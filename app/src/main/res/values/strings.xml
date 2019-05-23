@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">BCU</string>
+    <string name="anim_view">Animation Viewer</string>
+    <string name="stg_inf">Stage Info</string>
+    <string name="des_animsch">Open Filter screens</string>
+    <string name="des_animbck">Back to main page</string>
+    <string-array name="set_stg">
+        <item>Story of Legends</item>
+        <item>Regular Event Stages</item>
+        <item>Collaboration Stages</item>
+        <item>Empire of Cats</item>
+        <item>Extra Stages</item>
+        <item>Dojo Stages</item>
+        <item>Heavenly Tower</item>
+        <item>Ranking Dojo Stages</item>
+        <item>Challenge Battle</item>
+        <item>Uncanny Legends</item>
+        <item>Night Stages</item>
+    </string-array>
+    <string name="des_stgbck">Back to main page</string>
+    <string name="sch_nm">Search by Filter</string>
+    <string name="def_schbck">Back to Animation Viewer</string>
+    <string name="sch_tg">Target</string>
+    <string name="sch_red">Red</string>
+    <string name="sch_fl">Float</string>
+    <string name="sch_bla">Black</string>
+    <string name="sch_me">Metal</string>
+    <string name="sch_al">Alien</string>
+    <string name="sch_zo">Zombie</string>
+    <string name="sch_re">Relic</string>
+    <string name="sch_an">Angel</string>
+    <string name="sch_wh">White</string>
+    <string name="sch_or">Or</string>
+    <string name="sch_and">And</string>
+    <string name="sch_atk">Attack</string>
+    <string name="sch_rare">Rarity</string>
+    <string name="sch_rare_ba">Basic</string>
+    <string name="sch_rare_ra">Rare</string>
+    <string name="sch_rare_ex">EX</string>
+    <string name="sch_rare_sr">Super Rare</string>
+    <string name="sch_rare_ur">Uber Rare</string>
+    <string name="sch_rare_lr">Legend Rare</string>
+    <string name="sch_atk_si">Single</string>
+    <string name="sch_atk_ra">Range</string>
+    <string name="sch_atk_ld">Long Distance</string>
+    <string name="sch_atk_om">Omni Strike</string>
+    <string name="sch_atk_mu">Multi Hit</string>
+    <string name="sch_atk_kb">KB Revenge</string>
+    <string name="sch_abil">Ability</string>
+    <string name="sch_abi_we">Weaken</string>
+    <string name="sch_abi_fr">Freeze</string>
+    <string name="sch_abi_sl">Slow</string>
+    <string name="sch_abi_ao">Attacks Only</string>
+    <string name="sch_abi_st">Strong</string>
+    <string name="sch_abi_re">Resistant</string>
+    <string name="sch_abi_it">Insanely Tough</string>
+    <string name="sch_abi_id">Insane Damage</string>
+    <string name="sch_abi_kb">Knockback</string>
+    <string name="sch_abi_wa">Warp</string>
+    <string name="sch_abi_str">Strengthen</string>
+    <string name="sch_abi_su">Survive</string>
+    <string name="sch_abi_bd">Base Destroyer</string>
+    <string name="sch_abi_cr">Critical</string>
+    <string name="sch_abi_zk">Zombie Killer</string>
+    <string name="sch_abi_bb">Barrier Breaker</string>
+    <string name="sch_abi_em">Extra Money</string>
+    <string name="sch_abi_me">Metal</string>
+    <string name="sch_abi_iw">Imu.Weaken</string>
+    <string name="sch_abi_if">Imu.Freeze</string>
+    <string name="sch_abi_is">Imu.Slow</string>
+    <string name="sch_abi_ik">Imu.KB</string>
+    <string name="sch_abi_iwv">Imu.Wave</string>
+    <string name="sch_abi_iwa">Imu.Warp</string>
+    <string name="sch_abi_ic">Imu.Curse</string>
+    <string name="sch_abi_ws">Wave Shield</string>
+    <string name="sch_abi_md">Massive Damage</string>
+    <string name="sch_abi_wv">Wave</string>
+    <string name="sch_abi_eva">Eva Angel Killer</string>
+    <string name="sch_abi_wk">Witch Killer</string>
+    <string name="main_file_o">File Found!</string>
+    <string name="main_file_x">File not Found!</string>
+    <string name="animview_tg">Target Found!</string>
+    <string name="animview_tgnot">Target Not Found!</string>
+    <string name="animview_atk">Attack Found!</string>
+    <string name="animview_atknot">Attack Not Found!</string>
+    <string name="animview_abil">Ability Found!</string>
+    <string name="animview_abilnot">Ability Not Found!</string>
+    <string name="animview_atksi">Multi Found!</string>
+    <string name="animview_atksinot">Single Found!</string>
+    <string name="animview_atkornot">Attack type not Found</string>
+    <string name="animview_tgset">Target Set!</string>
+    <string name="animview_tgsetnot">Target not set!</string>
+    <string name="animview_atkset">Attack Set!</string>
+    <string name="animview_atksetnot">Attack not Set!</string>
+    <string name="animview_abilset">Ability Set!</string>
+    <string name="animview_abilsetnot">Ability not Set!</string>
+    <string name="main_file_cont">You must download file to run this application. Will you download files?</string>
+    <string name="main_file_ok">OK</string>
+    <string name="main_file_cancel">Cancel</string>
+    <string name="down_wait">Waiting for connection…</string>
+    <string name="down_1">000001</string>
+    <string name="down_2">000002</string>
+    <string name="down_3">000003</string>
+    <string name="down_01">080504</string>
+    <string name="down_done">Done</string>
+    <string name="down_state_ok">Download Complete!</string>
+    <string name="down_state_no">Download Failed…</string>
+    <string name="down_state_doing">Downloading Files</string>
+    <string name="down_state_rea">Ready</string>
+    <string name="down_down">Download</string>
+    <string name="down_redown">Retry</string>
+    <string name="down_finish">Success</string>
+    <string name="down_down_all">Download All</string>
+    <string name="down_notdone">You didn\'t download all files</string>
+    <string name="down_zip_rea">Tap this button when you downloaded all files</string>
+    <string name="down_zip_ex">"Extracting… : "</string>
+    <string name="down_state_install">Installed</string>
+    <string name="main_unitinfo">Unit Info</string>
+    <string name="donw_lang">Language</string>
+    <string name="main_check_up">Checking Updates…</string>
+    <string name="main_check_file">Checking files…</string>
+</resources>
