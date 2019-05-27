@@ -38,8 +38,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class DownloadScreen extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
     final private String url = "http://battlecatsultimate.cf/api/resources/assets/";
-    final private String [] filename = {"000001.zip","000002.zip","000003.zip","080504.zip"};
-    final private String [] lib = {"000001","000002","000003","080504"};
+    final private String [] filename = {"000001.zip","000002.zip","000003.zip","080504.zip","080600.zip","080601.zip"};
+    final private String [] lib = {"000001","000002","000003","080504","080600","080601"};
     final private int FILE_NUMBER = 4;
     public ArrayList<Integer> allset = new ArrayList<>();
     private URL link;

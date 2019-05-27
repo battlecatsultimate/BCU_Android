@@ -17,6 +17,7 @@ public interface FileData {
 
 }
 
+
 interface ByteData extends FileData {
 
 	public byte[] getBytes();

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String path;
     final private String [] filename = {"000001.zip","000002.zip","000003.zip","080504.zip"};
-    final private String [] lib = {"000001","000002","000003","080504"};
+    final private String [] lib = {"000001","000002","000003","080504","080600","080601"};
     final private long [] sizes = {68264194,69064400,69569256,2956};
     final private int FILE_NUMBER = 4;
     private ArrayList<String> fileneed = new ArrayList<>();

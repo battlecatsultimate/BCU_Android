@@ -1,16 +1,18 @@
 package com.mandarin.bcu.util.system.files;
 
-public interface AssetData extends ByteData {
+import java.io.File;
 
-	public static AssetData getAsset(byte[] bs) {
+public interface AssetData extends FileData {
+
+	public static AssetData getAsset(File bs) {
 		return new DefAsset(bs);
 	}
 
 }
 
-class DefAsset extends FileByte implements AssetData {
+class DefAsset extends FDFile implements AssetData {
 
-	public DefAsset(byte[] bs) {
+	public DefAsset(File bs) {
 		super(bs);
 	}
 

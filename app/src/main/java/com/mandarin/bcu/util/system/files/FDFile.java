@@ -1,6 +1,8 @@
 package com.mandarin.bcu.util.system.files;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
@@ -29,7 +31,17 @@ public class FDFile implements FileData {
 	@Override
 	public Queue<String> readLine() {
 		try {
-			return new ArrayDeque<String>(Files.readAllLines(file.toPath()));
+			BufferedReader input = new BufferedReader(new FileReader(file.toString()));
+			if(!input.ready()) {
+				throw new IOException();
+			}
+			String line;
+			ArrayDeque<String> res = new ArrayDeque<>();
+			while((line = input.readLine()) != null) {
+				res.add(line);
+			}
+			input.close();
+			return res;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
