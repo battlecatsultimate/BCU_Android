@@ -1,7 +1,9 @@
 package com.mandarin.bcu;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +15,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mandarin.bcu.main.MainBCU;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,18 +30,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
 
     private String path;
-    final private String [] filename = {"000001.zip","000002.zip","000003.zip","080504.zip"};
-    final private String [] lib = {"000001","000002","000003","080504","080600","080601"};
-    final private long [] sizes = {68264194,69064400,69569256,2956};
-    final private int FILE_NUMBER = 4;
     private ArrayList<String> fileneed = new ArrayList<>();
     private ArrayList<String> filenum = new ArrayList<>();
     private boolean lang = false;
@@ -51,12 +62,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        MainBCU.CheckMem(this);
 
         path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
 
         animbtn = findViewById(R.id.anvibtn);
         stagebtn = findViewById(R.id.stgbtn);
+        animbtn.setVisibility(View.GONE);
+        stagebtn.setVisibility(View.GONE);
         checkstate = findViewById(R.id.mainstup);
         mainprog = findViewById(R.id.mainprogup);
 
@@ -76,8 +89,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        checkUpdates updates = new checkUpdates();
-        updates.execute();
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if(connectivityManager.getActiveNetworkInfo() != null) {
+            checkUpdates updates = new checkUpdates();
+            updates.execute();
+        } else {
+            if(cando()) {
+                mainprog.setVisibility(View.GONE);
+                checkstate.setVisibility(View.GONE);
+                stagebtn.setVisibility(View.VISIBLE);
+                animbtn.setVisibility(View.VISIBLE);
+            } else {
+                mainprog.setVisibility(View.GONE);
+                checkstate.setText(R.string.main_internet_no);
+                Toast.makeText(this, "You need internet connection to run this application!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    protected boolean cando() {
+        boolean result = false;
+
+        String infopath = path + "/files/info/";
+        String filename = "info_android.ini";
+
+        File f = new File(infopath,filename);
+
+        if(f.exists()) {
+            try {
+                String line;
+
+                FileInputStream fis = new FileInputStream(f);
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
+
+                ArrayList<String> lines = new ArrayList<>();
+
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                }
+
+                if(lines.size() == 3) {
+                    String [] libline = lines.get(2).split("=");
+
+                    if(libline.length == 2) {
+                        ArrayList<String> libs = new ArrayList<>(Arrays.asList(libline[1].split(",")));
+
+                        if(libs.contains("000001") && libs.contains("000002") && libs.contains("000003")) {
+                            result = true;
+
+                            return true;
+                        } else {
+                            return result;
+                        }
+
+
+                    } else {
+                        return result;
+                    }
+                } else {
+                    return result;
+                }
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return result;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return result;
+            }
+        } else {
+            return result;
+        }
     }
 
     protected void animationview() {
@@ -91,174 +177,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void checkFiles() {
-        AlertDialog.Builder donloader = new AlertDialog.Builder(this);
-        final Intent intent = new Intent(this,DownloadScreen.class);
-        donloader.setTitle(R.string.main_file_x);
-        donloader.setMessage(R.string.main_file_cont);
-        donloader.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(lang) {
-                    fileneed.add("lang");
-                    filenum.add(String.valueOf(FILE_NUMBER+1));
-                }
-                intent.putExtra("fileneed",fileneed);
-                intent.putExtra("filenum",filenum);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        donloader.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-
-        donloader.setCancelable(false);
-
-        langcheck();
-
-        String infopath = path + "/files/info/";
-        String filename = "info.txt";
-
-        File g = new File(infopath);
-
-        if(!g.exists()) {
-            for(int i=0;i<lib.length;i++) {
-                fileneed.add(lib[i]);
-                filenum.add(String.valueOf(i));
-            }
-
-            AlertDialog downloader = donloader.create();
-            downloader.show();
-        } else {
-            File f = new File(infopath,filename);
-
-            if(f.exists()) {
-                try {
-                    String line;
-
-                    FileInputStream fis = new FileInputStream(f);
-                    InputStreamReader isr = new InputStreamReader(fis);
-                    BufferedReader br = new BufferedReader(isr);
-                    StringBuilder str = new StringBuilder();
-
-                    while((line = br.readLine()) != null) {
-                        str.append(line).append(System.getProperty("line.separator"));
-                    }
-
-                    String [] lit = str.toString().split("\n");
-
-                    String [] libnum = lit[2].split("=");
-
-                    ArrayList<String> ver = new ArrayList<>(Arrays.asList(libnum[1].split(",")));
-                    System.out.println(ver.toString());
-
-                    if(ver.size() != FILE_NUMBER) {
-                        for(int i=0;i<lib.length;i++) {
-                            if(!ver.contains(lib[i])) {
-                                fileneed.add(lib[i]);
-                                filenum.add(String.valueOf(i));
-                            }
-                        }
-                        AlertDialog downloader = donloader.create();
-                        downloader.show();
-                    } else {
-                        int checker = 0;
-
-                        for(int i=0;i<lib.length;i++) {
-                            if(lib[i].equals(ver.get(i)))
-                                checker++;
-                            else {
-                                fileneed.add(lib[i]);
-                                filenum.add(String.valueOf(i));
-                            }
-                        }
-
-                        if(checker!=FILE_NUMBER) {
-                            AlertDialog downloader = donloader.create();
-                            downloader.show();
-                        } else {
-                            checker = 0;
-
-                            for(int i=0;i<lib.length;i++) {
-                                f = new File(infopath,lib[i]+".verinfo");
-
-                                if(f.exists())
-                                    checker++;
-                                else
-                                    if(!fileneed.contains(lib[i])) {
-                                        fileneed.add(lib[i]);
-                                        filenum.add(String.valueOf(i));
-                                    }
-                            }
-
-                            if(checker != FILE_NUMBER) {
-                                AlertDialog downloader = donloader.create();
-                                downloader.show();
-                            } else if(lang) {
-                                AlertDialog downloader = donloader.create();
-                                downloader.show();
-                            }
-                        }
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                for(int i=0;i<lib.length;i++) {
-                    fileneed.add(lib[i]);
-                    filenum.add(String.valueOf(i));
-                }
-
-                AlertDialog downloader = donloader.create();
-                downloader.show();
-            }
-        }
-    }
-
-    protected void langcheck() {
-        String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-        String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt"};
-        String source = path+"/lang";
-
-        File f = new File(source);
-
-        if(!f.exists()) {
-            lang = true;
-        } else {
-            for (String s : lan) {
-                for (String s1 : langfile) {
-                    f = new File(source + s, s1);
-
-                    if (!f.exists()) {
-                        lang = true;
-                        break;
-                    }
-                }
-
-                if (lang) {
-                    break;
-                }
-            }
-        }
-    }
-
     private class checkUpdates extends AsyncTask<Void,Integer,Void> {
         private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
         private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt"};
         private String source = path+"/lang";
+        private String assetlink = "http://battlecatsultimate.cf/api/java/getAssets.php";
         private int size;
         private File output = null;
         private boolean add;
         final private String url = "http://battlecatsultimate.cf/api/resources/lang";
         private URL link;
+        private URL asseturl;
         private HttpURLConnection c;
+
+        private JSONObject inp;
+        private JSONObject ans;
 
         @Override
         protected void onPreExecute() {
@@ -268,9 +201,31 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            for (String s1 : lan) {
-                for (String s : langfile) {
-                    try {
+            try {
+                inp = new JSONObject();
+                inp.put("bcuver",MainBCU.ver);
+
+                URL asseturl = new URL(assetlink);
+                HttpURLConnection connection = (HttpURLConnection) asseturl.openConnection();
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+                connection.setRequestMethod("POST");
+
+                OutputStream os = connection.getOutputStream();
+                os.write(inp.toString().getBytes("UTF-8"));
+                os.close();
+
+                InputStream is = connection.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+                String result = readAll(new BufferedReader(isr));
+
+                ans = new JSONObject(result);
+                is.close();
+                connection.disconnect();
+
+                for (String s1 : lan) {
+                    for (String s : langfile) {
                         String langurl = url + s1 + s;
                         link = new URL(langurl);
                         c = (HttpURLConnection) link.openConnection();
@@ -291,25 +246,34 @@ public class MainActivity extends AppCompatActivity {
 
                         if (output.exists()) {
                             if (output.length() != size) {
-                                System.out.println(size);
-                                System.out.println(output.length());
-                                add = true;
+                                lang = true;
                                 break;
                             }
+                        } else {
+                            lang = true;
                         }
 
                         c.disconnect();
+                    }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        output = null;
+                    if (lang) {
+                        break;
                     }
                 }
-
-                if (add) {
-                    break;
-                }
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+                output = null;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                output = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                output = null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                output = null;
             }
+
 
             publishProgress(1);
 
@@ -318,13 +282,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            if(add) {
-                lang = true;
-            }
-
+            System.out.println(lang);
             if (values[0] == 1) {
                 checkstate.setText(R.string.main_check_file);
-                checkFiles();
+                checkFiles(ans);
             }
         }
 
@@ -335,6 +296,157 @@ public class MainActivity extends AppCompatActivity {
                 checkstate.setVisibility(View.GONE);
                 stagebtn.setVisibility(View.VISIBLE);
                 animbtn.setVisibility(View.VISIBLE);
+            }
+        }
+
+        protected String readAll(Reader rd) {
+            try {
+                StringBuilder sb = new StringBuilder();
+                int chara;
+                while ((chara = rd.read()) != -1) {
+                    sb.append((char)chara);
+                }
+
+                return sb.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void checkFiles(JSONObject asset) {
+            try {
+                Map<String, String> libmap = new TreeMap<>();
+                JSONArray ja = asset.getJSONArray("assets");
+
+                for(int i=0;i<ja.length();i++) {
+                    JSONArray ent = ja.getJSONArray(i);
+                    libmap.put(ent.getString(0),ent.getString(1));
+                }
+
+                ArrayList<String> lib = new ArrayList<>(libmap.keySet());
+
+                AlertDialog.Builder donloader = new AlertDialog.Builder(MainActivity.this);
+                final Intent intent = new Intent(MainActivity.this, DownloadScreen.class);
+                donloader.setTitle(R.string.main_file_need);
+                donloader.setMessage(R.string.main_file_up);
+                donloader.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (lang) {
+                            fileneed.add("Language");
+                            filenum.add(String.valueOf(filenum.size()));
+                        }
+                        System.out.println(fileneed.toString());
+                        intent.putExtra("fileneed", fileneed);
+                        intent.putExtra("filenum", filenum);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+                donloader.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                donloader.setCancelable(false);
+
+                String infopath = path + "/files/info/";
+                String filename = "info_android.ini";
+
+                File g = new File(infopath);
+
+                if (!g.exists()) {
+                    for (int i = 0; i < lib.size(); i++) {
+                        fileneed.add(lib.get(i));
+                        filenum.add(String.valueOf(i));
+                    }
+                    donloader.setTitle(R.string.main_down_init);
+                    donloader.setMessage(R.string.main_file_cont);
+                    AlertDialog downloader = donloader.create();
+                    downloader.show();
+                } else {
+                    File f = new File(infopath, filename);
+
+                    if (f.exists()) {
+                        try {
+                            String line;
+
+                            FileInputStream fis = new FileInputStream(f);
+                            InputStreamReader isr = new InputStreamReader(fis);
+                            BufferedReader br = new BufferedReader(isr);
+                            StringBuilder str = new StringBuilder();
+
+                            while ((line = br.readLine()) != null) {
+                                str.append(line).append(System.getProperty("line.separator"));
+                            }
+
+                            String[] lit = str.toString().split("\n");
+
+                            if(lit.length == 3) {
+
+                                String[] libnum = lit[2].split("=");
+
+                                if(libnum.length == 2) {
+
+                                    ArrayList<String> ver = new ArrayList<>(Arrays.asList(libnum[1].split(",")));
+
+                                    for (int i = 0; i < lib.size(); i++) {
+                                        if (!ver.contains(lib.get(i))) {
+                                            fileneed.add(lib.get(i));
+                                            filenum.add(String.valueOf(i));
+                                        }
+                                    }
+
+                                    if (!filenum.isEmpty()) {
+                                        AlertDialog downloader = donloader.create();
+                                        downloader.show();
+                                    } else if (lang) {
+                                        donloader.setTitle(R.string.main_file_x);
+                                        AlertDialog downloader = donloader.create();
+                                        downloader.show();
+                                    }
+                                } else {
+                                    for (int i = 0; i < lib.size(); i++) {
+                                        fileneed.add(lib.get(i));
+                                        filenum.add(String.valueOf(i));
+                                    }
+                                    donloader.setTitle(R.string.main_info_corr);
+                                    donloader.setMessage(R.string.main_info_cont);
+                                    AlertDialog downloader = donloader.create();
+                                    downloader.show();
+                                }
+                            } else {
+                                for (int i = 0; i < lib.size(); i++) {
+                                    fileneed.add(lib.get(i));
+                                    filenum.add(String.valueOf(i));
+                                }
+                                donloader.setTitle(R.string.main_info_corr);
+                                donloader.setMessage(R.string.main_info_cont);
+                                AlertDialog downloader = donloader.create();
+                                downloader.show();
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        for (int i = 0; i < lib.size(); i++) {
+                            fileneed.add(lib.get(i));
+                            filenum.add(String.valueOf(i));
+                        }
+                        donloader.setTitle(R.string.main_down_init);
+                        donloader.setMessage(R.string.main_file_cont);
+                        AlertDialog downloader = donloader.create();
+                        downloader.show();
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }

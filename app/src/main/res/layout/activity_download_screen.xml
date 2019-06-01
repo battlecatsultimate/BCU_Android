@@ -6,273 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".DownloadScreen">
 
-    <ScrollView
+    <ProgressBar
+        android:id="@+id/downprog"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginEnd="128dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/downcons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/downstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/down_state_rea"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/downprog"
+        app:layout_constraintTop_toBottomOf="@+id/downprog" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toTopOf="@+id/downbt1"
-                app:layout_constraintTop_toBottomOf="@+id/downbtall"
-                tools:layout_editor_absoluteX="0dp"></View>
-
-            <Button
-                android:id="@+id/downbtall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
-                android:text="@string/down_down_all"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/downbt1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="28dp"
-                android:layout_marginRight="28dp"
-                android:text="@string/down_down"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/downbtall" />
-
-            <TextView
-                android:id="@+id/down1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
-                android:text="@string/down_1"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/downbt1" />
-
-            <ProgressBar
-                android:id="@+id/prog1"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt1"
-                app:layout_constraintEnd_toStartOf="@+id/downbt1"
-                app:layout_constraintStart_toEndOf="@+id/down1"
-                app:layout_constraintTop_toTopOf="@+id/downbt1" />
-
-            <TextView
-                android:id="@+id/downst1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_state_rea"
-                app:layout_constraintStart_toStartOf="@+id/prog1"
-                app:layout_constraintTop_toBottomOf="@+id/prog1" />
-
-            <Button
-                android:id="@+id/downbt2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/down_down"
-                app:layout_constraintEnd_toEndOf="@+id/downbt1"
-                app:layout_constraintTop_toBottomOf="@+id/downbt1" />
-
-            <ProgressBar
-                android:id="@+id/prog2"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt2"
-                app:layout_constraintEnd_toStartOf="@+id/downbt2"
-                app:layout_constraintStart_toStartOf="@+id/prog1"
-                app:layout_constraintTop_toTopOf="@+id/downbt2" />
-
-            <TextView
-                android:id="@+id/down2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_2"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt2"
-                app:layout_constraintStart_toStartOf="@+id/down1"
-                app:layout_constraintTop_toTopOf="@+id/downbt2" />
-
-            <TextView
-                android:id="@+id/downst2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_state_rea"
-                app:layout_constraintStart_toStartOf="@+id/prog2"
-                app:layout_constraintTop_toBottomOf="@+id/prog2" />
-
-            <Button
-                android:id="@+id/downbt3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/down_down"
-                app:layout_constraintEnd_toEndOf="@+id/downbt2"
-                app:layout_constraintTop_toBottomOf="@+id/downbt2" />
-
-            <ProgressBar
-                android:id="@+id/prog3"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt3"
-                app:layout_constraintEnd_toEndOf="@+id/prog2"
-                app:layout_constraintHorizontal_bias="0.6"
-                app:layout_constraintStart_toStartOf="@+id/prog2"
-                app:layout_constraintTop_toTopOf="@+id/downbt3" />
-
-            <TextView
-                android:id="@+id/down3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_3"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt3"
-                app:layout_constraintStart_toStartOf="@+id/down2"
-                app:layout_constraintTop_toTopOf="@+id/downbt3" />
-
-            <TextView
-                android:id="@+id/downst3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_state_rea"
-                app:layout_constraintStart_toStartOf="@+id/prog3"
-                app:layout_constraintTop_toBottomOf="@+id/prog3" />
-
-            <TextView
-                android:id="@+id/down01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_01"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt01"
-                app:layout_constraintStart_toStartOf="@+id/down3"
-                app:layout_constraintTop_toTopOf="@+id/downbt01" />
-
-            <Button
-                android:id="@+id/downbt01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/down_down"
-                app:layout_constraintEnd_toEndOf="@+id/downbt3"
-                app:layout_constraintTop_toBottomOf="@+id/downbt3" />
-
-            <ProgressBar
-                android:id="@+id/prog01"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/downbt01"
-                app:layout_constraintEnd_toEndOf="@+id/prog3"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/prog3"
-                app:layout_constraintTop_toTopOf="@+id/downbt01" />
-
-            <TextView
-                android:id="@+id/downst01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_state_rea"
-                app:layout_constraintStart_toStartOf="@+id/prog01"
-                app:layout_constraintTop_toBottomOf="@+id/prog01" />
-
-            <Button
-                android:id="@+id/downbtdone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="24dp"
-                android:text="@string/down_done"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/downbtlang" />
-
-            <TextView
-                android:id="@+id/downzipst"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
-                android:text="@string/down_zip_rea"
-                app:layout_constraintStart_toEndOf="@+id/downbtdone"
-                app:layout_constraintTop_toTopOf="@+id/downbtdone" />
-
-            <ProgressBar
-                android:id="@+id/progzip"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
-                android:layout_marginEnd="128dp"
-                android:layout_marginRight="128dp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbtdone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/downbtdone" />
-
-            <TextView
-                android:id="@+id/downlang"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/donw_lang"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/downbtlang"
-                app:layout_constraintStart_toStartOf="@+id/down01"
-                app:layout_constraintTop_toTopOf="@+id/downbtlang" />
-
-            <Button
-                android:id="@+id/downbtlang"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/down_down"
-                app:layout_constraintEnd_toEndOf="@+id/downbt01"
-                app:layout_constraintTop_toBottomOf="@+id/downbt01" />
-
-            <ProgressBar
-                android:id="@+id/proglang"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/downbtlang"
-                app:layout_constraintEnd_toEndOf="@+id/prog01"
-                app:layout_constraintStart_toStartOf="@+id/prog01"
-                app:layout_constraintTop_toTopOf="@+id/downbtlang" />
-
-            <TextView
-                android:id="@+id/downstlang"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/down_state_rea"
-                app:layout_constraintStart_toStartOf="@+id/proglang"
-                app:layout_constraintTop_toBottomOf="@+id/proglang" />
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-
+    <Button
+        android:id="@+id/retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/down_redown"
+        app:layout_constraintBottom_toBottomOf="@+id/downstate"
+        app:layout_constraintEnd_toEndOf="@+id/downprog"
+        app:layout_constraintTop_toTopOf="@+id/downstate" />
 </android.support.constraint.ConstraintLayout>
