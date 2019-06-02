@@ -60,7 +60,7 @@ public class Unit extends Data implements Comparable<Unit> {
 			for (int j=0;j<lu.get(i).forms.length;j++) {
 				int lang = 0;
 				while(lang < 4) {
-					lu.get(i).forms[j].name = findName(j,i,lu.get(i).forms.length,unitnames[lang]);
+					lu.get(i).forms[j].name = findName(j,i,unitnames[lang]);
 
 					if(lu.get(i).forms[j].name != null)
 						break;
@@ -74,7 +74,7 @@ public class Unit extends Data implements Comparable<Unit> {
 		}
 	}
 
-	protected static String findName(int form,int num,int formnum,String [] names) {
+	protected static String findName(int form,int num,String [] names) {
 		String name = null;
 
 		if(names.length>num) {
