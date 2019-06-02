@@ -77,7 +77,7 @@ public class SearchFilter extends AppCompatActivity {
     private ScrollView sc;
     private NestedScrollView nsc;
     private int[] tgid = {R.id.schchrd,R.id.schchfl,R.id.schchbla,R.id.schchme,R.id.schchan,R.id.schchal,R.id.schchzo,R.id.schchre,R.id.schchwh};
-    private String [] colors = {"1","2","3","4","5","6","7","8","9","0"};
+    private String [] colors = {"1","2","3","4","5","6","7","8","0"};
     private int[] rareid = {R.id.schchba,R.id.schchex,R.id.schchr,R.id.schchsr,R.id.schchur,R.id.schchlr};
     private String [] rarity = {"0","1","2","3","4","5"};
     private int[] atkid = {R.id.schchld,R.id.schchom,R.id.schchmu};
