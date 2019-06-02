@@ -1,13 +1,10 @@
 package com.mandarin.bcu;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.content.res.AppCompatResources;
@@ -21,35 +18,21 @@ import com.mandarin.bcu.asynchs.CheckUpdates;
 import com.mandarin.bcu.main.MainBCU;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
-import com.mandarin.bcu.util.system.files.VFile;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String [] LIB_REQUIRED = {"000001","000002","000003"};
+    private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603"};
     private String path;
     private ArrayList<String> fileneed = new ArrayList<>();
     private ArrayList<String> filenum = new ArrayList<>();
@@ -71,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
         MainBCU.CheckMem(this);
 
-        System.out.println(new File(".").getAbsolutePath());
-
         path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
 
         ImageBuilder.builder = new BMBuilder();
+        com.mandarin.bcu.decode.ZipLib.init();
+        com.mandarin.bcu.decode.ZipLib.read();
 
         animbtn = findViewById(R.id.anvibtn);
         stagebtn = findViewById(R.id.stgbtn);

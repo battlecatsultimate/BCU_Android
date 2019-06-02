@@ -111,10 +111,7 @@ public class AnimationViewer extends AppCompatActivity {
 
                 for (int i = 0; i < unitnumber; i++) {
                     String shortPath = "./org/unit/"+ number(i) + "/f/uni" + number(i) + "_f00.png";
-                    String longPath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files";
 
-
-                    VFile.root.build(shortPath,AssetData.getAsset(new File(longPath+shortPath.substring(1))));
                     StaticStore.bitmaps[i] = VFile.getFile(shortPath).getData().getImg().bimg();
 
                 }

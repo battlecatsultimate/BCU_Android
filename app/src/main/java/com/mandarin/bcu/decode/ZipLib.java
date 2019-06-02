@@ -1,5 +1,7 @@
 package com.mandarin.bcu.decode;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.io.IOException;
 import com.mandarin.bcu.main.Opts;
@@ -25,10 +27,10 @@ public class ZipLib {
 
 	public static void init() {
 
-		File f = new File("./files/");
+		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/");
 		if (!f.exists())
 			return;
-		info = new LibInfo("./files");// TODO
+		info = new LibInfo(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/");// TODO
 	}
 
 	public static void merge(File f) {
@@ -44,7 +46,7 @@ public class ZipLib {
 	}
 
 	public static void read() {
-		String prev = "";// TODO
+		String prev = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files";// TODO
 		for (PathInfo pi : info.merge.paths.values()) {
 			if (pi.type != 0)
 				continue;
