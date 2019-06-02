@@ -1,5 +1,7 @@
 package com.mandarin.bcu.util.system.fake;
 
+import android.graphics.Bitmap;
+
 import java.io.IOException;
 
 public interface FakeImage {
@@ -12,7 +14,7 @@ public interface FakeImage {
 		return ImageBuilder.builder.write(img, str, o);
 	}
 
-	public Object bimg();
+	public Bitmap bimg();
 
 	public int getHeight();
 

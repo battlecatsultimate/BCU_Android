@@ -28,6 +28,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.mandarin.bcu.util.system.android.BMBuilder;
+import com.mandarin.bcu.util.system.fake.ImageBuilder;
+import com.mandarin.bcu.util.system.files.AssetData;
+import com.mandarin.bcu.util.system.files.VFile;
+
 public class AnimationViewer extends AppCompatActivity {
 
     protected ImageButton search;
@@ -36,8 +41,6 @@ public class AnimationViewer extends AppCompatActivity {
     private String unitpath;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
-    private Bitmap[] bitmaps;
-    private String[] names;
 
     private String[] unitrarity;
     private String[][][] unitattack;
@@ -50,12 +53,15 @@ public class AnimationViewer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animation_viewer);
 
+        ImageBuilder builder = new BMBuilder();
+
         unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
+
+        System.out.println(unitnumber);
 
         File f = new File(unitpath);
         unitnumber = f.listFiles().length;
-        names = new String[unitnumber];
-        bitmaps = new Bitmap[unitnumber];
+
         unitrarity = new String[unitnumber];
         unitattack = new String[unitnumber][][];
         unittarget = new String[unitnumber][][];
@@ -93,13 +99,25 @@ public class AnimationViewer extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             String[] prior = chooser();
-            getName(prior);
+            if(StaticStore.names == null) {
+                StaticStore.names = new String[unitnumber];
 
-            for (int i = 0; i < unitnumber; i++) {
+                getName(prior);
+            }
 
-                File imgfile = new File(unitpath+number(i)+"/f/uni"+number(i)+"_f00.png");
-                bitmaps[i] = BitmapFactory.decodeFile(imgfile.getAbsolutePath());
+            if(StaticStore.bitmaps == null) {
+                StaticStore.bitmaps = new Bitmap[unitnumber];
 
+
+                for (int i = 0; i < unitnumber; i++) {
+                    String shortPath = "./org/unit/"+ number(i) + "/f/uni" + number(i) + "_f00.png";
+                    String longPath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files";
+
+
+                    VFile.root.build(shortPath,AssetData.getAsset(new File(longPath+shortPath.substring(1))));
+                    StaticStore.bitmaps[i] = VFile.getFile(shortPath).getData().getImg().bimg();
+
+                }
             }
 
             findrarity();
@@ -114,7 +132,7 @@ public class AnimationViewer extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            Adapters adap = new Adapters(AnimationViewer.this,names,bitmaps);
+            Adapters adap = new Adapters(AnimationViewer.this,StaticStore.names,StaticStore.bitmaps);
             list.setAdapter(adap);
         }
 
@@ -221,27 +239,27 @@ public class AnimationViewer extends AppCompatActivity {
         }
 
         for(int i=0;i<unitnumber;i++) {
-            names[i] = findname(i,uninames[0]);
-            if(names[i] == null) {
-                names[i] = findname(i,uninames[1]);
+            StaticStore.names[i] = findname(i,uninames[0]);
+            if(StaticStore.names[i] == null) {
+                StaticStore.names[i] = findname(i,uninames[1]);
 
-                if(names[i] == null) {
-                    names[i] = findname(i,uninames[2]);
+                if(StaticStore.names[i] == null) {
+                    StaticStore.names[i] = findname(i,uninames[2]);
 
-                    if(names[i] == null) {
-                        names[i] = findname(i,uninames[3]);
+                    if(StaticStore.names[i] == null) {
+                        StaticStore.names[i] = findname(i,uninames[3]);
 
-                        if(names[i] == null) {
-                            names[i] = "";
+                        if(StaticStore.names[i] == null) {
+                            StaticStore.names[i] = "";
                         }
                     }
                 }
             }
 
-            if(names[i].equals("")) {
-                names[i] = number(i);
+            if(StaticStore.names[i].equals("")) {
+                StaticStore.names[i] = number(i);
             } else {
-                names[i] = number(i) + " - "+names[i];
+                StaticStore.names[i] = number(i) + " - "+StaticStore.names[i];
             }
         }
     }
@@ -474,10 +492,10 @@ public class AnimationViewer extends AppCompatActivity {
             String [] newnames = new String[filters.size()];
 
             for(int i=0;i<filters.size();i++) {
-                newnames[i] = names[Integer.parseInt(filters.get(i))];
+                newnames[i] = StaticStore.names[Integer.parseInt(filters.get(i))];
             }
 
-            FilterAdapters filterAdapters = new FilterAdapters(AnimationViewer.this,newnames,bitmaps,filters);
+            FilterAdapters filterAdapters = new FilterAdapters(AnimationViewer.this,newnames,StaticStore.bitmaps,filters);
             list.setAdapter(filterAdapters);
         }
     }

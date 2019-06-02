@@ -2,7 +2,20 @@ package com.mandarin.bcu.io;
 
 import static java.lang.Character.isDigit;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.mandarin.bcu.main.Opts;
 
 public class Reader extends DataIO {
 
@@ -78,4 +91,56 @@ public class Reader extends DataIO {
 		return ans;
 	}
 
+	public static Queue<String> readLines(String path) {
+		File file = new File(path);
+		Queue<String> ans = new ArrayDeque<>();
+		BufferedReader reader = null;
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+			reader = new BufferedReader(isr);
+			String temp = null;
+			while ((temp = reader.readLine()) != null)
+				ans.add(temp);
+			reader.close();
+		} catch (Exception e) {
+			Opts.ioErr("failed to read file " + file);
+			e.printStackTrace();
+		}
+		return ans;
+	}
+
+	public static Set<String> getInfo(String path) {
+		String infopath = path + "/files/info/";
+		String filename = "info_android.ini";
+
+
+		File f = new File(infopath, filename);
+
+		try {
+			String line;
+
+			FileInputStream fis = new FileInputStream(f);
+			InputStreamReader isr = new InputStreamReader(fis);
+			BufferedReader br = new BufferedReader(isr);
+			ArrayList<String> lines = new ArrayList<>();
+
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
+
+			Set<String> libs = new TreeSet<>(Arrays.asList(lines.get(2).split("=")[1].split(",")));
+
+			return libs;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
