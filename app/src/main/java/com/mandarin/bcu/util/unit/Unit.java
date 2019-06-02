@@ -79,7 +79,7 @@ public class Unit extends Data implements Comparable<Unit> {
 
 		if(names.length>num) {
 			String [] wait = names[num].split("\t");
-			if(wait.length > formnum) {
+			if(wait.length >= 3 && form+1 < wait.length) {
 				if(!wait[form+1].equals("")) {
 					name = wait[form+1];
 				}

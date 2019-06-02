@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             checkUpdates.execute();
         } else {
             if(cando()) {
+                com.mandarin.bcu.decode.ZipLib.init();
+                com.mandarin.bcu.decode.ZipLib.read();
                 mainprog.setVisibility(View.GONE);
                 checkstate.setVisibility(View.GONE);
                 stagebtn.setVisibility(View.VISIBLE);
