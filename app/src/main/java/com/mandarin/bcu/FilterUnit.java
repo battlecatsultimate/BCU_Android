@@ -1,5 +1,12 @@
 package com.mandarin.bcu;
 
+import com.mandarin.bcu.util.Interpret;
+import com.mandarin.bcu.util.entity.data.MaskUnit;
+import com.mandarin.bcu.util.pack.Pack;
+import com.mandarin.bcu.util.system.P;
+import com.mandarin.bcu.util.unit.Form;
+import com.mandarin.bcu.util.unit.Unit;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -7,7 +14,7 @@ class FilterUnit {
     private ArrayList<String> rarity;
     private ArrayList<String> attack;
     private ArrayList<String> target;
-    private ArrayList<String> ability;
+    private ArrayList<ArrayList<Integer>> ability;
     private boolean atksimu;
     private boolean atkorand;
     private boolean tgorand;
@@ -16,7 +23,7 @@ class FilterUnit {
     private int unitnumber;
 
     FilterUnit(ArrayList<String> rarity, ArrayList<String> attack, ArrayList<String> target,
-               ArrayList<String> ability, boolean atksimu, boolean atkorand, boolean tgorand,
+               ArrayList<ArrayList<Integer>> ability, boolean atksimu, boolean atkorand, boolean tgorand,
                boolean aborand, boolean empty, int unitnumber) {
         this.rarity = rarity;
         this.attack = attack;
@@ -31,365 +38,135 @@ class FilterUnit {
 
     }
 
-    ArrayList<String> setRarity(String[] unitrarity) {
-        ArrayList<String> filterunit = new ArrayList<>();
+    ArrayList<Integer> setFilter() {
+        ArrayList<Boolean> b0 = new ArrayList<>();
+        ArrayList<Boolean> b1 = new ArrayList<>();
+        ArrayList<Boolean> b2 = new ArrayList<>();
+        ArrayList<Boolean> b3 = new ArrayList<>();
+        ArrayList<Boolean> b4 = new ArrayList<>();
 
-        if(!rarity.isEmpty()) {
-            for(int i =0;i<unitnumber;i++) {
-                boolean add = false;
-                for(int j=0;j<rarity.size();j++) {
-                    if(unitrarity[i].equals(rarity.get(j))) {
-                        add= true;
-                        break;
-                    }
-                }
-                if(add) {
-                    filterunit.add(String.valueOf(i));
-                }
-            }
-        } else {
-            for(int i=0;i<unitnumber;i++) {
-                filterunit.add(String.valueOf(i));
-            }
+        if(rarity.isEmpty()) {
+            for (int i = 0; i < unitnumber; i++)
+                b0.add(true);
         }
 
-        return filterunit;
-    }
-
-    ArrayList<String> setAttack(String[][][] unitattack, ArrayList<String> filterunit) {
-        ArrayList<Boolean> simu = new ArrayList<>();
-        ArrayList<Boolean> remover = new ArrayList<>();
-
-        if(!empty) {
-            if(atksimu) {
-                for(int i = 0; i< filterunit.size(); i++) {
-                    boolean add = false;
-                    for (int j = 0; j < unitattack[Integer.parseInt(filterunit.get(i))].length; j++) {
-                        ArrayList<String> compare = new ArrayList<>(Arrays.asList(unitattack[Integer.parseInt(filterunit.get(i))][j]));
-
-                        if (!compare.contains("12|0")) {
-                            add = true;
-                            break;
-                        }
-                    }
-
-                    if (!add) {
-                        simu.add(false);
-                    } else {
-                        simu.add(true);
-                    }
-                }
-            } else {
-                for(int i = 0; i< filterunit.size(); i++) {
-                    boolean add = false;
-                    for (int j = 0; j < unitattack[Integer.parseInt(filterunit.get(i))].length; j++) {
-                        ArrayList<String> compare = new ArrayList<>(Arrays.asList(unitattack[Integer.parseInt(filterunit.get(i))][j]));
-
-                        if (!compare.contains("12|1")) {
-                            add = true;
-                            break;
-                        }
-                    }
-
-                    if (!add) {
-                        simu.add(false);
-                    } else {
-                        simu.add(true);
-                    }
-                }
-            }
-        } else {
-            for(int i =0;i<filterunit.size();i++) {
-                simu.add(true);
-            }
+        if(empty) {
+            for (int i = 0; i < unitnumber; i++)
+                b1.add(true);
         }
 
-
-
-            if(atkorand) {
-                for(int i = 0; i< filterunit.size(); i++) {
-
-                    boolean add = false;
-                    for(int j = 0; j<unitattack[Integer.parseInt(filterunit.get(i))].length; j++) {
-                        ArrayList<String> compare = new ArrayList<>(Arrays.asList(unitattack[Integer.parseInt(filterunit.get(i))][j]));
-
-                        if(attack.size() == 0) {
-                            add= true;
-                            break;
-                        }
-
-                        if(attack.contains("1")) {
-                            String [] wait = compare.get(2).split("\\|");
-
-                            if(Integer.parseInt(wait[1]) != 0 ) {
-                                add = true;
-                                break;
-                            }
-                        }
-
-                        if(attack.contains("2")) {
-                            String [] wait = compare.get(2).split("\\|");
-
-                            if(Integer.parseInt(wait[1]) < 0) {
-                                add = true;
-                                break;
-                            }
-                        }
-
-                        if(attack.contains("3")) {
-                            if(compare.size() > 3) {
-                                String [] wait = compare.get(3).split("\\|");
-
-                                if(Integer.parseInt(wait[1]) != 0) {
-                                    add = true;
-                                    break;
-                                }
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-
-                    if(!add) {
-                        remover.add(false);
-                    } else {
-                        remover.add(true);
-                    }
-                }
-            } else {
-                for(int i = 0; i< filterunit.size(); i++) {
-                    boolean broken = false;
-                    for(int j = 0; j<unitattack[Integer.parseInt(filterunit.get(i))].length; j++) {
-                        int checker = 0;
-                        ArrayList<String> compare = new ArrayList<>(Arrays.asList(unitattack[Integer.parseInt(filterunit.get(i))][j]));
-
-                        if(attack.contains("1")) {
-                            String [] wait = compare.get(2).split("\\|");
-
-                            if(Integer.parseInt(wait[1]) != 0 ) {
-                                checker++;
-                            }
-                        }
-
-                        if(attack.contains("2")) {
-                            String [] wait = compare.get(2).split("\\|");
-
-                            if(Integer.parseInt(wait[1]) < 0) {
-                                checker++;
-                            }
-                        }
-
-                        if(attack.contains("3")) {
-                            if(compare.size() > 3) {
-                                String [] wait = compare.get(3).split("\\|");
-
-                                if(Integer.parseInt(wait[1]) != 0) {
-                                    checker++;
-                                }
-                            } else {
-                                broken = true;
-                                break;
-                            }
-                        }
-
-                        if(Integer.parseInt(filterunit.get(i)) == 355) {
-                            System.out.println(checker);
-                        }
-
-                        if(checker == attack.size()) {
-                            remover.add(true);
-                            break;
-                        } else if(j == unitattack[Integer.parseInt(filterunit.get(i))].length-1) {
-                            remover.add(false);
-                        }
-                    }
-                    if(broken) {
-                        remover.add(false);
-                    }
-                }
-            }
-
-
-
-        ArrayList<String> finals = new ArrayList<>();
-
-        for(int i=0;i<filterunit.size();i++) {
-            if(simu.get(i) && remover.get(i)) {
-                finals.add(filterunit.get(i));
-            }
+        if(attack.isEmpty()) {
+            for (int i = 0; i < unitnumber; i++)
+                b2.add(true);
         }
 
-        return finals;
-    }
-
-    ArrayList<String> setTarget(String[][][] unittarget, ArrayList<String> filterunit) {
-        ArrayList<Boolean> remover = new ArrayList<>();
-
-        if(tgorand) {
-            for(int i=0;i<filterunit.size();i++) {
-                boolean add = false;
-
-                for(int j=0;j<unittarget[Integer.parseInt(filterunit.get(i))].length;j++) {
-                    ArrayList<String> compare = new ArrayList<>(Arrays.asList(unittarget[Integer.parseInt(filterunit.get(i))][j]));
-
-                    if(target.isEmpty()) {
-                        add = true;
-                        break;
-                    }
-
-                    for(int k=0;k<target.size();k++) {
-                        if(Integer.parseInt(target.get(k)) < compare.size()) {
-                            if(Integer.parseInt(compare.get(Integer.parseInt(target.get(k)))) != 0) {
-                                add =true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if(add) {
-                        break;
-                    }
-                }
-
-                if(!add) {
-                    remover.add(false);
-                } else {
-                    remover.add(true);
-                }
-            }
-        } else {
-            for(int i=0;i<filterunit.size();i++) {
-                boolean broken = false;
-                for(int j=0;j<unittarget[Integer.parseInt(filterunit.get(i))].length;j++) {
-                    ArrayList<String> compare = new ArrayList<>(Arrays.asList(unittarget[Integer.parseInt(filterunit.get(i))][j]));
-                    int checker = 0;
-                    for(int k=0;k<target.size();k++) {
-                        if (Integer.parseInt(target.get(k)) < compare.size()) {
-                            if (Integer.parseInt(compare.get(Integer.parseInt(target.get(k)))) != 0) {
-                                checker++;
-                            }
-                        } else {
-                            broken = true;
-                            break;
-                        }
-                    }
-
-                    if(broken) {
-                        break;
-                    }
-
-                    if(checker == target.size()) {
-                        remover.add(true);
-                        break;
-                    } else if(j == unittarget[Integer.parseInt(filterunit.get(i))].length-1) {
-                        remover.add(false);
-                    }
-                }
-
-                if(broken) {
-                    remover.add(false);
-                }
-            }
+        if(target.isEmpty()) {
+            for (int i = 0; i < unitnumber; i++)
+                b3.add(true);
         }
 
-        ArrayList<String> finals = new ArrayList<>();
-
-        for(int i=0;i<filterunit.size();i++) {
-            if(remover.get(i)) {
-                finals.add(filterunit.get(i));
-            }
+        if(ability.isEmpty()) {
+            for (int i = 0; i < unitnumber; i++)
+                b4.add(true);
         }
 
-        return finals;
-    }
+        for(Unit u : Pack.def.us.ulist.getList()) {
+            b0.add(rarity.contains(String.valueOf(u.rarity)));
+            ArrayList<Boolean> b10 = new ArrayList<>();
+            ArrayList<Boolean> b20 = new ArrayList<>();
+            ArrayList<Boolean> b30 = new ArrayList<>();
+            ArrayList<Boolean> b40 = new ArrayList<>();
+            for(Form f : u.forms) {
+                MaskUnit du = f.maxu();
 
-    ArrayList<String> setAbility(String[][][] unitabil, ArrayList<String> filterunit) {
-        ArrayList<Boolean> remover = new ArrayList<>();
+                int t = du.getType();
+                int a = du.getAbi();
 
-        if(aborand) {
-            for(int i=0;i<filterunit.size();i++) {
-                boolean add = false;
+                if(!empty)
+                    if(atksimu)
+                        b10.add(Interpret.isType(du,1));
+                    else
+                        b10.add(Interpret.isType(du,0));
 
-                for(int j=0;j<unitabil[Integer.parseInt(filterunit.get(i))].length;j++) {
-                    ArrayList<String> compare = new ArrayList<>(Arrays.asList(unitabil[Integer.parseInt(filterunit.get(i))][j]));
+                boolean b21 = !atkorand;
 
-                    if(ability.isEmpty()) {
-                        add = true;
-                        break;
-                    }
+                for(int k = 0;k<attack.size();k++) {
+                    if(atkorand)
+                        b21 |= Interpret.isType(du,Integer.parseInt(attack.get(k)));
+                    else
+                        b21 &= Interpret.isType(du,Integer.parseInt(attack.get(k)));
+                }
 
-                    for(int k=0;k<ability.size();k++) {
-                        if(Integer.parseInt(ability.get(k)) < compare.size()) {
-                            try {
-                                if (Integer.parseInt(compare.get(Integer.parseInt(ability.get(k)))) != 0) {
-                                    add = true;
-                                    break;
-                                }
-                            } catch (Exception ignored) {
-                            }
-                        }
-                    }
+                boolean b31 = !tgorand;
 
-                    if(add) {
-                        break;
+                for(int k = 0; k < target.size();k++) {
+                    if(tgorand)
+                        b31 |= ((t>>Integer.parseInt(target.get(k)))&1) == 1;
+                    else
+                        b31 &= ((t>>Integer.parseInt(target.get(k)))&1) == 1;
+                }
+
+                boolean b41 = !aborand;
+
+                for(int k = 0;k < ability.size();k++) {
+                    ArrayList<Integer> vect = ability.get(k);
+
+                    if(vect.get(0) == 0) {
+                        boolean bind = (a&vect.get(1)) != 0;
+                        if(aborand)
+                            b41 |= bind;
+                        else
+                            b41 &= bind;
+                    } else if(vect.get(0) == 1) {
+                        if(aborand)
+                            b41 |= du.getProc(vect.get(1))[0] > 0;
+                        else
+                            b41 &= du.getProc(vect.get(1))[0] > 0;
                     }
                 }
 
-                if(!add) {
-                    remover.add(false);
-                } else {
-                    remover.add(true);
-                }
+                b20.add(b21);
+                b30.add(b31);
+                b40.add(b41);
             }
-        } else {
-            for(int i=0;i<filterunit.size();i++) {
-                boolean broken = false;
-                for(int j=0;j<unitabil[Integer.parseInt(filterunit.get(i))].length;j++) {
-                    ArrayList<String> compare = new ArrayList<>(Arrays.asList(unitabil[Integer.parseInt(filterunit.get(i))][j]));
-                    int checker = 0;
-                    for(int k=0;k<ability.size();k++) {
-                        try {
-                            if (Integer.parseInt(ability.get(k)) < compare.size()) {
-                                if (Integer.parseInt(compare.get(Integer.parseInt(ability.get(k)))) != 0) {
-                                    checker++;
-                                }
-                            } else {
-                                broken = true;
-                                break;
-                            }
-                        } catch (Exception e) {
-                            broken = true;
-                            break;
-                        }
 
-                    }
+            if(!empty)
+                if(b10.contains(true))
+                    b1.add(true);
+                else
+                    b1.add(false);
 
-                    if(broken) {
-                        break;
-                    }
+            if(b20.contains(true))
+                b2.add(true);
+            else
+                b2.add(false);
 
-                    if(checker == ability.size()) {
-                        remover.add(true);
-                        break;
-                    } else if(j == unitabil[Integer.parseInt(filterunit.get(i))].length-1) {
-                        remover.add(false);
-                    }
-                }
+            if(b30.contains(true))
+                b3.add(true);
+            else
+                b3.add(false);
 
-                if(broken) {
-                    remover.add(false);
-                }
-            }
+            if(b40.contains(true))
+                b4.add(true);
+            else
+                b4.add(false);
         }
 
-        ArrayList<String> finals = new ArrayList<>();
+        ArrayList<Boolean> total = new ArrayList<>();
 
-        for(int i=0;i<filterunit.size();i++) {
-            if(remover.get(i)) {
-                finals.add(filterunit.get(i));
-            }
-        }
+        for(int i = 0;i<unitnumber;i++)
+            if(b0.get(i) && b1.get(i) && b2.get(i) && b3.get(i) && b4.get(i))
+                total.add(true);
+            else
+                total.add(false);
 
-        return finals;
+        ArrayList<Integer> result = new ArrayList<>();
+
+        for(int i =0;i<unitnumber;i++)
+            if(total.get(i))
+                result.add(i);
+
+
+        return result;
     }
 }

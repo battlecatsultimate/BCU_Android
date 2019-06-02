@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
 
         ImageBuilder.builder = new BMBuilder();
-        com.mandarin.bcu.decode.ZipLib.init();
-        com.mandarin.bcu.decode.ZipLib.read();
 
         animbtn = findViewById(R.id.anvibtn);
         stagebtn = findViewById(R.id.stgbtn);
@@ -102,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
     protected boolean cando() {
         String infopath = path + "/files/info/";
         String filename = "info_android.ini";

@@ -165,17 +165,15 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         System.out.println(lang);
         if (values[0] == 1) {
             checkstate.setText(R.string.main_check_file);
-            checkFiles(ans);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
+        checkFiles(ans);
+
         if(fileneed.isEmpty() && filenum.isEmpty()) {
-            mainprog.setVisibility(View.GONE);
-            checkstate.setVisibility(View.GONE);
-            stagebtn.setVisibility(View.VISIBLE);
-            animbtn.setVisibility(View.VISIBLE);
+            new AddPathes(animbtn,stagebtn,checkstate,mainprog).execute();
         }
     }
 
@@ -237,20 +235,29 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             try {
                 Set<String> libs = com.mandarin.bcu.io.Reader.getInfo(path);
 
-                for(int i = 0; i < lib.size();i++) {
-                    if(!libs.contains(lib.get(i))) {
+                if(libs.isEmpty()) {
+                    for (int i = 0; i < lib.size(); i++) {
                         fileneed.add(lib.get(i));
                         filenum.add(String.valueOf(i));
                     }
-                }
+                    AlertDialog downloader = donloader.create();
+                    downloader.show();
+                } else {
+                    for (int i = 0; i < lib.size(); i++) {
+                        if (!libs.contains(lib.get(i))) {
+                            fileneed.add(lib.get(i));
+                            filenum.add(String.valueOf(i));
+                        }
+                    }
 
-                if (!filenum.isEmpty()) {
-                    AlertDialog downloader = donloader.create();
-                    downloader.show();
-                } else if (lang) {
-                    donloader.setTitle(R.string.main_file_x);
-                    AlertDialog downloader = donloader.create();
-                    downloader.show();
+                    if (!filenum.isEmpty()) {
+                        AlertDialog downloader = donloader.create();
+                        downloader.show();
+                    } else if (lang) {
+                        donloader.setTitle(R.string.main_file_x);
+                        AlertDialog downloader = donloader.create();
+                        downloader.show();
+                    }
                 }
             } catch (Exception e) {
                 for (int i = 0; i < lib.size(); i++) {
@@ -265,5 +272,41 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+}
+
+class AddPathes extends AsyncTask<Void,Integer,Void> {
+    private final Button animbtn;
+    private final Button stagebtn;
+    private final TextView checkstate;
+    private final ProgressBar mainprog;
+
+    AddPathes(Button animbtn,Button stagebtn,TextView checkstate,ProgressBar mainprog) {
+        this.animbtn = animbtn;
+        this.stagebtn = stagebtn;
+        this.checkstate = checkstate;
+        this.mainprog = mainprog;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        checkstate.setText(R.string.main_file_read);
+    }
+
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+        com.mandarin.bcu.decode.ZipLib.init();
+        com.mandarin.bcu.decode.ZipLib.read();
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        mainprog.setVisibility(View.GONE);
+        checkstate.setVisibility(View.GONE);
+        stagebtn.setVisibility(View.VISIBLE);
+        animbtn.setVisibility(View.VISIBLE);
     }
 }

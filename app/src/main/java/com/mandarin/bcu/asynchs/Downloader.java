@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.MainActivity;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.io.Reader;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -28,6 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -414,7 +416,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
             String libs = infolibbuild();
 
-            fos.write(("Installed lib=4\nver=0.5.0\nlib="+libs).getBytes());
+            fos.write((libs).getBytes());
             fos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -426,7 +428,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     private String infolibbuild() {
         String pathes = path+"/files/info/";
         String filename = "info_android.ini";
-        ArrayList<String> Original = new ArrayList<>();
+        Set<String> Original = new TreeSet<>();
         String result = "";
         String abort = "";
 
@@ -437,6 +439,8 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                 abort += fileneed.get(i);
             }
         }
+
+        abort = "file_version = 00040510\nnumber_of_libs = "+fileneed.size()+"\nlib="+abort;
 
         File f = new File(pathes,filename);
 
@@ -454,33 +458,27 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                     lines.add(line);
                 }
 
-                if(lines.size() == 3) {
-                    String [] libline = lines.get(2).split("=");
-                    if(libline.length == 2) {
-                        String [] libs = libline[1].split(",");
+                Original = Reader.getInfo(path);
 
-                        for(int i = 0; i < libs.length; i++) {
-                            Original.add(libs[i]);
-                        }
-
-                        Set<String> set = new LinkedHashSet<>(Original);
-                        set.addAll(fileneed);
-                        ArrayList<String> combined = new ArrayList<>(set);
-
-                        for(int i = 0; i < combined.size();i++) {
-                            if(i != combined.size() - 1) {
-                                result += combined.get(i)+",";
-                            } else {
-                                result += combined.get(i);
-                            }
-                        }
-                        return result;
-                    } else {
-                        return abort;
-                    }
-                } else {
-                    return abort;
+                if(Original == null) {
+                    Original = new TreeSet<>();
                 }
+
+                Original.addAll(fileneed);
+
+                ArrayList<String> combined = new ArrayList<>(Original);
+
+                for(int i = 0; i < combined.size();i++) {
+                    if(i != combined.size() - 1) {
+                        result += combined.get(i)+",";
+                    } else {
+                        result += combined.get(i);
+                    }
+                }
+
+                result = "file_version = 00040510\nnumber_of_libs = "+combined.size()+"\nlib="+result;
+
+                return result;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 return abort;

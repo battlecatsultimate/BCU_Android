@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,16 @@ public class LibInfo {
 
 	protected LibInfo(String sys) {
 		fs = sys;
-		Queue<String> qs = Reader.readLines(fs + "/info/info.ini");
+		Queue<String> qs = Reader.readLines(fs + "/info/info_android.ini");
 		ver = Reader.parseIntN(qs.poll());
 		int n = Reader.parseIntN(qs.poll());
+
+		String [] libs = qs.poll().split("=")[1].split(",");
+
+		for(int i = 0; i < libs.length;i++) {
+			qs.add(libs[i]);
+		}
+
 		for (int i = 0; i < n; i++) {
 			String v = qs.poll().trim();
 			VerInfo vi = new VerInfo(fs, v);

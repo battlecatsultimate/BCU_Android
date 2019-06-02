@@ -30,7 +30,7 @@ public class ZipLib {
 		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/");
 		if (!f.exists())
 			return;
-		info = new LibInfo(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/");// TODO
+		info = new LibInfo(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files");// TODO
 	}
 
 	public static void merge(File f) {

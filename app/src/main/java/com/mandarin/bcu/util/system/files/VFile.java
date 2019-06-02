@@ -23,6 +23,8 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 				return null;
 			return new VFile<FDFile>(null, f.getName(), new FDFile(f));
 		}
+		if(path.startsWith("./lang/"))
+			return root.find(path);
 		return null;
 	}
 

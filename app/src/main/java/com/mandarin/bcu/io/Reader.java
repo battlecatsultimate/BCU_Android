@@ -134,10 +134,10 @@ public class Reader extends DataIO {
 			return libs;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return null;
+			return new TreeSet<>();
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return new TreeSet<>();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

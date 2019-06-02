@@ -1,8 +1,12 @@
 package com.mandarin.bcu.util.unit;
 
+import android.os.Environment;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 
 import com.mandarin.bcu.io.Reader;
@@ -14,6 +18,7 @@ import com.mandarin.bcu.util.entity.data.CustomUnit;
 import com.mandarin.bcu.util.entity.data.PCoin;
 import com.mandarin.bcu.util.pack.Pack;
 import com.mandarin.bcu.util.system.FixIndexList;
+import com.mandarin.bcu.util.system.P;
 import com.mandarin.bcu.util.system.files.AssetData;
 import com.mandarin.bcu.util.system.files.VFile;
 
@@ -48,6 +53,79 @@ public class Unit extends Data implements Comparable<Unit> {
 			u.info.fillBuy(strs);
 		}
 
+		String [] priority = chooser();
+		String [][] unitnames = getName(priority);
+
+		for(int i = 0; i < lu.size();i++) {
+			for (int j=0;j<lu.get(i).forms.length;j++) {
+				int lang = 0;
+				while(lang < 4) {
+					lu.get(i).forms[j].name = findName(j,i,lu.get(i).forms.length,unitnames[lang]);
+
+					if(lu.get(i).forms[j].name != null)
+						break;
+					lang++;
+				}
+
+				if(lu.get(i).forms[j].name == null) {
+					lu.get(i).forms[j].name = "";
+				}
+			}
+		}
+	}
+
+	protected static String findName(int form,int num,int formnum,String [] names) {
+		String name = null;
+
+		if(names.length>num) {
+			String [] wait = names[num].split("\t");
+			if(wait.length > formnum) {
+				if(!wait[form+1].equals("")) {
+					name = wait[form+1];
+				}
+			}
+		}
+
+		return name;
+	}
+
+	protected static String[][] getName(String [] priority) {
+		String[][] result = new String[4][];
+
+		for(int i = 0; i <priority.length;i++) {
+			String shortPath = "./lang"+priority[i]+"UnitName.txt";
+			String longPath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU";
+
+			VFile.root.build(shortPath,AssetData.getAsset(new File(longPath+shortPath.substring(1))));
+			Queue<String> qs = VFile.getFile(shortPath).getData().readLine();
+			result[i] = qs.toArray(new String[qs.size()]);
+		}
+
+		return result;
+	}
+
+	protected static String[] chooser() {
+		String language = Locale.getDefault().getLanguage();
+		String [] priority;
+		switch (language) {
+			case "en":
+				priority = new String[]{"/en/", "/jp/", "/zh/", "/kr/"};
+				break;
+			case "ja":
+				priority = new String[]{"/jp/", "/en/", "/zh/", "/kr/"};
+				break;
+			case "th":
+				priority = new String[]{"/zh/", "/jp/", "/en/", "/kr/"};
+				break;
+			case "ko":
+				priority = new String[]{"/kr/", "/jp/", "/en/", "/zh/"};
+				break;
+			default:
+				priority = new String[]{"/en/", "/jp/", "/zh/", "/kr/"};
+				break;
+		}
+
+		return priority;
 	}
 
 	public final Pack pack;
