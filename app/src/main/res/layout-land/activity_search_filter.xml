@@ -19,6 +19,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
+        android:id="@+id/schreset"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="24dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:srcCompat="@drawable/ic_refresh_black_24dp" />
+
+    <ImageButton
         android:id="@+id/schbck"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -444,7 +455,6 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
                         android:drawableEnd="@mipmap/ic_freeze"
-                        android:drawableRight="@mipmap/ic_freeze"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.27"
                         app:layout_constraintStart_toStartOf="parent"
@@ -721,6 +731,26 @@
                         android:drawableRight="@mipmap/ic_imws"
                         app:layout_constraintStart_toStartOf="@+id/schchabimsl"
                         app:layout_constraintTop_toBottomOf="@+id/schchabimsl" />
+
+                    <CheckBox
+                        android:id="@+id/schchabwik"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:drawableEnd="@mipmap/ic_imwk"
+                        android:drawableRight="@mipmap/ic_imwk"
+                        app:layout_constraintStart_toStartOf="@+id/schchabimkb"
+                        app:layout_constraintTop_toBottomOf="@+id/schchabimkb" />
+
+                    <CheckBox
+                        android:id="@+id/schchabevk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:drawableEnd="@mipmap/ic_eva"
+                        android:drawableRight="@mipmap/ic_eva"
+                        app:layout_constraintStart_toStartOf="@+id/schchabimwv"
+                        app:layout_constraintTop_toBottomOf="@+id/schchabimwv" />
                 </android.support.constraint.ConstraintLayout>
             </android.support.v4.widget.NestedScrollView>
 

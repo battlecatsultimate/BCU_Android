@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mandarin.bcu.util.Interpret;
 import com.mandarin.bcu.util.pack.Pack;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
@@ -86,7 +87,7 @@ public class AnimationViewer extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                if(Pack.def.us.ulist.size() == 0)
+                if(StaticStore.units==null)
                     Unit.readData();
 
                 if(StaticStore.units == null)
@@ -221,7 +222,6 @@ public class AnimationViewer extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ArrayList<String> filters;
 
         ArrayList<String> rarity;
         ArrayList<String> attack;
@@ -265,6 +265,27 @@ public class AnimationViewer extends AppCompatActivity {
                     Toast.makeText(AnimationViewer.this,showName(newNumber.get(position)),Toast.LENGTH_SHORT).show();
 
                     return false;
+                }
+            });
+
+
+
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AnimationViewer.this,SearchFilter.class);
+
+                    intent.putExtra("empty",empty);
+                    intent.putExtra("tgorand",tgorand);
+                    intent.putExtra("atksimu",atksimu);
+                    intent.putExtra("aborand",aborand);
+                    intent.putExtra("atkorand",atkorand);
+                    intent.putExtra("target",target);
+                    intent.putExtra("attack",attack);
+                    intent.putExtra("rare",rarity);
+                    intent.putExtra("ability",ability);
+                    setResult(Activity.RESULT_OK,intent);
+                    startActivityForResult(intent,REQUEST_CODE);
                 }
             });
         }

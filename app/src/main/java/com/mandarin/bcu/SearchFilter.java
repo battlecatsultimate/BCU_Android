@@ -2,9 +2,10 @@ package com.mandarin.bcu;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -17,10 +18,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static com.mandarin.bcu.util.Data.AB_BASE;
 import static com.mandarin.bcu.util.Data.AB_EARN;
+import static com.mandarin.bcu.util.Data.AB_EKILL;
 import static com.mandarin.bcu.util.Data.AB_GOOD;
 import static com.mandarin.bcu.util.Data.AB_MASSIVE;
 import static com.mandarin.bcu.util.Data.AB_MASSIVES;
@@ -29,9 +30,8 @@ import static com.mandarin.bcu.util.Data.AB_ONLY;
 import static com.mandarin.bcu.util.Data.AB_RESIST;
 import static com.mandarin.bcu.util.Data.AB_RESISTS;
 import static com.mandarin.bcu.util.Data.AB_WAVES;
+import static com.mandarin.bcu.util.Data.AB_WKILL;
 import static com.mandarin.bcu.util.Data.AB_ZKILL;
-import static com.mandarin.bcu.util.Data.ATK_LD;
-import static com.mandarin.bcu.util.Data.ATK_OMNI;
 import static com.mandarin.bcu.util.Data.P_BREAK;
 import static com.mandarin.bcu.util.Data.P_CRIT;
 import static com.mandarin.bcu.util.Data.P_IMUCURSE;
@@ -49,19 +49,11 @@ import static com.mandarin.bcu.util.Data.P_STRONG;
 import static com.mandarin.bcu.util.Data.P_WARP;
 import static com.mandarin.bcu.util.Data.P_WAVE;
 import static com.mandarin.bcu.util.Data.P_WEAK;
-import static com.mandarin.bcu.util.Data.TB_ALIEN;
-import static com.mandarin.bcu.util.Data.TB_ANGEL;
-import static com.mandarin.bcu.util.Data.TB_BLACK;
-import static com.mandarin.bcu.util.Data.TB_FLOAT;
-import static com.mandarin.bcu.util.Data.TB_METAL;
-import static com.mandarin.bcu.util.Data.TB_RED;
-import static com.mandarin.bcu.util.Data.TB_RELIC;
-import static com.mandarin.bcu.util.Data.TB_WHITE;
-import static com.mandarin.bcu.util.Data.TB_ZOMBIE;
 
 public class SearchFilter extends AppCompatActivity {
 
     private ImageButton back;
+    private ImageButton reset;
     private RadioButton tgor;
     private RadioButton atkmu;
     private RadioButton atkor;
@@ -73,7 +65,7 @@ public class SearchFilter extends AppCompatActivity {
     private CheckBox[] rarities = new CheckBox[6];
     private CheckBox[] targets = new CheckBox[9];
     private CheckBox[] attacks = new CheckBox[3];
-    private CheckBox[] abilities = new CheckBox[28];
+    private CheckBox[] abilities = new CheckBox[30];
     private ScrollView sc;
     private NestedScrollView nsc;
     private int[] tgid = {R.id.schchrd,R.id.schchfl,R.id.schchbla,R.id.schchme,R.id.schchan,R.id.schchal,R.id.schchzo,R.id.schchre,R.id.schchwh};
@@ -83,13 +75,14 @@ public class SearchFilter extends AppCompatActivity {
     private int[] atkid = {R.id.schchld,R.id.schchom,R.id.schchmu};
     private String [] atks = {"2","4","3"};
     private int[] abid = {R.id.schchabwe,R.id.schchabfr,R.id.schchabsl,R.id.schchabta,R.id.schchabst,R.id.schchabre,R.id.schchabir,R.id.schchabmd,R.id.schchabid,R.id.schchabkb,R.id.schchabwp,R.id.schchabstr,R.id.schchabsu,R.id.schchabcd,
-            R.id.schchabcr,R.id.schchabzk,R.id.schchabbb,R.id.schchabem,R.id.schchabme,R.id.schchabwv,R.id.schchabimwe,R.id.schchabimfr,R.id.schchabimsl,R.id.schchabimkb,R.id.schchabimwv,R.id.schchabimwp,R.id.schchabimcu,R.id.schchabws};
+            R.id.schchabcr,R.id.schchabzk,R.id.schchabbb,R.id.schchabem,R.id.schchabme,R.id.schchabwv,R.id.schchabimwe,R.id.schchabimfr,R.id.schchabimsl,R.id.schchabimkb,R.id.schchabimwv,R.id.schchabimwp,R.id.schchabimcu,R.id.schchabws,
+            R.id.schchabwik,R.id.schchabevk};
     private int[] abtool = {R.string.sch_abi_we,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_ao,R.string.sch_abi_st,R.string.sch_abi_re,R.string.sch_abi_it,R.string.sch_abi_md,R.string.sch_abi_id,R.string.sch_abi_kb,
             R.string.sch_abi_wa,R.string.sch_abi_str,R.string.sch_abi_su,R.string.sch_abi_bd,R.string.sch_abi_cr,R.string.sch_abi_zk,R.string.sch_abi_bb,R.string.sch_abi_em,R.string.sch_abi_me,R.string.sch_abi_wv,
-            R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.sch_abi_iwa,R.string.sch_abi_ic,R.string.sch_abi_ws};
+            R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.sch_abi_iwa,R.string.sch_abi_ic,R.string.sch_abi_ws,R.string.sch_abi_wk,R.string.sch_abi_eva};
     private int[] tgtool = {R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_zo,R.string.sch_re,R.string.sch_al,R.string.sch_wh};
     private int [][] abils = {{1,P_WEAK},{1,P_STOP},{1,P_SLOW},{0,AB_ONLY},{0,AB_GOOD},{0,AB_RESIST},{0,AB_RESISTS},{0,AB_MASSIVE},{0,AB_MASSIVES},{1,P_KB},{1,P_WARP},{1,P_STRONG},{1,P_LETHAL},{0,AB_BASE},{1,P_CRIT},{0,AB_ZKILL},{1,P_BREAK},
-            {0,AB_EARN},{0,AB_METALIC},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_IMUWARP},{1,P_IMUCURSE},{0,AB_WAVES}};
+            {0,AB_EARN},{0,AB_METALIC},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_IMUWARP},{1,P_IMUCURSE},{0,AB_WAVES},{0,AB_WKILL},{0,AB_EKILL}};
     private ArrayList<String> tg = new ArrayList<>();
     private ArrayList<String> rare = new ArrayList<>();
     private ArrayList<ArrayList<Integer>> ability = new ArrayList<>();
@@ -105,6 +98,7 @@ public class SearchFilter extends AppCompatActivity {
         setContentView(R.layout.activity_search_filter);
 
         back = findViewById(R.id.schbck);
+        reset = findViewById(R.id.schreset);
         tgor = findViewById(R.id.schrdtgor);
         atkmu = findViewById(R.id.schrdatkmu);
         atkor = findViewById(R.id.schrdatkor);
@@ -128,6 +122,8 @@ public class SearchFilter extends AppCompatActivity {
         atkor.setChecked(true);
         abor.setChecked(true);
 
+        Checker();
+
         Listeners();
     }
 
@@ -137,6 +133,44 @@ public class SearchFilter extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 returner();
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tg = new ArrayList<>();
+                rare = new ArrayList<>();
+                ability = new ArrayList<>();
+                attack = new ArrayList<>();
+                tgorand = true;
+                atksimu = true;
+                aborand = true;
+                atkorand = true;
+
+                atkgroup.clearCheck();
+                tgor.setChecked(true);
+                abor.setChecked(true);
+                abor.setChecked(true);
+
+                for(int i=0;i<rarities.length;i++) {
+                    if(rarities[i].isChecked())
+                        rarities[i].setChecked(false);
+                }
+
+                for(int i=0;i<attacks.length;i++) {
+                    if(attacks[i].isChecked())
+                        attacks[i].setChecked(false);
+                }
+
+                for(int i=0;i<targets.length;i++) {
+                    if(targets[i].isChecked())
+                        targets[i].setChecked(false);
+                }
+
+                for(int i=0;i<abilities.length;i++)
+                    if(abilities[i].isChecked())
+                        abilities[i].setChecked(false);
             }
         });
 
@@ -221,14 +255,15 @@ public class SearchFilter extends AppCompatActivity {
             abilities[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ArrayList<Integer> abilval = new ArrayList<>();
+                    for(int i : abils[finall])
+                        abilval.add(i);
+
                     if(isChecked) {
-                        ArrayList<Integer> abilval = new ArrayList<>();
-                        for(int i : abils[finall])
-                            abilval.add(i);
                         ability.add(abilval);
                     }
                     else
-                        ability.remove(abils[finall]);
+                        ability.remove(abilval);
                 }
             });
 
@@ -267,5 +302,72 @@ public class SearchFilter extends AppCompatActivity {
         result.putExtra("ability",ability);
         setResult(RESULT_OK,result);
         finish();
+    }
+
+    protected void Checker() {
+        Intent data = getIntent();
+        Bundle extra = data.getExtras();
+
+        if(extra != null) {
+
+            boolean empty = extra.getBoolean("empty");
+
+            if (!empty)
+                atkgroup.check(R.id.schrdatkmu);
+
+            atksimu = extra.getBoolean("atksimu");
+
+            if (!atksimu)
+                if (!empty)
+                    atkgroup.check(R.id.schrdatksi);
+
+            atkorand = extra.getBoolean("atkorand");
+
+            if (!atkorand)
+                atkgroupor.check(R.id.schrdatkand);
+
+            tgorand = extra.getBoolean("tgorand");
+
+            if (!tgorand)
+                tggroup.check(R.id.schrdtgand);
+
+            aborand = extra.getBoolean("aborand");
+
+            if (!aborand)
+                abgroup.check(R.id.schrdaband);
+
+            rare = extra.getStringArrayList("rare");
+
+            for(int i=0;i<rarity.length;i++) {
+                if(rare.contains(rarity[i]))
+                    rarities[i].setChecked(true);
+            }
+
+            attack = extra.getStringArrayList("attack");
+
+            for(int i=0;i<atks.length;i++) {
+                if(attack.contains(atks[i]))
+                    attacks[i].setChecked(true);
+            }
+            tg = extra.getStringArrayList("target");
+
+            for(int i=0;i<colors.length;i++) {
+                if(tg.contains(colors[i]))
+                    targets[i].setChecked(true);
+            }
+
+            ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
+
+            System.out.println(ability);
+
+            for(int i =0;i<abils.length;i++) {
+                ArrayList<Integer> checker = new ArrayList<>();
+                for(int j : abils[i])
+                    checker.add(j);
+
+                if(ability.contains(checker))
+                    abilities[i].setChecked(true);
+            }
+        }
     }
 }
