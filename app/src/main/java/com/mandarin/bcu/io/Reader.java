@@ -111,7 +111,12 @@ public class Reader extends DataIO {
 	}
 
 	public static Set<String> getInfo(String path) {
-		String infopath = path + "/files/info/";
+		String infopath;
+		if(path.endsWith("/"))
+			infopath = path + "files/info";
+		else
+			infopath = path + "/files/info";
+
 		String filename = "info_android.ini";
 
 
@@ -128,6 +133,8 @@ public class Reader extends DataIO {
 			while ((line = br.readLine()) != null) {
 				lines.add(line);
 			}
+
+			System.out.println(lines);
 
 			Set<String> libs = new TreeSet<>(Arrays.asList(lines.get(2).split("=")[1].split(",")));
 

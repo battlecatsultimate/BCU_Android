@@ -104,4 +104,6 @@
     <string name="down_zip_rea">추출 준비중…</string>
     <string name="main_down_init">추가 데이터 필요</string>
     <string name="main_file_read">파일 읽는중…</string>
+    <string name="schreset_cont">Reset Search Settng</string>
+    <string name="unit_icon">Unit icon</string>
 </resources>

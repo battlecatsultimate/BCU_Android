@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mandarin.bcu.util.Interpret;
 import com.mandarin.bcu.util.pack.Pack;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
@@ -31,14 +30,13 @@ import com.mandarin.bcu.util.unit.Unit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Objects;
 
 public class AnimationViewer extends AppCompatActivity {
 
     protected ImageButton search;
     private ListView list;
     private ProgressBar prog;
-    private String unitpath;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
 
@@ -50,7 +48,7 @@ public class AnimationViewer extends AppCompatActivity {
 
         ImageBuilder builder = new BMBuilder();
 
-        unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
+        String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
 
         File f = new File(unitpath);
         unitnumber = f.listFiles().length;
@@ -111,7 +109,7 @@ public class AnimationViewer extends AppCompatActivity {
                 for (int i = 0; i < unitnumber; i++) {
                     String shortPath = "./org/unit/"+ number(i) + "/f/uni" + number(i) + "_f00.png";
 
-                    StaticStore.bitmaps[i] = VFile.getFile(shortPath).getData().getImg().bimg();
+                    StaticStore.bitmaps[i] = Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg();
 
                 }
             }
@@ -154,19 +152,19 @@ public class AnimationViewer extends AppCompatActivity {
             names.add(f.name);
         }
 
-        String result = withID(location,names.get(0));
+        StringBuilder result = new StringBuilder(withID(location, names.get(0)));
 
         for(int i = 1; i < names.size();i++) {
-            result += " - " + names.get(i);
+            result.append(" - ").append(names.get(i));
         }
 
-        return result;
+        return result.toString();
     }
 
     protected String withID(int id, String name) {
         String result;
 
-        if(name == "") {
+        if(name.equals("")) {
             result = number(id);
         } else {
             result = number(id)+" - "+name;
@@ -257,7 +255,7 @@ public class AnimationViewer extends AppCompatActivity {
                 newName.add(StaticStore.names[i]);
             }
 
-            Adapters adapters = new Adapters(this,newName.toArray(new String[newName.size()]),StaticStore.bitmaps,newNumber);
+            Adapters adapters = new Adapters(this,newName.toArray(new String[0]),StaticStore.bitmaps,newNumber);
             list.setAdapter(adapters);
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override

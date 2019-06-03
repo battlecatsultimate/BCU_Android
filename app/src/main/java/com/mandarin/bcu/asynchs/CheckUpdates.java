@@ -30,6 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -47,16 +48,9 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
     private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt"};
     private String source;
-    private String assetlink = "http://battlecatsultimate.cf/api/java/getAssets.php";
-    private int size;
-    private File output = null;
-    final private String url = "http://battlecatsultimate.cf/api/resources/lang";
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
-    private URL link;
-    private HttpURLConnection c;
 
-    private JSONObject inp;
     private JSONObject ans;
 
     public CheckUpdates(Button animbtn, Button stagebtn, String path, boolean lang, TextView checkstate, ProgressBar mainprog, ArrayList<String> fileneed, ArrayList<String> filenum, Context context) {
@@ -81,10 +75,12 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        File output;
         try {
-            inp = new JSONObject();
+            JSONObject inp = new JSONObject();
             inp.put("bcuver", MainBCU.ver);
 
+            String assetlink = "http://battlecatsultimate.cf/api/java/getAssets.php";
             URL asseturl = new URL(assetlink);
             HttpURLConnection connection = (HttpURLConnection) asseturl.openConnection();
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -93,11 +89,11 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             connection.setRequestMethod("POST");
 
             OutputStream os = connection.getOutputStream();
-            os.write(inp.toString().getBytes("UTF-8"));
+            os.write(inp.toString().getBytes(StandardCharsets.UTF_8));
             os.close();
 
             InputStream is = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+            InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             String result = readAll(new BufferedReader(isr));
 
             ans = new JSONObject(result);
@@ -106,9 +102,10 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
             for (String s1 : lan) {
                 for (String s : langfile) {
+                    String url = "http://battlecatsultimate.cf/api/resources/lang";
                     String langurl = url + s1 + s;
-                    link = new URL(langurl);
-                    c = (HttpURLConnection) link.openConnection();
+                    URL link = new URL(langurl);
+                    HttpURLConnection c = (HttpURLConnection) link.openConnection();
                     c.setRequestMethod("GET");
                     c.connect();
 
@@ -116,7 +113,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
                     byte[] buf = new byte[1024];
                     int len1;
-                    size = 0;
+                    int size = 0;
                     while ((len1 = urlis.read(buf)) != -1) {
                         size += len1;
                     }
@@ -142,16 +139,12 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             }
         } catch (ProtocolException e) {
             e.printStackTrace();
-            output = null;
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            output = null;
         } catch (IOException e) {
             e.printStackTrace();
-            output = null;
         } catch (JSONException e) {
             e.printStackTrace();
-            output = null;
         }
 
 
@@ -177,7 +170,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         }
     }
 
-    protected String readAll(Reader rd) {
+    private String readAll(Reader rd) {
         try {
             StringBuilder sb = new StringBuilder();
             int chara;
@@ -192,7 +185,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         }
     }
 
-    protected void checkFiles(JSONObject asset) {
+    private void checkFiles(JSONObject asset) {
         try {
             Map<String, String> libmap = new TreeMap<>();
             JSONArray ja = asset.getJSONArray("assets");
@@ -235,7 +228,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             try {
                 Set<String> libs = com.mandarin.bcu.io.Reader.getInfo(path);
 
-                if(libs.isEmpty()) {
+                if(libs != null && libs.isEmpty()) {
                     for (int i = 0; i < lib.size(); i++) {
                         fileneed.add(lib.get(i));
                         filenum.add(String.valueOf(i));
@@ -244,7 +237,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                     downloader.show();
                 } else {
                     for (int i = 0; i < lib.size(); i++) {
-                        if (!libs.contains(lib.get(i))) {
+                        if (!(libs != null && libs.contains(lib.get(i)))) {
                             fileneed.add(lib.get(i));
                             filenum.add(String.valueOf(i));
                         }

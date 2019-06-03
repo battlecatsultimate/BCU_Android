@@ -8,6 +8,7 @@
         android:id="@+id/uniticon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/unit_icon"
         android:padding="5dp" />
 
     <LinearLayout android:layout_width="wrap_content"
@@ -18,12 +19,12 @@
             android:id="@+id/unitname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:padding="2dp"
-            android:textColor="#4d4d4d" />
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#4d4d4d"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

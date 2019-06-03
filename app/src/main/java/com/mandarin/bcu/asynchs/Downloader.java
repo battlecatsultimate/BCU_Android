@@ -15,32 +15,24 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.io.Reader;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Downloader extends AsyncTask<Void,Integer,Void> {
-    private long total;
     private int size;
-    private int number;
     private ArrayList<Long> sizes = new ArrayList<>();
-    private String url;
-    private URL link;
-    private HttpURLConnection connection;
     private ArrayList<Boolean> remover = new ArrayList<>();
 
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
@@ -48,11 +40,8 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     private String source;
     private String downloading;
     private String extracting;
-    private String lurl = "http://battlecatsultimate.cf/api/resources/lang/";
-    private final String urls = "http://battlecatsultimate.cf/api/resources/assets/";
     private final String path;
     private ArrayList<String> fileneed;
-    private final ArrayList<String> filenum;
 
     private final ProgressBar prog;
     private final TextView state;
@@ -61,7 +50,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     private ArrayList<String> purifyneed = new ArrayList<>();
 
-    File output = null;
+    private File output = null;
 
     public Downloader(ProgressBar prog, TextView state, Button retry, String path, ArrayList<String> fileneed, ArrayList<String> filenum,
                       String downloading, String extracting, Context context) {
@@ -70,11 +59,10 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         this.retry = retry;
         this.path = path;
         this.fileneed = fileneed;
-        this.filenum = filenum;
         this.downloading = downloading;
         this.extracting = extracting;
         this.context = context;
-        source = path+"/lang";
+        source = path+"lang";
     }
 
     @Override
@@ -86,9 +74,13 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        for(int i = 0; i<fileneed.size();i++) {
+        String url;
+        URL link;
+        HttpURLConnection connection;
+        String urls = "http://battlecatsultimate.cf/api/resources/assets/";
+        for(int i = 0; i<fileneed.size(); i++) {
             try {
-                url = urls+fileneed.get(i)+".zip";
+                url = urls +fileneed.get(i)+".zip";
                 link = new URL(url);
                 connection = (HttpURLConnection) link.openConnection();
 
@@ -106,14 +98,16 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
         purify(sizes);
 
+        int number;
         if(purifyneed.contains("Language")) {
             number = purifyneed.size()-1;
         } else {
             number = purifyneed.size();
         }
-        for(int i = 0; i < number;i++) {
+        long total;
+        for(int i = 0; i < number; i++) {
             try {
-                url = urls+purifyneed.get(i)+".zip";
+                url = urls +purifyneed.get(i)+".zip";
                 link = new URL(url);
                 connection = (HttpURLConnection) link.openConnection();
                 connection.setRequestMethod("GET");
@@ -144,7 +138,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
                 while((len1 = is.read(buffer)) != -1) {
                     total += Math.abs(len1);
-                    int progress = (int)(total*100/size);
+                    int progress = (int)(total *100/size);
                     publishProgress(progress,i);
                     fos.write(buffer,0,len1);
                 }
@@ -165,6 +159,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
             try {
                 for (String s1 : lan) {
                     for (String s : langfile) {
+                        String lurl = "http://battlecatsultimate.cf/api/resources/lang/";
                         String langurl = lurl + s1 + s;
                         link = new URL(langurl);
                         connection = (HttpURLConnection) link.openConnection();
@@ -194,7 +189,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
                         while((len1 = is.read(buffer)) > 0) {
                             total += len1;
-                            int progress = (int) (total*100/size);
+                            int progress = (int) (total *100/size);
                             publishProgress(progress,100);
                             fos.write(buffer,0,len1);
                         }
@@ -263,18 +258,18 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         if(!purifyneed.isEmpty() || output == null) {
             if(purifyneed.isEmpty()) {
                 state.setText(R.string.down_state_ok);
-                new Unzipper(prog,state,path,fileneed,filenum,extracting,context).execute();
+                new Unzipper(prog,state,path,fileneed, extracting,context).execute();
             } else {
                 state.setText(R.string.down_state_no);
                 retry.setVisibility(View.VISIBLE);
             }
         } else {
             state.setText(R.string.down_state_ok);
-            new Unzipper(prog,state,path,fileneed,filenum,extracting,context).execute();
+            new Unzipper(prog,state,path,fileneed, extracting,context).execute();
         }
     }
 
-    protected void purify(ArrayList<Long> size) {
+    private void purify(ArrayList<Long> size) {
         purifyneed = new ArrayList<>();
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -304,12 +299,8 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 }
 
 class Unzipper extends AsyncTask<Void,Integer,Void> {
-    InputStream is;
-    ZipInputStream zis;
-    private String source;
     private String destin;
     private ArrayList<String> fileneed;
-    private final ArrayList<String> filenum;
     private final String path;
     private final String extracting;
 
@@ -317,16 +308,15 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     private final TextView state;
     private final Context context;
 
-    public Unzipper(ProgressBar prog, TextView state, String path, ArrayList<String> fileneed, ArrayList<String> filenum,
-                    String extracting,Context context) {
+    Unzipper(ProgressBar prog, TextView state, String path, ArrayList<String> fileneed,
+             String extracting, Context context) {
         this.prog = prog;
         this.state = state;
         this.path = path;
         this.fileneed = fileneed;
-        this.filenum = filenum;
         this.extracting = extracting;
         this.context = context;
-        destin = path+"/files/";
+        destin = path+"files/";
     }
 
     @Override
@@ -339,9 +329,9 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
         for(int i=0;i<j;i++) {
             try {
-                source = path+"/"+fileneed.get(i)+".zip";
-                is = new FileInputStream(source);
-                zis = new ZipInputStream(new BufferedInputStream(is));
+                String source = path + fileneed.get(i) + ".zip";
+                InputStream is = new FileInputStream(source);
+                ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
                 ZipEntry ze;
                 byte[] buffer = new byte[1024];
                 int count;
@@ -392,7 +382,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        String pathes = path+"/";
+        String pathes = path;
         infowirter();
         for (String s : fileneed) {
             File f = new File(pathes, s+".zip");
@@ -407,14 +397,14 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     }
 
     private void infowirter() {
-        String pathes = path+"/files/info/";
+        String pathes = path+"files/info/";
         String filename = "info_android.ini";
 
         File f = new File(pathes,filename);
         try {
-            FileOutputStream fos = new FileOutputStream(f,false);
-
             String libs = infolibbuild();
+
+            FileOutputStream fos = new FileOutputStream(f,false);
 
             fos.write((libs).getBytes());
             fos.close();
@@ -426,39 +416,31 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     }
 
     private String infolibbuild() {
-        String pathes = path+"/files/info/";
+        String pathes = path+"files/info/";
         String filename = "info_android.ini";
-        Set<String> Original = new TreeSet<>();
-        String result = "";
-        String abort = "";
+        Set<String> Original;
+        StringBuilder result = new StringBuilder();
+        StringBuilder abort = new StringBuilder();
 
         for(int i = 0; i < fileneed.size();i++) {
             if(i != fileneed.size() - 1) {
-                abort += fileneed.get(i)+",";
+                abort.append(fileneed.get(i)).append(",");
             } else {
-                abort += fileneed.get(i);
+                abort.append(fileneed.get(i));
             }
         }
 
-        abort = "file_version = 00040510\nnumber_of_libs = "+fileneed.size()+"\nlib="+abort;
+        abort.insert(0, "file_version = 00040510\nnumber_of_libs = " + fileneed.size() + "\nlib=");
 
         File f = new File(pathes,filename);
 
         if(f.exists()) {
             try {
-                String line;
-
-                FileInputStream fis = new FileInputStream(f);
-                InputStreamReader isr = new InputStreamReader(fis);
-                BufferedReader br = new BufferedReader(isr);
-
-                ArrayList<String> lines = new ArrayList<>();
-
-                while((line = br.readLine()) != null) {
-                    lines.add(line);
-                }
 
                 Original = Reader.getInfo(path);
+
+                if(Original != null)
+                    System.out.println(Original);
 
                 if(Original == null) {
                     Original = new TreeSet<>();
@@ -470,24 +452,21 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
                 for(int i = 0; i < combined.size();i++) {
                     if(i != combined.size() - 1) {
-                        result += combined.get(i)+",";
+                        result.append(combined.get(i)).append(",");
                     } else {
-                        result += combined.get(i);
+                        result.append(combined.get(i));
                     }
                 }
 
-                result = "file_version = 00040510\nnumber_of_libs = "+combined.size()+"\nlib="+result;
+                result.insert(0, "file_version = 00040510\nnumber_of_libs = " + combined.size() + "\nlib=");
 
-                return result;
-            } catch (FileNotFoundException e) {
+                return result.toString();
+            } catch (Exception e) {
                 e.printStackTrace();
-                return abort;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return abort;
+                return abort.toString();
             }
         } else {
-            return abort;
+            return abort.toString();
         }
     }
 }

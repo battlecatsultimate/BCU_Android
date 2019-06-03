@@ -3,7 +3,6 @@ package com.mandarin.bcu;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -17,7 +16,6 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.mandarin.bcu.util.Data.AB_BASE;
 import static com.mandarin.bcu.util.Data.AB_EARN;
@@ -153,24 +151,24 @@ public class SearchFilter extends AppCompatActivity {
                 abor.setChecked(true);
                 abor.setChecked(true);
 
-                for(int i=0;i<rarities.length;i++) {
-                    if(rarities[i].isChecked())
-                        rarities[i].setChecked(false);
+                for (CheckBox rarity1 : rarities) {
+                    if (rarity1.isChecked())
+                        rarity1.setChecked(false);
                 }
 
-                for(int i=0;i<attacks.length;i++) {
-                    if(attacks[i].isChecked())
-                        attacks[i].setChecked(false);
+                for (CheckBox attack1 : attacks) {
+                    if (attack1.isChecked())
+                        attack1.setChecked(false);
                 }
 
-                for(int i=0;i<targets.length;i++) {
-                    if(targets[i].isChecked())
-                        targets[i].setChecked(false);
+                for (CheckBox target : targets) {
+                    if (target.isChecked())
+                        target.setChecked(false);
                 }
 
-                for(int i=0;i<abilities.length;i++)
-                    if(abilities[i].isChecked())
-                        abilities[i].setChecked(false);
+                for (CheckBox ability1 : abilities)
+                    if (ability1.isChecked())
+                        ability1.setChecked(false);
             }
         });
 
@@ -338,23 +336,21 @@ public class SearchFilter extends AppCompatActivity {
 
             rare = extra.getStringArrayList("rare");
 
-            for(int i=0;i<rarity.length;i++) {
-                if(rare.contains(rarity[i]))
+            for(int i=0;i<rarity.length;i++)
+                if (rare != null && rare.contains(rarity[i]))
                     rarities[i].setChecked(true);
-            }
 
             attack = extra.getStringArrayList("attack");
 
-            for(int i=0;i<atks.length;i++) {
-                if(attack.contains(atks[i]))
+            for(int i=0;i<atks.length;i++)
+                if (attack != null && attack.contains(atks[i]))
                     attacks[i].setChecked(true);
-            }
+
             tg = extra.getStringArrayList("target");
 
-            for(int i=0;i<colors.length;i++) {
-                if(tg.contains(colors[i]))
+            for(int i=0;i<colors.length;i++)
+                if (tg != null && tg.contains(colors[i]))
                     targets[i].setChecked(true);
-            }
 
             ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
 

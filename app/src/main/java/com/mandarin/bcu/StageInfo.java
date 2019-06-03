@@ -6,13 +6,12 @@ import android.view.View;
 import android.widget.ImageButton;
 
 public class StageInfo extends AppCompatActivity {
-    private ImageButton back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stage_info);
-        back = findViewById(R.id.stgbck);
+        ImageButton back = findViewById(R.id.stgbck);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

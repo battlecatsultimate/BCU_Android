@@ -104,4 +104,6 @@
     <string name="down_zip_rea">Preparing Extracting…</string>
     <string name="main_down_init">Initial Download Required</string>
     <string name="main_file_read">Reading Files…</string>
+    <string name="schreset_cont">Reset Search Settng</string>
+    <string name="unit_icon">Unit icon</string>
 </resources>

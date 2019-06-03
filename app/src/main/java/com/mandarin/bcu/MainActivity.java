@@ -36,12 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private String path;
     private ArrayList<String> fileneed = new ArrayList<>();
     private ArrayList<String> filenum = new ArrayList<>();
-    private boolean lang = false;
-
-    private Button animbtn;
-    private Button stagebtn;
-    private TextView checkstate;
-    private ProgressBar mainprog;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -58,12 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
         ImageBuilder.builder = new BMBuilder();
 
-        animbtn = findViewById(R.id.anvibtn);
-        stagebtn = findViewById(R.id.stgbtn);
+        Button animbtn = findViewById(R.id.anvibtn);
+        Button stagebtn = findViewById(R.id.stgbtn);
         animbtn.setVisibility(View.GONE);
         stagebtn.setVisibility(View.GONE);
-        checkstate = findViewById(R.id.mainstup);
-        mainprog = findViewById(R.id.mainprogup);
+        TextView checkstate = findViewById(R.id.mainstup);
+        ProgressBar mainprog = findViewById(R.id.mainprogup);
 
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_kasa_jizo), null, null, null);
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
@@ -84,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if(connectivityManager.getActiveNetworkInfo() != null) {
-            CheckUpdates checkUpdates = new CheckUpdates(animbtn,stagebtn,path,lang,checkstate,mainprog,fileneed,filenum,MainActivity.this);
+            boolean lang = false;
+            CheckUpdates checkUpdates = new CheckUpdates(animbtn, stagebtn,path, lang, checkstate, mainprog,fileneed,filenum,MainActivity.this);
             checkUpdates.execute();
         } else {
             if(cando()) {
