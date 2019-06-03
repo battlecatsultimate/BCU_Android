@@ -204,10 +204,6 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             donloader.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (lang) {
-                        fileneed.add("Language");
-                        filenum.add(String.valueOf(filenum.size()));
-                    }
                     System.out.println(fileneed.toString());
                     intent.putExtra("fileneed", fileneed);
                     intent.putExtra("filenum", filenum);
@@ -247,6 +243,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                         AlertDialog downloader = donloader.create();
                         downloader.show();
                     } else if (lang) {
+                        fileneed.add("Language");
+                        filenum.add(String.valueOf(filenum.size()));
                         donloader.setTitle(R.string.main_file_x);
                         AlertDialog downloader = donloader.create();
                         downloader.show();
