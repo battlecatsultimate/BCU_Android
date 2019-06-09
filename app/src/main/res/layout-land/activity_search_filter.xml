@@ -400,7 +400,7 @@
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/animnscview"
                 android:layout_width="0dp"
-                android:layout_height="72dp"
+                android:layout_height="144dp"
                 android:layout_marginBottom="16dp"
                 android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -750,6 +750,16 @@
                     android:layout_weight="1"
                     android:text="@string/sch_and" />
             </RadioGroup>
+
+            <CheckBox
+                android:id="@+id/schnp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="@string/sch_np"
+                app:layout_constraintBottom_toBottomOf="@+id/schrare"
+                app:layout_constraintStart_toEndOf="@+id/schrare"
+                app:layout_constraintTop_toTopOf="@+id/schrare" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

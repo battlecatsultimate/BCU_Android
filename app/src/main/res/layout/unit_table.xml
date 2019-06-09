@@ -1,5 +1,584 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" />
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/unitinfname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:text="Name"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableLayout
+        android:id="@+id/tables"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="18dp"
+        android:stretchColumns="*"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unitinfname">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinfid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_id"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfidr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_ID" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape">
+
+                <ImageView
+                    android:id="@+id/unitinficon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:contentDescription="@string/unit_s_icon"
+                    android:paddingStart="18dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="12dp"
+                    app:srcCompat="@mipmap/ic_white" />
+            </TableRow>
+
+            <TextView
+                android:id="@+id/unitinfhp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_hp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfhpr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_HP" />
+
+            <TextView
+                android:id="@+id/unitinfhb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/hb"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfhbr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_HB" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinflev"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_level"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape">
+
+                <Spinner
+                    android:id="@+id/unitinflevr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:textAlignment="center"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/unitinfplus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    tools:text="@string/unit_info_plus" />
+
+                <Spinner
+                    android:id="@+id/unitinflevpr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:textAlignment="center"
+                    tools:visibility="visible" />
+
+            </TableRow>
+
+            <Button
+                android:id="@+id/unitinfatk"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/unit_info_atk"
+                android:textAllCaps="false"
+                android:textColor="#6B6B6B"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfatkr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Atk" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <Button
+                android:id="@+id/unitinfatktime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_atktime"
+                android:textAllCaps="false"
+                android:textColor="#6b6b6b"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfatktimer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Atktime" />
+
+            <TextView
+                android:id="@+id/unitinfabilt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_abilT"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfabiltr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Abil_TF" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <Button
+                android:id="@+id/unitinfpreatk"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="@string/unit_info_pre"
+                android:textAllCaps="false"
+                android:textColor="#6B6B6B"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfpreatkr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Pre" />
+
+            <Button
+                android:id="@+id/unitinfpost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="@string/unit_info_post"
+                android:textAllCaps="false"
+                android:textColor="#6B6B6B"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfpostr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Post" />
+
+            <Button
+                android:id="@+id/unitinftba"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="@string/unit_info_tba"
+                android:textAllCaps="false"
+                android:textColor="#6b6b6b"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinftbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_TBA" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinftrait"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_trait"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinftraitr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Trait" />
+
+            <TextView
+                android:id="@+id/unitinfsimu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_atkt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfsimur"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Simu" />
+
+            <TextView
+                android:id="@+id/unitinfcost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_cost"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfcostr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Cost" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinfrang"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_rang"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfrangr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Range" />
+
+            <Button
+                android:id="@+id/unitinfcd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="@string/unit_info_cd"
+                android:textAllCaps="false"
+                android:textColor="#6B6B6B"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfcdr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_CD" />
+
+            <TextView
+                android:id="@+id/unitinfspd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_spd"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfspdr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Spd" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cell_shape"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/unitinfabil"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:background="@drawable/cell_shape"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_abil"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="6"
+                android:gravity="center_horizontal|center_vertical">
+
+                <TextView
+                    android:id="@+id/unitabilnone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="18dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/unit_info_t_none" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/unitinfabilr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="6"
+                    android:background="@drawable/cell_shape"
+                    android:focusable="false" />
+            </TableRow>
+
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/unitinffrse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:background="@android:color/transparent"
+        android:text="@string/unit_info_fr"
+        android:textColor="#6B6B6B"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinfname"
+        app:layout_constraintStart_toEndOf="@+id/unitinfname"
+        app:layout_constraintTop_toTopOf="@+id/unitinfname" />
+
+</android.support.constraint.ConstraintLayout>

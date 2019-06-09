@@ -1,6 +1,7 @@
 package com.mandarin.bcu.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.mandarin.bcu.util.basis.BasisLU;
@@ -58,15 +59,27 @@ public class Interpret extends Data {
 
 	/** proc data formatter */
 	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
-			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
-			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
+			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 6 }, { 0, -1 }, { -1, 4, 7 },
+			{ -1, 9, 10, 7 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
-			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
+			{ -1, 1, 2, 0 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
+
+	/** proc data formatter for KR,JP */
+	private static final int[][] CMP2 = { { 0, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, 2, -1 },
+			{ 0, 3, 1, -1 }, { 0, -1 }, { 0, 1, 4, -1 }, { 0, 1, -1 }, { 5, 6, -1 }, { 0, -1 }, { 4, 7, -1 },
+			{ 9, 10, 7, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
+			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 4, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } };
+
+	/** proc data locator for KR,JP */
+	private static final int[][] LOC2 = { { 0, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, 1, -1 },
+			{ 0, 2, 1, -1 }, { 0, -1 }, { 0, 1, 2, -1 }, { 0, 1, -1 }, { 0,1, -1 }, { 0, -1 }, { 1, 0, -1 },
+			{ 1, 2, 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
+			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 2, -1 }, { 0, 3, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } };
 
 	/** combo string component */
 	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
@@ -115,13 +128,117 @@ public class Interpret extends Data {
 	}
 
 	public static String getTrait(int type, int star) {
-		String ans = "";
+		StringBuilder ans = new StringBuilder();
 		for (int i = 0; i < TRAIT.length; i++)
 			if (((type >> i) & 1) > 0)
-				ans += TRAIT[i] + ", ";
+				ans.append(TRAIT[i]).append(", ");
 		if (star > 0)
-			ans += STAR[star];
-		return ans;
+			ans.append(STAR[star]);
+		return ans.toString();
+	}
+
+	public static List<Integer> getProcid(MaskEntity du) {
+	    List<Integer> l = new ArrayList<>();
+	    MaskAtk ma = du.getRepAtk();
+
+	    for(int i=0;i< PROC.length;i++) {
+	        if(ma.getProc(i)[0] == 0)
+	            continue;
+	        l.add(i);
+        }
+
+	    return l;
+    }
+
+	public static List<String> getProc(MaskEntity du, int cmp) {
+		List<Integer> immune = Arrays.asList(13,14,15,16,17,18,19);
+		List<String> l = new ArrayList<>();
+		MaskAtk ma = du.getRepAtk();
+		if(cmp == 0) {
+			for(int i =0;i<PROC.length;i++) {
+				if(ma.getProc(i)[0] == 0)
+					continue;
+				StringBuilder ans = new StringBuilder();
+				for(int j = 0;j<CMP[i].length;j++) {
+					if(CMP[i][j] == -1)
+						if(immune.contains(i)) {
+							ans.append(TEXT[11]).append(PROC[i].substring(4));
+						}
+						else
+							ans.append(PROC[i]);
+					else {
+						int pro = ma.getProc(i)[LOC[i][j]];
+						String rep = pro == -1?"infinity":""+pro;
+						ans.append(TEXT[CMP[i][j]].replace("_", rep));
+					}
+				}
+				l.add(ans.toString());
+			}
+		} else {
+			for(int i =0;i<PROC.length;i++) {
+				if(ma.getProc(i)[0] == 0)
+					continue;
+				StringBuilder ans = new StringBuilder();
+				for(int j = 0;j<CMP2[i].length;j++) {
+					if(CMP2[i][j] == -1)
+						ans.append(PROC[i]);
+					else {
+						int pro = ma.getProc(i)[LOC2[i][j]];
+						String rep = pro == -1?"infinity":""+pro;
+						ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+					}
+				}
+				l.add(ans.toString());
+			}
+		}
+		return l;
+	}
+
+	public static List<Integer> getAbiid(MaskEntity me) {
+		List<Integer> l = new ArrayList<>();
+
+		for(int i=0;i<ABIS.length;i++)
+			if(((me.getAbi()>>i)&1) > 0)
+				l.add(i);
+
+		return l;
+	}
+
+	public static List<String> getAbi(MaskEntity me, String[][] frag,String[] addition, int lang) {
+		List<String> l = new ArrayList<>();
+		StringBuilder imu = new StringBuilder(frag[lang][0]);
+
+		for(int i=0;i<ABIS.length;i++)
+			if(((me.getAbi()>>i)&1) > 0)
+				if(ABIS[i].startsWith("Imu."))
+					imu.append(ABIS[i].substring(4));
+				else {
+					if(i == 0)
+						l.add(ABIS[i]+addition[0]);
+					else if(i == 1)
+						l.add(ABIS[i]+addition[1]);
+					else if(i == 2)
+						l.add(ABIS[i]+addition[2]);
+					else if(i == 4)
+						l.add(ABIS[i]+addition[3]);
+					else if(i == 5)
+						l.add(ABIS[i]+addition[4]);
+					else if(i == 14)
+						l.add(ABIS[i]+addition[5]);
+					else if(i == 17)
+						l.add(ABIS[i]+addition[6]);
+					else if(i == 20)
+						l.add(ABIS[i]+addition[7]);
+					else if(i == 21)
+						l.add(ABIS[i]+addition[8]);
+					else
+						l.add(ABIS[i]);
+				}
+
+		if(imu.length()>10)
+			l.add(imu.toString());
+
+		return l;
 	}
 
 	public static int getValue(int ind, Treasure t) {

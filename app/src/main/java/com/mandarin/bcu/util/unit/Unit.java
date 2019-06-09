@@ -55,14 +55,20 @@ public class Unit extends Data implements Comparable<Unit> {
 
 		String [] priority = chooser();
 		String [][] unitnames = getName(priority);
+		String [][] explains = getExplain(priority);
 
 		for(int i = 0; i < lu.size();i++) {
+			lu.get(i).info.explanation = new String[lu.get(i).forms.length][];
 			for (int j=0;j<lu.get(i).forms.length;j++) {
 				int lang = 0;
 				while(lang < 4) {
-					lu.get(i).forms[j].name = findName(j,i,unitnames[lang]);
+					if(lu.get(i).forms[j].name == null || lu.get(i).forms[j].name.equals(""))
+						lu.get(i).forms[j].name = findName(j,i,unitnames[lang]);
 
-					if(lu.get(i).forms[j].name != null)
+					if(lu.get(i).info.explanation[j] == null)
+						lu.get(i).info.explanation[j] = findExplain(j,i,explains[lang]);
+
+					if(lu.get(i).forms[j].name != null && lu.get(i).info.explanation[j] != null)
 						break;
 					lang++;
 				}
@@ -70,11 +76,15 @@ public class Unit extends Data implements Comparable<Unit> {
 				if(lu.get(i).forms[j].name == null) {
 					lu.get(i).forms[j].name = "";
 				}
+
+				if(lu.get(i).info.explanation[j] == null) {
+					lu.get(i).info.explanation[j] = new String[]{""};
+				}
 			}
 		}
 	}
 
-	protected static String findName(int form,int num,String [] names) {
+	private static String findName(int form, int num, String[] names) {
 		String name = null;
 
 		if(names.length>num) {
@@ -98,13 +108,41 @@ public class Unit extends Data implements Comparable<Unit> {
 
 			VFile.root.build(shortPath,AssetData.getAsset(new File(longPath+shortPath.substring(1))));
 			Queue<String> qs = VFile.getFile(shortPath).getData().readLine();
-			result[i] = qs.toArray(new String[qs.size()]);
+			result[i] = qs.toArray(new String[0]);
 		}
 
 		return result;
 	}
 
-	protected static String[] chooser() {
+	private static String[][] getExplain(String[] priority) {
+		String[][] result = new String[4][];
+
+		for(int i=0;i<priority.length;i++) {
+			String shortPath = "./lang"+priority[i]+"UnitExplanation.txt";
+			String longPath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
+
+			VFile.root.build(shortPath,AssetData.getAsset(new File(longPath+shortPath.substring(1))));
+			Queue<String> qs = VFile.getFile(shortPath).getData().readLine();
+			result[i] = qs.toArray(new String[0]);
+		}
+
+		return result;
+	}
+
+	private static String[] findExplain(int form, int num, String[] explains) {
+		String[] explain = null;
+
+		if(explains.length > num) {
+			String[] lines = explains[num].split("\t");
+			if(lines.length >= 3 && form+1 < lines.length) {
+				explain = lines[form+1].split("<br>");
+			}
+		}
+
+		return explain;
+	}
+
+	private static String[] chooser() {
 		String language = Locale.getDefault().getLanguage();
 		String [] priority;
 		switch (language) {
@@ -238,29 +276,6 @@ public class Unit extends Data implements Comparable<Unit> {
 		if (forms[0].name.length() > 0)
 			return trio(id) + " " + forms[0].name;
 		return trio(id);
-	}
-
-}
-
-class UnitInfo {
-
-	public int[][] evo;
-	public int[] price = new int[10];
-	public int type;
-
-	protected void fillBuy(String[] strs) {
-		for (int i = 0; i < 10; i++)
-			price[i] = Integer.parseInt(strs[2 + i]);
-		type = Integer.parseInt(strs[12]);
-		int et = Integer.parseInt(strs[23]);
-		if (et >= 15000 && et < 17000) {
-			evo = new int[6][2];
-			evo[0][0] = Integer.parseInt(strs[27]);
-			for (int i = 0; i < 5; i++) {
-				evo[i][0] = Integer.parseInt(strs[28 + i * 2]);
-				evo[i][1] = Integer.parseInt(strs[29 + i * 2]);
-			}
-		}
 	}
 
 }

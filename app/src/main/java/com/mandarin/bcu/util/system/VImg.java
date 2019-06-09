@@ -1,5 +1,7 @@
 package com.mandarin.bcu.util.system;
 
+import android.graphics.Bitmap;
+
 import java.io.IOException;
 
 import com.mandarin.bcu.util.ImgCore;
@@ -72,6 +74,13 @@ public class VImg extends ImgCore {
 		bimg = file.getData().getImg();
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];
+	}
+
+	public Bitmap getIcon() {
+		if(getImg() == null || getImg().bimg() == null)
+			return null;
+
+		return getImg().bimg();
 	}
 
 }

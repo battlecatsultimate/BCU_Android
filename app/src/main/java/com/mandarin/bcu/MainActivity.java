@@ -14,8 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mandarin.bcu.asynchs.CheckUpdates;
-import com.mandarin.bcu.main.MainBCU;
+import com.mandarin.bcu.androidutil.asynchs.CheckUpdates;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
 
@@ -45,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MainBCU.CheckMem(this);
 
         path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
 
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(connectivityManager.getActiveNetworkInfo() != null) {
             boolean lang = false;
-            CheckUpdates checkUpdates = new CheckUpdates(animbtn, stagebtn,path, lang, checkstate, mainprog,fileneed,filenum,MainActivity.this);
+            CheckUpdates checkUpdates = new CheckUpdates(path, lang,fileneed,filenum,MainActivity.this,cando());
             checkUpdates.execute();
         } else {
             if(cando()) {
@@ -97,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     protected boolean cando() {
         String infopath = path + "/files/info/";
         String filename = "info_android.ini";

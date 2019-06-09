@@ -276,8 +276,16 @@ public class SearchFilter extends AppCompatActivity {
         nsc.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                sc.requestDisallowInterceptTouchEvent(true);
-
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        sc.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        sc.requestDisallowInterceptTouchEvent(false);
+                        break;
+                    default:
+                        break;
+                }
                 return false;
             }
         });
@@ -365,5 +373,10 @@ public class SearchFilter extends AppCompatActivity {
                     abilities[i].setChecked(true);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        back.performClick();
     }
 }

@@ -2,6 +2,7 @@ package com.mandarin.bcu.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -24,7 +25,9 @@ public class MainBCU {
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
-			((Activity)context).finish();
+			Toast.makeText(context,"Low Memory! Performance may be slow",Toast.LENGTH_SHORT).show();
+			String mems = "Required Memory : "+(int)(Opts.MEMORY)+" Current memory : "+(int)(mem >> 20);
+			Toast.makeText(context,mems,Toast.LENGTH_SHORT).show();
 		}
 
 		loaded = true;
