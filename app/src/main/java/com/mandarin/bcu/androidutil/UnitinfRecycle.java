@@ -91,8 +91,8 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         List<Integer> abilityicon = Interpret.getAbiid(f.du);
 
         String language = Locale.getDefault().getLanguage();
-        List<String> proc = new ArrayList<>();
-        if(language == "ko")
+        List<String> proc;
+        if(language.equals("ko"))
             proc = Interpret.getProc(f.du,1);
         else
             proc = Interpret.getProc(f.du,0);

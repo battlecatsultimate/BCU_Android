@@ -3,9 +3,9 @@
     <string name="app_name">BCU</string>
     <string name="anim_view">애니메이션 뷰어</string>
     <string name="def_schbck">Back to Animation Viewer</string>
-    <string name="des_animbck">Back to main page</string>
-    <string name="des_animsch">Open Filter screens</string>
-    <string name="des_stgbck">Back to main page</string>
+    <string name="def_animbck">Back to main page</string>
+    <string name="def_animsch">Open Filter screens</string>
+    <string name="def_stgbck">Back to main page</string>
     <string-array name="set_stg">
         <item>레전드 스토리</item>
         <item>정규 이벤트 스테이지</item>
@@ -100,8 +100,8 @@
     <string name="down_zip_rea">추출 준비중…</string>
     <string name="main_down_init">추가 데이터 필요</string>
     <string name="main_file_read">파일 읽는중…</string>
-    <string name="schreset_cont">Reset Search Settng</string>
-    <string name="unit_icon">Unit icon</string>
+    <string name="def_schreset_cont">Reset Search Settng</string>
+    <string name="def_unit_icon">Unit icon</string>
     <string name="hb">히트백</string>
     <string name="unit_info_hp">체력</string>
     <string name="unit_info_id">ID</string>
@@ -124,7 +124,7 @@
     <string name="unit_info_sec">초</string>
     <string name="unit_info_rang">사거리</string>
     <string name="unit_info_atkt">공격타입</string>
-    <string name="unit_info_back_cont">Unit info Back Button</string>
+    <string name="def_info_back_cont">Unit info Back Button</string>
     <string name="sch_np">본능 포함</string>
     <string name="unit_info_abil">능력</string>
     <string name="unit_info_tba">후딜</string>
@@ -162,7 +162,7 @@
     <string name="unit_info_exmon">" (받는 머니 x2)"</string>
     <string name="unit_info_atkbs">" (성 공격 시 x4)"</string>
     <string name="unit_info_wkill">" (피격 시 x0.1 / 공격 시 x5)"</string>
-    <string name="unit_s_icon">Unit\'s Icon</string>
+    <string name="def_unit_s_icon">Unit\'s Icon</string>
     <string name="unit_info_evakill">" (피격 시 x0.2 / 공격 시 x5)"</string>
     <string name="unit_info_text0">"_ % 확률로 "</string>
     <string name="unit_info_text1">"_ f 동안 "</string>
@@ -172,10 +172,10 @@
     <string name="unit_info_text5">"_ % 체력에서, "</string>
     <string name="unit_info_text6">"_ % 만큼 "</string>
     <string name="unit_info_text7">"_ 번 "</string>
-    <string name="unit_info_text8">times</string>
+    <string name="def_unit_info_text8">times</string>
     <string name="unit_info_text9">_ f 뒤에</string>
     <string name="unit_info_text10">" _ % 의 체력으로 "</string>
-    <string name="unit_info_text11">"Immune to "</string>
+    <string name="def_unit_info_text11">"Immune to "</string>
     <string name="unit_info_first">1단</string>
     <string name="unit_info_second">2단</string>
     <string name="unit_info_third">3단</string>

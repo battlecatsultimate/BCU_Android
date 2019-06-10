@@ -3,7 +3,6 @@ package com.mandarin.bcu.androidutil.asynchs;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
@@ -161,7 +160,7 @@ class Definer {
             R.string.abi_iseal,R.string.abi_iboswv,R.string.sch_abi_it,R.string.sch_abi_id};
     private String [] abi = new String[abiid.length];
     private int [] textid = {R.string.unit_info_text0,R.string.unit_info_text1,R.string.unit_info_text2,R.string.unit_info_text3,R.string.unit_info_text4,R.string.unit_info_text5,R.string.unit_info_text6,R.string.unit_info_text7,
-            R.string.unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.unit_info_text11};
+            R.string.def_unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.def_unit_info_text11};
     private String [] textstring = new String[textid.length];
 
     void define(Context context) {

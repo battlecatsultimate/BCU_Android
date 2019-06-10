@@ -2,8 +2,8 @@
     <string name="app_name">BCU</string>
     <string name="anim_view">Animation Viewer</string>
     <string name="stg_inf">Stage Info</string>
-    <string name="des_animsch">Open Filter screens</string>
-    <string name="des_animbck">Back to main page</string>
+    <string name="def_animsch">Open Filter screens</string>
+    <string name="def_animbck">Back to main page</string>
     <string-array name="set_stg">
         <item>Story of Legends</item>
         <item>Regular Event Stages</item>
@@ -17,7 +17,7 @@
         <item>Uncanny Legends</item>
         <item>Night Stages</item>
     </string-array>
-    <string name="des_stgbck">Back to main page</string>
+    <string name="def_stgbck">Back to main page</string>
     <string name="sch_nm">Search by Filter</string>
     <string name="def_schbck">Back to Animation Viewer</string>
     <string name="sch_tg">Target</string>
@@ -42,8 +42,8 @@
     <string name="sch_rare_lr">Legend Rare</string>
     <string name="sch_atk_si">Single</string>
     <string name="sch_atk_ra">Area</string>
-    <string name="sch_atk_ld">Long Distance</string>
-    <string name="sch_atk_om">Omni Strike</string>
+    <string name="sch_atk_ld">LD</string>
+    <string name="sch_atk_om">Omni</string>
     <string name="sch_atk_mu">Multi HIt</string>
     <string name="sch_abil">Ability</string>
     <string name="sch_abi_we">Weaken</string>
@@ -100,8 +100,8 @@
     <string name="down_zip_rea">Preparing Extracting…</string>
     <string name="main_down_init">Initial Download Required</string>
     <string name="main_file_read">Reading Files…</string>
-    <string name="schreset_cont">Reset Search Settng</string>
-    <string name="unit_icon">Unit icon</string>
+    <string name="def_schreset_cont">Reset Search Settng</string>
+    <string name="def_unit_icon">Unit icon</string>
     <string name="unit_info_id">ID</string>
     <string name="unit_info_trait">Trait</string>
     <string name="unit_info_level">Level</string>
@@ -124,7 +124,7 @@
     <string name="unit_info_sec">Seconds</string>
     <string name="unit_info_rang">Range</string>
     <string name="unit_info_atkt">Attack Type</string>
-    <string name="unit_info_back_cont">Unit info Back Button</string>
+    <string name="def_info_back_cont">Unit info Back Button</string>
     <string name="unit_info_abil">Ability</string>
     <string name="unit_info_tba">TBA</string>
     <string name="sch_np">Consider Talents</string>
@@ -158,7 +158,7 @@
     <string name="unit_info_resis">" (Takes damage x0.25~x0.2)"</string>
     <string name="unit_info_insres">" (Takes damage x1/6~x1/7)"</string>
     <string name="unit_info_insmas">" (Gives damage x5~x6)"</string>
-    <string name="unit_s_icon">Unit\'s Icon</string>
+    <string name="def_unit_s_icon">Unit\'s Icon</string>
     <string name="unit_info_exmon">" (Money get x2)"</string>
     <string name="unit_info_atkbs">" (Give damage x4 to Base)"</string>
     <string name="unit_info_wkill">" (Takes damge x0.1 / Gives damage x5)"</string>
@@ -171,10 +171,10 @@
     <string name="unit_info_text5">"At _ % health, "</string>
     <string name="unit_info_text6">" to _ %"</string>
     <string name="unit_info_text7">" for _"</string>
-    <string name="unit_info_text8">times</string>
+    <string name="def_unit_info_text8">times</string>
     <string name="unit_info_text9">" after _ f"</string>
     <string name="unit_info_text10">" with _ % health"</string>
-    <string name="unit_info_text11">"Immune to "</string>
+    <string name="def_unit_info_text11">"Immune to "</string>
     <string name="unit_info_first">First</string>
     <string name="unit_info_second">Second</string>
     <string name="unit_info_third">Third</string>

@@ -143,7 +143,7 @@ public class getStrings {
     }
 
     public String getRange(Form f) {
-        int tb = f.du.touchBase();
+        int tb = f.du.getRange();
         MaskAtk ma = f.du.getRepAtk();
         int lds = ma.getShortPoint();
         int ldr = ma.getLongPoint()-ma.getShortPoint();
