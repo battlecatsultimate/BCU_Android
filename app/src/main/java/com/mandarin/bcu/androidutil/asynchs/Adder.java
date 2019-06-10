@@ -61,7 +61,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
             for (int i = 0; i < unitnumber; i++) {
                 String shortPath = "./org/unit/"+ number(i) + "/f/uni" + number(i) + "_f00.png";
 
-                StaticStore.bitmaps[i] = Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg();
+                StaticStore.bitmaps[i] = StaticStore.getResizeb(Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(),context,48f);
 
             }
         }

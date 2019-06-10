@@ -280,14 +280,16 @@
 
                 <RadioButton
                     android:id="@+id/schrdtgor"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="12dp"
                     android:text="@string/sch_or" />
 
                 <RadioButton
                     android:id="@+id/schrdtgand"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/sch_and" />
@@ -701,14 +703,16 @@
 
                 <RadioButton
                     android:id="@+id/schrdabor"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="@dimen/default_gap"
                     android:text="@string/sch_or" />
 
                 <RadioButton
                     android:id="@+id/schrdaband"
-                    android:layout_width="64dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/sch_and" />
@@ -725,9 +729,11 @@
 
                 <RadioButton
                     android:id="@+id/schrdatkor"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="12dp"
                     android:text="@string/sch_or" />
 
                 <RadioButton

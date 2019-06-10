@@ -98,7 +98,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             proc = Interpret.getProc(f.du,0);
         List<Integer> procicon = Interpret.getProcid(f.du);
 
-        viewHolder.uniticon.setImageBitmap(f.anim.uni.getIcon());
+        viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb(f.anim.uni.getIcon(),context,48));
         viewHolder.unitname.setText(names.get(i));
         viewHolder.unitid.setText(s.getID(f,viewHolder,number(id)));
         viewHolder.unithp.setText(s.getHP(f,t,f.unit.getPrefLv()));
@@ -418,7 +418,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             if(viewHolder.getAdapterPosition() < ability.size()) {
                 viewHolder.abiltext.setText(ability.get(viewHolder.getAdapterPosition()));
                 if (abilicon.get(viewHolder.getAdapterPosition()) != 15 && abilicon.get(viewHolder.getAdapterPosition()) != 19) {
-                    Bitmap resized = getResize(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())]);
+                    Bitmap resized = StaticStore.getResize(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())],context);
                     viewHolder.abilicon.setImageBitmap(resized);
                 } else {
                     viewHolder.abilicon.setImageBitmap(empty());
@@ -426,7 +426,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             } else {
                 int location = viewHolder.getAdapterPosition()-ability.size();
                 viewHolder.abiltext.setText(procs.get(location));
-                Bitmap resized = getResize(StaticStore.picons[procicon.get(location)]);
+                Bitmap resized = StaticStore.getResize(StaticStore.picons[procicon.get(location)],context);
                 viewHolder.abilicon.setImageBitmap(resized);
             }
         }
@@ -446,14 +446,6 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                 abilicon = itemView.findViewById(R.id.abilicon);
                 abiltext = itemView.findViewById(R.id.ability);
             }
-        }
-
-        private Bitmap getResize(Drawable drawable) {
-            float dp = 32f;
-            Resources r = context.getResources();
-            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
-            Bitmap b = ((BitmapDrawable)drawable).getBitmap();
-            return Bitmap.createScaledBitmap(b,(int)px,(int)px,false);
         }
 
         private Bitmap empty() {
