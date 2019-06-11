@@ -93,9 +93,9 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         String language = Locale.getDefault().getLanguage();
         List<String> proc;
         if(language.equals("ko"))
-            proc = Interpret.getProc(f.du,1);
+            proc = Interpret.getProc(f.du,1,0);
         else
-            proc = Interpret.getProc(f.du,0);
+            proc = Interpret.getProc(f.du,0,0);
         List<Integer> procicon = Interpret.getProcid(f.du);
 
         viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb(f.anim.uni.getIcon(),context,48));
@@ -167,6 +167,27 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     viewHolder.unitatkt.setText(s.getAtkTime(f,1));
                     viewHolder.frse.setText(context.getString(R.string.unit_info_sec));
 
+                    if(viewHolder.unitabil.getVisibility() != View.GONE) {
+
+                        List<String> ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0);
+                        List<Integer> abilityicon = Interpret.getAbiid(f.du);
+
+                        String language = Locale.getDefault().getLanguage();
+                        List<String> proc;
+                        if (language.equals("ko"))
+                            proc = Interpret.getProc(f.du, 1, 1);
+                        else
+                            proc = Interpret.getProc(f.du, 0, 1);
+                        List<Integer> procicon = Interpret.getProcid(f.du);
+
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                        viewHolder.unitabil.setLayoutManager(linearLayoutManager);
+                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon);
+                        viewHolder.unitabil.setAdapter(adapterAbil);
+                        ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
+                    }
+
                     fs = 1;
                 } else {
                     viewHolder.unitcd.setText(s.getCD(f,t,0));
@@ -175,6 +196,27 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     viewHolder.unittba.setText(s.getTBA(f,0));
                     viewHolder.unitatkt.setText(s.getAtkTime(f,0));
                     viewHolder.frse.setText(context.getString(R.string.unit_info_fr));
+
+                    if(viewHolder.unitabil.getVisibility() != View.GONE) {
+
+                        List<String> ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0);
+                        List<Integer> abilityicon = Interpret.getAbiid(f.du);
+
+                        String language = Locale.getDefault().getLanguage();
+                        List<String> proc;
+                        if (language.equals("ko"))
+                            proc = Interpret.getProc(f.du, 1, 0);
+                        else
+                            proc = Interpret.getProc(f.du, 0, 0);
+                        List<Integer> procicon = Interpret.getProcid(f.du);
+
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                        viewHolder.unitabil.setLayoutManager(linearLayoutManager);
+                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon);
+                        viewHolder.unitabil.setAdapter(adapterAbil);
+                        ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
+                    }
 
                     fs = 0;
                 }

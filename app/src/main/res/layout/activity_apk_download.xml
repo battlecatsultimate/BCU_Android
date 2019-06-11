@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ApkDownload">
+
+    <ProgressBar
+        android:id="@+id/apkprog"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginEnd="128dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/apkstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/down_state_rea"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/apkprog"
+        app:layout_constraintTop_toBottomOf="@+id/apkprog" />
+
+    <Button
+        android:id="@+id/apkretry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/down_redown"
+        app:layout_constraintBottom_toBottomOf="@+id/apkstate"
+        app:layout_constraintEnd_toEndOf="@+id/apkprog"
+        app:layout_constraintTop_toTopOf="@+id/apkstate" />
+</android.support.constraint.ConstraintLayout>

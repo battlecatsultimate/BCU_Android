@@ -72,8 +72,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPreExecute() {
-        animbtn.setVisibility(View.GONE);
-        stagebtn.setVisibility(View.GONE);
+        checkstate.setText(R.string.main_check_up);
     }
 
     @Override
@@ -131,6 +130,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                         }
                     } else {
                         lang = true;
+                        break;
                     }
 
                     c.disconnect();

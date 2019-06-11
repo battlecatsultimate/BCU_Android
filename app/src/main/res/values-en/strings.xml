@@ -180,4 +180,7 @@
     <string name="unit_info_second">Second</string>
     <string name="unit_info_third">Third</string>
     <string name="unit_info_extitle">Unit Explanation</string>
+    <string name="apk_down_title">New Apk Found</string>
+    <string name="apk_down_content">"You can download newer version. Do you want to download apk file? New version : "</string>
+    <string name="main_check_apk">Checking APK File…</string>
 </resources>

@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mandarin.bcu.androidutil.asynchs.CheckApk;
 import com.mandarin.bcu.androidutil.asynchs.CheckUpdates;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603"};
     private String path;
+    private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";
     private ArrayList<String> fileneed = new ArrayList<>();
     private ArrayList<String> filenum = new ArrayList<>();
 
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        deleter(new File(PATH));
 
         path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
 
@@ -76,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(connectivityManager.getActiveNetworkInfo() != null) {
             boolean lang = false;
-            CheckUpdates checkUpdates = new CheckUpdates(path, lang,fileneed,filenum,MainActivity.this,cando());
-            checkUpdates.execute();
+            CheckApk checkApk = new CheckApk(path,lang,fileneed,filenum,this,cando());
+            checkApk.execute();
         } else {
             if(cando()) {
                 com.mandarin.bcu.decode.ZipLib.init();
@@ -152,5 +156,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void deleter(File f) {
+        if(f.isDirectory())
+            for(File g : f.listFiles())
+                deleter(g);
+        else
+            f.delete();
+    }
 
 }

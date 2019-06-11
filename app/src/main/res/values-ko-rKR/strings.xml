@@ -180,4 +180,7 @@
     <string name="unit_info_second">2단</string>
     <string name="unit_info_third">3단</string>
     <string name="unit_info_extitle">유닛 설명</string>
+    <string name="apk_down_title">새로운 Apk 발견</string>
+    <string name="apk_down_content">"새로운 버전의 apk 가 발견되었습니다. 다운받으시겠습니까? 신규 버전 : "</string>
+    <string name="main_check_apk">APK 파일 확인중…</string>
 </resources>

@@ -49,7 +49,7 @@
         android:layout_marginStart="32dp"
         android:text="@string/sch_nm"
         android:textColor="#D8D8D8"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toEndOf="@+id/schbck"
@@ -61,7 +61,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.0">
@@ -69,6 +69,67 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <TableRow
+                android:id="@+id/tableRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:weightSum="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schrare">
+
+                <CheckBox
+                    android:id="@+id/schchba"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.16"
+                    android:text="@string/sch_rare_ba"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/schchex"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.12"
+                    android:text="@string/sch_rare_ex"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/schchr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.12"
+                    android:text="@string/sch_rare_ra"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/schchsr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:text="@string/sch_rare_sr"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/schchur"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:text="@string/sch_rare_ur"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/schchlr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:text="@string/sch_rare_lr"
+                    android:textSize="14sp" />
+            </TableRow>
 
             <TextView
                 android:id="@+id/schrare"
@@ -81,79 +142,6 @@
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <CheckBox
-                android:id="@+id/schchba"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/sch_rare_ba"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schrare" />
-
-            <CheckBox
-                android:id="@+id/schchex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/sch_rare_ex"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/schchlr"
-                app:layout_constraintHorizontal_bias="0.1"
-                app:layout_constraintStart_toEndOf="@+id/schchba"
-                app:layout_constraintTop_toTopOf="@+id/schchba" />
-
-            <CheckBox
-                android:id="@+id/schchr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/sch_rare_ra"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/schchlr"
-                app:layout_constraintHorizontal_bias="0.3"
-                app:layout_constraintStart_toEndOf="@+id/schchba"
-                app:layout_constraintTop_toTopOf="@+id/schchex" />
-
-            <CheckBox
-                android:id="@+id/schchsr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/sch_rare_sr"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/schchlr"
-                app:layout_constraintHorizontal_bias="0.55"
-                app:layout_constraintStart_toEndOf="@+id/schchba"
-                app:layout_constraintTop_toTopOf="@+id/schchr" />
-
-            <CheckBox
-                android:id="@+id/schchur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sch_rare_ur"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/schchlr"
-                app:layout_constraintHorizontal_bias="0.84"
-                app:layout_constraintStart_toEndOf="@+id/schchba"
-                app:layout_constraintTop_toTopOf="@+id/schchsr" />
-
-            <CheckBox
-                android:id="@+id/schchlr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sch_rare_lr"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.95"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/schchur" />
 
             <TextView
                 android:id="@+id/schtg"
@@ -174,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_red"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
@@ -186,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_float"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.276"
                 app:layout_constraintStart_toStartOf="parent"
@@ -198,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schtg" />
@@ -209,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_metal"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.73"
                 app:layout_constraintStart_toStartOf="parent"
@@ -221,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_angel"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.95"
                 app:layout_constraintStart_toStartOf="parent"
@@ -233,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_alien"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
@@ -245,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_zombie"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/schchfl"
                 app:layout_constraintTop_toBottomOf="@+id/schchfl" />
 
@@ -255,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_relic"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/schchbla"
                 app:layout_constraintTop_toBottomOf="@+id/schchbla" />
 
@@ -265,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_white"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/schchme"
                 app:layout_constraintTop_toBottomOf="@+id/schchme" />
 
@@ -275,6 +263,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/schtg"
                 app:layout_constraintStart_toEndOf="@+id/schtg"
                 app:layout_constraintTop_toTopOf="@+id/schtg">
 
@@ -305,24 +294,24 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchba" />
+                app:layout_constraintTop_toBottomOf="@+id/tableRow" />
 
             <RadioGroup
                 android:id="@+id/schrgatk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="24dp"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toEndOf="@+id/schatk"
-                app:layout_constraintTop_toBottomOf="@+id/schchba">
+                app:layout_constraintBottom_toBottomOf="@+id/schatk"
+                app:layout_constraintStart_toEndOf="@+id/schrgatkor"
+                app:layout_constraintTop_toTopOf="@+id/schatk">
 
                 <RadioButton
                     android:id="@+id/schrdatksi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableEnd="@mipmap/ic_multi"
+                    android:drawableEnd="@mipmap/ic_single"
                     android:text="@string/sch_atk_si"
                     android:textSize="14sp" />
 
@@ -331,7 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableEnd="@mipmap/ic_single"
+                    android:drawableEnd="@mipmap/ic_multi"
                     android:text="@string/sch_atk_ra"
                     android:textSize="14sp" />
             </RadioGroup>
@@ -343,7 +332,7 @@
                 android:layout_marginTop="24dp"
                 android:drawableEnd="@mipmap/ic_ld"
                 android:text="@string/sch_atk_ld"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -355,7 +344,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@mipmap/ic_omni"
                 android:text="@string/sch_atk_om"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/schchld" />
@@ -368,7 +357,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/sch_atk_mu"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.9"
                 app:layout_constraintStart_toStartOf="parent"
@@ -698,6 +687,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/schabil"
                 app:layout_constraintStart_toEndOf="@+id/schabil"
                 app:layout_constraintTop_toTopOf="@+id/schabil">
 
@@ -722,9 +712,10 @@
                 android:id="@+id/schrgatkor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="24dp"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toEndOf="@+id/schrgatk"
+                app:layout_constraintBottom_toBottomOf="@+id/schatk"
+                app:layout_constraintStart_toEndOf="@+id/schatk"
                 app:layout_constraintTop_toTopOf="@+id/schatk">
 
                 <RadioButton

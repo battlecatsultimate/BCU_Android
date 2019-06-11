@@ -1,5 +1,6 @@
 package com.mandarin.bcu.util;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -150,42 +151,65 @@ public class Interpret extends Data {
 	    return l;
     }
 
-	public static List<String> getProc(MaskEntity du, int cmp) {
-		List<Integer> immune = Arrays.asList(13,14,15,16,17,18,19);
+	public static List<String> getProc(MaskEntity du, int cmp,int frse) {
+		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = du.getRepAtk();
-		if(cmp == 0) {
-			for(int i =0;i<PROC.length;i++) {
-				if(ma.getProc(i)[0] == 0)
+		if (cmp == 0) {
+			for (int i = 0; i < PROC.length; i++) {
+				if (ma.getProc(i)[0] == 0)
 					continue;
 				StringBuilder ans = new StringBuilder();
-				for(int j = 0;j<CMP[i].length;j++) {
-					if(CMP[i][j] == -1)
-						if(immune.contains(i)) {
+				for (int j = 0; j < CMP[i].length; j++) {
+					if (CMP[i][j] == -1)
+						if (immune.contains(i)) {
 							ans.append(TEXT[11]).append(PROC[i].substring(4));
-						}
-						else
+						} else
 							ans.append(PROC[i]);
 					else {
-						int pro = ma.getProc(i)[LOC[i][j]];
-						String rep = pro == -1?"infinity":""+pro;
-						ans.append(TEXT[CMP[i][j]].replace("_", rep));
+						if (frse == 0) {
+							int pro = ma.getProc(i)[LOC[i][j]];
+							String rep = pro == -1 ? "infinity" : "" + pro;
+							ans.append(TEXT[CMP[i][j]].replace("_", rep));
+						} else {
+							if (TEXT[CMP[i][j]].contains("_ f")) {
+								int pro = ma.getProc(i)[LOC[i][j]];
+								String rep = pro == -1 ? "infinity" : new DecimalFormat("#.##").format((double) pro / 30);
+								ans.append(TEXT[CMP[i][j]].replace("_ f", "_ s").replace("_", rep));
+							} else {
+								int pro = ma.getProc(i)[LOC[i][j]];
+								String rep = pro == -1 ? "infinity" : "" + pro;
+								ans.append(TEXT[CMP[i][j]].replace("_", rep));
+							}
+						}
 					}
 				}
 				l.add(ans.toString());
 			}
 		} else {
-			for(int i =0;i<PROC.length;i++) {
-				if(ma.getProc(i)[0] == 0)
+			for (int i = 0; i < PROC.length; i++) {
+				if (ma.getProc(i)[0] == 0)
 					continue;
 				StringBuilder ans = new StringBuilder();
-				for(int j = 0;j<CMP2[i].length;j++) {
-					if(CMP2[i][j] == -1)
+				for (int j = 0; j < CMP2[i].length; j++) {
+					if (CMP2[i][j] == -1)
 						ans.append(PROC[i]);
 					else {
-						int pro = ma.getProc(i)[LOC2[i][j]];
-						String rep = pro == -1?"infinity":""+pro;
-						ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+						if (frse == 0) {
+							int pro = ma.getProc(i)[LOC2[i][j]];
+							String rep = pro == -1 ? "infinity" : "" + pro;
+							ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+						} else {
+							if (TEXT[CMP2[i][j]].contains("_ f")) {
+								int pro = ma.getProc(i)[LOC2[i][j]];
+								String rep = pro == -1 ? "infinity" : new DecimalFormat("#.##").format((double) pro / 30);
+								ans.append(TEXT[CMP2[i][j]].replace("_ f", "_ s").replace("_", rep));
+							} else {
+								int pro = ma.getProc(i)[LOC2[i][j]];
+								String rep = pro == -1 ? "infinity" : "" + pro;
+								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+							}
+						}
 					}
 				}
 				l.add(ans.toString());
