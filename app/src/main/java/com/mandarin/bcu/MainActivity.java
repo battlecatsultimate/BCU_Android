@@ -2,6 +2,7 @@ package com.mandarin.bcu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,12 +11,13 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.asynchs.CheckApk;
-import com.mandarin.bcu.androidutil.asynchs.CheckUpdates;
+import com.mandarin.bcu.util.system.P;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
 
@@ -32,7 +34,7 @@ import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603"};
+    private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603","080604"};
     private String path;
     private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";
     private ArrayList<String> fileneed = new ArrayList<>();
@@ -45,20 +47,54 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences.Editor ed = shared.edit();
+        if(!shared.contains("initial")) {
+            ed.putBoolean("initial",true);
+            ed.putBoolean("theme",true);
+            ed.putBoolean("frame",true);
+            ed.putBoolean("apktest",false);
+            ed.putInt("default_level",50);
+            ed.apply();
+        } else {
+            if(!shared.getBoolean("theme",false)) {
+                setTheme(R.style.AppTheme_night);
+            } else {
+                setTheme(R.style.AppTheme_day);
+            }
+        }
+
+        if(!shared.contains("frame")) {
+            ed.putBoolean("frame",true);
+            ed.apply();
+        }
+
+        if(!shared.contains("apktest")) {
+            ed.putBoolean("apktest",true);
+            ed.apply();
+        }
+
+        if(!shared.contains("default_level")) {
+            ed.putInt("default_level",50);
+            ed.apply();
+        }
+
+        if(!shared.contains("apktest")) {
+            ed.putBoolean("apktest",false);
+            ed.apply();
+        }
+
         setContentView(R.layout.activity_main);
 
         deleter(new File(PATH));
 
-        path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
-
-        ImageBuilder.builder = new BMBuilder();
-
+        Intent result = getIntent();
         Button animbtn = findViewById(R.id.anvibtn);
         Button stagebtn = findViewById(R.id.stgbtn);
-        animbtn.setVisibility(View.GONE);
-        stagebtn.setVisibility(View.GONE);
         TextView checkstate = findViewById(R.id.mainstup);
         ProgressBar mainprog = findViewById(R.id.mainprogup);
+        ImageButton config = findViewById(R.id.mainconfig);
 
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_kasa_jizo), null, null, null);
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
@@ -75,28 +111,52 @@ public class MainActivity extends AppCompatActivity {
                 stageinfoview();
             }
         });
+        config.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoconfig();
+            }
+        });
 
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if(connectivityManager.getActiveNetworkInfo() != null) {
-            boolean lang = false;
-            CheckApk checkApk = new CheckApk(path,lang,fileneed,filenum,this,cando());
-            checkApk.execute();
+        if(result.getBooleanExtra("Config",false)) {
+            mainprog.setVisibility(View.GONE);
+            checkstate.setVisibility(View.GONE);
+            stagebtn.setVisibility(View.VISIBLE);
+            animbtn.setVisibility(View.VISIBLE);
+            config.setVisibility(View.VISIBLE);
         } else {
-            if(cando()) {
-                com.mandarin.bcu.decode.ZipLib.init();
-                com.mandarin.bcu.decode.ZipLib.read();
-                mainprog.setVisibility(View.GONE);
-                checkstate.setVisibility(View.GONE);
-                stagebtn.setVisibility(View.VISIBLE);
-                animbtn.setVisibility(View.VISIBLE);
+            path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
+
+            ImageBuilder.builder = new BMBuilder();
+
+
+
+            animbtn.setVisibility(View.GONE);
+            stagebtn.setVisibility(View.GONE);
+            config.setVisibility(View.GONE);
+
+            ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if(connectivityManager.getActiveNetworkInfo() != null) {
+                boolean lang = false;
+                CheckApk checkApk = new CheckApk(path,lang,fileneed,filenum,this,cando());
+                checkApk.execute();
             } else {
-                mainprog.setVisibility(View.GONE);
-                checkstate.setText(R.string.main_internet_no);
-                Toast.makeText(this, "You need internet connection to run this application!", Toast.LENGTH_SHORT).show();
+                if(cando()) {
+                    com.mandarin.bcu.decode.ZipLib.init();
+                    com.mandarin.bcu.decode.ZipLib.read();
+                    mainprog.setVisibility(View.GONE);
+                    checkstate.setVisibility(View.GONE);
+                    stagebtn.setVisibility(View.VISIBLE);
+                    animbtn.setVisibility(View.VISIBLE);
+                    config.setVisibility(View.VISIBLE);
+                } else {
+                    mainprog.setVisibility(View.GONE);
+                    checkstate.setText(R.string.main_internet_no);
+                    Toast.makeText(this, "You need internet connection to run this application!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
-
     }
 
     protected boolean cando() {
@@ -131,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                     return false;
                 }
-
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 return false;
@@ -154,6 +212,12 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this,StageInfo.class);
         startActivity(intent);
+    }
+
+    protected void gotoconfig() {
+        Intent intent = new Intent(this,ConfigScreen.class);
+        startActivity(intent);
+        finish();
     }
 
     private void deleter(File f) {

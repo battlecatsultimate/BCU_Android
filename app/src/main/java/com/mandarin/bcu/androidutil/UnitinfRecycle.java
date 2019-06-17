@@ -1,14 +1,22 @@
 package com.mandarin.bcu.androidutil;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +30,6 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
-import com.mandarin.bcu.util.Res;
 import com.mandarin.bcu.util.basis.BasisSet;
 import com.mandarin.bcu.util.basis.Treasure;
 import com.mandarin.bcu.util.unit.EForm;
@@ -31,6 +38,7 @@ import com.mandarin.bcu.util.unit.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHolder> {
     private Activity context;
@@ -40,6 +48,11 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
     private int fs = 0;
     private getStrings s;
     private String [][] fragment = {{"Immune to "},{""}};
+    private int[][] states = new int[][] {
+            new int[] {android.R.attr.state_enabled}
+    };
+
+    private int[] color;
 
 
     public UnitinfRecycle(Activity context, ArrayList<String> names, Form[] forms, int id) {
@@ -48,6 +61,9 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         this.forms = forms;
         this.id = id;
         s = new getStrings(this.context);
+        color = new int[] {
+                getAttributeColor(context,R.attr.TextPrimary)
+        };
 
         if(StaticStore.addition == null) {
             int[] addid = {R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas};
@@ -84,18 +100,68 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        TextInputLayout cdlev;
+        TextInputLayout cdtrea;
+        TextInputLayout atktrea;
+        TextInputLayout healtrea;
+
+
+        cdlev = context.findViewById(R.id.cdlev);
+        cdtrea = context.findViewById(R.id.cdtrea);
+        atktrea = context.findViewById(R.id.atktrea);
+        healtrea = context.findViewById(R.id.healtrea);
+
+        cdlev.setCounterEnabled(true);
+        cdlev.setCounterMaxLength(2);
+
+        cdtrea.setCounterEnabled(true);
+        cdtrea.setCounterMaxLength(3);
+
+        atktrea.setCounterEnabled(true);
+        atktrea.setCounterMaxLength(3);
+
+        healtrea.setCounterEnabled(true);
+        healtrea.setCounterMaxLength(3);
+
+        cdlev.setHelperTextColor(new ColorStateList(states,color));
+        cdtrea.setHelperTextColor(new ColorStateList(states,color));
+        atktrea.setHelperTextColor(new ColorStateList(states,color));
+        healtrea.setHelperTextColor(new ColorStateList(states,color));
+
+        SharedPreferences shared = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+
+        if(shared.getBoolean("frame",true)) {
+            fs = 0;
+            viewHolder.frse.setText(context.getString(R.string.unit_info_fr));
+        } else {
+            fs = 1;
+            viewHolder.frse.setText(context.getString(R.string.unit_info_sec));
+        }
+
         Treasure t = BasisSet.current.t();
         Form f = forms[viewHolder.getAdapterPosition()];
         EForm ef = new EForm(f,f.unit.getPrefLvs());
         List<String> ability = Interpret.getAbi(f.du,fragment,StaticStore.addition,0);
         List<Integer> abilityicon = Interpret.getAbiid(f.du);
 
+        TextInputEditText cdlevt = context.findViewById(R.id.cdlevt);
+        TextInputEditText cdtreat = context.findViewById(R.id.cdtreat);
+        TextInputEditText atktreat = context.findViewById(R.id.atktreat);
+        TextInputEditText healtreat = context.findViewById(R.id.healtreat);
+
+        cdlevt.setText(String.valueOf(t.tech[0]));
+        cdtreat.setText(String.valueOf(t.trea[2]));
+        atktreat.setText(String.valueOf(t.trea[0]));
+        healtreat.setText(String.valueOf(t.trea[1]));
+
+
         String language = Locale.getDefault().getLanguage();
         List<String> proc;
-        if(language.equals("ko"))
-            proc = Interpret.getProc(f.du,1,0);
-        else
-            proc = Interpret.getProc(f.du,0,0);
+        if(language.equals("ko")) {
+            proc = Interpret.getProc(f.du,1,fs);
+        } else {
+            proc = Interpret.getProc(f.du,0,fs);
+        }
         List<Integer> procicon = Interpret.getProcid(f.du);
 
         viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb(f.anim.uni.getIcon(),context,48));
@@ -108,12 +174,12 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.unitcost.setText(s.getCost(f));
         viewHolder.unitsimu.setText(s.getSimu(f));
         viewHolder.unitspd.setText(s.getSpd(f));
-        viewHolder.unitcd.setText(s.getCD(f,t,0));
+        viewHolder.unitcd.setText(s.getCD(f, t, fs));
         viewHolder.unitrang.setText(s.getRange(f));
-        viewHolder.unitpreatk.setText(s.getPre(f,0));
-        viewHolder.unitpost.setText(s.getPost(f,0));
-        viewHolder.unittba.setText(s.getTBA(f,0));
-        viewHolder.unitatkt.setText(s.getAtkTime(f,0));
+        viewHolder.unitpreatk.setText(s.getPre(f, fs));
+        viewHolder.unitpost.setText(s.getPost(f, fs));
+        viewHolder.unittba.setText(s.getTBA(f, fs));
+        viewHolder.unitatkt.setText(s.getAtkTime(f, fs));
         viewHolder.unitabilt.setText(s.getAbilT(f));
 
         if(ability.size()>0 || proc.size() > 0) {
@@ -131,7 +197,18 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         Listeners(viewHolder);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void Listeners(ViewHolder viewHolder) {
+        TextInputLayout cdlev = context.findViewById(R.id.cdlev);
+        TextInputLayout cdtrea = context.findViewById(R.id.cdtrea);
+        TextInputLayout atktrea = context.findViewById(R.id.atktrea);
+        TextInputLayout healtrea = context.findViewById(R.id.healtrea);
+        TextInputEditText cdlevt = context.findViewById(R.id.cdlevt);
+        TextInputEditText cdtreat = context.findViewById(R.id.cdtreat);
+        TextInputEditText atktreat = context.findViewById(R.id.atktreat);
+        TextInputEditText healtreat = context.findViewById(R.id.healtreat);
+        Button reset = context.findViewById(R.id.treasurereset);
+
         Treasure t = BasisSet.current.t();
         Form f = forms[viewHolder.getAdapterPosition()];
 
@@ -143,13 +220,30 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         for(int j=0;j<f.unit.maxp+1;j++)
             levelsp.add(j);
 
-        ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,levels);
-        ArrayAdapter<Integer> arrayAdapterp = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,levelsp);
+        ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(context, R.layout.spinneradapter, levels);
+        ArrayAdapter<Integer> arrayAdapterp = new ArrayAdapter<>(context, R.layout.spinneradapter, levelsp);
+
+        int currentlev;
+
+        SharedPreferences shared = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+
+        if(shared.getInt("default_level",50) > f.unit.max)
+            currentlev = f.unit.max;
+        else
+            if(f.unit.rarity != 0)
+                currentlev = shared.getInt("default_level",50);
+            else
+                currentlev = f.unit.max;
 
         viewHolder.unitlevel.setAdapter(arrayAdapter);
-        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel,f.unit.max));
+        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel,currentlev));
         viewHolder.unitlevelp.setAdapter(arrayAdapterp);
-        viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp,f.unit.getPrefLv()-f.unit.max));
+
+        if(f.unit.getPrefLv()-f.unit.max < 0) {
+            viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp,0));
+        } else {
+            viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, f.unit.getPrefLv() - f.unit.max));
+        }
 
         if(levelsp.size() == 1) {
             viewHolder.unitlevelp.setVisibility(View.GONE);
@@ -160,11 +254,12 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             @Override
             public void onClick(View v) {
                 if(fs == 0) {
-                    viewHolder.unitcd.setText(s.getCD(f,t,1));
-                    viewHolder.unitpreatk.setText(s.getPre(f,1));
-                    viewHolder.unitpost.setText(s.getPost(f,1));
-                    viewHolder.unittba.setText(s.getTBA(f,1));
-                    viewHolder.unitatkt.setText(s.getAtkTime(f,1));
+                    fs = 1;
+                    viewHolder.unitcd.setText(s.getCD(f,t,fs));
+                    viewHolder.unitpreatk.setText(s.getPre(f,fs));
+                    viewHolder.unitpost.setText(s.getPost(f,fs));
+                    viewHolder.unittba.setText(s.getTBA(f,fs));
+                    viewHolder.unitatkt.setText(s.getAtkTime(f,fs));
                     viewHolder.frse.setText(context.getString(R.string.unit_info_sec));
 
                     if(viewHolder.unitabil.getVisibility() != View.GONE) {
@@ -175,9 +270,9 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         String language = Locale.getDefault().getLanguage();
                         List<String> proc;
                         if (language.equals("ko"))
-                            proc = Interpret.getProc(f.du, 1, 1);
+                            proc = Interpret.getProc(f.du, 1, fs);
                         else
-                            proc = Interpret.getProc(f.du, 0, 1);
+                            proc = Interpret.getProc(f.du, 0, fs);
                         List<Integer> procicon = Interpret.getProcid(f.du);
 
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -187,14 +282,13 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         viewHolder.unitabil.setAdapter(adapterAbil);
                         ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
                     }
-
-                    fs = 1;
                 } else {
-                    viewHolder.unitcd.setText(s.getCD(f,t,0));
-                    viewHolder.unitpreatk.setText(s.getPre(f,0));
-                    viewHolder.unitpost.setText(s.getPost(f,0));
-                    viewHolder.unittba.setText(s.getTBA(f,0));
-                    viewHolder.unitatkt.setText(s.getAtkTime(f,0));
+                    fs = 0;
+                    viewHolder.unitcd.setText(s.getCD(f,t,fs));
+                    viewHolder.unitpreatk.setText(s.getPre(f,fs));
+                    viewHolder.unitpost.setText(s.getPost(f,fs));
+                    viewHolder.unittba.setText(s.getTBA(f,fs));
+                    viewHolder.unitatkt.setText(s.getAtkTime(f,fs));
                     viewHolder.frse.setText(context.getString(R.string.unit_info_fr));
 
                     if(viewHolder.unitabil.getVisibility() != View.GONE) {
@@ -205,9 +299,9 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         String language = Locale.getDefault().getLanguage();
                         List<String> proc;
                         if (language.equals("ko"))
-                            proc = Interpret.getProc(f.du, 1, 0);
+                            proc = Interpret.getProc(f.du, 1, fs);
                         else
-                            proc = Interpret.getProc(f.du, 0, 0);
+                            proc = Interpret.getProc(f.du, 0, fs);
                         List<Integer> procicon = Interpret.getProcid(f.du);
 
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -217,8 +311,6 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         viewHolder.unitabil.setAdapter(adapterAbil);
                         ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
                     }
-
-                    fs = 0;
                 }
             }
         });
@@ -337,6 +429,284 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        cdlevt.setSelection(Objects.requireNonNull(cdlevt.getText()).length());
+        cdtreat.setSelection(Objects.requireNonNull(cdtreat.getText()).length());
+        atktreat.setSelection(Objects.requireNonNull(atktreat.getText()).length());
+        healtreat.setSelection(Objects.requireNonNull(healtreat.getText()).length());
+
+        cdlevt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 30 || Integer.parseInt(s.toString()) <= 0) {
+                        if(cdlev.isHelperTextEnabled()) {
+                            cdlev.setHelperTextEnabled(false);
+                            cdlev.setErrorEnabled(true);
+                            cdlev.setError(context.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(cdlev.isErrorEnabled()) {
+                            cdlev.setError(null);
+                            cdlev.setErrorEnabled(false);
+                            cdlev.setHelperTextEnabled(true);
+                            cdlev.setHelperTextColor(new ColorStateList(states,color));
+                            cdlev.setHelperText("1~30");
+                        }
+                    }
+                } else {
+                    if(cdlev.isErrorEnabled()) {
+                        cdlev.setError(null);
+                        cdlev.setErrorEnabled(false);
+                        cdlev.setHelperTextEnabled(true);
+                        cdlev.setHelperTextColor(new ColorStateList(states,color));
+                        cdlev.setHelperText("1~30");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 30 && Integer.parseInt(text.toString()) > 0) {
+                        int lev = Integer.parseInt(text.toString());
+
+                        t.tech[0] = lev;
+
+                        if (viewHolder.unitcd.getText().toString().endsWith("s")) {
+                            viewHolder.unitcd.setText(s.getCD(f, t, 1));
+                        } else {
+                            viewHolder.unitcd.setText(s.getCD(f, t, 0));
+                        }
+                    }
+                } else {
+                    t.tech[0] = 1;
+                    if(viewHolder.unitcd.getText().toString().endsWith("s")) {
+                        viewHolder.unitcd.setText(s.getCD(f,t,1));
+                    } else {
+                        viewHolder.unitcd.setText(s.getCD(f,t,0));
+                    }
+                }
+            }
+        });
+
+        cdtreat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 300) {
+                        if(cdtrea.isHelperTextEnabled()) {
+                            cdtrea.setHelperTextEnabled(false);
+                            cdtrea.setErrorEnabled(true);
+                            cdtrea.setError(context.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(cdtrea.isErrorEnabled()) {
+                            cdtrea.setError(null);
+                            cdtrea.setErrorEnabled(false);
+                            cdtrea.setHelperTextEnabled(true);
+                            cdtrea.setHelperTextColor(new ColorStateList(states,color));
+                            cdtrea.setHelperText("0~300");
+                        }
+                    }
+                } else {
+                    if(cdtrea.isErrorEnabled()) {
+                        cdtrea.setError(null);
+                        cdtrea.setErrorEnabled(false);
+                        cdtrea.setHelperTextEnabled(true);
+                        cdtrea.setHelperTextColor(new ColorStateList(states,color));
+                        cdtrea.setHelperText("0~300");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 300) {
+                        int trea = Integer.parseInt(text.toString());
+
+                        t.trea[2] = trea;
+
+                        if (viewHolder.unitcd.getText().toString().endsWith("s")) {
+                            viewHolder.unitcd.setText(s.getCD(f, t, 1));
+                        } else {
+                            viewHolder.unitcd.setText(s.getCD(f, t, 0));
+                        }
+                    }
+                } else {
+                    t.trea[2] = 0;
+                    if(viewHolder.unitcd.getText().toString().endsWith("s")) {
+                        viewHolder.unitcd.setText(s.getCD(f,t,1));
+                    } else {
+                        viewHolder.unitcd.setText(s.getCD(f,t,0));
+                    }
+                }
+            }
+        });
+
+        atktreat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 300) {
+                        if(atktrea.isHelperTextEnabled()) {
+                            atktrea.setHelperTextEnabled(false);
+                            atktrea.setErrorEnabled(true);
+                            atktrea.setError(context.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(atktrea.isErrorEnabled()) {
+                            atktrea.setError(null);
+                            atktrea.setErrorEnabled(false);
+                            atktrea.setHelperTextEnabled(true);
+                            atktrea.setHelperTextColor(new ColorStateList(states,color));
+                            atktrea.setHelperText("0~300");
+                        }
+                    }
+                } else {
+                    if(atktrea.isErrorEnabled()) {
+                        atktrea.setError(null);
+                        atktrea.setErrorEnabled(false);
+                        atktrea.setHelperTextEnabled(true);
+                        atktrea.setHelperTextColor(new ColorStateList(states,color));
+                        atktrea.setHelperText("0~300");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 300) {
+                        int trea = Integer.parseInt(text.toString());
+
+                        t.trea[0] = trea;
+                        int level = (int) viewHolder.unitlevel.getSelectedItem();
+                        int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
+
+                        if (viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
+                            viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp));
+                        } else {
+                            viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp));
+                        }
+                    }
+                } else {
+                    t.trea[0] = 0;
+                    int level = (int)viewHolder.unitlevel.getSelectedItem();
+                    int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
+
+                    if(viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
+                        viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp));
+                    } else {
+                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp));
+                    }
+                }
+            }
+        });
+
+        healtreat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 300) {
+                        if(healtrea.isHelperTextEnabled()) {
+                            healtrea.setHelperTextEnabled(false);
+                            healtrea.setErrorEnabled(true);
+                            healtrea.setError(context.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(healtrea.isErrorEnabled()) {
+                            healtrea.setError(null);
+                            healtrea.setErrorEnabled(false);
+                            healtrea.setHelperTextEnabled(true);
+                            healtrea.setHelperTextColor(new ColorStateList(states,color));
+                            healtrea.setHelperText("0~300");
+                        }
+                    }
+                } else {
+                    if(healtrea.isErrorEnabled()) {
+                        healtrea.setError(null);
+                        healtrea.setErrorEnabled(false);
+                        healtrea.setHelperTextEnabled(true);
+                        healtrea.setHelperTextColor(new ColorStateList(states,color));
+                        healtrea.setHelperText("0~300");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 300) {
+                        int trea = Integer.parseInt(text.toString());
+
+                        t.trea[1] = trea;
+                        int level = (int) viewHolder.unitlevel.getSelectedItem();
+                        int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
+
+                        viewHolder.unithp.setText(s.getHP(f, t, level + levelp));
+                    }
+                } else {
+                    t.trea[1] = 0;
+                    int level = (int)viewHolder.unitlevel.getSelectedItem();
+                    int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
+
+                    viewHolder.unithp.setText(s.getHP(f,t,level+levelp));
+                }
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                t.tech[0] = 30;
+                t.trea[0] = 300;
+                t.trea[1] = 300;
+                t.trea[2] = 300;
+
+                cdlevt.setText(String.valueOf(t.tech[0]));
+                cdtreat.setText(String.valueOf(t.trea[0]));
+                atktreat.setText(String.valueOf(t.trea[1]));
+                healtreat.setText(String.valueOf(t.trea[2]));
+
+                int level = (int)viewHolder.unitlevel.getSelectedItem();
+                int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
+
+                if(viewHolder.unitcd.getText().toString().endsWith("s")) {
+                    viewHolder.unitcd.setText(s.getCD(f,t,1));
+                } else {
+                    viewHolder.unitcd.setText(s.getCD(f,t,0));
+                }
+
+                if(viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
+                    viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp));
+                } else {
+                    viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp));
+                }
+
+                viewHolder.unithp.setText(s.getHP(f,t,level+levelp));
             }
         });
     }
@@ -498,5 +868,18 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             return Bitmap.createBitmap((int)px,(int)px,conf);
         }
 
+    }
+
+    private static int getAttributeColor(Context context, int attributeId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attributeId, typedValue, true);
+        int colorRes = typedValue.resourceId;
+        int color = -1;
+        try {
+            color = ContextCompat.getColor(context,colorRes);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return color;
     }
 }

@@ -167,7 +167,7 @@
     <string name="unit_info_text0">"_ % 확률로 "</string>
     <string name="unit_info_text1">"_ f 동안 "</string>
     <string name="unit_info_text2">"레벨 _ "</string>
-    <string name="unit_info_text3">적을 _ % 만큼</string>
+    <string name="unit_info_text3">"적을 _ % 만큼 "</string>
     <string name="unit_info_text4">"_ 만큼 "</string>
     <string name="unit_info_text5">"_ % 체력에서, "</string>
     <string name="unit_info_text6">"_ % 만큼 "</string>
@@ -183,4 +183,23 @@
     <string name="apk_down_title">새로운 Apk 발견</string>
     <string name="apk_down_content">"새로운 버전의 apk 가 발견되었습니다. 다운받으시겠습니까? 신규 버전 : "</string>
     <string name="main_check_apk">APK 파일 확인중…</string>
+    <string name="def_config">Go to Settings</string>
+    <string name="theme_dark">다크</string>
+    <string name="theme_light">라이트</string>
+    <string name="config_theme">테마</string>
+    <string name="config_name">설정</string>
+    <string name="config_frames">프레임</string>
+    <string name="config_frse">데이터 기본 단위</string>
+    <string name="config_seconds">초</string>
+    <string name="treasure_atk">전설의 냥코소드</string>
+    <string name="treasure_cd">시간단축 시계</string>
+    <string name="treasure_cd_lev">연구력 레벨</string>
+    <string name="treasure_heal">전설의 냥코실드</string>
+    <string name="treasure_level">보물/레벨</string>
+    <string name="treasure_invalid">범위 벗어남</string>
+    <string name="action_settings">설정</string>
+    <string name="config_deflev">기본 레벨</string>
+    <string name="config_testapk">안정성에 상관없이 앱을 최신으로 업데이트</string>
+    <string name="def_treasure_set">Open Treasure Setting</string>
+    <string name="treasure_reset">초기화</string>
 </resources>

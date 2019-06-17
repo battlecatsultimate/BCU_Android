@@ -2,6 +2,7 @@ package com.mandarin.bcu;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -93,6 +94,22 @@ public class SearchFilter extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences.Editor ed;
+        if(!shared.contains("initial")) {
+            ed = shared.edit();
+            ed.putBoolean("initial",true);
+            ed.putBoolean("theme",true);
+            ed.apply();
+        } else {
+            if(!shared.getBoolean("theme",false)) {
+                setTheme(R.style.AppTheme_night);
+            } else {
+                setTheme(R.style.AppTheme_day);
+            }
+        }
+
         setContentView(R.layout.activity_search_filter);
 
         back = findViewById(R.id.schbck);
@@ -310,6 +327,7 @@ public class SearchFilter extends AppCompatActivity {
         finish();
     }
 
+    @SuppressWarnings("unchecked")
     protected void Checker() {
         Intent data = getIntent();
         Bundle extra = data.getExtras();

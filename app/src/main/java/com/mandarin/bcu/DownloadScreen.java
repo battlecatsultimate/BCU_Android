@@ -2,6 +2,7 @@ package com.mandarin.bcu;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,6 +32,22 @@ public class DownloadScreen extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences.Editor ed;
+        if(!shared.contains("initial")) {
+            ed = shared.edit();
+            ed.putBoolean("initial",true);
+            ed.putBoolean("theme",true);
+            ed.apply();
+        } else {
+            if(!shared.getBoolean("theme",false)) {
+                setTheme(R.style.AppTheme_night);
+            } else {
+                setTheme(R.style.AppTheme_day);
+            }
+        }
+
         setContentView(R.layout.activity_download_screen);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

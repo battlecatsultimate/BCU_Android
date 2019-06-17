@@ -6,8 +6,60 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="backgroundPrimary">@color/backgroundPrimary</item>
+        <item name="stageSelect">@color/stageSelect</item>
+        <item name="unitinfButton">@color/unitinfButton</item>
+        <item name="ButtonPrimary">@color/ButtonPrimary</item>
+        <item name="TextPrimary">@color/TextPrimary</item>
+        <item name="TableBorder">@color/TableBorder</item>
+        <item name="UnitinfoName">@color/UnitinfoName</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.night" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryN</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkN</item>
+        <item name="colorAccent">@color/colorAccentN</item>
+        <item name="backgroundPrimary">@color/backgroundPrimaryN</item>
+        <item name="stageSelect">@color/stageSelectN</item>
+        <item name="unitinfButton">@color/unitinfButtonN</item>
+        <item name="ButtonPrimary">@color/ButtonPrimaryN</item>
+        <item name="TextPrimary">@color/TextPrimaryN</item>
+        <item name="TableBorder">@color/TableBorderN</item>
+        <item name="UnitinfoName">@color/UnitinfoNameN</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.day" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="backgroundPrimary">@color/backgroundPrimary</item>
+        <item name="stageSelect">@color/stageSelect</item>
+        <item name="unitinfButton">@color/unitinfButton</item>
+        <item name="ButtonPrimary">@color/ButtonPrimary</item>
+        <item name="TextPrimary">@color/TextPrimary</item>
+        <item name="TableBorder">@color/TableBorder</item>
+        <item name="UnitinfoName">@color/UnitinfoName</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CounterStyle" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">?attr/TextPrimary</item>
     </style>
 
 </resources>

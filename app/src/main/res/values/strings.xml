@@ -182,4 +182,24 @@
     <string name="apk_down_title">New Apk Found</string>
     <string name="apk_down_content">"You can download newer version. Do you want to download apk file? New version : "</string>
     <string name="main_check_apk">Checking APK File…</string>
+    <string name="def_config">Go to Settings</string>
+    <string name="theme_light">Light</string>
+    <string name="config_theme">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="config_name">Configuration</string>
+    <string name="config_frse">Frame/Second</string>
+    <string name="config_frames">Frames</string>
+    <string name="config_seconds">Seconds</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="treasure_level">Treasure/Level</string>
+    <string name="treasure_cd_lev">CD Level</string>
+    <string name="treasure_cd">CD Treasure</string>
+    <string name="treasure_atk">Atk Treasure</string>
+    <string name="treasure_heal">Health Treasure</string>
+    <string name="def_treasure_set">Open Treasure Setting</string>
+    <string name="treasure_invalid">Invalid Range</string>
+    <string name="treasure_reset">Reset</string>
+    <string name="config_testapk">Update apk to test version</string>
+    <string name="config_deflev">Default Level</string>
 </resources>

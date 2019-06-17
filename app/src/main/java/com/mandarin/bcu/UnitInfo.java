@@ -1,8 +1,13 @@
 package com.mandarin.bcu;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,8 +17,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -30,12 +40,31 @@ public class UnitInfo extends AppCompatActivity {
     private ArrayList<String> names = new ArrayList<>();
     private int[] nformid = {R.string.unit_info_first,R.string.unit_info_second,R.string.unit_info_third};
     private String[] nform = new String[nformid.length];
-    ImageButton back;
+    private ImageButton treasure;
+    private ConstraintLayout mainLayout;
+    private ConstraintLayout treasuretab;
+    private boolean isOpen = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences.Editor ed;
+        if(!shared.contains("initial")) {
+            ed = shared.edit();
+            ed.putBoolean("initial",true);
+            ed.putBoolean("theme",true);
+            ed.apply();
+        } else {
+            if(!shared.getBoolean("theme",false)) {
+                setTheme(R.style.AppTheme_night);
+            } else {
+                setTheme(R.style.AppTheme_day);
+            }
+        }
+
         setContentView(R.layout.activity_unit_info);
 
         ScrollView scrollView = findViewById(R.id.unitinfscroll);
@@ -48,7 +77,7 @@ public class UnitInfo extends AppCompatActivity {
 
         TextView unittitle = findViewById(R.id.unitinfrarname);
 
-        back = findViewById(R.id.unitinfback);
+        ImageButton back = findViewById(R.id.unitinfback);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +116,63 @@ public class UnitInfo extends AppCompatActivity {
             viewPager.setOffscreenPageLimit(1);
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
             tabs.setupWithViewPager(viewPager);
+
+            treasure = findViewById(R.id.imageButton);
+            mainLayout = findViewById(R.id.unitinfomain);
+            treasuretab = findViewById(R.id.treasurelayout);
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+            AnimatorSet set = new AnimatorSet();
+
+            treasure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!isOpen) {
+                        ValueAnimator slider = ValueAnimator.ofInt(0,treasuretab.getWidth()).setDuration(300);
+                        slider.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                treasuretab.setTranslationX(-(int)animation.getAnimatedValue());
+                                treasuretab.requestLayout();
+                            }
+                        });
+
+                        set.play(slider);
+                        set.setInterpolator(new DecelerateInterpolator());
+                        set.start();
+                        isOpen = true;
+                    } else {
+                        View view = UnitInfo.this.getCurrentFocus();
+                        if(view != null) {
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                            treasuretab.clearFocus();
+                        }
+                        ValueAnimator slider = ValueAnimator.ofInt(treasuretab.getWidth(),0).setDuration(300);
+                        slider.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                treasuretab.setTranslationX(-(int)animation.getAnimatedValue());
+                                treasuretab.requestLayout();
+                            }
+                        });
+                        set.play(slider);
+                        set.setInterpolator(new AccelerateInterpolator());
+                        set.start();
+                        isOpen = false;
+                    }
+                }
+            });
+
+            treasuretab.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mainLayout.setClickable(false);
+                    return true;
+                }
+            });
         }
     }
 
@@ -117,4 +203,14 @@ public class UnitInfo extends AppCompatActivity {
             return title[position];
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if(isOpen) {
+            treasure.performClick();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 }

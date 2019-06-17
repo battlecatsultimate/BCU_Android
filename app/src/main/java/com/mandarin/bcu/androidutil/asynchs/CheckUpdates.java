@@ -8,11 +8,13 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mandarin.bcu.DownloadScreen;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.main.MainBCU;
 
 import org.json.JSONArray;
@@ -43,6 +45,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     private final TextView checkstate;
     private final ProgressBar mainprog;
     private final Context context;
+    private final ImageButton config;
     private final boolean cando;
 
     private boolean lang;
@@ -54,11 +57,12 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     private JSONObject ans;
 
-    public CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Context context,boolean cando) {
+    CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Context context, boolean cando) {
         this.context = context;
         Activity a = (Activity)context;
         this.animbtn = a.findViewById(R.id.anvibtn);
         this.stagebtn = a.findViewById(R.id.stgbtn);
+        this.config = a.findViewById(R.id.mainconfig);
         this.path = path;
         this.lang = lang;
         this.checkstate = a.findViewById(R.id.mainstup);
@@ -169,7 +173,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         checkFiles(ans);
 
         if(fileneed.isEmpty() && filenum.isEmpty()) {
-            new AddPathes(animbtn,stagebtn,checkstate,mainprog).execute();
+            new AddPathes(animbtn,stagebtn,checkstate,mainprog,config).execute();
         }
     }
 
@@ -280,12 +284,14 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     private final Button stagebtn;
     private final TextView checkstate;
     private final ProgressBar mainprog;
+    private final ImageButton config;
 
-    AddPathes(Button animbtn,Button stagebtn,TextView checkstate,ProgressBar mainprog) {
+    AddPathes(Button animbtn, Button stagebtn, TextView checkstate, ProgressBar mainprog, ImageButton config) {
         this.animbtn = animbtn;
         this.stagebtn = stagebtn;
         this.checkstate = checkstate;
         this.mainprog = mainprog;
+        this.config = config;
     }
 
     @Override
@@ -298,6 +304,7 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         com.mandarin.bcu.decode.ZipLib.init();
         com.mandarin.bcu.decode.ZipLib.read();
+        StaticStore.root = 1;
 
         return null;
     }
@@ -308,5 +315,6 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
         checkstate.setVisibility(View.GONE);
         stagebtn.setVisibility(View.VISIBLE);
         animbtn.setVisibility(View.VISIBLE);
+        config.setVisibility(View.VISIBLE);
     }
 }

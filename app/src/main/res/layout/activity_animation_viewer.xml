@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundPrimary"
     tools:context=".AnimationViewer">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/animtool"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#A9A9A9"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,9 +24,11 @@
         android:id="@+id/animsch"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/def_animsch"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:tint="?attr/UnitinfoName"
         app:layout_constraintBottom_toBottomOf="@+id/animtool"
         app:layout_constraintEnd_toEndOf="@+id/animtool"
         app:layout_constraintTop_toTopOf="@+id/animtool"
@@ -35,9 +38,11 @@
         android:id="@+id/animbck"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/def_animbck"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:tint="?attr/UnitinfoName"
         app:layout_constraintBottom_toBottomOf="@+id/animtool"
         app:layout_constraintStart_toStartOf="@+id/animtool"
         app:layout_constraintTop_toTopOf="@+id/animtool"
@@ -61,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animtool" >
+        app:layout_constraintTop_toBottomOf="@+id/animtool">
 
     </ListView>
 

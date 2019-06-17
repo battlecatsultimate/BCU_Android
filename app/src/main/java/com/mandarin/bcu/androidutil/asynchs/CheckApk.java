@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -25,6 +26,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class CheckApk extends AsyncTask<Void,String,Void> {
     private final Context context;
@@ -85,7 +88,14 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
             in.close();
             apkcon.disconnect();
 
-            String thatver = ans.getString("android_ver");
+            SharedPreferences shared = context.getSharedPreferences("configuration",MODE_PRIVATE);
+            String thatver;
+
+            if(shared.getBoolean("apktest",false)) {
+                thatver = ans.getString("android_test");
+            } else {
+                thatver = ans.getString("android_ver");
+            }
 
             publishProgress(thatver);
 

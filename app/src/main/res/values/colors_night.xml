@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryN">#282828</color>
+    <color name="colorPrimaryDarkN">#282828</color>
+    <color name="colorAccentN">#455a64</color>
+    <color name="stageSelectN">#cfcfcf</color>
+    <color name="unitinfButtonN">#424242</color>
+    <color name="backgroundPrimaryN">#363636</color>
+    <color name="ButtonPrimaryN">#404040</color>
+    <color name="TextPrimaryN">#eeeeee</color>
+    <color name="TableBorderN">#212121</color>
+    <color name="UnitinfoNameN">#bdbdbd</color>
+</resources>

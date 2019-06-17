@@ -1,126 +1,381 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".UnitInfo">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/unitinfomain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#A9A9A9"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundPrimary"
+        tools:context=".UnitInfo">
 
-    <TextView
-        android:id="@+id/unitinfrarname"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="Unit_Rairty_Name"
-        android:textColor="#d8d8d8"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
-        app:layout_constraintStart_toEndOf="@+id/unitinfback"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2" />
-
-    <ScrollView
-        android:id="@+id/unitinfscroll"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
-
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/nestedScrollView"
+        <TextView
+            android:id="@+id/unitinfrarname"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Unit_Rairty_Name"
+            android:textColor="?attr/UnitinfoName"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
+            app:layout_constraintStart_toEndOf="@+id/unitinfback"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2" />
+
+        <ScrollView
+            android:id="@+id/unitinfscroll"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/nestedScrollView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/unitinfrec"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
-                        android:focusableInTouchMode="true"
-                        android:overScrollMode="never"
-                        app:layout_constrainedWidth="false">
+                        android:orientation="vertical">
 
-                    </android.support.v7.widget.RecyclerView>
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/unitinfrec"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:descendantFocusability="blocksDescendants"
+                            android:focusableInTouchMode="true"
+                            android:overScrollMode="never"
+                            app:layout_constrainedWidth="false">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/unitinfpager"
-                android:layout_width="0dp"
-                android:layout_height="180dp"
-                android:layout_marginBottom="16dp"
+                        </android.support.v7.widget.RecyclerView>
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/unitinfpager"
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/unitinfexplain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    app:tabGravity="fill"
+                    app:tabMaxWidth="0dp"
+                    app:tabPaddingEnd="24dp"
+                    app:tabPaddingStart="24dp"
+                    app:tabTextColor="?attr/TextPrimary" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/unit_info_extitle"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+
+        <ImageButton
+            android:id="@+id/unitinfback"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/def_info_back_cont"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:tint="?attr/UnitinfoName"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
+            app:layout_constraintStart_toStartOf="@+id/toolbar2"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2"
+            app:srcCompat="@drawable/back_button" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/def_treasure_set"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:tint="?attr/UnitinfoName"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
+            app:layout_constraintEnd_toEndOf="@+id/unitinfscroll"
+            app:layout_constraintTop_toTopOf="@+id/toolbar2"
+            app:srcCompat="@drawable/ic_menu_black_24dp" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/treasurelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/tab_border"
+            android:outlineProvider="bounds"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/unitinfscroll"
+            app:layout_constraintTop_toBottomOf="@id/toolbar2"
+            app:layout_constraintVertical_bias="1.0"
+            tools:context=".UnitInfo">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0">
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/unitinfexplain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:tabGravity="fill"
-                app:tabMaxWidth="0dp"
-                app:tabPaddingEnd="24dp"
-                app:tabPaddingStart="24dp" />
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/unit_info_extitle"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+                    <TextView
+                        android:id="@+id/treasurename"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:maxLines="1"
+                        android:text="@string/treasure_level"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cdlev"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/treasure_cd_lev"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~30"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/treasurename">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cdlevt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:inputType="numberSigned"
+                            android:maxLength="2"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/cdlevst"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="lv."
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/cdlev"
+                        app:layout_constraintEnd_toEndOf="@+id/cdlev"
+                        app:layout_constraintTop_toTopOf="@+id/cdlev" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cdtrea"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:hint="@string/treasure_cd"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="0~300"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cdlev">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cdtreat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:inputType="numberSigned"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/percent0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="%"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/cdtrea"
+                        app:layout_constraintEnd_toEndOf="@+id/cdtrea"
+                        app:layout_constraintTop_toTopOf="@+id/cdtrea" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/atktrea"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:hint="@string/treasure_atk"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="0~300"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cdtrea">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/atktreat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:inputType="numberSigned"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/percent1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="%"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/atktrea"
+                        app:layout_constraintEnd_toEndOf="@+id/atktrea"
+                        app:layout_constraintTop_toTopOf="@+id/atktrea" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/healtrea"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:hint="@string/treasure_heal"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="0~300"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/atktrea">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/healtreat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:inputType="numberSigned"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/percent2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="%"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/healtrea"
+                        app:layout_constraintEnd_toEndOf="@+id/healtrea"
+                        app:layout_constraintTop_toTopOf="@+id/healtrea" />
+
+                    <Button
+                        android:id="@+id/treasurereset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:text="@string/treasure_reset"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/treasurename"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/treasurename"
+                        app:layout_constraintTop_toTopOf="@+id/treasurename" />
+
+                </android.support.constraint.ConstraintLayout>
+            </ScrollView>
 
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
 
-    <ImageButton
-        android:id="@+id/unitinfback"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/def_info_back_cont"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
-        app:layout_constraintStart_toStartOf="@+id/toolbar2"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2"
-        app:srcCompat="@drawable/back_button" />
+    </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

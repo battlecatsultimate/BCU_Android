@@ -2,6 +2,7 @@ package com.mandarin.bcu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -16,7 +17,6 @@ import com.mandarin.bcu.androidutil.FilterUnit;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.Adapters;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
-import com.mandarin.bcu.main.MainBCU;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
 import com.mandarin.bcu.util.unit.Form;
@@ -35,6 +35,22 @@ public class AnimationViewer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences.Editor ed;
+        if(!shared.contains("initial")) {
+            ed = shared.edit();
+            ed.putBoolean("initial",true);
+            ed.putBoolean("theme",true);
+            ed.apply();
+        } else {
+            if(!shared.getBoolean("theme",false)) {
+                setTheme(R.style.AppTheme_night);
+            } else {
+                setTheme(R.style.AppTheme_day);
+            }
+        }
+
         setContentView(R.layout.activity_animation_viewer);
 
         ImageBuilder.builder = new BMBuilder();
@@ -108,6 +124,7 @@ public class AnimationViewer extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

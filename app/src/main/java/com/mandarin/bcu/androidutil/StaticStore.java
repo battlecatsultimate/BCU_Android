@@ -20,6 +20,7 @@ public class StaticStore {
     public static Drawable[] icons = null;
     public static Drawable[] picons = null;
     public static String [] addition = null;
+    public static int root = 0;
 
     public static Bitmap getResize(Drawable drawable, Context context) {
         float dp = 32f;
@@ -33,5 +34,10 @@ public class StaticStore {
         Resources r = context.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
         return Bitmap.createScaledBitmap(b,(int)px,(int)px,false);
+    }
+
+    public static int dptopx(float dp,Context context) {
+        Resources r = context.getResources();
+        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
     }
 }

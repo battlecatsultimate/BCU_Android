@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.BuildConfig;
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.util.Interpret;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,7 +70,7 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
 
             byte [] buffer = new byte[1024];
             int len1;
-            Long total = (long)0;
+            long total = (long)0;
 
             while((len1 = is.read(buffer))!= -1) {
                 total += len1;

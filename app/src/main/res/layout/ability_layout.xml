@@ -39,7 +39,7 @@
             android:padding="2dp"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#4d4d4d"
+            android:textColor="?attr/TextPrimary"
             android:textSize="14sp" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
