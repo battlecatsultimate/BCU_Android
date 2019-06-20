@@ -1,6 +1,7 @@
 package com.mandarin.bcu;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Toast;
+
+import com.mandarin.bcu.androidutil.Revalidater;
 
 import java.util.ArrayList;
 
@@ -90,6 +93,7 @@ public class SearchFilter extends AppCompatActivity {
     private boolean atksimu = true;
     private boolean aborand = true;
     private boolean atkorand = true;
+    private boolean talents = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +166,7 @@ public class SearchFilter extends AppCompatActivity {
                 atksimu = true;
                 aborand = true;
                 atkorand = true;
+                talents = false;
 
                 atkgroup.clearCheck();
                 tgor.setChecked(true);
@@ -396,5 +401,11 @@ public class SearchFilter extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         back.performClick();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 }

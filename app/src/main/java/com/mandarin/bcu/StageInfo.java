@@ -1,5 +1,6 @@
 package com.mandarin.bcu;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 
 public class StageInfo extends AppCompatActivity {
@@ -71,5 +73,11 @@ public class StageInfo extends AppCompatActivity {
 
         stageset.setAdapter(adapter);
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 }

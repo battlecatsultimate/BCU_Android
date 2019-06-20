@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.asynchs.CheckApk;
 import com.mandarin.bcu.util.system.P;
 import com.mandarin.bcu.util.system.android.BMBuilder;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             ed.putBoolean("frame",true);
             ed.putBoolean("apktest",false);
             ed.putInt("default_level",50);
+            ed.putInt("Language",0);
             ed.apply();
         } else {
             if(!shared.getBoolean("theme",false)) {
@@ -82,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(!shared.contains("apktest")) {
             ed.putBoolean("apktest",false);
+            ed.apply();
+        }
+
+        if(!shared.contains("Language")) {
+            ed.putInt("Language",0);
             ed.apply();
         }
 
@@ -226,6 +233,12 @@ public class MainActivity extends AppCompatActivity {
                 deleter(g);
         else
             f.delete();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 
 }

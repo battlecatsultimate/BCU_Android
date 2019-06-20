@@ -5,11 +5,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.TypedValue;
 
 import com.mandarin.bcu.util.basis.Treasure;
 import com.mandarin.bcu.util.unit.Unit;
 
+import java.io.File;
 import java.util.List;
 
 public class StaticStore {
@@ -21,6 +23,15 @@ public class StaticStore {
     public static Drawable[] picons = null;
     public static String [] addition = null;
     public static int root = 0;
+    public static int unitnumber;
+    public static String [] lang = {"","en","zh","ja","ko"};
+
+    public static void getUnitnumber() {
+        String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
+
+        File f = new File(unitpath);
+        unitnumber = f.listFiles().length;
+    }
 
     public static Bitmap getResize(Drawable drawable, Context context) {
         float dp = 32f;

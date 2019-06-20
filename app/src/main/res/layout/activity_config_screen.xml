@@ -48,6 +48,7 @@
             android:layout_height="wrap_content">
 
             <TableRow
+                android:id="@+id/tableRow2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -60,7 +61,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/apktest">
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/configdeflev"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.8"
@@ -70,7 +71,7 @@
                     android:textSize="14sp" />
 
                 <Spinner
-                    android:id="@+id/configdeflev"
+                    android:id="@+id/configdeflevsp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
@@ -170,13 +171,43 @@
                 android:id="@+id/apktest"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
                 android:text="@string/config_testapk"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/configfrse"
-                app:layout_constraintStart_toStartOf="@+id/configfrse"
-                app:layout_constraintTop_toBottomOf="@+id/configfrse" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow3" />
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/configfrse">
+
+                <TextView
+                    android:id="@+id/configlang"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:text="@string/config_lang"
+                    android:textColor="?attr/TextPrimary" />
+
+                <Spinner
+                    android:id="@+id/configlangsp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:popupBackground="?attr/backgroundPrimary" />
+            </TableRow>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

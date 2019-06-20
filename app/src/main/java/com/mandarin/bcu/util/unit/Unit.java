@@ -1,5 +1,7 @@
 package com.mandarin.bcu.util.unit;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 import java.io.File;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.io.Reader;
 import com.mandarin.bcu.main.MainBCU;
 import com.mandarin.bcu.util.Data;
@@ -23,8 +26,9 @@ import com.mandarin.bcu.util.system.files.AssetData;
 import com.mandarin.bcu.util.system.files.VFile;
 
 public class Unit extends Data implements Comparable<Unit> {
+	private final static String [] locales = StaticStore.lang;
 
-	public static void readData() throws IOException {
+	public static void readData(Context context) throws IOException {
 		VFile.get("./org/unit").list().forEach(p -> new Unit(p));
 		Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
 		List<Unit> lu = Pack.def.us.ulist.getList();
@@ -53,7 +57,7 @@ public class Unit extends Data implements Comparable<Unit> {
 			u.info.fillBuy(strs);
 		}
 
-		String [] priority = chooser();
+		String [] priority = chooser(context);
 		String [][] unitnames = getName(priority);
 		String [][] explains = getExplain(priority);
 
@@ -142,8 +146,15 @@ public class Unit extends Data implements Comparable<Unit> {
 		return explain;
 	}
 
-	private static String[] chooser() {
-		String language = Locale.getDefault().getLanguage();
+	private static String[] chooser(Context context) {
+		String language = null;
+
+		SharedPreferences shared = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+		if(shared.getInt("Language",0) == 0) {
+			language = Locale.getDefault().getLanguage();
+		} else {
+			language = locales[shared.getInt("Language",0)];
+		}
 		String [] priority;
 		switch (language) {
 			case "en":
@@ -152,7 +163,10 @@ public class Unit extends Data implements Comparable<Unit> {
 			case "ja":
 				priority = new String[]{"/jp/", "/en/", "/zh/", "/kr/"};
 				break;
-			case "th":
+			case "zh":
+				priority = new String[]{"/zh/", "/jp/", "/en/", "/kr/"};
+				break;
+			case "zh_TW":
 				priority = new String[]{"/zh/", "/jp/", "/en/", "/kr/"};
 				break;
 			case "ko":

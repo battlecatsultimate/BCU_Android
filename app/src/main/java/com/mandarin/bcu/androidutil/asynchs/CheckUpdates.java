@@ -304,6 +304,7 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         com.mandarin.bcu.decode.ZipLib.init();
         com.mandarin.bcu.decode.ZipLib.read();
+        StaticStore.getUnitnumber();
         StaticStore.root = 1;
 
         return null;

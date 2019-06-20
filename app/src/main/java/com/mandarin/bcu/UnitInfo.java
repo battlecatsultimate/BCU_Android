@@ -29,6 +29,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.DynamicExplanation;
+import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.UnitinfRecycle;
 import com.mandarin.bcu.androidutil.getStrings;
@@ -211,6 +212,12 @@ public class UnitInfo extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 
 }

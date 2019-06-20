@@ -1,6 +1,7 @@
 package com.mandarin.bcu;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.asynchs.DownloadApk;
 
 public class ApkDownload extends AppCompatActivity {
@@ -72,5 +74,11 @@ public class ApkDownload extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 }

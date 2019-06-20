@@ -1,7 +1,9 @@
 package com.mandarin.bcu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,19 +16,25 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.StaticStore;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigScreen extends AppCompatActivity {
     SharedPreferences shared;
     ImageButton back;
+    private int [] LangId = {R.string.lang_auto,R.string.def_lang_en,R.string.def_lang_zh,R.string.def_lang_ja,R.string.def_lang_ko};
+    private String [] locales = StaticStore.lang;
+    private  boolean started = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         shared = getSharedPreferences("configuration",MODE_PRIVATE);
-        SharedPreferences.Editor ed = shared.edit();
+        SharedPreferences.Editor ed;
         if(!shared.contains("initial")) {
             ed = shared.edit();
             ed.putBoolean("initial",true);
@@ -110,7 +118,7 @@ public class ConfigScreen extends AppCompatActivity {
         for(int j =1;j < 51;j++)
             levels.add(j);
 
-        Spinner deflev = findViewById(R.id.configdeflev);
+        Spinner deflev = findViewById(R.id.configdeflevsp);
         ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(this,R.layout.spinneradapter,levels);
         deflev.setAdapter(arrayAdapter);
         deflev.setSelection(getIndex(deflev,shared.getInt("default_level",50)));
@@ -151,6 +159,44 @@ public class ConfigScreen extends AppCompatActivity {
                 }
             }
         });
+
+        Spinner language = findViewById(R.id.configlangsp);
+
+        List<String> lang = new ArrayList<>();
+        for (int i1 : LangId) {
+            lang.add(getString(i1));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.spinneradapter,lang);
+        language.setAdapter(adapter);
+        language.setSelection(shared.getInt("Language",0));
+
+        language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(started) {
+                    SharedPreferences.Editor ed = shared.edit();
+                    ed.putInt("Language", position);
+                    ed.apply();
+
+                    String lang = locales[position];
+                    if (lang.equals(""))
+                        lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+
+                    if (StaticStore.units != null)
+                        new Revalidater(ConfigScreen.this).Validate(lang, ConfigScreen.this);
+
+                    restart();
+                }
+
+                started = true;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private int getIndex(Spinner spinner, int lev) {
@@ -172,5 +218,11 @@ public class ConfigScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         back.performClick();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 }

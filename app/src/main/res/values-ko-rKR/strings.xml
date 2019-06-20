@@ -202,4 +202,11 @@
     <string name="config_testapk">안정성에 상관없이 앱을 최신으로 업데이트</string>
     <string name="def_treasure_set">Open Treasure Setting</string>
     <string name="treasure_reset">초기화</string>
+    <string name="def_lang_en">English</string>
+    <string name="def_lang_ko">한국어</string>
+    <string name="def_lang_zh">中文</string>
+    <string name="config_lang">언어</string>
+    <string name="lang_auto">자동</string>
+    <string name="def_lang_ja">日本語</string>
+    <string name="config_auto_mes">언어는 설정에서 나간 뒤에 적용됩니다.</string>
 </resources>

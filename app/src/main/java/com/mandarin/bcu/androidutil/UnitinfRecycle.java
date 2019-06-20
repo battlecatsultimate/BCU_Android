@@ -155,7 +155,10 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         healtreat.setText(String.valueOf(t.trea[1]));
 
 
-        String language = Locale.getDefault().getLanguage();
+        String language = StaticStore.lang[shared.getInt("Language",0)];
+        if(language.equals("")) {
+            language = Locale.getDefault().getLanguage();
+        }
         List<String> proc;
         if(language.equals("ko")) {
             proc = Interpret.getProc(f.du,1,fs);

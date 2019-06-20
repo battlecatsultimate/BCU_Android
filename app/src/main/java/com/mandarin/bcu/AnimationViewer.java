@@ -1,6 +1,7 @@
 package com.mandarin.bcu;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,8 +15,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.FilterUnit;
+import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.asynchs.Adapters;
+import com.mandarin.bcu.androidutil.Adapters;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
 import com.mandarin.bcu.util.system.android.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
@@ -55,10 +57,7 @@ public class AnimationViewer extends AppCompatActivity {
 
         ImageBuilder.builder = new BMBuilder();
 
-        String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
-
-        File f = new File(unitpath);
-        unitnumber = f.listFiles().length;
+        unitnumber = StaticStore.unitnumber;
 
         ImageButton back = findViewById(R.id.animbck);
         search = findViewById(R.id.animsch);
@@ -201,5 +200,11 @@ public class AnimationViewer extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
     }
 }
