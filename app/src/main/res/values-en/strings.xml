@@ -209,4 +209,13 @@
     <string name="lang_auto">Auto</string>
     <string name="def_lang_ja">日本語</string>
     <string name="config_auto_mes">Language will be applied after you leave the settings.</string>
+    <string name="talen_cu">Res.Curse</string>
+    <string name="talen_fr">Res.Freeze</string>
+    <string name="talen_kb">Res.KB</string>
+    <string name="talen_sl">Res.Slow</string>
+    <string name="talen_we">Res.Weaken</string>
+    <string name="talen_wv">Res.Wave</string>
+    <string name="unit_info_talent">Consider Talents</string>
+    <string name="talen_trait">"Trait : "</string>
+    <string name="talen_abil">"Ability : "</string>
 </resources>

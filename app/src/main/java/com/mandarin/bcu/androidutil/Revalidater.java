@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
 
-import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.pack.Pack;
 import com.mandarin.bcu.util.system.files.AssetData;
 import com.mandarin.bcu.util.system.files.VFile;

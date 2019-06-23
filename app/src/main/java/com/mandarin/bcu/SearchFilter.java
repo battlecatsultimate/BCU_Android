@@ -68,6 +68,7 @@ public class SearchFilter extends AppCompatActivity {
     private CheckBox[] targets = new CheckBox[9];
     private CheckBox[] attacks = new CheckBox[3];
     private CheckBox[] abilities = new CheckBox[30];
+    private CheckBox chnp;
     private ScrollView sc;
     private NestedScrollView nsc;
     private int[] tgid = {R.id.schchrd,R.id.schchfl,R.id.schchbla,R.id.schchme,R.id.schchan,R.id.schchal,R.id.schchzo,R.id.schchre,R.id.schchwh};
@@ -128,6 +129,7 @@ public class SearchFilter extends AppCompatActivity {
         abgroup = findViewById(R.id.schrgab);
         sc = findViewById(R.id.animsc);
         nsc = findViewById(R.id.animnscview);
+        chnp = findViewById(R.id.schnp);
         for(int i = 0; i < tgid.length; i++)
             targets[i] = findViewById(tgid[i]);
         for(int i=0;i<rareid.length;i++)
@@ -172,6 +174,7 @@ public class SearchFilter extends AppCompatActivity {
                 tgor.setChecked(true);
                 abor.setChecked(true);
                 abor.setChecked(true);
+                chnp.setChecked(false);
 
                 for (CheckBox rarity1 : rarities) {
                     if (rarity1.isChecked())
@@ -311,6 +314,16 @@ public class SearchFilter extends AppCompatActivity {
                 return false;
             }
         });
+
+        chnp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                    talents = true;
+                else
+                    talents = false;
+            }
+        });
     }
 
     protected void returner() {
@@ -328,6 +341,7 @@ public class SearchFilter extends AppCompatActivity {
         result.putExtra("attack",attack);
         result.putExtra("rare",rare);
         result.putExtra("ability",ability);
+        result.putExtra("talents",talents);
         setResult(RESULT_OK,result);
         finish();
     }
@@ -385,8 +399,6 @@ public class SearchFilter extends AppCompatActivity {
 
             ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
 
-            System.out.println(ability);
-
             for(int i =0;i<abils.length;i++) {
                 ArrayList<Integer> checker = new ArrayList<>();
                 for(int j : abils[i])
@@ -395,6 +407,11 @@ public class SearchFilter extends AppCompatActivity {
                 if(ability.contains(checker))
                     abilities[i].setChecked(true);
             }
+
+            talents = extra.getBoolean("talents");
+
+            if(talents)
+                chnp.setChecked(true);
         }
     }
 

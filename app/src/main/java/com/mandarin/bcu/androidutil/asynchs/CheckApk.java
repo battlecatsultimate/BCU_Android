@@ -72,6 +72,7 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
             apkcon.setDoInput(true);
             apkcon.setDoOutput(true);
             apkcon.setRequestMethod("POST");
+            apkcon.connect();
             OutputStream os = apkcon.getOutputStream();
             os.write(update.toString().getBytes(StandardCharsets.UTF_8));
             os.close();

@@ -12,22 +12,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="32dp"
         android:text="Name"
         android:textColor="?attr/TextPrimary"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TableRow
+        android:id="@+id/talenrow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unitinffrse">
+
+        <Spinner
+            android:id="@+id/talent0"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent2"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent3"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent4"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+    </TableRow>
+
     <TableLayout
         android:id="@+id/tables"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="24dp"
         android:stretchColumns="*"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unitinfname">
+        app:layout_constraintTop_toBottomOf="@+id/talenrow">
 
         <TableRow
             android:layout_width="match_parent"
@@ -546,5 +592,39 @@
         app:layout_constraintBottom_toBottomOf="@+id/unitinfname"
         app:layout_constraintStart_toEndOf="@+id/unitinfname"
         app:layout_constraintTop_toTopOf="@+id/unitinfname" />
+
+    <CheckBox
+        android:id="@+id/unitinftalen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/unit_info_talent"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinffrse"
+        app:layout_constraintStart_toEndOf="@+id/unitinffrse"
+        app:layout_constraintTop_toTopOf="@+id/unitinffrse" />
+
+    <TableRow
+        android:id="@+id/talresetrow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinffrse"
+        app:layout_constraintStart_toEndOf="@+id/unitinftalen"
+        app:layout_constraintTop_toTopOf="@+id/unitinffrse">
+
+        <Button
+            android:id="@+id/unitinftalreset"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/ButtonPrimary"
+            android:maxLines="1"
+            android:minWidth="0dip"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/treasure_reset"
+            android:textAllCaps="false"
+            android:textColor="?attr/TextPrimary" />
+    </TableRow>
 
 </android.support.constraint.ConstraintLayout>

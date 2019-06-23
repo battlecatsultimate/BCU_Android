@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,13 +16,12 @@ import android.widget.Toast;
 import com.mandarin.bcu.androidutil.FilterUnit;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.Adapters;
+import com.mandarin.bcu.androidutil.UnitListAdapter;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
-import com.mandarin.bcu.util.system.android.BMBuilder;
+import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
 import com.mandarin.bcu.util.unit.Form;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class AnimationViewer extends AppCompatActivity {
@@ -37,7 +35,6 @@ public class AnimationViewer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
         SharedPreferences.Editor ed;
         if(!shared.contains("initial")) {
@@ -137,6 +134,7 @@ public class AnimationViewer extends AppCompatActivity {
         boolean tgorand;
         boolean aborand;
         boolean empty;
+        boolean talents;
 
         if(resultCode == RESULT_OK) {
             assert data != null;
@@ -153,8 +151,9 @@ public class AnimationViewer extends AppCompatActivity {
             atkorand = extra.getBoolean("atkorand");
             tgorand = extra.getBoolean("tgorand");
             aborand = extra.getBoolean("aborand");
+            talents = extra.getBoolean("talents");
 
-            FilterUnit filterUnit = new FilterUnit(rarity,attack,target,ability,atksimu,atkorand,tgorand,aborand,empty,unitnumber);
+            FilterUnit filterUnit = new FilterUnit(rarity,attack,target,ability,atksimu,atkorand,tgorand,aborand,empty,unitnumber,talents);
             ArrayList<Integer> newNumber = filterUnit.setFilter();
             ArrayList<String> newName = new ArrayList<>();
 
@@ -162,8 +161,8 @@ public class AnimationViewer extends AppCompatActivity {
                 newName.add(StaticStore.names[i]);
             }
 
-            Adapters adapters = new Adapters(this,newName.toArray(new String[0]),StaticStore.bitmaps,newNumber);
-            list.setAdapter(adapters);
+            UnitListAdapter unitListAdapter = new UnitListAdapter(this,newName.toArray(new String[0]),StaticStore.bitmaps,newNumber);
+            list.setAdapter(unitListAdapter);
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -191,6 +190,7 @@ public class AnimationViewer extends AppCompatActivity {
                     intent.putExtra("atksimu",atksimu);
                     intent.putExtra("aborand",aborand);
                     intent.putExtra("atkorand",atkorand);
+                    intent.putExtra("talents",talents);
                     intent.putExtra("target",target);
                     intent.putExtra("attack",attack);
                     intent.putExtra("rare",rarity);

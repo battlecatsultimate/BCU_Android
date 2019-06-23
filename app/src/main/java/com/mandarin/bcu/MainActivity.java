@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.CheckApk;
-import com.mandarin.bcu.util.system.P;
-import com.mandarin.bcu.util.system.android.BMBuilder;
+import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 import com.mandarin.bcu.util.system.fake.ImageBuilder;
 
 import java.io.BufferedReader;
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 if(cando()) {
                     com.mandarin.bcu.decode.ZipLib.init();
                     com.mandarin.bcu.decode.ZipLib.read();
+                    StaticStore.getUnitnumber();
                     mainprog.setVisibility(View.GONE);
                     checkstate.setVisibility(View.GONE);
                     stagebtn.setVisibility(View.VISIBLE);

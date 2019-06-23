@@ -134,8 +134,6 @@ public class Reader extends DataIO {
 				lines.add(line);
 			}
 
-			System.out.println(lines);
-
 			Set<String> libs = new TreeSet<>(Arrays.asList(lines.get(2).split("=")[1].split(",")));
 
 			return libs;

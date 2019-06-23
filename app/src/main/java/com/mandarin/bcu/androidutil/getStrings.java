@@ -7,17 +7,31 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
 import com.mandarin.bcu.util.basis.Treasure;
 import com.mandarin.bcu.util.entity.data.MaskAtk;
+import com.mandarin.bcu.util.entity.data.MaskUnit;
 import com.mandarin.bcu.util.unit.EForm;
 import com.mandarin.bcu.util.unit.Form;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class getStrings {
     private final Context c;
+    private String[] abilID = {"1","2","3","8","10","11","13","14","15","16","17","18","19","20","21","22","25","26","27","29","30","31","32","37","38","39","40"};
+    private int[] talID = {R.string.sch_abi_we,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_kb,R.string.sch_abi_str,R.string.sch_abi_su,R.string.sch_abi_cr,
+            R.string.sch_abi_zk,R.string.sch_abi_bb,R.string.sch_abi_em,R.string.sch_abi_wv,R.string.talen_we,R.string.talen_fr,R.string.talen_sl,R.string.talen_kb
+            ,R.string.talen_wv,R.string.unit_info_cost,R.string.unit_info_cd,R.string.unit_info_spd,R.string.sch_abi_ic,R.string.talen_cu,
+            R.string.unit_info_atk,R.string.unit_info_hp,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re};
+    private String [] talTool = new String[talID.length];
     
     public getStrings(Context context) {
         c = context;
+    }
+
+    public void getTalList() {
+        for(int i = 0;i<talTool.length;i++)
+            talTool[i] = c.getString(talID[i]);
     }
     
     public String getTitle(Form f) {
@@ -158,41 +172,83 @@ public class getStrings {
             return String.valueOf(tb);
     }
 
-    public String getCD(Form f, Treasure t, int frse) {
+    public String getCD(Form f, Treasure t, int frse,boolean talent, int[] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
         if(frse == 0)
-            return t.getFinRes(f.du.getRespawn()) +" f";
+            return t.getFinRes(du.getRespawn()) +" f";
         else
-            return new DecimalFormat("#.##").format((double) t.getFinRes(f.du.getRespawn())/30) +" s";
+            return new DecimalFormat("#.##").format((double) t.getFinRes(du.getRespawn())/30) +" s";
     }
 
-    public String getAtk(Form f,Treasure t,int lev) {
-        if(f.du.rawAtkData().length > 1)
-            return getTotAtk(f, t, lev) +" "+getAtks(f,t,lev);
+    public String getAtk(Form f,Treasure t,int lev,boolean talent,int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
         else
-            return getTotAtk(f,t,lev);
+            du = f.du;
+
+        if(du.rawAtkData().length > 1)
+            return getTotAtk(f, t, lev,talent,lvs) +" "+getAtks(f,t,lev,talent,lvs);
+        else
+            return getTotAtk(f,t,lev,talent,lvs);
     }
 
-    public String getSpd(Form f) {
-        return String.valueOf(f.du.getSpeed());
+    public String getSpd(Form f, boolean talent,int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
+        return String.valueOf(du.getSpeed());
     }
 
-    public String getHB(Form f) {
-        return String.valueOf(f.du.getHb());
+    public String getHB(Form f,boolean talent,int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
+        return String.valueOf(du.getHb());
     }
 
-    public String getHP(Form f, Treasure t, int lev) {
-        return String.valueOf((int)(f.du.getHp()*t.getDefMulti()*f.unit.lv.getMult(lev)));
+    public String getHP(Form f, Treasure t, int lev,boolean talent,int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
+        return String.valueOf((int)(du.getHp()*t.getDefMulti()*f.unit.lv.getMult(lev)));
     }
 
-    public String getTotAtk(Form f,Treasure t,int lev) {
-        return String.valueOf((int)(f.du.allAtk()*t.getAtkMulti()*f.unit.lv.getMult(lev)));
+    public String getTotAtk(Form f,Treasure t,int lev, boolean talent, int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
+        return String.valueOf((int)(du.allAtk()*t.getAtkMulti()*f.unit.lv.getMult(lev)));
     }
 
-    public String getDPS(Form f,Treasure t,int lev) {
-        return String.valueOf(new DecimalFormat("#.##").format(Double.parseDouble(getTotAtk(f,t,lev))/((double)f.du.getItv()/30)));
+    public String getDPS(Form f,Treasure t,int lev,boolean talent, int[] lvs) {
+        return String.valueOf(new DecimalFormat("#.##").format(Double.parseDouble(getTotAtk(f,t,lev,talent,lvs))/((double)f.du.getItv()/30)));
     }
 
-    public String getTrait(EForm ef) {
+    public String getTrait(Form ef,boolean talent, int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && ef.getPCoin() != null)
+            du = talent?ef.getPCoin().improve(lvs):ef.du;
+        else
+            du = ef.du;
+
         StringBuilder allcolor = new StringBuilder();
         StringBuilder alltrait = new StringBuilder();
 
@@ -204,7 +260,7 @@ public class getStrings {
 
         String result;
 
-        result = Interpret.getTrait(ef.du.getType(), 0);
+        result = Interpret.getTrait(du.getType(), 0);
 
         if(result.equals(""))
             result = c.getString(R.string.unit_info_t_none);
@@ -221,12 +277,24 @@ public class getStrings {
         return result;
     }
 
-    public String getCost(Form f) {
-        return String.valueOf((int)(f.du.getPrice()*1.5));
+    public String getCost(Form f,boolean talent,int [] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
+        return String.valueOf((int)(du.getPrice()*1.5));
     }
 
-    public String getAtks(Form f,Treasure t, int lev) {
-        int[][] atks = f.du.rawAtkData();
+    public String getAtks(Form f,Treasure t, int lev,boolean talent, int[] lvs) {
+        MaskUnit du;
+        if(lvs != null && f.getPCoin() != null)
+            du = talent?f.getPCoin().improve(lvs):f.du;
+        else
+            du = f.du;
+
+        int[][] atks = du.rawAtkData();
 
         ArrayList<Integer> damges = new ArrayList<>();
 
@@ -251,5 +319,25 @@ public class getStrings {
             return c.getString(R.string.sch_atk_ra);
         else
             return c.getString(R.string.sch_atk_si);
+    }
+
+    public String getTalentName(int index,Form f) {
+        String ans = "";
+
+        int [][] info = f.getPCoin().info;
+        List<String> abil = Arrays.asList(abilID);
+
+        List<String> trait = Arrays.asList("37","38","39","40");
+        List<String> basic = Arrays.asList("25","26","27","31","32");
+
+        if(trait.contains(String.valueOf(info[index][0])))
+            ans = c.getString(R.string.talen_trait) + talTool[abil.indexOf(String.valueOf(info[index][0]))];
+        else if(basic.contains(String.valueOf(info[index][0])))
+            ans = talTool[abil.indexOf(String.valueOf(info[index][0]))];
+        else
+            ans = c.getString(R.string.talen_abil) + talTool[abil.indexOf(String.valueOf(info[index][0]))];
+
+
+        return ans;
     }
 }

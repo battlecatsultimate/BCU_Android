@@ -1,10 +1,8 @@
 package com.mandarin.bcu.androidutil;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
@@ -12,6 +10,7 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
 import com.mandarin.bcu.util.basis.BasisSet;
 import com.mandarin.bcu.util.basis.Combo;
+import com.mandarin.bcu.util.entity.data.PCoin;
 import com.mandarin.bcu.util.pack.Pack;
 import com.mandarin.bcu.util.unit.Unit;
 
@@ -39,6 +38,7 @@ public class Definer {
         try {
             if(StaticStore.units==null) {
                 Unit.readData(context);
+                PCoin.read();
                 StaticStore.units = Pack.def.us.ulist.getList();
 
                 for(int i = 0;i<colorid.length;i++) {

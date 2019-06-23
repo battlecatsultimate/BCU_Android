@@ -18,11 +18,12 @@ public class FilterUnit {
     private boolean tgorand;
     private boolean aborand;
     private boolean empty;
+    private boolean talents;
     private int unitnumber;
 
     public FilterUnit(ArrayList<String> rarity, ArrayList<String> attack, ArrayList<String> target,
                ArrayList<ArrayList<Integer>> ability, boolean atksimu, boolean atkorand, boolean tgorand,
-               boolean aborand, boolean empty, int unitnumber) {
+               boolean aborand, boolean empty, int unitnumber,boolean talents) {
         this.rarity = rarity;
         this.attack = attack;
         this.target = target;
@@ -33,7 +34,7 @@ public class FilterUnit {
         this.aborand = aborand;
         this.unitnumber = unitnumber;
         this.empty = empty;
-
+        this.talents = talents;
     }
 
     public ArrayList<Integer> setFilter() {
@@ -75,7 +76,7 @@ public class FilterUnit {
             ArrayList<Boolean> b30 = new ArrayList<>();
             ArrayList<Boolean> b40 = new ArrayList<>();
             for(Form f : u.forms) {
-                MaskUnit du = f.maxu();
+                MaskUnit du = talents? f.maxu() : f.du;
 
                 int t = du.getType();
                 int a = du.getAbi();

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import com.mandarin.bcu.util.basis.BasisLU;
 import com.mandarin.bcu.util.basis.BasisSet;
@@ -68,6 +69,12 @@ public class Interpret extends Data {
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
+
+	/**resist data locator */
+	private static final int[][] LOCR = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
+			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
+			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data formatter for KR,JP */
@@ -155,6 +162,7 @@ public class Interpret extends Data {
 		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = du.getRepAtk();
+		String lang = Locale.getDefault().getLanguage();
 		if (cmp == 0) {
 			for (int i = 0; i < PROC.length; i++) {
 				if (ma.getProc(i)[0] == 0)
@@ -162,7 +170,7 @@ public class Interpret extends Data {
 				StringBuilder ans = new StringBuilder();
 				for (int j = 0; j < CMP[i].length; j++) {
 					if (CMP[i][j] == -1)
-						if (immune.contains(i)) {
+						if (immune.contains(i) && lang.equals("en")) {
 							ans.append(TEXT[11]).append(PROC[i].substring(4));
 						} else
 							ans.append(PROC[i]);
@@ -170,7 +178,8 @@ public class Interpret extends Data {
 						if (frse == 0) {
 							int pro = ma.getProc(i)[LOC[i][j]];
 							String rep = pro == -1 ? "infinity" : "" + pro;
-							ans.append(TEXT[CMP[i][j]].replace("_", rep));
+							if(!(immune.contains(i) && TEXT[CMP[i][j]].contains("%") && pro == 100))
+								ans.append(TEXT[CMP[i][j]].replace("_", rep));
 						} else {
 							if (TEXT[CMP[i][j]].contains("_ f")) {
 								int pro = ma.getProc(i)[LOC[i][j]];
@@ -179,7 +188,8 @@ public class Interpret extends Data {
 							} else {
 								int pro = ma.getProc(i)[LOC[i][j]];
 								String rep = pro == -1 ? "infinity" : "" + pro;
-								ans.append(TEXT[CMP[i][j]].replace("_", rep));
+								if(!(immune.contains(i) && TEXT[CMP[i][j]].contains("%") && pro == 100))
+									ans.append(TEXT[CMP[i][j]].replace("_", rep));
 							}
 						}
 					}
@@ -198,7 +208,8 @@ public class Interpret extends Data {
 						if (frse == 0) {
 							int pro = ma.getProc(i)[LOC2[i][j]];
 							String rep = pro == -1 ? "infinity" : "" + pro;
-							ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+							if(!(immune.contains(i) && TEXT[CMP2[i][j]].contains("%") && pro == 100))
+								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
 						} else {
 							if (TEXT[CMP2[i][j]].contains("_ f")) {
 								int pro = ma.getProc(i)[LOC2[i][j]];
@@ -207,7 +218,8 @@ public class Interpret extends Data {
 							} else {
 								int pro = ma.getProc(i)[LOC2[i][j]];
 								String rep = pro == -1 ? "infinity" : "" + pro;
-								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+								if(!(immune.contains(i) && TEXT[CMP2[i][j]].contains("%") && pro == 100))
+									ans.append(TEXT[CMP2[i][j]].replace("_", rep));
 							}
 						}
 					}

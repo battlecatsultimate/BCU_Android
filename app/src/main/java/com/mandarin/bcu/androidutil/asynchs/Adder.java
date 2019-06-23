@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
-import com.mandarin.bcu.androidutil.Adapters;
+import com.mandarin.bcu.androidutil.UnitListAdapter;
 import com.mandarin.bcu.androidutil.Definer;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.util.pack.Pack;
@@ -75,7 +75,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         for(int i = 0; i < unitnumber;i++) {
             locate.add(i);
         }
-        Adapters adap = new Adapters((Activity)context,StaticStore.names,StaticStore.bitmaps,locate);
+        UnitListAdapter adap = new UnitListAdapter((Activity)context,StaticStore.names,StaticStore.bitmaps,locate);
         list.setAdapter(adap);
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

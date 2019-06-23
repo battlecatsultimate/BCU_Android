@@ -2,6 +2,7 @@ package com.mandarin.bcu.util.unit;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Environment;
 
 import java.io.File;
@@ -151,7 +152,7 @@ public class Unit extends Data implements Comparable<Unit> {
 
 		SharedPreferences shared = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
 		if(shared.getInt("Language",0) == 0) {
-			language = Locale.getDefault().getLanguage();
+			language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
 		} else {
 			language = locales[shared.getInt("Language",0)];
 		}
@@ -164,9 +165,6 @@ public class Unit extends Data implements Comparable<Unit> {
 				priority = new String[]{"/jp/", "/en/", "/zh/", "/kr/"};
 				break;
 			case "zh":
-				priority = new String[]{"/zh/", "/jp/", "/en/", "/kr/"};
-				break;
-			case "zh_TW":
 				priority = new String[]{"/zh/", "/jp/", "/en/", "/kr/"};
 				break;
 			case "ko":

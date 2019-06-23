@@ -41,6 +41,8 @@ public class PCoin extends Data {
 	public DataUnit improve(int[] lvs) {
 		DataUnit ans = du.clone();
 		for (int i = 0; i < 5; i++) {
+			if(lvs[i+1] == 0)
+				continue;
 			int maxlv = info[i][1];
 			int[] modifs = new int[4];
 			if (maxlv > 1 && lvs[i + 1] > 0) {
