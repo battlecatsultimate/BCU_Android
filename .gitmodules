@@ -1,0 +1,3 @@
+[submodule "app/src/main/java/common"]
+	path = app/src/main/java/common
+	url = https://github.com/battlecatsultimate/BCU_java_util_common.git
