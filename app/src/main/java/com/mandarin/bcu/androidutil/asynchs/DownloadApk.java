@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mandarin.bcu.BuildConfig;
+import com.google.example.easypermissions.BuildConfig;
 import com.mandarin.bcu.R;
 
 import java.io.File;
