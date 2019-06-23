@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
-import com.mandarin.bcu.util.basis.Treasure;
-import com.mandarin.bcu.util.entity.data.MaskAtk;
-import com.mandarin.bcu.util.entity.data.MaskUnit;
-import com.mandarin.bcu.util.unit.EForm;
-import com.mandarin.bcu.util.unit.Form;
+import common.battle.Treasure;
+import common.battle.data.MaskAtk;
+import common.battle.data.MaskUnit;
+import common.util.unit.EForm;
+import common.util.unit.Form;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

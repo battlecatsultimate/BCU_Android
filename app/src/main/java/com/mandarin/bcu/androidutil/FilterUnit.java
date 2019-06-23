@@ -1,10 +1,10 @@
 package com.mandarin.bcu.androidutil;
 
 import com.mandarin.bcu.util.Interpret;
-import com.mandarin.bcu.util.entity.data.MaskUnit;
-import com.mandarin.bcu.util.pack.Pack;
-import com.mandarin.bcu.util.unit.Form;
-import com.mandarin.bcu.util.unit.Unit;
+import common.battle.data.MaskUnit;
+import common.util.pack.Pack;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 
 import java.util.ArrayList;
 

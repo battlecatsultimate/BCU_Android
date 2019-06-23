@@ -1,8 +1,9 @@
 package com.mandarin.bcu.util.system.files;
 
-import com.mandarin.bcu.util.system.fake.FakeImage;
+import common.system.fake.FakeImage;
 
-import com.mandarin.bcu.io.InStream;
+import common.io.InStream;
+import common.system.files.FileData;
 
 import java.util.Queue;
 

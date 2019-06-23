@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -36,10 +37,10 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
-import com.mandarin.bcu.util.basis.BasisSet;
-import com.mandarin.bcu.util.basis.Treasure;
-import com.mandarin.bcu.util.entity.data.MaskUnit;
-import com.mandarin.bcu.util.unit.Form;
+import common.battle.BasisSet;
+import common.battle.Treasure;
+import common.battle.data.MaskUnit;
+import common.util.unit.Form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,7 +195,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         }
         List<Integer> procicon = Interpret.getProcid(f.du);
 
-        viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb(f.anim.uni.getIcon(),context,48));
+        viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb((Bitmap)f.anim.uni.getImg().bimg(),context,48));
         viewHolder.unitname.setText(names.get(i));
         viewHolder.unitid.setText(s.getID(f,viewHolder,number(id)));
         viewHolder.unithp.setText(s.getHP(f,t,f.unit.getPrefLv(),false,pcoins));

@@ -8,10 +8,10 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
 
-import com.mandarin.bcu.util.pack.Pack;
-import com.mandarin.bcu.util.system.files.AssetData;
-import com.mandarin.bcu.util.system.files.VFile;
-import com.mandarin.bcu.util.unit.Unit;
+import common.util.pack.Pack;
+import common.system.files.AssetData;
+import common.system.files.VFile;
+import common.util.unit.Unit;
 
 import java.io.File;
 import java.util.List;
@@ -69,39 +69,6 @@ public class Revalidater extends ContextWrapper {
     }
 
     public void Validate(String lang, Context context) {
-        List<Unit> lu = Pack.def.us.ulist.getList();
-
-        String [] priority = chooser(lang);
-        String [][] unitnames = getName(priority);
-        String [][] explains = getExplain(priority);
-
-        for(int i =0;i< lu.size();i++) {
-            lu.get(i).info.explanation = new String[lu.get(i).forms.length][];
-            for(int j = 0;j<lu.get(i).forms.length;j++) {
-                lu.get(i).forms[j].name = null;
-                int lan = 0;
-
-                while(lan < 4) {
-                    if(lu.get(i).forms[j].name == null || lu.get(i).forms[j].name.equals(""))
-                        lu.get(i).forms[j].name = findName(j,i,unitnames[lan]);
-
-                    if(lu.get(i).info.explanation[j] == null)
-                        lu.get(i).info.explanation[j] = findExplain(j,i,explains[lan]);
-
-                    if(lu.get(i).forms[j].name != null && lu.get(i).info.explanation[j] != null)
-                        break;
-                    lan++;
-                }
-
-                if(lu.get(i).forms[j].name == null) {
-                    lu.get(i).forms[j].name = "";
-                }
-
-                if(lu.get(i).info.explanation[j] == null) {
-                    lu.get(i).info.explanation[j] = new String[]{""};
-                }
-            }
-        }
 
         new Definer().redefine(context,lang);
 

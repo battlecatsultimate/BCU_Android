@@ -2,8 +2,8 @@ package com.mandarin.bcu.androidutil.fakeandroid;
 
 import android.graphics.Bitmap;
 
-import com.mandarin.bcu.util.system.fake.FakeImage;
-import com.mandarin.bcu.util.system.fake.ImageBuilder;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 
 import java.io.IOException;
 

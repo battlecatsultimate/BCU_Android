@@ -3,8 +3,8 @@ package com.mandarin.bcu.androidutil.fakeandroid;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.mandarin.bcu.util.system.fake.FakeImage;
-import com.mandarin.bcu.util.system.fake.ImageBuilder;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +31,7 @@ public class BMBuilder extends ImageBuilder {
 
     @Override
     public boolean write(FakeImage img, String fmt, Object o) throws IOException {
-        Bitmap b = img.bimg();
+        Bitmap b = (Bitmap)img.bimg();
 
         if(b == null)
             return false;

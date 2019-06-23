@@ -16,9 +16,11 @@ import com.mandarin.bcu.UnitInfo;
 import com.mandarin.bcu.androidutil.UnitListAdapter;
 import com.mandarin.bcu.androidutil.Definer;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.util.pack.Pack;
-import com.mandarin.bcu.util.system.files.VFile;
-import com.mandarin.bcu.util.unit.Form;
+
+import common.system.MultiLangCont;
+import common.util.pack.Pack;
+import common.system.files.VFile;
+import common.util.unit.Form;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -47,7 +49,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
             StaticStore.names = new String[unitnumber];
 
             for(int i = 0; i < StaticStore.names.length;i++) {
-                StaticStore.names[i] = withID(i,Pack.def.us.ulist.getList().get(i).forms[0].name);
+                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
             }
         }
 
@@ -58,7 +60,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
             for (int i = 0; i < unitnumber; i++) {
                 String shortPath = "./org/unit/"+ number(i) + "/f/uni" + number(i) + "_f00.png";
 
-                StaticStore.bitmaps[i] = StaticStore.getResizeb(Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(),context,48f);
+                StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap)Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(),context,48f);
 
             }
         }

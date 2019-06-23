@@ -19,8 +19,8 @@ import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.UnitListAdapter;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
-import com.mandarin.bcu.util.system.fake.ImageBuilder;
-import com.mandarin.bcu.util.unit.Form;
+import common.system.fake.ImageBuilder;
+import common.util.unit.Form;
 
 import java.util.ArrayList;
 

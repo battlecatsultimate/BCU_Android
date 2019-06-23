@@ -16,11 +16,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.CheckApk;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
-import com.mandarin.bcu.util.system.fake.ImageBuilder;
+
+import common.CommonStatic;
+import common.system.fake.ImageBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -152,7 +156,15 @@ public class MainActivity extends AppCompatActivity {
                 if(cando()) {
                     com.mandarin.bcu.decode.ZipLib.init();
                     com.mandarin.bcu.decode.ZipLib.read();
+
                     StaticStore.getUnitnumber();
+                    StaticStore.root = 1;
+
+                    new DefineItf().init();
+
+                    String language = Locale.getDefault().getLanguage();
+                    CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(language);
+
                     mainprog.setVisibility(View.GONE);
                     checkstate.setVisibility(View.GONE);
                     stagebtn.setVisibility(View.VISIBLE);

@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.util.unit.Unit;
+
+import common.system.MultiLangCont;
+import common.util.unit.Unit;
 
 public class DynamicExplanation extends Fragment {
     View view;
@@ -38,7 +40,7 @@ public class DynamicExplanation extends Fragment {
         val = getArguments().getInt("Number",0);
         id = getArguments().getInt("ID",0);
         titles = getArguments().getStringArray("Title");
-        String[] explanation = StaticStore.units.get(id).info.explanation[val];
+        String[] explanation = MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[val]);
 
         unitname = view.findViewById(R.id.unitexname);
         int[] lineid = {R.id.unitex0,R.id.unitex1,R.id.unitex2};
@@ -51,7 +53,8 @@ public class DynamicExplanation extends Fragment {
             if(i >= explanation.length) {
                 explains[i].setVisibility(View.GONE);
             } else {
-                explains[i].setText(explanation[i]);
+                if(explanation[i] != null)
+                    explains[i].setText(explanation[i]);
             }
         }
 

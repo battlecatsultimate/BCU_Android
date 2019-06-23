@@ -6,16 +6,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import com.mandarin.bcu.util.basis.BasisLU;
-import com.mandarin.bcu.util.basis.BasisSet;
-import com.mandarin.bcu.util.basis.Combo;
-import com.mandarin.bcu.util.basis.Treasure;
-import com.mandarin.bcu.util.entity.data.MaskAtk;
-import com.mandarin.bcu.util.entity.data.MaskEnemy;
-import com.mandarin.bcu.util.entity.data.MaskEntity;
-import com.mandarin.bcu.util.pack.Pack;
-import com.mandarin.bcu.util.stage.MapColc;
-import com.mandarin.bcu.util.unit.Enemy;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
+import common.battle.data.MaskUnit;
+import common.util.Data;
+import common.util.unit.Combo;
+import common.battle.Treasure;
+import common.battle.data.MaskAtk;
+import common.util.pack.Pack;
+import common.util.stage.MapColc;
+import common.util.unit.Enemy;
 
 public class Interpret extends Data {
 
@@ -145,7 +145,7 @@ public class Interpret extends Data {
 		return ans.toString();
 	}
 
-	public static List<Integer> getProcid(MaskEntity du) {
+	public static List<Integer> getProcid(MaskUnit du) {
 	    List<Integer> l = new ArrayList<>();
 	    MaskAtk ma = du.getRepAtk();
 
@@ -158,7 +158,7 @@ public class Interpret extends Data {
 	    return l;
     }
 
-	public static List<String> getProc(MaskEntity du, int cmp,int frse) {
+	public static List<String> getProc(MaskUnit du, int cmp,int frse) {
 		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = du.getRepAtk();
@@ -230,7 +230,7 @@ public class Interpret extends Data {
 		return l;
 	}
 
-	public static List<Integer> getAbiid(MaskEntity me) {
+	public static List<Integer> getAbiid(MaskUnit me) {
 		List<Integer> l = new ArrayList<>();
 
 		for(int i=0;i<ABIS.length;i++)
@@ -240,7 +240,7 @@ public class Interpret extends Data {
 		return l;
 	}
 
-	public static List<String> getAbi(MaskEntity me, String[][] frag,String[] addition, int lang) {
+	public static List<String> getAbi(MaskUnit me, String[][] frag,String[] addition, int lang) {
 		List<String> l = new ArrayList<>();
 		StringBuilder imu = new StringBuilder(frag[lang][0]);
 
@@ -377,7 +377,7 @@ public class Interpret extends Data {
 		return false;
 	}
 
-	public static boolean isType(MaskEntity de, int type) {
+	public static boolean isType(MaskUnit de, int type) {
 		int[][] raw = de.rawAtkData();
 		if (type == 0)
 			return !de.isRange();

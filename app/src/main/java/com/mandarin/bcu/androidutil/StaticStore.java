@@ -8,8 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.TypedValue;
 
-import com.mandarin.bcu.util.basis.Treasure;
-import com.mandarin.bcu.util.unit.Unit;
+import common.battle.Treasure;
+import common.util.unit.Unit;
 
 import java.io.File;
 import java.util.List;
@@ -24,7 +24,7 @@ public class StaticStore {
     public static String [] addition = null;
     public static int root = 0;
     public static int unitnumber;
-    public static String [] lang = {"","en","zh","ja","ko"};
+    public static String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
 
     public static void getUnitnumber() {
         String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";

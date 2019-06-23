@@ -14,8 +14,11 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.DownloadScreen;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.main.MainBCU;
+
+import common.CommonStatic;
+import main.MainBCU;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +37,8 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -304,8 +309,16 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         com.mandarin.bcu.decode.ZipLib.init();
         com.mandarin.bcu.decode.ZipLib.read();
+
         StaticStore.getUnitnumber();
         StaticStore.root = 1;
+
+        new DefineItf().init();
+
+        String language = Locale.getDefault().getLanguage();
+        CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(language)-1;
+
+        System.out.println(CommonStatic.Lang.lang);
 
         return null;
     }

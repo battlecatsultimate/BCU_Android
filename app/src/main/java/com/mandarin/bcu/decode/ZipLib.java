@@ -4,9 +4,9 @@ import android.os.Environment;
 
 import java.io.File;
 import java.io.IOException;
-import com.mandarin.bcu.main.Opts;
-import com.mandarin.bcu.util.system.files.AssetData;
-import com.mandarin.bcu.util.system.files.VFile;
+import main.Opts;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 
 public class ZipLib {
 

@@ -15,7 +15,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.mandarin.bcu.main.Opts;
+import main.Opts;
+
+import common.io.DataIO;
 
 public class Reader extends DataIO {
 

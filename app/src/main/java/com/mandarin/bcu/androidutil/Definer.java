@@ -4,18 +4,28 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
-import com.mandarin.bcu.util.basis.BasisSet;
-import com.mandarin.bcu.util.basis.Combo;
-import com.mandarin.bcu.util.entity.data.PCoin;
-import com.mandarin.bcu.util.pack.Pack;
-import com.mandarin.bcu.util.unit.Unit;
 
+import common.CommonStatic;
+import common.battle.BasisSet;
+import common.system.MultiLangCont;
+import common.system.files.AssetData;
+import common.system.files.VFile;
+import common.util.unit.Combo;
+import common.battle.data.PCoin;
+import common.util.pack.Pack;
+import common.util.unit.Unit;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Queue;
 
 public class Definer {
     private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re};
@@ -33,13 +43,52 @@ public class Definer {
     private int [] textid = {R.string.unit_info_text0,R.string.unit_info_text1,R.string.unit_info_text2,R.string.unit_info_text3,R.string.unit_info_text4,R.string.unit_info_text5,R.string.unit_info_text6,R.string.unit_info_text7,
             R.string.def_unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.def_unit_info_text11};
     private String [] textstring = new String[textid.length];
+    private String [] lan = {"/en/","/zh/","/kr/","/jp/"};
+    private String [] files = {"UnitName.txt","UnitExplanation.txt"};
 
     public void define(Context context) {
         try {
             if(StaticStore.units==null) {
-                Unit.readData(context);
+                Unit.readData();
                 PCoin.read();
+
                 StaticStore.units = Pack.def.us.ulist.getList();
+
+                for(String l : lan) {
+                    for(String n : files) {
+                        String Path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/lang"+l+n;
+
+                        File f = new File(Path);
+
+                        if(f.exists()) {
+                            Queue<String> qs = AssetData.getAsset(f).readLine();
+
+                            if(n.equals("UnitName.txt")) {
+                                for(String str : qs) {
+                                    String[] strs = str.trim().split("\t");
+                                    Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+                                    if(u == null)
+                                        continue;
+
+                                    for(int i = 0;i<Math.min(u.forms.length,strs.length-1);i++)
+                                        MultiLangCont.FNAME.put(l.substring(1, l.length() - 1), u.forms[i], strs[i + 1].trim());
+                                }
+                            } else if (n.equals("UnitExplanation.txt")) {
+                                for(String str : qs) {
+                                    String[] strs = str.trim().split("\t");
+                                    Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+                                    if (u == null)
+                                        continue;
+
+                                    for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++) {
+                                        String[] lines = strs[i + 1].trim().split("<br>");
+                                        MultiLangCont.FEXP.put(l.substring(1,l.length()-1), u.forms[i], lines);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
                 for(int i = 0;i<colorid.length;i++) {
                     colorstring[i] = context.getString(colorid[i]);

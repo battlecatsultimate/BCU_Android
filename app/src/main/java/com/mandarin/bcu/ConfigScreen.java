@@ -25,7 +25,7 @@ import java.util.List;
 public class ConfigScreen extends AppCompatActivity {
     SharedPreferences shared;
     ImageButton back;
-    private int [] LangId = {R.string.lang_auto,R.string.def_lang_en,R.string.def_lang_zh,R.string.def_lang_ja,R.string.def_lang_ko};
+    private int [] LangId = {R.string.lang_auto,R.string.def_lang_en,R.string.def_lang_zh,R.string.def_lang_ko,R.string.def_lang_ja};
     private String [] locales = StaticStore.lang;
     private  boolean started = false;
 
