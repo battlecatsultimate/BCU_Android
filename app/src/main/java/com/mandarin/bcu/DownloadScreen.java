@@ -74,7 +74,7 @@ public class DownloadScreen extends AppCompatActivity{
         prog.setMax(100);
         state = findViewById(R.id.downstate);
 
-        new com.mandarin.bcu.androidutil.asynchs.Downloader(prog,state,retry,path,fileneed,filenum,downloading,extracting,DownloadScreen.this).execute();
+        new com.mandarin.bcu.androidutil.asynchs.Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
 
         Listeners();
 
@@ -85,7 +85,7 @@ public class DownloadScreen extends AppCompatActivity{
             @Override
             public void onSingleClick(View v) {
                 retry.setVisibility(View.GONE);
-                new com.mandarin.bcu.androidutil.asynchs.Downloader(prog,state,retry,path,fileneed,filenum,downloading,extracting,DownloadScreen.this).execute();
+                new com.mandarin.bcu.androidutil.asynchs.Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
             }
         });
     }

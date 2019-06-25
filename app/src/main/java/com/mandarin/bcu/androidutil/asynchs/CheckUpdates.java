@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,9 +16,6 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.StaticStore;
 
-import common.CommonStatic;
-import main.MainBCU;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -43,15 +40,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import common.CommonStatic;
+import main.MainBCU;
+
 public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
-    private final Button animbtn;
-    private final Button stagebtn;
     private final String path;
-    private final TextView checkstate;
-    private final ProgressBar mainprog;
-    private final Context context;
-    private final ImageButton config;
     private final boolean cando;
+
+    private final WeakReference<Activity> weakReference;
 
     private boolean lang;
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
@@ -62,16 +58,10 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     private JSONObject ans;
 
-    CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Context context, boolean cando) {
-        this.context = context;
-        Activity a = (Activity)context;
-        this.animbtn = a.findViewById(R.id.anvibtn);
-        this.stagebtn = a.findViewById(R.id.stgbtn);
-        this.config = a.findViewById(R.id.mainconfig);
+    CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando) {
+        this.weakReference = new WeakReference<>(context);
         this.path = path;
         this.lang = lang;
-        this.checkstate = a.findViewById(R.id.mainstup);
-        this.mainprog = a.findViewById(R.id.mainprogup);
         this.fileneed = fileneed;
         this.filenum = filenum;
         this.cando = cando;
@@ -81,6 +71,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPreExecute() {
+        Activity activity = weakReference.get();
+        TextView checkstate = activity.findViewById(R.id.mainstup);
         checkstate.setText(R.string.main_check_up);
     }
 
@@ -167,6 +159,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
+        Activity activity = weakReference.get();
+        TextView checkstate = activity.findViewById(R.id.mainstup);
         System.out.println(lang);
         if (values[0] == 1) {
             checkstate.setText(R.string.main_check_file);
@@ -177,8 +171,10 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         checkFiles(ans);
 
+        Activity activity = weakReference.get();
+
         if(fileneed.isEmpty() && filenum.isEmpty()) {
-            new AddPathes(animbtn,stagebtn,checkstate,mainprog,config).execute();
+            new AddPathes(activity).execute();
         }
     }
 
@@ -198,6 +194,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     }
 
     private void checkFiles(JSONObject asset) {
+        Activity activity = weakReference.get();
+
         try {
             Map<String, String> libmap = new TreeMap<>();
             JSONArray ja = asset.getJSONArray("assets");
@@ -209,8 +207,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
             ArrayList<String> lib = new ArrayList<>(libmap.keySet());
 
-            AlertDialog.Builder donloader = new AlertDialog.Builder(context);
-            final Intent intent = new Intent(context, DownloadScreen.class);
+            AlertDialog.Builder donloader = new AlertDialog.Builder(activity);
+            final Intent intent = new Intent(activity, DownloadScreen.class);
             donloader.setTitle(R.string.main_file_need);
             donloader.setMessage(R.string.main_file_up);
             donloader.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
@@ -223,8 +221,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                     System.out.println(fileneed.toString());
                     intent.putExtra("fileneed", fileneed);
                     intent.putExtra("filenum", filenum);
-                    context.startActivity(intent);
-                    ((Activity) context).finish();
+                    activity.startActivity(intent);
+                    activity.finish();
                 }
             });
 
@@ -232,7 +230,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if(!cando)
-                        ((Activity)context).finish();
+                        activity.finish();
                 }
             });
 
@@ -285,22 +283,16 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 }
 
 class AddPathes extends AsyncTask<Void,Integer,Void> {
-    private final Button animbtn;
-    private final Button stagebtn;
-    private final TextView checkstate;
-    private final ProgressBar mainprog;
-    private final ImageButton config;
+    private final WeakReference<Activity> weakReference;
 
-    AddPathes(Button animbtn, Button stagebtn, TextView checkstate, ProgressBar mainprog, ImageButton config) {
-        this.animbtn = animbtn;
-        this.stagebtn = stagebtn;
-        this.checkstate = checkstate;
-        this.mainprog = mainprog;
-        this.config = config;
+    AddPathes(Activity activity) {
+        this.weakReference = new WeakReference<>(activity);
     }
 
     @Override
     protected void onPreExecute() {
+        Activity activity = weakReference.get();
+        TextView checkstate = activity.findViewById(R.id.mainstup);
         checkstate.setText(R.string.main_file_read);
     }
 
@@ -328,6 +320,14 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPostExecute(Void result) {
+        Activity activity = weakReference.get();
+
+        ProgressBar mainprog = activity.findViewById(R.id.mainprogup);
+        TextView checkstate = activity.findViewById(R.id.mainstup);
+        Button stagebtn = activity.findViewById(R.id.stgbtn);
+        Button animbtn = activity.findViewById(R.id.anvibtn);
+        ImageButton config = activity.findViewById(R.id.mainconfig);
+
         mainprog.setVisibility(View.GONE);
         checkstate.setVisibility(View.GONE);
         stagebtn.setVisibility(View.VISIBLE);

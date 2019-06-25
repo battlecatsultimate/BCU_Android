@@ -32,6 +32,7 @@ public class StaticStore {
     public static int root = 0;
     public static int unitnumber;
     public static long unitinflistClick = 0;
+    public static final long INTERVAL = 1000;
     public static String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
 
     public static void getUnitnumber() {

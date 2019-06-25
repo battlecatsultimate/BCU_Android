@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import static android.content.Context.MODE_PRIVATE;
 
 public class CheckApk extends AsyncTask<Void,String,Void> {
-    private final Context context;
+    private final WeakReference<Activity> weakReference;
     private String thisver;
     private boolean cando;
     private String path;
@@ -38,8 +38,8 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
 
-    public CheckApk(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Context context, boolean cando) {
-        this.context = context;
+    public CheckApk(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando) {
+        this.weakReference = new WeakReference<>(context);
         this.path = path;
         this.lang = lang;
         this.fileneed = fileneed;
@@ -49,20 +49,22 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
     @Override
     protected void onPreExecute() {
+        Activity activity = weakReference.get();
         try{
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(),0);
+            PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(),0);
             thisver = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
-        TextView state = ((Activity)context).findViewById(R.id.mainstup);
+        TextView state = activity.findViewById(R.id.mainstup);
         state.setText(R.string.main_check_apk);
 
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
+        Activity activity = weakReference.get();
         try{
             JSONObject update = new JSONObject();
             String apklink = "http://battlecatsultimate.cf/api/java/getupdate.php";
@@ -89,7 +91,7 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
             in.close();
             apkcon.disconnect();
 
-            SharedPreferences shared = context.getSharedPreferences("configuration",MODE_PRIVATE);
+            SharedPreferences shared = activity.getSharedPreferences("configuration",MODE_PRIVATE);
             String thatver;
 
             if(shared.getBoolean("apktest",false)) {
@@ -121,33 +123,34 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     }
 
     private void goToApk(String ver) {
+        Activity activity = weakReference.get();
 
         if(!thisver.equals(ver)) {
-            AlertDialog.Builder apkdon = new AlertDialog.Builder(context);
+            AlertDialog.Builder apkdon = new AlertDialog.Builder(activity);
             apkdon.setCancelable(false);
             apkdon.setTitle(R.string.apk_down_title);
-            String content = context.getString(R.string.apk_down_content)+ver;
+            String content = activity.getString(R.string.apk_down_content)+ver;
             apkdon.setMessage(content);
             apkdon.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent result = new Intent(context, ApkDownload.class);
+                    Intent result = new Intent(activity, ApkDownload.class);
                     result.putExtra("ver",ver);
-                    context.startActivity(result);
-                    ((Activity)context).finish();
+                    activity.startActivity(result);
+                    activity.finish();
                 }
             });
             apkdon.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    new CheckUpdates(path,lang,fileneed,filenum,context,cando).execute();
+                    new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
                 }
             });
 
             AlertDialog apkdown = apkdon.create();
             apkdown.show();
         } else {
-            new CheckUpdates(path,lang,fileneed,filenum,context,cando).execute();
+            new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
         }
     }
 }

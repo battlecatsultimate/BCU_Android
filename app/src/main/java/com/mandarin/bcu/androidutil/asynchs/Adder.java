@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -18,6 +17,7 @@ import com.mandarin.bcu.androidutil.Definer;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.UnitListAdapter;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -28,24 +28,26 @@ import common.util.unit.Form;
 
 public class Adder extends AsyncTask<Void, Integer, Void> {
     private final int unitnumber;
-    private final long INTERVAL = 1000;
-    private final Context context;
+    private final WeakReference<Activity> weakReference;
 
-    public Adder(int unitnumber, Context context) {
+    public Adder(int unitnumber, Activity context) {
         this.unitnumber = unitnumber;
-        this.context = context;
+        this.weakReference = new WeakReference<>(context);
     }
 
     @Override
     protected void onPreExecute() {
-        ListView list = ((Activity)context).findViewById(R.id.unitinflist);
+        Activity activity = weakReference.get();
+        ListView list = activity.findViewById(R.id.unitinflist);
 
         list.setVisibility(View.GONE);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        new Definer().define(context);
+        Activity activity = weakReference.get();
+
+        new Definer().define(activity);
 
         if(StaticStore.names == null) {
             StaticStore.names = new String[unitnumber];
@@ -62,7 +64,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
             for (int i = 0; i < unitnumber; i++) {
                 String shortPath = "./org/unit/"+ number(i) + "/f/uni" + number(i) + "_f00.png";
 
-                StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap)Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(),context,48f);
+                StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap)Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(),activity,48f);
 
             }
         }
@@ -74,17 +76,19 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        ListView list = ((Activity)context).findViewById(R.id.unitinflist);
+        Activity activity = weakReference.get();
+
+        ListView list = activity.findViewById(R.id.unitinflist);
         ArrayList<Integer> locate = new ArrayList<>();
         for(int i = 0; i < unitnumber;i++) {
             locate.add(i);
         }
-        UnitListAdapter adap = new UnitListAdapter((Activity)context,StaticStore.names,StaticStore.bitmaps,locate);
+        UnitListAdapter adap = new UnitListAdapter(activity,StaticStore.names,StaticStore.bitmaps,locate);
         list.setAdapter(adap);
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context,showName(locate.get(position)),Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,showName(locate.get(position)),Toast.LENGTH_SHORT).show();
                 list.setClickable(false);
 
                 return false;
@@ -93,23 +97,25 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < INTERVAL)
+                if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL)
                     return;
 
                 StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
 
-                Intent result = new Intent(context, UnitInfo.class);
+                Intent result = new Intent(activity, UnitInfo.class);
                 result.putExtra("ID",locate.get(position));
-                context.startActivity(result);
+                activity.startActivity(result);
             }
         });
     }
 
     @Override
     protected void onPostExecute(Void result) {
+        Activity activity = weakReference.get();
+
         super.onPostExecute(result);
-        ListView list = ((Activity)context).findViewById(R.id.unitinflist);
-        ProgressBar prog = ((Activity)context).findViewById(R.id.unitinfprog);
+        ListView list = activity.findViewById(R.id.unitinflist);
+        ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         list.setVisibility(View.VISIBLE);
         prog.setVisibility(View.GONE);
     }

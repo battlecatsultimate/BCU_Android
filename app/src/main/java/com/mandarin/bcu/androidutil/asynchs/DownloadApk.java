@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -18,20 +17,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DownloadApk extends AsyncTask<Void,Integer,Void> {
-    private final Context context;
+    private final WeakReference<Activity> weakReference;
     private final String ver;
     private final String url;
     private final String path;
     private final String realpath;
     private File output = null;
 
-    public DownloadApk(Context context,String ver,String url,String path,String realpath) {
-        this.context = context;
+    public DownloadApk(Activity context,String ver,String url,String path,String realpath) {
+        this.weakReference = new WeakReference<>(context);
         this.ver = ver;
         this.url = url;
         this.path = path;
@@ -40,7 +40,8 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPreExecute() {
-        TextView state = ((Activity)context).findViewById(R.id.apkstate);
+        Activity activity = weakReference.get();
+        TextView state = activity.findViewById(R.id.apkstate);
         state.setText(R.string.down_wait);
     }
 
@@ -95,9 +96,10 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        ProgressBar prog = ((Activity)context).findViewById(R.id.apkprog);
-        TextView state = ((Activity)context).findViewById(R.id.apkstate);
-        String name = context.getString(R.string.down_state_doing)+"BCU_Android_"+ver+".apk";
+        Activity activity = weakReference.get();
+        ProgressBar prog = activity.findViewById(R.id.apkprog);
+        TextView state = activity.findViewById(R.id.apkstate);
+        String name = activity.getString(R.string.down_state_doing)+"BCU_Android_"+ver+".apk";
         state.setText(name);
 
         if(prog.isIndeterminate()) {
@@ -109,17 +111,18 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPostExecute(Void result) {
+        Activity activity = weakReference.get();
         if(output == null) {
-            Button retry = ((Activity)context).findViewById(R.id.apkretry);
+            Button retry = activity.findViewById(R.id.apkretry);
             retry.setVisibility(View.VISIBLE);
         } else {
             File install = new File(realpath);
-            Uri apkuri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",install);
+            Uri apkuri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID+".fileprovider",install);
             Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent.setData(apkuri);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(intent);
-            ((Activity)context).finish();
+            activity.startActivity(intent);
+            activity.finish();
         }
     }
 }

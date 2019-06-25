@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
@@ -21,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,31 +43,28 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     private final String path;
     private ArrayList<String> fileneed;
 
-    private final ProgressBar prog;
-    private final TextView state;
-    private final Button retry;
-    private final Context context;
+    private final WeakReference<Activity> weakActivity;
 
     private ArrayList<String> purifyneed = new ArrayList<>();
 
     private File output = null;
 
-    public Downloader(ProgressBar prog, TextView state, Button retry, String path, ArrayList<String> fileneed, ArrayList<String> filenum,
-                      String downloading, String extracting, Context context) {
-        this.prog = prog;
-        this.state = state;
-        this.retry = retry;
+    public Downloader(String path, ArrayList<String> fileneed, String downloading, String extracting, Activity context) {
         this.path = path;
         this.fileneed = fileneed;
         this.downloading = downloading;
         this.extracting = extracting;
-        this.context = context;
+        this.weakActivity = new WeakReference<>(context);
         source = path+"lang";
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        Activity activity = weakActivity.get();
+
+        ProgressBar prog = activity.findViewById(R.id.downprog);
+        TextView state = activity.findViewById(R.id.downstate);
         prog.setIndeterminate(true);
         state.setText(R.string.down_check_file);
     }
@@ -221,6 +218,10 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
+        Activity activity = weakActivity.get();
+        ProgressBar prog = activity.findViewById(R.id.downprog);
+        TextView state = activity.findViewById(R.id.downstate);
+
         if(prog.isIndeterminate()) {
             prog.setIndeterminate(false);
         }
@@ -234,6 +235,11 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPostExecute(Void result) {
+        Activity activity = weakActivity.get();
+        ProgressBar prog = activity.findViewById(R.id.downprog);
+        TextView state = activity.findViewById(R.id.downstate);
+        Button retry = activity.findViewById(R.id.retry);
+
         ArrayList<String> results = new ArrayList<>();
 
         if(remover.size() < purifyneed.size()) {
@@ -258,18 +264,19 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         if(!purifyneed.isEmpty() || output == null) {
             if(purifyneed.isEmpty()) {
                 state.setText(R.string.down_state_ok);
-                new Unzipper(prog,state,path,fileneed, extracting,context).execute();
+                new Unzipper(path,fileneed, extracting,activity).execute();
             } else {
                 state.setText(R.string.down_state_no);
                 retry.setVisibility(View.VISIBLE);
             }
         } else {
             state.setText(R.string.down_state_ok);
-            new Unzipper(prog,state,path,fileneed, extracting,context).execute();
+            new Unzipper(path,fileneed, extracting,activity).execute();
         }
     }
 
     private void purify(ArrayList<Long> size) {
+        Activity activity = weakActivity.get();
         purifyneed = new ArrayList<>();
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -292,8 +299,8 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                 }
             }
         } else {
-            Toast.makeText(context,"Error : Size is smaller than fileneed size",Toast.LENGTH_SHORT).show();
-            ((Activity)context).finish();
+            Toast.makeText(activity,"Error : Size is smaller than fileneed size",Toast.LENGTH_SHORT).show();
+            activity.finish();
         }
     }
 }
@@ -304,18 +311,13 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     private final String path;
     private final String extracting;
 
-    private final ProgressBar prog;
-    private final TextView state;
-    private final Context context;
+    private WeakReference<Activity> weakReference;
 
-    Unzipper(ProgressBar prog, TextView state, String path, ArrayList<String> fileneed,
-             String extracting, Context context) {
-        this.prog = prog;
-        this.state = state;
+    Unzipper(String path, ArrayList<String> fileneed, String extracting, Activity context) {
         this.path = path;
         this.fileneed = fileneed;
         this.extracting = extracting;
-        this.context = context;
+        this.weakReference = new WeakReference<>(context);
         destin = path+"files/";
     }
 
@@ -370,6 +372,9 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPreExecute() {
+        Activity activity = weakReference.get();
+        ProgressBar prog = activity.findViewById(R.id.downprog);
+        TextView state = activity.findViewById(R.id.downstate);
         prog.setIndeterminate(true);
         state.setText(R.string.down_zip_ex);
     }
@@ -377,11 +382,14 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
+        Activity activity = weakReference.get();
+        TextView state = activity.findViewById(R.id.downstate);
         state.setText(extracting+fileneed.get(values[0]));
     }
 
     @Override
     protected void onPostExecute(Void result) {
+        Activity activity = weakReference.get();
         infowirter();
         for (String s : fileneed) {
             File f = new File(path, s+".zip");
@@ -390,9 +398,9 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                 f.delete();
             }
         }
-        Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
-        ((Activity)context).finish();
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
     private void infowirter() {
