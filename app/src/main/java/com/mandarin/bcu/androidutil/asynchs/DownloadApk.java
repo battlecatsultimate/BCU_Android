@@ -1,9 +1,11 @@
 package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
@@ -117,7 +119,7 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
             retry.setVisibility(View.VISIBLE);
         } else {
             File install = new File(realpath);
-            Uri apkuri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID+".fileprovider",install);
+            Uri apkuri = FileProvider.getUriForFile(activity, "com.mandarin.bcu.provider",install);
             Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent.setData(apkuri);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

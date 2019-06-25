@@ -2,5 +2,5 @@
 <paths>
     <external-path
         name="external_files"
-        path="Android/data/com.mandarin.BCU/apk"/>
+        path="Android/data/com.mandarin.BCU/apk/"/>
 </paths>
