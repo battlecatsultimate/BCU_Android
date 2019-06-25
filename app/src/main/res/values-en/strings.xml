@@ -224,4 +224,19 @@
     <string name="unit_info_text15">" (Reduces _ % of damage)"</string>
     <string name="unit_info_text16">" (Reduces _ % of duration)"</string>
     <string name="talen_warp">Res.Warp</string>
+    <string name="unzip_fail">Unzip Failed…</string>
+    <string name="fruit9">Green Catfruit</string>
+    <string name="fruit8">Blue Catfruit</string>
+    <string name="fruit7">Red Catfruit</string>
+    <string name="fruit6">Purple Catfruit</string>
+    <string name="fruit5">Yellow Catfruit Seed</string>
+    <string name="fruit4">Green Catfruit Seed</string>
+    <string name="fruit3">Blue Catfruit Seed</string>
+    <string name="fruit2">Red Catfruit Seed</string>
+    <string name="fruit13">Elder Catfruit</string>
+    <string name="fruit12">Elder Catfruit Seed</string>
+    <string name="fruit11">Epic Catfruit</string>
+    <string name="fruit10">Yellow Catfruit</string>
+    <string name="fruit1">Purple Catfruit Seed</string>
+    <string name="unit_info_catfruit">Cat Fruit Evolve</string>
 </resources>

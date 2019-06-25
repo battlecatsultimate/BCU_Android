@@ -5,9 +5,15 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -19,10 +25,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.UnitInfo;
+import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.adapters.DynamicExplanation;
+import com.mandarin.bcu.androidutil.adapters.DynamicFruit;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.UnitinfRecycle;
+import com.mandarin.bcu.androidutil.adapters.UnitinfRecycle;
 import com.mandarin.bcu.androidutil.getStrings;
 
 import java.lang.ref.WeakReference;
@@ -35,11 +46,18 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     private final int id;
     private ArrayList<String> names = new ArrayList<>();
     private boolean isOpen;
+    private final FragmentManager fm;
+    private int[] nformid = {R.string.unit_info_first,R.string.unit_info_second,R.string.unit_info_third};
+    private String[] nform = new String[nformid.length];
 
-    public UInfoLoader(int id,Activity activity,boolean isOpen) {
+    public UInfoLoader(int id,Activity activity,boolean isOpen,FragmentManager fm) {
      this.id = id;
      this.weakActivity = new WeakReference<>(activity);
      this.isOpen = isOpen;
+     this.fm = fm;
+
+    for(int i=0;i<nformid.length;i++)
+        nform[i] = weakActivity.get().getString(nformid[i]);
     }
 
 
@@ -65,6 +83,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(unitinfRecycle);
         ViewCompat.setNestedScrollingEnabled(recyclerView,false);
+
+        publishProgress(0);
 
         ImageButton treasure = activity.findViewById(R.id.treabutton);
         ConstraintLayout mainLayout = activity.findViewById(R.id.unitinfomain);
@@ -123,7 +143,40 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
             }
         });
 
+        TextView fruittext = activity.findViewById(R.id.cfinftext);
+        ViewPager fruitpage = activity.findViewById(R.id.catfruitpager);
+
+        if(StaticStore.units.get(id).info.evo == null) {
+            fruitpage.setVisibility(View.GONE);
+            fruittext.setVisibility(View.GONE);
+        } else {
+            fruitpage.setAdapter(new DynamicFruit(activity,id));
+            fruitpage.setOffscreenPageLimit(1);
+        }
+
         return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... results) {
+        Activity activity = weakActivity.get();
+
+        TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
+
+        for(int i=0;i<StaticStore.units.get(id).forms.length;i++) {
+            tabs.addTab(tabs.newTab().setText(nform[i]));
+        }
+
+        ExplanationTab explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+
+        ViewPager viewPager = activity.findViewById(R.id.unitinfpager);
+        viewPager.setAdapter(explain);
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        tabs.setupWithViewPager(viewPager);
+
+        if(StaticStore.units.get(id).info.evo == null)
+            viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
     }
 
     @Override
@@ -138,5 +191,33 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         prog.setVisibility(View.GONE);
+    }
+
+    protected class ExplanationTab extends FragmentStatePagerAdapter {
+        int number;
+        int id;
+        String[] title;
+
+        ExplanationTab(FragmentManager fm, int number, int id, String[] title) {
+            super(fm);
+            this.number = number;
+            this.id = id;
+            this.title = title;
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return DynamicExplanation.newInstance(i,id,title);
+        }
+
+        @Override
+        public int getCount() {
+            return number;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return title[position];
+        }
     }
 }

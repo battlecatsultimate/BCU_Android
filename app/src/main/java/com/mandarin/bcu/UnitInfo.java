@@ -15,11 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.mandarin.bcu.androidutil.DynamicExplanation;
+import com.mandarin.bcu.androidutil.adapters.DynamicExplanation;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.UInfoLoader;
@@ -29,8 +30,6 @@ import java.util.ArrayList;
 
 public class UnitInfo extends AppCompatActivity {
     private ArrayList<String> names = new ArrayList<>();
-    private int[] nformid = {R.string.unit_info_first,R.string.unit_info_second,R.string.unit_info_third};
-    private String[] nform = new String[nformid.length];
     private boolean isOpen = false;
     private ImageButton treasure;
 
@@ -38,6 +37,8 @@ public class UnitInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
         SharedPreferences.Editor ed;
@@ -65,9 +66,6 @@ public class UnitInfo extends AppCompatActivity {
         ConstraintLayout treasuretab = findViewById(R.id.treasurelayout);
         treasuretab.setVisibility(View.GONE);
 
-        for(int i=0;i<nformid.length;i++)
-            nform[i] = getString(nformid[i]);
-
         TextView unittitle = findViewById(R.id.unitinfrarname);
 
         ImageButton back = findViewById(R.id.unitinfback);
@@ -91,50 +89,7 @@ public class UnitInfo extends AppCompatActivity {
             getStrings s = new getStrings(this);
             unittitle.setText(s.getTitle(StaticStore.units.get(id).forms[0]));
 
-
-            TabLayout tabs = findViewById(R.id.unitinfexplain);
-
-            for(int i=0;i<StaticStore.units.get(id).forms.length;i++) {
-                tabs.addTab(tabs.newTab().setText(nform[i]));
-            }
-
-            ExplanationTab explain = new ExplanationTab(getSupportFragmentManager(),tabs.getTabCount(),id,nform);
-
-            ViewPager viewPager = findViewById(R.id.unitinfpager);
-            viewPager.setAdapter(explain);
-            viewPager.setOffscreenPageLimit(1);
-            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-            tabs.setupWithViewPager(viewPager);
-
-            new UInfoLoader(id,this,isOpen).execute();
-        }
-    }
-
-    protected class ExplanationTab extends FragmentStatePagerAdapter {
-        int number;
-        int id;
-        String[] title;
-
-        ExplanationTab(FragmentManager fm, int number, int id,String[] title) {
-            super(fm);
-            this.number = number;
-            this.id = id;
-            this.title = title;
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return DynamicExplanation.newInstance(i,id,title);
-        }
-
-        @Override
-        public int getCount() {
-            return number;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return title[position];
+            new UInfoLoader(id,this,isOpen,getSupportFragmentManager()).execute();
         }
     }
 

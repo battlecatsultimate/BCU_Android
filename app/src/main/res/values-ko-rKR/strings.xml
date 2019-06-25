@@ -224,4 +224,19 @@
     <string name="unit_info_text15">" (받는 데미지 _ % 감소)"</string>
     <string name="unit_info_text16">" (워프시간 _ % 감소)"</string>
     <string name="talen_warp">워프 내성</string>
+    <string name="unzip_fail">추출 실패…</string>
+    <string name="fruit9">초록 개다래 열매</string>
+    <string name="fruit8">파랑 개다래 열매</string>
+    <string name="fruit7">빨강 개다래 열매</string>
+    <string name="fruit6">보라 개다래 열매</string>
+    <string name="fruit5">노랑 개다래 열매 씨앗</string>
+    <string name="fruit4">초록 개다래 열매 씨앗</string>
+    <string name="fruit3">파랑 개다래 열매 씨앗</string>
+    <string name="fruit2">빨강 개다래 열매 씨앗</string>
+    <string name="fruit13">고대 개다래 열매</string>
+    <string name="fruit12">고대 개다래 열매 씨앗</string>
+    <string name="fruit11">무지개 개다래 열매</string>
+    <string name="fruit10">노랑 개다래 열매</string>
+    <string name="fruit1">보라 개다래 열매 씨앗</string>
+    <string name="unit_info_catfruit">개다래 정보</string>
 </resources>

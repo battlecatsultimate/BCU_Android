@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
-import com.mandarin.bcu.androidutil.SingleClick;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 
 import java.util.ArrayList;
 

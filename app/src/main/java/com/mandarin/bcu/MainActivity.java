@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.Revalidater;
-import com.mandarin.bcu.androidutil.SingleClick;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.CheckApk;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
@@ -40,7 +40,7 @@ import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603","080604"};
+    private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603","080604","080605"};
     private String path;
     private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";
     private ArrayList<String> fileneed = new ArrayList<>();

@@ -3,6 +3,8 @@ package com.mandarin.bcu.androidutil;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -45,7 +47,8 @@ public class Definer {
             R.string.unit_info_text14,R.string.unit_info_text15,R.string.unit_info_text16};
     private String [] textstring = new String[textid.length];
     private String [] lan = {"/en/","/zh/","/kr/","/jp/"};
-    private String [] files = {"UnitName.txt","UnitExplanation.txt"};
+    private String [] files = {"UnitName.txt","UnitExplanation.txt","CatFruitExplanation.txt"};
+
 
     public void define(Context context) {
         try {
@@ -88,6 +91,16 @@ public class Definer {
                                         MultiLangCont.FEXP.put(l.substring(1,l.length()-1), u.forms[i], lines);
                                     }
                                 }
+                            } else if (n.equals("CatFruitExplanation.txt")) {
+                                for(String str : qs) {
+                                    String[] strs = str.trim().split("\t");
+                                    Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+                                    if(u==null)
+                                        continue;
+
+                                    String[] lines = strs[1].split("<br>");
+                                    MultiLangCont.CFEXP.put(l.substring(1,l.length()-1),u.info,lines);
+                                }
                             }
                         }
                     }
@@ -121,6 +134,16 @@ public class Definer {
             if(StaticStore.t == null) {
                 Combo.readFile();
                 StaticStore.t = BasisSet.current.t();
+            }
+
+            if(StaticStore.fruit == null) {
+                String Path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/page/catfruit/";
+                File f = new File(Path);
+                StaticStore.fruit = new Bitmap[f.listFiles().length];
+
+                for(int i = 0; i<f.listFiles().length;i++) {
+                    StaticStore.fruit[i] = BitmapFactory.decodeFile(f.listFiles()[i].getAbsolutePath());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -15,7 +15,7 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
 import com.mandarin.bcu.androidutil.Definer;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.UnitListAdapter;
+import com.mandarin.bcu.androidutil.adapters.UnitListAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                 Toast.makeText(activity,showName(locate.get(position)),Toast.LENGTH_SHORT).show();
                 list.setClickable(false);
 
-                return false;
+                return true;
             }
         });
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,7 +134,11 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         ArrayList<String> names = new ArrayList<>();
 
         for(Form f : StaticStore.units.get(location).forms) {
-            names.add(f.name);
+            String name = MultiLangCont.FNAME.getCont(f);
+            if(name == null)
+                name = "";
+
+            names.add(name);
         }
 
         StringBuilder result = new StringBuilder(withID(location, names.get(0)));

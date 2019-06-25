@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.asynchs;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -36,7 +37,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     private ArrayList<Boolean> remover = new ArrayList<>();
 
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt"};
+    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt"};
     private String source;
     private String downloading;
     private String extracting;
@@ -310,6 +311,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     private ArrayList<String> fileneed;
     private final String path;
     private final String extracting;
+    private boolean contin = true;
 
     private WeakReference<Activity> weakReference;
 
@@ -341,13 +343,27 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                 while((ze = zis.getNextEntry()) != null) {
                     String filenam = ze.getName();
 
+                    File f= new File(destin+filenam);
+
+                    System.out.println("Path : "+f.getParent());
+                    System.out.println("Name : "+f.getName());
+                    System.out.println("Is Dir : "+ze.isDirectory());
+                    System.out.println("Is exist : "+f.exists());
+
                     if(ze.isDirectory()) {
-                        File fmd = new File(destin+filenam);
-                        fmd.mkdirs();
+                        if (!f.exists())
+                            f.mkdirs();
                         continue;
                     }
 
-                    FileOutputStream fout = new FileOutputStream(destin+filenam);
+                    File dir = new File(f.getParent());
+                    if(!dir.exists())
+                        dir.mkdirs();
+
+                    if(!f.exists())
+                        f.createNewFile();
+
+                    FileOutputStream fout = new FileOutputStream(f);
 
                     while((count = zis.read(buffer)) != -1) {
                         publishProgress(i);
@@ -362,8 +378,10 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                contin = false;
             } catch (IOException e) {
                 e.printStackTrace();
+                contin = false;
             }
         }
 
@@ -390,17 +408,28 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
-        infowirter();
-        for (String s : fileneed) {
-            File f = new File(path, s+".zip");
 
-            if (f.exists()) {
-                f.delete();
+        if (contin) {
+            infowirter();
+            for (String s : fileneed) {
+                File f = new File(path, s + ".zip");
+
+                if (f.exists()) {
+                    f.delete();
+                }
             }
+            Intent intent = new Intent(activity, MainActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
+        } else {
+            Button retry = activity.findViewById(R.id.retry);
+            TextView checkstate = activity.findViewById(R.id.downstate);
+            ProgressBar prog = activity.findViewById(R.id.downprog);
+
+            checkstate.setText(R.string.unzip_fail);
+            prog.setIndeterminate(false);
+            retry.setVisibility(View.VISIBLE);
         }
-        Intent intent = new Intent(activity, MainActivity.class);
-        activity.startActivity(intent);
-        activity.finish();
     }
 
     private void infowirter() {

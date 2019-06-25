@@ -8,16 +8,14 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
 
-import common.system.MultiLangCont;
-import common.util.pack.Pack;
-import common.system.files.AssetData;
-import common.system.files.VFile;
-import common.util.unit.Unit;
-
 import java.io.File;
-import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
+
+import common.system.MultiLangCont;
+import common.system.files.AssetData;
+import common.system.files.VFile;
+import common.util.pack.Pack;
 
 public class Revalidater extends ContextWrapper {
     private static String [] locales = StaticStore.lang;

@@ -51,15 +51,16 @@
             android:id="@+id/unitinfscroll"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:fillViewport="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2"
+            app:layout_constraintVertical_bias="1.0">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <android.support.v4.widget.NestedScrollView
                     android:id="@+id/nestedScrollView"
@@ -88,13 +89,12 @@
                     </LinearLayout>
                 </android.support.v4.widget.NestedScrollView>
 
-                <android.support.v4.view.ViewPager
+                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
                     android:id="@+id/unitinfpager"
                     android:layout_width="0dp"
-                    android:layout_height="180dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
 
@@ -125,6 +125,49 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+
+                <TextView
+                    android:id="@+id/cfinftext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/unit_info_catfruit"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/TableBorder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/unitinfpager" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/TableBorder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/unitinfexplain" />
+
+                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+                    android:id="@+id/catfruitpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cfinftext">
+
+                </com.mandarin.bcu.androidutil.adapters.MeasureViewPager>
 
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
@@ -222,6 +265,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
                             android:inputType="number"
                             android:maxLength="2"
                             android:textColor="?attr/TextPrimary"
@@ -264,6 +308,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
                             android:inputType="number"
                             android:maxLength="3"
                             android:textColor="?attr/TextPrimary"
@@ -306,6 +351,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
                             android:inputType="number"
                             android:maxLength="3"
                             android:textColor="?attr/TextPrimary"
@@ -350,6 +396,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
                             android:inputType="number"
                             android:maxLength="3"
                             android:textColor="?attr/TextPrimary"

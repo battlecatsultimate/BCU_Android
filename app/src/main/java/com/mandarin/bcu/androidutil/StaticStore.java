@@ -3,22 +3,19 @@ package com.mandarin.bcu.androidutil;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.util.TypedValue;
-import android.view.View;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import common.battle.Treasure;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 import common.util.unit.Unit;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 public class StaticStore {
     public static Bitmap[] bitmaps = null;
@@ -28,6 +25,7 @@ public class StaticStore {
     public static FakeImage[] img15 = null;
     public static Bitmap[] icons = null;
     public static Bitmap[] picons = null;
+    public static Bitmap[] fruit = null;
     public static String [] addition = null;
     public static int root = 0;
     public static int unitnumber;

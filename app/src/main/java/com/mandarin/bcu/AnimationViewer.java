@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.FilterUnit;
 import com.mandarin.bcu.androidutil.Revalidater;
-import com.mandarin.bcu.androidutil.SingleClick;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.UnitListAdapter;
+import com.mandarin.bcu.androidutil.adapters.UnitListAdapter;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
@@ -178,7 +178,7 @@ public class AnimationViewer extends AppCompatActivity {
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(AnimationViewer.this,showName(newNumber.get(position)),Toast.LENGTH_SHORT).show();
                     list.setClickable(false);
-                    return false;
+                    return true;
                 }
             });
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -51,7 +51,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     private boolean lang;
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt"};
+    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt"};
     private String source;
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
@@ -198,7 +198,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
         try {
             Map<String, String> libmap = new TreeMap<>();
-            JSONArray ja = asset.getJSONArray("assets");
+            JSONArray ja = asset.getJSONArray("android");
 
             for(int i=0;i<ja.length();i++) {
                 JSONArray ent = ja.getJSONArray(i);
