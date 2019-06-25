@@ -62,17 +62,11 @@ public class Interpret extends Data {
 	/** proc data formatter */
 	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 6 }, { 0, -1 }, { -1, 4, 7 },
-			{ -1, 9, 10, 7 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
+			{ -1, 9, 10, 7 }, { -1, 14 }, { -1, 13 }, { -1, 13 }, { -1, 15 }, { -1, 13 }, { -1, 16 }, { -1, 13 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
-			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
-			{ -1, 1, 2, 0 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
-
-	/**resist data locator */
-	private static final int[][] LOCR = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
@@ -80,13 +74,13 @@ public class Interpret extends Data {
 	/** proc data formatter for KR,JP */
 	private static final int[][] CMP2 = { { 0, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, 2, -1 },
 			{ 0, 3, 1, -1 }, { 0, -1 }, { 0, 1, 4, -1 }, { 0, 1, -1 }, { 5, 6, -1 }, { 0, -1 }, { 4, 7, -1 },
-			{ 9, 10, 7, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
+			{ 9, 10, 7, -1 }, { -1, 14 }, { -1, 13 }, { -1, 13 }, { -1, 15 }, { -1, 13 }, { -1, 16 }, { -1, 13 }, { 0, -1 },
 			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 4, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data locator for KR,JP */
 	private static final int[][] LOC2 = { { 0, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, 2, 1, -1 }, { 0, -1 }, { 0, 1, 2, -1 }, { 0, 1, -1 }, { 0,1, -1 }, { 0, -1 }, { 1, 0, -1 },
-			{ 1, 2, 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 }, { 0, -1 },
+			{ 1, 2, 0, -1 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 2, -1 }, { 0, 3, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } };
 
 	/** combo string component */
@@ -146,13 +140,23 @@ public class Interpret extends Data {
 	}
 
 	public static List<Integer> getProcid(MaskUnit du) {
+		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
 	    List<Integer> l = new ArrayList<>();
 	    MaskAtk ma = du.getRepAtk();
 
 	    for(int i=0;i< PROC.length;i++) {
 	        if(ma.getProc(i)[0] == 0)
 	            continue;
-	        l.add(i);
+
+	        if(immune.contains(i)) {
+	        	int pro = ma.getProc(i)[0];
+
+	        	if(pro != 100)
+	        		l.add(i+15);
+	        	else
+	        		l.add(i);
+			} else
+	        	l.add(i);
         }
 
 	    return l;
@@ -171,15 +175,27 @@ public class Interpret extends Data {
 				for (int j = 0; j < CMP[i].length; j++) {
 					if (CMP[i][j] == -1)
 						if (immune.contains(i) && lang.equals("en")) {
-							ans.append(TEXT[11]).append(PROC[i].substring(4));
-						} else
-							ans.append(PROC[i]);
+							int pro = ma.getProc(i)[0];
+							if(pro != 100)
+								ans.append(TEXT[12]).append(PROC[i].substring(4));
+							else
+								ans.append(TEXT[11]).append(PROC[i].substring(4));
+						} else {
+							int pro = ma.getProc(i)[0];
+
+							if (immune.contains(i) && pro != 100)
+								ans.append(PROC[i+15]);
+							else
+								ans.append(PROC[i]);
+						}
 					else {
 						if (frse == 0) {
 							int pro = ma.getProc(i)[LOC[i][j]];
 							String rep = pro == -1 ? "infinity" : "" + pro;
-							if(!(immune.contains(i) && TEXT[CMP[i][j]].contains("%") && pro == 100))
-								ans.append(TEXT[CMP[i][j]].replace("_", rep));
+							if(immune.contains(i) && pro != 100)
+								ans.append(TEXT[CMP[i][j]].replace("_",rep));
+							else if(!immune.contains(i))
+								ans.append(TEXT[CMP[i][j]].replace("_",rep));
 						} else {
 							if (TEXT[CMP[i][j]].contains("_ f")) {
 								int pro = ma.getProc(i)[LOC[i][j]];
@@ -188,8 +204,10 @@ public class Interpret extends Data {
 							} else {
 								int pro = ma.getProc(i)[LOC[i][j]];
 								String rep = pro == -1 ? "infinity" : "" + pro;
-								if(!(immune.contains(i) && TEXT[CMP[i][j]].contains("%") && pro == 100))
+								if(immune.contains(i) && pro != 100)
 									ans.append(TEXT[CMP[i][j]].replace("_", rep));
+								else if(!immune.contains(i))
+									ans.append(TEXT[CMP[i][j]].replace("_",rep));
 							}
 						}
 					}
@@ -202,13 +220,23 @@ public class Interpret extends Data {
 					continue;
 				StringBuilder ans = new StringBuilder();
 				for (int j = 0; j < CMP2[i].length; j++) {
-					if (CMP2[i][j] == -1)
-						ans.append(PROC[i]);
-					else {
+					if (CMP2[i][j] == -1) {
+						if(immune.contains(i)) {
+							int pro = ma.getProc(i)[0];
+
+							if(pro != 100)
+								ans.append(PROC[i+15]);
+							else
+								ans.append(PROC[i]);
+						} else
+							ans.append(PROC[i]);
+					} else {
 						if (frse == 0) {
 							int pro = ma.getProc(i)[LOC2[i][j]];
 							String rep = pro == -1 ? "infinity" : "" + pro;
-							if(!(immune.contains(i) && TEXT[CMP2[i][j]].contains("%") && pro == 100))
+							if(immune.contains(i) && pro != 100)
+								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+							else if(!immune.contains(i))
 								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
 						} else {
 							if (TEXT[CMP2[i][j]].contains("_ f")) {
@@ -218,7 +246,9 @@ public class Interpret extends Data {
 							} else {
 								int pro = ma.getProc(i)[LOC2[i][j]];
 								String rep = pro == -1 ? "infinity" : "" + pro;
-								if(!(immune.contains(i) && TEXT[CMP2[i][j]].contains("%") && pro == 100))
+								if(immune.contains(i) && pro != 100)
+									ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+								else if(!immune.contains(i))
 									ans.append(TEXT[CMP2[i][j]].replace("_", rep));
 							}
 						}

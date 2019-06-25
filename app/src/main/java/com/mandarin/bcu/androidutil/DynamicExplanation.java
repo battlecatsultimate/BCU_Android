@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.mandarin.bcu.R;
 
 import common.system.MultiLangCont;
-import common.util.unit.Unit;
 
 public class DynamicExplanation extends Fragment {
     View view;
@@ -47,7 +46,12 @@ public class DynamicExplanation extends Fragment {
         for(int i=0;i<lineid.length;i++)
             explains[i] = view.findViewById(lineid[i]);
 
-        unitname.setText(StaticStore.units.get(id).forms[val].name);
+        String name = MultiLangCont.FNAME.getCont(StaticStore.units.get(id).forms[val]);
+
+        if(name == null)
+            name = "";
+
+        unitname.setText(name);
 
         for(int i=0;i < explains.length;i++) {
             if(i >= explanation.length) {

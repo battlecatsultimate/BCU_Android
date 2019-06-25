@@ -154,7 +154,7 @@
     <string name="abi_ithch">Imu.Theme Change</string>
     <string name="abi_sui">Suicide</string>
     <string name="abi_ipoi">Imu.Poison</string>
-    <string name="unit_info_strong">" (Takes damage x0.5~x0.4 / Gives damge x1.5~x1.8)"</string>
+    <string name="unit_info_strong">" (Takes damage x0.5~x0.4 / Gives damage x1.5~x1.8)"</string>
     <string name="unit_info_masdam">" (Gives damage x3~x4)"</string>
     <string name="unit_info_resis">" (Takes damage x0.25~x0.2)"</string>
     <string name="unit_info_insres">" (Takes damage x1/6~x1/7)"</string>
@@ -218,4 +218,10 @@
     <string name="unit_info_talent">Consider Talents</string>
     <string name="talen_trait">"Trait : "</string>
     <string name="talen_abil">"Ability : "</string>
+    <string name="def_unit_info_text12">"Resist to "</string>
+    <string name="unit_info_text13">" (Reduces _ % of time)"</string>
+    <string name="unit_info_text14">" (Reduces _ % of distance)"</string>
+    <string name="unit_info_text15">" (Reduces _ % of damage)"</string>
+    <string name="unit_info_text16">" (Reduces _ % of duration)"</string>
+    <string name="talen_warp">Res.Warp</string>
 </resources>

@@ -20,7 +20,10 @@ import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import common.CommonStatic;
 
 public class ConfigScreen extends AppCompatActivity {
     SharedPreferences shared;
@@ -180,11 +183,18 @@ public class ConfigScreen extends AppCompatActivity {
                     ed.apply();
 
                     String lang = locales[position];
+
                     if (lang.equals(""))
                         lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
 
                     if (StaticStore.units != null)
                         new Revalidater(ConfigScreen.this).Validate(lang, ConfigScreen.this);
+                    else {
+                        CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(lang)-1;
+
+                        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang == -2)
+                            CommonStatic.Lang.lang = 0;
+                    }
 
                     restart();
                 }

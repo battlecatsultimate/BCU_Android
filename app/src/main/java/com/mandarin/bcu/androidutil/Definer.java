@@ -10,22 +10,20 @@ import android.support.annotation.NonNull;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
 
-import common.CommonStatic;
-import common.battle.BasisSet;
-import common.system.MultiLangCont;
-import common.system.files.AssetData;
-import common.system.files.VFile;
-import common.util.unit.Combo;
-import common.battle.data.PCoin;
-import common.util.pack.Pack;
-import common.util.unit.Unit;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Queue;
+
+import common.CommonStatic;
+import common.battle.BasisSet;
+import common.battle.data.PCoin;
+import common.system.MultiLangCont;
+import common.system.files.AssetData;
+import common.util.pack.Pack;
+import common.util.unit.Combo;
+import common.util.unit.Unit;
 
 public class Definer {
     private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re};
@@ -34,14 +32,17 @@ public class Definer {
     private String [] colorstring = new String[colorid.length];
     private int [] procid = {R.string.sch_abi_kb,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_cr,R.string.sch_abi_wv,R.string.sch_abi_we,R.string.sch_abi_bb,R.string.sch_abi_wa,R.string.sch_abi_cr,
             R.string.sch_abi_str,R.string.sch_abi_su,R.string.abi_bo,R.string.abi_rev,R.string.sch_abi_ik,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_iwv,R.string.sch_abi_iw,R.string.sch_abi_iwa,
-            R.string.sch_abi_ic,R.string.abi_snk,R.string.abi_stt,R.string.abi_seal,R.string.abi_sum,R.string.abi_mvatk,R.string.abi_thch,R.string.abi_poi,R.string.abi_boswv};
+            R.string.sch_abi_ic,R.string.abi_snk,R.string.abi_stt,R.string.abi_seal,R.string.abi_sum,R.string.abi_mvatk,R.string.abi_thch,R.string.abi_poi,R.string.abi_boswv
+            ,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
+            R.string.talen_cu};
     private String [] proc = new String[procid.length];
     private int [] abiid = {R.string.sch_abi_st,R.string.sch_abi_re,R.string.sch_abi_md,R.string.sch_abi_ao,R.string.sch_abi_em,R.string.sch_abi_bd,R.string.sch_abi_me,R.string.abi_imvatk,R.string.sch_abi_ws,
             R.string.abi_isnk,R.string.abi_istt,R.string.abi_gh,R.string.abi_ipoi,R.string.sch_abi_zk,R.string.sch_abi_wk,R.string.abi_sui,R.string.abi_ithch,R.string.sch_abi_eva,
             R.string.abi_iseal,R.string.abi_iboswv,R.string.sch_abi_it,R.string.sch_abi_id};
     private String [] abi = new String[abiid.length];
     private int [] textid = {R.string.unit_info_text0,R.string.unit_info_text1,R.string.unit_info_text2,R.string.unit_info_text3,R.string.unit_info_text4,R.string.unit_info_text5,R.string.unit_info_text6,R.string.unit_info_text7,
-            R.string.def_unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.def_unit_info_text11};
+            R.string.def_unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.def_unit_info_text11,R.string.def_unit_info_text12,R.string.unit_info_text13,
+            R.string.unit_info_text14,R.string.unit_info_text15,R.string.unit_info_text16};
     private String [] textstring = new String[textid.length];
     private String [] lan = {"/en/","/zh/","/kr/","/jp/"};
     private String [] files = {"UnitName.txt","UnitExplanation.txt"};
@@ -53,6 +54,8 @@ public class Definer {
                 PCoin.read();
 
                 StaticStore.units = Pack.def.us.ulist.getList();
+
+                StaticStore.readImg();
 
                 for(String l : lan) {
                     for(String n : files) {
@@ -125,6 +128,13 @@ public class Definer {
     }
 
     void redefine(Context context,String lang) {
+
+        CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(lang)-1;
+
+        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang == -2)
+            CommonStatic.Lang.lang = 0;
+
+        System.out.println(CommonStatic.Lang.lang);
 
         for(int i = 0;i<colorid.length;i++) {
             colorstring[i] = getString(context,colorid[i],lang);

@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
@@ -37,15 +36,16 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
-import common.battle.BasisSet;
-import common.battle.Treasure;
-import common.battle.data.MaskUnit;
-import common.util.unit.Form;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import common.battle.BasisSet;
+import common.battle.Treasure;
+import common.battle.data.MaskUnit;
+import common.util.unit.Form;
 
 public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHolder> {
     private Activity context;
@@ -77,6 +77,10 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                 getAttributeColor(context,R.attr.TextPrimary)
         };
 
+        if(StaticStore.img15 == null) {
+            StaticStore.readImg();
+        }
+
         if(StaticStore.addition == null) {
             int[] addid = {R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas};
             StaticStore.addition = new String[addid.length];
@@ -85,20 +89,25 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         }
 
         if(StaticStore.icons == null) {
-            int[] abiconid = {R.mipmap.ic_strong, R.mipmap.ic_resist, R.mipmap.ic_md, R.mipmap.ic_target, R.mipmap.ic_em, R.mipmap.ic_cb, R.mipmap.ic_met, R.mipmap.ic_white, R.mipmap.ic_imws, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_zk,
-                    R.mipmap.ic_imwk, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_eva, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_inr, R.mipmap.ic_ind};
-            StaticStore.icons = new Drawable[abiconid.length];
-            for (int i = 0; i < abiconid.length; i++)
-                StaticStore.icons[i] = context.getDrawable(abiconid[i]);
+            if(StaticStore.img15 == null)
+                StaticStore.readImg();
+
+            int[] number = {203,204,206,202,205,200,209,227,218,227,227,227,227,260,258,227,227,110,227,122,114};
+            StaticStore.icons = new Bitmap[number.length];
+            for (int i = 0; i < number.length; i++)
+                StaticStore.icons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
         }
 
         if(StaticStore.picons == null) {
-            int[] proiconid = {R.mipmap.ic_kb, R.mipmap.ic_freeze, R.mipmap.ic_slow, R.mipmap.ic_critical, R.mipmap.ic_wv, R.mipmap.ic_weaken, R.mipmap.ic_bb, R.mipmap.ic_wa, R.mipmap.ic_white, R.mipmap.ic_stren, R.mipmap.ic_survive, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_imkb,
-                    R.mipmap.ic_imfr, R.mipmap.ic_imsl, R.mipmap.ic_imwv, R.mipmap.ic_imwe, R.mipmap.ic_imwa, R.mipmap.ic_imcu, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white, R.mipmap.ic_white};
-            StaticStore.picons = new Drawable[proiconid.length];
+            if(StaticStore.img15 == null)
+                StaticStore.readImg();
 
-            for (int i = 0; i < proiconid.length; i++)
-                StaticStore.picons[i] = context.getDrawable(proiconid[i]);
+            int[] number = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,49,45,47,51,43,53,109};
+
+            StaticStore.picons = new Bitmap[number.length];
+
+            for (int i = 0; i < number.length; i++)
+                StaticStore.picons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
         }
     }
 
@@ -782,7 +791,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim2.setInterpolator(new DecelerateInterpolator());
                     anim2.start();
 
-                    ValueAnimator anim3 = ValueAnimator.ofInt(0,StaticStore.dptopx(24f,context));
+                    ValueAnimator anim3 = ValueAnimator.ofInt(0,StaticStore.dptopx(16f,context));
                     anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -824,7 +833,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim2.setInterpolator(new DecelerateInterpolator());
                     anim2.start();
 
-                    ValueAnimator anim3 = ValueAnimator.ofInt(StaticStore.dptopx(24f,context),0);
+                    ValueAnimator anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f,context),0);
                     anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -1002,7 +1011,10 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
         viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
         viewHolder.unithb.setText(s.getHB(f,talents,pcoins));
-        viewHolder.unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoins));
+        if(viewHolder.unitatk.getText().toString().equals("DPS"))
+            viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoins));
+        else
+            viewHolder.unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoins));
         viewHolder.unitcost.setText(s.getCost(f,talents,pcoins));
         if(viewHolder.unitcd.getText().toString().endsWith("s"))
             viewHolder.unitcd.setText(s.getCD(f,t,1,talents,pcoins));

@@ -318,6 +318,9 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
         String language = Locale.getDefault().getLanguage();
         CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(language)-1;
 
+        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang == -2)
+            CommonStatic.Lang.lang = 0;
+
         System.out.println(CommonStatic.Lang.lang);
 
         return null;

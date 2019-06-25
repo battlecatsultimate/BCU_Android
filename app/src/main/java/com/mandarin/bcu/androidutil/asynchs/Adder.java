@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,20 +14,21 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
-import com.mandarin.bcu.androidutil.UnitListAdapter;
 import com.mandarin.bcu.androidutil.Definer;
 import com.mandarin.bcu.androidutil.StaticStore;
-
-import common.system.MultiLangCont;
-import common.util.pack.Pack;
-import common.system.files.VFile;
-import common.util.unit.Form;
+import com.mandarin.bcu.androidutil.UnitListAdapter;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+import common.system.MultiLangCont;
+import common.system.files.VFile;
+import common.util.pack.Pack;
+import common.util.unit.Form;
+
 public class Adder extends AsyncTask<Void, Integer, Void> {
     private final int unitnumber;
+    private final long INTERVAL = 1000;
     private final Context context;
 
     public Adder(int unitnumber, Context context) {
@@ -83,6 +85,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(context,showName(locate.get(position)),Toast.LENGTH_SHORT).show();
+                list.setClickable(false);
 
                 return false;
             }
@@ -90,6 +93,11 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < INTERVAL)
+                    return;
+
+                StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
+
                 Intent result = new Intent(context, UnitInfo.class);
                 result.putExtra("ID",locate.get(position));
                 context.startActivity(result);
@@ -134,11 +142,15 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
 
     private String withID(int id, String name) {
         String result;
+        String names = name;
 
-        if(name.equals("")) {
+        if(names == null)
+            names = "";
+
+        if(names.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+name;
+            result = number(id)+" - "+names;
         }
 
         return result;

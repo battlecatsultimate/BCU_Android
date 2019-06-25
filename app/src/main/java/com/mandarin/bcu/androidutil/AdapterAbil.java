@@ -44,7 +44,7 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
         if(viewHolder.getAdapterPosition() < ability.size()) {
             viewHolder.abiltext.setText(ability.get(viewHolder.getAdapterPosition()));
             if (abilicon.get(viewHolder.getAdapterPosition()) != 15 && abilicon.get(viewHolder.getAdapterPosition()) != 19) {
-                Bitmap resized = StaticStore.getResize(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())],context);
+                Bitmap resized = StaticStore.getResizeb(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())],context,24f);
                 viewHolder.abilicon.setImageBitmap(resized);
             } else {
                 viewHolder.abilicon.setImageBitmap(empty());
@@ -52,7 +52,7 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
         } else {
             int location = viewHolder.getAdapterPosition()-ability.size();
             viewHolder.abiltext.setText(procs.get(location));
-            Bitmap resized = StaticStore.getResize(StaticStore.picons[procicon.get(location)],context);
+            Bitmap resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)],context,24f);
             viewHolder.abilicon.setImageBitmap(resized);
         }
     }

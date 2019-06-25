@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,10 +16,13 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.FilterUnit;
 import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.UnitListAdapter;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
+
+import common.system.MultiLangCont;
 import common.system.fake.ImageBuilder;
 import common.util.unit.Form;
 
@@ -30,6 +34,7 @@ public class AnimationViewer extends AppCompatActivity {
     private ListView list;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
+    private final long INTEVAL = 1000;
 
 
     @Override
@@ -60,16 +65,16 @@ public class AnimationViewer extends AppCompatActivity {
         search = findViewById(R.id.animsch);
         list = findViewById(R.id.unitinflist);
 
-        back.setOnClickListener(new View.OnClickListener() {
+        back.setOnClickListener(new SingleClick() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 finish();
             }
         });
 
-        search.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new SingleClick() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 gotoFilter();
             }
         });
@@ -81,7 +86,12 @@ public class AnimationViewer extends AppCompatActivity {
         ArrayList<String> names = new ArrayList<>();
 
         for(Form f : StaticStore.units.get(location).forms) {
-            names.add(f.name);
+            String name = MultiLangCont.FNAME.getCont(f);
+
+            if(name == null)
+                name = "";
+
+            names.add(name);
         }
 
         StringBuilder result = new StringBuilder(withID(location, names.get(0)));
@@ -167,22 +177,27 @@ public class AnimationViewer extends AppCompatActivity {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(AnimationViewer.this,showName(newNumber.get(position)),Toast.LENGTH_SHORT).show();
-
+                    list.setClickable(false);
                     return false;
                 }
             });
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < INTEVAL)
+                        return;
+
                     Intent result = new Intent(AnimationViewer.this,UnitInfo.class);
                     result.putExtra("ID",newNumber.get(position));
                     startActivity(result);
+
+                    StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
                 }
             });
 
-            search.setOnClickListener(new View.OnClickListener() {
+            search.setOnClickListener(new SingleClick() {
                 @Override
-                public void onClick(View v) {
+                public void onSingleClick(View v) {
                     Intent intent = new Intent(AnimationViewer.this,SearchFilter.class);
 
                     intent.putExtra("empty",empty);

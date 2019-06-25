@@ -84,8 +84,6 @@
                                   <option name="values">
                                     <map>
                                       <entry key="foregroundImage" value="C:\Users\user\Desktop\무제-1.png" />
-                                      <entry key="showGrid" value="true" />
-                                      <entry key="showSafeZone" value="false" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -124,8 +122,8 @@
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="C:\Users\user\Desktop\Icons\122.png" />
-                                      <entry key="outputName" value="ic_inr" />
+                                      <entry key="imageAsset" value="C:\Users\user\Desktop\Utility\Plan\Icons\109.png" />
+                                      <entry key="outputName" value="ic_recu" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -152,6 +150,11 @@
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
                           </map>
                         </option>
                       </PersistentState>

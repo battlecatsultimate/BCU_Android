@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
 
+import common.system.MultiLangCont;
 import common.util.pack.Pack;
 import common.system.files.AssetData;
 import common.system.files.VFile;
@@ -29,7 +30,6 @@ public class Revalidater extends ContextWrapper {
 
     public static ContextWrapper LangChange(Context context,int position) {
         String lang = locales[position];
-        String count = "";
 
         if(lang.equals("")) {
             lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
@@ -76,18 +76,22 @@ public class Revalidater extends ContextWrapper {
             StaticStore.names = new String[unitnumber];
 
             for(int i =0;i<unitnumber;i++) {
-                StaticStore.names[i] = withID(i,Pack.def.us.ulist.getList().get(i).forms[0].name);
+                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
             }
         }
     }
 
     private String withID(int id, String name) {
         String result;
+        String names = name;
 
-        if(name.equals("")) {
+        if(name == null)
+            names = "";
+
+        if(names.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+name;
+            result = number(id)+" - "+names;
         }
 
         return result;

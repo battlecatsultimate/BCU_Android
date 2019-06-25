@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.SingleClick;
 import com.mandarin.bcu.androidutil.asynchs.DownloadApk;
 
 public class ApkDownload extends AppCompatActivity {
@@ -65,9 +66,9 @@ public class ApkDownload extends AppCompatActivity {
 
                 new DownloadApk(ApkDownload.this, ver, realurl, PATH, realpath).execute();
 
-                retry.setOnClickListener(new View.OnClickListener() {
+                retry.setOnClickListener(new SingleClick() {
                     @Override
-                    public void onClick(View v) {
+                    public void onSingleClick(View v) {
                         new DownloadApk(ApkDownload.this, ver, realurl, PATH, realpath).execute();
                         retry.setVisibility(View.GONE);
                     }

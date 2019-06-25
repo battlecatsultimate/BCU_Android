@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.util.ArrayList;
 
@@ -58,6 +61,7 @@ public class SearchFilter extends AppCompatActivity {
     private ImageButton reset;
     private RadioButton tgor;
     private RadioButton atkmu;
+    private RadioButton atksi;
     private RadioButton atkor;
     private RadioButton abor;
     private RadioGroup tggroup;
@@ -96,9 +100,16 @@ public class SearchFilter extends AppCompatActivity {
     private boolean atkorand = true;
     private boolean talents = false;
 
+    private int [] atkdraw = {212,112};
+    private int [] tgdraw = {219,220,221,222,223,224,225,226,227};
+    private int [] abdraw = {195,197,198,202,203,204,122,206,114,207,266,196,199,200,201,260,264,205,209,208,213,214,215,216,210,262,116,218,258,110};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(StaticStore.img15 == null)
+            StaticStore.readImg();
 
         SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
         SharedPreferences.Editor ed;
@@ -121,6 +132,11 @@ public class SearchFilter extends AppCompatActivity {
         reset = findViewById(R.id.schreset);
         tgor = findViewById(R.id.schrdtgor);
         atkmu = findViewById(R.id.schrdatkmu);
+        atkmu.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(211,40f),null);
+        atkmu.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+        atksi = findViewById(R.id.schrdatksi);
+        atksi.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(217,40f),null);
+        atksi.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         atkor = findViewById(R.id.schrdatkor);
         abor = findViewById(R.id.schrdabor);
         tggroup = findViewById(R.id.schrgtg);
@@ -130,14 +146,26 @@ public class SearchFilter extends AppCompatActivity {
         sc = findViewById(R.id.animsc);
         nsc = findViewById(R.id.animnscview);
         chnp = findViewById(R.id.schnp);
-        for(int i = 0; i < tgid.length; i++)
+        for(int i = 0; i < tgid.length; i++) {
             targets[i] = findViewById(tgid[i]);
+            targets[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(tgdraw[i],40f),null);
+            targets[i].setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+        }
         for(int i=0;i<rareid.length;i++)
             rarities[i] = findViewById(rareid[i]);
-        for(int i=0;i<atkid.length;i++)
+        for(int i=0;i<atkid.length;i++) {
             attacks[i] = findViewById(atkid[i]);
-        for(int i=0;i<abid.length;i++)
+
+            if(i <atkid.length-1) {
+                attacks[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(atkdraw[i],40f),null);
+                attacks[i].setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+            }
+        }
+        for(int i=0;i<abid.length;i++) {
             abilities[i] = findViewById(abid[i]);
+            abilities[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(abdraw[i],40f),null);
+            abilities[i].setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+        }
 
         tgor.setChecked(true);
         atkor.setChecked(true);
@@ -413,6 +441,13 @@ public class SearchFilter extends AppCompatActivity {
             if(talents)
                 chnp.setChecked(true);
         }
+    }
+
+    protected BitmapDrawable getResizeDraw(int id,float dp) {
+        BitmapDrawable bd = new BitmapDrawable(getResources(),StaticStore.getResizeb((Bitmap)StaticStore.img15[id].bimg(),this,dp));
+        bd.setFilterBitmap(true);
+        bd.setAntiAlias(true);
+        return bd;
     }
 
     @Override

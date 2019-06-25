@@ -218,4 +218,10 @@
     <string name="unit_info_talent">Consider Talents</string>
     <string name="talen_trait">"Trait : "</string>
     <string name="talen_abil">"Ability : "</string>
+    <string name="def_unit_info_text12">"Resist to "</string>
+    <string name="unit_info_text13">" (Reduces _ % of time)"</string>
+    <string name="unit_info_text14">" (Reduces _ % of distance)"</string>
+    <string name="unit_info_text15">" (Reduces _ % of damage)"</string>
+    <string name="unit_info_text16">" (Reduces _ % of duration)"</string>
+    <string name="talen_warp">Res.Warp</string>
 </resources>

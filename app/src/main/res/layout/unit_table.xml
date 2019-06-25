@@ -116,8 +116,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:contentDescription="@string/def_unit_s_icon"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    app:srcCompat="@mipmap/ic_white" />
+                    android:paddingBottom="12dp" />
             </TableRow>
 
             <TextView

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.CheckApk;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
@@ -110,21 +111,23 @@ public class MainActivity extends AppCompatActivity {
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_kasa_jizo), null, null, null);
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
 
-        animbtn.setOnClickListener(new View.OnClickListener() {
+        animbtn.setOnClickListener(new SingleClick() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 animationview();
             }
         });
-        stagebtn.setOnClickListener(new View.OnClickListener() {
+
+        stagebtn.setOnClickListener(new SingleClick() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 stageinfoview();
             }
         });
-        config.setOnClickListener(new View.OnClickListener() {
+
+        config.setOnClickListener(new SingleClick() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 gotoconfig();
             }
         });

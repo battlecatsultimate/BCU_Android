@@ -2,17 +2,11 @@ package com.mandarin.bcu.androidutil;
 
 import android.graphics.BitmapFactory;
 
-import com.mandarin.bcu.io.BCMusic;
-import com.mandarin.bcu.io.Reader;
-import com.mandarin.bcu.io.Writer;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Queue;
 import java.util.function.Function;
 
@@ -20,6 +14,8 @@ import common.CommonStatic;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
+import common.system.files.FileData;
+import common.system.files.VFile;
 
 public class DefineItf implements CommonStatic.Itf {
     @Override
@@ -83,7 +79,17 @@ public class DefineItf implements CommonStatic.Itf {
 
     @Override
     public <T> T readSave(String path, Function<Queue<String>, T> func) {
-        return null;
+        VFile<? extends FileData> f = VFile.getFile(path);
+        Queue<String> qs = f.getData().readLine();
+        if(qs!=null)
+            try {
+                T t = func.apply(qs);
+                if(t != null)
+                    return t;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return func.apply(null);
     }
 
     @Override

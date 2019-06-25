@@ -210,7 +210,7 @@
     <string name="def_lang_ja">日本語</string>
     <string name="config_auto_mes">언어는 설정에서 나간 뒤에 적용됩니다.</string>
     <string name="talen_cu">저주 내성</string>
-    <string name="talen_fr">멈추게 내성</string>
+    <string name="talen_fr">멈춘다 내성</string>
     <string name="talen_kb">밀치기 내성</string>
     <string name="talen_sl">느리게 내성</string>
     <string name="talen_we">약화 내성</string>
@@ -218,4 +218,10 @@
     <string name="unit_info_talent">본능 포함</string>
     <string name="talen_trait">"속성 : "</string>
     <string name="talen_abil">"능력 : "</string>
+    <string name="def_unit_info_text12">"Resist to "</string>
+    <string name="unit_info_text13">" (시간 _ % 감소)"</string>
+    <string name="unit_info_text14">" (밀쳐나는 거리 _ % 감소)"</string>
+    <string name="unit_info_text15">" (받는 데미지 _ % 감소)"</string>
+    <string name="unit_info_text16">" (워프시간 _ % 감소)"</string>
+    <string name="talen_warp">워프 내성</string>
 </resources>

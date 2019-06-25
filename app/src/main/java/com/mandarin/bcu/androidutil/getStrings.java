@@ -5,16 +5,17 @@ import android.support.v7.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
-import common.battle.Treasure;
-import common.battle.data.MaskAtk;
-import common.battle.data.MaskUnit;
-import common.util.unit.EForm;
-import common.util.unit.Form;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import common.battle.Treasure;
+import common.battle.data.MaskAtk;
+import common.battle.data.MaskUnit;
+import common.system.MultiLangCont;
+import common.util.unit.Form;
 
 public class getStrings {
     private final Context c;
@@ -37,7 +38,11 @@ public class getStrings {
     public String getTitle(Form f) {
         StringBuilder result = new StringBuilder();
 
-        String name = f.name;
+        String name = MultiLangCont.FNAME.getCont(f);
+
+        if(name == null)
+            name = "";
+
         String rarity;
 
         switch (f.unit.rarity) {
