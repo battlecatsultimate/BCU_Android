@@ -43,6 +43,9 @@ public class DynamicExplanation extends Fragment {
         id = getArguments().getInt("ID",0);
         titles = getArguments().getStringArray("Title");
         String[] explanation = MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[val]);
+        if(explanation == null) {
+            explanation = new String[]{"","",""};
+        }
 
         unitname = view.findViewById(R.id.unitexname);
         int[] lineid = {R.id.unitex0,R.id.unitex1,R.id.unitex2};

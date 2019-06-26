@@ -94,7 +94,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             if(StaticStore.img15 == null)
                 StaticStore.readImg();
 
-            int[] number = {203,204,206,202,205,200,209,227,218,227,227,227,227,260,258,227,227,110,227,122,114};
+            int[] number = {203,204,206,202,205,200,209,227,218,227,227,227,227,260,258,227,227,110,227,227,122,114};
             StaticStore.icons = new Bitmap[number.length];
             for (int i = 0; i < number.length; i++)
                 StaticStore.icons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();

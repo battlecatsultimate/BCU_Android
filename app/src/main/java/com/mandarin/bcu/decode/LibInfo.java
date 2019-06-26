@@ -131,12 +131,12 @@ final class PathInfo implements Comparable<PathInfo> {
 	protected PathInfo(String input, String v) {
 		ver = v;
 		String[] strs = input.split("\t");
-		path = strs[1].trim();
+		path = strs[1].trim().replace("\\","/");
 		type = getType(strs[0].trim());
 	}
 
 	protected PathInfo(String p, String v, int t) {
-		path = p;
+		path = p.replace("\\","/");
 		ver = v;
 		type = t;
 	}
