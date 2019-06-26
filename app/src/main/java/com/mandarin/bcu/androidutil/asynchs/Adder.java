@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.asynchs;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.view.View;

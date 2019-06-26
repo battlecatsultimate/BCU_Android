@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.widget.TextView;
 
 import com.mandarin.bcu.ApkDownload;
@@ -124,8 +125,21 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
     private void goToApk(String ver) {
         Activity activity = weakReference.get();
+        boolean update = false;
 
-        if(!thisver.equals(ver)) {
+        String[] thisnum = thisver.split("\\.");
+        String[] thatnum = ver.split("\\.");
+
+        for(int i = 0;i < 3;i++) {
+            int num1 = Integer.valueOf(thisnum[i]);
+            int num2 = Integer.valueOf(thatnum[i]);
+
+            if(num1 < num2) {
+                update = true;
+            }
+        }
+
+        if(update) {
             AlertDialog.Builder apkdon = new AlertDialog.Builder(activity);
             apkdon.setCancelable(false);
             apkdon.setTitle(R.string.apk_down_title);

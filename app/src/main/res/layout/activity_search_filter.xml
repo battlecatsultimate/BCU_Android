@@ -77,12 +77,11 @@
 
             <TableRow
                 android:id="@+id/tableRow"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
-                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schrare">
@@ -101,7 +100,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.12"
-                    
+
                     android:text="@string/sch_rare_ex"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="14sp" />
@@ -111,7 +110,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.12"
-                    
+
                     android:text="@string/sch_rare_ra"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="14sp" />
@@ -121,7 +120,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    
+
                     android:text="@string/sch_rare_sr"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="14sp" />
@@ -131,7 +130,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    
+
                     android:text="@string/sch_rare_ur"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="14sp" />
@@ -141,7 +140,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    
+
                     android:text="@string/sch_rare_lr"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="14sp" />

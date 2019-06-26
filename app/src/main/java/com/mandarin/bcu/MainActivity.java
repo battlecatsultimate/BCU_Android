@@ -40,7 +40,7 @@ import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String [] LIB_REQUIRED = {"000001","000002","000003", "080602", "080603","080604","080605"};
+    private final String [] LIB_REQUIRED = StaticStore.LIBREQ;
     private String path;
     private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";
     private ArrayList<String> fileneed = new ArrayList<>();

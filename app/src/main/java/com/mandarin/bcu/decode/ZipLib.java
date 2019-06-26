@@ -2,6 +2,8 @@ package com.mandarin.bcu.decode;
 
 import android.os.Environment;
 
+import com.mandarin.bcu.androidutil.StaticStore;
+
 import java.io.File;
 import java.io.IOException;
 import main.Opts;
@@ -10,8 +12,8 @@ import common.system.files.VFile;
 
 public class ZipLib {
 
-	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603","080604","080605"};
-	public static final String[] OPTREQS = { "080504" };
+	public static final String[] LIBREQS = StaticStore.LIBREQ;
+	public static final String[] OPTREQS = StaticStore.OPTREQS;
 
 	public static String lib;
 	public static LibInfo info;
