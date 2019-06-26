@@ -141,10 +141,37 @@ public class Definer {
                 File f = new File(Path);
                 StaticStore.fruit = new Bitmap[f.listFiles().length];
 
-                for(int i = 0; i<f.listFiles().length;i++) {
-                    StaticStore.fruit[i] = BitmapFactory.decodeFile(f.listFiles()[i].getAbsolutePath());
+                String[] names = {"gatyaitemD_30_f.png","gatyaitemD_31_f.png","gatyaitemD_32_f.png","gatyaitemD_33_f.png","gatyaitemD_34_f.png","gatyaitemD_35_f.png","gatyaitemD_36_f.png"
+                ,"gatyaitemD_37_f.png","gatyaitemD_38_f.png","gatyaitemD_39_f.png","gatyaitemD_40_f.png","gatyaitemD_41_f.png","gatyaitemD_42_f.png","xp.png"};
+
+                for(int i = 0; i<names.length;i++) {
+                    StaticStore.fruit[i] = BitmapFactory.decodeFile(Path+names[i]);
                 }
             }
+
+            if(StaticStore.icons == null) {
+                int[] number = {203,204,206,202,205,200,209,227,218,227,227,227,227,260,258,227,227,110,227,227,122,114};
+                StaticStore.icons = new Bitmap[number.length];
+                for (int i = 0; i < number.length; i++)
+                    StaticStore.icons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
+            }
+
+            if(StaticStore.picons == null) {
+                int[] number = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,49,45,47,51,43,53,109};
+
+                StaticStore.picons = new Bitmap[number.length];
+
+                for (int i = 0; i < number.length; i++)
+                    StaticStore.picons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
+            }
+
+            if(StaticStore.addition == null) {
+                int[] addid = {R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas};
+                StaticStore.addition = new String[addid.length];
+                for (int i = 0; i < addid.length; i++)
+                    StaticStore.addition[i] = context.getString(addid[i]);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

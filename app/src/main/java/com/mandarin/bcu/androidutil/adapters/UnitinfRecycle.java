@@ -78,39 +78,6 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         color = new int[] {
                 getAttributeColor(context,R.attr.TextPrimary)
         };
-
-        if(StaticStore.img15 == null) {
-            StaticStore.readImg();
-        }
-
-        if(StaticStore.addition == null) {
-            int[] addid = {R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas};
-            StaticStore.addition = new String[addid.length];
-            for (int i = 0; i < addid.length; i++)
-                StaticStore.addition[i] = context.getString(addid[i]);
-        }
-
-        if(StaticStore.icons == null) {
-            if(StaticStore.img15 == null)
-                StaticStore.readImg();
-
-            int[] number = {203,204,206,202,205,200,209,227,218,227,227,227,227,260,258,227,227,110,227,227,122,114};
-            StaticStore.icons = new Bitmap[number.length];
-            for (int i = 0; i < number.length; i++)
-                StaticStore.icons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
-        }
-
-        if(StaticStore.picons == null) {
-            if(StaticStore.img15 == null)
-                StaticStore.readImg();
-
-            int[] number = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,49,45,47,51,43,53,109};
-
-            StaticStore.picons = new Bitmap[number.length];
-
-            for (int i = 0; i < number.length; i++)
-                StaticStore.picons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
-        }
     }
 
     @NonNull
