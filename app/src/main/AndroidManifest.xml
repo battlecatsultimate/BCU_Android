@@ -22,6 +22,12 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".EnemyInfo"
+            android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name=".EnemyList"
+            android:screenOrientation="sensorLandscape" />
+        <activity
             android:name=".ConfigScreen"
             android:screenOrientation="sensorLandscape" />
         <activity

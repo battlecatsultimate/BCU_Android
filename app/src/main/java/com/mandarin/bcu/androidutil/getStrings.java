@@ -11,10 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import common.battle.Basis;
+import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.battle.data.MaskAtk;
+import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.system.MultiLangCont;
+import common.util.unit.EForm;
+import common.util.unit.Enemy;
 import common.util.unit.Form;
 
 public class getStrings {
@@ -80,33 +85,55 @@ public class getStrings {
             return new DecimalFormat("#.##").format((double)f.du.getItv()/30)+" s";
     }
 
+    public String getAtkTime(Enemy em, int frse) {
+        if(frse == 0)
+            return em.de.getItv()+" f";
+        else
+            return new DecimalFormat("#.##").format((double)em.de.getItv()/30)+" s";
+    }
+
     public String getAbilT(Form f) {
         int [][] atkdat = f.du.rawAtkData();
 
-        if(atkdat.length > 1) {
-            StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
 
-            for(int i =0;i<atkdat.length;i++) {
-                if(i != atkdat.length-1) {
-                    if(atkdat[i][2] == 1)
-                        result.append(c.getString(R.string.unit_info_true)).append(" / ");
-                    else
-                        result.append(c.getString(R.string.unit_info_false)).append(" / ");
-                } else {
-                    if(atkdat[i][2] == 1)
-                        result.append(c.getString(R.string.unit_info_true));
-                    else
-                        result.append(c.getString(R.string.unit_info_false));
-                }
+        for(int i =0;i<atkdat.length;i++) {
+            if(i != atkdat.length-1) {
+                if(atkdat[i][2] == 1)
+                    result.append(c.getString(R.string.unit_info_true)).append(" / ");
+                else
+                    result.append(c.getString(R.string.unit_info_false)).append(" / ");
+            } else {
+                if(atkdat[i][2] == 1)
+                    result.append(c.getString(R.string.unit_info_true));
+                else
+                    result.append(c.getString(R.string.unit_info_false));
             }
-
-            return result.toString();
-        } else {
-            if(atkdat[0][2] == 1)
-                return c.getString(R.string.unit_info_true);
-            else
-                return c.getString(R.string.unit_info_false);
         }
+
+        return result.toString();
+    }
+
+    public String getAbilT(Enemy em) {
+        int [][] atks = em.de.rawAtkData();
+
+        StringBuilder result = new StringBuilder();
+
+        for(int i =0;i<atks.length;i++) {
+            if(i < atks.length-1) {
+                if(atks[i][2] == 1)
+                    result.append(c.getString(R.string.unit_info_true)).append(" / ");
+                else
+                    result.append(c.getString(R.string.unit_info_false)).append(" / ");
+            } else {
+                if(atks[i][2] == 1)
+                    result.append(c.getString(R.string.unit_info_true));
+                else
+                    result.append(c.getString(R.string.unit_info_false));
+            }
+        }
+
+        return result.toString();
     }
 
     public String getPost(Form f, int frse) {
@@ -116,11 +143,25 @@ public class getStrings {
             return new DecimalFormat("#.##").format((double)f.du.getPost()/30)+" s";
     }
 
+    public String getPost(Enemy em, int frse) {
+        if(frse == 0)
+            return em.de.getPost()+" f";
+        else
+            return new DecimalFormat("#.##").format((double)em.de.getPost()/30)+" s";
+    }
+
     public String getTBA(Form f,int frse) {
         if(frse == 0)
             return f.du.getTBA()+" f";
         else
             return new DecimalFormat("#.##").format((double)f.du.getTBA()/30)+" s";
+    }
+
+    public String getTBA(Enemy em,int frse) {
+        if(frse == 0)
+            return em.de.getTBA()+" f";
+        else
+            return new DecimalFormat("#.##").format((double)em.de.getTBA()/30)+" s";
     }
 
     public String getPre(Form f,int frse) {
@@ -157,13 +198,63 @@ public class getStrings {
         }
     }
 
-    public String getID(Form f, RecyclerView.ViewHolder viewHolder,String id) {
+    public String getPre(Enemy em,int frse) {
+        int[][] atkdat = em.de.rawAtkData();
+
+        if (frse == 0) {
+            if (atkdat.length > 1) {
+                StringBuilder result = new StringBuilder();
+
+                for (int i = 0; i < atkdat.length; i++) {
+                    if (i != atkdat.length - 1)
+                        result.append(atkdat[i][1]).append(" f / ");
+                    else
+                        result.append(atkdat[i][1]).append(" f");
+                }
+
+                return result.toString();
+            } else
+                return atkdat[0][1] + " f";
+        } else {
+            if (atkdat.length > 1) {
+                StringBuilder result = new StringBuilder();
+
+                for (int i = 0; i < atkdat.length; i++) {
+                    if (i != atkdat.length - 1)
+                        result.append(new DecimalFormat("#.##").format((double)atkdat[i][1]/30)).append(" s / ");
+                    else
+                        result.append(new DecimalFormat("#.##").format((double)atkdat[i][1]/30)).append(" s");
+                }
+
+                return result.toString();
+            } else
+                return new DecimalFormat("#.##").format((double)atkdat[0][1]/30) + " s";
+        }
+    }
+
+    public String getID(RecyclerView.ViewHolder viewHolder, String id) {
         return id+"-"+viewHolder.getAdapterPosition();
     }
 
     public String getRange(Form f) {
         int tb = f.du.getRange();
         MaskAtk ma = f.du.getRepAtk();
+        int lds = ma.getShortPoint();
+        int ldr = ma.getLongPoint()-ma.getShortPoint();
+
+        int start = Math.min(lds,lds+ldr);
+        int end = Math.max(lds,lds+ldr);
+
+
+        if(lds > 0)
+            return tb+" / "+start+" ~ "+end;
+        else
+            return String.valueOf(tb);
+    }
+
+    public String getRange(Enemy em) {
+        int tb = em.de.getRange();
+        MaskAtk ma = em.de.getRepAtk();
         int lds = ma.getShortPoint();
         int ldr = ma.getLongPoint()-ma.getShortPoint();
 
@@ -203,6 +294,13 @@ public class getStrings {
             return getTotAtk(f,t,lev,talent,lvs);
     }
 
+    public String getAtk(Enemy em,int multi) {
+        if(em.de.rawAtkData().length > 1)
+            return getTotAtk(em,multi)+" "+getAtks(em,multi);
+        else
+            return getTotAtk(em,multi);
+    }
+
     public String getSpd(Form f, boolean talent,int [] lvs) {
         MaskUnit du;
         if(lvs != null && f.getPCoin() != null)
@@ -211,6 +309,17 @@ public class getStrings {
             du = f.du;
 
         return String.valueOf(du.getSpeed());
+    }
+
+    public String getSpd(Enemy em) {
+        return String.valueOf(em.de.getSpeed());
+    }
+
+    public String getBarrier(Enemy em) {
+        if(em.de.getShield() == 0)
+            return c.getString(R.string.unit_info_t_none);
+        else
+            return String.valueOf(em.de.getShield());
     }
 
     public String getHB(Form f,boolean talent,int [] lvs) {
@@ -223,6 +332,10 @@ public class getStrings {
         return String.valueOf(du.getHb());
     }
 
+    public String getHB(Enemy em) {
+        return String.valueOf(em.de.getHb());
+    }
+
     public String getHP(Form f, Treasure t, int lev,boolean talent,int [] lvs) {
         MaskUnit du;
         if(lvs != null && f.getPCoin() != null)
@@ -231,6 +344,10 @@ public class getStrings {
             du = f.du;
 
         return String.valueOf((int)(du.getHp()*t.getDefMulti()*f.unit.lv.getMult(lev)));
+    }
+
+    public String getHP(Enemy em, int multi) {
+        return String.valueOf((int)(em.de.multi(BasisSet.current)*em.de.getHp()*multi/100));
     }
 
     public String getTotAtk(Form f,Treasure t,int lev, boolean talent, int [] lvs) {
@@ -243,8 +360,16 @@ public class getStrings {
         return String.valueOf((int)(du.allAtk()*t.getAtkMulti()*f.unit.lv.getMult(lev)));
     }
 
+    public String getTotAtk(Enemy em, int multi) {
+        return String.valueOf((int)(em.de.multi(BasisSet.current)*em.de.allAtk()*multi/100));
+    }
+
     public String getDPS(Form f,Treasure t,int lev,boolean talent, int[] lvs) {
         return String.valueOf(new DecimalFormat("#.##").format(Double.parseDouble(getTotAtk(f,t,lev,talent,lvs))/((double)f.du.getItv()/30)));
+    }
+
+    public String getDPS(Enemy em, int multi) {
+        return String.valueOf(new DecimalFormat("#.##").format(Double.parseDouble(getTotAtk(em,multi))/((double)em.de.getItv()/30)));
     }
 
     public String getTrait(Form ef,boolean talent, int [] lvs) {
@@ -282,6 +407,37 @@ public class getStrings {
         return result;
     }
 
+    public String getTrait(Enemy em) {
+        MaskEnemy de = em.de;
+
+        StringBuilder allcolor = new StringBuilder();
+        StringBuilder alltrait = new StringBuilder();
+
+        for(int i = 0; i< Interpret.TRAIT.length; i++) {
+            if (i != 0)
+                allcolor.append(Interpret.TRAIT[i]).append(", ");
+            alltrait.append(Interpret.TRAIT[i]).append(", ");
+        }
+
+        String result;
+
+        result = Interpret.getTrait(de.getType(), 0);
+
+        if(result.equals(""))
+            result = c.getString(R.string.unit_info_t_none);
+
+        if(result.equals(allcolor.toString()))
+            result = c.getString(R.string.unit_info_t_allc);
+
+        if(result.equals(alltrait.toString()))
+            result = c.getString(R.string.unit_info_t_allt);
+
+        if(result.endsWith(", "))
+            result = result.substring(0,result.length()-2);
+
+        return result;
+    }
+
     public String getCost(Form f,boolean talent,int [] lvs) {
         MaskUnit du;
         if(lvs != null && f.getPCoin() != null)
@@ -290,6 +446,10 @@ public class getStrings {
             du = f.du;
 
         return String.valueOf((int)(du.getPrice()*1.5));
+    }
+
+    public String getDrop(Enemy em,Treasure t) {
+        return String.valueOf((int)(em.de.getDrop()*t.getDropMulti()));
     }
 
     public String getAtks(Form f,Treasure t, int lev,boolean talent, int[] lvs) {
@@ -319,9 +479,37 @@ public class getStrings {
         return result.toString();
     }
 
+    public String getAtks(Enemy em, int multi) {
+        int[][] atks = em.de.rawAtkData();
+
+        ArrayList<Integer> damages = new ArrayList<>();
+
+        for(int[] atk : atks) {
+            damages.add((int)(atk[0]*em.de.multi(BasisSet.current)*multi/100));
+        }
+
+        StringBuilder result = new StringBuilder("(");
+
+        for(int i = 0;i<damages.size();i++) {
+            if(i < damages.size()-1)
+                result.append("").append(damages.get(i)).append((", "));
+            else
+                result.append("").append(damages.get(i)).append(")");
+        }
+
+        return result.toString();
+    }
+
     public String getSimu(Form f) {
         if(Interpret.isType(f.du,1))
             return c.getString(R.string.sch_atk_ra);
+        else
+            return c.getString(R.string.sch_atk_si);
+    }
+
+    public String getSimu(Enemy em) {
+        if(Interpret.isType(em.de,1))
+            return c.getString(R.string.sch_atk_mu);
         else
             return c.getString(R.string.sch_atk_si);
     }
@@ -344,5 +532,15 @@ public class getStrings {
 
 
         return ans;
+    }
+
+    public String number(int num) {
+        if (0 <= num && num < 10) {
+            return "00" + num;
+        } else if (10 <= num && num <= 99) {
+            return "0" + num;
+        } else {
+            return String.valueOf(num);
+        }
     }
 }

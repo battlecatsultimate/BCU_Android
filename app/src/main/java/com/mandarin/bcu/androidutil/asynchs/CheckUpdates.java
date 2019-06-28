@@ -303,6 +303,7 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
         com.mandarin.bcu.decode.ZipLib.read();
 
         StaticStore.getUnitnumber();
+        StaticStore.getEnemynumber();
         StaticStore.root = 1;
 
         new DefineItf().init();
@@ -327,11 +328,13 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
         Button stagebtn = activity.findViewById(R.id.stgbtn);
         Button animbtn = activity.findViewById(R.id.anvibtn);
         ImageButton config = activity.findViewById(R.id.mainconfig);
+        Button emlistbtn = activity.findViewById(R.id.eninfbtn);
 
         mainprog.setVisibility(View.GONE);
         checkstate.setVisibility(View.GONE);
         stagebtn.setVisibility(View.VISIBLE);
         animbtn.setVisibility(View.VISIBLE);
         config.setVisibility(View.VISIBLE);
+        emlistbtn.setVisibility(View.VISIBLE);
     }
 }

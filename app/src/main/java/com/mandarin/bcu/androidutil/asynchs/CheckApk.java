@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.ApkDownload;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.util.Interpret;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,19 +126,11 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
     private void goToApk(String ver) {
         Activity activity = weakReference.get();
-        boolean update = false;
 
         String[] thisnum = thisver.split("\\.");
         String[] thatnum = ver.split("\\.");
 
-        for(int i = 0;i < 3;i++) {
-            int num1 = Integer.valueOf(thisnum[i]);
-            int num2 = Integer.valueOf(thatnum[i]);
-
-            if(num1 < num2) {
-                update = true;
-            }
-        }
+        boolean update = check(thisnum,thatnum);
 
         if(update) {
             AlertDialog.Builder apkdon = new AlertDialog.Builder(activity);
@@ -166,5 +159,21 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
         } else {
             new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
         }
+    }
+
+    public boolean check(String[] thisnum, String[] thatnum) {
+        boolean update = false;
+
+        int [] these = {Integer.parseInt(thisnum[0]),Integer.parseInt(thisnum[1]),Integer.parseInt(thisnum[2])};
+        int [] those = {Integer.parseInt(thatnum[0]),Integer.parseInt(thatnum[1]),Integer.parseInt(thatnum[2])};
+
+        if(these[0] < those[0])
+            update = true;
+        else if(these[0] == those[0] && these[1] < those[1])
+            update = true;
+        else if(these[0] == those[0] && these[1] == those[1] && these[2] < those[2])
+            update = true;
+
+        return update;
     }
 }

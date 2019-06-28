@@ -140,6 +140,8 @@ public class ConfigScreen extends AppCompatActivity {
             }
         });
 
+        System.out.println(CommonStatic.Lang.lang);
+
         Switch apktest = findViewById(R.id.apktest);
 
         if(!shared.getBoolean("apktest",false)) {
@@ -187,7 +189,7 @@ public class ConfigScreen extends AppCompatActivity {
                     if (lang.equals(""))
                         lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
 
-                    if (StaticStore.units != null)
+                    if (StaticStore.units != null || StaticStore.enemies != null)
                         new Revalidater(ConfigScreen.this).Validate(lang, ConfigScreen.this);
                     else {
                         CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(lang)-1;

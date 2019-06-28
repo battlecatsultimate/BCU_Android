@@ -156,7 +156,6 @@ public class AnimationViewer extends AppCompatActivity {
             attack = extra.getStringArrayList("attack");
             target = extra.getStringArrayList("target");
             ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
-            System.out.println(ability);
             atksimu = extra.getBoolean("atksimu");
             atkorand = extra.getBoolean("atkorand");
             tgorand = extra.getBoolean("tgorand");

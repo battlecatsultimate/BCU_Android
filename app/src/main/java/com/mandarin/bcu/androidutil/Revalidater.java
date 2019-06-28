@@ -12,6 +12,8 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Queue;
 
+import javax.xml.transform.sax.SAXTransformerFactory;
+
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
 import common.system.files.VFile;
@@ -75,6 +77,14 @@ public class Revalidater extends ContextWrapper {
 
             for(int i =0;i<unitnumber;i++) {
                 StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
+            }
+        }
+
+        if(StaticStore.enames != null) {
+            StaticStore.enames = new String[StaticStore.emnumber];
+
+            for(int i = 0;i < StaticStore.emnumber;i++) {
+                StaticStore.enames[i] = withID(i,MultiLangCont.ENAME.getCont(Pack.def.es.get(i)));
             }
         }
     }

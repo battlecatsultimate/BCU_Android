@@ -1,5 +1,10 @@
 package com.mandarin.bcu.util;
 
+import android.app.Activity;
+import android.os.SystemClock;
+
+import com.mandarin.bcu.R;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +13,7 @@ import java.util.Locale;
 
 import common.battle.BasisLU;
 import common.battle.BasisSet;
+import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.util.Data;
 import common.util.unit.Combo;
@@ -162,6 +168,29 @@ public class Interpret extends Data {
 	    return l;
     }
 
+	public static List<Integer> getProcid(MaskEnemy du) {
+		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
+		List<Integer> l = new ArrayList<>();
+		MaskAtk ma = du.getRepAtk();
+
+		for(int i=0;i< PROC.length;i++) {
+			if(ma.getProc(i)[0] == 0)
+				continue;
+
+			if(immune.contains(i)) {
+				int pro = ma.getProc(i)[0];
+
+				if(pro != 100)
+					l.add(i+15);
+				else
+					l.add(i);
+			} else
+				l.add(i);
+		}
+
+		return l;
+	}
+
 	public static List<String> getProc(MaskUnit du, int cmp,int frse) {
 		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
 		List<String> l = new ArrayList<>();
@@ -260,6 +289,136 @@ public class Interpret extends Data {
 		return l;
 	}
 
+	public static List<String> getProc(MaskEnemy du, int cmp, int frse, Activity activity) {
+		List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
+		List<String> l = new ArrayList<>();
+		MaskAtk ma = du.getRepAtk();
+		String lang = Locale.getDefault().getLanguage();
+		if (cmp == 0) {
+			for (int i = 0; i < PROC.length; i++) {
+				if (ma.getProc(i)[0] == 0)
+					continue;
+				StringBuilder ans = new StringBuilder();
+				for (int j = 0; j < CMP[i].length; j++) {
+					if (CMP[i][j] == -1)
+						if (immune.contains(i) && lang.equals("en")) {
+							int pro = ma.getProc(i)[0];
+							if(pro != 100)
+								ans.append(TEXT[12]).append(PROC[i].substring(4));
+							else
+								ans.append(TEXT[11]).append(PROC[i].substring(4));
+						} else {
+							int pro = ma.getProc(i)[0];
+
+							if (immune.contains(i) && pro != 100)
+								ans.append(PROC[i+15]);
+							else
+								ans.append(PROC[i]);
+						}
+					else {
+						if (frse == 0) {
+							int pro = ma.getProc(i)[LOC[i][j]];
+							String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
+							if(immune.contains(i) && pro != 100)
+								ans.append(TEXT[CMP[i][j]].replace("_",rep));
+							else if(!immune.contains(i)) {
+								switch(i) {
+									case 11:
+										if(lang.equals("en")) {
+											if(pro == 1 && CMP[i][j] == 7)
+												ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
+											else if(pro == 2 && CMP[i][j] == 7)
+												ans.append(TEXT[CMP[i][j]].replace("_","Twice"));
+											else if(CMP[i][j] == 7)
+												ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
+											else
+												ans.append(TEXT[CMP[i][j]].replace("_", rep));
+										} else
+											ans.append(TEXT[CMP[i][j]].replace("_", rep));
+
+										break;
+									case 12:
+										if(lang.equals("en")) {
+											if(pro == 1 && CMP[i][j] == 7)
+												ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
+											else if(pro == 2 && CMP[i][j] == 7)
+												ans.append(TEXT[CMP[i][j]].replace("_","Twice"));
+											else if(CMP[i][j] == 7)
+												ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
+											else
+												ans.append(TEXT[CMP[i][j]].replace("_", rep));
+										} else
+											ans.append(TEXT[CMP[i][j]].replace("_", rep));
+										break;
+									default:
+										ans.append(TEXT[CMP[i][j]].replace("_", rep));
+										break;
+								}
+							}
+						} else {
+							if (TEXT[CMP[i][j]].contains("_ f")) {
+								int pro = ma.getProc(i)[LOC[i][j]];
+								String rep = pro == -1 ? activity.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
+								ans.append(TEXT[CMP[i][j]].replace("_ f", "_ s").replace("_", rep));
+							} else {
+								int pro = ma.getProc(i)[LOC[i][j]];
+								String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
+								if(immune.contains(i) && pro != 100)
+									ans.append(TEXT[CMP[i][j]].replace("_", rep));
+								else if(!immune.contains(i))
+									ans.append(TEXT[CMP[i][j]].replace("_",rep));
+							}
+						}
+					}
+				}
+				l.add(ans.toString());
+			}
+		} else {
+			for (int i = 0; i < PROC.length; i++) {
+				if (ma.getProc(i)[0] == 0)
+					continue;
+				StringBuilder ans = new StringBuilder();
+				for (int j = 0; j < CMP2[i].length; j++) {
+					if (CMP2[i][j] == -1) {
+						if(immune.contains(i)) {
+							int pro = ma.getProc(i)[0];
+
+							if(pro != 100)
+								ans.append(PROC[i+15]);
+							else
+								ans.append(PROC[i]);
+						} else
+							ans.append(PROC[i]);
+					} else {
+						if (frse == 0) {
+							int pro = ma.getProc(i)[LOC2[i][j]];
+							String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
+							if(immune.contains(i) && pro != 100)
+								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+							else if(!immune.contains(i))
+								ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+						} else {
+							if (TEXT[CMP2[i][j]].contains("_ f")) {
+								int pro = ma.getProc(i)[LOC2[i][j]];
+								String rep = pro == -1 ? activity.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
+								ans.append(TEXT[CMP2[i][j]].replace("_ f", "_ s").replace("_", rep));
+							} else {
+								int pro = ma.getProc(i)[LOC2[i][j]];
+								String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
+								if(immune.contains(i) && pro != 100)
+									ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+								else if(!immune.contains(i))
+									ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+							}
+						}
+					}
+				}
+				l.add(ans.toString());
+			}
+		}
+		return l;
+	}
+
 	public static List<Integer> getAbiid(MaskUnit me) {
 		List<Integer> l = new ArrayList<>();
 
@@ -270,7 +429,55 @@ public class Interpret extends Data {
 		return l;
 	}
 
+	public static List<Integer> getAbiid(MaskEnemy me) {
+		List<Integer> l = new ArrayList<>();
+
+		for(int i=0;i<ABIS.length;i++)
+			if(((me.getAbi()>>i)&1) > 0)
+				l.add(i);
+
+		return l;
+	}
+
+
 	public static List<String> getAbi(MaskUnit me, String[][] frag,String[] addition, int lang) {
+		List<String> l = new ArrayList<>();
+		StringBuilder imu = new StringBuilder(frag[lang][0]);
+
+		for(int i=0;i<ABIS.length;i++)
+			if(((me.getAbi()>>i)&1) > 0)
+				if(ABIS[i].startsWith("Imu."))
+					imu.append(ABIS[i].substring(4));
+				else {
+					if(i == 0)
+						l.add(ABIS[i]+addition[0]);
+					else if(i == 1)
+						l.add(ABIS[i]+addition[1]);
+					else if(i == 2)
+						l.add(ABIS[i]+addition[2]);
+					else if(i == 4)
+						l.add(ABIS[i]+addition[3]);
+					else if(i == 5)
+						l.add(ABIS[i]+addition[4]);
+					else if(i == 14)
+						l.add(ABIS[i]+addition[5]);
+					else if(i == 17)
+						l.add(ABIS[i]+addition[6]);
+					else if(i == 20)
+						l.add(ABIS[i]+addition[7]);
+					else if(i == 21)
+						l.add(ABIS[i]+addition[8]);
+					else
+						l.add(ABIS[i]);
+				}
+
+		if(imu.length()>10)
+			l.add(imu.toString());
+
+		return l;
+	}
+
+	public static List<String> getAbi(MaskEnemy me, String[][] frag,String[] addition, int lang) {
 		List<String> l = new ArrayList<>();
 		StringBuilder imu = new StringBuilder(frag[lang][0]);
 
@@ -408,6 +615,23 @@ public class Interpret extends Data {
 	}
 
 	public static boolean isType(MaskUnit de, int type) {
+		int[][] raw = de.rawAtkData();
+		if (type == 0)
+			return !de.isRange();
+		else if (type == 1)
+			return de.isRange();
+		else if (type == 2)
+			return de.isLD();
+		else if (type == 3)
+			return raw.length > 1;
+		else if (type == 4)
+			return de.isOmni();
+		else if (type == 5)
+			return de.getTBA() + raw[0][1] < de.getItv() / 2;
+		return false;
+	}
+
+	public static boolean isType(MaskEnemy de, int type) {
 		int[][] raw = de.rawAtkData();
 		if (type == 0)
 			return !de.isRange();

@@ -104,12 +104,15 @@ public class MainActivity extends AppCompatActivity {
         Intent result = getIntent();
         Button animbtn = findViewById(R.id.anvibtn);
         Button stagebtn = findViewById(R.id.stgbtn);
+        Button emlistbtn = findViewById(R.id.eninfbtn);
         TextView checkstate = findViewById(R.id.mainstup);
         ProgressBar mainprog = findViewById(R.id.mainprogup);
         ImageButton config = findViewById(R.id.mainconfig);
 
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_kasa_jizo), null, null, null);
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
+        emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_enemy),null,null,null);
+        emlistbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
 
         animbtn.setOnClickListener(new SingleClick() {
             @Override
@@ -132,22 +135,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        emlistbtn.setOnClickListener(new SingleClick() {
+            @Override
+            public void onSingleClick(View v) {
+                gotoenemyinf();
+            }
+        });
+
         if(result.getBooleanExtra("Config",false)) {
             mainprog.setVisibility(View.GONE);
             checkstate.setVisibility(View.GONE);
             stagebtn.setVisibility(View.VISIBLE);
             animbtn.setVisibility(View.VISIBLE);
             config.setVisibility(View.VISIBLE);
+            emlistbtn.setVisibility(View.VISIBLE);
         } else {
             path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
 
             ImageBuilder.builder = new BMBuilder();
-
-
-
             animbtn.setVisibility(View.GONE);
             stagebtn.setVisibility(View.GONE);
             config.setVisibility(View.GONE);
+            emlistbtn.setVisibility(View.GONE);
 
             ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -161,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     com.mandarin.bcu.decode.ZipLib.read();
 
                     StaticStore.getUnitnumber();
+                    StaticStore.getEnemynumber();
                     StaticStore.root = 1;
 
                     new DefineItf().init();
@@ -176,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     stagebtn.setVisibility(View.VISIBLE);
                     animbtn.setVisibility(View.VISIBLE);
                     config.setVisibility(View.VISIBLE);
+                    emlistbtn.setVisibility(View.VISIBLE);
                 } else {
                     mainprog.setVisibility(View.GONE);
                     checkstate.setText(R.string.main_internet_no);
@@ -244,6 +255,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,ConfigScreen.class);
         startActivity(intent);
         finish();
+    }
+
+    protected void gotoenemyinf() {
+        Intent intent = new Intent(this,EnemyList.class);
+        startActivity(intent);
     }
 
     private void deleter(File f) {

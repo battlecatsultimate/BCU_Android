@@ -175,7 +175,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
         viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb((Bitmap)f.anim.uni.getImg().bimg(),context,48));
         viewHolder.unitname.setText(names.get(i));
-        viewHolder.unitid.setText(s.getID(f,viewHolder,number(id)));
+        viewHolder.unitid.setText(s.getID(viewHolder,number(id)));
         viewHolder.unithp.setText(s.getHP(f,t,f.unit.getPrefLv(),false,pcoins));
         viewHolder.unithb.setText(s.getHB(f,false,pcoins));
         viewHolder.unitatk.setText(s.getTotAtk(f,t,f.unit.getPrefLv(),false,pcoins));

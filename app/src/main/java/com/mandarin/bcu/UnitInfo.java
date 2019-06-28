@@ -6,11 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,16 +15,12 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.mandarin.bcu.androidutil.adapters.DynamicExplanation;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.asynchs.UInfoLoader;
 import com.mandarin.bcu.androidutil.getStrings;
 
-import java.util.ArrayList;
-
 public class UnitInfo extends AppCompatActivity {
-    private ArrayList<String> names = new ArrayList<>();
     private boolean isOpen = false;
     private ImageButton treasure;
 

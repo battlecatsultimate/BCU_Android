@@ -239,4 +239,12 @@
     <string name="fruit10">노랑 개다래 열매</string>
     <string name="fruit1">보라 개다래 열매 씨앗</string>
     <string name="unit_info_catfruit">개다래 정보</string>
+    <string name="enem_info_barrier">베리어</string>
+    <string name="enem_info_drop">경험치</string>
+    <string name="enem_info_exp">적 설명</string>
+    <string name="enemy_info_multi">배율</string>
+    <string name="main_enemy_info">적 정보</string>
+    <string name="enemy_info_trait">속성</string>
+    <string name="abi_cu">저주</string>
+    <string name="infinity">무한</string>
 </resources>

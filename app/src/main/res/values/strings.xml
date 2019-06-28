@@ -238,4 +238,12 @@
     <string name="fruit11">Epic Catfruit</string>
     <string name="fruit12">Elder Catfruit Seed</string>
     <string name="fruit13">Elder Catfruit</string>
+    <string name="enem_info_drop">Drop</string>
+    <string name="enem_info_barrier">Barrier</string>
+    <string name="enem_info_exp">Enemy Explanation</string>
+    <string name="enemy_info_multi">Multiply</string>
+    <string name="main_enemy_info">Enemy Info</string>
+    <string name="enemy_info_trait">Trait</string>
+    <string name="abi_cu">Curse</string>
+    <string name="infinity">Infinity</string>
 </resources>

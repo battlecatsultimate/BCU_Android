@@ -32,7 +32,7 @@ public class Definer {
     private int [] starid = {R.string.unit_info_starred,R.string.unit_info_god1,R.string.unit_info_god2,R.string.unit_info_god3};
     private String [] starstring = new String[5];
     private String [] colorstring = new String[colorid.length];
-    private int [] procid = {R.string.sch_abi_kb,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_cr,R.string.sch_abi_wv,R.string.sch_abi_we,R.string.sch_abi_bb,R.string.sch_abi_wa,R.string.sch_abi_cr,
+    private int [] procid = {R.string.sch_abi_kb,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_cr,R.string.sch_abi_wv,R.string.sch_abi_we,R.string.sch_abi_bb,R.string.sch_abi_wa,R.string.abi_cu,
             R.string.sch_abi_str,R.string.sch_abi_su,R.string.abi_bo,R.string.abi_rev,R.string.sch_abi_ik,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_iwv,R.string.sch_abi_iw,R.string.sch_abi_iwa,
             R.string.sch_abi_ic,R.string.abi_snk,R.string.abi_stt,R.string.abi_seal,R.string.abi_sum,R.string.abi_mvatk,R.string.abi_thch,R.string.abi_poi,R.string.abi_boswv
             ,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
@@ -58,7 +58,9 @@ public class Definer {
 
                 StaticStore.units = Pack.def.us.ulist.getList();
 
-                StaticStore.readImg();
+                if(StaticStore.img15 == null) {
+                    StaticStore.readImg();
+                }
 
                 for(String l : lan) {
                     for(String n : files) {
@@ -69,38 +71,42 @@ public class Definer {
                         if(f.exists()) {
                             Queue<String> qs = AssetData.getAsset(f).readLine();
 
-                            if(n.equals("UnitName.txt")) {
-                                for(String str : qs) {
-                                    String[] strs = str.trim().split("\t");
-                                    Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
-                                    if(u == null)
-                                        continue;
+                            switch (n) {
+                                case "UnitName.txt":
+                                    for (String str : qs) {
+                                        String[] strs = str.trim().split("\t");
+                                        Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+                                        if (u == null)
+                                            continue;
 
-                                    for(int i = 0;i<Math.min(u.forms.length,strs.length-1);i++)
-                                        MultiLangCont.FNAME.put(l.substring(1, l.length() - 1), u.forms[i], strs[i + 1].trim());
-                                }
-                            } else if (n.equals("UnitExplanation.txt")) {
-                                for(String str : qs) {
-                                    String[] strs = str.trim().split("\t");
-                                    Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
-                                    if (u == null)
-                                        continue;
-
-                                    for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++) {
-                                        String[] lines = strs[i + 1].trim().split("<br>");
-                                        MultiLangCont.FEXP.put(l.substring(1,l.length()-1), u.forms[i], lines);
+                                        for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
+                                            MultiLangCont.FNAME.put(l.substring(1, l.length() - 1), u.forms[i], strs[i + 1].trim());
                                     }
-                                }
-                            } else if (n.equals("CatFruitExplanation.txt")) {
-                                for(String str : qs) {
-                                    String[] strs = str.trim().split("\t");
-                                    Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
-                                    if(u==null)
-                                        continue;
+                                    break;
+                                case "UnitExplanation.txt":
+                                    for (String str : qs) {
+                                        String[] strs = str.trim().split("\t");
+                                        Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+                                        if (u == null)
+                                            continue;
 
-                                    String[] lines = strs[1].split("<br>");
-                                    MultiLangCont.CFEXP.put(l.substring(1,l.length()-1),u.info,lines);
-                                }
+                                        for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++) {
+                                            String[] lines = strs[i + 1].trim().split("<br>");
+                                            MultiLangCont.FEXP.put(l.substring(1, l.length() - 1), u.forms[i], lines);
+                                        }
+                                    }
+                                    break;
+                                case "CatFruitExplanation.txt":
+                                    for (String str : qs) {
+                                        String[] strs = str.trim().split("\t");
+                                        Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+                                        if (u == null)
+                                            continue;
+
+                                        String[] lines = strs[1].split("<br>");
+                                        MultiLangCont.CFEXP.put(l.substring(1, l.length() - 1), u.info, lines);
+                                    }
+                                    break;
                             }
                         }
                     }
@@ -154,6 +160,17 @@ public class Definer {
                 StaticStore.icons = new Bitmap[number.length];
                 for (int i = 0; i < number.length; i++)
                     StaticStore.icons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
+
+                String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
+                String[] files = {"","","","","","","","MovingX.png","","SniperX.png","TimeX.png","Ghost.png","PoisonX.png","","","","ThemeX.png",
+                        "","SealX.png","BossWaveX.png","",""};
+
+                for(int i = 0;i<files.length;i++) {
+                    if (files[i].equals(""))
+                        continue;
+
+                    StaticStore.icons[i] = BitmapFactory.decodeFile(iconpath + files[i]);
+                }
             }
 
             if(StaticStore.picons == null) {
@@ -163,6 +180,17 @@ public class Definer {
 
                 for (int i = 0; i < number.length; i++)
                     StaticStore.picons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
+
+                String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
+                String[] files = {"","","","","","","","","Curse.png","","","Burrow.png","Revive.png","","","","","","","","Sniper.png","Time.png","Seal.png"
+                        ,"Summon.png","Moving.png","Theme.png","Poison.png","BossWave.png"};
+
+                for(int i = 0;i<files.length;i++) {
+                    if(files[i].equals(""))
+                        continue;
+
+                    StaticStore.picons[i] = BitmapFactory.decodeFile(iconpath+files[i]);
+                }
             }
 
             if(StaticStore.addition == null) {

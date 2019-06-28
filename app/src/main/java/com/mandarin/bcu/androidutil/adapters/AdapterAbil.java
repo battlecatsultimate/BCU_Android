@@ -76,7 +76,7 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
     }
 
     private Bitmap empty() {
-        float dp =32f;
+        float dp =28f;
         Resources r = context.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;

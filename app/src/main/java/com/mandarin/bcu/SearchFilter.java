@@ -61,7 +61,6 @@ public class SearchFilter extends AppCompatActivity {
     private ImageButton reset;
     private RadioButton tgor;
     private RadioButton atkmu;
-    private RadioButton atksi;
     private RadioButton atkor;
     private RadioButton abor;
     private RadioGroup tggroup;
@@ -134,7 +133,7 @@ public class SearchFilter extends AppCompatActivity {
         atkmu = findViewById(R.id.schrdatkmu);
         atkmu.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(211,40f),null);
         atkmu.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
-        atksi = findViewById(R.id.schrdatksi);
+        RadioButton atksi = findViewById(R.id.schrdatksi);
         atksi.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(217,40f),null);
         atksi.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         atkor = findViewById(R.id.schrdatkor);

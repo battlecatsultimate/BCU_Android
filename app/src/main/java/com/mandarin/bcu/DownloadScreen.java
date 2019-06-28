@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -24,11 +23,8 @@ import java.util.ArrayList;
 public class DownloadScreen extends AppCompatActivity{
     private String path;
     private ArrayList<String> fileneed;
-    private ArrayList<String> filenum;
 
     private Button retry;
-    private ProgressBar prog;
-    private TextView state;
 
     private String downloading;
     private String extracting;
@@ -66,13 +62,11 @@ public class DownloadScreen extends AppCompatActivity{
 
         Intent result = getIntent();
         fileneed = result.getStringArrayListExtra("fileneed");
-        filenum = result.getStringArrayListExtra("filenum");
 
         retry = findViewById(R.id.retry);
         retry.setVisibility(View.GONE);
-        prog = findViewById(R.id.downprog);
+        ProgressBar prog = findViewById(R.id.downprog);
         prog.setMax(100);
-        state = findViewById(R.id.downstate);
 
         new com.mandarin.bcu.androidutil.asynchs.Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
 
