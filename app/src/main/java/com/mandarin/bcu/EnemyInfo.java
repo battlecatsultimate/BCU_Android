@@ -3,6 +3,7 @@ package com.mandarin.bcu;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +40,13 @@ public class EnemyInfo extends AppCompatActivity {
                 setTheme(R.style.AppTheme_day);
             }
         }
+
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         setContentView(R.layout.activity_enemy_info);
 

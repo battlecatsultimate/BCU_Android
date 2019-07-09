@@ -67,14 +67,14 @@ public class Interpret extends Data {
 
 	/** proc data formatter */
 	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
-			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 6 }, { 0, -1 }, { -1, 4, 7 },
-			{ -1, 9, 10, 7 }, { -1, 14 }, { -1, 13 }, { -1, 13 }, { -1, 15 }, { -1, 13 }, { -1, 16 }, { -1, 13 }, { 0, -1 },
+			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 6 }, { 0, -1 }, { -1, 7, 4 },
+			{ -1, 7, 9, 10 }, { -1, 14 }, { -1, 13 }, { -1, 13 }, { -1, 15 }, { -1, 13 }, { -1, 16 }, { -1, 13 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
-			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
-			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
+			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 0, 1 },
+			{ -1, 0, 1, 2 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data formatter for KR,JP */
@@ -138,10 +138,12 @@ public class Interpret extends Data {
 	public static String getTrait(int type, int star) {
 		StringBuilder ans = new StringBuilder();
 		for (int i = 0; i < TRAIT.length; i++)
-			if (((type >> i) & 1) > 0)
-				ans.append(TRAIT[i]).append(", ");
-		if (star > 0)
-			ans.append(STAR[star]);
+			if (((type >> i) & 1) > 0) {
+				if(i == 6 && star == 1)
+					ans.append(TRAIT[i]).append(" ").append("(").append(STAR[star]).append(")").append(", ");
+				else
+					ans.append(TRAIT[i]).append(", ");
+			}
 		return ans.toString();
 	}
 
@@ -366,7 +368,38 @@ public class Interpret extends Data {
 								if(immune.contains(i) && pro != 100)
 									ans.append(TEXT[CMP[i][j]].replace("_", rep));
 								else if(!immune.contains(i))
-									ans.append(TEXT[CMP[i][j]].replace("_",rep));
+									switch(i) {
+										case 11:
+											if(lang.equals("en")) {
+												if(pro == 1 && CMP[i][j] == 7)
+													ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
+												else if(pro == 2 && CMP[i][j] == 7)
+													ans.append(TEXT[CMP[i][j]].replace("_","Twice"));
+												else if(CMP[i][j] == 7)
+													ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
+												else
+													ans.append(TEXT[CMP[i][j]].replace("_", rep));
+											} else
+												ans.append(TEXT[CMP[i][j]].replace("_", rep));
+
+											break;
+										case 12:
+											if(lang.equals("en")) {
+												if(pro == 1 && CMP[i][j] == 7)
+													ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
+												else if(pro == 2 && CMP[i][j] == 7)
+													ans.append(TEXT[CMP[i][j]].replace("_","Twice"));
+												else if(CMP[i][j] == 7)
+													ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
+												else
+													ans.append(TEXT[CMP[i][j]].replace("_", rep));
+											} else
+												ans.append(TEXT[CMP[i][j]].replace("_", rep));
+											break;
+										default:
+											ans.append(TEXT[CMP[i][j]].replace("_", rep));
+											break;
+									}
 							}
 						}
 					}

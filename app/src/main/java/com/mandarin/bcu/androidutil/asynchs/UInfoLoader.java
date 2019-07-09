@@ -6,11 +6,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -19,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -33,6 +36,7 @@ import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.DynamicExplanation;
 import com.mandarin.bcu.androidutil.adapters.DynamicFruit;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.UnitinfPager;
 import com.mandarin.bcu.androidutil.adapters.UnitinfRecycle;
 import com.mandarin.bcu.androidutil.getStrings;
 
@@ -49,15 +53,18 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     private final FragmentManager fm;
     private int[] nformid = {R.string.unit_info_first,R.string.unit_info_second,R.string.unit_info_third};
     private String[] nform = new String[nformid.length];
+    private TableTab table;
+    private ExplanationTab explain;
+    private UnitinfRecycle unitinfRecycle;
 
     public UInfoLoader(int id,Activity activity,boolean isOpen,FragmentManager fm) {
-     this.id = id;
-     this.weakActivity = new WeakReference<>(activity);
-     this.isOpen = isOpen;
-     this.fm = fm;
+        this.id = id;
+        this.weakActivity = new WeakReference<>(activity);
+        this.isOpen = isOpen;
+        this.fm = fm;
 
-    for(int i=0;i<nformid.length;i++)
-        nform[i] = weakActivity.get().getString(nformid[i]);
+        for(int i=0;i<nformid.length;i++)
+            nform[i] = weakActivity.get().getString(nformid[i]);
     }
 
 
@@ -66,10 +73,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakActivity.get();
 
+        SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
 
-        RecyclerView recyclerView = activity.findViewById(R.id.unitinfrec);
-
-        getStrings s = new getStrings(activity);
         for(int i = 0; i<StaticStore.units.get(id).forms.length; i++) {
             String name = MultiLangCont.FNAME.getCont(StaticStore.units.get(id).forms[i]);
 
@@ -79,10 +84,29 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
             names.add(name);
         }
 
-        UnitinfRecycle unitinfRecycle = new UnitinfRecycle(activity,names,StaticStore.units.get(id).forms, id);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setAdapter(unitinfRecycle);
-        ViewCompat.setNestedScrollingEnabled(recyclerView,false);
+        TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
+
+        for(int i=0;i<StaticStore.units.get(id).forms.length;i++) {
+            tabs.addTab(tabs.newTab().setText(nform[i]));
+        }
+
+        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(shared.getBoolean("Lay_Land",false)) {
+                table = new TableTab(fm,tabs.getTabCount(),id,nform);
+                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+            } else {
+                unitinfRecycle = new UnitinfRecycle(activity,names,StaticStore.units.get(id).forms, id);
+                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+            }
+        } else {
+            if(shared.getBoolean("Lay_Port",true)) {
+                table = new TableTab(fm,tabs.getTabCount(),id,nform);
+                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+            } else {
+                unitinfRecycle = new UnitinfRecycle(activity,names,StaticStore.units.get(id).forms, id);
+                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+            }
+        }
 
         publishProgress(0);
 
@@ -163,20 +187,22 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
 
-        for(int i=0;i<StaticStore.units.get(id).forms.length;i++) {
-            tabs.addTab(tabs.newTab().setText(nform[i]));
+        SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+
+        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(shared.getBoolean("Lay_Land",false)) {
+                setUinfo(activity,tabs);
+            } else {
+                setUinfoR(activity,tabs);
+            }
+        } else {
+            if(shared.getBoolean("Lay_Port",true)) {
+                setUinfo(activity,tabs);
+            } else {
+                setUinfoR(activity,tabs);
+            }
         }
 
-        ExplanationTab explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
-
-        ViewPager viewPager = activity.findViewById(R.id.unitinfpager);
-        viewPager.setAdapter(explain);
-        viewPager.setOffscreenPageLimit(1);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-        tabs.setupWithViewPager(viewPager);
-
-        if(StaticStore.units.get(id).info.evo == null)
-            viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
     }
 
     @Override
@@ -191,6 +217,9 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         prog.setVisibility(View.GONE);
+
+        TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
+        tabs.getTabAt(StaticStore.unittabposition).select();
     }
 
     protected class ExplanationTab extends FragmentStatePagerAdapter {
@@ -219,5 +248,125 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         public CharSequence getPageTitle(int position) {
             return title[position];
         }
+    }
+
+    protected class TableTab extends FragmentPagerAdapter {
+        int form;
+        int id;
+        String [] names;
+
+        TableTab(FragmentManager fm, int form, int id,String [] names) {
+            super(fm);
+            this.form = form;
+            this.id = id;
+            this.names = names;
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return UnitinfPager.newInstance(i,id,names);
+        }
+
+        @Override
+        public int getCount() {
+            return form;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {return names[position];}
+    }
+
+    private void setUinfo(Activity activity, TabLayout tabs) {
+        ViewPager tablePager = activity.findViewById(R.id.unitinftable);
+        tablePager.setAdapter(table);
+        tablePager.setOffscreenPageLimit(2);
+        tablePager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        tabs.setupWithViewPager(tablePager);
+
+        ViewPager viewPager = activity.findViewById(R.id.unitinfpager);
+        viewPager.setAdapter(explain);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                tablePager.setCurrentItem(tab.getPosition());
+                StaticStore.unittabposition = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        if(StaticStore.units.get(id).info.evo == null)
+            viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
+
+        View view = activity.findViewById(R.id.view);
+        View view2 = activity.findViewById(R.id.view2);
+        TextView exp = activity.findViewById(R.id.unitinfexp);
+
+        if(MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {
+            viewPager.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
+            tabs.setVisibility(View.GONE);
+            exp.setVisibility(View.GONE);
+        }
+    }
+
+    private void setUinfoR(Activity activity, TabLayout tabs) {
+        RecyclerView recyclerView = activity.findViewById(R.id.unitinfrec);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setAdapter(unitinfRecycle);
+        ViewCompat.setNestedScrollingEnabled(recyclerView,false);
+
+        ViewPager viewPager = activity.findViewById(R.id.unitinfpager);
+        viewPager.setAdapter(explain);
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        tabs.setupWithViewPager(viewPager);
+
+        if(StaticStore.units.get(id).info.evo == null)
+            viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
+
+        View view = activity.findViewById(R.id.enemviewtop);
+        View view2 = activity.findViewById(R.id.enemviewbot);
+        TextView exp = activity.findViewById(R.id.unitinfexp);
+
+        if(MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {
+            viewPager.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
+            tabs.setVisibility(View.GONE);
+            exp.setVisibility(View.GONE);
+        }
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                StaticStore.unittabposition = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 }

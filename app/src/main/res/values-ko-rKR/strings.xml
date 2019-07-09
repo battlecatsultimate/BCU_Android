@@ -109,7 +109,7 @@
     <string name="unit_info_plus">" + "</string>
     <string name="unit_info_trait">타겟</string>
     <string name="unit_info_atk">공격력</string>
-    <string name="unit_info_starred">스타</string>
+    <string name="unit_info_starred">별달린</string>
     <string name="unit_info_god1">수수께끼의 가면 1</string>
     <string name="unit_info_god2">수수께끼의 가면 2</string>
     <string name="unit_info_god3">수수께끼의 가면 3</string>
@@ -247,4 +247,14 @@
     <string name="enemy_info_trait">속성</string>
     <string name="abi_cu">저주</string>
     <string name="infinity">무한</string>
+    <string name="esch_eva">사도</string>
+    <string name="esch_witch">마녀</string>
+    <string name="abi_bu">버로우</string>
+    <string name="config_land">가로모드</string>
+    <string name="config_ori">화면모드</string>
+    <string name="config_port">세로모드</string>
+    <string name="unit_inf_talen">본능</string>
+    <string name="config_lay_list">리스트</string>
+    <string name="config_lay_slide">슬라이드</string>
+    <string name="config_unit_inf_lay">유닛 정보 레이아웃</string>
 </resources>

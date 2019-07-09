@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.mandarin.bcu.EnemyInfo;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.EDefiner;
+import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.EnemyListAdapter;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -32,9 +33,28 @@ import common.system.files.VFile;
 
 public class EAdder extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
+    private ArrayList<String> attack;
+    private ArrayList<String> trait;
+    private ArrayList<ArrayList<Integer>> ability;
+    private boolean atksimu;
+    private boolean atkorand;
+    private boolean trorand;
+    private boolean aborand;
+    private boolean empty;
+    private int enemnumber;
 
-    public EAdder(Activity activity) {
+    public EAdder(Activity activity,ArrayList<String> attack,ArrayList<String> trait, ArrayList<ArrayList<Integer>> ability,
+                  boolean atksimu, boolean atkorand, boolean trorand, boolean aborand, boolean empty, int enemnumber) {
         this.weakReference = new WeakReference<>(activity);
+        this.attack = attack;
+        this.trait = trait;
+        this.ability = ability;
+        this.atksimu = atksimu;
+        this.atkorand = atkorand;
+        this.trorand = trorand;
+        this.aborand = aborand;
+        this.empty = empty;
+        this.enemnumber = enemnumber;
     }
 
     @Override
@@ -93,11 +113,15 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         Activity activity = weakReference.get();
 
         ListView list = activity.findViewById(R.id.enlist);
-        ArrayList<Integer> location = new ArrayList<>();
-        for(int i = 0;i<StaticStore.emnumber;i++) {
-            location.add(i);
-        }
-        EnemyListAdapter enemy = new EnemyListAdapter(activity,StaticStore.enames,StaticStore.ebitmaps,location);
+
+        FilterEntity filterEntity = new FilterEntity(attack,trait,ability,atksimu,atkorand,trorand,aborand,empty,enemnumber);
+        ArrayList<Integer> numbers = filterEntity.EsetFilter();
+        ArrayList<String> names = new ArrayList<>();
+
+        for(int i : numbers)
+            names.add(StaticStore.enames[i]);
+
+        EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),StaticStore.ebitmaps,numbers);
         list.setAdapter(enemy);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,7 +132,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
                 StaticStore.enemyinflistClick = SystemClock.elapsedRealtime();
 
                 Intent result = new Intent(activity, EnemyInfo.class);
-                result.putExtra("ID",location.get(position));
+                result.putExtra("ID",numbers.get(position));
                 activity.startActivity(result);
             }
         });

@@ -27,6 +27,7 @@
                 android:layout_marginTop="24dp"
                 android:text="TextView"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,6 +39,7 @@
                 android:layout_marginTop="24dp"
                 android:text="TextView"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cfinf1" />
 
@@ -50,6 +52,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="TextView"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cfinf2" />
@@ -153,7 +156,8 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="TextView"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/fruittext2"
@@ -165,7 +169,8 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="TextView"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/fruittext3"
@@ -177,7 +182,8 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="TextView"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/fruittext4"
@@ -189,7 +195,8 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="TextView"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/fruittext5"
@@ -201,7 +208,8 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="TextView"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/xptext"
@@ -213,7 +221,8 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="TextView"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
     </TableLayout>

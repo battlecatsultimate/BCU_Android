@@ -2,6 +2,7 @@ package com.mandarin.bcu;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +37,13 @@ public class StageInfo extends AppCompatActivity {
                 setTheme(R.style.AppTheme_day);
             }
         }
+
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         setContentView(R.layout.activity_stage_info);
         ImageButton back = findViewById(R.id.stgbck);

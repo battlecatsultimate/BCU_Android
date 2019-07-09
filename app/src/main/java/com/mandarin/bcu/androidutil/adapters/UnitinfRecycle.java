@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -47,6 +48,7 @@ import java.util.Objects;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.battle.data.MaskUnit;
+import common.system.P;
 import common.util.unit.Form;
 
 public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHolder> {
@@ -747,7 +749,13 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim.setInterpolator(new DecelerateInterpolator());
                     anim.start();
 
-                    ValueAnimator anim2 = ValueAnimator.ofInt(0,StaticStore.dptopx(48f,context));
+                    ValueAnimator anim2;
+                    if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        anim2 = ValueAnimator.ofInt(0, StaticStore.dptopx(48f, context));
+                    } else {
+                        anim2 = ValueAnimator.ofInt(0, StaticStore.dptopx(56f, context));
+                    }
+
                     anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -789,7 +797,11 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim.setInterpolator(new DecelerateInterpolator());
                     anim.start();
 
-                    ValueAnimator anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f,context),0);
+                    ValueAnimator anim2;
+                    if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                        anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f,context),0);
+                    else
+                        anim2 = ValueAnimator.ofInt(StaticStore.dptopx(56f,context),0);
                     anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {

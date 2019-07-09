@@ -41,11 +41,11 @@
     <string name="sch_rare_ra">稀有</string>
     <string name="sch_rare_sr">激稀有</string>
     <string name="sch_rare_ur">超激稀有</string>
-    <string name="sch_atk_ld">遠距攻擊</string>
-    <string name="sch_atk_om">全方位攻擊</string>
-    <string name="sch_atk_ra">範圍攻擊</string>
-    <string name="sch_atk_si">單體攻擊</string>
-    <string name="sch_atk_mu">連續攻擊</string>
+    <string name="sch_atk_ld">遠距</string>
+    <string name="sch_atk_om">全方位</string>
+    <string name="sch_atk_ra">範圍</string>
+    <string name="sch_atk_si">單體</string>
+    <string name="sch_atk_mu">多段</string>
     <string name="sch_abil">能力</string>
     <string name="sch_abi_ao">只能攻擊</string>
     <string name="sch_abi_bb">破壞護盾</string>
@@ -171,7 +171,7 @@
     <string name="unit_info_text4">"至 _ 後方"</string>
     <string name="unit_info_text5">"殘餘 _ % 體力, "</string>
     <string name="unit_info_text6">"至 _ %"</string>
-    <string name="unit_info_text7">" for _"</string>
+    <string name="unit_info_text7">" _"</string>
     <string name="def_unit_info_text8">次</string>
     <string name="unit_info_text9">"在 _ f 後"</string>
     <string name="unit_info_text10">"有著 _ % 血量"</string>
@@ -246,5 +246,15 @@
     <string name="main_enemy_info">Enemy Info</string>
     <string name="enemy_info_trait">Trait</string>
     <string name="abi_cu">Curse</string>
-    <string name="infinity">Infinity</string>
+    <string name="infinity">Infinite</string>
+    <string name="esch_eva">Eva</string>
+    <string name="esch_witch">Witch</string>
+    <string name="abi_bu">Burrow</string>
+    <string name="config_land">Landscape</string>
+    <string name="config_ori">Orientation</string>
+    <string name="config_port">Portrait</string>
+    <string name="unit_inf_talen">Talents</string>
+    <string name="config_lay_list">List</string>
+    <string name="config_lay_slide">Slide</string>
+    <string name="config_unit_inf_lay">Unit Info Layout</string>
 </resources>

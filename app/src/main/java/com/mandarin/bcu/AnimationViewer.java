@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -14,7 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.mandarin.bcu.androidutil.FilterUnit;
+import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -34,13 +35,31 @@ public class AnimationViewer extends AppCompatActivity {
     private ListView list;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
-    private final long INTEVAL = 1000;
+
+    private ArrayList<String> rarity = new ArrayList<>();
+    private ArrayList<String> attack = new ArrayList<>();
+    private ArrayList<String> target = new ArrayList<>();
+    private ArrayList<ArrayList<Integer>> ability = new ArrayList<>();
+    private boolean atksimu = true;
+    private boolean atkorand = true;
+    private boolean tgorand = true;
+    private boolean aborand = true;
+    private boolean empty = true;
+    private boolean talents = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
         SharedPreferences.Editor ed;
         if(!shared.contains("initial")) {
             ed = shared.edit();
@@ -55,6 +74,24 @@ public class AnimationViewer extends AppCompatActivity {
             }
         }
 
+        if(savedInstanceState != null) {
+            empty = savedInstanceState.getBoolean("empty");
+            tgorand = savedInstanceState.getBoolean("tgorand");
+            atksimu = savedInstanceState.getBoolean("atksimu");
+            aborand = savedInstanceState.getBoolean("aborand");
+            atkorand = savedInstanceState.getBoolean("atkorand");
+            talents = savedInstanceState.getBoolean("talents");
+            target = savedInstanceState.getStringArrayList("target");
+            attack = savedInstanceState.getStringArrayList("attack");
+            rarity = savedInstanceState.getStringArrayList("rare");
+            ability = (ArrayList<ArrayList<Integer>>)savedInstanceState.getSerializable("ability");
+        }
+
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
         setContentView(R.layout.activity_animation_viewer);
 
         ImageBuilder.builder = new BMBuilder();
@@ -63,6 +100,7 @@ public class AnimationViewer extends AppCompatActivity {
 
         ImageButton back = findViewById(R.id.animbck);
         search = findViewById(R.id.animsch);
+
         list = findViewById(R.id.unitinflist);
 
         back.setOnClickListener(new SingleClick() {
@@ -79,7 +117,7 @@ public class AnimationViewer extends AppCompatActivity {
             }
         });
 
-        new Adder(unitnumber,this).execute();
+        new Adder(unitnumber,this,empty,tgorand,atksimu,aborand,atkorand,talents,target,attack,rarity,ability).execute();
     }
 
     protected String showName(int location) {
@@ -116,8 +154,20 @@ public class AnimationViewer extends AppCompatActivity {
     }
 
     protected void gotoFilter() {
-        Intent intent = new Intent(this, SearchFilter.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        Intent intent = new Intent(AnimationViewer.this,SearchFilter.class);
+
+        intent.putExtra("empty",empty);
+        intent.putExtra("tgorand",tgorand);
+        intent.putExtra("atksimu",atksimu);
+        intent.putExtra("aborand",aborand);
+        intent.putExtra("atkorand",atkorand);
+        intent.putExtra("talents",talents);
+        intent.putExtra("target",target);
+        intent.putExtra("attack",attack);
+        intent.putExtra("rare",rarity);
+        intent.putExtra("ability",ability);
+        setResult(Activity.RESULT_OK,intent);
+        startActivityForResult(intent,REQUEST_CODE);
     }
 
     protected String number(int num) {
@@ -135,17 +185,6 @@ public class AnimationViewer extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ArrayList<String> rarity;
-        ArrayList<String> attack;
-        ArrayList<String> target;
-        ArrayList<ArrayList<Integer>> ability;
-        boolean atksimu;
-        boolean atkorand;
-        boolean tgorand;
-        boolean aborand;
-        boolean empty;
-        boolean talents;
-
         if(resultCode == RESULT_OK) {
             assert data != null;
             Bundle extra = data.getExtras();
@@ -162,8 +201,8 @@ public class AnimationViewer extends AppCompatActivity {
             aborand = extra.getBoolean("aborand");
             talents = extra.getBoolean("talents");
 
-            FilterUnit filterUnit = new FilterUnit(rarity,attack,target,ability,atksimu,atkorand,tgorand,aborand,empty,unitnumber,talents);
-            ArrayList<Integer> newNumber = filterUnit.setFilter();
+            FilterEntity filterEntity = new FilterEntity(rarity,attack,target,ability,atksimu,atkorand,tgorand,aborand,empty,unitnumber,talents);
+            ArrayList<Integer> newNumber = filterEntity.setFilter();
             ArrayList<String> newName = new ArrayList<>();
 
             for(int i : newNumber) {
@@ -183,7 +222,7 @@ public class AnimationViewer extends AppCompatActivity {
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < INTEVAL)
+                    if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL)
                         return;
 
                     Intent result = new Intent(AnimationViewer.this,UnitInfo.class);
@@ -220,5 +259,21 @@ public class AnimationViewer extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        bundle.putBoolean("empty",empty);
+        bundle.putBoolean("tgorand",tgorand);
+        bundle.putBoolean("atksimu",atksimu);
+        bundle.putBoolean("aborand",aborand);
+        bundle.putBoolean("atkorand",atkorand);
+        bundle.putBoolean("talents",talents);
+        bundle.putStringArrayList("target",target);
+        bundle.putStringArrayList("attack",attack);
+        bundle.putStringArrayList("rare",rarity);
+        bundle.putSerializable("ability",ability);
+
+        super.onSaveInstanceState(bundle);
     }
 }

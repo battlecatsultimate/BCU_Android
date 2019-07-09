@@ -6,17 +6,10 @@ import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Environment;
 
-import java.io.File;
 import java.util.Locale;
-import java.util.Queue;
-
-import javax.xml.transform.sax.SAXTransformerFactory;
 
 import common.system.MultiLangCont;
-import common.system.files.AssetData;
-import common.system.files.VFile;
 import common.util.pack.Pack;
 
 public class Revalidater extends ContextWrapper {
@@ -113,94 +106,5 @@ public class Revalidater extends ContextWrapper {
         } else {
             return String.valueOf(num);
         }
-    }
-
-    private String findName(int form, int num, String[] names) {
-        String name = null;
-
-        if(names.length>num) {
-            String [] wait = names[num].split("\t");
-            if(wait.length >= 3 && form+1 < wait.length) {
-                if(!wait[form+1].equals("")) {
-                    name = wait[form+1];
-                }
-            }
-        }
-
-        return name;
-    }
-
-    protected String[][] getName(String [] priority) {
-        String[][] result = new String[4][];
-
-        for(int i = 0; i <priority.length;i++) {
-            String shortPath = "./lang"+priority[i]+"UnitName.txt";
-            String longPath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU";
-
-            VFile.root.build(shortPath, AssetData.getAsset(new File(longPath+shortPath.substring(1))));
-            Queue<String> qs = VFile.getFile(shortPath).getData().readLine();
-            result[i] = qs.toArray(new String[0]);
-        }
-
-        return result;
-    }
-
-    private String[][] getExplain(String[] priority) {
-        String[][] result = new String[4][];
-
-        for(int i=0;i<priority.length;i++) {
-            String shortPath = "./lang"+priority[i]+"UnitExplanation.txt";
-            String longPath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
-
-            VFile.root.build(shortPath,AssetData.getAsset(new File(longPath+shortPath.substring(1))));
-            Queue<String> qs = VFile.getFile(shortPath).getData().readLine();
-            result[i] = qs.toArray(new String[0]);
-        }
-
-        return result;
-    }
-
-    private String[] findExplain(int form, int num, String[] explains) {
-        String[] explain = null;
-
-        if(explains.length > num) {
-            String[] lines = explains[num].split("\t");
-            if(lines.length >= 3 && form+1 < lines.length) {
-                explain = lines[form+1].split("<br>");
-            }
-        }
-
-        return explain;
-    }
-
-    private String[] chooser(String lang) {
-        String langs;
-
-        if(lang.equals("")) {
-            langs = Locale.getDefault().getLanguage();
-        } else {
-            langs = lang;
-        }
-
-        String [] priority;
-        switch (langs) {
-            case "en":
-                priority = new String[]{"/en/", "/jp/", "/zh/", "/kr/"};
-                break;
-            case "ja":
-                priority = new String[]{"/jp/", "/en/", "/zh/", "/kr/"};
-                break;
-            case "zh":
-                priority = new String[]{"/zh/", "/jp/", "/en/", "/kr/"};
-                break;
-            case "ko":
-                priority = new String[]{"/kr/", "/jp/", "/en/", "/zh/"};
-                break;
-            default:
-                priority = new String[]{"/en/", "/jp/", "/zh/", "/kr/"};
-                break;
-        }
-
-        return priority;
     }
 }

@@ -1,17 +1,22 @@
 package com.mandarin.bcu.androidutil;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.util.TypedValue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
+import common.CommonStatic;
 import common.battle.Treasure;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
@@ -22,9 +27,13 @@ public class StaticStore {
     public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700"};
     public static final String [] OPTREQS = { "080504" };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
+    public static final int [] langnum = {-1,0,1,2,3,4,5,6,7,8};
+    public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/logs/";
     public static final long INTERVAL = 1000;
 
     public static int root = 0;
+
+    int example = 0;
 
     public static Bitmap[] bitmaps = null;
     public static String[] names = null;
@@ -43,6 +52,9 @@ public class StaticStore {
     public static String[] enames = null;
     public static Bitmap[] ebitmaps = null;
     public static int emnumber;
+
+    public static int unittabposition = 0;
+    public static boolean unitinfreset = false;
 
     public static void getUnitnumber() {
         String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
@@ -109,5 +121,22 @@ public class StaticStore {
             e.printStackTrace();
             img15 = null;
         }
+    }
+
+    public static void getLang(int lan) {
+        String language;
+
+        if(lan == 0) {
+            language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+            CommonStatic.Lang.lang = Arrays.asList(lang).indexOf(language)-1;
+            System.out.println("Auto Set : "+language);
+        } else {
+            System.out.println(lang[lan]);
+            CommonStatic.Lang.lang = lan-1;
+        }
+        System.out.println(CommonStatic.Lang.lang);
+
+        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang < 0)
+            CommonStatic.Lang.lang = 0;
     }
 }

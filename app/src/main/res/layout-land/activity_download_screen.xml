@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundPrimary"
+    tools:context=".DownloadScreen">
+
+    <ProgressBar
+        android:id="@+id/downprog"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginEnd="128dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/downstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/down_state_rea"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/downprog"
+        app:layout_constraintTop_toBottomOf="@+id/downprog" />
+
+    <Button
+        android:id="@+id/retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/ButtonPrimary"
+        android:text="@string/down_redown"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/downstate"
+        app:layout_constraintEnd_toEndOf="@+id/downprog"
+        app:layout_constraintTop_toTopOf="@+id/downstate" />
+</android.support.constraint.ConstraintLayout>

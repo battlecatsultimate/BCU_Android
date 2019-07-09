@@ -27,11 +27,11 @@
             android:id="@+id/unitinfrarname"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Unit_Rairty_Name"
             android:textColor="?attr/UnitinfoName"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
             app:layout_constraintStart_toEndOf="@+id/unitinfback"
@@ -60,32 +60,29 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <android.support.v4.widget.NestedScrollView
-                    android:id="@+id/nestedScrollView"
+                    android:id="@+id/nestedScrollView3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:fillViewport="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/unitinfrec"
+                        <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+                            android:id="@+id/unitinftable"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:descendantFocusability="blocksDescendants"
                             android:focusableInTouchMode="true"
-                            android:overScrollMode="never"
-                            app:layout_constrainedWidth="false">
-
-                        </android.support.v7.widget.RecyclerView>
+                            android:overScrollMode="never"/>
                     </LinearLayout>
                 </android.support.v4.widget.NestedScrollView>
 
@@ -93,20 +90,22 @@
                     android:id="@+id/unitinfpager"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
+                    app:layout_constraintTop_toBottomOf="@+id/unitinfexp">
+
+                </com.mandarin.bcu.androidutil.adapters.MeasureViewPager>
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/unitinfexplain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:tabGravity="fill"
                     app:tabMaxWidth="0dp"
                     app:tabPaddingEnd="24dp"
@@ -114,7 +113,7 @@
                     app:tabTextColor="?attr/TextPrimary" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/unitinfexp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -124,7 +123,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+                    app:layout_constraintTop_toBottomOf="@+id/nestedScrollView3" />
 
                 <TextView
                     android:id="@+id/cfinftext"
@@ -153,9 +152,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/TableBorder"
+                    app:layout_constraintBottom_toTopOf="@+id/unitinfpager"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/unitinfexplain" />
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
                     android:id="@+id/catfruitpager"

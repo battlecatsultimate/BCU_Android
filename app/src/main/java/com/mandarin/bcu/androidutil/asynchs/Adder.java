@@ -3,7 +3,6 @@ package com.mandarin.bcu.androidutil.asynchs;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
 import com.mandarin.bcu.androidutil.Definer;
+import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.UnitListAdapter;
 
@@ -31,9 +31,31 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
     private final int unitnumber;
     private final WeakReference<Activity> weakReference;
 
-    public Adder(int unitnumber, Activity context) {
+    private boolean empty;
+    private boolean tgorand;
+    private boolean atksimu;
+    private boolean aborand;
+    private boolean atkorand;
+    private boolean talents;
+    private ArrayList<String> target;
+    private ArrayList<String> attack;
+    private ArrayList<String> rarity;
+    private ArrayList<ArrayList<Integer>> ability;
+
+    public Adder(int unitnumber, Activity context,boolean empty, boolean tgorand, boolean atksimu, boolean aborand, boolean atkorand, boolean talents
+    ,ArrayList<String> target, ArrayList<String> attack,ArrayList<String> rarity, ArrayList<ArrayList<Integer>> ability) {
         this.unitnumber = unitnumber;
         this.weakReference = new WeakReference<>(context);
+        this.empty = empty;
+        this.tgorand = tgorand;
+        this.atksimu = atksimu;
+        this.aborand = aborand;
+        this.atkorand = atkorand;
+        this.talents = talents;
+        this.target = target;
+        this.attack = attack;
+        this.rarity = rarity;
+        this.ability = ability;
     }
 
     @Override
@@ -80,16 +102,19 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         Activity activity = weakReference.get();
 
         ListView list = activity.findViewById(R.id.unitinflist);
-        ArrayList<Integer> locate = new ArrayList<>();
-        for(int i = 0; i < unitnumber;i++) {
-            locate.add(i);
+        FilterEntity filterEntity = new FilterEntity(rarity,attack,target,ability,atksimu,atkorand,tgorand,aborand,empty,unitnumber,talents);
+        ArrayList<Integer> numbers = filterEntity.setFilter();
+        ArrayList<String> names = new ArrayList<>();
+
+        for(int i : numbers) {
+            names.add(StaticStore.names[i]);
         }
-        UnitListAdapter adap = new UnitListAdapter(activity,StaticStore.names,StaticStore.bitmaps,locate);
+        UnitListAdapter adap = new UnitListAdapter(activity,names.toArray(new String[0]),StaticStore.bitmaps,numbers);
         list.setAdapter(adap);
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(activity,showName(locate.get(position)),Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,showName(numbers.get(position)),Toast.LENGTH_SHORT).show();
                 list.setClickable(false);
 
                 return true;
@@ -104,7 +129,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                 StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
 
                 Intent result = new Intent(activity, UnitInfo.class);
-                result.putExtra("ID",locate.get(position));
+                result.putExtra("ID",numbers.get(position));
                 activity.startActivity(result);
             }
         });

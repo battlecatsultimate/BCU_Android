@@ -3,6 +3,7 @@ package com.mandarin.bcu;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class ConfigScreen extends AppCompatActivity {
     private int [] LangId = {R.string.lang_auto,R.string.def_lang_en,R.string.def_lang_zh,R.string.def_lang_ko,R.string.def_lang_ja};
     private String [] locales = StaticStore.lang;
     private  boolean started = false;
+    private boolean changed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,13 @@ public class ConfigScreen extends AppCompatActivity {
                 setTheme(R.style.AppTheme_day);
             }
         }
+
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         setContentView(R.layout.activity_config_screen);
 
@@ -180,6 +189,7 @@ public class ConfigScreen extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(started) {
+                    changed = true;
                     SharedPreferences.Editor ed = shared.edit();
                     ed.putInt("Language", position);
                     ed.apply();
@@ -192,10 +202,7 @@ public class ConfigScreen extends AppCompatActivity {
                     if (StaticStore.units != null || StaticStore.enemies != null)
                         new Revalidater(ConfigScreen.this).Validate(lang, ConfigScreen.this);
                     else {
-                        CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(lang)-1;
-
-                        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang == -2)
-                            CommonStatic.Lang.lang = 0;
+                        StaticStore.getLang(position);
                     }
 
                     restart();
@@ -209,6 +216,62 @@ public class ConfigScreen extends AppCompatActivity {
 
             }
         });
+
+        RadioGroup orientation = findViewById(R.id.configorirg);
+        RadioButton[] oris = {findViewById(R.id.configoriauto),findViewById(R.id.configoriland),findViewById(R.id.configoriport)};
+
+        orientation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(started)
+                    for(int i = 0;i<3;i++)
+                        if(i != shared.getInt("Orientation",0) && checkedId == oris[i].getId()) {
+                            SharedPreferences.Editor ed = shared.edit();
+                            ed.putInt("Orientation", i);
+                            ed.apply();
+                            restart();
+                        }
+            }
+        });
+
+        oris[shared.getInt("Orientation",0)].setChecked(true);
+
+        RadioGroup unitinfland = findViewById(R.id.configinfland);
+        RadioButton unitinflandlist = findViewById(R.id.configlaylandlist);
+        RadioButton unitinflandslide = findViewById(R.id.configlaylandslide);
+
+        if(shared.getBoolean("Lay_Land",false))
+            unitinflandslide.setChecked(true);
+        else
+            unitinflandlist.setChecked(true);
+
+        unitinfland.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                SharedPreferences.Editor ed = shared.edit();
+                ed.putBoolean("Lay_Land",checkedId == unitinflandslide.getId());
+                ed.apply();
+            }
+        });
+
+        RadioGroup unitinfport = findViewById(R.id.configinfport);
+        RadioButton unitinfportlist = findViewById(R.id.configlayportlist);
+        RadioButton unitinfportslide = findViewById(R.id.configlayportslide);
+
+        if(shared.getBoolean("Lay_Port",true))
+            unitinfportslide.setChecked(true);
+        else
+            unitinfportlist.setChecked(true);
+
+        unitinfport.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                SharedPreferences.Editor ed = shared.edit();
+                ed.putBoolean("Lay_Port",checkedId == unitinfportslide.getId());
+                ed.apply();
+            }
+        });
+
     }
 
     private int getIndex(Spinner spinner, int lev) {

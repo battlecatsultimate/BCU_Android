@@ -27,41 +27,52 @@
         android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unitinffrse">
+        app:layout_constraintTop_toBottomOf="@+id/unitinftalen">
 
         <Spinner
             android:id="@+id/talent0"
+            style="@style/Platform.Widget.AppCompat.Spinner"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_weight="0.2"
-            android:popupBackground="?attr/backgroundPrimary" />
+            android:backgroundTint="?attr/TableBorder"
+            android:popupBackground="?attr/backgroundPrimary"
+            android:spinnerMode="dropdown" />
 
         <Spinner
             android:id="@+id/talent1"
+            style="@style/Platform.Widget.AppCompat.Spinner"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_weight="0.2"
+            android:backgroundTint="?attr/TableBorder"
             android:popupBackground="?attr/backgroundPrimary" />
 
         <Spinner
             android:id="@+id/talent2"
+            style="@style/Platform.Widget.AppCompat.Spinner"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_weight="0.2"
+            android:backgroundTint="?attr/TableBorder"
             android:popupBackground="?attr/backgroundPrimary" />
 
         <Spinner
             android:id="@+id/talent3"
+            style="@style/Platform.Widget.AppCompat.Spinner"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_weight="0.2"
+            android:backgroundTint="?attr/TableBorder"
             android:popupBackground="?attr/backgroundPrimary" />
 
         <Spinner
             android:id="@+id/talent4"
+            style="@style/Platform.Widget.AppCompat.Spinner"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_weight="0.2"
+            android:backgroundTint="?attr/TableBorder"
             android:popupBackground="?attr/backgroundPrimary" />
     </TableRow>
 
@@ -107,6 +118,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_span="2"
                 android:background="@drawable/cell_shape">
 
                 <ImageView
@@ -118,6 +130,12 @@
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp" />
             </TableRow>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/unitinfhp"
@@ -164,7 +182,6 @@
                 android:paddingBottom="12dp"
                 android:text="Unit_HB"
                 android:textColor="?attr/TextPrimary" />
-
         </TableRow>
 
         <TableRow
@@ -187,7 +204,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape">
 
                 <Spinner
@@ -224,6 +241,12 @@
 
             </TableRow>
 
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
             <Button
                 android:id="@+id/unitinfatk"
                 android:layout_width="match_parent"
@@ -247,7 +270,6 @@
                 android:paddingBottom="12dp"
                 android:text="Unit_Atk"
                 android:textColor="?attr/TextPrimary" />
-
         </TableRow>
 
         <TableRow
@@ -269,13 +291,19 @@
                 android:id="@+id/unitinfatktimer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="Unit_Atktime"
                 android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/unitinfabilt"
@@ -300,7 +328,6 @@
                 android:paddingBottom="12dp"
                 android:text="Unit_Abil_TF"
                 android:textColor="?attr/TextPrimary" />
-
         </TableRow>
 
         <TableRow
@@ -322,13 +349,19 @@
                 android:id="@+id/unitinfpreatkr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="Unit_Pre"
                 android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <Button
                 android:id="@+id/unitinfpost"
@@ -372,7 +405,6 @@
                 android:paddingBottom="12dp"
                 android:text="Unit_TBA"
                 android:textColor="?attr/TextPrimary" />
-
         </TableRow>
 
         <TableRow
@@ -397,13 +429,19 @@
                 android:id="@+id/unitinftraitr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="Unit_Trait"
                 android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/unitinfsimu"
@@ -450,7 +488,6 @@
                 android:paddingBottom="12dp"
                 android:text="Unit_Cost"
                 android:textColor="?attr/TextPrimary" />
-
         </TableRow>
 
         <TableRow
@@ -475,13 +512,19 @@
                 android:id="@+id/unitinfrangr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="2"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="Unit_Range"
                 android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <Button
                 android:id="@+id/unitinfcd"
@@ -531,7 +574,6 @@
                 android:paddingBottom="12dp"
                 android:text="Unit_Spd"
                 android:textColor="?attr/TextPrimary" />
-
         </TableRow>
 
         <TableRow
@@ -543,8 +585,7 @@
             <TextView
                 android:id="@+id/unitinfabil"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/cell_shape"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
@@ -554,26 +595,45 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_span="6"
-                android:gravity="center_horizontal|center_vertical">
+                android:layout_height="wrap_content"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape">
 
                 <TextView
                     android:id="@+id/unitabilnone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingStart="24dp"
                     android:paddingTop="12dp"
+                    android:paddingEnd="24dp"
                     android:paddingBottom="12dp"
                     android:text="@string/unit_info_t_none"
                     android:textColor="?attr/TextPrimary" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/unitinfabilr"
+                <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_span="6"
-                    android:background="@drawable/cell_shape"
-                    android:focusable="false" />
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/unitinfabilr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/cell_shape"
+                            android:focusable="false" />
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
             </TableRow>
 
         </TableRow>
@@ -596,21 +656,22 @@
         android:id="@+id/unitinftalen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="@string/unit_info_talent"
+        android:layout_marginTop="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/unit_inf_talen"
         android:textColor="?attr/TextPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/unitinffrse"
-        app:layout_constraintStart_toEndOf="@+id/unitinffrse"
-        app:layout_constraintTop_toTopOf="@+id/unitinffrse" />
+        app:layout_constraintStart_toStartOf="@+id/unitinfname"
+        app:layout_constraintTop_toBottomOf="@+id/unitinffrse" />
 
     <TableRow
         android:id="@+id/talresetrow"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/unitinffrse"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinftalen"
         app:layout_constraintStart_toEndOf="@+id/unitinftalen"
-        app:layout_constraintTop_toTopOf="@+id/unitinffrse">
+        app:layout_constraintTop_toTopOf="@+id/unitinftalen">
 
         <Button
             android:id="@+id/unitinftalreset"

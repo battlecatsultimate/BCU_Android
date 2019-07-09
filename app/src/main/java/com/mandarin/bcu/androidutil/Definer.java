@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.decode.ZipLib;
 import com.mandarin.bcu.util.Interpret;
 
 import java.io.File;
@@ -23,12 +25,13 @@ import common.battle.BasisSet;
 import common.battle.data.PCoin;
 import common.system.MultiLangCont;
 import common.system.files.AssetData;
+import common.system.files.VFile;
 import common.util.pack.Pack;
 import common.util.unit.Combo;
 import common.util.unit.Unit;
 
 public class Definer {
-    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re};
+    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_witch,R.string.esch_eva};
     private int [] starid = {R.string.unit_info_starred,R.string.unit_info_god1,R.string.unit_info_god2,R.string.unit_info_god3};
     private String [] starstring = new String[5];
     private String [] colorstring = new String[colorid.length];
@@ -52,6 +55,11 @@ public class Definer {
 
     public void define(Context context) {
         try {
+            if(StaticStore.root == 0 || VFile.root.list() == null) {
+                ZipLib.init();
+                ZipLib.read();
+            }
+
             if(StaticStore.units==null) {
                 Unit.readData();
                 PCoin.read();
@@ -162,7 +170,7 @@ public class Definer {
                     StaticStore.icons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
 
                 String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
-                String[] files = {"","","","","","","","MovingX.png","","SniperX.png","TimeX.png","Ghost.png","PoisonX.png","","","","ThemeX.png",
+                String[] files = {"","","","","","","","MovingX.png","","SnipeX.png","TimeX.png","Ghost.png","PoisonX.png","","","","ThemeX.png",
                         "","SealX.png","BossWaveX.png","",""};
 
                 for(int i = 0;i<files.length;i++) {
@@ -182,7 +190,7 @@ public class Definer {
                     StaticStore.picons[i] = (Bitmap)StaticStore.img15[number[i]].bimg();
 
                 String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
-                String[] files = {"","","","","","","","","Curse.png","","","Burrow.png","Revive.png","","","","","","","","Sniper.png","Time.png","Seal.png"
+                String[] files = {"","","","","","","","","Curse.png","","","Burrow.png","Revive.png","","","","","","","","Snipe.png","Time.png","Seal.png"
                         ,"Summon.png","Moving.png","Theme.png","Poison.png","BossWave.png"};
 
                 for(int i = 0;i<files.length;i++) {
@@ -206,13 +214,9 @@ public class Definer {
     }
 
     void redefine(Context context,String lang) {
+        SharedPreferences shared = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
 
-        CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(lang)-1;
-
-        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang == -2)
-            CommonStatic.Lang.lang = 0;
-
-        System.out.println(CommonStatic.Lang.lang);
+        StaticStore.getLang(shared.getInt("Language",0));
 
         for(int i = 0;i<colorid.length;i++) {
             colorstring[i] = getString(context,colorid[i],lang);

@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -46,16 +50,59 @@ public class UnitInfo extends AppCompatActivity {
             }
         }
 
-        setContentView(R.layout.activity_unit_info);
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(shared.getBoolean("Lay_Land",false)) {
+                setContentView(R.layout.activity_unit_info);
+            } else {
+                setContentView(R.layout.activity_unit_infor);
+            }
+        } else {
+            if(shared.getBoolean("Lay_Port",true)) {
+                setContentView(R.layout.activity_unit_info);
+            } else {
+                setContentView(R.layout.activity_unit_infor);
+            }
+        }
+        if(StaticStore.unitinfreset) {
+            StaticStore.unittabposition = 0;
+            StaticStore.unitinfreset = false;
+        }
 
         ScrollView scrollView = findViewById(R.id.unitinfscroll);
         scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-        scrollView.setFocusable(true);
+        scrollView.setFocusable(false);
         scrollView.setFocusableInTouchMode(true);
         scrollView.setVisibility(View.GONE);
 
         ConstraintLayout treasuretab = findViewById(R.id.treasurelayout);
         treasuretab.setVisibility(View.GONE);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(shared.getBoolean("Lay_Land",false)) {
+                ViewPager unittable = findViewById(R.id.unitinftable);
+                unittable.setFocusable(false);
+                unittable.requestFocusFromTouch();
+            } else {
+                RecyclerView recyclerView = findViewById(R.id.unitinfrec);
+                recyclerView.requestFocusFromTouch();
+            }
+        } else {
+            if(shared.getBoolean("Lay_Port",false)) {
+                ViewPager unittable = findViewById(R.id.unitinftable);
+                unittable.setFocusable(false);
+                unittable.requestFocusFromTouch();
+            } else {
+                RecyclerView recyclerView = findViewById(R.id.unitinfrec);
+                recyclerView.requestFocusFromTouch();
+            }
+        }
 
         TextView unittitle = findViewById(R.id.unitinfrarname);
 
@@ -65,12 +112,10 @@ public class UnitInfo extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StaticStore.unitinfreset = true;
                 finish();
             }
         });
-
-        RecyclerView recyclerView = findViewById(R.id.unitinfrec);
-        recyclerView.requestFocusFromTouch();
 
         Intent result = getIntent();
         Bundle extra = result.getExtras();
@@ -90,6 +135,7 @@ public class UnitInfo extends AppCompatActivity {
             treasure.performClick();
         } else {
             super.onBackPressed();
+            StaticStore.unitinfreset = true;
         }
     }
 

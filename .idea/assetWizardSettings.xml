@@ -180,7 +180,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_settings_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_drop_down_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -190,13 +190,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
-                            <entry key="height" value="48" />
-                            <entry key="outputName" value="ic_enemy" />
+                            <entry key="height" value="18" />
+                            <entry key="outputName" value="ic_arrow_drop_down_black_24dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\user\Desktop\enemy.svg" />
-                            <entry key="width" value="48" />
+                            <entry key="width" value="18" />
                           </map>
                         </option>
                       </PersistentState>

@@ -13,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,9 +26,7 @@ import com.mandarin.bcu.util.Interpret;
 import java.util.List;
 
 import common.battle.Treasure;
-import common.battle.data.MaskEnemy;
 import common.system.MultiLangCont;
-import common.util.unit.EForm;
 import common.util.unit.Enemy;
 
 public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
@@ -291,5 +288,31 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
         viewHolder.enempre.setText(s.getPre(em,fs));
         viewHolder.enempost.setText(s.getPost(em,fs));
         viewHolder.enemtba.setText(s.getTBA(em,fs));
+        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+
+        String language = StaticStore.lang[shared.getInt("Language",0)];
+        if(language.equals("")) {
+            language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+        }
+        List<String> proc;
+        if(language.equals("ko")) {
+            proc = Interpret.getProc(em.de,1,fs,activity);
+        } else {
+            proc = Interpret.getProc(em.de,0,fs,activity);
+        }
+        List<Integer> procicon = Interpret.getProcid(em.de);
+
+        List<String>ability = Interpret.getAbi(em.de,fragment,StaticStore.addition,0);
+        List<Integer>abilityicon = Interpret.getAbiid(em.de);
+
+        if(ability.size()>0 || proc.size()>0) {
+            viewHolder.none.setVisibility(View.GONE);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            viewHolder.emabil.setLayoutManager(linearLayoutManager);
+            AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, activity);
+            viewHolder.emabil.setAdapter(adapterAbil);
+            ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false);
+        }
     }
 }

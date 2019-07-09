@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.adapters.UnitinfRecycle;
 import com.mandarin.bcu.util.Interpret;
 
 import java.text.DecimalFormat;
@@ -236,6 +237,10 @@ public class getStrings {
         return id+"-"+viewHolder.getAdapterPosition();
     }
 
+    public String getID(int form, String id) {
+        return id+"-"+ form;
+    }
+
     public String getRange(Form f) {
         int tb = f.du.getRange();
         MaskAtk ma = f.du.getRepAtk();
@@ -420,8 +425,9 @@ public class getStrings {
         }
 
         String result;
+        int star = de.getStar();
 
-        result = Interpret.getTrait(de.getType(), 0);
+        result = Interpret.getTrait(de.getType(), star);
 
         if(result.equals(""))
             result = c.getString(R.string.unit_info_t_none);
@@ -509,7 +515,7 @@ public class getStrings {
 
     public String getSimu(Enemy em) {
         if(Interpret.isType(em.de,1))
-            return c.getString(R.string.sch_atk_mu);
+            return c.getString(R.string.sch_atk_ra);
         else
             return c.getString(R.string.sch_atk_si);
     }

@@ -10,12 +10,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.DynamicEmExplanation;
 import com.mandarin.bcu.androidutil.adapters.EnemyRecycle;
 
 import java.lang.ref.WeakReference;
+
+import common.system.MultiLangCont;
 
 public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
@@ -24,6 +28,23 @@ public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
     public EInfoLoader(Activity activity,int id) {
         this.weakReference = new WeakReference<>(activity);
         this.id = id;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        Activity activity = weakReference.get();
+
+        if(MultiLangCont.EEXP.getCont(StaticStore.enemies.get(id)) == null) {
+            View view1 = activity.findViewById(R.id.enemviewtop);
+            View view2 = activity.findViewById(R.id.enemviewbot);
+            ViewPager viewPager = activity.findViewById(R.id.eneminfexp);
+            TextView exptext = activity.findViewById(R.id.eneminfexptx);
+
+            view1.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
+            viewPager.setVisibility(View.GONE);
+            exptext.setVisibility(View.GONE);
+        }
     }
 
     @Override

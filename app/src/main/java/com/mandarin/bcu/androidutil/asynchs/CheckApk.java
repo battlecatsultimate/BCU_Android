@@ -8,12 +8,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.widget.TextView;
 
 import com.mandarin.bcu.ApkDownload;
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.util.Interpret;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +37,7 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     private boolean lang;
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
+    private boolean contin = true;
 
     public CheckApk(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando) {
         this.weakReference = new WeakReference<>(context);
@@ -107,10 +106,13 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            contin = false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            contin = false;
         } catch (IOException e) {
             e.printStackTrace();
+            contin = false;
         }
         return null;
     }
@@ -122,6 +124,9 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
     @Override
     protected void onPostExecute(Void results) {
+        if(!contin) {
+            new CheckApk(path,lang,fileneed,filenum,weakReference.get(),cando).execute();
+        }
     }
 
     private void goToApk(String ver) {

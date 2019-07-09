@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -125,16 +127,28 @@ public class SearchFilter extends AppCompatActivity {
             }
         }
 
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
         setContentView(R.layout.activity_search_filter);
 
         back = findViewById(R.id.schbck);
         reset = findViewById(R.id.schreset);
         tgor = findViewById(R.id.schrdtgor);
         atkmu = findViewById(R.id.schrdatkmu);
-        atkmu.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(211,40f),null);
         atkmu.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         RadioButton atksi = findViewById(R.id.schrdatksi);
-        atksi.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(217,40f),null);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            atkmu.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(211,40f),null);
+            atksi.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(217, 40f), null);
+        } else {
+            atkmu.setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(211,32f),null);
+            atksi.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(217, 32f), null);
+        }
         atksi.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         atkor = findViewById(R.id.schrdatkor);
         abor = findViewById(R.id.schrdabor);
@@ -147,7 +161,10 @@ public class SearchFilter extends AppCompatActivity {
         chnp = findViewById(R.id.schnp);
         for(int i = 0; i < tgid.length; i++) {
             targets[i] = findViewById(tgid[i]);
-            targets[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(tgdraw[i],40f),null);
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                targets[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(tgdraw[i],40f),null);
+            else
+                targets[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(tgdraw[i],32f),null);
             targets[i].setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         }
         for(int i=0;i<rareid.length;i++)
@@ -156,13 +173,19 @@ public class SearchFilter extends AppCompatActivity {
             attacks[i] = findViewById(atkid[i]);
 
             if(i <atkid.length-1) {
-                attacks[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(atkdraw[i],40f),null);
-                attacks[i].setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    attacks[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(atkdraw[i],40f),null);
+                else
+                    attacks[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(atkdraw[i],32f),null);
+                attacks[i].setCompoundDrawablePadding(StaticStore.dptopx(8f,this));
             }
         }
         for(int i=0;i<abid.length;i++) {
             abilities[i] = findViewById(abid[i]);
-            abilities[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(abdraw[i],40f),null);
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                abilities[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(abdraw[i],40f),null);
+            else
+                abilities[i].setCompoundDrawablesWithIntrinsicBounds(null,null,getResizeDraw(abdraw[i],32f),null);
             abilities[i].setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         }
 
@@ -199,7 +222,7 @@ public class SearchFilter extends AppCompatActivity {
 
                 atkgroup.clearCheck();
                 tgor.setChecked(true);
-                abor.setChecked(true);
+                atkor.setChecked(true);
                 abor.setChecked(true);
                 chnp.setChecked(false);
 
@@ -235,6 +258,13 @@ public class SearchFilter extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 atksimu = checkedId == atkmu.getId();
+            }
+        });
+
+        atkgroupor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                atkorand = checkedId == atkor.getId();
             }
         });
 
@@ -314,13 +344,6 @@ public class SearchFilter extends AppCompatActivity {
                     }
                     else
                         ability.remove(abilval);
-                }
-            });
-
-            atkgroupor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    atkorand = checkedId == atkor.getId();
                 }
             });
         }

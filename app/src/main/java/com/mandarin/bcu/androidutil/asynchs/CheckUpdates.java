@@ -1,8 +1,10 @@
 package com.mandarin.bcu.androidutil.asynchs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mandarin.bcu.DownloadScreen;
+import com.mandarin.bcu.MainActivity;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -55,6 +58,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     private String source;
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
+    private boolean contin = true;
 
     private JSONObject ans;
 
@@ -143,12 +147,16 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             }
         } catch (ProtocolException e) {
             e.printStackTrace();
+            contin = false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            contin = false;
         } catch (IOException e) {
             e.printStackTrace();
+            contin = false;
         } catch (JSONException e) {
             e.printStackTrace();
+            contin = false;
         }
 
 
@@ -169,12 +177,17 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        checkFiles(ans);
+        System.out.println("Continue : "+contin);
+        if(contin) {
+            checkFiles(ans);
 
-        Activity activity = weakReference.get();
+            Activity activity = weakReference.get();
 
-        if(fileneed.isEmpty() && filenum.isEmpty()) {
-            new AddPathes(activity).execute();
+            if (fileneed.isEmpty() && filenum.isEmpty()) {
+                new AddPathes(activity).execute();
+            }
+        } else {
+            new CheckUpdates(path,lang,fileneed,filenum,weakReference.get(),cando).execute();
         }
     }
 
@@ -299,6 +312,8 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        Activity activity = weakReference.get();
+        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         com.mandarin.bcu.decode.ZipLib.init();
         com.mandarin.bcu.decode.ZipLib.read();
 
@@ -308,13 +323,7 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
 
         new DefineItf().init();
 
-        String language = Locale.getDefault().getLanguage();
-        CommonStatic.Lang.lang = Arrays.asList(StaticStore.lang).indexOf(language)-1;
-
-        if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang == -2)
-            CommonStatic.Lang.lang = 0;
-
-        System.out.println(CommonStatic.Lang.lang);
+        StaticStore.getLang(shared.getInt("Language",0));
 
         return null;
     }
@@ -323,18 +332,8 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        ProgressBar mainprog = activity.findViewById(R.id.mainprogup);
-        TextView checkstate = activity.findViewById(R.id.mainstup);
-        Button stagebtn = activity.findViewById(R.id.stgbtn);
-        Button animbtn = activity.findViewById(R.id.anvibtn);
-        ImageButton config = activity.findViewById(R.id.mainconfig);
-        Button emlistbtn = activity.findViewById(R.id.eninfbtn);
-
-        mainprog.setVisibility(View.GONE);
-        checkstate.setVisibility(View.GONE);
-        stagebtn.setVisibility(View.VISIBLE);
-        animbtn.setVisibility(View.VISIBLE);
-        config.setVisibility(View.VISIBLE);
-        emlistbtn.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
     }
 }

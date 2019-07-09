@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundPrimary"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/unitinfname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="32dp"
+        android:text="Name"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableRow
+        android:id="@+id/talenrow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unitinffrse">
+
+        <Spinner
+            android:id="@+id/talent0"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent2"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent3"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+
+        <Spinner
+            android:id="@+id/talent4"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.2"
+            android:popupBackground="?attr/backgroundPrimary" />
+    </TableRow>
+
+    <TableLayout
+        android:id="@+id/tables"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:stretchColumns="*"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/talenrow">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinfid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_id"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfidr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_ID"
+                android:textColor="?attr/TextPrimary" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape">
+
+                <ImageView
+                    android:id="@+id/unitinficon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:contentDescription="@string/def_unit_s_icon"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp" />
+            </TableRow>
+
+            <TextView
+                android:id="@+id/unitinfhp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_hp"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfhpr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_HP"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/unitinfhb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/hb"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfhbr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_HB"
+                android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinflev"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_level"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape">
+
+                <Spinner
+                    android:id="@+id/unitinflevr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:popupBackground="?attr/backgroundPrimary"
+                    android:textAlignment="center"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/unitinfplus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="?attr/TextPrimary"
+                    tools:text="@string/unit_info_plus" />
+
+                <Spinner
+                    android:id="@+id/unitinflevpr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:popupBackground="?attr/backgroundPrimary"
+                    android:textAlignment="center"
+                    tools:visibility="visible" />
+
+            </TableRow>
+
+            <Button
+                android:id="@+id/unitinfatk"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/unit_info_atk"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfatkr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Atk"
+                android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <Button
+                android:id="@+id/unitinfatktime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:text="@string/unit_info_atktime"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfatktimer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Atktime"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/unitinfabilt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_abilT"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfabiltr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Abil_TF"
+                android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <Button
+                android:id="@+id/unitinfpreatk"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:text="@string/unit_info_pre"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfpreatkr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Pre"
+                android:textColor="?attr/TextPrimary" />
+
+            <Button
+                android:id="@+id/unitinfpost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/unit_info_post"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfpostr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Post"
+                android:textColor="?attr/TextPrimary" />
+
+            <Button
+                android:id="@+id/unitinftba"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:text="@string/unit_info_tba"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinftbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_TBA"
+                android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinftrait"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_trait"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinftraitr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Trait"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/unitinfsimu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_atkt"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfsimur"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Simu"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/unitinfcost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_cost"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfcostr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Cost"
+                android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinfrang"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_rang"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfrangr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Range"
+                android:textColor="?attr/TextPrimary" />
+
+            <Button
+                android:id="@+id/unitinfcd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/unit_info_cd"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfcdr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_CD"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/unitinfspd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_spd"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfspdr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Unit_Spd"
+                android:textColor="?attr/TextPrimary" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cell_shape">
+
+            <TextView
+                android:id="@+id/unitinfabil"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_info_abil"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="6"
+                android:gravity="center_horizontal|center_vertical">
+
+                <TextView
+                    android:id="@+id/unitabilnone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/unit_info_t_none"
+                    android:textColor="?attr/TextPrimary" />
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/unitinfabilr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/cell_shape"
+                            android:focusable="false" />
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
+            </TableRow>
+
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/unitinffrse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:background="@android:color/transparent"
+        android:text="@string/unit_info_fr"
+        android:textAllCaps="true"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinfname"
+        app:layout_constraintStart_toEndOf="@+id/unitinfname"
+        app:layout_constraintTop_toTopOf="@+id/unitinfname" />
+
+    <CheckBox
+        android:id="@+id/unitinftalen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/unit_info_talent"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinffrse"
+        app:layout_constraintStart_toEndOf="@+id/unitinffrse"
+        app:layout_constraintTop_toTopOf="@+id/unitinffrse" />
+
+    <TableRow
+        android:id="@+id/talresetrow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/unitinffrse"
+        app:layout_constraintStart_toEndOf="@+id/unitinftalen"
+        app:layout_constraintTop_toTopOf="@+id/unitinffrse">
+
+        <Button
+            android:id="@+id/unitinftalreset"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/ButtonPrimary"
+            android:maxLines="1"
+            android:minWidth="0dip"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/treasure_reset"
+            android:textAllCaps="false"
+            android:textColor="?attr/TextPrimary" />
+    </TableRow>
+
+</android.support.constraint.ConstraintLayout>

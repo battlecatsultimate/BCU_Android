@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -45,7 +46,12 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
         if(viewHolder.getAdapterPosition() < ability.size()) {
             viewHolder.abiltext.setText(ability.get(viewHolder.getAdapterPosition()));
             if (abilicon.get(viewHolder.getAdapterPosition()) != 15 && abilicon.get(viewHolder.getAdapterPosition()) != 19) {
-                Bitmap resized = StaticStore.getResizeb(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())],context,28f);
+                Bitmap resized;
+                if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    resized = StaticStore.getResizeb(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())], context, 28f);
+                } else {
+                    resized = StaticStore.getResizeb(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())], context, 24f);
+                }
                 viewHolder.abilicon.setImageBitmap(resized);
             } else {
                 viewHolder.abilicon.setImageBitmap(empty());
@@ -53,7 +59,13 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
         } else {
             int location = viewHolder.getAdapterPosition()-ability.size();
             viewHolder.abiltext.setText(procs.get(location));
-            Bitmap resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)],context,28f);
+
+            Bitmap resized;
+            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 28f);
+            } else {
+                resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)],context,24f);
+            }
             viewHolder.abilicon.setImageBitmap(resized);
         }
     }

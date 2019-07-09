@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.adapters;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ public class DynamicFruit extends PagerAdapter {
     private int[] txid = {R.id.fruittext1,R.id.fruittext2,R.id.fruittext3,R.id.fruittext4,R.id.fruittext5,R.id.xptext};
     int[] cfdeid = {R.id.cfinf1,R.id.cfinf2,R.id.cfinf3};
     int[] cftooltip = {R.string.fruit1,R.string.fruit2,R.string.fruit3,R.string.fruit4,R.string.fruit5,R.string.fruit6,R.string.fruit7,R.string.fruit8,R.string.fruit9,R.string.fruit10,R.string.fruit11,R.string.fruit12,R.string.fruit13};
+    boolean [] exist = {false,false,false,false,false,true};
 
     public DynamicFruit(Activity activity, int id) {
         this.activity = activity;
@@ -50,12 +52,26 @@ public class DynamicFruit extends PagerAdapter {
 
         int[][] evo = StaticStore.units.get(id).info.evo;
 
-        fruits[5].setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[13],activity,48f));
+        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            fruits[5].setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[13], activity, 48f));
+        } else {
+            fruits[5].setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[13], activity, 40f));
+        }
         fruittext[5].setText(String.valueOf(evo[0][0]));
 
         for(int i =0;i<fruits.length-1;i++) {
             final int finall = i;
-            fruits[i].setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[ids.indexOf(evo[i+1][0])],activity,48f));
+
+            try {
+                if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    fruits[i].setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[ids.indexOf(evo[i + 1][0])], activity, 48f));
+                } else {
+                    fruits[i].setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[ids.indexOf(evo[i + 1][0])], activity, 40f));
+                }
+                exist[i] = true;
+            } catch(IndexOutOfBoundsException e) {
+                fruits[i].setImageBitmap(StaticStore.empty(activity,48f,48f));
+            }
             fruits[i].setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -65,7 +81,10 @@ public class DynamicFruit extends PagerAdapter {
                 }
             });
 
-            fruittext[i].setText(String.valueOf(evo[i+1][1]));
+            if(exist[i])
+                fruittext[i].setText(String.valueOf(evo[i+1][1]));
+            else
+                fruittext[i].setText("");
         }
 
         String [] lines = StaticStore.units.get(id).info.getExplanation();

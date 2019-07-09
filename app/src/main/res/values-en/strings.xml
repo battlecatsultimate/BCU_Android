@@ -171,7 +171,7 @@
     <string name="unit_info_text4">" to distance of _"</string>
     <string name="unit_info_text5">"At _ % health, "</string>
     <string name="unit_info_text6">" to _ %"</string>
-    <string name="unit_info_text7">" for _"</string>
+    <string name="unit_info_text7">" _"</string>
     <string name="def_unit_info_text8">times</string>
     <string name="unit_info_text9">" after _ f"</string>
     <string name="unit_info_text10">" with _ % health"</string>
@@ -246,5 +246,15 @@
     <string name="main_enemy_info">Enemy Info</string>
     <string name="enemy_info_trait">Trait</string>
     <string name="abi_cu">Curse</string>
-    <string name="infinity">Infinity</string>
+    <string name="infinity">Infinite</string>
+    <string name="esch_eva">Eva</string>
+    <string name="esch_witch">Witch</string>
+    <string name="abi_bu">Burrow</string>
+    <string name="config_land">Landscape</string>
+    <string name="config_ori">Orientation</string>
+    <string name="config_port">Portrait</string>
+    <string name="unit_inf_talen">Talents</string>
+    <string name="config_lay_list">List</string>
+    <string name="config_lay_slide">Slide</string>
+    <string name="config_unit_inf_lay">Unit Info Layout</string>
 </resources>

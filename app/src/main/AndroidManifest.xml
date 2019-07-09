@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,41 +23,48 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".EnemyInfo"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".EnemyList"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".ConfigScreen"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".ApkDownload"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".UnitInfo"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".DownloadScreen"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".SearchFilter"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".StageInfo"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".AnimationViewer"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="sensorLandscape">
+            android:name=".CheckUpdateScreen"
+            android:screenOrientation="locked"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EnemySearchFilter"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".EnemyInfo"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".EnemyList"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".ConfigScreen"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".ApkDownload"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".UnitInfo"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".DownloadScreen"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".SearchFilter"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".StageInfo"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".AnimationViewer"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="locked"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
