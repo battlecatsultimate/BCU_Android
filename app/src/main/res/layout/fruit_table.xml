@@ -76,8 +76,8 @@
 
             <ImageView
                 android:id="@+id/fruit1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
@@ -87,8 +87,8 @@
 
             <ImageView
                 android:id="@+id/fruit2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
@@ -98,8 +98,8 @@
 
             <ImageView
                 android:id="@+id/fruit3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
@@ -109,8 +109,8 @@
 
             <ImageView
                 android:id="@+id/fruit4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
@@ -120,8 +120,8 @@
 
             <ImageView
                 android:id="@+id/fruit5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
@@ -131,8 +131,8 @@
 
             <ImageView
                 android:id="@+id/xp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
@@ -148,8 +148,8 @@
 
             <TextView
                 android:id="@+id/fruittext1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -161,8 +161,8 @@
 
             <TextView
                 android:id="@+id/fruittext2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -174,8 +174,8 @@
 
             <TextView
                 android:id="@+id/fruittext3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -187,8 +187,8 @@
 
             <TextView
                 android:id="@+id/fruittext4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -200,8 +200,8 @@
 
             <TextView
                 android:id="@+id/fruittext5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -213,8 +213,8 @@
 
             <TextView
                 android:id="@+id/xptext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.1666"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"

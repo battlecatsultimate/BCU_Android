@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mandarin.bcu.CheckUpdateScreen;
 import com.mandarin.bcu.MainActivity;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.io.Reader;
@@ -418,7 +419,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                     f.delete();
                 }
             }
-            Intent intent = new Intent(activity, MainActivity.class);
+            Intent intent = new Intent(activity, CheckUpdateScreen.class);
             activity.startActivity(intent);
             activity.finish();
         } else {
