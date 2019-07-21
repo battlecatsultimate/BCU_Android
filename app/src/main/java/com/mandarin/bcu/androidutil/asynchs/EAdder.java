@@ -33,33 +33,18 @@ import common.system.files.VFile;
 
 public class EAdder extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
-    private ArrayList<String> attack;
-    private ArrayList<String> trait;
-    private ArrayList<ArrayList<Integer>> ability;
-    private boolean atksimu;
-    private boolean atkorand;
-    private boolean trorand;
-    private boolean aborand;
-    private boolean empty;
     private int enemnumber;
 
-    public EAdder(Activity activity,ArrayList<String> attack,ArrayList<String> trait, ArrayList<ArrayList<Integer>> ability,
-                  boolean atksimu, boolean atkorand, boolean trorand, boolean aborand, boolean empty, int enemnumber) {
+    public EAdder(Activity activity,int enemnumber) {
         this.weakReference = new WeakReference<>(activity);
-        this.attack = attack;
-        this.trait = trait;
-        this.ability = ability;
-        this.atksimu = atksimu;
-        this.atkorand = atkorand;
-        this.trorand = trorand;
-        this.aborand = aborand;
-        this.empty = empty;
         this.enemnumber = enemnumber;
     }
 
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
 
         ListView listView = activity.findViewById(R.id.enlist);
         listView.setVisibility(View.GONE);
@@ -76,6 +61,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return null;
 
         new EDefiner().define(activity);
 
@@ -112,9 +99,11 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... results) {
         Activity activity = weakReference.get();
 
+        if(activity == null) return;
+
         ListView list = activity.findViewById(R.id.enlist);
 
-        FilterEntity filterEntity = new FilterEntity(attack,trait,ability,atksimu,atkorand,trorand,aborand,empty,enemnumber);
+        FilterEntity filterEntity = new FilterEntity(enemnumber);
         ArrayList<Integer> numbers = filterEntity.EsetFilter();
         ArrayList<String> names = new ArrayList<>();
 
@@ -141,6 +130,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
 
         super.onPostExecute(result);
         ListView list = activity.findViewById(R.id.enlist);

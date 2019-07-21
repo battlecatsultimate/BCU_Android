@@ -25,7 +25,6 @@ import com.mandarin.bcu.androidutil.asynchs.UInfoLoader;
 import com.mandarin.bcu.androidutil.getStrings;
 
 public class UnitInfo extends AppCompatActivity {
-    private boolean isOpen = false;
     private ImageButton treasure;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -113,6 +112,7 @@ public class UnitInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 StaticStore.unitinfreset = true;
+                StaticStore.UisOpen = false;
                 finish();
             }
         });
@@ -125,13 +125,13 @@ public class UnitInfo extends AppCompatActivity {
             getStrings s = new getStrings(this);
             unittitle.setText(s.getTitle(StaticStore.units.get(id).forms[0]));
 
-            new UInfoLoader(id,this,isOpen,getSupportFragmentManager()).execute();
+            new UInfoLoader(id,this,getSupportFragmentManager()).execute();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(isOpen) {
+        if(StaticStore.UisOpen) {
             treasure.performClick();
         } else {
             super.onBackPressed();

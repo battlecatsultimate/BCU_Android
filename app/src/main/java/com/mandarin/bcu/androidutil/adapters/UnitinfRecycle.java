@@ -48,7 +48,6 @@ import java.util.Objects;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.battle.data.MaskUnit;
-import common.system.P;
 import common.util.unit.Form;
 
 public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHolder> {

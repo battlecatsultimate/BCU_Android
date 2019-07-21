@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,6 +123,9 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
         TextView checkstate = findViewById(R.id.mainstup);
         ProgressBar mainprog = findViewById(R.id.mainprogup);
+        Button retry = findViewById(R.id.checkupretry);
+
+        retry.setVisibility(View.GONE);
 
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -129,6 +133,20 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
         ImageBuilder.builder = new BMBuilder();
 
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(connectivityManager.getActiveNetworkInfo() != null) {
+                    retry.setVisibility(View.GONE);
+                    mainprog.setVisibility(View.VISIBLE);
+                    boolean lang = false;
+                    CheckApk checkApk = new CheckApk(path,lang,fileneed,filenum,CheckUpdateScreen.this,cando());
+                    checkApk.execute();
+                } else {
+                    Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
         if(connectivityManager.getActiveNetworkInfo() != null) {
@@ -148,10 +166,15 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
                 StaticStore.getLang(shared.getInt("Language",0));
 
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+
             } else {
                 mainprog.setVisibility(View.GONE);
+                retry.setVisibility(View.VISIBLE);
                 checkstate.setText(R.string.main_internet_no);
-                Toast.makeText(this, "You need internet connection to run this application!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.needconnect, Toast.LENGTH_SHORT).show();
             }
         }
     }

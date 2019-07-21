@@ -26,6 +26,8 @@ import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.util.ArrayList;
 
+import common.system.P;
+
 import static common.util.Data.AB_BASE;
 import static common.util.Data.AB_EARN;
 import static common.util.Data.AB_EKILL;
@@ -91,15 +93,6 @@ public class SearchFilter extends AppCompatActivity {
     private int[] tgtool = {R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.sch_wh};
     private int [][] abils = {{1,P_WEAK},{1,P_STOP},{1,P_SLOW},{0,AB_ONLY},{0,AB_GOOD},{0,AB_RESIST},{0,AB_RESISTS},{0,AB_MASSIVE},{0,AB_MASSIVES},{1,P_KB},{1,P_WARP},{1,P_STRONG},{1,P_LETHAL},{0,AB_BASE},{1,P_CRIT},{0,AB_ZKILL},{1,P_BREAK},
             {0,AB_EARN},{0,AB_METALIC},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_IMUWARP},{1,P_IMUCURSE},{0,AB_WAVES},{0,AB_WKILL},{0,AB_EKILL}};
-    private ArrayList<String> tg = new ArrayList<>();
-    private ArrayList<String> rare = new ArrayList<>();
-    private ArrayList<ArrayList<Integer>> ability = new ArrayList<>();
-    private ArrayList<String> attack = new ArrayList<>();
-    private boolean tgorand = true;
-    private boolean atksimu = true;
-    private boolean aborand = true;
-    private boolean atkorand = true;
-    private boolean talents = false;
 
     private int [] atkdraw = {212,112};
     private int [] tgdraw = {219,220,221,222,223,224,225,226,227};
@@ -210,15 +203,7 @@ public class SearchFilter extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tg = new ArrayList<>();
-                rare = new ArrayList<>();
-                ability = new ArrayList<>();
-                attack = new ArrayList<>();
-                tgorand = true;
-                atksimu = true;
-                aborand = true;
-                atkorand = true;
-                talents = false;
+                StaticStore.filterReset();
 
                 atkgroup.clearCheck();
                 tgor.setChecked(true);
@@ -250,28 +235,28 @@ public class SearchFilter extends AppCompatActivity {
         tggroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                tgorand = checkedId == tgor.getId();
+                StaticStore.tgorand = checkedId == tgor.getId();
             }
         });
 
         atkgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                atksimu = checkedId == atkmu.getId();
+                StaticStore.atksimu = checkedId == atkmu.getId();
             }
         });
 
         atkgroupor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                atkorand = checkedId == atkor.getId();
+                StaticStore.atkorand = checkedId == atkor.getId();
             }
         });
 
         abgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                aborand = checkedId == abor.getId();
+                StaticStore.aborand = checkedId == abor.getId();
             }
         });
 
@@ -281,9 +266,9 @@ public class SearchFilter extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        tg.add(colors[finalI]);
+                        StaticStore.tg.add(colors[finalI]);
                     else
-                        tg.remove(colors[finalI]);
+                        StaticStore.tg.remove(colors[finalI]);
                 }
             });
 
@@ -302,9 +287,9 @@ public class SearchFilter extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        rare.add(rarity[finall]);
+                        StaticStore.rare.add(rarity[finall]);
                     else
-                        rare.remove(rarity[finall]);
+                        StaticStore.rare.remove(rarity[finall]);
                 }
             });
         }
@@ -315,9 +300,9 @@ public class SearchFilter extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        attack.add(atks[finall]);
+                        StaticStore.attack.add(atks[finall]);
                     else
-                        attack.remove(atks[finall]);
+                        StaticStore.attack.remove(atks[finall]);
                 }
             });
         }
@@ -340,10 +325,10 @@ public class SearchFilter extends AppCompatActivity {
                         abilval.add(i);
 
                     if(isChecked) {
-                        ability.add(abilval);
+                        StaticStore.ability.add(abilval);
                     }
                     else
-                        ability.remove(abilval);
+                        StaticStore.ability.remove(abilval);
                 }
             });
         }
@@ -368,101 +353,60 @@ public class SearchFilter extends AppCompatActivity {
         chnp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    talents = true;
-                else
-                    talents = false;
+                StaticStore.talents = isChecked;
             }
         });
     }
 
     protected void returner() {
         Intent result = new Intent();
-        if(atkgroup.getCheckedRadioButtonId() == -1) {
-            result.putExtra("empty",true);
-        } else {
-            result.putExtra("empty",false);
-        }
-        result.putExtra("tgorand",tgorand);
-        result.putExtra("atksimu",atksimu);
-        result.putExtra("aborand",aborand);
-        result.putExtra("atkorand",atkorand);
-        result.putExtra("target",tg);
-        result.putExtra("attack",attack);
-        result.putExtra("rare",rare);
-        result.putExtra("ability",ability);
-        result.putExtra("talents",talents);
+
+        StaticStore.empty = atkgroup.getCheckedRadioButtonId() == -1;
         setResult(RESULT_OK,result);
         finish();
     }
 
     @SuppressWarnings("unchecked")
     protected void Checker() {
-        Intent data = getIntent();
-        Bundle extra = data.getExtras();
+        if (!StaticStore.empty)
+            atkgroup.check(R.id.schrdatkmu);
 
-        if(extra != null) {
+        if (!StaticStore.atksimu)
+            if (!StaticStore.empty)
+                atkgroup.check(R.id.schrdatksi);
 
-            boolean empty = extra.getBoolean("empty");
+        if (!StaticStore.atkorand)
+            atkgroupor.check(R.id.schrdatkand);
 
-            if (!empty)
-                atkgroup.check(R.id.schrdatkmu);
+        if (!StaticStore.tgorand)
+            tggroup.check(R.id.schrdtgand);
 
-            atksimu = extra.getBoolean("atksimu");
+        if (!StaticStore.aborand)
+            abgroup.check(R.id.schrdaband);
 
-            if (!atksimu)
-                if (!empty)
-                    atkgroup.check(R.id.schrdatksi);
+        for(int i=0;i<rarity.length;i++)
+            if (StaticStore.rare != null && StaticStore.rare.contains(rarity[i]))
+                rarities[i].setChecked(true);
 
-            atkorand = extra.getBoolean("atkorand");
+        for(int i=0;i<atks.length;i++)
+            if (StaticStore.attack != null && StaticStore.attack.contains(atks[i]))
+                attacks[i].setChecked(true);
 
-            if (!atkorand)
-                atkgroupor.check(R.id.schrdatkand);
+        for(int i=0;i<colors.length;i++)
+            if (StaticStore.tg != null && StaticStore.tg.contains(colors[i]))
+                targets[i].setChecked(true);
 
-            tgorand = extra.getBoolean("tgorand");
+        for(int i =0;i<abils.length;i++) {
+            ArrayList<Integer> checker = new ArrayList<>();
+            for(int j : abils[i])
+                checker.add(j);
 
-            if (!tgorand)
-                tggroup.check(R.id.schrdtgand);
-
-            aborand = extra.getBoolean("aborand");
-
-            if (!aborand)
-                abgroup.check(R.id.schrdaband);
-
-            rare = extra.getStringArrayList("rare");
-
-            for(int i=0;i<rarity.length;i++)
-                if (rare != null && rare.contains(rarity[i]))
-                    rarities[i].setChecked(true);
-
-            attack = extra.getStringArrayList("attack");
-
-            for(int i=0;i<atks.length;i++)
-                if (attack != null && attack.contains(atks[i]))
-                    attacks[i].setChecked(true);
-
-            tg = extra.getStringArrayList("target");
-
-            for(int i=0;i<colors.length;i++)
-                if (tg != null && tg.contains(colors[i]))
-                    targets[i].setChecked(true);
-
-            ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
-
-            for(int i =0;i<abils.length;i++) {
-                ArrayList<Integer> checker = new ArrayList<>();
-                for(int j : abils[i])
-                    checker.add(j);
-
-                if(ability.contains(checker))
-                    abilities[i].setChecked(true);
-            }
-
-            talents = extra.getBoolean("talents");
-
-            if(talents)
-                chnp.setChecked(true);
+            if(StaticStore.ability.contains(checker))
+                abilities[i].setChecked(true);
         }
+
+        if(StaticStore.talents)
+            chnp.setChecked(true);
     }
 
     protected BitmapDrawable getResizeDraw(int id,float dp) {

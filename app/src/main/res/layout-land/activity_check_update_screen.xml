@@ -27,4 +27,17 @@
         app:layout_constraintEnd_toEndOf="@+id/mainprogup"
         app:layout_constraintStart_toStartOf="@+id/mainprogup"
         app:layout_constraintTop_toBottomOf="@+id/mainprogup" />
+
+    <Button
+        android:id="@+id/checkupretry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/ButtonPrimary"
+        android:text="@string/down_redown"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

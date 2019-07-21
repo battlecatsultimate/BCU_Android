@@ -76,8 +76,13 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         TextView checkstate = activity.findViewById(R.id.mainstup);
-        checkstate.setText(R.string.main_check_up);
+
+        if(checkstate != null)
+            checkstate.setText(R.string.main_check_up);
     }
 
     @Override
@@ -168,20 +173,25 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         TextView checkstate = activity.findViewById(R.id.mainstup);
         System.out.println(lang);
         if (values[0] == 1) {
-            checkstate.setText(R.string.main_check_file);
+            if(checkstate != null)
+                checkstate.setText(R.string.main_check_file);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        System.out.println("Continue : "+contin);
-        if(contin) {
+        if(contin || cando) {
             checkFiles(ans);
 
             Activity activity = weakReference.get();
+
+            if(activity == null) return;
 
             if (fileneed.isEmpty() && filenum.isEmpty()) {
                 new AddPathes(activity).execute();
@@ -208,6 +218,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     private void checkFiles(JSONObject asset) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
 
         try {
             Map<String, String> libmap = new TreeMap<>();
@@ -305,14 +317,22 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         TextView checkstate = activity.findViewById(R.id.mainstup);
-        checkstate.setText(R.string.main_file_read);
+
+        if(checkstate != null)
+            checkstate.setText(R.string.main_file_read);
     }
 
 
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return null;
+
         SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         com.mandarin.bcu.decode.ZipLib.init();
         com.mandarin.bcu.decode.ZipLib.read();
@@ -331,6 +351,8 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
 
         Intent intent = new Intent(activity, MainActivity.class);
         activity.startActivity(intent);

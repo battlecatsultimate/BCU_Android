@@ -40,8 +40,13 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         TextView state = activity.findViewById(R.id.apkstate);
-        state.setText(R.string.down_wait);
+
+        if(state != null)
+            state.setText(R.string.down_wait);
     }
 
     @Override
@@ -96,24 +101,36 @@ public class DownloadApk extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         ProgressBar prog = activity.findViewById(R.id.apkprog);
         TextView state = activity.findViewById(R.id.apkstate);
         String name = activity.getString(R.string.down_state_doing)+"BCU_Android_"+ver+".apk";
-        state.setText(name);
 
-        if(prog.isIndeterminate()) {
-            prog.setIndeterminate(false);
+        if(state != null)
+            state.setText(name);
+
+        if(prog != null) {
+            if (prog.isIndeterminate()) {
+                prog.setIndeterminate(false);
+            }
+
+            prog.setProgress(values[0]);
         }
-
-        prog.setProgress(values[0]);
     }
 
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         if(output == null) {
             Button retry = activity.findViewById(R.id.apkretry);
-            retry.setVisibility(View.VISIBLE);
+
+            if(retry != null)
+                retry.setVisibility(View.VISIBLE);
         } else {
             File install = new File(realpath);
             Uri apkuri = FileProvider.getUriForFile(activity, "com.mandarin.bcu.provider",install);

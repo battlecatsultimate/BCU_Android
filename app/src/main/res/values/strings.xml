@@ -256,4 +256,12 @@
     <string name="config_lay_list">List</string>
     <string name="config_unit_inf_lay">Unit Info Layout</string>
     <string name="config_lay_slide">Slide</string>
+    <string name="treasure_ac_lev">AC Level</string>
+    <string name="treasure_ac_trea">AC Treasure</string>
+    <string name="treasure_itf_cry">Crystal (ItF)</string>
+    <string name="treasure_cotc_cry">Crystal (CotC)</string>
+    <string name="def_description">Description</string>
+    <string name="def_treasure_lv">lv.</string>
+    <string name="def_treasure_perc">%</string>
+    <string name="needconnect">You need internet connection to run this application!</string>
 </resources>

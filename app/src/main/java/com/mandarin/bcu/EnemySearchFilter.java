@@ -58,6 +58,7 @@ public class EnemySearchFilter extends AppCompatActivity {
     private RadioGroup atkgroup;
     private RadioGroup atkgroupor;
     private RadioGroup abgroup;
+    private CheckBox star;
     private CheckBox[] traits = new CheckBox[12];
     private CheckBox[] attacks = new CheckBox[3];
     private CheckBox[] abilities = new CheckBox[18];
@@ -73,14 +74,6 @@ public class EnemySearchFilter extends AppCompatActivity {
             R.string.sch_abi_wv,R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.abi_cu,R.string.abi_bu,R.string.abi_rev};
     private int [] trtool = {R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.sch_wh};
     private  int [][] abils = {{1,P_WEAK},{1,P_STOP},{1,P_SLOW},{1,P_KB},{1,P_WARP},{1,P_STRONG},{1,P_LETHAL},{0,AB_BASE},{1,P_CRIT},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_CURSE},{1,P_BURROW},{1,P_REVIVE}};
-
-    private ArrayList<String> tr = new ArrayList<>();
-    private ArrayList<String> attack = new ArrayList<>();
-    private ArrayList<ArrayList<Integer>> ability = new ArrayList<>();
-    private boolean trorand = true;
-    private boolean atksimu = true;
-    private boolean atkorand = true;
-    private boolean aborand = true;
 
     private int [] atkdraw = {212,112};
     private int [] trdraw = {219,220,221,222,223,224,225,226,227,-1,-1,-1};
@@ -124,6 +117,7 @@ public class EnemySearchFilter extends AppCompatActivity {
         reset = findViewById(R.id.schreset);
         tgor = findViewById(R.id.eschrdtgor);
         atkmu = findViewById(R.id.eschrdatkmu);
+        star = findViewById(R.id.eschstar);
         atkmu.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         RadioButton atksi = findViewById(R.id.eschrdatksi);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -217,18 +211,20 @@ public class EnemySearchFilter extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tr = new ArrayList<>();
-                ability = new ArrayList<>();
-                attack = new ArrayList<>();
-                trorand = true;
-                atksimu = true;
-                aborand = true;
-                atkorand = true;
+                StaticStore.tg = new ArrayList<>();
+                StaticStore.ability = new ArrayList<>();
+                StaticStore.attack = new ArrayList<>();
+                StaticStore.tgorand = true;
+                StaticStore.atksimu = true;
+                StaticStore.aborand = true;
+                StaticStore.atkorand = true;
+                StaticStore.starred  = false;
 
                 atkgroup.clearCheck();
                 tgor.setChecked(true);
                 atkor.setChecked(true);
                 abor.setChecked(true);
+                star.setChecked(false);
 
                 for(CheckBox attack1 : attacks) {
                     if(attack1.isChecked())
@@ -247,31 +243,38 @@ public class EnemySearchFilter extends AppCompatActivity {
             }
         });
 
+        star.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                StaticStore.starred = isChecked;
+            }
+        });
+
         tggroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                trorand = checkedId == tgor.getId();
+                StaticStore.tgorand = checkedId == tgor.getId();
             }
         });
 
         atkgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                atksimu = checkedId == atkmu.getId();
+                StaticStore.atksimu = checkedId == atkmu.getId();
             }
         });
 
         atkgroupor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                atkorand = checkedId == atkor.getId();
+                StaticStore.atkorand = checkedId == atkor.getId();
             }
         });
 
         abgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                aborand = checkedId == abor.getId();
+                StaticStore.aborand = checkedId == abor.getId();
             }
         });
 
@@ -281,9 +284,9 @@ public class EnemySearchFilter extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        tr.add(colors[finall]);
+                        StaticStore.tg.add(colors[finall]);
                     else
-                        tr.remove(colors[finall]);
+                        StaticStore.tg.remove(colors[finall]);
                 }
             });
 
@@ -302,9 +305,9 @@ public class EnemySearchFilter extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        attack.add(atks[finall]);
+                        StaticStore.attack.add(atks[finall]);
                     else
-                        attack.remove(atks[finall]);
+                        StaticStore.attack.remove(atks[finall]);
                 }
             });
         }
@@ -327,9 +330,9 @@ public class EnemySearchFilter extends AppCompatActivity {
                         abilval.add(i);
 
                     if(isChecked)
-                        ability.add(abilval);
+                        StaticStore.ability.add(abilval);
                     else
-                        ability.remove(abilval);
+                        StaticStore.ability.remove(abilval);
                 }
             });
 
@@ -350,83 +353,63 @@ public class EnemySearchFilter extends AppCompatActivity {
                     return false;
                 }
             });
+
+            star.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    StaticStore.starred = isChecked;
+                }
+            });
         }
     }
 
     protected void returner() {
         Intent result = new Intent();
-        if(atkgroup.getCheckedRadioButtonId() == -1)
-            result.putExtra("empty",true);
-        else
-            result.putExtra("empty",false);
 
-        result.putExtra("trorand",trorand);
-        result.putExtra("atksimu",atksimu);
-        result.putExtra("atkorand",atkorand);
-        result.putExtra("aborand",aborand);
-        result.putExtra("trait",tr);
-        result.putExtra("attack",attack);
-        result.putExtra("ability",ability);
+        StaticStore.empty = atkgroup.getCheckedRadioButtonId() == -1;
+
         setResult(RESULT_OK,result);
         finish();
     }
 
     protected void Checker() {
-        Intent data = getIntent();
-        Bundle extra = data.getExtras();
 
-        if(extra != null) {
-            boolean empty = extra.getBoolean("empty");
+            star.setChecked(StaticStore.starred);
 
-            if(!empty)
+            if(!StaticStore.empty)
                 atkgroup.check(R.id.schrdatkmu);
 
-            atksimu = extra.getBoolean("atksimu");
-
-            if(!atksimu)
-                if(!empty)
+            if(!StaticStore.atksimu)
+                if(!StaticStore.empty)
                     atkgroup.check(R.id.eschrdatksi);
 
-            atkorand = extra.getBoolean("atkorand");
-
-            if(!atkorand)
+            if(!StaticStore.atkorand)
                 atkgroupor.check(R.id.eschrdatkand);
 
-            trorand = extra.getBoolean("trorand");
-
-            if(!trorand)
+            if(!StaticStore.tgorand)
                 tggroup.check(R.id.eschrdtgand);
 
-            aborand = extra.getBoolean("aborand");
-
-            if(!aborand)
+            if(!StaticStore.aborand)
                 abgroup.check(R.id.eschrdaband);
 
-            attack = extra.getStringArrayList("attack");
-
             for(int i = 0;i<atks.length;i++) {
-                if(attack != null && attack.contains(atks[i]))
+                if(StaticStore.attack != null && StaticStore.attack.contains(atks[i]))
                     attacks[i].setChecked(true);
             }
 
-            tr = extra.getStringArrayList("trait");
-
             for(int i = 0;i<colors.length;i++) {
-                if(tr != null && tr.contains(colors[i]))
+                if(StaticStore.tg != null && StaticStore.tg.contains(colors[i]))
                     traits[i].setChecked(true);
             }
-
-            ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
 
             for(int i = 0; i< abils.length;i++) {
                 ArrayList<Integer> checker = new ArrayList<>();
                 for(int k : abils[i])
                     checker.add(k);
 
-                if(ability != null && ability.contains(checker))
+                if(StaticStore.ability != null && StaticStore.ability.contains(checker))
                     abilities[i].setChecked(true);
             }
-        }
     }
 
     @Override

@@ -281,9 +281,9 @@
                         android:layout_marginBottom="12dp"
                         android:text="lv."
                         android:textColor="?attr/TextPrimary"
-                        app:layout_constraintBottom_toBottomOf="@+id/cdlev"
-                        app:layout_constraintEnd_toEndOf="@+id/cdlev"
-                        app:layout_constraintTop_toTopOf="@+id/cdlev" />
+                        app:layout_constraintBottom_toBottomOf="@+id/aclev"
+                        app:layout_constraintEnd_toEndOf="@+id/aclev"
+                        app:layout_constraintTop_toTopOf="@+id/aclev" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/cdtrea"
@@ -301,7 +301,7 @@
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/cdlev">
+                        app:layout_constraintTop_toBottomOf="@+id/aclev">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/cdtreat"

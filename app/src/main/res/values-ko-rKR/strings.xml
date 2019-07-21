@@ -257,4 +257,12 @@
     <string name="config_lay_list">리스트</string>
     <string name="config_lay_slide">슬라이드</string>
     <string name="config_unit_inf_lay">유닛 정보 레이아웃</string>
+    <string name="treasure_ac_lev">회계력 레벨</string>
+    <string name="treasure_ac_trea">슈퍼 레지스터</string>
+    <string name="treasure_cotc_cry">크리스탈 (우주편)</string>
+    <string name="treasure_itf_cry">크리스탈 (미래편)</string>
+    <string name="def_treasure_lv">lv.</string>
+    <string name="def_treasure_perc">%</string>
+    <string name="def_description">Description</string>
+    <string name="needconnect">이 어플을 실행하기 위해서는 인터넷이 필요합니다!</string>
 </resources>

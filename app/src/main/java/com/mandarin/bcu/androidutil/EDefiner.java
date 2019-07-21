@@ -34,7 +34,7 @@ public class EDefiner {
     private String[] lan = {"/en/","/zh/","/kr/","/jp/"};
     private String[] files = {"EnemyName.txt","EnemyExplanation.txt"};
 
-    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_witch,R.string.esch_witch};
+    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_eva,R.string.esch_witch};
     private int [] starid = {R.string.unit_info_starred,R.string.unit_info_god1,R.string.unit_info_god2,R.string.unit_info_god3};
     private String [] starstring = new String[5];
     private String [] colorstring = new String[colorid.length];
@@ -55,13 +55,16 @@ public class EDefiner {
 
     public void define(Context context) {
         try {
-            if(StaticStore.root == 0 || VFile.root.list() == null) {
-                ZipLib.init();
-                ZipLib.read();
-            }
-
             if(StaticStore.enemies == null) {
-                Enemy.readData();
+                try {
+                    Enemy.readData();
+                } catch (NullPointerException e) {
+                    ZipLib.init();
+                    ZipLib.read();
+                    new DefineItf().init();
+                    Enemy.readData();
+                    StaticStore.root = 1;
+                }
 
                 StaticStore.enemies = Pack.def.es.getList();
 

@@ -65,6 +65,8 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         super.onPreExecute();
         Activity activity = weakActivity.get();
 
+        if(activity == null) return;
+
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
         prog.setIndeterminate(true);
@@ -221,6 +223,9 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakActivity.get();
+
+        if(activity == null) return;
+
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
 
@@ -238,6 +243,9 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakActivity.get();
+
+        if(activity == null) return;
+
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
         Button retry = activity.findViewById(R.id.retry);
@@ -279,6 +287,9 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     private void purify(ArrayList<Long> size) {
         Activity activity = weakActivity.get();
+
+        if(activity == null) return;
+
         purifyneed = new ArrayList<>();
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -392,6 +403,9 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
         prog.setIndeterminate(true);
@@ -402,6 +416,9 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         TextView state = activity.findViewById(R.id.downstate);
         state.setText(extracting+fileneed.get(values[0]));
     }
@@ -409,6 +426,8 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
 
         if (contin) {
             infowirter();

@@ -49,7 +49,6 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakActivity;
     private final int id;
     private ArrayList<String> names = new ArrayList<>();
-    private boolean isOpen;
     private final FragmentManager fm;
     private int[] nformid = {R.string.unit_info_first,R.string.unit_info_second,R.string.unit_info_third};
     private String[] nform = new String[nformid.length];
@@ -57,10 +56,9 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     private ExplanationTab explain;
     private UnitinfRecycle unitinfRecycle;
 
-    public UInfoLoader(int id,Activity activity,boolean isOpen,FragmentManager fm) {
+    public UInfoLoader(int id,Activity activity,FragmentManager fm) {
         this.id = id;
         this.weakActivity = new WeakReference<>(activity);
-        this.isOpen = isOpen;
         this.fm = fm;
 
         for(int i=0;i<nformid.length;i++)
@@ -72,6 +70,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakActivity.get();
+
+        if(activity == null) return null;
 
         SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
 
@@ -122,7 +122,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         treasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isOpen) {
+                if(!StaticStore.UisOpen) {
                     ValueAnimator slider = ValueAnimator.ofInt(0,treasuretab.getWidth()).setDuration(300);
                     slider.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
@@ -135,7 +135,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
                     set.play(slider);
                     set.setInterpolator(new DecelerateInterpolator());
                     set.start();
-                    isOpen = true;
+                    StaticStore.UisOpen = true;
                 } else {
                     View view = activity.getCurrentFocus();
                     if(view != null) {
@@ -154,7 +154,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
                     set.play(slider);
                     set.setInterpolator(new AccelerateInterpolator());
                     set.start();
-                    isOpen = false;
+                    StaticStore.UisOpen = false;
                 }
             }
         });
@@ -185,6 +185,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... results) {
         Activity activity = weakActivity.get();
 
+        if(activity == null) return;
+
         TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
 
         SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
@@ -208,6 +210,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakActivity.get();
+
+        if(activity == null) return;
 
         ScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
         scrollView.setVisibility(View.VISIBLE);

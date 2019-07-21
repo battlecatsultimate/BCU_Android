@@ -3,13 +3,18 @@ package com.mandarin.bcu.androidutil.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +29,9 @@ import com.mandarin.bcu.androidutil.getStrings;
 import com.mandarin.bcu.util.Interpret;
 
 import java.util.List;
+import java.util.Objects;
 
+import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.system.MultiLangCont;
 import common.util.unit.Enemy;
@@ -36,11 +43,18 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
     private int fs = 0;
     private int multi = 100;
     private getStrings s;
+    private int[][] states = new int[][] {
+            new int[] {android.R.attr.state_enabled}
+    };
+    private int[] color;
 
     public EnemyRecycle(Activity activity,int id) {
         this.activity = activity;
         this.id = id;
         s = new getStrings(activity);
+        color = new int[] {
+                getAttributeColor(activity,R.attr.TextPrimary)
+        };
     }
 
     @NonNull
@@ -64,6 +78,39 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
         } else {
             fs = 1;
             viewHolder.frse.setText(activity.getString(R.string.unit_info_sec));
+        }
+
+        TextInputLayout aclev = activity.findViewById(R.id.aclev);
+        TextInputLayout actrea = activity.findViewById(R.id.actrea);
+        TextInputLayout itfcry = activity.findViewById(R.id.itfcrytrea);
+        TextInputLayout cotccry = activity.findViewById(R.id.cotccrytrea);
+        TextInputLayout[] godmask = {activity.findViewById(R.id.godmask),activity.findViewById(R.id.godmask1),activity.findViewById(R.id.godmask2)};
+        TextInputEditText aclevt = activity.findViewById(R.id.aclevt);
+        TextInputEditText actreat = activity.findViewById(R.id.actreat);
+        TextInputEditText itfcryt = activity.findViewById(R.id.itfcrytreat);
+        TextInputEditText cotccryt = activity.findViewById(R.id.cotccrytreat);
+        TextInputEditText[] godmaskt = {activity.findViewById(R.id.godmaskt),activity.findViewById(R.id.godmaskt1),activity.findViewById(R.id.godmaskt2)};
+
+        aclev.setCounterEnabled(true);
+        aclev.setCounterMaxLength(2);
+        aclev.setHelperTextColor(new ColorStateList(states,color));
+
+        actrea.setCounterEnabled(true);
+        actrea.setCounterMaxLength(3);
+        actrea.setHelperTextColor(new ColorStateList(states,color));
+
+        itfcry.setCounterEnabled(true);
+        itfcry.setCounterMaxLength(3);
+        itfcry.setHelperTextColor(new ColorStateList(states,color));
+
+        cotccry.setCounterEnabled(true);
+        cotccry.setCounterMaxLength(4);
+        cotccry.setHelperTextColor(new ColorStateList(states,color));
+
+        for(TextInputLayout til : godmask) {
+            til.setCounterEnabled(true);
+            til.setCounterMaxLength(3);
+            til.setHelperTextColor(new ColorStateList(states,color));
         }
 
         viewHolder.name.setText(MultiLangCont.ENAME.getCont(em));
@@ -113,11 +160,36 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
             viewHolder.emabil.setVisibility(View.GONE);
         }
 
+        aclevt.setText(String.valueOf(t.tech[1]));
+        actreat.setText(String.valueOf(t.trea[3]));
+        itfcryt.setText(String.valueOf(t.alien));
+        cotccryt.setText(String.valueOf(t.star));
+        for(int j = 0;j < godmaskt.length;j++)
+            godmaskt[j].setText(String.valueOf(t.gods[j]));
+
         Listeners(viewHolder);
     }
 
     private void Listeners(ViewHolder viewHolder) {
         Enemy em = StaticStore.enemies.get(id);
+
+        if(activity == null) return;
+
+        Treasure t = BasisSet.current.t();
+
+        TextInputLayout aclev = activity.findViewById(R.id.aclev);
+        TextInputLayout actrea = activity.findViewById(R.id.actrea);
+        TextInputLayout itfcry = activity.findViewById(R.id.itfcrytrea);
+        TextInputLayout cotccry = activity.findViewById(R.id.cotccrytrea);
+        TextInputLayout[] godmask = {activity.findViewById(R.id.godmask),activity.findViewById(R.id.godmask1),activity.findViewById(R.id.godmask2)};
+        TextInputEditText aclevt = activity.findViewById(R.id.aclevt);
+        TextInputEditText actreat = activity.findViewById(R.id.actreat);
+        TextInputEditText itfcryt = activity.findViewById(R.id.itfcrytreat);
+        TextInputEditText cotccryt = activity.findViewById(R.id.cotccrytreat);
+        TextInputEditText[] godmaskt = {activity.findViewById(R.id.godmaskt),activity.findViewById(R.id.godmaskt1),activity.findViewById(R.id.godmaskt2)};
+
+        Button reset = activity.findViewById(R.id.enemtreareset);
+
         viewHolder.enemmulti.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -209,6 +281,343 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
                     viewHolder.enemtba.setText(s.getTBA(em,1));
                 else
                     viewHolder.enemtba.setText(s.getTBA(em,0));
+            }
+        });
+
+        aclevt.setSelection(Objects.requireNonNull(aclevt.getText()).length());
+        actreat.setSelection(Objects.requireNonNull(actreat.getText()).length());
+        itfcryt.setSelection(Objects.requireNonNull(itfcryt.getText()).length());
+        cotccryt.setSelection(Objects.requireNonNull(cotccryt.getText()).length());
+        for(TextInputEditText tiet : godmaskt)
+            tiet.setSelection(Objects.requireNonNull(tiet.getText()).length());
+
+        aclevt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 30 || Integer.parseInt(s.toString()) <= 0) {
+                        if(aclev.isHelperTextEnabled()) {
+                            aclev.setHelperTextEnabled(false);
+                            aclev.setErrorEnabled(true);
+                            aclev.setError(activity.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(aclev.isErrorEnabled()) {
+                            aclev.setError(null);
+                            aclev.setErrorEnabled(false);
+                            aclev.setHelperTextEnabled(true);
+                            aclev.setHelperTextColor(new ColorStateList(states,color));
+                            aclev.setHelperText("1~30");
+                        }
+                    }
+                } else {
+                    if(aclev.isErrorEnabled()) {
+                        aclev.setError(null);
+                        aclev.setErrorEnabled(false);
+                        aclev.setHelperTextEnabled(true);
+                        aclev.setHelperTextColor(new ColorStateList(states,color));
+                        aclev.setHelperText("1~30");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if(Integer.parseInt(text.toString()) <= 30 && Integer.parseInt(text.toString()) > 0) {
+                        int lev = Integer.parseInt(text.toString());
+
+                        t.tech[1] = lev;
+
+                        viewHolder.enemdrop.setText(s.getDrop(em,t));
+                    }
+                } else {
+                    t.tech[1] = 1;
+
+                    viewHolder.enemdrop.setText(s.getDrop(em,t));
+                }
+            }
+        });
+
+        actreat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 300) {
+                        if(actrea.isHelperTextEnabled()) {
+                            actrea.setHelperTextEnabled(false);
+                            actrea.setErrorEnabled(true);
+                            actrea.setError(activity.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(actrea.isErrorEnabled()) {
+                            actrea.setError(null);
+                            actrea.setErrorEnabled(false);
+                            actrea.setHelperTextEnabled(true);
+                            actrea.setHelperTextColor(new ColorStateList(states,color));
+                            actrea.setHelperText("0~300");
+                        }
+                    }
+                } else {
+                    if(actrea.isErrorEnabled()) {
+                        actrea.setError(null);
+                        actrea.setErrorEnabled(false);
+                        actrea.setHelperTextEnabled(true);
+                        actrea.setHelperTextColor(new ColorStateList(states,color));
+                        actrea.setHelperText("0~300");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 300) {
+                        int trea = Integer.parseInt(text.toString());
+
+                        t.trea[3] = trea;
+
+                        viewHolder.enemdrop.setText(s.getDrop(em,t));
+                    }
+                } else {
+                    t.trea[3] = 0;
+
+                    viewHolder.enemdrop.setText(s.getDrop(em,t));
+                }
+            }
+        });
+
+        itfcryt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 600) {
+                        if(itfcry.isHelperTextEnabled()) {
+                            itfcry.setHelperTextEnabled(false);
+                            itfcry.setErrorEnabled(true);
+                            itfcry.setError(activity.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(itfcry.isErrorEnabled()) {
+                            itfcry.setError(null);
+                            itfcry.setErrorEnabled(false);
+                            itfcry.setHelperTextEnabled(true);
+                            itfcry.setHelperTextColor(new ColorStateList(states,color));
+                            itfcry.setHelperText("0~600");
+                        }
+                    }
+                } else {
+                    if(itfcry.isErrorEnabled()) {
+                        itfcry.setError(null);
+                        itfcry.setErrorEnabled(false);
+                        itfcry.setHelperTextEnabled(true);
+                        itfcry.setHelperTextColor(new ColorStateList(states,color));
+                        itfcry.setHelperText("0~600");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 600) {
+
+                        t.alien = Integer.parseInt(text.toString());
+
+                        viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                        if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                            viewHolder.enematk.setText(s.getDPS(em,multi));
+                        } else {
+                            viewHolder.enematk.setText(s.getAtk(em,multi));
+                        }
+                    }
+                } else {
+                    t.alien = 0;
+
+                    viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                    if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                        viewHolder.enematk.setText(s.getDPS(em,multi));
+                    } else {
+                        viewHolder.enematk.setText(s.getAtk(em,multi));
+                    }
+                }
+            }
+        });
+
+        cotccryt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()) {
+                    if (Integer.parseInt(s.toString()) > 1500) {
+                        if(cotccry.isHelperTextEnabled()) {
+                            cotccry.setHelperTextEnabled(false);
+                            cotccry.setErrorEnabled(true);
+                            cotccry.setError(activity.getString(R.string.treasure_invalid));
+                        }
+                    } else {
+                        if(cotccry.isErrorEnabled()) {
+                            cotccry.setError(null);
+                            cotccry.setErrorEnabled(false);
+                            cotccry.setHelperTextEnabled(true);
+                            cotccry.setHelperTextColor(new ColorStateList(states,color));
+                            cotccry.setHelperText("0~1500");
+                        }
+                    }
+                } else {
+                    if(cotccry.isErrorEnabled()) {
+                        cotccry.setError(null);
+                        cotccry.setErrorEnabled(false);
+                        cotccry.setHelperTextEnabled(true);
+                        cotccry.setHelperTextColor(new ColorStateList(states,color));
+                        cotccry.setHelperText("0~1500");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                if(!text.toString().isEmpty()) {
+                    if (Integer.parseInt(text.toString()) <= 1500) {
+
+                        t.star = Integer.parseInt(text.toString());
+
+                        viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                        if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                            viewHolder.enematk.setText(s.getDPS(em,multi));
+                        } else {
+                            viewHolder.enematk.setText(s.getAtk(em,multi));
+                        }
+                    }
+                } else {
+                    t.star = 0;
+
+                    viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                    if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                        viewHolder.enematk.setText(s.getDPS(em,multi));
+                    } else {
+                        viewHolder.enematk.setText(s.getAtk(em,multi));
+                    }
+                }
+            }
+        });
+
+        for(int i = 0;i< godmaskt.length;i++) {
+            final int finall = i;
+            godmaskt[i].addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(!s.toString().isEmpty()) {
+                        if (Integer.parseInt(s.toString()) > 100) {
+                            if(godmask[finall].isHelperTextEnabled()) {
+                                godmask[finall].setHelperTextEnabled(false);
+                                godmask[finall].setErrorEnabled(true);
+                                godmask[finall].setError(activity.getString(R.string.treasure_invalid));
+                            }
+                        } else {
+                            if(godmask[finall].isErrorEnabled()) {
+                                godmask[finall].setError(null);
+                                godmask[finall].setErrorEnabled(false);
+                                godmask[finall].setHelperTextEnabled(true);
+                                godmask[finall].setHelperTextColor(new ColorStateList(states,color));
+                                godmask[finall].setHelperText("0~100");
+                            }
+                        }
+                    } else {
+                        if(godmask[finall].isErrorEnabled()) {
+                            godmask[finall].setError(null);
+                            godmask[finall].setErrorEnabled(false);
+                            godmask[finall].setHelperTextEnabled(true);
+                            godmask[finall].setHelperTextColor(new ColorStateList(states,color));
+                            godmask[finall].setHelperText("0~100");
+                        }
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable text) {
+                    if(!text.toString().isEmpty()) {
+                        if (Integer.parseInt(text.toString()) <= 100) {
+
+                            t.gods[finall] = Integer.parseInt(text.toString());
+
+                            viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                            if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                                viewHolder.enematk.setText(s.getDPS(em,multi));
+                            } else {
+                                viewHolder.enematk.setText(s.getAtk(em,multi));
+                            }
+                        }
+                    } else {
+                        t.gods[finall] = 0;
+
+                        viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                        if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                            viewHolder.enematk.setText(s.getDPS(em,multi));
+                        } else {
+                            viewHolder.enematk.setText(s.getAtk(em,multi));
+                        }
+                    }
+                }
+            });
+        }
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                t.tech[1] = 30;
+                t.trea[3] = 300;
+                t.alien = 600;
+                t.star = 1500;
+                for(int i = 0; i < t.gods.length;i++)
+                    t.gods[i] = 100;
+
+                aclevt.setText(String.valueOf(t.tech[1]));
+                actreat.setText(String.valueOf(t.trea[3]));
+                itfcryt.setText(String.valueOf(t.alien));
+                cotccryt.setText(String.valueOf(t.star));
+                for(int i = 0;i < t.gods.length;i++)
+                    godmaskt[i].setText(String.valueOf(t.gods[i]));
+
+                viewHolder.enemhp.setText(s.getHP(em,multi));
+
+                if(viewHolder.enematkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                    viewHolder.enematk.setText(s.getDPS(em,multi));
+                } else {
+                    viewHolder.enematk.setText(s.getAtk(em,multi));
+                }
+
+                viewHolder.enemdrop.setText(s.getDrop(em,t));
             }
         });
     }
@@ -314,5 +723,18 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
             viewHolder.emabil.setAdapter(adapterAbil);
             ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false);
         }
+    }
+
+    private static int getAttributeColor(Context context, int attributeId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attributeId, typedValue, true);
+        int colorRes = typedValue.resourceId;
+        int color = -1;
+        try {
+            color = ContextCompat.getColor(context,colorRes);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return color;
     }
 }

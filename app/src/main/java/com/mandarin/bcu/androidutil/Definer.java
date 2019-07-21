@@ -31,7 +31,7 @@ import common.util.unit.Combo;
 import common.util.unit.Unit;
 
 public class Definer {
-    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_witch,R.string.esch_eva};
+    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_eva,R.string.esch_witch};
     private int [] starid = {R.string.unit_info_starred,R.string.unit_info_god1,R.string.unit_info_god2,R.string.unit_info_god3};
     private String [] starstring = new String[5];
     private String [] colorstring = new String[colorid.length];
@@ -55,14 +55,18 @@ public class Definer {
 
     public void define(Context context) {
         try {
-            if(StaticStore.root == 0 || VFile.root.list() == null) {
-                ZipLib.init();
-                ZipLib.read();
-            }
-
             if(StaticStore.units==null) {
-                Unit.readData();
-                PCoin.read();
+                try {
+                    Unit.readData();
+                    PCoin.read();
+                } catch(Exception e) {
+                    ZipLib.init();
+                    ZipLib.read();
+                    new DefineItf().init();
+                    Unit.readData();
+                    PCoin.read();
+                    StaticStore.root = 1;
+                }
 
                 StaticStore.units = Pack.def.us.ulist.getList();
 
@@ -81,8 +85,9 @@ public class Definer {
 
                             switch (n) {
                                 case "UnitName.txt":
-                                    for (String str : qs) {
-                                        String[] strs = str.trim().split("\t");
+                                    int size = qs.size();
+                                    for (int j = 0; j < size; j++) {
+                                        String[] strs = qs.poll().trim().split("\t");
                                         Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
                                         if (u == null)
                                             continue;
@@ -92,8 +97,9 @@ public class Definer {
                                     }
                                     break;
                                 case "UnitExplanation.txt":
-                                    for (String str : qs) {
-                                        String[] strs = str.trim().split("\t");
+                                    size = qs.size();
+                                    for (int j = 0; j < size; j++) {
+                                        String[] strs = qs.poll().trim().split("\t");
                                         Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
                                         if (u == null)
                                             continue;
@@ -258,5 +264,15 @@ public class Definer {
         Configuration configuration = new Configuration(context.getResources().getConfiguration());
         configuration.setLocale(locale);
         return context.createConfigurationContext(configuration).getResources().getString(id);
+    }
+
+    protected String number(int num) {
+        if (0 <= num && num < 10) {
+            return "00" + num;
+        } else if (10 <= num && num <= 99) {
+            return "0" + num;
+        } else {
+            return String.valueOf(num);
+        }
     }
 }

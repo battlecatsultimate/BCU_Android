@@ -1,140 +1,539 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/backgroundPrimary"
-    tools:context=".EnemyInfo">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/enemmainlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundPrimary"
+        tools:context=".EnemyInfo">
 
-    <ImageButton
-        android:id="@+id/eneminfbck"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:backgroundTint="?attr/UnitinfoName"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
-        app:layout_constraintStart_toStartOf="@+id/toolbar4"
-        app:layout_constraintTop_toTopOf="@+id/toolbar4"
-        app:srcCompat="@drawable/back_button" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/eneminfprog"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar4" />
+        <ImageButton
+            android:id="@+id/eneminfbck"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="?attr/UnitinfoName"
+            android:contentDescription="@string/def_description"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
+            app:layout_constraintStart_toStartOf="@+id/toolbar4"
+            app:layout_constraintTop_toTopOf="@+id/toolbar4"
+            app:srcCompat="@drawable/back_button" />
 
-    <TextView
-        android:id="@+id/eneminftitle"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:gravity="center"
-        android:text="Enemy_Name"
-        android:textColor="?attr/UnitinfoName"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
-        app:layout_constraintStart_toEndOf="@+id/eneminfbck"
-        app:layout_constraintTop_toTopOf="@+id/toolbar4" />
+        <ProgressBar
+            android:id="@+id/eneminfprog"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar4" />
 
-    <ScrollView
-        android:id="@+id/eneminfscroll"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar4">
+        <TextView
+            android:id="@+id/eneminftitle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:gravity="center"
+            android:text="Enemy_Name"
+            android:textColor="?attr/UnitinfoName"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
+            app:layout_constraintStart_toEndOf="@+id/eneminfbck"
+            app:layout_constraintTop_toTopOf="@+id/toolbar4" />
+
+        <ScrollView
+            android:id="@+id/eneminfscroll"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar4">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/nestedScrollView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/eneminftable"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusableInTouchMode="true"
+                            android:overScrollMode="never"
+                            app:layout_constrainedWidth="false" />
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
+                <TextView
+                    android:id="@+id/eneminfexptx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/enem_info_exp"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nestedScrollView2" />
+
+                <View
+                    android:id="@+id/enemviewtop"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="24dp"
+                    android:background="?attr/TableBorder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/eneminfexptx" />
+
+                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+                    android:id="@+id/eneminfexp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/enemviewtop" />
+
+                <View
+                    android:id="@+id/enemviewbot"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/TableBorder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/eneminfexp" />
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:id="@+id/enemtreasuretab"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar4"
+            app:layout_constraintVertical_bias="1.0">
 
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/nestedScrollView2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fillViewport="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/eneminftable"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:focusableInTouchMode="true"
-                        android:overScrollMode="never"
-                        app:layout_constrainedWidth="false" />
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
-
-            <TextView
-                android:id="@+id/eneminfexptx"
+            <ScrollView
+                android:id="@+id/enemtreascroll"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/enem_info_exp"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nestedScrollView2" />
-
-            <View
-                android:id="@+id/enemviewtop"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="24dp"
-                android:background="?attr/TableBorder"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/eneminfexptx" />
-
-            <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-                android:id="@+id/eneminfexp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:background="?attr/backgroundPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/enemviewtop" />
-
-            <View
-                android:id="@+id/enemviewbot"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/TableBorder"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/eneminfexp" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/etrelev"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/treasure_level"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/aclev"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/treasure_ac_lev"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~30"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/etrelev">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/aclevt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/actrea"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/treasure_ac_trea"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~300"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/aclev">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/actreat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/itfcrytrea"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/treasure_itf_cry"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~600"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/actrea">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/itfcrytreat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cotccrytrea"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/treasure_cotc_cry"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~1500"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itfcrytrea">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/cotccrytreat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/godmask"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/unit_info_god1"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~100"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cotccrytrea">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/godmaskt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/godmask1"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/unit_info_god2"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~100"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/godmask">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/godmaskt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/godmask2"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="196dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:hint="@string/unit_info_god3"
+                        android:textColorHint="?attr/TextPrimary"
+                        app:counterTextAppearance="@style/CounterStyle"
+                        app:errorEnabled="true"
+                        app:helperText="1~100"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/godmask1">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/godmaskt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:imeOptions="actionDone|flagNoExtractUi"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:textColor="?attr/TextPrimary"
+                            android:textColorHint="?attr/TextPrimary"
+                            android:textSize="14sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/enemtreareset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:text="@string/treasure_reset"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/etrelev"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/etrelev"
+                        app:layout_constraintTop_toTopOf="@+id/etrelev" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_lv"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/aclev"
+                        app:layout_constraintEnd_toEndOf="@+id/aclev"
+                        app:layout_constraintTop_toTopOf="@+id/aclev" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_perc"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/actrea"
+                        app:layout_constraintEnd_toEndOf="@+id/actrea"
+                        app:layout_constraintTop_toTopOf="@+id/actrea" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_perc"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/itfcrytrea"
+                        app:layout_constraintEnd_toEndOf="@+id/itfcrytrea"
+                        app:layout_constraintTop_toTopOf="@+id/itfcrytrea" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_perc"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/cotccrytrea"
+                        app:layout_constraintEnd_toEndOf="@+id/cotccrytrea"
+                        app:layout_constraintTop_toTopOf="@+id/cotccrytrea" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_perc"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/godmask"
+                        app:layout_constraintEnd_toEndOf="@+id/godmask"
+                        app:layout_constraintTop_toTopOf="@+id/godmask" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_perc"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/godmask1"
+                        app:layout_constraintEnd_toEndOf="@+id/godmask1"
+                        app:layout_constraintTop_toTopOf="@+id/godmask1" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/def_treasure_perc"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintBottom_toBottomOf="@+id/godmask2"
+                        app:layout_constraintEnd_toEndOf="@+id/godmask2"
+                        app:layout_constraintTop_toTopOf="@+id/godmask2" />
+
+                </android.support.constraint.ConstraintLayout>
+            </ScrollView>
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-</android.support.constraint.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/enemtreasure"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/def_description"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
+            app:layout_constraintEnd_toEndOf="@+id/toolbar4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_menu_black_24dp" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

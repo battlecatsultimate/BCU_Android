@@ -12,6 +12,7 @@ import android.util.TypedValue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -24,37 +25,58 @@ import common.util.unit.Enemy;
 import common.util.unit.Unit;
 
 public class StaticStore {
-    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700"};
-    public static final String [] OPTREQS = { "080504" };
+    /** System/IO variables **/
+    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706"};
+    public static final String [] OPTREQS = { "080504"  };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
-    public static final int [] langnum = {-1,0,1,2,3,4,5,6,7,8};
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/logs/";
     public static final long INTERVAL = 1000;
 
     public static int root = 0;
 
-    int example = 0;
+    /** Image/Text variables **/
 
-    public static Bitmap[] bitmaps = null;
-    public static String[] names = null;
-    public static List<Unit> units = null;
     public static Treasure t = null;
     public static FakeImage[] img15 = null;
     public static Bitmap[] icons = null;
     public static Bitmap[] picons = null;
     public static Bitmap[] fruit = null;
     public static String [] addition = null;
+
+    /** Variables for Unit **/
+
+    public static List<Unit> units = null;
     public static int unitnumber;
+    public static Bitmap[] bitmaps = null;
+    public static String[] names = null;
     public static long unitinflistClick = 0;
-    public static long enemyinflistClick = 0;
+    public static boolean UisOpen = false;
+
+    public static int unittabposition = 0;
+    public static boolean unitinfreset = false;
+
+    /** Variables for Enemy **/
 
     public static List<Enemy> enemies = null;
     public static String[] enames = null;
     public static Bitmap[] ebitmaps = null;
     public static int emnumber;
+    public static long enemyinflistClick = 0;
+    public static boolean EisOpen = false;
 
-    public static int unittabposition = 0;
-    public static boolean unitinfreset = false;
+    /** Search Filter Variables **/
+
+    public static ArrayList<String> tg = new ArrayList<>();
+    public static ArrayList<String> rare = new ArrayList<>();
+    public static ArrayList<ArrayList<Integer>> ability = new ArrayList<>();
+    public static ArrayList<String> attack = new ArrayList<>();
+    public static boolean tgorand = true;
+    public static boolean atksimu = true;
+    public static boolean aborand = true;
+    public static boolean atkorand = true;
+    public static boolean empty = true;
+    public static boolean talents = false;
+    public static boolean starred = false;
 
     public static void getUnitnumber() {
         String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
@@ -138,5 +160,19 @@ public class StaticStore {
 
         if(CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang < 0)
             CommonStatic.Lang.lang = 0;
+    }
+
+    public static void filterReset() {
+        tg = new ArrayList<>();
+        rare = new ArrayList<>();
+        ability = new ArrayList<>();
+        attack = new ArrayList<>();
+        tgorand = true;
+        atksimu = true;
+        aborand = true;
+        atkorand = true;
+        empty = true;
+        talents = false;
+        starred = false;
     }
 }

@@ -51,6 +51,9 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         try{
             PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(),0);
             thisver = packageInfo.versionName;
@@ -66,6 +69,9 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
+
+        if(activity == null) return  null;
+
         try{
             JSONObject update = new JSONObject();
             String apklink = "http://battlecatsultimate.cf/api/java/getupdate.php";

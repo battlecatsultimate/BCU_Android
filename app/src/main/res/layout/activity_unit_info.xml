@@ -210,7 +210,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/unitinfscroll"
             app:layout_constraintTop_toBottomOf="@id/toolbar2"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_bias="0.0"
             tools:context=".UnitInfo">
 
             <ScrollView
@@ -277,7 +277,7 @@
                         android:id="@+id/cdlevst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_marginBottom="12dp"
                         android:text="lv."
                         android:textColor="?attr/TextPrimary"
@@ -396,7 +396,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:backgroundTint="?attr/TextPrimary"
-                            android:imeOptions="flagNoExtractUi"
+                            android:imeOptions="actionDone|flagNoExtractUi"
                             android:inputType="number"
                             android:maxLength="3"
                             android:textColor="?attr/TextPrimary"

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.mandarin.bcu.androidutil.getStrings;
 import common.system.MultiLangCont;
 
 public class EnemyInfo extends AppCompatActivity {
+    ImageButton treasure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class EnemyInfo extends AppCompatActivity {
 
         setContentView(R.layout.activity_enemy_info);
 
+        treasure = findViewById(R.id.enemtreasure);
+
         ScrollView scrollView = findViewById(R.id.eneminfscroll);
         scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         scrollView.setFocusable(true);
@@ -68,6 +72,14 @@ public class EnemyInfo extends AppCompatActivity {
 
             new EInfoLoader(this,id).execute();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(StaticStore.EisOpen)
+            treasure.performClick();
+        else
+            super.onBackPressed();
     }
 
     @Override

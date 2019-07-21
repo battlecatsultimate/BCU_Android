@@ -1,6 +1,5 @@
 package com.mandarin.bcu;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,17 +16,17 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
-import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.adapters.UnitListAdapter;
 import com.mandarin.bcu.androidutil.asynchs.Adder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
+import java.util.ArrayList;
+
 import common.system.MultiLangCont;
 import common.system.fake.ImageBuilder;
 import common.util.unit.Form;
-
-import java.util.ArrayList;
 
 public class AnimationViewer extends AppCompatActivity {
 
@@ -35,17 +34,6 @@ public class AnimationViewer extends AppCompatActivity {
     private ListView list;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
-
-    private ArrayList<String> rarity = new ArrayList<>();
-    private ArrayList<String> attack = new ArrayList<>();
-    private ArrayList<String> target = new ArrayList<>();
-    private ArrayList<ArrayList<Integer>> ability = new ArrayList<>();
-    private boolean atksimu = true;
-    private boolean atkorand = true;
-    private boolean tgorand = true;
-    private boolean aborand = true;
-    private boolean empty = true;
-    private boolean talents = false;
 
 
     @Override
@@ -74,19 +62,6 @@ public class AnimationViewer extends AppCompatActivity {
             }
         }
 
-        if(savedInstanceState != null) {
-            empty = savedInstanceState.getBoolean("empty");
-            tgorand = savedInstanceState.getBoolean("tgorand");
-            atksimu = savedInstanceState.getBoolean("atksimu");
-            aborand = savedInstanceState.getBoolean("aborand");
-            atkorand = savedInstanceState.getBoolean("atkorand");
-            talents = savedInstanceState.getBoolean("talents");
-            target = savedInstanceState.getStringArrayList("target");
-            attack = savedInstanceState.getStringArrayList("attack");
-            rarity = savedInstanceState.getStringArrayList("rare");
-            ability = (ArrayList<ArrayList<Integer>>)savedInstanceState.getSerializable("ability");
-        }
-
         if(shared.getInt("Orientation",0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         else if(shared.getInt("Orientation",0) == 2)
@@ -106,6 +81,7 @@ public class AnimationViewer extends AppCompatActivity {
         back.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
+                StaticStore.filterReset();
                 finish();
             }
         });
@@ -117,7 +93,7 @@ public class AnimationViewer extends AppCompatActivity {
             }
         });
 
-        new Adder(unitnumber,this,empty,tgorand,atksimu,aborand,atkorand,talents,target,attack,rarity,ability).execute();
+        new Adder(unitnumber,this).execute();
     }
 
     protected String showName(int location) {
@@ -155,18 +131,6 @@ public class AnimationViewer extends AppCompatActivity {
 
     protected void gotoFilter() {
         Intent intent = new Intent(AnimationViewer.this,SearchFilter.class);
-
-        intent.putExtra("empty",empty);
-        intent.putExtra("tgorand",tgorand);
-        intent.putExtra("atksimu",atksimu);
-        intent.putExtra("aborand",aborand);
-        intent.putExtra("atkorand",atkorand);
-        intent.putExtra("talents",talents);
-        intent.putExtra("target",target);
-        intent.putExtra("attack",attack);
-        intent.putExtra("rare",rarity);
-        intent.putExtra("ability",ability);
-        setResult(Activity.RESULT_OK,intent);
         startActivityForResult(intent,REQUEST_CODE);
     }
 
@@ -180,28 +144,13 @@ public class AnimationViewer extends AppCompatActivity {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK) {
-            assert data != null;
-            Bundle extra = data.getExtras();
 
-            assert extra != null;
-            empty = extra.getBoolean("empty");
-            rarity = extra.getStringArrayList("rare");
-            attack = extra.getStringArrayList("attack");
-            target = extra.getStringArrayList("target");
-            ability = (ArrayList<ArrayList<Integer>>) extra.getSerializable("ability");
-            atksimu = extra.getBoolean("atksimu");
-            atkorand = extra.getBoolean("atkorand");
-            tgorand = extra.getBoolean("tgorand");
-            aborand = extra.getBoolean("aborand");
-            talents = extra.getBoolean("talents");
-
-            FilterEntity filterEntity = new FilterEntity(rarity,attack,target,ability,atksimu,atkorand,tgorand,aborand,empty,unitnumber,talents);
+            FilterEntity filterEntity = new FilterEntity(unitnumber);
             ArrayList<Integer> newNumber = filterEntity.setFilter();
             ArrayList<String> newName = new ArrayList<>();
 
@@ -232,26 +181,6 @@ public class AnimationViewer extends AppCompatActivity {
                     StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
                 }
             });
-
-            search.setOnClickListener(new SingleClick() {
-                @Override
-                public void onSingleClick(View v) {
-                    Intent intent = new Intent(AnimationViewer.this,SearchFilter.class);
-
-                    intent.putExtra("empty",empty);
-                    intent.putExtra("tgorand",tgorand);
-                    intent.putExtra("atksimu",atksimu);
-                    intent.putExtra("aborand",aborand);
-                    intent.putExtra("atkorand",atkorand);
-                    intent.putExtra("talents",talents);
-                    intent.putExtra("target",target);
-                    intent.putExtra("attack",attack);
-                    intent.putExtra("rare",rarity);
-                    intent.putExtra("ability",ability);
-                    setResult(Activity.RESULT_OK,intent);
-                    startActivityForResult(intent,REQUEST_CODE);
-                }
-            });
         }
     }
 
@@ -262,18 +191,8 @@ public class AnimationViewer extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle bundle) {
-        bundle.putBoolean("empty",empty);
-        bundle.putBoolean("tgorand",tgorand);
-        bundle.putBoolean("atksimu",atksimu);
-        bundle.putBoolean("aborand",aborand);
-        bundle.putBoolean("atkorand",atkorand);
-        bundle.putBoolean("talents",talents);
-        bundle.putStringArrayList("target",target);
-        bundle.putStringArrayList("attack",attack);
-        bundle.putStringArrayList("rare",rarity);
-        bundle.putSerializable("ability",ability);
-
-        super.onSaveInstanceState(bundle);
+    public void onBackPressed() {
+        super.onBackPressed();
+        StaticStore.filterReset();
     }
 }

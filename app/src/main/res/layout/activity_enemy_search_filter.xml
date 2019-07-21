@@ -90,6 +90,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
+                android:id="@+id/eschstar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="@string/unit_info_starred"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/eschrgtg"
+                app:layout_constraintStart_toEndOf="@+id/eschrgtg"
+                app:layout_constraintTop_toTopOf="@+id/eschrgtg" />
+
+            <CheckBox
                 android:id="@+id/eschchrd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -353,7 +364,6 @@
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:layout_editor_absoluteY="280dp">
 
