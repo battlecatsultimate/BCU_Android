@@ -135,7 +135,6 @@
     <string name="unit_info_atktime">Atk-Time</string>
     <string name="unit_info_true">True</string>
     <string name="unit_info_false">False</string>
-    <string name="abi_bo">Borrow</string>
     <string name="abi_rev">Revive</string>
     <string name="abi_stt">Stop Time</string>
     <string name="abi_snk">Sniper KB</string>

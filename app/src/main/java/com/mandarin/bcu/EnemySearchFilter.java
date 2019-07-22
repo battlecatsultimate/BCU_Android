@@ -290,13 +290,14 @@ public class EnemySearchFilter extends AppCompatActivity {
                 }
             });
 
-            traits[i].setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(v.getContext(), trtool[finall], Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
+            if(i < 9)
+                traits[i].setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Toast.makeText(v.getContext(), trtool[finall], Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
         }
 
         for(int i =0;i<attacks.length;i++) {

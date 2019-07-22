@@ -135,7 +135,6 @@
     <string name="unit_info_true">참</string>
     <string name="unit_info_false">거짓</string>
     <string name="sch_abi_bb">베리어를 부순다</string>
-    <string name="abi_bo">버로우</string>
     <string name="abi_rev">부활</string>
     <string name="abi_stt">시간 멈춤</string>
     <string name="abi_snk">스나이퍼 넉백</string>
