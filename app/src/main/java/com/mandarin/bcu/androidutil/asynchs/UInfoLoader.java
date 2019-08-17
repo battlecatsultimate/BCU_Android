@@ -322,7 +322,6 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
             viewPager.setVisibility(View.GONE);
             view.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
-            tabs.setVisibility(View.GONE);
             exp.setVisibility(View.GONE);
         }
     }

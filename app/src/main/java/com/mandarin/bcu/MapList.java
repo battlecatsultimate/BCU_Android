@@ -16,8 +16,9 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.asynchs.MapAdder;
 
-public class StageInfo extends AppCompatActivity {
+public class MapList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class StageInfo extends AppCompatActivity {
         else if(shared.getInt("Orientation",0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
-        setContentView(R.layout.activity_stage_info);
+        setContentView(R.layout.activity_map_list);
         ImageButton back = findViewById(R.id.stgbck);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -63,8 +64,8 @@ public class StageInfo extends AppCompatActivity {
             public View getView(int position, View converView, @NonNull ViewGroup parent) {
                 View v = super.getView(position,converView,parent);
 
-                ((TextView)v).setTextColor(ContextCompat.getColor(StageInfo.this,R.color.TextPrimary));
-                int eight = StaticStore.dptopx(8f,StageInfo.this);
+                ((TextView)v).setTextColor(ContextCompat.getColor(MapList.this,R.color.TextPrimary));
+                int eight = StaticStore.dptopx(8f, MapList.this);
                 v.setPadding(eight,eight,eight,eight);
 
                 return v;
@@ -73,13 +74,17 @@ public class StageInfo extends AppCompatActivity {
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position,convertView,parent);
 
-                ((TextView)v).setTextColor(ContextCompat.getColor(StageInfo.this,R.color.TextPrimary));
+                ((TextView)v).setTextColor(ContextCompat.getColor(MapList.this,R.color.TextPrimary));
 
                 return v;
             }
         };
 
         stageset.setAdapter(adapter);
+
+        MapAdder mapAdder = new MapAdder(this);
+
+        mapAdder.execute();
 
     }
 

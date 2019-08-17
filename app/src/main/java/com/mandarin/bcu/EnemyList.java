@@ -64,9 +64,9 @@ public class EnemyList extends AppCompatActivity {
         list = findViewById(R.id.enlist);
         ImageButton search = findViewById(R.id.enlistsch);
 
-        back.setOnClickListener(new SingleClick() {
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSingleClick(View v) {
+            public void onClick(View v) {
                 StaticStore.filterReset();
                 finish();
             }
@@ -128,7 +128,7 @@ public class EnemyList extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         StaticStore.filterReset();
+        super.onBackPressed();
     }
 }

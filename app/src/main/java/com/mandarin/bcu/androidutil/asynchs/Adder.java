@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.R;
@@ -54,6 +55,8 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         if(activity  != null) {
             new Definer().define(activity);
 
+            publishProgress(0);
+
             if (StaticStore.names == null) {
                 StaticStore.names = new String[unitnumber];
 
@@ -61,6 +64,8 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                     StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
                 }
             }
+
+            publishProgress(1);
 
             if (StaticStore.bitmaps == null) {
                 StaticStore.bitmaps = new Bitmap[unitnumber];
@@ -74,7 +79,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                 }
             }
 
-            publishProgress(0);
+            publishProgress(2);
         }
 
         return null;
@@ -84,39 +89,51 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
 
-        if(activity != null) {
-            ListView list = activity.findViewById(R.id.unitinflist);
-            FilterEntity filterEntity = new FilterEntity(unitnumber);
-            ArrayList<Integer> numbers = filterEntity.setFilter();
-            ArrayList<String> names = new ArrayList<>();
+        if(activity == null) return;
 
-            for (int i : numbers) {
-                names.add(StaticStore.names[i]);
-            }
-            UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), StaticStore.bitmaps, numbers);
-            list.setAdapter(adap);
-            list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(activity, showName(numbers.get(position)), Toast.LENGTH_SHORT).show();
-                    list.setClickable(false);
+        TextView ulistst = activity.findViewById(R.id.unitinfst);
 
-                    return true;
+        switch(values[0]) {
+            case 0:
+                ulistst.setText(R.string.unit_list_unitname);
+                break;
+            case 1:
+                ulistst.setText(R.string.unit_list_unitic);
+                break;
+            case 2:
+                ListView list = activity.findViewById(R.id.unitinflist);
+                FilterEntity filterEntity = new FilterEntity(unitnumber);
+                ArrayList<Integer> numbers = filterEntity.setFilter();
+                ArrayList<String> names = new ArrayList<>();
+
+                for (int i : numbers) {
+                    names.add(StaticStore.names[i]);
                 }
-            });
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL)
-                        return;
+                UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), StaticStore.bitmaps, numbers);
+                list.setAdapter(adap);
+                list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(activity, showName(numbers.get(position)), Toast.LENGTH_SHORT).show();
+                        list.setClickable(false);
 
-                    StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
+                        return true;
+                    }
+                });
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL)
+                            return;
 
-                    Intent result = new Intent(activity, UnitInfo.class);
-                    result.putExtra("ID", numbers.get(position));
-                    activity.startActivity(result);
-                }
-            });
+                        StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
+
+                        Intent result = new Intent(activity, UnitInfo.class);
+                        result.putExtra("ID", numbers.get(position));
+                        activity.startActivity(result);
+                    }
+                });
+                break;
         }
     }
 
@@ -129,8 +146,10 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         if(activity != null) {
             ListView list = activity.findViewById(R.id.unitinflist);
             ProgressBar prog = activity.findViewById(R.id.unitinfprog);
+            TextView ulistst = activity.findViewById(R.id.unitinfst);
             list.setVisibility(View.VISIBLE);
             prog.setVisibility(View.GONE);
+            ulistst.setVisibility(View.GONE);
         }
     }
 

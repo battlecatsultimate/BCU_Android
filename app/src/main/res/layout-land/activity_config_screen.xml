@@ -69,7 +69,7 @@
                 android:layout_marginEnd="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/apktest">
+                app:layout_constraintTop_toBottomOf="@+id/configskiptext">
 
                 <TextView
                     android:id="@+id/configdeflev"
@@ -95,13 +95,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
                 android:text="@string/config_theme"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/configcheckup"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/configcheckup" />
 
             <RadioGroup
                 android:id="@+id/configrgtheme"
@@ -344,6 +344,30 @@
                     android:text="@string/config_lay_slide"
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
+
+            <Switch
+                android:id="@+id/configskiptext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/config_skip_text"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/apktest"
+                app:layout_constraintStart_toStartOf="@+id/apktest"
+                app:layout_constraintTop_toBottomOf="@+id/apktest" />
+
+            <Button
+                android:id="@+id/configcheckup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:text="@string/config_check_up"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

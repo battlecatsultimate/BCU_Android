@@ -264,4 +264,24 @@
     <string name="def_treasure_perc">%</string>
     <string name="def_description">Description</string>
     <string name="needconnect">이 어플을 실행하기 위해서는 인터넷이 필요합니다!</string>
+    <string name="config_skip_text">언어파일 업데이트 확인 건너뛰기</string>
+    <string name="config_check_up">업데이트 확인</string>
+    <string name="def_map_name">Map_Name</string>
+    <string name="def_map_coount">Map_Coount</string>
+    <string name="map_list_stages">" 스테이지"</string>
+    <string name="stg_info_enem">적 정보 불러오는 중…</string>
+    <string name="stg_info_enemimg">적 이미지 불러오는 중…</string>
+    <string name="stg_info_enemname">적 이름 불러오는 중…</string>
+    <string name="stg_info_stgd">맵 정보 불러오는 중…</string>
+    <string name="stg_info_stgs">맵 필터링 중…</string>
+    <string name="sch_abi_sb">혼신의 일격</string>
+    <string name="unit_info_text17">" (데미지의 _ %)"</string>
+    <string name="abi_imcri">크리티컬 무효</string>
+    <string name="stg_list_enemic">적 아이콘 불러오는 중…</string>
+    <string name="stg_list_stl">스테이지 정보 불러오는 중…</string>
+    <string name="def_stage_name">Stage_Name</string>
+    <string name="unit_list_unitload">유닛 데이터 불러오는 중…</string>
+    <string name="unit_list_unitic">유닛 이미지 불러오는 중…</string>
+    <string name="unit_list_unitname">유닛 이름 불러오는 중…</string>
+    <string name="map_list_stage">" 스테이지"</string>
 </resources>

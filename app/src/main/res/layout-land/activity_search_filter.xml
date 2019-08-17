@@ -162,15 +162,15 @@
                 android:id="@+id/schtg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/sch_tg"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgtg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchld" />
+                app:layout_constraintTop_toTopOf="@+id/schrgtg" />
 
             <CheckBox
                 android:id="@+id/schchrd"
@@ -278,17 +278,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schtg"
                 app:layout_constraintStart_toEndOf="@+id/schtg"
-                app:layout_constraintTop_toTopOf="@+id/schtg">
+                app:layout_constraintTop_toBottomOf="@+id/schview1">
 
                 <RadioButton
                     android:id="@+id/schrdtgor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    
+
                     android:paddingStart="0dp"
                     android:paddingEnd="12dp"
                     android:text="@string/sch_or"
@@ -299,7 +299,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    
+
                     android:text="@string/sch_and"
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
@@ -308,24 +308,24 @@
                 android:id="@+id/schatk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:text="@string/sch_atk"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgatkor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+                app:layout_constraintTop_toTopOf="@+id/schrgatkor" />
 
             <RadioGroup
                 android:id="@+id/schrgatk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schatk"
                 app:layout_constraintStart_toEndOf="@+id/schrgatkor"
-                app:layout_constraintTop_toTopOf="@+id/schatk">
+                app:layout_constraintTop_toBottomOf="@+id/schview">
 
                 <RadioButton
                     android:id="@+id/schrdatksi"
@@ -393,20 +393,20 @@
             <TextView
                 android:id="@+id/schabil"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginTop="24dp"
+                android:layout_height="wrap_content"
                 android:text="@string/sch_abil"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgab"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchzo" />
+                app:layout_constraintTop_toTopOf="@+id/schrgab" />
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/animnscview"
                 android:layout_width="0dp"
-                android:layout_height="144dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:fillViewport="true"
@@ -706,6 +706,15 @@
 
                         app:layout_constraintStart_toStartOf="@+id/schchabimwv"
                         app:layout_constraintTop_toBottomOf="@+id/schchabimwv" />
+
+                    <CheckBox
+                        android:id="@+id/schchabsb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintStart_toStartOf="@+id/schchabimwp"
+                        app:layout_constraintTop_toBottomOf="@+id/schchabimwp" />
+
                 </android.support.constraint.ConstraintLayout>
             </android.support.v4.widget.NestedScrollView>
 
@@ -714,17 +723,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schabil"
                 app:layout_constraintStart_toEndOf="@+id/schabil"
-                app:layout_constraintTop_toTopOf="@+id/schabil">
+                app:layout_constraintTop_toBottomOf="@+id/schview2">
 
                 <RadioButton
                     android:id="@+id/schrdabor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    
+
                     android:paddingStart="0dp"
                     android:paddingEnd="@dimen/default_gap"
                     android:text="@string/sch_or"
@@ -735,7 +744,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    
+
                     android:text="@string/sch_and"
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
@@ -746,16 +755,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schatk"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgatk"
                 app:layout_constraintStart_toEndOf="@+id/schatk"
-                app:layout_constraintTop_toTopOf="@+id/schatk">
+                app:layout_constraintTop_toTopOf="@+id/schrgatk">
 
                 <RadioButton
                     android:id="@+id/schrdatkor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    
+
                     android:paddingStart="0dp"
                     android:paddingEnd="12dp"
                     android:text="@string/sch_or"
@@ -766,7 +775,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    
+
                     android:text="@string/sch_and"
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
@@ -781,6 +790,39 @@
                 app:layout_constraintBottom_toBottomOf="@+id/schrare"
                 app:layout_constraintStart_toEndOf="@+id/schrare"
                 app:layout_constraintTop_toTopOf="@+id/schrare" />
+
+            <View
+                android:id="@+id/schview"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/TableBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+
+            <View
+                android:id="@+id/schview1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/TableBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schchom" />
+
+            <View
+                android:id="@+id/schview2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/TableBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schchre" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

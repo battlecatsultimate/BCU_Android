@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -30,19 +30,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import common.CommonStatic;
+import common.system.P;
 import common.system.fake.ImageBuilder;
 
 public class CheckUpdateScreen extends AppCompatActivity {
     private final String [] LIB_REQUIRED = StaticStore.LIBREQ;
     private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";
     private String path;
-    private ArrayList<String> fileneed = new ArrayList<>();
-    private ArrayList<String> filenum = new ArrayList<>();
+    private boolean config = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +106,10 @@ public class CheckUpdateScreen extends AppCompatActivity {
             ed.putBoolean("Lay_Land",false);
         }
 
+        if(!shared.contains("Skip_Text")) {
+            ed.putBoolean("Skip_Text",false);
+        }
+
         if(shared.getInt("Orientation",0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         else if(shared.getInt("Orientation",0) == 2)
@@ -120,6 +122,16 @@ public class CheckUpdateScreen extends AppCompatActivity {
         setContentView(R.layout.activity_check_update_screen);
 
         deleter(new File(PATH));
+
+        Intent result = getIntent();
+
+        if(result.getExtras() != null) {
+            Bundle extra = result.getExtras();
+
+            config = extra.getBoolean("Config");
+
+            System.out.println("config Bool : "+config);
+        }
 
         TextView checkstate = findViewById(R.id.mainstup);
         ProgressBar mainprog = findViewById(R.id.mainprogup);
@@ -140,7 +152,7 @@ public class CheckUpdateScreen extends AppCompatActivity {
                     retry.setVisibility(View.GONE);
                     mainprog.setVisibility(View.VISIBLE);
                     boolean lang = false;
-                    CheckApk checkApk = new CheckApk(path,lang,fileneed,filenum,CheckUpdateScreen.this,cando());
+                    CheckApk checkApk = new CheckApk(path,lang,CheckUpdateScreen.this,cando());
                     checkApk.execute();
                 } else {
                     Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
@@ -150,9 +162,15 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
 
         if(connectivityManager.getActiveNetworkInfo() != null) {
-            boolean lang = false;
-            CheckApk checkApk = new CheckApk(path,lang,fileneed,filenum,this,cando());
-            checkApk.execute();
+            if(!config) {
+                boolean lang = false;
+                CheckApk checkApk = new CheckApk(path, lang, this, cando());
+                checkApk.execute();
+            } else {
+                boolean lang = false;
+                CheckApk checkApk = new CheckApk(path,lang,this,cando(),config);
+                checkApk.execute();
+            }
         } else {
             if(cando()) {
                 com.mandarin.bcu.decode.ZipLib.init();

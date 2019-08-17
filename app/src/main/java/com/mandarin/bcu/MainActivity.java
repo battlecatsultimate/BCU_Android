@@ -1,50 +1,22 @@
 package com.mandarin.bcu;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mandarin.bcu.androidutil.DefineItf;
 import com.mandarin.bcu.androidutil.ErrorLogWriter;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.asynchs.CheckApk;
-import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
-
-import common.CommonStatic;
-import common.system.fake.ImageBuilder;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -123,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 gotoenemyinf();
             }
         });
+
+        System.out.println("unitlang : "+StaticStore.unitlang);
+        System.out.println("enemylang : "+StaticStore.enemeylang);
+        System.out.println("stagelang : "+StaticStore.stagelang);
     }
 
     protected void animationview() {
@@ -132,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void stageinfoview()
     {
-        Intent intent = new Intent(this,StageInfo.class);
+        Intent intent = new Intent(this, MapList.class);
         startActivity(intent);
     }
 

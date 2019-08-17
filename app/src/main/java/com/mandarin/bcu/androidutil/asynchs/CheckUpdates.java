@@ -7,10 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mandarin.bcu.DownloadScreen;
@@ -37,13 +33,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import common.CommonStatic;
 import main.MainBCU;
 
 public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
@@ -59,16 +52,29 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
     private boolean contin = true;
+    private boolean config = false;
 
     private JSONObject ans;
 
     CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando) {
-        this.weakReference = new WeakReference<>(context);
         this.path = path;
         this.lang = lang;
         this.fileneed = fileneed;
         this.filenum = filenum;
+        this.weakReference = new WeakReference<>(context);
         this.cando = cando;
+
+        source = path+"/lang";
+    }
+
+    CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando, boolean config) {
+        this.path = path;
+        this.lang = lang;
+        this.fileneed = fileneed;
+        this.filenum = filenum;
+        this.weakReference = new WeakReference<>(context);
+        this.cando = cando;
+        this.config = config;
 
         source = path+"/lang";
     }
@@ -92,7 +98,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             JSONObject inp = new JSONObject();
             inp.put("bcuver", MainBCU.ver);
 
-            String assetlink = "http://battlecatsultimate.cf/api/java/getAssets.php";
+            String assetlink = "http://battle-cats-ultimate.000webhostapp.com/api/java/getupdate.php";
             URL asseturl = new URL(assetlink);
             HttpURLConnection connection = (HttpURLConnection) asseturl.openConnection();
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -112,44 +118,51 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             is.close();
             connection.disconnect();
 
-            for (String s1 : lan) {
-                for (String s : langfile) {
-                    String url = "http://battlecatsultimate.cf/api/resources/lang";
-                    String langurl = url + s1 + s;
-                    URL link = new URL(langurl);
-                    HttpURLConnection c = (HttpURLConnection) link.openConnection();
-                    c.setRequestMethod("GET");
-                    c.connect();
+            Activity activity = weakReference.get();
 
-                    InputStream urlis = c.getInputStream();
+            SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
 
-                    byte[] buf = new byte[1024];
-                    int len1;
-                    int size = 0;
-                    while ((len1 = urlis.read(buf)) != -1) {
-                        size += len1;
-                    }
+            if(!shared.getBoolean("Skip_Text",false) || config) {
+                for (String s1 : lan) {
+                    for (String s : langfile) {
+                        String url = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang";
+                        String langurl = url + s1 + s;
+                        URL link = new URL(langurl);
+                        HttpURLConnection c = (HttpURLConnection) link.openConnection();
+                        c.setRequestMethod("GET");
+                        c.connect();
+
+                        InputStream urlis = c.getInputStream();
+
+                        byte[] buf = new byte[1024];
+                        int len1;
+                        int size = 0;
+                        while ((len1 = urlis.read(buf)) != -1) {
+                            size += len1;
+                        }
 
 
-                    output = new File(source + s1, s);
+                        output = new File(source + s1, s);
 
-                    if (output.exists()) {
-                        if (output.length() != size) {
+                        if (output.exists()) {
+                            if (output.length() != size) {
+                                lang = true;
+                                break;
+                            }
+                        } else {
                             lang = true;
                             break;
                         }
-                    } else {
-                        lang = true;
-                        break;
+
+                        c.disconnect();
                     }
 
-                    c.disconnect();
-                }
-
-                if (lang) {
-                    break;
+                    if (lang) {
+                        break;
+                    }
                 }
             }
+
         } catch (ProtocolException e) {
             e.printStackTrace();
             contin = false;
@@ -177,7 +190,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         if(activity == null) return;
 
         TextView checkstate = activity.findViewById(R.id.mainstup);
-        System.out.println(lang);
+
         if (values[0] == 1) {
             if(checkstate != null)
                 checkstate.setText(R.string.main_check_file);
@@ -232,6 +245,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
             ArrayList<String> lib = new ArrayList<>(libmap.keySet());
 
+            System.out.println(lib.toString());
+
             AlertDialog.Builder donloader = new AlertDialog.Builder(activity);
             final Intent intent = new Intent(activity, DownloadScreen.class);
             donloader.setTitle(R.string.main_file_need);
@@ -256,6 +271,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                 public void onClick(DialogInterface dialog, int which) {
                     if(!cando)
                         activity.finish();
+                    else
+                        new AddPathes(activity).execute();
                 }
             });
 

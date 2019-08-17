@@ -264,4 +264,24 @@
     <string name="def_treasure_perc">%</string>
     <string name="def_description">Description</string>
     <string name="needconnect">需要網路連線</string>
+    <string name="config_skip_text">Skip checking text updates</string>
+    <string name="config_check_up">Check Updates</string>
+    <string name="def_map_coount">Map_Coount</string>
+    <string name="def_map_name">Map_Name</string>
+    <string name="map_list_stages">" Stages"</string>
+    <string name="stg_info_enem">Loading Enemy Data…</string>
+    <string name="stg_info_enemimg">Loading Enemy Images…</string>
+    <string name="stg_info_enemname">Loading Enemy Names…</string>
+    <string name="stg_info_stgd">Loading Map Data…</string>
+    <string name="stg_info_stgs">Filtering Maps…</string>
+    <string name="sch_abi_sb">Savage Blow</string>
+    <string name="unit_info_text17">" ( _ % of damage)"</string>
+    <string name="abi_imcri">Imu.Critical</string>
+    <string name="stg_list_enemic">Loading Enemy Icons…</string>
+    <string name="stg_list_stl">Loading Stage Data…</string>
+    <string name="def_stage_name">Stage_Name</string>
+    <string name="unit_list_unitload">Loading Unit Data…</string>
+    <string name="unit_list_unitic">Loading Unit Images…</string>
+    <string name="unit_list_unitname">Loading Unit Names…</string>
+    <string name="map_list_stage">" Stage"</string>
 </resources>

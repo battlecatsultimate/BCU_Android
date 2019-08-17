@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -90,6 +92,21 @@ public class DownloadScreen extends AppCompatActivity{
                 new com.mandarin.bcu.androidutil.asynchs.Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        TextView state = findViewById(R.id.downstate);
+        ProgressBar prog = findViewById(R.id.downprog);
+        bundle.putString("state",state.getText().toString());
+        bundle.putInt("prog",prog.getProgress());
+
+        super.onSaveInstanceState(bundle);
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.widget.EdgeEffect;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.mandarin.bcu.EnemyInfo;
 import com.mandarin.bcu.R;
@@ -53,6 +54,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         back.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
+                StaticStore.filterReset();
                 activity.finish();
             }
         });
@@ -65,6 +67,18 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         if(activity == null) return null;
 
         new EDefiner().define(activity);
+
+        publishProgress(0);
+
+        if(StaticStore.enames == null) {
+            StaticStore.enames = new String[StaticStore.emnumber];
+
+            for(int i = 0;i<StaticStore.emnumber;i++) {
+                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(StaticStore.enemies.get(i)));
+            }
+        }
+
+        publishProgress(1);
 
         if(StaticStore.ebitmaps == null) {
             StaticStore.ebitmaps = new Bitmap[StaticStore.emnumber];
@@ -81,16 +95,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
                 }
             }
         }
-
-        if(StaticStore.enames == null) {
-            StaticStore.enames = new String[StaticStore.emnumber];
-
-            for(int i = 0;i<StaticStore.emnumber;i++) {
-                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(StaticStore.enemies.get(i)));
-            }
-        }
-
-        publishProgress(0);
+        publishProgress(2);
 
         return null;
     }
@@ -101,30 +106,42 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
 
         if(activity == null) return;
 
-        ListView list = activity.findViewById(R.id.enlist);
+        TextView enlistst = activity.findViewById(R.id.enlistst);
 
-        FilterEntity filterEntity = new FilterEntity(enemnumber);
-        ArrayList<Integer> numbers = filterEntity.EsetFilter();
-        ArrayList<String> names = new ArrayList<>();
+        switch(results[0]) {
+            case 0:
+                enlistst.setText(R.string.stg_info_enemname);
+                break;
+            case 1:
+                enlistst.setText(R.string.stg_info_enemimg);
+                break;
+            case 2:
+                ListView list = activity.findViewById(R.id.enlist);
 
-        for(int i : numbers)
-            names.add(StaticStore.enames[i]);
+                FilterEntity filterEntity = new FilterEntity(enemnumber);
+                ArrayList<Integer> numbers = filterEntity.EsetFilter();
+                ArrayList<String> names = new ArrayList<>();
 
-        EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),StaticStore.ebitmaps,numbers);
-        list.setAdapter(enemy);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
-                    return;
+                for(int i : numbers)
+                    names.add(StaticStore.enames[i]);
 
-                StaticStore.enemyinflistClick = SystemClock.elapsedRealtime();
+                EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),StaticStore.ebitmaps,numbers);
+                list.setAdapter(enemy);
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
+                            return;
 
-                Intent result = new Intent(activity, EnemyInfo.class);
-                result.putExtra("ID",numbers.get(position));
-                activity.startActivity(result);
-            }
-        });
+                        StaticStore.enemyinflistClick = SystemClock.elapsedRealtime();
+
+                        Intent result = new Intent(activity, EnemyInfo.class);
+                        result.putExtra("ID",numbers.get(position));
+                        activity.startActivity(result);
+                    }
+                });
+                break;
+        }
     }
 
     @Override
@@ -134,6 +151,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         if(activity == null) return;
 
         super.onPostExecute(result);
+        TextView enlistst = activity.findViewById(R.id.enlistst);
+        enlistst.setVisibility(View.GONE);
         ListView list = activity.findViewById(R.id.enlist);
         list.setVisibility(View.VISIBLE);
         ProgressBar prog = activity.findViewById(R.id.enlistprog);
@@ -146,7 +165,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         } else if (10 <= num && num <= 99) {
             return "0" + num;
         } else {
-            return String.valueOf(num);
+            return ""+num;
         }
     }
 

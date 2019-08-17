@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -35,17 +36,24 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     private boolean cando;
     private String path;
     private boolean lang;
-    private ArrayList<String> fileneed;
-    private ArrayList<String> filenum;
+    private ArrayList<String> fileneed = new ArrayList<>();
+    private ArrayList<String> filenum = new ArrayList<>();
     private boolean contin = true;
+    private boolean config = false;
 
-    public CheckApk(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando) {
+    public CheckApk(String path, boolean lang, Activity context, boolean cando) {
         this.weakReference = new WeakReference<>(context);
         this.path = path;
         this.lang = lang;
-        this.fileneed = fileneed;
-        this.filenum = filenum;
         this.cando = cando;
+    }
+
+    public CheckApk(String path, boolean lang, Activity context, boolean cando, boolean config) {
+        this.weakReference = new WeakReference<>(context);
+        this.path = path;
+        this.lang = lang;
+        this.cando = cando;
+        this.config = config;
     }
 
     @Override
@@ -74,7 +82,7 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
         try{
             JSONObject update = new JSONObject();
-            String apklink = "http://battlecatsultimate.cf/api/java/getupdate.php";
+            String apklink = "http://battle-cats-ultimate.000webhostapp.com/api/java/getupdate.php";
             update.put("bcuver",thisver);
             URL apkurl = new URL(apklink);
             HttpURLConnection apkcon = (HttpURLConnection)apkurl.openConnection();
@@ -130,8 +138,18 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
 
     @Override
     protected void onPostExecute(Void results) {
+        Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
         if(!contin) {
-            new CheckApk(path,lang,fileneed,filenum,weakReference.get(),cando).execute();
+            if(cando)
+                if(!config)
+                    new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+                else
+                    new CheckUpdates(path,lang,fileneed,filenum,activity,cando,config).execute();
+            else
+                new CheckApk(path,lang,weakReference.get(),cando).execute();
         }
     }
 
@@ -161,14 +179,20 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
             apkdon.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+                    if(!config)
+                        new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+                    else
+                        new CheckUpdates(path,lang,fileneed,filenum,activity,cando,config).execute();
                 }
             });
 
             AlertDialog apkdown = apkdon.create();
             apkdown.show();
         } else {
-            new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+            if(!config)
+                new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+            else
+                new CheckUpdates(path,lang,fileneed,filenum,activity,cando,config).execute();
         }
     }
 

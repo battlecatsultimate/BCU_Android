@@ -61,8 +61,9 @@ public class ApkDownload extends AppCompatActivity {
                 String APK = ".apk";
                 String realpath = PATH + FILESTART + ver + APK;
                 String ZIP = ".zip";
-                String URL = "http://battlecatsultimate.cf/api/resources/android/";
-                String realurl = URL + FILESTART + ver + ZIP;
+                String RAW = "?raw=true";
+                String URL = "https://github.com/battlecatsultimate/bcu-resources/blob/master/resources/android/";
+                String realurl = URL + FILESTART + ver + APK + RAW;
 
                 Button retry = findViewById(R.id.apkretry);
                 retry.setVisibility(View.GONE);

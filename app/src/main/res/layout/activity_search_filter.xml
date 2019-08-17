@@ -169,12 +169,12 @@
                 android:id="@+id/schtg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="@string/sch_tg"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgtg"
                 app:layout_constraintStart_toStartOf="@+id/schatk"
-                app:layout_constraintTop_toBottomOf="@+id/schchld" />
+                app:layout_constraintTop_toTopOf="@+id/schrgtg" />
 
             <CheckBox
                 android:id="@+id/schchrd"
@@ -275,10 +275,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schtg"
                 app:layout_constraintStart_toEndOf="@+id/schtg"
-                app:layout_constraintTop_toTopOf="@+id/schtg">
+                app:layout_constraintTop_toBottomOf="@+id/schview1">
 
                 <RadioButton
                     android:id="@+id/schrdtgor"
@@ -305,14 +305,14 @@
                 android:id="@+id/schatk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="@string/sch_atk"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgatkor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchsr" />
+                app:layout_constraintTop_toTopOf="@+id/schrgatkor" />
 
             <RadioGroup
                 android:id="@+id/schrgatk"
@@ -327,7 +327,6 @@
                     android:id="@+id/schrdatksi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
 
                     android:text="@string/sch_atk_si"
                     android:textColor="?attr/TextPrimary"
@@ -337,7 +336,6 @@
                     android:id="@+id/schrdatkmu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
 
                     android:text="@string/sch_atk_ra"
                     android:textColor="?attr/TextPrimary"
@@ -388,20 +386,20 @@
             <TextView
                 android:id="@+id/schabil"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginTop="24dp"
+                android:layout_height="wrap_content"
                 android:text="@string/sch_abil"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/schrgab"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchzo" />
+                app:layout_constraintTop_toTopOf="@+id/schrgab" />
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/animnscview"
                 android:layout_width="0dp"
-                android:layout_height="144dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:fillViewport="true"
@@ -410,7 +408,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schrgab"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintWidth_min="144dp">
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -683,6 +682,14 @@
                         app:layout_constraintStart_toStartOf="@+id/schchabimcu"
                         app:layout_constraintTop_toTopOf="@+id/schchabwik" />
 
+                    <CheckBox
+                        android:id="@+id/schchabsb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintStart_toStartOf="@+id/schchabws"
+                        app:layout_constraintTop_toBottomOf="@+id/schchabws" />
+
                 </android.support.constraint.ConstraintLayout>
             </android.support.v4.widget.NestedScrollView>
 
@@ -691,10 +698,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schabil"
                 app:layout_constraintStart_toEndOf="@+id/schabil"
-                app:layout_constraintTop_toTopOf="@+id/schabil">
+                app:layout_constraintTop_toBottomOf="@+id/schview2">
 
                 <RadioButton
                     android:id="@+id/schrdabor"
@@ -722,10 +729,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/schatk"
                 app:layout_constraintStart_toEndOf="@+id/schatk"
-                app:layout_constraintTop_toTopOf="@+id/schatk">
+                app:layout_constraintTop_toBottomOf="@+id/schview">
 
                 <RadioButton
                     android:id="@+id/schrdatkor"
@@ -758,6 +765,39 @@
                 app:layout_constraintBottom_toBottomOf="@+id/schrare"
                 app:layout_constraintStart_toEndOf="@+id/schrare"
                 app:layout_constraintTop_toTopOf="@+id/schrare" />
+
+            <View
+                android:id="@+id/schview"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/TableBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schchur" />
+
+            <View
+                android:id="@+id/schview1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/TableBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schchom" />
+
+            <View
+                android:id="@+id/schview2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/TableBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schchre" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

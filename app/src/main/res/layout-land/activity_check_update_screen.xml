@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,37 +7,35 @@
     android:background="?attr/backgroundPrimary"
     tools:context=".CheckUpdateScreen">
 
-    <ProgressBar
-        android:id="@+id/mainprogup"
-        style="?android:attr/progressBarStyle"
+    <Space
+        android:id="@+id/space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerInParent="true" />
+
+    <ProgressBar
+        android:id="@+id/mainprogup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/mainstup"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
-        android:layout_marginTop="32dp"
+        android:layout_below="@+id/space"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
         android:text="@string/main_check_up"
-        android:textColor="?attr/TextPrimary"
-        app:layout_constraintEnd_toEndOf="@+id/mainprogup"
-        app:layout_constraintStart_toStartOf="@+id/mainprogup"
-        app:layout_constraintTop_toBottomOf="@+id/mainprogup" />
+        android:textColor="?attr/TextPrimary" />
 
     <Button
         android:id="@+id/checkupretry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:background="?attr/ButtonPrimary"
         android:text="@string/down_redown"
         android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:textColor="?attr/TextPrimary" />
+</RelativeLayout>

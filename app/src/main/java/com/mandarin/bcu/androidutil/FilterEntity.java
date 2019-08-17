@@ -222,9 +222,9 @@ public class FilterEntity {
                         b30 &= bind;
                 } else if(vect.get(0) == 1) {
                     if(StaticStore.aborand)
-                        b30 |= de.getProc(vect.get(1))[0] > 0;
+                        b30 |= de.getProc(vect.get(1))[0] != 0;
                     else
-                        b30 &= de.getProc(vect.get(1))[0] > 0;
+                        b30 &= de.getProc(vect.get(1))[0] != 0;
                 }
             }
 

@@ -22,10 +22,12 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".StageList"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".CheckUpdateScreen"
-            android:screenOrientation="locked"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,37 +36,39 @@
         </activity>
         <activity
             android:name=".EnemySearchFilter"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".EnemyInfo"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".EnemyList"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ConfigScreen"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ApkDownload"
-            android:screenOrientation="locked"/>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="locked" />
         <activity
             android:name=".UnitInfo"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".DownloadScreen"
-            android:screenOrientation="locked"/>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="locked" />
         <activity
             android:name=".SearchFilter"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
-            android:name=".StageInfo"
-            android:screenOrientation="locked"/>
+            android:name=".MapList"
+            android:screenOrientation="locked" />
         <activity
             android:name=".AnimationViewer"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

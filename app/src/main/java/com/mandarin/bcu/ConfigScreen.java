@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -19,6 +20,7 @@ import android.widget.Switch;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -272,6 +274,33 @@ public class ConfigScreen extends AppCompatActivity {
             }
         });
 
+        Switch skiptext = findViewById(R.id.configskiptext);
+
+        if(shared.getBoolean("Skip_Text",false))
+            skiptext.setChecked(true);
+        else
+            skiptext.setChecked(false);
+
+        skiptext.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor ed = shared.edit();
+                ed.putBoolean("Skip_Text",isChecked);
+                ed.apply();
+            }
+        });
+
+        Button Checkupdate = findViewById(R.id.configcheckup);
+
+        Checkupdate.setOnClickListener(new SingleClick() {
+            @Override
+            public void onSingleClick(View v) {
+                Intent intent = new Intent(ConfigScreen.this,CheckUpdateScreen.class);
+                intent.putExtra("Config",true);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private int getIndex(Spinner spinner, int lev) {

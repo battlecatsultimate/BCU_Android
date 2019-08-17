@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.mandarin.bcu.CheckUpdateScreen;
 import com.mandarin.bcu.MainActivity;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.io.Reader;
 
 import java.io.BufferedInputStream;
@@ -33,6 +34,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Downloader extends AsyncTask<Void,Integer,Void> {
+    private String RAW = "?raw=true";
+
     private int size;
     private ArrayList<Long> sizes = new ArrayList<>();
     private ArrayList<Boolean> remover = new ArrayList<>();
@@ -78,10 +81,10 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         String url;
         URL link;
         HttpURLConnection connection;
-        String urls = "http://battlecatsultimate.cf/api/resources/assets/";
+        String urls = "https://github.com/battlecatsultimate/bcu-resources/blob/master/resources/assets/";
         for(int i = 0; i<fileneed.size(); i++) {
             try {
-                url = urls +fileneed.get(i)+".zip";
+                url = urls +fileneed.get(i)+".zip" + RAW;
                 link = new URL(url);
                 connection = (HttpURLConnection) link.openConnection();
 
@@ -108,7 +111,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         long total;
         for(int i = 0; i < number; i++) {
             try {
-                url = urls +purifyneed.get(i)+".zip";
+                url = urls +purifyneed.get(i)+".zip"+RAW;
                 link = new URL(url);
                 connection = (HttpURLConnection) link.openConnection();
                 connection.setRequestMethod("GET");
@@ -160,8 +163,8 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
             try {
                 for (String s1 : lan) {
                     for (String s : langfile) {
-                        String lurl = "http://battlecatsultimate.cf/api/resources/lang/";
-                        String langurl = lurl + s1 + s;
+                        String lurl = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang";
+                        String langurl = lurl + s1 + s + RAW;
                         link = new URL(langurl);
                         connection = (HttpURLConnection) link.openConnection();
                         connection.setRequestMethod("GET");
@@ -202,6 +205,10 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
                     purifyneed.remove("Language");
                     fileneed.remove("Language");
+
+                    StaticStore.unitlang = 1;
+                    StaticStore.enemeylang = 1;
+                    StaticStore.stagelang = 1;
                 }
             } catch (MalformedURLException e) {
                 output = null;
@@ -356,11 +363,6 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                     String filenam = ze.getName();
 
                     File f= new File(destin+filenam);
-
-                    System.out.println("Path : "+f.getParent());
-                    System.out.println("Name : "+f.getName());
-                    System.out.println("Is Dir : "+ze.isDirectory());
-                    System.out.println("Is exist : "+f.exists());
 
                     if(ze.isDirectory()) {
                         if (!f.exists())

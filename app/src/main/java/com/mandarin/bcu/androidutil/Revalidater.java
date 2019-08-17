@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import common.system.MultiLangCont;
 import common.util.pack.Pack;
+import common.util.stage.MapColc;
 
 public class Revalidater extends ContextWrapper {
     private static String [] locales = StaticStore.lang;
@@ -78,6 +79,18 @@ public class Revalidater extends ContextWrapper {
 
             for(int i = 0;i < StaticStore.emnumber;i++) {
                 StaticStore.enames[i] = withID(i,MultiLangCont.ENAME.getCont(Pack.def.es.get(i)));
+            }
+        }
+
+        if(StaticStore.mapnames != null) {
+            for(int i = 0;i < MapColc.MAPS.size(); i++) {
+                MapColc mc = MapColc.MAPS.get(StaticStore.MAPCODE[i]);
+
+                if(mc == null) continue;
+
+                for(int k = 0; k < mc.maps.length; k ++) {
+                    StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k]);
+                }
             }
         }
     }

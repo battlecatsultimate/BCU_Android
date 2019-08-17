@@ -40,6 +40,7 @@ import static common.util.Data.P_IMUWEAK;
 import static common.util.Data.P_KB;
 import static common.util.Data.P_LETHAL;
 import static common.util.Data.P_REVIVE;
+import static common.util.Data.P_SATK;
 import static common.util.Data.P_SLOW;
 import static common.util.Data.P_STOP;
 import static common.util.Data.P_STRONG;
@@ -61,7 +62,7 @@ public class EnemySearchFilter extends AppCompatActivity {
     private CheckBox star;
     private CheckBox[] traits = new CheckBox[12];
     private CheckBox[] attacks = new CheckBox[3];
-    private CheckBox[] abilities = new CheckBox[18];
+    private CheckBox[] abilities = new CheckBox[19];
     private ScrollView sc;
     private NestedScrollView nsc;
     private int[] trid = {R.id.eschchrd,R.id.eschchfl,R.id.eschchbla,R.id.eschchme,R.id.eschchan,R.id.eschchal,R.id.eschchzo,R.id.eschchre,R.id.eschchwh,R.id.eschwit,R.id.escheva,R.id.eschnone};
@@ -69,15 +70,15 @@ public class EnemySearchFilter extends AppCompatActivity {
     private int[] atkid = {R.id.eschchld,R.id.eschchom,R.id.eschchmu};
     private String [] atks = {"2","4","3"};
     private int [] abid = {R.id.eschchabwe,R.id.eschchabfr,R.id.eschchabsl,R.id.eschchabkb,R.id.eschchabwp,R.id.eschchabstr,R.id.eschchabsu,R.id.eschchabcd,R.id.eschchabcr,R.id.eschchabwv,R.id.eschchabimwe,
-            R.id.eschchabimfr,R.id.eschchabimsl,R.id.eschchabimkb,R.id.eschchabimwv,R.id.eschchabcu,R.id.eschchabbu,R.id.eschchabrev};
+            R.id.eschchabimfr,R.id.eschchabimsl,R.id.eschchabimkb,R.id.eschchabimwv,R.id.eschchabcu,R.id.eschchabbu,R.id.eschchabrev,R.id.eschchabsb};
     private int [] abtool = {R.string.sch_abi_we,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_kb,R.string.sch_abi_wa,R.string.sch_abi_str,R.string.sch_abi_su,R.string.sch_abi_bd,R.string.sch_abi_cr,
-            R.string.sch_abi_wv,R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.abi_cu,R.string.abi_bu,R.string.abi_rev};
+            R.string.sch_abi_wv,R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.abi_cu,R.string.abi_bu,R.string.abi_rev,R.string.sch_abi_sb};
     private int [] trtool = {R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.sch_wh};
-    private  int [][] abils = {{1,P_WEAK},{1,P_STOP},{1,P_SLOW},{1,P_KB},{1,P_WARP},{1,P_STRONG},{1,P_LETHAL},{0,AB_BASE},{1,P_CRIT},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_CURSE},{1,P_BURROW},{1,P_REVIVE}};
+    private  int [][] abils = {{1,P_WEAK},{1,P_STOP},{1,P_SLOW},{1,P_KB},{1,P_WARP},{1,P_STRONG},{1,P_LETHAL},{0,AB_BASE},{1,P_CRIT},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_CURSE},{1,P_BURROW},{1,P_REVIVE},{1,P_SATK}};
 
     private int [] atkdraw = {212,112};
     private int [] trdraw = {219,220,221,222,223,224,225,226,227,-1,-1,-1};
-    private int [] abdraw = {195,197,198,207,266,196,199,200,201,208,213,214,215,216,210,-1,-1,-1};
+    private int [] abdraw = {195,197,198,207,266,196,199,200,201,208,213,214,215,216,210,-1,-1,-1,229};
     private String [] abfiles = {"","","","","","","","","","","","","","","","Curse.png","Burrow.png","Revive.png"};
 
     @Override

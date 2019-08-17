@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
-    tools:context=".StageInfo">
+    tools:context=".MapList">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/stgtool"
@@ -46,5 +46,37 @@
         app:layout_constraintBottom_toBottomOf="@+id/stgtool"
         app:layout_constraintEnd_toEndOf="@+id/stgtool"
         app:layout_constraintTop_toTopOf="@+id/stgtool" />
+
+    <ProgressBar
+        android:id="@+id/mapprog"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/maplist"
+        app:layout_constraintEnd_toEndOf="@+id/maplist"
+        app:layout_constraintStart_toStartOf="@+id/maplist"
+        app:layout_constraintTop_toTopOf="@+id/maplist" />
+
+    <TextView
+        android:id="@+id/mapst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/stg_info_stgd"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mapprog" />
+
+    <ListView
+        android:id="@+id/maplist"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stgtool" >
+
+    </ListView>
 
 </android.support.constraint.ConstraintLayout>

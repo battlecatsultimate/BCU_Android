@@ -16,21 +16,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import common.CommonStatic;
 import common.battle.Treasure;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
+import common.util.stage.MapColc;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
 
 public class StaticStore {
     /** System/IO variables **/
-    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706"};
+    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802"};
     public static final String [] OPTREQS = { "080504"  };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/logs/";
     public static final long INTERVAL = 1000;
+    public static int unitlang = 1;
+    public static int enemeylang = 1;
+    public static int stagelang = 1;
 
     public static int root = 0;
 
@@ -49,7 +54,7 @@ public class StaticStore {
     public static int unitnumber;
     public static Bitmap[] bitmaps = null;
     public static String[] names = null;
-    public static long unitinflistClick = 0;
+    public static long unitinflistClick = SystemClock.elapsedRealtime();
     public static boolean UisOpen = false;
 
     public static int unittabposition = 0;
@@ -61,8 +66,15 @@ public class StaticStore {
     public static String[] enames = null;
     public static Bitmap[] ebitmaps = null;
     public static int emnumber;
-    public static long enemyinflistClick = 0;
+    public static long enemyinflistClick = SystemClock.elapsedRealtime();
     public static boolean EisOpen = false;
+
+    /** Variables for Map/Stage **/
+    public static Map<Integer,MapColc> map = null;
+    public static String [][] mapnames = null;
+    public static final int [] MAPCODE = {0,1,2,3,4,6,7,11,12,13,14};
+    public static Bitmap[] eicons = null;
+    public static long maplistClick = SystemClock.elapsedRealtime();
 
     /** Search Filter Variables **/
 
