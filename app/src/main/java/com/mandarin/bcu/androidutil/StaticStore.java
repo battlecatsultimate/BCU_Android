@@ -36,6 +36,7 @@ public class StaticStore {
     public static int unitlang = 1;
     public static int enemeylang = 1;
     public static int stagelang = 1;
+    public static int maplang = 1;
 
     public static int root = 0;
 

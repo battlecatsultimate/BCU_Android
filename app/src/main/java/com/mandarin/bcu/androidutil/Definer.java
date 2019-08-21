@@ -101,6 +101,10 @@ public class Definer {
             }
 
             if(StaticStore.unitlang == 1) {
+                MultiLangCont.FNAME.clear();
+                MultiLangCont.FEXP.clear();
+                MultiLangCont.CFEXP.clear();
+
                 for(String l : lan) {
                     for(String n : files) {
                         String Path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/lang"+l+n;

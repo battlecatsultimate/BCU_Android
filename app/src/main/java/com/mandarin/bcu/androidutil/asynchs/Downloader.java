@@ -146,6 +146,8 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                     publishProgress(progress,i);
                     fos.write(buffer,0,len1);
                 }
+
+                connection.disconnect();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 output = null;
@@ -209,6 +211,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                     StaticStore.unitlang = 1;
                     StaticStore.enemeylang = 1;
                     StaticStore.stagelang = 1;
+                    StaticStore.maplang = 1;
                 }
             } catch (MalformedURLException e) {
                 output = null;

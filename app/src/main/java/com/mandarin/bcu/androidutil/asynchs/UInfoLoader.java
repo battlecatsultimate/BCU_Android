@@ -65,6 +65,21 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
             nform[i] = weakActivity.get().getString(nformid[i]);
     }
 
+    @Override
+    protected void onPreExecute() {
+        Activity activity = weakActivity.get();
+
+        if(activity == null) return;
+
+        TextView fruittext = activity.findViewById(R.id.cfinftext);
+        ViewPager fruitpage = activity.findViewById(R.id.catfruitpager);
+
+        if(StaticStore.units.get(id).info.evo == null) {
+            fruitpage.setVisibility(View.GONE);
+            fruittext.setVisibility(View.GONE);
+        }
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -167,13 +182,9 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
             }
         });
 
-        TextView fruittext = activity.findViewById(R.id.cfinftext);
         ViewPager fruitpage = activity.findViewById(R.id.catfruitpager);
 
-        if(StaticStore.units.get(id).info.evo == null) {
-            fruitpage.setVisibility(View.GONE);
-            fruittext.setVisibility(View.GONE);
-        } else {
+        if(StaticStore.units.get(id).info.evo != null){
             fruitpage.setAdapter(new DynamicFruit(activity,id));
             fruitpage.setOffscreenPageLimit(1);
         }

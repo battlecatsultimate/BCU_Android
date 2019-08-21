@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -129,8 +130,6 @@ public class CheckUpdateScreen extends AppCompatActivity {
             Bundle extra = result.getExtras();
 
             config = extra.getBoolean("Config");
-
-            System.out.println("config Bool : "+config);
         }
 
         TextView checkstate = findViewById(R.id.mainstup);
@@ -155,11 +154,10 @@ public class CheckUpdateScreen extends AppCompatActivity {
                     CheckApk checkApk = new CheckApk(path,lang,CheckUpdateScreen.this,cando());
                     checkApk.execute();
                 } else {
-                    Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
 
         if(connectivityManager.getActiveNetworkInfo() != null) {
             if(!config) {
@@ -173,20 +171,8 @@ public class CheckUpdateScreen extends AppCompatActivity {
             }
         } else {
             if(cando()) {
-                com.mandarin.bcu.decode.ZipLib.init();
-                com.mandarin.bcu.decode.ZipLib.read();
-
-                StaticStore.getUnitnumber();
-                StaticStore.getEnemynumber();
-                StaticStore.root = 1;
-
-                new DefineItf().init();
-
-                StaticStore.getLang(shared.getInt("Language",0));
-
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                boolean lang = false;
+                new CheckApk(path,lang,this,cando(),config).execute();
 
             } else {
                 mainprog.setVisibility(View.GONE);

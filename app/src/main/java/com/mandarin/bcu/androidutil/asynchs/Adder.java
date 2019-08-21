@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,46 +42,48 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity != null) {
-            ListView list = activity.findViewById(R.id.unitinflist);
+        if(activity == null) return;
 
-            list.setVisibility(View.GONE);
-        }
+        ListView list = activity.findViewById(R.id.unitinflist);
+        ImageButton search = activity.findViewById(R.id.animsch);
+
+        list.setVisibility(View.GONE);
+        search.setVisibility(View.GONE);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity  != null) {
-            new Definer().define(activity);
+        if(activity == null) return null;
 
-            publishProgress(0);
+        new Definer().define(activity);
 
-            if (StaticStore.names == null) {
-                StaticStore.names = new String[unitnumber];
+        publishProgress(0);
 
-                for (int i = 0; i < StaticStore.names.length; i++) {
-                    StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
-                }
+        if (StaticStore.names == null) {
+            StaticStore.names = new String[unitnumber];
+
+            for (int i = 0; i < StaticStore.names.length; i++) {
+                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
             }
-
-            publishProgress(1);
-
-            if (StaticStore.bitmaps == null) {
-                StaticStore.bitmaps = new Bitmap[unitnumber];
-
-
-                for (int i = 0; i < unitnumber; i++) {
-                    String shortPath = "./org/unit/" + number(i) + "/f/uni" + number(i) + "_f00.png";
-
-                    StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(), activity, 48f);
-
-                }
-            }
-
-            publishProgress(2);
         }
+
+        publishProgress(1);
+
+        if (StaticStore.bitmaps == null) {
+            StaticStore.bitmaps = new Bitmap[unitnumber];
+
+
+            for (int i = 0; i < unitnumber; i++) {
+                String shortPath = "./org/unit/" + number(i) + "/f/uni" + number(i) + "_f00.png";
+
+                StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(), activity, 48f);
+
+            }
+        }
+
+        publishProgress(2);
 
         return null;
     }
@@ -143,14 +146,16 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
 
         super.onPostExecute(result);
 
-        if(activity != null) {
-            ListView list = activity.findViewById(R.id.unitinflist);
-            ProgressBar prog = activity.findViewById(R.id.unitinfprog);
-            TextView ulistst = activity.findViewById(R.id.unitinfst);
-            list.setVisibility(View.VISIBLE);
-            prog.setVisibility(View.GONE);
-            ulistst.setVisibility(View.GONE);
-        }
+        if(activity == null) return;
+
+        ListView list = activity.findViewById(R.id.unitinflist);
+        ProgressBar prog = activity.findViewById(R.id.unitinfprog);
+        TextView ulistst = activity.findViewById(R.id.unitinfst);
+        ImageButton search = activity.findViewById(R.id.animsch);
+        list.setVisibility(View.VISIBLE);
+        prog.setVisibility(View.GONE);
+        ulistst.setVisibility(View.GONE);
+        search.setVisibility(View.VISIBLE);
     }
 
     private String number(int num) {

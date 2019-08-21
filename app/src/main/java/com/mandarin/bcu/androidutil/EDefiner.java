@@ -141,6 +141,9 @@ public class EDefiner {
             }
 
             if(StaticStore.enemeylang == 1) {
+                MultiLangCont.ENAME.clear();
+                MultiLangCont.EEXP.clear();
+
                 for (String l : lan) {
                     for (String n : files) {
                         String path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/lang" + l + n;

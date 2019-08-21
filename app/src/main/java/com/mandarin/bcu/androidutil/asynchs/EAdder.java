@@ -49,6 +49,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
 
         ListView listView = activity.findViewById(R.id.enlist);
         listView.setVisibility(View.GONE);
+        ImageButton search = activity.findViewById(R.id.enlistsch);
+        search.setVisibility(View.GONE);
 
         ImageButton back = activity.findViewById(R.id.enlistbck);
         back.setOnClickListener(new SingleClick() {
@@ -157,6 +159,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         list.setVisibility(View.VISIBLE);
         ProgressBar prog = activity.findViewById(R.id.enlistprog);
         prog.setVisibility(View.GONE);
+        ImageButton search = activity.findViewById(R.id.enlistsch);
+        search.setVisibility(View.VISIBLE);
     }
 
     private String number(int num) {

@@ -22,7 +22,7 @@ public class MapDefiner {
     private final String FILE = "StageName.txt";
     private final String [] LAN = {"/en/","/zh/","/kr/","/jp/"};
 
-    public void define(Context context) {
+    public void define() {
         try {
             if(StaticStore.map == null) {
                 try {
@@ -43,6 +43,9 @@ public class MapDefiner {
             }
 
             if(StaticStore.stagelang == 1) {
+                MultiLangCont.SMNAME.clear();
+                MultiLangCont.STNAME.clear();
+
                 for(String l : LAN) {
                     String path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/lang"+l+FILE;
 
@@ -108,7 +111,7 @@ public class MapDefiner {
                 StaticStore.stagelang = 0;
             }
 
-            if(StaticStore.mapnames == null) {
+            if(StaticStore.maplang == 1) {
                 StaticStore.mapnames = new String[StaticStore.map.size()][];
 
                 for(int i = 0; i < StaticStore.mapnames.length; i++) {
@@ -122,11 +125,9 @@ public class MapDefiner {
                         StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k]);
                     }
                 }
+
+                StaticStore.maplang = 0;
             }
-
-            if(StaticStore.enemies == null)
-                new EDefiner().define(context);
-
         } catch(Exception e) {
             e.printStackTrace();
         }

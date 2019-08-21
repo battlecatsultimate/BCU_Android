@@ -275,7 +275,7 @@
     <string name="stg_info_enem">Loading Enemy Data…</string>
     <string name="stg_info_stgs">Filtering Maps…</string>
     <string name="sch_abi_sb">Savage Blow</string>
-    <string name="unit_info_text17">" ( _ % of damage)"</string>
+    <string name="unit_info_text17">" (Gives damage  _ % more)"</string>
     <string name="abi_imcri">Imu.Critical</string>
     <string name="stg_list_enemic">Loading Enemy Icons…</string>
     <string name="stg_list_stl">Loading Stage Data…</string>

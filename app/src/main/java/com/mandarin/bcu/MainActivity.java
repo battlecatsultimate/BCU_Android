@@ -95,10 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 gotoenemyinf();
             }
         });
-
-        System.out.println("unitlang : "+StaticStore.unitlang);
-        System.out.println("enemylang : "+StaticStore.enemeylang);
-        System.out.println("stagelang : "+StaticStore.stagelang);
     }
 
     protected void animationview() {

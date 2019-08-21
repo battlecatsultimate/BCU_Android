@@ -14,14 +14,12 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import common.util.stage.MapColc;
+import common.util.stage.SCDef;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.Enemy;
 
 public class StageListAdapter extends ArrayAdapter<String> {
     private final Activity activity;
@@ -78,16 +76,7 @@ public class StageListAdapter extends ArrayAdapter<String> {
 
         Stage st = stm.list.get(position);
 
-        Set<Enemy> enemies = st.data.getAllEnemy();
-
-        List<Integer> ids = new ArrayList<>();
-
-        for(Enemy e : enemies) {
-            if(!ids.contains(e.id) && e.id != 21)
-                ids.add(e.id);
-        }
-
-        Collections.sort(ids);
+        List<Integer> ids = getid(st.data);
 
         ImageView[] icons = new ImageView[ids.size()];
 
@@ -103,5 +92,52 @@ public class StageListAdapter extends ArrayAdapter<String> {
         }
 
         return row;
+    }
+
+    private List<Integer> getid(SCDef stage) {
+        List<int []> result = new ArrayList<>();
+        int [][] data = reverse(stage.datas);
+
+        for (int[] datas : data) {
+            if (result.isEmpty()) {
+                result.add(datas);
+                continue;
+            }
+
+            int id = datas[SCDef.E];
+
+            if (haveSame(id, result)) {
+                result.add(datas);
+            }
+        }
+
+        List<Integer> ids = new ArrayList<>();
+
+        for(int [] datas : result) {
+            ids.add(datas[SCDef.E]);
+        }
+
+        return ids;
+    }
+
+    private boolean haveSame(int id, List<int []> result) {
+        if(id == 19 || id == 20 || id == 21) return false;
+
+        for(int [] data : result) {
+            if(id == data[SCDef.E])
+                return false;
+        }
+
+        return true;
+    }
+
+    private int[][] reverse(int [][] data) {
+        int [][] result = new int[data.length][];
+
+        for(int i = 0; i < data.length; i++) {
+            result[i] = data[data.length-1-i];
+        }
+
+        return result;
     }
 }

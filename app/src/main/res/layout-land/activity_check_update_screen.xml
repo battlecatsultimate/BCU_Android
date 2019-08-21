@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/mainstup"
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/space"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
@@ -200,11 +201,14 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     @Override
     protected void onPostExecute(Void result) {
         if(contin || cando) {
-            checkFiles(ans);
-
             Activity activity = weakReference.get();
 
             if(activity == null) return;
+
+            ConnectivityManager connectivityManager = (ConnectivityManager)activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if(connectivityManager.getActiveNetworkInfo() != null)
+                checkFiles(ans);
 
             if (fileneed.isEmpty() && filenum.isEmpty()) {
                 new AddPathes(activity).execute();

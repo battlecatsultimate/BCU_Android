@@ -275,7 +275,7 @@
     <string name="stg_info_stgd">맵 정보 불러오는 중…</string>
     <string name="stg_info_stgs">맵 필터링 중…</string>
     <string name="sch_abi_sb">혼신의 일격</string>
-    <string name="unit_info_text17">" (데미지의 _ %)"</string>
+    <string name="unit_info_text17">" ( _ % 만큼 더 데미지)"</string>
     <string name="abi_imcri">크리티컬 무효</string>
     <string name="stg_list_enemic">적 아이콘 불러오는 중…</string>
     <string name="stg_list_stl">스테이지 정보 불러오는 중…</string>

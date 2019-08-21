@@ -49,7 +49,7 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
 
         if(activity == null) return null;
 
-        new MapDefiner().define(activity);
+        new MapDefiner().define();
 
         publishProgress(0);
 
