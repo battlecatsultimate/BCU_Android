@@ -4,22 +4,22 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.androidutil.adapters.UnitinfRecycle;
 import com.mandarin.bcu.util.Interpret;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import common.battle.Basis;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.system.MultiLangCont;
-import common.util.unit.EForm;
+import common.system.P;
+import common.util.stage.SCDef;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 
@@ -31,9 +31,13 @@ public class getStrings {
             ,R.string.talen_wv,R.string.unit_info_cost,R.string.unit_info_cd,R.string.unit_info_spd,R.string.sch_abi_ic,R.string.talen_cu,
             R.string.unit_info_atk,R.string.unit_info_hp,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re};
     private String [] talTool = new String[talID.length];
+    private String [] mapcolcid = {"N","S","C","CH","E","T","V","R","M","A","B"};
+    private List<String> mapcodes = Arrays.asList("0","1","2","3","4","6","7","11","12","13","14");
+    private int [] diffid = {R.string.stg_info_easy,R.string.stg_info_norm,R.string.stg_info_hard,R.string.stg_info_vete,R.string.stg_info_expe,R.string.stg_info_insa,R.string.stg_info_dead,R.string.stg_info_merc};
     
     public getStrings(Context context) {
         c = context;
+        getTalList();
     }
 
     public void getTalList() {
@@ -548,5 +552,68 @@ public class getStrings {
         } else {
             return String.valueOf(num);
         }
+    }
+
+    public String getID(int mapcode,int stid, int posit) {
+        int p = mapcodes.indexOf(String.valueOf(mapcode));
+
+        if(p == -1 || p >= mapcolcid.length) {
+            return mapcode +"-"+stid+"-"+posit;
+        } else {
+            return mapcolcid[p]+"-"+stid+"-"+posit;
+        }
+    }
+
+    public String getDifficulty(int diff) {
+        if(diff >= diffid.length || diff < 0) {
+            if(diff == -1)
+                return c.getString(R.string.unit_info_t_none);
+            else
+                return String.valueOf(diff);
+        } else {
+            return c.getString(diffid[diff]);
+        }
+    }
+
+    public String getLayer(int [] data) {
+        if(data[SCDef.L0] == data[SCDef.L1])
+            return ""+data[SCDef.L0];
+        else
+            return data[SCDef.L0] + " ~ " + data[SCDef.L1];
+    }
+
+    public String getRespawn(int [] data, boolean frse) {
+        if(data[SCDef.R0] == data[SCDef.R1])
+            if(frse)
+                return data[SCDef.R0]+" f";
+            else
+                return new DecimalFormat("#.##").format((float)data[SCDef.R0]/30) + " s";
+        else
+            if(frse)
+                return data[SCDef.R0] + " f ~ " + data[SCDef.R1]+" f";
+            else
+                return new DecimalFormat("#.##").format((float)data[SCDef.R0]/30) +" s ~ "+ new DecimalFormat("#.##").format((float)data[SCDef.R1]/30) + " s";
+    }
+
+    public String getBaseHealth(int [] data) {
+        return data[SCDef.C0] + " %";
+    }
+
+    public String getMultiply(int [] data, int multi) {
+        return (int)((float)data[SCDef.M]*(float)multi/(float)100) + " %";
+    }
+
+    public String getNumber(int [] data) {
+        if(data[SCDef.N] == 0)
+            return c.getString(R.string.infinity);
+        else
+            return String.valueOf(data[SCDef.N]);
+    }
+
+    public String getStart(int [] data, boolean frse) {
+        if(frse)
+            return data[SCDef.S0]+" f";
+        else
+            return new DecimalFormat("#.##").format((float)data[SCDef.S0]/30) + " s";
     }
 }

@@ -644,7 +644,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:background="@android:color/transparent"
+        android:backgroundTint="?attr/ButtonPrimary"
         android:text="@string/unit_info_fr"
         android:textAllCaps="false"
         android:textColor="?attr/TextPrimary"

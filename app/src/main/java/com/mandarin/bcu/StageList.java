@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageButton;
 
 import com.mandarin.bcu.androidutil.Revalidater;
-import com.mandarin.bcu.androidutil.asynchs.StageLoader;
+import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader;
 
 public class StageList extends AppCompatActivity {
     private int mapcode;
@@ -60,5 +60,12 @@ public class StageList extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        ImageButton bck = findViewById(R.id.stglistbck);
+
+        bck.performClick();
     }
 }

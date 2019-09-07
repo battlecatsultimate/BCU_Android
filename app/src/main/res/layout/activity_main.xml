@@ -28,6 +28,7 @@
                 android:backgroundTint="?attr/ButtonPrimary"
                 android:drawablePadding="10dp"
                 android:text="@string/main_unitinfo"
+                android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="30sp" />
         </TableRow>
@@ -44,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/ButtonPrimary"
                 android:text="@string/main_enemy_info"
+                android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="30sp" />
         </TableRow>
@@ -61,6 +63,7 @@
                 android:backgroundTint="?attr/ButtonPrimary"
                 android:drawablePadding="10dp"
                 android:text="@string/stg_inf"
+                android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="30sp"
                 app:layout_constraintHeight_percent="0.175" />

@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,7 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.asynchs.UInfoLoader;
+import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader;
 import com.mandarin.bcu.androidutil.getStrings;
 
 public class UnitInfo extends AppCompatActivity {

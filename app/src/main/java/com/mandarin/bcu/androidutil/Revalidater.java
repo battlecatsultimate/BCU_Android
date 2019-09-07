@@ -7,6 +7,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 
+import com.mandarin.bcu.androidutil.unit.Definer;
+
 import java.util.Locale;
 
 import common.system.MultiLangCont;

@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="8dp"
+        android:descendantFocusability="blocksDescendants"
         app:alignContent="stretch"
         app:alignItems="stretch"
         app:flexWrap="wrap"

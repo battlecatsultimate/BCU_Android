@@ -13,6 +13,7 @@
         <item name="TextPrimary">@color/TextPrimary</item>
         <item name="TableBorder">@color/TableBorder</item>
         <item name="UnitinfoName">@color/UnitinfoName</item>
+        <item name="iconPrimary">@color/iconPrimary</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
@@ -29,6 +30,7 @@
         <item name="TextPrimary">@color/TextPrimaryN</item>
         <item name="TableBorder">@color/TableBorderN</item>
         <item name="UnitinfoName">@color/UnitinfoNameN</item>
+        <item name="iconPrimary">@color/iconPrimaryN</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
@@ -45,6 +47,7 @@
         <item name="TextPrimary">@color/TextPrimary</item>
         <item name="TableBorder">@color/TableBorder</item>
         <item name="UnitinfoName">@color/UnitinfoName</item>
+        <item name="iconPrimary">@color/iconPrimary</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>

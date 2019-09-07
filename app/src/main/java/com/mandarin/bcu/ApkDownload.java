@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
-import com.mandarin.bcu.androidutil.asynchs.DownloadApk;
+import com.mandarin.bcu.androidutil.io.asynchs.DownloadApk;
 
 public class ApkDownload extends AppCompatActivity {
     private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";

@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -16,11 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mandarin.bcu.androidutil.DefineItf;
-import com.mandarin.bcu.androidutil.ErrorLogWriter;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.asynchs.CheckApk;
+import com.mandarin.bcu.androidutil.io.asynchs.CheckApk;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
 import java.io.BufferedReader;
@@ -34,7 +32,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import common.system.P;
 import common.system.fake.ImageBuilder;
 
 public class CheckUpdateScreen extends AppCompatActivity {

@@ -10,5 +10,6 @@
     <attr name="TextPrimary" format="color"/>
     <attr name="TableBorder" format="color"/>
     <attr name="UnitinfoName" format="color"/>
+    <attr name="iconPrimary" format="color"/>
     <attr name="themes" format="reference"/>
 </resources>

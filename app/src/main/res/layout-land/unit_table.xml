@@ -559,8 +559,9 @@
 
                 <TextView
                     android:id="@+id/unitabilnone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:text="@string/unit_info_t_none"
@@ -598,7 +599,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:background="@android:color/transparent"
+        android:backgroundTint="?attr/ButtonPrimary"
         android:text="@string/unit_info_fr"
         android:textAllCaps="true"
         android:textColor="?attr/TextPrimary"

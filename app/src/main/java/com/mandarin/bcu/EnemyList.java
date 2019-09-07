@@ -17,15 +17,14 @@ import android.widget.ListView;
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.adapters.EnemyListAdapter;
+import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
-import com.mandarin.bcu.androidutil.asynchs.EAdder;
+import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
 import java.util.ArrayList;
 
 import common.system.fake.ImageBuilder;
-import common.util.unit.Enemy;
 
 public class EnemyList extends AppCompatActivity {
     private ListView list;

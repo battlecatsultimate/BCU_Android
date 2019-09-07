@@ -22,8 +22,13 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".StageList"
-            android:screenOrientation="locked"/>
+        <activity android:name=".ImageViewer"></activity>
+        <activity
+            android:name=".StageInfo"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".StageList"
+            android:screenOrientation="locked" />
         <activity
             android:name=".CheckUpdateScreen"
             android:configChanges="keyboardHidden|orientation|screenSize"

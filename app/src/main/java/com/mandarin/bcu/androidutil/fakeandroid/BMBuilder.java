@@ -13,7 +13,7 @@ import java.io.OutputStream;
 
 public class BMBuilder extends ImageBuilder {
     @Override
-    public FIBM build(Object o) throws IOException {
+    public FIBM build(Object o) {
         if(o == null)
             return null;
         if(o instanceof Bitmap)

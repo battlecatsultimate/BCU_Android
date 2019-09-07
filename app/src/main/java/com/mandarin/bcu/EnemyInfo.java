@@ -8,15 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.asynchs.EInfoLoader;
+import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader;
 import com.mandarin.bcu.androidutil.getStrings;
 
 import common.system.MultiLangCont;
@@ -67,10 +65,13 @@ public class EnemyInfo extends AppCompatActivity {
 
         if(extra != null) {
             int id = extra.getInt("ID");
-            getStrings s = new getStrings(this);
+            int multi = extra.getInt("Multiply");
             title.setText(MultiLangCont.ENAME.getCont(StaticStore.enemies.get(id)));
 
-            new EInfoLoader(this,id).execute();
+            if(multi != 0)
+                new EInfoLoader(this,id,multi).execute();
+            else
+                new EInfoLoader(this,id).execute();
         }
     }
 

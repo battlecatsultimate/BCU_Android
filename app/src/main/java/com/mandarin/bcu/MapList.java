@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.asynchs.MapAdder;
+import com.mandarin.bcu.androidutil.stage.asynchs.MapAdder;
 
 public class MapList extends AppCompatActivity {
 
@@ -92,5 +92,12 @@ public class MapList extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        ImageButton bck = findViewById(R.id.stgbck);
+
+        bck.performClick();
     }
 }

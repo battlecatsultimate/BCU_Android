@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
+import com.mandarin.bcu.androidutil.io.asynchs.Downloader;
 
 import java.util.ArrayList;
 
@@ -78,7 +79,7 @@ public class DownloadScreen extends AppCompatActivity{
         ProgressBar prog = findViewById(R.id.downprog);
         prog.setMax(100);
 
-        new com.mandarin.bcu.androidutil.asynchs.Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
+        new Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
 
         Listeners();
 
@@ -89,7 +90,7 @@ public class DownloadScreen extends AppCompatActivity{
             @Override
             public void onSingleClick(View v) {
                 retry.setVisibility(View.GONE);
-                new com.mandarin.bcu.androidutil.asynchs.Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
+                new Downloader(path,fileneed,downloading,extracting,DownloadScreen.this).execute();
             }
         });
     }

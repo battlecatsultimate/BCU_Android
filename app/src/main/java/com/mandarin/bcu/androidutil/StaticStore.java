@@ -22,6 +22,7 @@ import common.CommonStatic;
 import common.battle.Treasure;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
+import common.util.pack.Background;
 import common.util.stage.MapColc;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
@@ -33,6 +34,8 @@ public class StaticStore {
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/logs/";
     public static final long INTERVAL = 1000;
+    public static final long INFO_INTERVAL = 350;
+    public static int bgread = 0;
     public static int unitlang = 1;
     public static int enemeylang = 1;
     public static int stagelang = 1;
@@ -76,6 +79,14 @@ public class StaticStore {
     public static final int [] MAPCODE = {0,1,2,3,4,6,7,11,12,13,14};
     public static Bitmap[] eicons = null;
     public static long maplistClick = SystemClock.elapsedRealtime();
+    public static long stglistClick = SystemClock.elapsedRealtime();
+    public static long infoClick = SystemClock.elapsedRealtime();
+    public static Bitmap treasure = null;
+    public static boolean [] infoOpened = null;
+    public static int stageSpinner = -1;
+
+    /** Variables for Battle **/
+    public static Background bg = null;
 
     /** Search Filter Variables **/
 
@@ -155,6 +166,21 @@ public class StaticStore {
         } catch (IOException e) {
             e.printStackTrace();
             img15 = null;
+        }
+    }
+
+    public static void readTreasureIcon() {
+        String path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/img002.png";
+        String imgcut = "./org/page/img002.imgcut";
+        File f = new File(path);
+        ImgCut img = ImgCut.newIns(imgcut);
+
+        try {
+            FakeImage png = FakeImage.read(f);
+            FakeImage[] imgs = img.cut(png);
+            treasure = (Bitmap)imgs[28].bimg();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

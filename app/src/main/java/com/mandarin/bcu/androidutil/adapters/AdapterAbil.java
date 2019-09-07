@@ -25,7 +25,7 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
     private List<Integer> procicon;
     private Context context;
 
-    AdapterAbil(List<String> ability, List<String> procs, List<Integer> abilicon, List<Integer> procicon, Context context) {
+    public AdapterAbil(List<String> ability, List<String> procs, List<Integer> abilicon, List<Integer> procicon, Context context) {
         this.ability = ability;
         this.procs = procs;
         this.abilicon = abilicon;
