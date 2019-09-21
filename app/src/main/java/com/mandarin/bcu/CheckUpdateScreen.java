@@ -119,6 +119,8 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_check_update_screen);
 
+        if(MainActivity.isRunning) finish();
+
         deleter(new File(PATH));
 
         Intent result = getIntent();
@@ -151,7 +153,7 @@ public class CheckUpdateScreen extends AppCompatActivity {
                     CheckApk checkApk = new CheckApk(path,lang,CheckUpdateScreen.this,cando());
                     checkApk.execute();
                 } else {
-                    //Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
                 }
             }
         });

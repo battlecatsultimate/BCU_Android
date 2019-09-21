@@ -338,4 +338,17 @@
     <string name="stg_info_respawn">Respawn</string>
     <string name="stg_info_start">Start</string>
     <string name="stg_info_info">Info</string>
+    <string name="stg_info_limit">Limit</string>
+    <string name="limit_deploy">Maximum Units</string>
+    <string name="limit_line">Line Limit</string>
+    <string name="limit_max">Maximum Cost</string>
+    <string name="limit_min">Minimum Cost</string>
+    <string name="limit_rare">Rarity</string>
+    <string name="limit_chra">Character Group</string>
+    <string name="limit_line2">Only first line</string>
+    <string name="limit_max2">Max cost _</string>
+    <string name="limit_min2">Minimum cost _</string>
+    <string name="limit_chra1">Only _ available</string>
+    <string name="limit_chra2">Cannot use _</string>
+    <string name="sch_abi_iv">Invincibility</string>
 </resources>

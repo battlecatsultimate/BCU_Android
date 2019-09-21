@@ -365,6 +365,63 @@
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/stginfolimit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/stg_info_limit"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="5">
+
+                <TextView
+                    android:id="@+id/stginfononer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/cell_shape"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/unit_info_t_none"
+                    android:textColor="?attr/TextPrimary" />
+
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/limitscroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/stginfolimitrec"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overScrollMode="never" />
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+            </TableRow>
+
+        </TableRow>
     </TableLayout>
 
     <TextView

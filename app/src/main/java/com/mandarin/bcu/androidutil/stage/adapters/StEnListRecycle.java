@@ -50,6 +50,12 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
             for (int i = 0; i < st.data.datas.length; i++) {
                 StaticStore.infoOpened[i] = false;
             }
+        } else if(StaticStore.infoOpened.length < st.data.datas.length) {
+            StaticStore.infoOpened = new boolean[st.data.datas.length];
+
+            for (int i = 0; i < st.data.datas.length; i++) {
+                StaticStore.infoOpened[i] = false;
+            }
         }
     }
 
@@ -60,6 +66,12 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
         this.frse = frse;
 
         if(StaticStore.infoOpened == null) {
+            StaticStore.infoOpened = new boolean[st.data.datas.length];
+
+            for (int i = 0; i < st.data.datas.length; i++) {
+                StaticStore.infoOpened[i] = false;
+            }
+        } else if(StaticStore.infoOpened.length < st.data.datas.length) {
             StaticStore.infoOpened = new boolean[st.data.datas.length];
 
             for (int i = 0; i < st.data.datas.length; i++) {

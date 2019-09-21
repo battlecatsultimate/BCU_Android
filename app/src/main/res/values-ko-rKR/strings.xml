@@ -338,4 +338,17 @@
     <string name="stg_info_respawn">리스폰</string>
     <string name="stg_info_start">첫 출현</string>
     <string name="stg_info_info">정보</string>
+    <string name="stg_info_limit">제한</string>
+    <string name="limit_deploy">최대 유닛</string>
+    <string name="limit_line">라인 제한</string>
+    <string name="limit_max">최대 코스트</string>
+    <string name="limit_min">최소 코스트</string>
+    <string name="limit_rare">레어도</string>
+    <string name="limit_chra">유닛 제한</string>
+    <string name="limit_line2">첫번째 페이지만</string>
+    <string name="limit_max2">최대 _ 원</string>
+    <string name="limit_min2">최소 _ 원</string>
+    <string name="limit_chra1">_만 사용가능</string>
+    <string name="limit_chra2">_ 사용 불가능</string>
+    <string name="sch_abi_iv">공격 무효</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.mandarin.bcu.androidutil.stage;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Environment;
 
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
@@ -27,23 +30,29 @@ public class MapDefiner {
     private final String REWA = "RewardName.txt";
     private final String [] LAN = {"/en/","/zh/","/kr/","/jp/"};
 
-    public void define() {
+    public void define(Context context) {
         try {
             if(StaticStore.map == null) {
                 try {
                     MapColc.read();
                     Combo.readFile();
-                    Limit.read();
                     CharaGroup.read();
+                    Limit.read();
                 } catch (Exception e) {
+                    StaticStore.clear();
+
+                    SharedPreferences shared = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+
+                    StaticStore.getLang(shared.getInt("Language",0));
                     ZipLib.init();
                     ZipLib.read();
+                    StaticStore.getEnemynumber();
                     ImageBuilder.builder = new BMBuilder();
                     new DefineItf().init();
                     MapColc.read();
                     Combo.readFile();
-                    Limit.read();
                     CharaGroup.read();
+                    Limit.read();
                     StaticStore.root = 1;
                 }
 

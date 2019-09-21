@@ -11,9 +11,9 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 import com.mandarin.bcu.androidutil.io.DefineItf;
-import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.decode.ZipLib;
 import com.mandarin.bcu.util.Interpret;
 
@@ -40,7 +40,7 @@ public class Definer {
     private int [] procid = {R.string.sch_abi_kb,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_cr,R.string.sch_abi_wv,R.string.sch_abi_we,R.string.sch_abi_bb,R.string.sch_abi_wa,R.string.abi_cu,
             R.string.sch_abi_str,R.string.sch_abi_su,R.string.abi_bu,R.string.abi_rev,R.string.sch_abi_ik,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_iwv,R.string.sch_abi_iw,R.string.sch_abi_iwa,
             R.string.sch_abi_ic,R.string.abi_snk,R.string.abi_stt,R.string.abi_seal,R.string.abi_sum,R.string.abi_mvatk,R.string.abi_thch,R.string.abi_poi,R.string.abi_boswv
-            ,R.string.abi_imcri,R.string.sch_abi_sb,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
+            ,R.string.abi_imcri,R.string.sch_abi_sb,R.string.sch_abi_iv,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
             R.string.talen_cu};
     private String [] proc = new String[procid.length];
     private int [] abiid = {R.string.sch_abi_st,R.string.sch_abi_re,R.string.sch_abi_md,R.string.sch_abi_ao,R.string.sch_abi_em,R.string.sch_abi_bd,R.string.sch_abi_me,R.string.abi_imvatk,R.string.sch_abi_ws,
@@ -58,10 +58,18 @@ public class Definer {
     public void define(Context context) {
         try {
             if(StaticStore.units==null) {
+                SharedPreferences shared = context.getSharedPreferences("Data",Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = shared.edit();
+
                 try {
                     Unit.readData();
                     PCoin.read();
                 } catch(Exception e) {
+                    StaticStore.clear();
+
+                    SharedPreferences shared2 = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+
+                    StaticStore.getLang(shared2.getInt("Language",0));
                     ZipLib.init();
                     ZipLib.read();
                     ImageBuilder.builder = new BMBuilder();
@@ -204,7 +212,7 @@ public class Definer {
             }
 
             if(StaticStore.picons == null) {
-                int[] number = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,227,229,49,45,47,51,43,53,109,227};
+                int[] number = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,227,229,231,49,45,47,51,43,53,109,227};
 
                 StaticStore.picons = new Bitmap[number.length];
 

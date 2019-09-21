@@ -57,7 +57,7 @@
             android:gravity="center"
             android:text="Enemy_Name"
             android:textColor="?attr/UnitinfoName"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
             app:layout_constraintStart_toEndOf="@+id/eneminfbck"

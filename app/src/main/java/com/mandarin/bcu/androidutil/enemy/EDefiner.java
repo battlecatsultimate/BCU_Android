@@ -61,6 +61,11 @@ public class EDefiner {
                 try {
                     Enemy.readData();
                 } catch (NullPointerException e) {
+                    StaticStore.clear();
+
+                    SharedPreferences shared = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+
+                    StaticStore.getLang(shared.getInt("Language",0));
                     ZipLib.init();
                     ZipLib.read();
                     ImageBuilder.builder = new BMBuilder();

@@ -18,12 +18,15 @@ import com.mandarin.bcu.androidutil.enemy.EDefiner;
 import com.mandarin.bcu.androidutil.stage.MapDefiner;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter;
+import com.mandarin.bcu.androidutil.unit.Definer;
 
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 import common.system.MultiLangCont;
 import common.system.files.VFile;
+import common.util.stage.CharaGroup;
+import common.util.stage.Limit;
 
 public class MapAdder extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
@@ -49,13 +52,17 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
 
         if(activity == null) return null;
 
-        new MapDefiner().define();
+        new Definer().define(activity);
 
         publishProgress(0);
 
-        new EDefiner().define(activity);
+        new MapDefiner().define(activity);
 
         publishProgress(1);
+
+        new EDefiner().define(activity);
+
+        publishProgress(2);
 
         if(StaticStore.ebitmaps == null) {
             StaticStore.ebitmaps = new Bitmap[StaticStore.emnumber];
@@ -72,7 +79,7 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
             }
         }
 
-        publishProgress(2);
+        publishProgress(3);
 
         if(StaticStore.enames == null) {
             StaticStore.enames = new String[StaticStore.emnumber];
@@ -82,7 +89,7 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
             }
         }
 
-        publishProgress(3);
+        publishProgress(4);
 
         if(StaticStore.eicons == null) {
             StaticStore.eicons = new Bitmap[StaticStore.emnumber];
@@ -100,7 +107,7 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
             }
         }
 
-        publishProgress(4);
+        publishProgress(5);
 
         return null;
     }
@@ -115,18 +122,21 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
 
         switch (results[0]) {
             case 0:
-                mapst.setText(activity.getString(R.string.stg_info_enem));
+                mapst.setText(R.string.stg_info_stgd);
                 break;
             case 1:
-                mapst.setText(activity.getString(R.string.stg_info_enemimg));
+                mapst.setText(activity.getString(R.string.stg_info_enem));
                 break;
             case 2:
-                mapst.setText(activity.getString(R.string.stg_info_enemname));
+                mapst.setText(activity.getString(R.string.stg_info_enemimg));
                 break;
             case 3:
-                mapst.setText(R.string.stg_list_enemic);
+                mapst.setText(activity.getString(R.string.stg_info_enemname));
                 break;
             case 4:
+                mapst.setText(R.string.stg_list_enemic);
+                break;
+            case 5:
                 mapst.setText(activity.getString(R.string.stg_info_stgs));
 
                 Spinner stageset = activity.findViewById(R.id.stgspin);

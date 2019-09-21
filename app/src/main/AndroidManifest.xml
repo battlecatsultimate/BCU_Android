@@ -22,7 +22,8 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ImageViewer"></activity>
+        <activity android:name=".ImageViewer"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".StageInfo"
             android:screenOrientation="locked" />

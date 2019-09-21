@@ -69,25 +69,25 @@ public class Interpret extends Data {
 	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 6 }, { 0, -1 }, { -1, 7, 4 },
 			{ -1, 7, 9, 10 }, { -1, 14 }, { -1, 13 }, { -1, 13 }, { -1, 15 }, { -1, 13 }, { -1, 16 }, { -1, 13 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 17 }};
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 17 }, {0, -1, 1}};
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 0, 1 },
 			{ -1, 0, 1, 2 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 1 }};
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 1 }, {0, -1, 1}};
 
 	/** proc data formatter for KR,JP */
 	private static final int[][] CMP2 = { { 0, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, 2, -1 },
 			{ 0, 3, 1, -1 }, { 0, -1 }, { 0, 1, 4, -1 }, { 0, 1, -1 }, { 5, 6, -1 }, { 0, -1 }, { 4, 7, -1 },
 			{ 9, 10, 7, -1 }, { -1, 14 }, { -1, 13 }, { -1, 13 }, { -1, 15 }, { -1, 13 }, { -1, 16 }, { -1, 13 }, { 0, -1 },
-			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 4, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 17 }};
+			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 4, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 17 }, {0, 1, -1}};
 
 	/** proc data locator for KR,JP */
 	private static final int[][] LOC2 = { { 0, -1 }, { 0, 1, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, 2, 1, -1 }, { 0, -1 }, { 0, 1, 2, -1 }, { 0, 1, -1 }, { 0,1, -1 }, { 0, -1 }, { 1, 0, -1 },
 			{ 1, 2, 0, -1 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
-			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 2, -1 }, { 0, 3, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 1 }};
+			{ 0, 1, -1 }, { 0, 1, -1 }, { 0, 2, -1 }, { 0, 3, -1 }, { 0, 1, -1 }, { 0, -1 }, { 0, -1 } , { -1 } , {0, -1, 1 }, {0, 1, -1}};
 
 	/** combo string component */
 	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
@@ -160,7 +160,7 @@ public class Interpret extends Data {
 	        	int pro = ma.getProc(i)[0];
 
 	        	if(pro != 100)
-	        		l.add(i+15);
+	        		l.add(PROC.length+i-20);
 	        	else
 	        		l.add(i);
 			} else
@@ -183,7 +183,7 @@ public class Interpret extends Data {
 				int pro = ma.getProc(i)[0];
 
 				if(pro != 100)
-					l.add(i+15);
+					l.add(PROC.length+i-20);
 				else
 					l.add(i);
 			} else
@@ -215,7 +215,7 @@ public class Interpret extends Data {
 							int pro = ma.getProc(i)[0];
 
 							if (immune.contains(i) && pro != 100)
-								ans.append(PROC[i+17]);
+								ans.append(PROC[PROC.length+i-20]);
 							else
 								ans.append(PROC[i]);
 						}
@@ -256,7 +256,7 @@ public class Interpret extends Data {
 							int pro = ma.getProc(i)[0];
 
 							if(pro != 100)
-								ans.append(PROC[i+17]);
+								ans.append(PROC[PROC.length+i-20]);
 							else
 								ans.append(PROC[i]);
 						} else
@@ -313,7 +313,7 @@ public class Interpret extends Data {
 							int pro = ma.getProc(i)[0];
 
 							if (immune.contains(i) && pro != 100)
-								ans.append(PROC[i+15]);
+								ans.append(PROC[PROC.length+i-20]);
 							else
 								ans.append(PROC[i]);
 						}
@@ -417,7 +417,7 @@ public class Interpret extends Data {
 							int pro = ma.getProc(i)[0];
 
 							if(pro != 100)
-								ans.append(PROC[i+15]);
+								ans.append(PROC[PROC.length+i-20]);
 							else
 								ans.append(PROC[i]);
 						} else

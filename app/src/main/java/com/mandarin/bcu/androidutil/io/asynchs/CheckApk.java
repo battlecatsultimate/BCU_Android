@@ -7,10 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mandarin.bcu.ApkDownload;
+import com.mandarin.bcu.CheckUpdateScreen;
 import com.mandarin.bcu.R;
 
 import org.json.JSONException;
@@ -27,6 +33,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 public class CheckApk extends AsyncTask<Void,String,Void> {
@@ -67,7 +74,11 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        ProgressBar prog = activity.findViewById(R.id.mainprogup);
+        Button retry = activity.findViewById(R.id.checkupretry);
 
+        retry.setVisibility(View.GONE);
+        prog.setVisibility(View.VISIBLE);
         TextView state = activity.findViewById(R.id.mainstup);
         state.setText(R.string.main_check_apk);
 
@@ -147,8 +158,30 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
                     new CheckUpdates(path,lang,fileneed,filenum,activity, true).execute();
                 else
                     new CheckUpdates(path,lang,fileneed,filenum,activity, true, true).execute();
-            else
-                new CheckApk(path,lang,weakReference.get(),cando).execute();
+            else {
+                ConnectivityManager connectivityManager = (ConnectivityManager)activity.getSystemService(CONNECTIVITY_SERVICE);
+
+                if(connectivityManager.getActiveNetworkInfo() == null) {
+                    Button checkup = activity.findViewById(R.id.checkupretry);
+                    ProgressBar prog = activity.findViewById(R.id.mainprogup);
+                    TextView mainstup = activity.findViewById(R.id.mainstup);
+
+                    checkup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(connectivityManager.getActiveNetworkInfo() != null)
+                                new CheckApk(path,lang,weakReference.get(),cando).execute();
+                            else
+                                Toast.makeText(activity, R.string.needconnect, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    prog.setVisibility(View.GONE);
+                    mainstup.setText(R.string.main_internet_no);
+                } else {
+                    new CheckApk(path, lang, weakReference.get(), cando).execute();
+                }
+            }
         }
     }
 

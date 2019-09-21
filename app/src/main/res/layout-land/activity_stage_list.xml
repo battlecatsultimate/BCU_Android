@@ -18,6 +18,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/stglistname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/def_minus"
+        android:textColor="?attr/UnitinfoName"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/stglist"
+        app:layout_constraintStart_toEndOf="@+id/stglistbck"
+        app:layout_constraintTop_toTopOf="@+id/toolbar5" />
+
     <ImageButton
         android:id="@+id/stglistbck"
         android:layout_width="wrap_content"

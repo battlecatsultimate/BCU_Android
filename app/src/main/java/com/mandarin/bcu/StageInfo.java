@@ -51,6 +51,7 @@ public class StageInfo extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 StaticStore.infoOpened = null;
+                StaticStore.stageSpinner = -1;
                 finish();
             }
         });

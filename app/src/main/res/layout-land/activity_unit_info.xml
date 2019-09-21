@@ -27,7 +27,7 @@
             android:id="@+id/unitinfrarname"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Unit_Rairty_Name"
             android:textColor="?attr/UnitinfoName"

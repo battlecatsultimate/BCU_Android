@@ -18,6 +18,7 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
 
 public class MainActivity extends AppCompatActivity {
+    public static boolean isRunning = false;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         Thread.setDefaultUncaughtExceptionHandler(new ErrorLogWriter(StaticStore.LOGPATH));
 
         setContentView(R.layout.activity_main);
+
+        isRunning = true;
 
         Button animbtn = findViewById(R.id.anvibtn);
         Button stagebtn = findViewById(R.id.stgbtn);
@@ -122,5 +125,17 @@ public class MainActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        isRunning = false;
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onDestroy() {
+        isRunning = false;
+        super.onDestroy();
     }
 }

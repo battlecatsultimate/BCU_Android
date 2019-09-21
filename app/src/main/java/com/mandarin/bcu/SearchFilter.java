@@ -43,6 +43,7 @@ import static common.util.Data.AB_WKILL;
 import static common.util.Data.AB_ZKILL;
 import static common.util.Data.P_BREAK;
 import static common.util.Data.P_CRIT;
+import static common.util.Data.P_IMUATK;
 import static common.util.Data.P_IMUCURSE;
 import static common.util.Data.P_IMUKB;
 import static common.util.Data.P_IMUSLOW;
@@ -72,10 +73,6 @@ public class SearchFilter extends AppCompatActivity {
     private RadioGroup atkgroup;
     private RadioGroup atkgroupor;
     private RadioGroup abgroup;
-    private CheckBox[] rarities = new CheckBox[6];
-    private CheckBox[] targets = new CheckBox[9];
-    private CheckBox[] attacks = new CheckBox[3];
-    private CheckBox[] abilities = new CheckBox[31];
     private CheckBox chnp;
     private ScrollView sc;
     private NestedScrollView nsc;
@@ -87,17 +84,22 @@ public class SearchFilter extends AppCompatActivity {
     private String [] atks = {"2","4","3"};
     private int[] abid = {R.id.schchabwe,R.id.schchabfr,R.id.schchabsl,R.id.schchabta,R.id.schchabst,R.id.schchabre,R.id.schchabir,R.id.schchabmd,R.id.schchabid,R.id.schchabkb,R.id.schchabwp,R.id.schchabstr,R.id.schchabsu,R.id.schchabcd,
             R.id.schchabcr,R.id.schchabzk,R.id.schchabbb,R.id.schchabem,R.id.schchabme,R.id.schchabwv,R.id.schchabimwe,R.id.schchabimfr,R.id.schchabimsl,R.id.schchabimkb,R.id.schchabimwv,R.id.schchabimwp,R.id.schchabimcu,R.id.schchabws,
-            R.id.schchabwik,R.id.schchabevk,R.id.schchabsb};
+            R.id.schchabwik,R.id.schchabevk,R.id.schchabsb,R.id.schchabiv};
     private int[] abtool = {R.string.sch_abi_we,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_ao,R.string.sch_abi_st,R.string.sch_abi_re,R.string.sch_abi_it,R.string.sch_abi_md,R.string.sch_abi_id,R.string.sch_abi_kb,
             R.string.sch_abi_wa,R.string.sch_abi_str,R.string.sch_abi_su,R.string.sch_abi_bd,R.string.sch_abi_cr,R.string.sch_abi_zk,R.string.sch_abi_bb,R.string.sch_abi_em,R.string.sch_abi_me,R.string.sch_abi_wv,
-            R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.sch_abi_iwa,R.string.sch_abi_ic,R.string.sch_abi_ws,R.string.sch_abi_wk,R.string.sch_abi_eva,R.string.sch_abi_sb};
+            R.string.sch_abi_iw,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_ik,R.string.sch_abi_iwv,R.string.sch_abi_iwa,R.string.sch_abi_ic,R.string.sch_abi_ws,R.string.sch_abi_wk,R.string.sch_abi_eva,R.string.sch_abi_sb,R.string.sch_abi_iv};
     private int[] tgtool = {R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.sch_wh};
     private int [][] abils = {{1,P_WEAK},{1,P_STOP},{1,P_SLOW},{0,AB_ONLY},{0,AB_GOOD},{0,AB_RESIST},{0,AB_RESISTS},{0,AB_MASSIVE},{0,AB_MASSIVES},{1,P_KB},{1,P_WARP},{1,P_STRONG},{1,P_LETHAL},{0,AB_BASE},{1,P_CRIT},{0,AB_ZKILL},{1,P_BREAK},
-            {0,AB_EARN},{0,AB_METALIC},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_IMUWARP},{1,P_IMUCURSE},{0,AB_WAVES},{0,AB_WKILL},{0,AB_EKILL},{1,P_SATK}};
+            {0,AB_EARN},{0,AB_METALIC},{1,P_WAVE},{1,P_IMUWEAK},{1,P_IMUSTOP},{1,P_IMUSLOW},{1,P_IMUKB},{1,P_IMUWAVE},{1,P_IMUWARP},{1,P_IMUCURSE},{0,AB_WAVES},{0,AB_WKILL},{0,AB_EKILL},{1,P_SATK},{1,P_IMUATK}};
+
+    private CheckBox[] rarities = new CheckBox[rareid.length];
+    private CheckBox[] targets = new CheckBox[tgid.length];
+    private CheckBox[] attacks = new CheckBox[atkid.length];
+    private CheckBox[] abilities = new CheckBox[abid.length];
 
     private int [] atkdraw = {212,112};
     private int [] tgdraw = {219,220,221,222,223,224,225,226,227};
-    private int [] abdraw = {195,197,198,202,203,204,122,206,114,207,266,196,199,200,201,260,264,205,209,208,213,214,215,216,210,262,116,218,258,110,229};
+    private int [] abdraw = {195,197,198,202,203,204,122,206,114,207,266,196,199,200,201,260,264,205,209,208,213,214,215,216,210,262,116,218,258,110,229,231};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

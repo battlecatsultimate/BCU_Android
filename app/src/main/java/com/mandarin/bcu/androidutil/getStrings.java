@@ -19,9 +19,11 @@ import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.system.MultiLangCont;
 import common.system.P;
+import common.util.stage.Limit;
 import common.util.stage.SCDef;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
+import common.util.unit.Unit;
 
 public class getStrings {
     private final Context c;
@@ -615,5 +617,94 @@ public class getStrings {
             return data[SCDef.S0]+" f";
         else
             return new DecimalFormat("#.##").format((float)data[SCDef.S0]/30) + " s";
+    }
+
+    public String [] getLimit(Limit l) {
+        List<String> limits = new ArrayList<>();
+
+        if(l.line != 0) {
+            String result = c.getString(R.string.limit_line)+" : "+ c.getString(R.string.limit_line2);
+
+            limits.add(result);
+        }
+
+        if(l.max != 0) {
+            String result = c.getString(R.string.limit_max)+" : "+c.getString(R.string.limit_max2).replace("_",String.valueOf(l.max));
+
+            limits.add(result);
+        }
+
+        if(l.min != 0) {
+            String result = c.getString(R.string.limit_min)+" : "+c.getString(R.string.limit_min2).replace("_",String.valueOf(l.min));
+
+            limits.add(result);
+        }
+
+        if(l.rare != 0) {
+            int [] rid = {R.string.sch_rare_ba,R.string.sch_rare_ex,R.string.sch_rare_ra,R.string.sch_rare_sr,R.string.sch_rare_ur,R.string.sch_rare_lr};
+
+            StringBuilder rare = new StringBuilder();
+
+            for(int i = 0; i < rid.length; i++) {
+
+                if (((l.rare >> i) & 1) == 1) {
+                    rare.append(c.getString(rid[i])).append(", ");
+                }
+            }
+
+            String result = c.getString(R.string.limit_rare)+" : "+rare.toString().substring(0,rare.length()-2);
+
+            limits.add(result);
+        }
+
+        if(l.num != 0) {
+            String result = c.getString(R.string.limit_deploy)+" : "+l.num;
+
+            limits.add(result);
+        }
+
+        if(l.group != null) {
+            StringBuilder units = new StringBuilder();
+
+            List<Unit> u = new ArrayList<>(l.group.set);
+
+            for(int i = 0; i < u.size(); i++) {
+                if(i == l.group.set.size()-1) {
+                    String f = MultiLangCont.FNAME.getCont(u.get(i).forms[0]);
+
+                    if(f == null)
+                        f = "";
+
+                    units.append(f);
+                } else {
+                    String f = MultiLangCont.FNAME.getCont(u.get(i).forms[0]);
+
+                    if(f == null)
+                        f = "";
+
+                    units.append(f).append(", ");
+                }
+            }
+
+            System.out.println(units.toString());
+
+            String result;
+
+            if(l.group.type == 0)
+                result = c.getString(R.string.limit_chra)+" : "+c.getString(R.string.limit_chra1).replace("_", units.toString());
+            else
+                result = c.getString(R.string.limit_chra)+" : "+c.getString(R.string.limit_chra2).replace("_", units.toString());
+
+            limits.add(result);
+        }
+
+        return limits.toArray(new String[0]);
+    }
+
+    public String getXP(int xp, Treasure t, boolean legend) {
+        if(legend)
+            return ""+(int)(xp*t.getXPMult()*9);
+
+        return ""+(int)(xp*t.getXPMult());
     }
 }

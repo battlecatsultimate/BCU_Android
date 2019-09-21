@@ -7,9 +7,14 @@ import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader;
+
+import common.system.MultiLangCont;
+import common.util.stage.MapColc;
+import common.util.stage.StageMap;
 
 public class StageList extends AppCompatActivity {
     private int mapcode;
@@ -50,6 +55,20 @@ public class StageList extends AppCompatActivity {
         if(extra != null) {
             mapcode = extra.getInt("mapcode");
             stid = extra.getInt("stid");
+        }
+
+        TextView name = findViewById(R.id.stglistname);
+
+        MapColc mc = MapColc.MAPS.get(mapcode);
+
+        if(mc != null) {
+            StageMap stm = mc.maps[stid];
+
+            String stname = MultiLangCont.SMNAME.getCont(stm);
+
+            if(stname == null) stname = "";
+
+            name.setText(stname);
         }
 
         StageLoader stageLoader = new StageLoader(this,mapcode,stid);

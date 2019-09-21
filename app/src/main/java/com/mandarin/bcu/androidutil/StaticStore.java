@@ -29,7 +29,7 @@ import common.util.unit.Unit;
 
 public class StaticStore {
     /** System/IO variables **/
-    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802"};
+    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802","080900","080901","080902"};
     public static final String [] OPTREQS = { "080504"  };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/logs/";
@@ -85,9 +85,6 @@ public class StaticStore {
     public static boolean [] infoOpened = null;
     public static int stageSpinner = -1;
 
-    /** Variables for Battle **/
-    public static Background bg = null;
-
     /** Search Filter Variables **/
 
     public static ArrayList<String> tg = new ArrayList<>();
@@ -101,6 +98,50 @@ public class StaticStore {
     public static boolean empty = true;
     public static boolean talents = false;
     public static boolean starred = false;
+
+    public static void clear() {
+        bgread = 0;
+        unitlang = 1;
+        enemeylang = 1;
+        stagelang = 1;
+        maplang = 1;
+
+        root = 0;
+
+        t = null;
+        img15 = null;
+        icons = null;
+        picons = null;
+        fruit = null;
+        addition = null;
+
+        units = null;
+        unitnumber = 0;
+        bitmaps = null;
+        names = null;
+        unitinflistClick = SystemClock.elapsedRealtime();
+        UisOpen = false;
+
+        unittabposition = 0;
+        unitinfreset = false;
+
+        enemies = null;
+        enames = null;
+        ebitmaps = null;
+        emnumber = 0;
+        enemyinflistClick = SystemClock.elapsedRealtime();
+        EisOpen = false;
+
+        map = null;
+        mapnames = null;
+        eicons = null;
+        maplistClick = SystemClock.elapsedRealtime();
+        stglistClick = SystemClock.elapsedRealtime();
+        infoClick = SystemClock.elapsedRealtime();
+        treasure = null;
+        infoOpened = null;
+        stageSpinner = -1;
+    }
 
     public static void getUnitnumber() {
         String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
