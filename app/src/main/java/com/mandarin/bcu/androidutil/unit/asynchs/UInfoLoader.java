@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -70,10 +71,12 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         TextView fruittext = activity.findViewById(R.id.cfinftext);
         ViewPager fruitpage = activity.findViewById(R.id.catfruitpager);
+        Button anim = activity.findViewById(R.id.animanim);
 
         if(StaticStore.units.get(id).info.evo == null) {
             fruitpage.setVisibility(View.GONE);
             fruittext.setVisibility(View.GONE);
+            anim.setVisibility(View.GONE);
         }
     }
 
@@ -229,6 +232,9 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         prog.setVisibility(View.GONE);
+
+        Button anim = activity.findViewById(R.id.animanim);
+        anim.setVisibility(View.VISIBLE);
 
         TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
         Objects.requireNonNull(tabs.getTabAt(StaticStore.unittabposition)).select();

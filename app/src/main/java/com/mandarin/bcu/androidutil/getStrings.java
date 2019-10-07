@@ -81,8 +81,10 @@ public class getStrings {
                 break;
         }
 
-        return result.append(rarity).append(" - ").append(name).toString();
-
+        if(name.equals(""))
+            return rarity;
+        else
+            return result.append(rarity).append(" - ").append(name).toString();
     }
 
     public String getAtkTime(Form f,int frse) {

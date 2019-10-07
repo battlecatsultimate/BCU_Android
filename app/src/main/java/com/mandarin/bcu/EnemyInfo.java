@@ -4,18 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader;
-import com.mandarin.bcu.androidutil.getStrings;
 
 import common.system.MultiLangCont;
 
@@ -67,6 +68,19 @@ public class EnemyInfo extends AppCompatActivity {
             int id = extra.getInt("ID");
             int multi = extra.getInt("Multiply");
             title.setText(MultiLangCont.ENAME.getCont(StaticStore.enemies.get(id)));
+
+            Button eanim = findViewById(R.id.eanimanim);
+
+            eanim.setOnClickListener(new SingleClick() {
+                @Override
+                public void onSingleClick(View v) {
+                    Intent intent = new Intent(EnemyInfo.this,ImageViewer.class);
+                    intent.putExtra("Img",3);
+                    intent.putExtra("ID",id);
+
+                    startActivity(intent);
+                }
+            });
 
             if(multi != 0)
                 new EInfoLoader(this,id,multi).execute();

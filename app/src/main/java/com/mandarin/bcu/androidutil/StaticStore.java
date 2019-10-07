@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintSet;
 import android.util.TypedValue;
 
 import java.io.File;
@@ -189,6 +191,31 @@ public class StaticStore {
         float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,h,r.getDisplayMetrics());
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         return Bitmap.createBitmap((int)width,(int)height,conf);
+    }
+
+    public static Bitmap getResizebp(Bitmap b, Context context, float w, float h) {
+        BitmapDrawable bd = new BitmapDrawable(context.getResources(),Bitmap.createScaledBitmap(b,(int)w,(int)h,true));
+        bd.setFilterBitmap(true);
+        bd.setAntiAlias(true);
+        return bd.getBitmap();
+    }
+
+    public static Bitmap getResizebp(Bitmap b, float w, float h) {
+        Matrix matrix = new Matrix();
+
+        if(w < 0 || h < 0) {
+            if (w < 0 && h < 0) {
+                matrix.setScale(-1,-1);
+            } else if (w < 0) {
+                matrix.setScale(-1,1);
+            } else if(h < 0) {
+                matrix.setScale(1,-1);
+            }
+        }
+
+        Bitmap reversed = Bitmap.createBitmap(b,0,0,b.getWidth(),b.getHeight(),matrix,false);
+
+        return Bitmap.createScaledBitmap(reversed,(int)Math.abs(w),(int)Math.abs(h),true);
     }
 
     public static int dptopx(float dp,Context context) {

@@ -351,4 +351,12 @@
     <string name="limit_chra1">_만 사용가능</string>
     <string name="limit_chra2">_ 사용 불가능</string>
     <string name="sch_abi_iv">공격 무효</string>
+    <string name="anim_atk">공격</string>
+    <string name="anim_burrow">버로우</string>
+    <string name="anim_kb">넉백</string>
+    <string name="anim_move">이동</string>
+    <string name="anim_under">지중 이동</string>
+    <string name="anim_burrowup">버로우 업</string>
+    <string name="anim_wait">기다림</string>
+    <string name="anim_anim">애니메이션</string>
 </resources>

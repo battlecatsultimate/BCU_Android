@@ -84,7 +84,7 @@ public class Opts {
 		return Opts.warning("failed to write file: " + f + " do you want to save it in another place?", "IO error");
 	}
 
-	private static void pop(String text, String title) {
+	public static void pop(String text, String title) {
 
 	}
 

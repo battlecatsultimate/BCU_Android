@@ -419,8 +419,10 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
 
         if(activity == null) return;
 
-        Intent intent = new Intent(activity, MainActivity.class);
-        activity.startActivity(intent);
-        activity.finish();
+        if(!MainActivity.isRunning) {
+            Intent intent = new Intent(activity, MainActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
+        }
     }
 }

@@ -14,12 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader;
 import com.mandarin.bcu.androidutil.getStrings;
 
@@ -123,6 +125,21 @@ public class UnitInfo extends AppCompatActivity {
             int id = extra.getInt("ID");
             getStrings s = new getStrings(this);
             unittitle.setText(s.getTitle(StaticStore.units.get(id).forms[0]));
+
+            Button anim = findViewById(R.id.animanim);
+
+            anim.setOnClickListener(new SingleClick() {
+                @Override
+                public void onSingleClick(View v) {
+                    Intent intent = new Intent(UnitInfo.this,ImageViewer.class);
+
+                    intent.putExtra("Img",2);
+                    intent.putExtra("ID",id);
+                    intent.putExtra("Form",StaticStore.unittabposition);
+
+                    startActivity(intent);
+                }
+            });
 
             new UInfoLoader(id,this,getSupportFragmentManager()).execute();
         }

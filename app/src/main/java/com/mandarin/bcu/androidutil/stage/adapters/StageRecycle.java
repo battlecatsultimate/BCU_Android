@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import common.battle.Treasure;
-import common.util.pack.Pack;
 import common.util.stage.Limit;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
@@ -255,7 +254,7 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
                         activity.startActivity(intent);
                     }
                 } else {
-                    String path = "./org/img/rc/rc" + number(posit) + ".png";
+                    String path = "./org/img/rc/rc" + number(st.castle) + ".png";
 
                     Intent intent = new Intent(activity, ImageViewer.class);
                     intent.putExtra("Path", path);

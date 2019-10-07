@@ -350,4 +350,12 @@
     <string name="limit_chra1">Only _ available</string>
     <string name="limit_chra2">Cannot use _</string>
     <string name="sch_abi_iv">Invincibility</string>
+    <string name="anim_move">Move</string>
+    <string name="anim_atk">Attack</string>
+    <string name="anim_wait">Wait</string>
+    <string name="anim_kb">Knockback</string>
+    <string name="anim_burrow">Burrow</string>
+    <string name="anim_under">Underground</string>
+    <string name="anim_burrowup">Burrow up</string>
+    <string name="anim_anim">Animation</string>
 </resources>

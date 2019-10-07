@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Button;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -58,12 +59,14 @@ public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
             View view2 = activity.findViewById(R.id.enemviewbot);
             ViewPager viewPager = activity.findViewById(R.id.eneminfexp);
             TextView exptext = activity.findViewById(R.id.eneminfexptx);
+            Button eanim = activity.findViewById(R.id.eanimanim);
 
             if(view1 != null) {
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.GONE);
                 viewPager.setVisibility(View.GONE);
                 exptext.setVisibility(View.GONE);
+                eanim.setVisibility(View.GONE);
             }
         }
     }
@@ -166,6 +169,7 @@ public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
         if(activity == null) return;
 
         ImageButton back = activity.findViewById(R.id.eneminfbck);
+        Button eanim = activity.findViewById(R.id.eanimanim);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +183,7 @@ public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
         ProgressBar prog = activity.findViewById(R.id.eneminfprog);
 
         scrollView.setVisibility(View.VISIBLE);
+        eanim.setVisibility(View.VISIBLE);
         prog.setVisibility(View.GONE);
     }
 }
