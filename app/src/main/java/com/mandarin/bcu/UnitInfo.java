@@ -133,9 +133,11 @@ public class UnitInfo extends AppCompatActivity {
                 public void onSingleClick(View v) {
                     Intent intent = new Intent(UnitInfo.this,ImageViewer.class);
 
+                    StaticStore.formposition = StaticStore.unittabposition;
+
                     intent.putExtra("Img",2);
                     intent.putExtra("ID",id);
-                    intent.putExtra("Form",StaticStore.unittabposition);
+                    intent.putExtra("Form",StaticStore.formposition);
 
                     startActivity(intent);
                 }

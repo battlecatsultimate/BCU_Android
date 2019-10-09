@@ -36,23 +36,15 @@ public class EDefiner {
     private String[] lan = {"/en/","/zh/","/kr/","/jp/"};
     private String[] files = {"EnemyName.txt","EnemyExplanation.txt"};
 
-    private int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_eva,R.string.esch_witch};
-    private int [] starid = {R.string.unit_info_starred,R.string.unit_info_god1,R.string.unit_info_god2,R.string.unit_info_god3};
+    private int [] colorid = StaticStore.colorid;
+    private int [] starid = StaticStore.starid;
     private String [] starstring = new String[5];
     private String [] colorstring = new String[colorid.length];
-    private int [] procid = {R.string.sch_abi_kb,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_cr,R.string.sch_abi_wv,R.string.sch_abi_we,R.string.sch_abi_bb,R.string.sch_abi_wa,R.string.abi_cu,
-            R.string.sch_abi_str,R.string.sch_abi_su,R.string.abi_bu,R.string.abi_rev,R.string.sch_abi_ik,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_iwv,R.string.sch_abi_iw,R.string.sch_abi_iwa,
-            R.string.sch_abi_ic,R.string.abi_snk,R.string.abi_stt,R.string.abi_seal,R.string.abi_sum,R.string.abi_mvatk,R.string.abi_thch,R.string.abi_poi,R.string.abi_boswv
-            ,R.string.abi_imcri,R.string.sch_abi_sb,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
-            R.string.talen_cu};
+    private int [] procid = StaticStore.procid;
     private String [] proc = new String[procid.length];
-    private int [] abiid = {R.string.sch_abi_st,R.string.sch_abi_re,R.string.sch_abi_md,R.string.sch_abi_ao,R.string.sch_abi_em,R.string.sch_abi_bd,R.string.sch_abi_me,R.string.abi_imvatk,R.string.sch_abi_ws,
-            R.string.abi_isnk,R.string.abi_istt,R.string.abi_gh,R.string.abi_ipoi,R.string.sch_abi_zk,R.string.sch_abi_wk,R.string.abi_sui,R.string.abi_ithch,R.string.sch_abi_eva,
-            R.string.abi_iseal,R.string.abi_iboswv,R.string.sch_abi_it,R.string.sch_abi_id};
+    private int [] abiid = StaticStore.abiid;
     private String [] abi = new String[abiid.length];
-    private int [] textid = {R.string.unit_info_text0,R.string.unit_info_text1,R.string.unit_info_text2,R.string.unit_info_text3,R.string.unit_info_text4,R.string.unit_info_text5,R.string.unit_info_text6,R.string.unit_info_text7,
-            R.string.def_unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.def_unit_info_text11,R.string.def_unit_info_text12,R.string.unit_info_text13,
-            R.string.unit_info_text14,R.string.unit_info_text15,R.string.unit_info_text16,R.string.unit_info_text17};
+    private int [] textid = StaticStore.textid;
     private String [] textstring = new String[textid.length];
 
     public void define(Context context) {
@@ -87,14 +79,13 @@ public class EDefiner {
                 }
 
                 if (StaticStore.icons == null) {
-                    int[] number = {203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114};
+                    int[] number = StaticStore.anumber;
                     StaticStore.icons = new Bitmap[number.length];
                     for (int i = 0; i < number.length; i++)
                         StaticStore.icons[i] = (Bitmap) StaticStore.img15[number[i]].bimg();
 
                     String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
-                    String[] files = {"","","","","","","","MovingX.png","","SnipeX.png","TimeX.png","Ghost.png","PoisonX.png","","","","ThemeX.png",
-                    "","SealX.png","BossWaveX.png","",""};
+                    String[] files = StaticStore.afiles;
 
                     for(int i = 0;i<files.length;i++) {
                         if(files[i].equals(""))
@@ -105,7 +96,7 @@ public class EDefiner {
                 }
 
                 if (StaticStore.picons == null) {
-                    int[] number = {207, 197, 198, 201, 208, 195, 264, 266, 227, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 49, 45, 47, 51, 43, 53, 109};
+                    int[] number = StaticStore.pnumber;
 
                     StaticStore.picons = new Bitmap[number.length];
 
@@ -113,8 +104,7 @@ public class EDefiner {
                         StaticStore.picons[i] = (Bitmap) StaticStore.img15[number[i]].bimg();
 
                     String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
-                    String[] files = {"","","","","","","","","Curse.png","","","Burrow.png","Revive.png","","","","","","","","Snipe.png","Time.png","Seal.png"
-                    ,"Summon.png","Moving.png","Theme.png","Poison.png","BossWave.png","CritX.png"};
+                    String[] files = StaticStore.pfiles;
 
                     for(int i = 0;i<files.length;i++) {
                         if(files[i].equals(""))

@@ -5,100 +5,229 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
 
+import common.battle.data.MaskAtk;
 import common.system.P;
+import common.util.ImgCore;
 import common.util.anim.EAnimU;
+import common.util.unit.Form;
 
 public class AnimationCView extends View {
     public EAnimU anim;
     private boolean night;
+    private Renderer renderer;
+
+    private TextView textView;
+    private SeekBar seekBar;
 
     private Canvas c;
     private Paint p = new Paint();
     private Paint p1 = new Paint();
+    private Paint fp = new Paint();
+    private Paint range = new Paint();
     private CVGraphics cv;
 
     private P p2;
+
+    private boolean isUnit;
+
+    private float start;
+    private float end;
+    private float tb;
+    private boolean l;
+
+    private long t = -1;
+    private long t1 = -1;
+    long fps;
+    boolean drawFPS;
 
     public float siz = 1;
 
     public float x = 0;
     public float y = 0;
 
-    long t = 0;
-    long t2 = 0;
-
     long sleeptime;
 
-    public AnimationCView(Context context, int id, int form, int mode, boolean night) {
+    boolean started = false;
+
+    public AnimationCView(Context context, int id, int form, int mode, boolean night,boolean axis, boolean fps, TextView textView, SeekBar seekBar) {
         super(context);
+
+        renderer = new Renderer();
 
         anim = StaticStore.units.get(id).forms[form].getEAnim(mode);
 
-        if(night)
+        anim.setTime(StaticStore.frame);
+
+        this.textView = textView;
+        this.seekBar = seekBar;
+
+        ImgCore.ref = axis;
+
+        drawFPS = fps;
+
+        range.setStyle(Paint.Style.STROKE);
+
+        if(night) {
             p.setColor(0x363636);
-        else
+            range.setColor(Color.GREEN);
+            fp.setColor(Color.WHITE);
+        } else {
             p.setColor(Color.WHITE);
+            range.setColor(Color.RED);
+            fp.setColor(Color.BLACK);
+        }
+
+        fp.setTextSize(StaticStore.dptopx(20f,context));
 
         p1.setFilterBitmap(true);
-        p1.setDither(true);
-        p1.setAntiAlias(true);
 
         p2 = new P((float)getWidth()/2,(float)getHeight()*2f/3f);
         cv = new CVGraphics(c, p1,night);
 
+        isUnit = true;
+
+        Form f = StaticStore.units.get(id).forms[form];
+
+        int tb = f.du.getRange();
+        MaskAtk atk = f.du.getRepAtk();
+
+        int lds = atk.getShortPoint();
+        int ldr = atk.getLongPoint()-atk.getShortPoint();
+
+        start = Math.min(lds,lds+ldr);
+        end = Math.max(lds,lds+ldr);
+
+        this.tb = tb;
+
+        l = lds>0;
+
         this.night = night;
     }
 
-    public AnimationCView(Context context, int id, int mode, boolean night) {
+    public AnimationCView(Context context, int id, int mode, boolean night, boolean axis, boolean fps, TextView textView, SeekBar seekBar) {
         super(context);
 
         anim = StaticStore.enemies.get(id).getEAnim(mode);
 
-        if(night)
+        anim.setTime(StaticStore.frame);
+
+        this.textView = textView;
+        this.seekBar = seekBar;
+
+        renderer = new Renderer();
+
+        ImgCore.ref = axis;
+
+        drawFPS = fps;
+
+        if(night) {
             p.setColor(0x363636);
-        else
+            fp.setColor(Color.WHITE);
+        } else {
             p.setColor(Color.WHITE);
+            fp.setColor(Color.BLACK);
+        }
+
+        fp.setTextSize(StaticStore.dptopx(20f,context));
 
         p1.setFilterBitmap(true);
-        p1.setDither(true);
-        p1.setAntiAlias(true);
 
         p2 = new P((float)getWidth()/2,(float)getHeight()*2f/3f);
         cv = new CVGraphics(c,p1,night);
 
+        isUnit = false;
+
         this.night = night;
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        postDelayed(renderer,0);
+        started = true;
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         c = canvas;
 
-        p2 = new P((float)getWidth()/2+x,(float)getHeight()*2/3+y);
-        cv = new CVGraphics(c,p1,night);
+        if(StaticStore.play) {
+            if (t1 != -1 && t - t1 != 0) {
+                fps = 1000L / (t - t1);
+            }
 
-        c.drawRect(0,0,getWidth(),getHeight(),p);
+            p2 = new P((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
+            cv = new CVGraphics(c, p1, night);
 
-        anim.draw(cv, p2,siz);
-        anim.update(true);
+            if (fps < 25)
+                sleeptime = (long) (sleeptime * 0.9 - 0.1);
+            else if (fps > 25)
+                sleeptime = (long) (sleeptime * 0.9 + 0.1);
 
-        t2 = System.currentTimeMillis();
+            c.drawRect(0, 0, getWidth(), getHeight(), p);
 
-        sleeptime = t != 0 ? (1000L/15L)+t-t2 < 0?  1 : (1000L/15L)+t-t2 : (1000L/30L);
+            if (drawFPS)
+                c.drawText("FPS : " + fps, 50, 50, fp);
 
-        sleeptime = sleeptime > 1000L/30L ? 1000L/30L : sleeptime;
+            anim.draw(cv, p2, siz);
+            anim.update(true);
 
-        try {
-            Thread.sleep(sleeptime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            StaticStore.frame++;
+
+            t1 = t;
+        } else {
+            if (t1 != -1 && t - t1 != 0) {
+                fps = 1000L / (t - t1);
+            }
+
+            p2 = new P((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
+            cv = new CVGraphics(c, p1, night);
+
+            if (fps < 25)
+                sleeptime = (long) (sleeptime * 0.9 - 0.1);
+            else if (fps > 25)
+                sleeptime = (long) (sleeptime * 0.9 + 0.1);
+
+            c.drawRect(0, 0, getWidth(), getHeight(), p);
+
+            if (drawFPS)
+                c.drawText("FPS : " + fps, 50, 50, fp);
+
+            anim.draw(cv, p2, siz);
+
+            t1 = t;
         }
+    }
 
-        t = t2;
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
 
-        invalidate();
+        removeCallbacks(renderer);
+    }
+
+    private class Renderer implements Runnable {
+
+        @Override
+        public void run() {
+            t = System.currentTimeMillis();
+
+            invalidate();
+
+            textView.setText(getContext().getText(R.string.anim_frame).toString().replace("-",""+StaticStore.frame));
+
+            seekBar.setProgress(StaticStore.frame);
+
+            if(started)
+                postDelayed(this,1000L/30L+sleeptime);
+        }
     }
 }

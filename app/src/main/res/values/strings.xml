@@ -358,4 +358,8 @@
     <string name="anim_under">Underground</string>
     <string name="anim_burrowup">Burrow up</string>
     <string name="anim_anim">Animation</string>
+    <string name="confg_axis">Show Axis</string>
+    <string name="config_fps">FPS Indicator</string>
+    <string name="anim_frame">Frame : -</string>
+    <string name="anim_warn_frame">Frame is 0</string>
 </resources>

@@ -242,7 +242,7 @@ public class ConfigScreen extends AppCompatActivity {
         RadioButton unitinflandlist = findViewById(R.id.configlaylandlist);
         RadioButton unitinflandslide = findViewById(R.id.configlaylandslide);
 
-        if(shared.getBoolean("Lay_Land",false))
+        if(shared.getBoolean("Lay_Land",true))
             unitinflandslide.setChecked(true);
         else
             unitinflandlist.setChecked(true);
@@ -299,6 +299,38 @@ public class ConfigScreen extends AppCompatActivity {
                 intent.putExtra("Config",true);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        Switch axis = findViewById(R.id.configaxis);
+
+        if(shared.getBoolean("Axis",true))
+            axis.setChecked(true);
+        else
+            axis.setChecked(false);
+
+        axis.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor ed = shared.edit();
+                ed.putBoolean("Axis",isChecked);
+                ed.apply();
+            }
+        });
+
+        Switch fps = findViewById(R.id.configfps);
+
+        if(shared.getBoolean("FPS",true))
+            fps.setChecked(true);
+        else
+            fps.setChecked(false);
+
+        fps.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor ed = shared.edit();
+                ed.putBoolean("FPS",isChecked);
+                ed.apply();
             }
         });
     }

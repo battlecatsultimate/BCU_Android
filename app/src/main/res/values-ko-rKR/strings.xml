@@ -359,4 +359,8 @@
     <string name="anim_burrowup">버로우 업</string>
     <string name="anim_wait">기다림</string>
     <string name="anim_anim">애니메이션</string>
+    <string name="anim_frame">프레임 : -</string>
+    <string name="anim_warn_frame">프레임이 0 입니다.</string>
+    <string name="confg_axis">축 보이기</string>
+    <string name="config_fps">FPS 표시</string>
 </resources>

@@ -356,8 +356,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         if(StaticStore.units.get(id).info.evo == null)
             viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
 
-        View view = activity.findViewById(R.id.enemviewtop);
-        View view2 = activity.findViewById(R.id.enemviewbot);
+        View view = activity.findViewById(R.id.view);
+        View view2 = activity.findViewById(R.id.view2);
         TextView exp = activity.findViewById(R.id.unitinfexp);
 
         if(MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {

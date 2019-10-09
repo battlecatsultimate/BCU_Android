@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,8 +19,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -30,7 +34,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -45,7 +53,6 @@ import java.util.Queue;
 
 import common.system.fake.FakeImage;
 import common.system.files.VFile;
-import common.util.anim.EAnimU;
 import common.util.anim.ImgCut;
 
 public class ImageViewer extends AppCompatActivity {
@@ -66,6 +73,8 @@ public class ImageViewer extends AppCompatActivity {
     float preX = 0;
     float preY = 0;
     int preid = -1;
+
+    Toast toast;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -111,9 +120,18 @@ public class ImageViewer extends AppCompatActivity {
 
         ImageButton bck = findViewById(R.id.imgviewerbck);
 
+        TableRow row = findViewById(R.id.palyrow);
+        SeekBar seekBar = findViewById(R.id.animframeseek);
+        TextView frame = findViewById(R.id.animframe);
+        FloatingActionButton [] buttons = {findViewById(R.id.animbackward),findViewById(R.id.animplay),findViewById(R.id.animforward)};
+
         bck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StaticStore.play = true;
+                StaticStore.frame = 0;
+                StaticStore.animposition = 0;
+                StaticStore.formposition = 0;
                 finish();
             }
         });
@@ -122,6 +140,9 @@ public class ImageViewer extends AppCompatActivity {
 
         switch(img) {
             case BG:
+                row.setVisibility(View.GONE);
+                seekBar.setVisibility(View.GONE);
+                frame.setVisibility(View.GONE);
                 anims.setVisibility(View.GONE);
 
                 Display display = getWindowManager().getDefaultDisplay();
@@ -174,6 +195,9 @@ public class ImageViewer extends AppCompatActivity {
                 break;
             case CASTLE:
                 anims.setVisibility(View.GONE);
+                row.setVisibility(View.GONE);
+                seekBar.setVisibility(View.GONE);
+                frame.setVisibility(View.GONE);
 
                 Bitmap b2 = (Bitmap) Objects.requireNonNull(VFile.getFile(path)).getData().getImg().bimg();
 
@@ -204,6 +228,13 @@ public class ImageViewer extends AppCompatActivity {
 
                 break;
             case ANIMU:
+                if(StaticStore.play) {
+                    buttons[0].hide();
+                    buttons[2].hide();
+                    seekBar.setEnabled(false);
+                } else {
+                    buttons[1].setImageDrawable(getDrawable(R.drawable.ic_pause_black_24dp));
+                }
                 img = findViewById(R.id.imgviewerimg);
 
                 img.setVisibility(View.GONE);
@@ -234,10 +265,7 @@ public class ImageViewer extends AppCompatActivity {
 
                 forms.setAdapter(adapter1);
 
-                if(!shared.getBoolean("theme",false))
-                    cView = new AnimationCView(this,id,form,0,true);
-                else
-                    cView = new AnimationCView(this,id,form,0,false);
+                cView = new AnimationCView(this,id,StaticStore.formposition,0,!shared.getBoolean("theme",false),shared.getBoolean("Axis",true),shared.getBoolean("FPS",true),frame,seekBar);
 
                 int px = StaticStore.dptopx(1f,this);
 
@@ -285,10 +313,13 @@ public class ImageViewer extends AppCompatActivity {
                 anims.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        int t = cView.anim.type;
-
-                        if(t != position)
+                        if(StaticStore.animposition != position) {
+                            StaticStore.animposition = position;
                             cView.anim.changeAnim(position);
+                            seekBar.setMax(cView.anim.len());
+                            seekBar.setProgress(0);
+                            StaticStore.frame = 0;
+                        }
                     }
 
                     @Override
@@ -302,7 +333,13 @@ public class ImageViewer extends AppCompatActivity {
                 forms.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long ids) {
-                        cView.anim = StaticStore.units.get(id).forms[position].getEAnim(anims.getSelectedItemPosition());
+                        if(StaticStore.formposition != position) {
+                            StaticStore.formposition = position;
+                            cView.anim = StaticStore.units.get(id).forms[position].getEAnim(anims.getSelectedItemPosition());
+                            seekBar.setMax(cView.anim.len());
+                            seekBar.setProgress(0);
+                            StaticStore.frame = 0;
+                        }
                     }
 
                     @Override
@@ -311,8 +348,94 @@ public class ImageViewer extends AppCompatActivity {
                     }
                 });
 
+                buttons[1].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        frame.setTextColor(getAttributeColor(ImageViewer.this,R.attr.TextPrimary));
+
+                        if(StaticStore.play) {
+                            buttons[1].setImageDrawable(getDrawable(R.drawable.ic_pause_black_24dp));
+                            buttons[0].show();
+                            buttons[2].show();
+                            seekBar.setEnabled(true);
+                        } else {
+                            buttons[1].setImageDrawable(getDrawable(R.drawable.ic_play_arrow_black_24dp));
+                            buttons[0].hide();
+                            buttons[2].hide();
+                            seekBar.setEnabled(false);
+                        }
+
+                        StaticStore.play = !StaticStore.play;
+                    }
+                });
+
+                buttons[0].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(StaticStore.frame > 0) {
+                            StaticStore.frame--;
+                            cView.anim.setTime(StaticStore.frame);
+                        } else {
+                            frame.setTextColor(Color.rgb(227, 66, 66));
+
+                            toast = Toast.makeText(ImageViewer.this,R.string.anim_warn_frame,Toast.LENGTH_SHORT);
+
+                            if(toast.getView().isShown())
+                                toast.show();
+                        }
+                    }
+                });
+
+                buttons[2].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StaticStore.frame++;
+                        cView.anim.setTime(StaticStore.frame);
+                        frame.setTextColor(getAttributeColor(ImageViewer.this,R.attr.TextPrimary));
+                    }
+                });
+
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if(fromUser) {
+                            StaticStore.frame = progress;
+                            cView.anim.setTime((int) StaticStore.frame);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+                frame.setText(getString(R.string.anim_frame).replace("-",""+StaticStore.frame));
+                seekBar.setProgress(StaticStore.frame);
+                anims.setSelection(StaticStore.animposition);
+                forms.setSelection(StaticStore.formposition);
+                cView.anim.changeAnim(StaticStore.animposition);
+                cView.anim.setTime(StaticStore.frame);
+                seekBar.setMax(cView.anim.len());
+
                 break;
             case ANIME:
+                if(StaticStore.play) {
+                    buttons[0].hide();
+                    buttons[2].hide();
+                    seekBar.setEnabled(false);
+                } else {
+                    buttons[1].setImageDrawable(getDrawable(R.drawable.ic_pause_black_24dp));
+                }
+
+                frame.setText(getString(R.string.anim_frame).replace("-",""+StaticStore.frame));
+                seekBar.setProgress(StaticStore.frame);
+
                 img = findViewById(R.id.imgviewerimg);
 
                 img.setVisibility(View.GONE);
@@ -323,10 +446,7 @@ public class ImageViewer extends AppCompatActivity {
 
                 linearLayout = findViewById(R.id.imgviewerln);
 
-                if(!shared.getBoolean("theme",false))
-                    cView = new AnimationCView(this,id,0,true);
-                else
-                    cView = new AnimationCView(this,id,0,false);
+                cView = new AnimationCView(this,id,0,!shared.getBoolean("theme",false),shared.getBoolean("Axis",true),shared.getBoolean("FPS",true),frame,seekBar);
 
                 px = StaticStore.dptopx(1f,this);
 
@@ -384,10 +504,13 @@ public class ImageViewer extends AppCompatActivity {
                 anims.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        int t = cView.anim.type;
-
-                        if(t != position)
+                        if(StaticStore.animposition != position) {
+                            StaticStore.animposition = position;
                             cView.anim.changeAnim(position);
+                            seekBar.setMax(cView.anim.len());
+                            seekBar.setProgress(0);
+                            StaticStore.frame = 0;
+                        }
                     }
 
                     @Override
@@ -395,6 +518,80 @@ public class ImageViewer extends AppCompatActivity {
 
                     }
                 });
+
+                buttons[1].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        frame.setTextColor(getAttributeColor(ImageViewer.this,R.attr.TextPrimary));
+
+                        if(StaticStore.play) {
+                            buttons[1].setImageDrawable(getDrawable(R.drawable.ic_pause_black_24dp));
+                            buttons[0].show();
+                            buttons[2].show();
+                            seekBar.setEnabled(true);
+                        } else {
+                            buttons[1].setImageDrawable(getDrawable(R.drawable.ic_play_arrow_black_24dp));
+                            buttons[0].hide();
+                            buttons[2].hide();
+                            seekBar.setEnabled(false);
+                        }
+
+                        StaticStore.play = !StaticStore.play;
+                    }
+                });
+
+                buttons[0].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(StaticStore.frame > 0) {
+                            StaticStore.frame--;
+                            cView.anim.setTime(StaticStore.frame);
+                        } else {
+                            frame.setTextColor(Color.rgb(227, 66, 66));
+
+                            toast = Toast.makeText(ImageViewer.this,R.string.anim_warn_frame,Toast.LENGTH_SHORT);
+
+                            if(toast.getView().isShown())
+                                toast.show();
+                        }
+                    }
+                });
+
+                buttons[2].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StaticStore.frame++;
+                        cView.anim.setTime(StaticStore.frame);
+                        frame.setTextColor(getAttributeColor(ImageViewer.this,R.attr.TextPrimary));
+                    }
+                });
+
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if(fromUser) {
+                            StaticStore.frame = progress;
+                            cView.anim.setTime((int) StaticStore.frame);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                
+                frame.setText(getString(R.string.anim_frame).replace("-",""+StaticStore.frame));
+                seekBar.setProgress(StaticStore.frame);
+                anims.setSelection(StaticStore.animposition);
+                cView.anim.changeAnim(StaticStore.animposition);
+                cView.anim.setTime(StaticStore.frame);
+                seekBar.setMax(cView.anim.len());
 
                 break;
         }
@@ -563,5 +760,18 @@ public class ImageViewer extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+    }
+
+    private static int getAttributeColor(Context context, int attributeId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attributeId, typedValue, true);
+        int colorRes = typedValue.resourceId;
+        int color = -1;
+        try {
+            color = ContextCompat.getColor(context,colorRes);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return color;
     }
 }
