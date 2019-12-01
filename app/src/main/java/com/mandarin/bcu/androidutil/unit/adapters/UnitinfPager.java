@@ -296,8 +296,7 @@ public class UnitinfPager extends Fragment {
 
         if(shared.getInt("default_level",50) > f.unit.max)
             currentlev = f.unit.max;
-        else
-        if(f.unit.rarity != 0)
+        else if(f.unit.rarity != 0)
             currentlev = shared.getInt("default_level",50);
         else
             currentlev = f.unit.max;
@@ -789,6 +788,7 @@ public class UnitinfPager extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 talents = true;
+
                 validate(f,t);
                 if(isChecked) {
                     ValueAnimator anim = ValueAnimator.ofInt(0,StaticStore.dptopx(100f,activity));

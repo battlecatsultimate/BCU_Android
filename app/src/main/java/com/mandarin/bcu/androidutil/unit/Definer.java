@@ -20,6 +20,7 @@ import com.mandarin.bcu.util.Interpret;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Queue;
 
 import common.CommonStatic;
@@ -50,10 +51,10 @@ public class Definer {
     public void define(Context context) {
         try {
             if(StaticStore.units==null) {
-                SharedPreferences shared = context.getSharedPreferences("Data",Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = shared.edit();
-
                 try {
+                    StaticStore.getUnitnumber();
+                    ImageBuilder.builder = new BMBuilder();
+                    new DefineItf().init();
                     Unit.readData();
                     PCoin.read();
                 } catch(Exception e) {
@@ -121,7 +122,7 @@ public class Definer {
                                 case "UnitName.txt":
                                     int size = qs.size();
                                     for (int j = 0; j < size; j++) {
-                                        String[] strs = qs.poll().trim().split("\t");
+                                        String[] strs = Objects.requireNonNull(qs.poll()).trim().split("\t");
                                         Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
                                         if (u == null)
                                             continue;
@@ -133,7 +134,7 @@ public class Definer {
                                 case "UnitExplanation.txt":
                                     size = qs.size();
                                     for (int j = 0; j < size; j++) {
-                                        String[] strs = qs.poll().trim().split("\t");
+                                        String[] strs = Objects.requireNonNull(qs.poll()).trim().split("\t");
                                         Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
                                         if (u == null)
                                             continue;

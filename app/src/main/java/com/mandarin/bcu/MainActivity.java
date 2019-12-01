@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Button animbtn = findViewById(R.id.anvibtn);
         Button stagebtn = findViewById(R.id.stgbtn);
         Button emlistbtn = findViewById(R.id.eninfbtn);
+        Button bang = findViewById(R.id.bang);
 
         ImageButton config = findViewById(R.id.mainconfig);
 
@@ -95,6 +96,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 gotoenemyinf();
+            }
+        });
+
+        bang.setOnClickListener(new SingleClick() {
+            @Override
+            public void onSingleClick(View v) {
+                Intent intent = new Intent(MainActivity.this,LineUpScreen.class);
+                startActivity(intent);
             }
         });
     }

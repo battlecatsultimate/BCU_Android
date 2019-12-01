@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Create"
+        android:id="@+id/lineup_create">
+        <menu>
+            <item android:title="Create Set"
+                android:id="@+id/lineup_create_set"/>
+
+            <item android:title="Create Lineup"
+                android:id="@+id/lineup_create_lineup"/>
+        </menu>
+    </item>
+
+    <item android:title="Copy"
+        android:id="@+id/lineup_copy">
+        <menu>
+            <item android:id="@+id/lineup_copy_set"
+                android:title="Copy Set"/>
+
+            <item android:id="@+id/lineup_copy_lineup"
+                android:title="Copy Lineup"/>
+        </menu>
+    </item>
+</menu>

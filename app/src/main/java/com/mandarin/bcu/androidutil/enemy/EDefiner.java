@@ -51,6 +51,7 @@ public class EDefiner {
         try {
             if(StaticStore.enemies == null) {
                 try {
+                    StaticStore.getEnemynumber();
                     Enemy.readData();
                 } catch (NullPointerException e) {
                     StaticStore.clear();

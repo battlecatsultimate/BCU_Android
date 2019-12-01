@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundPrimary">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lineupunitlevt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/lineup_unit_lev"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/lineuplevspin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="?attr/TextPrimary"
+                android:popupBackground="?attr/backgroundPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/lineupunitlevt"
+                app:layout_constraintStart_toEndOf="@+id/lineupunitlevt"
+                app:layout_constraintTop_toTopOf="@+id/lineupunitlevt" />
+
+            <TextView
+                android:id="@+id/lineuplevplus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/unit_info_plus"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/lineuplevspin"
+                app:layout_constraintStart_toEndOf="@+id/lineuplevspin"
+                app:layout_constraintTop_toTopOf="@+id/lineuplevspin" />
+
+            <Spinner
+                android:id="@+id/lineuplevpspin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="?attr/TextPrimary"
+                android:popupBackground="?attr/backgroundPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/lineuplevspin"
+                app:layout_constraintStart_toEndOf="@+id/lineuplevplus"
+                app:layout_constraintTop_toTopOf="@+id/lineuplevspin" />
+
+            <Button
+                android:id="@+id/lineupchform"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:text="@string/lineup_ch_form"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineupunitlevt" />
+
+            <TableRow
+                android:id="@+id/lineuppcoin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineupchform">
+
+                <Spinner
+                    android:id="@+id/lineupp"
+                    style="@style/Platform.Widget.AppCompat.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:backgroundTint="?attr/TableBorder"
+                    android:popupBackground="?attr/backgroundPrimary" />
+
+                <Spinner
+                    android:id="@+id/lineupp1"
+                    style="@style/Platform.Widget.AppCompat.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:backgroundTint="?attr/TableBorder"
+                    android:popupBackground="?attr/backgroundPrimary" />
+
+                <Spinner
+                    android:id="@+id/lineupp2"
+                    style="@style/Platform.Widget.AppCompat.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:backgroundTint="?attr/TableBorder"
+                    android:popupBackground="?attr/backgroundPrimary" />
+
+                <Spinner
+                    android:id="@+id/lineupp3"
+                    style="@style/Platform.Widget.AppCompat.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:backgroundTint="?attr/TableBorder"
+                    android:popupBackground="?attr/backgroundPrimary" />
+
+                <Spinner
+                    android:id="@+id/lineupp4"
+                    style="@style/Platform.Widget.AppCompat.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:backgroundTint="?attr/TableBorder"
+                    android:popupBackground="?attr/backgroundPrimary" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/lineupunittable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineuppcoin">
+
+                <TableLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:background="@drawable/cell_shape"
+                            android:gravity="center"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:text="@string/unit_info_hp"
+                            android:textColor="?attr/TextPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/lineupunithp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.75"
+                            android:background="@drawable/cell_shape"
+                            android:gravity="center"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:text="@string/def_unit_hp"
+                            android:textColor="?attr/TextPrimary" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView23"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:background="@drawable/cell_shape"
+                            android:gravity="center"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:text="@string/unit_info_atk"
+                            android:textColor="?attr/TextPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/lineupunitatk"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.75"
+                            android:background="@drawable/cell_shape"
+                            android:gravity="center"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:text="@string/def_unit_atk"
+                            android:textColor="?attr/TextPrimary" />
+                    </TableRow>
+
+                </TableLayout>
+
+                <ImageButton
+                    android:id="@+id/lineupunitinfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/cell_shape"
+                    android:contentDescription="@string/def_description"
+                    app:srcCompat="@drawable/ic_info_outline_black_24dp" />
+            </TableRow>
+
+            <CheckBox
+                android:id="@+id/lineuptalent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/unit_info_talent"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/lineupchform"
+                app:layout_constraintStart_toEndOf="@+id/lineupchform"
+                app:layout_constraintTop_toTopOf="@+id/lineupchform" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

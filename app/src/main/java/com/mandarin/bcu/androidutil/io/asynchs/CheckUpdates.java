@@ -317,7 +317,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             donloader.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(!cando)
+                    if(!cando || lang)
                         activity.finish();
                     else
                         new AddPathes(activity).execute();

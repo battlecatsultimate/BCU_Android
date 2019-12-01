@@ -31,6 +31,8 @@ import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import common.util.stage.MapColc;
+
 public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     private int size;
@@ -480,6 +482,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                 }
             }
             Intent intent = new Intent(activity, CheckUpdateScreen.class);
+            StaticStore.clear();
             activity.startActivity(intent);
             activity.finish();
         } else {

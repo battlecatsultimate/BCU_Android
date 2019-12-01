@@ -1,0 +1,275 @@
+package com.mandarin.bcu.androidutil.lineup;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
+import android.view.View;
+
+import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import common.battle.BasisSet;
+import common.battle.LineUp;
+import common.util.unit.Form;
+
+public class LineUpView extends View {
+    private List<Bitmap> units = new ArrayList<>();
+    private final Bitmap empty;
+    private Paint p = new Paint();
+    private Paint icon = new Paint();
+    private Paint floating = new Paint();
+    private float f;
+    private Bitmap bd;
+    float [][][] position = new float[2][5][2];
+
+    public boolean drawFloating = false;
+    public Bitmap floatB;
+    public int [] prePosit = new int[2];
+    public int lastPosit = 1;
+
+    public float x;
+    public float y;
+
+    float bw = 128f;
+
+    public LineUpView(Context context) {
+        super(context);
+
+        String path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/uni.png";
+
+        File f = new File(path);
+
+        if(!f.exists()) {
+            empty = StaticStore.empty(context,10,10);
+        } else {
+            empty = BitmapFactory.decodeFile(path);
+        }
+
+        this.f = StaticStore.dptopx(8f,context);
+        this.bd = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context,R.drawable.ic_delete_forever_black_24dp),bw*2/3,bw*2/3);
+
+        p.setFilterBitmap(true);
+        p.setAntiAlias(true);
+        p.setColor(StaticStore.getAttributeColor(context, R.attr.ButtonPrimary));
+
+        floating.setFilterBitmap(true);
+        floating.setAntiAlias(true);
+        floating.setAlpha(255/2);
+
+        for(int i = 0; i < position.length; i++) {
+            for(int j = 0; j < position[i].length; j++) {
+                position[i][j][0] = bw*i;
+                position[i][j][1] = bw*i;
+            }
+        }
+
+        for(int i = 0; i < 15; i++)
+            units.add(empty);
+    }
+
+    @Override
+    public void onDraw(Canvas c) {
+        getPosition();
+
+        DrawUnits(c);
+
+        DrawDeleteBox(c);
+
+        if(drawFloating)
+            DrawFloatingImage(c);
+
+        invalidate();
+    }
+
+    public void DrawFloatingImage(Canvas c) {
+        if(floatB != empty)
+            c.drawBitmap(StaticStore.getResizebp(floatB,bw*1.5f,bw*1.5f),x-(bw*1.5f/2),y-bw*1.5f/2,floating);
+    }
+
+    public void getPosition() {
+        float w = getWidth();
+        float h = getHeight();
+
+        if(w != 0 && h != 0) {
+            bw = w/5.0f;
+
+            for(int i = 0; i < position.length; i++) {
+                for (int  j = 0; j < position[i].length; j++) {
+                    position[i][j][0] = bw*j;
+                    position[i][j][1] = bw*i;
+                }
+            }
+        }
+    }
+
+    public void RemoveUnit(int [] posit) {
+        if(posit[0]*5+posit[1] >= StaticStore.currentForms.size() || posit[0]*5+posit[1] < 0)
+            return;
+
+        if(posit[0]*5+posit[1] < StaticStore.currentForms.size()) {
+            System.out.println("Removed at "+posit[0]+","+posit[1]+"!");
+            StaticStore.currentForms.remove(posit[0] * 5 + posit[1]);
+            units.remove(posit[0] * 5 + posit[1]);
+            units.add(empty);
+        }
+
+        toFormArray();
+    }
+
+    private void DrawDeleteBox(Canvas c) {
+        c.drawRoundRect(new RectF(f,bw*2+f,bw*5-f,bw*3-f),f,f,p);
+        c.drawBitmap(bd,bw*5/2-(float)bd.getWidth()/2,bw*2.5f-(float)bd.getHeight()/2,icon);
+    }
+
+    private void DrawUnits(Canvas c) {
+        int k = 0;
+
+        for (float[][] floats : position) {
+            for (int j = 0; j < floats.length; j++) {
+                if (k >= units.size())
+                    c.drawBitmap(StaticStore.getResizebp(empty, bw, bw), floats[j][0], floats[j][1], p);
+                else
+                    c.drawBitmap(StaticStore.getResizebp(units.get(k), bw, bw), floats[j][0], floats[j][1], p);
+
+                k += 1;
+            }
+        }
+    }
+
+    public void addUnit(Form f) {
+        if(units.size() < 15) {
+            changeUnitImage(lastPosit,(Bitmap) Objects.requireNonNull(f.udi).getImg().bimg());
+            lastPosit += 1;
+        } else {
+            units.set(units.size() - 1, (Bitmap) Objects.requireNonNull(f.udi).bimg.bimg());
+        }
+    }
+
+    public void changeUnitPosition(int from, int to) {
+        if(from < 0 || from >= units.size() || to < 0 || to >= units.size())
+            return;
+
+        Bitmap b = units.get(from);
+        Bitmap b2 = units.get(to);
+
+        if(b == empty) return;
+
+        Form f = StaticStore.currentForms.get(from);
+
+        if(b2 != empty) {
+            units.remove(from);
+            StaticStore.currentForms.remove(from);
+            units.add(to, b);
+            StaticStore.currentForms.add(to,f);
+        } else{
+            units.remove(from);
+            StaticStore.currentForms.remove(from);
+            units.add(lastPosit-1,b);
+            StaticStore.currentForms.add(lastPosit-1,f);
+        }
+
+        toFormArray();
+    }
+
+    public void CheckChange() {
+        int[] posit = getTouchedUnit(x,y);
+
+        if(posit == null)
+            return;
+
+        if(posit[0] == -100 && posit[1] == -100) {
+            RemoveUnit(prePosit);
+        } else
+            changeUnitPosition(5*prePosit[0]+prePosit[1],5*posit[0]+posit[1]);
+    }
+
+    public void changeUnitImage(int position, Bitmap newb) {
+        units.set(position,newb);
+    }
+
+    public void clearAllUnit() {
+        units.clear();
+
+        for(int i = 0; i < 15; i++)
+            units.add(empty);
+    }
+
+    public Bitmap getUnitImage(int x, int y) {
+        if(5*x+y >= units.size() || 5*x+y < 0)
+            return empty;
+        else
+            return units.get(5*x+y);
+    }
+
+    public int[] getTouchedUnit(float x, float y) {
+        for(int i = 0; i < position.length; i++) {
+            for(int j = 0; j < position[i].length; j++) {
+                if(x-position[i][j][0] >= 0 && y-position[i][j][1] >0 && x-bw-position[i][j][0] < 0 && y-bw-position[i][j][1] < 0)
+                    return new int[] {i,j};
+            }
+        }
+
+        if( y > bw*2 && y <= bw*3)
+            return new int [] {-100,-100};
+
+        return  null;
+    }
+
+    public void toFormList() {
+        Form[][] forms = BasisSet.current.sele.lu.fs;
+
+       StaticStore.currentForms = new ArrayList<>();
+
+        for (Form[] form : forms) {
+            StaticStore.currentForms.addAll(Arrays.asList(form));
+        }
+    }
+
+    public void toFormArray() {
+        for(int i = 0; i < BasisSet.current.sele.lu.fs.length; i++) {
+            for(int j = 0; j < BasisSet.current.sele.lu.fs[i].length; j++) {
+                if(i*5+j < StaticStore.currentForms.size())
+                    BasisSet.current.sele.lu.fs[i][j] = StaticStore.currentForms.get(i*5+j);
+                else
+                    BasisSet.current.sele.lu.fs[i][j] = null;
+            }
+        }
+    }
+
+    public void UpdateLineUp() {
+        clearAllUnit();
+        toFormList();
+
+        for(int i = 0; i < BasisSet.current.sele.lu.fs.length; i++) {
+            for(int j = 0; j < BasisSet.current.sele.lu.fs[i].length; j++) {
+                Form f = BasisSet.current.sele.lu.fs[i][j];
+
+                if(f != null) {
+                    Bitmap b = (Bitmap) f.anim.uni.getImg().bimg();
+
+                    changeUnitImage(i * 5 + j, b);
+                }
+            }
+        }
+    }
+
+    public void ChangeFroms(LineUp lu) {
+        for(int i = 0; i < lu.fs.length; i++) {
+            if (lu.fs[i].length >= 0)
+                System.arraycopy(lu.fs[i], 0, BasisSet.current.sele.lu.fs[i], 0, lu.fs[i].length);
+        }
+
+        UpdateLineUp();
+    }
+}

@@ -17,6 +17,7 @@ import common.CommonStatic;
 import common.system.MultiLangCont;
 import common.system.fake.ImageBuilder;
 import common.system.files.AssetData;
+import common.util.pack.Pack;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
 import common.util.stage.MapColc;
@@ -78,7 +79,9 @@ public class MapDefiner {
 
                                 if(strs.length == 1)
                                     continue;
+
                                 String id = strs[0].trim();
+
                                 String name = strs[strs.length-1].trim();
 
                                 if(id.length() == 0 || name.length() == 0)

@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.TypedValue;
 
 import com.mandarin.bcu.R;
@@ -23,20 +27,24 @@ import java.util.Locale;
 import java.util.Map;
 
 import common.CommonStatic;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 import common.util.pack.Background;
+import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.unit.Enemy;
+import common.util.unit.Form;
 import common.util.unit.Unit;
 
 public class StaticStore {
     /** System/IO variables **/
-    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802","080900","080901","080902"};
+    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802","080900","080901","080902","081000","081001","081005","081006"};
     public static final String [] OPTREQS = { "080504"  };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
-    public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/logs/";
+    public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/BCU/logs/";
     public static final long INTERVAL = 1000;
     public static final long INFO_INTERVAL = 350;
     public static int bgread = 0;
@@ -115,6 +123,19 @@ public class StaticStore {
     public static int frame = 0;
     public static int formposition = 0;
     public static int animposition = 0;
+    public static int gifFrame = 0;
+    public static boolean gifisSaving = false;
+    public static boolean enableGIF = false;
+    public static boolean keepDoing = true;
+    public static ArrayList<Bitmap> frames = new ArrayList<>();
+
+    /** Variables for LineUp **/
+    public static String [] LUnames = null;
+    public static List<BasisSet> sets = null;
+    public static boolean LULoading = false;
+    public static boolean LUread = false;
+    public static int LUtabPosition = 0;
+    public static List<Form> currentForms = null;
 
     /** Search Filter Variables **/
 
@@ -177,6 +198,8 @@ public class StaticStore {
         frame = 0;
         formposition = 0;
         animposition = 0;
+
+        CommonStatic.clearData();
     }
 
     public static void getUnitnumber() {
@@ -315,5 +338,45 @@ public class StaticStore {
         empty = true;
         talents = false;
         starred = false;
+    }
+
+    public static int[] getPossiblePosition(Form[][] f) {
+        for(int i = 0; i < f.length; i++) {
+            for(int j = 0; j < f[i].length; j++) {
+                if(f[i][j] == null)
+                    return new int[] {i,j};
+            }
+        }
+
+        return new int[] {1,4};
+    }
+
+    public static int getAttributeColor(Context context, int attributeId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attributeId, typedValue, true);
+        int colorRes = typedValue.resourceId;
+        int color = -1;
+        try {
+            color = ContextCompat.getColor(context,colorRes);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return color;
+    }
+
+    public static Bitmap getBitmapFromVector(Context context, int vectid) {
+        Drawable drawable = context.getDrawable(vectid);
+
+        if(drawable == null) return empty(context,100,100);
+
+        drawable.setTint(getAttributeColor(context,R.attr.TextPrimary));
+
+        Bitmap res = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(res);
+        drawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
+        drawable.draw(canvas);
+
+        return res;
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundPrimary">
+
+    <TextView
+        android:id="@+id/setluname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/lineup_cre_set"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/setluedit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setluname"
+        android:layout_alignStart="@+id/setluname"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/def_set_name"
+        android:inputType="textPersonName"
+        android:textColor="?attr/TextPrimary"
+        android:textColorHint="?attr/TextPrimary" />
+
+    <Button
+        android:id="@+id/setludone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setluedit"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/setlucancel"
+        android:background="@android:color/transparent"
+        android:text="@string/done"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary" />
+
+    <Button
+        android:id="@+id/setlucancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setluedit"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@android:color/transparent"
+        android:text="@string/main_file_cancel"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary" />
+</RelativeLayout>

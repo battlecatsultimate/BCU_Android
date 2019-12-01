@@ -62,7 +62,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         publishProgress(0);
 
         if (StaticStore.names == null) {
-            StaticStore.names = new String[unitnumber];
+            StaticStore.names = new String[StaticStore.unitnumber];
 
             for (int i = 0; i < StaticStore.names.length; i++) {
                 StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
@@ -72,7 +72,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         publishProgress(1);
 
         if (StaticStore.bitmaps == null) {
-            StaticStore.bitmaps = new Bitmap[unitnumber];
+            StaticStore.bitmaps = new Bitmap[StaticStore.unitnumber];
 
 
             for (int i = 0; i < unitnumber; i++) {
