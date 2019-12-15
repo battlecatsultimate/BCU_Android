@@ -66,7 +66,10 @@ public class LUUnitList extends Fragment {
 
                 int [] posit = StaticStore.getPossiblePosition(BasisSet.current.sele.lu.fs);
 
-                BasisSet.current.sele.lu.fs[posit[0]][posit[1]] = f;
+                if(posit[0] != 100)
+                    BasisSet.current.sele.lu.fs[posit[0]][posit[1]] = f;
+                else
+                    line.repform = f;
 
                 line.UpdateLineUp();
                 line.toFormArray();
@@ -90,7 +93,10 @@ public class LUUnitList extends Fragment {
             }
         }
 
-        return false;
+        if(line.repform == null) return false;
+
+        return u.equals(line.repform.unit);
+
     }
 
     public void setLineUp(LineUpView line) {

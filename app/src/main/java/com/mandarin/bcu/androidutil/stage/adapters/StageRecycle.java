@@ -193,13 +193,27 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
             viewHolder.star.setSelection(StaticStore.stageSpinner);
         }
 
-        if(mapcode == 0 || mapcode == 13)
-            viewHolder.xp.setText(s.getXP(st.info.xp,t,true));
+        if(st.info != null) {
+            if (mapcode == 0 || mapcode == 13)
+                viewHolder.xp.setText(s.getXP(st.info.xp, t, true));
+            else
+                viewHolder.xp.setText(s.getXP(st.info.xp, t, false));
+        } else {
+            viewHolder.xp.setText("0");
+        }
+
+        if(st.info != null)
+            viewHolder.energy.setText(String.valueOf(st.info.energy));
         else
-            viewHolder.xp.setText(s.getXP(st.info.xp,t,false));
-        viewHolder.energy.setText(String.valueOf(st.info.energy));
+            viewHolder.energy.setText("0");
+
         viewHolder.health.setText(String.valueOf(st.health));
-        viewHolder.difficulty.setText(s.getDifficulty(st.info.diff));
+
+        if(st.info != null)
+            viewHolder.difficulty.setText(s.getDifficulty(st.info.diff));
+        else
+            viewHolder.difficulty.setText(R.string.unit_info_t_none);
+
         viewHolder.continueable.setText(st.non_con ? activity.getString(R.string.stg_info_impo) : activity.getString(R.string.stg_info_poss));
         viewHolder.length.setText(String.valueOf(st.len));
         viewHolder.maxenemy.setText(String.valueOf(st.max));
@@ -265,31 +279,39 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
             }
         });
 
-        if (st.info.drop.length > 0) {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            viewHolder.drop.setLayoutManager(linearLayoutManager);
-            DropRecycle dropRecycle = new DropRecycle(st, activity);
-            viewHolder.drop.setAdapter(dropRecycle);
-            ViewCompat.setNestedScrollingEnabled(viewHolder.drop, false);
+        if(st.info != null) {
+            if (st.info.drop.length > 0) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                viewHolder.drop.setLayoutManager(linearLayoutManager);
+                DropRecycle dropRecycle = new DropRecycle(st, activity);
+                viewHolder.drop.setAdapter(dropRecycle);
+                ViewCompat.setNestedScrollingEnabled(viewHolder.drop, false);
+            } else {
+                viewHolder.droprow.setVisibility(View.GONE);
+                viewHolder.dropscroll.setVisibility(View.GONE);
+            }
+
+            if (st.info.time.length > 0) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                viewHolder.score.setLayoutManager(linearLayoutManager);
+                ScoreRecycle scoreRecycle = new ScoreRecycle(st, activity);
+                viewHolder.score.setAdapter(scoreRecycle);
+                ViewCompat.setNestedScrollingEnabled(viewHolder.score, false);
+            } else {
+                viewHolder.scorerow.setVisibility(View.GONE);
+                viewHolder.scorescroll.setVisibility(View.GONE);
+            }
+
+            if (st.info.drop.length <= 0 && st.info.time.length <= 0) {
+                viewHolder.droptitle.setVisibility(View.GONE);
+            }
         } else {
             viewHolder.droprow.setVisibility(View.GONE);
             viewHolder.dropscroll.setVisibility(View.GONE);
-        }
-
-        if (st.info.time.length > 0) {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            viewHolder.score.setLayoutManager(linearLayoutManager);
-            ScoreRecycle scoreRecycle = new ScoreRecycle(st, activity);
-            viewHolder.score.setAdapter(scoreRecycle);
-            ViewCompat.setNestedScrollingEnabled(viewHolder.score, false);
-        } else {
             viewHolder.scorerow.setVisibility(View.GONE);
             viewHolder.scorescroll.setVisibility(View.GONE);
-        }
-
-        if (st.info.drop.length <= 0 && st.info.time.length <= 0) {
             viewHolder.droptitle.setVisibility(View.GONE);
         }
 

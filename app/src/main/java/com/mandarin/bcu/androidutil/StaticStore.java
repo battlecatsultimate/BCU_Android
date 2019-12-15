@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -136,6 +137,8 @@ public class StaticStore {
     public static boolean LUread = false;
     public static int LUtabPosition = 0;
     public static List<Form> currentForms = null;
+    public static boolean updateForm = true;
+    public static int [] position = {-1,-1};
 
     /** Search Filter Variables **/
 
@@ -348,7 +351,7 @@ public class StaticStore {
             }
         }
 
-        return new int[] {1,4};
+        return new int[] {100,100};
     }
 
     public static int getAttributeColor(Context context, int attributeId) {
@@ -378,5 +381,19 @@ public class StaticStore {
         drawable.draw(canvas);
 
         return res;
+    }
+
+    public static Bitmap MakeIcon(Context context,Bitmap b, float wh) {
+        Bitmap before = Bitmap.createBitmap(128,128, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(before);
+        Paint p = new Paint();
+
+        System.out.println(""+b.getWidth()+","+b.getHeight());
+
+        float ratio = b.getWidth()/128f;
+
+        c.drawBitmap(b,64-(b.getWidth()/2f),64-(b.getHeight()/2f),p);
+
+        return getResizeb(before,context,wh);
     }
 }

@@ -229,7 +229,14 @@ public class UnitinfPager extends Fragment {
         if(name == null)
             name = "";
 
-        uniticon.setImageBitmap(StaticStore.getResizeb((Bitmap)f.anim.uni.getImg().bimg(),activity,48));
+        Bitmap icon = (Bitmap) f.anim.uni.getImg().bimg();
+
+        if(icon.getHeight() != icon.getWidth())
+            icon = StaticStore.MakeIcon(activity,icon,48f);
+        else
+            icon = StaticStore.getResizeb(icon,activity,48f);
+
+        uniticon.setImageBitmap(icon);
         unitname.setText(name);
         unitid.setText(s.getID(form,number(id)));
         unithp.setText(s.getHP(f,t,f.unit.getPrefLv(),false,pcoinlev));

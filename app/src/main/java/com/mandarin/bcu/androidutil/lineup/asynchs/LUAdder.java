@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,6 +60,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
     private final FragmentManager manager;
 
     private int prePosit;
+    private boolean TabInitialize = true;
 
     LUTab tab;
 
@@ -116,8 +118,12 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             for (int i = 0; i < StaticStore.unitnumber; i++) {
                 String shortPath = "./org/unit/" + number(i) + "/f/uni" + number(i) + "_f00.png";
 
-                StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(), activity, 48f);
+                Bitmap b = (Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg();
 
+                if(b.getWidth() == b.getHeight())
+                    StaticStore.bitmaps[i] = StaticStore.getResizeb(b, activity, 48f);
+                else
+                    StaticStore.bitmaps[i] = StaticStore.MakeIcon(activity,b,48f);
             }
         }
 
@@ -202,20 +208,11 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                                 if(posit != null) {
                                     line.prePosit = posit;
-
-                                    tab.updateData(posit);
                                 }
                             }
 
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            if(!line.drawFloating) {
-                                posit = line.getTouchedUnit(event.getX(), event.getY());
-
-                                if(posit != null)
-                                    line.prePosit = posit;
-                            }
-
                             line.x = event.getX();
                             line.y = event.getY();
 
@@ -223,7 +220,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                                 line.floatB = line.getUnitImage(line.prePosit[0], line.prePosit[1]);
                             }
 
-                            line.drawFloating = posit != null;
+                            line.drawFloating = true;
 
                             break;
                         case MotionEvent.ACTION_UP:
@@ -231,8 +228,13 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                             int [] deleted = line.getTouchedUnit(event.getX(),event.getY());
 
-                            if(deleted[0] == -100)
-                                tab.updateData(new int [] {-1,-1});
+                            if(deleted[0] == -100) {
+                                StaticStore.position = new int[]{-1, -1};
+                                StaticStore.updateForm = true;
+                            } else {
+                                StaticStore.position = deleted;
+                                StaticStore.updateForm = true;
+                            }
 
                             line.drawFloating = false;
 
@@ -275,6 +277,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     posits.add(-1);
 
                     tab = new LUTab(manager,line,posits);
+                    StaticStore.updateForm = true;
 
                     pager.setAdapter(tab);
                     pager.setOffscreenPageLimit(3);
@@ -314,6 +317,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     posits.add(-1);
 
                     tab = new LUTab(manager,line,posits);
+                    StaticStore.updateForm = true;
 
                     pager.setAdapter(tab);
                     pager.setOffscreenPageLimit(3);
@@ -372,6 +376,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                                     setspin.setSelection(setspin.getCount()-1);
 
                                     LUTab tab = new LUTab(manager,line);
+                                    StaticStore.updateForm = true;
 
                                     pager.setAdapter(tab);
                                     pager.setOffscreenPageLimit(3);
@@ -429,6 +434,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                                     luspin.setSelection(luspin.getCount()-1);
 
                                     LUTab tab = new LUTab(manager,line);
+                                    StaticStore.updateForm = true;
 
                                     pager.setAdapter(tab);
                                     pager.setOffscreenPageLimit(3);
@@ -551,29 +557,24 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
     private class LUTab extends FragmentStatePagerAdapter {
         private LineUpView lineup;
-        private ArrayList<Integer> posit = new ArrayList<>();
 
         LUTab(FragmentManager fm, LineUpView line) {
             super(fm);
             this.lineup = line;
-
-            posit.add(-1);
-            posit.add(-1);
         }
 
         LUTab(FragmentManager fm, LineUpView line, ArrayList<Integer> posit) {
             super(fm);
             this.lineup = line;
-            this.posit = posit;
         }
 
         @Override
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return LUUnitList.newInstance(StaticStore.LUnames,lineup);
+                    return LUUnitList.newInstance(StaticStore.LUnames, lineup);
                 case 1:
-                    return LUUnitSetting.newInstance(posit,lineup);
+                    return LUUnitSetting.newInstance(lineup);
                 case 2:
                     return LUCastleSetting.newInstance();
                 case 3:
@@ -596,15 +597,6 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         @Override
         public CharSequence getPageTitle(int position) {
             return names[position];
-        }
-
-        void updateData(int [] posit) {
-            this.posit.clear();
-
-            this.posit.add(posit[0]);
-            this.posit.add(posit[1]);
-
-            notifyDataSetChanged();
         }
     }
 

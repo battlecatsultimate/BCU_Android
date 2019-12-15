@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        bang.setVisibility(View.GONE);
     }
 
     protected void animationview() {

@@ -27,7 +27,8 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LineUpScreen"></activity>
+        <activity android:name=".LineUpScreen"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ImageViewer"
             android:hardwareAccelerated="true"
