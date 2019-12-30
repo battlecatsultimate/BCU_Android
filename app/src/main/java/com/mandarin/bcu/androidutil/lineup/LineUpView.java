@@ -33,16 +33,23 @@ public class LineUpView extends View {
     private Bitmap replace;
     float [][][] position = new float[2][5][2];
 
+    /**This boolean decides if floating image can be drawn or not**/
     public boolean drawFloating = false;
+    /**Bitmap about floating unit icon**/
     public Bitmap floatB;
+    /**Position where user firstly touched**/
     public int [] prePosit = new int[2];
+    /**Last position of lineup**/
     public int lastPosit = 1;
 
+    /**X coordinate where user is touching**/
     public float x;
+    /**Y coordinate where user is touching**/
     public float y;
 
     float bw = 128f;
 
+    /**Replacing area's form data**/
     public Form repform = null;
 
     public LineUpView(Context context) {
@@ -97,11 +104,13 @@ public class LineUpView extends View {
         invalidate();
     }
 
+    /**If floatB is true, draws floating unit image**/
     public void DrawFloatingImage(Canvas c) {
         if(floatB != empty)
             c.drawBitmap(StaticStore.getResizebp(floatB,bw*1.5f,bw*1.5f),x-(bw*1.5f/2),y-bw*1.5f/2,floating);
     }
 
+    /**Decides unit icons position using its width and height**/
     public void getPosition() {
         float w = getWidth();
         float h = getHeight();
@@ -118,6 +127,7 @@ public class LineUpView extends View {
         }
     }
 
+    /**Remove unit from lineup and itself using position**/
     public void RemoveUnit(int [] posit) {
         if(posit[0]*5+posit[1] >= StaticStore.currentForms.size() || posit[0]*5+posit[1] < 0)
             if(posit[0] != 100)
@@ -130,17 +140,21 @@ public class LineUpView extends View {
                 units.add(empty);
             }
 
+            lastPosit--;
+
             toFormArray();
         } else {
             repform = null;
         }
     }
 
+    /**Draws deleting area**/
     private void DrawDeleteBox(Canvas c) {
         c.drawRoundRect(new RectF(bw+f,bw*2+f,bw*5-f,bw*3-f),f,f,p);
         c.drawBitmap(bd,bw+bw*4/2-(float)bd.getWidth()/2,bw*2.5f-(float)bd.getHeight()/2,icon);
     }
 
+    /**Draws replacing area using repform**/
     private void DrawReplaceBox(Canvas c) {
         if(repform == null) {
             c.drawBitmap(StaticStore.getResizebp(empty, bw, bw), 0, bw * 2, p);
@@ -155,6 +169,7 @@ public class LineUpView extends View {
         }
     }
 
+    /**Draws unit icons using units**/
     private void DrawUnits(Canvas c) {
         int k = 0;
 
@@ -179,6 +194,7 @@ public class LineUpView extends View {
         }
     }
 
+    /**Changes 2 units' position using 2 ints. from is first unit's position, and to is second unit's position**/
     public void changeUnitPosition(int from, int to) {
         if(from < 0 || from >= units.size() || to < 0 || to >= units.size())
             return;
@@ -205,6 +221,7 @@ public class LineUpView extends View {
         toFormArray();
     }
 
+    /**Replaces specific unit and unit which is in replacing area**/
     public void ReplaceUnit(int from, int to) {
         Form f = null;
         Form f2 = null;
@@ -298,6 +315,7 @@ public class LineUpView extends View {
         toFormArray();
     }
 
+    /**Checks whether user tried to changed lineup**/
     public void CheckChange() {
         int[] posit = getTouchedUnit(x,y);
 
@@ -311,12 +329,18 @@ public class LineUpView extends View {
         } else {
             changeUnitPosition(5 * prePosit[0] + prePosit[1], 5 * posit[0] + posit[1]);
         }
+
+        BasisSet.current.sele.lu.renew();
+
+        StaticStore.SaveLineUp();
     }
 
+    /**Changes unit icon**/
     public void changeUnitImage(int position, Bitmap newb) {
         units.set(position,newb);
     }
 
+    /**Clears all unit icons**/
     public void clearAllUnit() {
         units.clear();
 
@@ -324,6 +348,7 @@ public class LineUpView extends View {
             units.add(empty);
     }
 
+    /**Gets unit's icon using position vlaues**/
     public Bitmap getUnitImage(int x, int y) {
         if(x == 100)
             if(repform != null) {
@@ -342,6 +367,7 @@ public class LineUpView extends View {
             return units.get(5*x+y);
     }
 
+    /**Gets unit which user touched**/
     public int[] getTouchedUnit(float x, float y) {
         for(int i = 0; i < position.length; i++) {
             for(int j = 0; j < position[i].length; j++) {
@@ -359,6 +385,7 @@ public class LineUpView extends View {
         return  null;
     }
 
+    /**Gets form data from array of forms in Lineup and converts it to list of forms in StaticStore**/
     public void toFormList() {
         Form[][] forms = BasisSet.current.sele.lu.fs;
 
@@ -369,6 +396,7 @@ public class LineUpView extends View {
         }
     }
 
+    /**Gets form data from list of forms in StaticStore and converts it to array of forms in Lineup**/
     public void toFormArray() {
         for(int i = 0; i < BasisSet.current.sele.lu.fs.length; i++) {
             for(int j = 0; j < BasisSet.current.sele.lu.fs[i].length; j++) {
@@ -380,6 +408,7 @@ public class LineUpView extends View {
         }
     }
 
+    /**Update Lineup view using form data in Lineup**/
     public void UpdateLineUp() {
         clearAllUnit();
         toFormList();
@@ -391,6 +420,14 @@ public class LineUpView extends View {
                 Form f = BasisSet.current.sele.lu.fs[i][j];
 
                 if(f != null) {
+                    if(repform != null) {
+                        if (f.unit == repform.unit) {
+                            repform = null;
+                            StaticStore.position = new int[]{-1, -1};
+                            StaticStore.updateForm = true;
+                        }
+                    }
+
                     Bitmap b = (Bitmap) f.anim.uni.getImg().bimg();
 
                     if(b.getWidth() != b.getHeight())
@@ -404,6 +441,7 @@ public class LineUpView extends View {
         }
     }
 
+    /**Change specific unit's form**/
     public void ChangeFroms(LineUp lu) {
         for(int i = 0; i < lu.fs.length; i++) {
             if (lu.fs[i].length >= 0)

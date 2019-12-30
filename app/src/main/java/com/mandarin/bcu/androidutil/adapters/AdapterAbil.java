@@ -61,12 +61,17 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
             viewHolder.abiltext.setText(procs.get(location));
 
             Bitmap resized;
-            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 28f);
+
+            if(procicon.get(location) != 31) {
+                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 28f);
+                } else {
+                    resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 24f);
+                }
+                viewHolder.abilicon.setImageBitmap(resized);
             } else {
-                resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)],context,24f);
+                viewHolder.abilicon.setImageBitmap(empty());
             }
-            viewHolder.abilicon.setImageBitmap(resized);
         }
     }
 
@@ -89,6 +94,10 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
 
     private Bitmap empty() {
         float dp =28f;
+
+        if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            dp = 24f;
+
         Resources r = context.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;

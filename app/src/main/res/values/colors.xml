@@ -11,5 +11,6 @@
     <color name="TableBorder">#999999</color>
     <color name="UnitinfoName">#D9D9D9</color>
     <color name="iconPrimary">#A9A9A9</color>
+    <color name="SelectionPrimary">#f8bbd0</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/UnitinfoName</color>
 </resources>

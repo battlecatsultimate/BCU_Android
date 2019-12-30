@@ -40,7 +40,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     private ArrayList<Boolean> remover = new ArrayList<>();
 
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt"};
+    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt","ComboName.txt"};
     private String difffile = "Difficulty.txt";
     private String source;
     private String downloading;

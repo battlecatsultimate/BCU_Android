@@ -1,5 +1,7 @@
 package com.mandarin.bcu.androidutil.io;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,6 +55,33 @@ public class ErrorLogWriter implements Thread.UncaughtExceptionHandler {
 
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.append(current);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void WriteLog(Exception error) {
+        try {
+            String path = Environment.getExternalStorageDirectory().getPath()+"/BCU/logs/";
+            File f = new File(path);
+
+            if(!f.exists()) {
+                f.mkdirs();
+            }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+            Date date = new Date();
+            String name = dateFormat.format(date)+".txt";
+
+            File file = new File(path,name);
+
+            if(!file.exists())
+                f.createNewFile();
+
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.append(error.toString());
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {

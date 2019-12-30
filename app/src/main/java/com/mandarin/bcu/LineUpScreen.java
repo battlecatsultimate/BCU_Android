@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mandarin.bcu.androidutil.Revalidater;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.lineup.LineUpView;
 import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder;
 
@@ -63,5 +64,11 @@ public class LineUpScreen extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        StaticStore.SaveLineUp();
+        super.onBackPressed();
     }
 }

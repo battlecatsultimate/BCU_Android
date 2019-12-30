@@ -27,6 +27,7 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.PCoin;
 import common.system.MultiLangCont;
+import common.system.P;
 import common.system.fake.ImageBuilder;
 import common.system.files.AssetData;
 import common.util.pack.Pack;
@@ -45,7 +46,7 @@ public class Definer {
     private int [] textid = StaticStore.textid;
     private String [] textstring = new String[textid.length];
     private String [] lan = {"/en/","/zh/","/kr/","/jp/"};
-    private String [] files = {"UnitName.txt","UnitExplanation.txt","CatFruitExplanation.txt"};
+    private String [] files = {"UnitName.txt","UnitExplanation.txt","CatFruitExplanation.txt","ComboName.txt"};
 
 
     public void define(Context context) {
@@ -57,6 +58,7 @@ public class Definer {
                     new DefineItf().init();
                     Unit.readData();
                     PCoin.read();
+                    Combo.readFile();
                 } catch(Exception e) {
                     StaticStore.clear();
 
@@ -70,6 +72,7 @@ public class Definer {
                     new DefineItf().init();
                     Unit.readData();
                     PCoin.read();
+                    Combo.readFile();
                     StaticStore.root = 1;
                 }
 
@@ -108,6 +111,7 @@ public class Definer {
                 MultiLangCont.FNAME.clear();
                 MultiLangCont.FEXP.clear();
                 MultiLangCont.CFEXP.clear();
+                MultiLangCont.COMNAME.clear();
 
                 for(String l : lan) {
                     for(String n : files) {
@@ -160,6 +164,20 @@ public class Definer {
                                         MultiLangCont.CFEXP.put(l.substring(1, l.length() - 1), u.info, lines);
                                     }
                                     break;
+                                case "ComboName.txt":
+                                    for(String str : qs) {
+                                        String [] strs = str.trim().split("\t");
+
+                                        if(strs.length <= 1) {
+                                            continue;
+                                        }
+
+                                        int id = Integer.parseInt(strs[0].trim());
+
+                                        String name = strs[1].trim();
+
+                                        MultiLangCont.COMNAME.put(l.substring(1,l.length()-1),id,name);
+                                    }
                             }
                         }
                     }

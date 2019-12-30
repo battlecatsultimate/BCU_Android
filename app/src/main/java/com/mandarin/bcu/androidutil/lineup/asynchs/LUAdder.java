@@ -24,12 +24,16 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 import com.mandarin.bcu.androidutil.lineup.LineUpView;
 import com.mandarin.bcu.androidutil.lineup.adapters.LUCastleSetting;
+import com.mandarin.bcu.androidutil.lineup.adapters.LUCatCombo;
+import com.mandarin.bcu.androidutil.lineup.adapters.LUConstruction;
 import com.mandarin.bcu.androidutil.lineup.adapters.LUTreasureSetting;
 import com.mandarin.bcu.androidutil.lineup.adapters.LUUnitList;
 import com.mandarin.bcu.androidutil.lineup.adapters.LUUnitSetting;
@@ -43,9 +47,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import common.battle.BasisSet;
@@ -64,7 +71,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
     LUTab tab;
 
-    private final int [] ids = {R.string.lineup_list,R.string.lineup_unit,R.string.lineup_castle,R.string.lineup_treasure};
+    private final int [] ids = {R.string.lineup_list,R.string.lineup_unit,R.string.lineup_castle,R.string.lineup_treasure,R.string.lineup_construction,R.string.lineup_combo};
     private String [] names = new String[ids.length];
 
     private ArrayList<Integer> posits = new ArrayList<>();
@@ -146,7 +153,14 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                     InStream is = InStream.getIns(buff);
 
-                    BasisSet.read(is);
+                    try {
+                        BasisSet.read(is);
+                    } catch (Exception e) {
+                        Toast.makeText(activity,R.string.lineup_file_err,Toast.LENGTH_SHORT).show();
+                        BasisSet.list.clear();
+                        new BasisSet();
+                        ErrorLogWriter.WriteLog(e);
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -228,12 +242,14 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                             int [] deleted = line.getTouchedUnit(event.getX(),event.getY());
 
-                            if(deleted[0] == -100) {
-                                StaticStore.position = new int[]{-1, -1};
-                                StaticStore.updateForm = true;
-                            } else {
-                                StaticStore.position = deleted;
-                                StaticStore.updateForm = true;
+                            if(deleted != null) {
+                                if (deleted[0] == -100) {
+                                    StaticStore.position = new int[]{-1, -1};
+                                    StaticStore.updateForm = true;
+                                } else {
+                                    StaticStore.position = deleted;
+                                    StaticStore.updateForm = true;
+                                }
                             }
 
                             line.drawFloating = false;
@@ -280,7 +296,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     StaticStore.updateForm = true;
 
                     pager.setAdapter(tab);
-                    pager.setOffscreenPageLimit(3);
+                    pager.setOffscreenPageLimit(5);
                     pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
                     tabs.setupWithViewPager(pager);
 
@@ -320,7 +336,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     StaticStore.updateForm = true;
 
                     pager.setAdapter(tab);
-                    pager.setOffscreenPageLimit(3);
+                    pager.setOffscreenPageLimit(5);
                     pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
                     tabs.setupWithViewPager(pager);
 
@@ -379,7 +395,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                                     StaticStore.updateForm = true;
 
                                     pager.setAdapter(tab);
-                                    pager.setOffscreenPageLimit(3);
+                                    pager.setOffscreenPageLimit(5);
                                     pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
                                     tabs.setupWithViewPager(pager);
 
@@ -437,7 +453,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                                     StaticStore.updateForm = true;
 
                                     pager.setAdapter(tab);
-                                    pager.setOffscreenPageLimit(3);
+                                    pager.setOffscreenPageLimit(5);
                                     pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
                                     tabs.setupWithViewPager(pager);
 
@@ -473,7 +489,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             });
 
             pager.setAdapter(tab);
-            pager.setOffscreenPageLimit(3);
+            pager.setOffscreenPageLimit(5);
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
             tabs.setupWithViewPager(pager);
 
@@ -579,6 +595,10 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     return LUCastleSetting.newInstance();
                 case 3:
                     return LUTreasureSetting.newInstance();
+                case 4:
+                    return LUConstruction.newInstance();
+                case 5:
+                    return LUCatCombo.newInstance(lineup);
             }
 
             return null;
@@ -586,7 +606,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
         @Override
         public int getCount() {
-            return 4;
+            return 6;
         }
 
         @Override

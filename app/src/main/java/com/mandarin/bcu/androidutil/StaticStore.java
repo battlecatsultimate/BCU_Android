@@ -20,7 +20,9 @@ import android.util.TypedValue;
 import com.mandarin.bcu.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,18 +33,21 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.Treasure;
+import common.io.OutStream;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 import common.util.pack.Background;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
+import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
 public class StaticStore {
     /** System/IO variables **/
-    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802","080900","080901","080902","081000","081001","081005","081006"};
+    public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802",
+                                            "080900","080901","080902","081000","081001","081005","081006","090000","090001","090100","090101","090102","090103"};
     public static final String [] OPTREQS = { "080504"  };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/BCU/logs/";
@@ -66,7 +71,7 @@ public class StaticStore {
     public static String [] addition = null;
 
     public static int[] anumber = {203,204,206,202,205,200,209,227,218,227,227,227,227,260,258,227,227,110,227,227,122,114};
-    public static int[] pnumber = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,227,229,231,49,45,47,51,43,53,109,227};
+    public static int[] pnumber = {207,197,198,201,208,195,264,266,227,196,199,227,227,216,214,215,210,213,262,116,227,227,227,227,227,227,227,227,227,229,231,227,49,45,47,51,43,53,109,227};
     public static String[] afiles = {"","","","","","","","MovingX.png","","SnipeX.png","TimeX.png","Ghost.png","PoisonX.png","","","","ThemeX.png",
             "","SealX.png","BossWaveX.png","",""};
     public static String[] pfiles = {"","","","","","","","","Curse.png","","","Burrow.png","Revive.png","","","","","","","","Snipe.png","Time.png","Seal.png"
@@ -77,14 +82,14 @@ public class StaticStore {
     public static int [] procid = {R.string.sch_abi_kb,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_cr,R.string.sch_abi_wv,R.string.sch_abi_we,R.string.sch_abi_bb,R.string.sch_abi_wa,R.string.abi_cu,
             R.string.sch_abi_str,R.string.sch_abi_su,R.string.abi_bu,R.string.abi_rev,R.string.sch_abi_ik,R.string.sch_abi_if,R.string.sch_abi_is,R.string.sch_abi_iwv,R.string.sch_abi_iw,R.string.sch_abi_iwa,
             R.string.sch_abi_ic,R.string.abi_snk,R.string.abi_stt,R.string.abi_seal,R.string.abi_sum,R.string.abi_mvatk,R.string.abi_thch,R.string.abi_poi,R.string.abi_boswv
-            ,R.string.abi_imcri,R.string.sch_abi_sb,R.string.sch_abi_iv,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
+            ,R.string.abi_imcri,R.string.sch_abi_sb,R.string.sch_abi_iv,R.string.sch_abi_poi,R.string.talen_kb,R.string.talen_fr,R.string.talen_sl,R.string.talen_wv,R.string.talen_we,R.string.talen_warp,
             R.string.talen_cu};
     public static int [] abiid = {R.string.sch_abi_st,R.string.sch_abi_re,R.string.sch_abi_md,R.string.sch_abi_ao,R.string.sch_abi_em,R.string.sch_abi_bd,R.string.sch_abi_me,R.string.abi_imvatk,R.string.sch_abi_ws,
             R.string.abi_isnk,R.string.abi_istt,R.string.abi_gh,R.string.abi_ipoi,R.string.sch_abi_zk,R.string.sch_abi_wk,R.string.abi_sui,R.string.abi_ithch,R.string.sch_abi_eva,
             R.string.abi_iseal,R.string.abi_iboswv,R.string.sch_abi_it,R.string.sch_abi_id};
     public static int [] textid = {R.string.unit_info_text0,R.string.unit_info_text1,R.string.unit_info_text2,R.string.unit_info_text3,R.string.unit_info_text4,R.string.unit_info_text5,R.string.unit_info_text6,R.string.unit_info_text7,
             R.string.def_unit_info_text8,R.string.unit_info_text9,R.string.unit_info_text10,R.string.def_unit_info_text11,R.string.def_unit_info_text12,R.string.unit_info_text13,
-            R.string.unit_info_text14,R.string.unit_info_text15,R.string.unit_info_text16,R.string.unit_info_text17};
+            R.string.unit_info_text14,R.string.unit_info_text15,R.string.unit_info_text16,R.string.unit_info_text17,R.string.unit_info_text18};
 
     /** Variables for Unit **/
 
@@ -139,6 +144,7 @@ public class StaticStore {
     public static List<Form> currentForms = null;
     public static boolean updateForm = true;
     public static int [] position = {-1,-1};
+    public static List<Combo> combos = new ArrayList<>();
 
     /** Search Filter Variables **/
 
@@ -388,12 +394,35 @@ public class StaticStore {
         Canvas c = new Canvas(before);
         Paint p = new Paint();
 
-        System.out.println(""+b.getWidth()+","+b.getHeight());
-
-        float ratio = b.getWidth()/128f;
-
         c.drawBitmap(b,64-(b.getWidth()/2f),64-(b.getHeight()/2f),p);
 
         return getResizeb(before,context,wh);
+    }
+
+    public static void SaveLineUp() {
+        String Path = Environment.getExternalStorageDirectory().getPath()+"/BCU/user/basis.v";
+        String Direct = Environment.getExternalStorageDirectory().getPath()+"/BCU/user/";
+
+        File g = new File(Direct);
+
+        if(!g.exists())
+            g.mkdirs();
+
+        File f = new File(Path);
+
+        try {
+            if(!f.exists())
+                f.createNewFile();
+
+            OutputStream os = new FileOutputStream(f);
+
+            OutStream out = BasisSet.writeAll();
+
+            out.flush(os);
+
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

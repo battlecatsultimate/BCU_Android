@@ -36,7 +36,6 @@ public class MapDefiner {
             if(StaticStore.map == null) {
                 try {
                     MapColc.read();
-                    Combo.readFile();
                     CharaGroup.read();
                     Limit.read();
                 } catch (Exception e) {
@@ -51,7 +50,6 @@ public class MapDefiner {
                     ImageBuilder.builder = new BMBuilder();
                     new DefineItf().init();
                     MapColc.read();
-                    Combo.readFile();
                     CharaGroup.read();
                     Limit.read();
                     StaticStore.root = 1;

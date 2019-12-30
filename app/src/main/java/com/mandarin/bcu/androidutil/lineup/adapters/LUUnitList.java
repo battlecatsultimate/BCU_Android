@@ -84,7 +84,11 @@ public class LUUnitList extends Fragment {
 
         for(int i = 0; i < BasisSet.current.sele.lu.fs.length; i++) {
             for(int j = 0; j < BasisSet.current.sele.lu.fs[i].length; j++) {
-                if(BasisSet.current.sele.lu.fs[i][j] == null) return false;
+                if(BasisSet.current.sele.lu.fs[i][j] == null) {
+                    if(line.repform == null) return false;
+
+                    return u.equals(line.repform.unit);
+                }
 
                 Unit u2 = BasisSet.current.sele.lu.fs[i][j].unit;
 
@@ -93,10 +97,7 @@ public class LUUnitList extends Fragment {
             }
         }
 
-        if(line.repform == null) return false;
-
-        return u.equals(line.repform.unit);
-
+        return false;
     }
 
     public void setLineUp(LineUpView line) {

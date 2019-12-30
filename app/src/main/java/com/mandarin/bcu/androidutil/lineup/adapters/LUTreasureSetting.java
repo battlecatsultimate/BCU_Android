@@ -661,7 +661,8 @@ public class LUTreasureSetting extends Fragment {
                                         t.tech[jj] = val;
 
                                         teche.setText("");
-
+                                        tech.setHelperTextEnabled(true);
+                                        tech.setHelperText("1~30 Lv.");
                                         break;
                                     case 1:
                                         t.trea[jj] = val;

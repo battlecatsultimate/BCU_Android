@@ -1,0 +1,35 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    When the item will be Focused.
+    You can give Hex value of color directly or just define a color in color.xml
+     and use it here like I am doing
+    -->
+    <item android:state_focused="true"><shape>
+        <solid android:color="@android:color/holo_blue_dark" />
+    </shape></item>
+
+    <!--
+    When the item will be Selected.
+    You can give Hex value of color directly or just define a color in color.xml
+     and use it here like I am doing
+    -->
+    <item android:state_selected="true"><shape>
+        <solid android:color="@android:color/holo_blue_dark" />
+    </shape></item>
+
+    <!--
+    When the item will be Pressed.
+    You can give Hex value of color directly or just define a color in color.xml
+     and use it here like I am doing
+    -->
+    <item android:state_pressed="true"><shape>
+        <solid android:color="@android:color/holo_blue_dark"/></shape></item>
+
+    <!--
+    When the item will be in Normal State.
+    Use any custom drawable or any color like above for normal state
+    -->
+    <item android:drawable="@android:color/transparent" />
+
+</selector>

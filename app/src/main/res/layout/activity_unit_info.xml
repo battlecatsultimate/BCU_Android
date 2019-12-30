@@ -220,7 +220,7 @@
             android:id="@+id/treasurelayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="@drawable/tab_border"
+            android:background="?attr/backgroundPrimary"
             android:outlineProvider="bounds"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

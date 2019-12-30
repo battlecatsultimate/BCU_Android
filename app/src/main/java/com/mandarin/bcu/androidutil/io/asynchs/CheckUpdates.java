@@ -48,7 +48,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     private boolean lang;
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt"};
+    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt","ComboName.txt"};
     private String source;
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;

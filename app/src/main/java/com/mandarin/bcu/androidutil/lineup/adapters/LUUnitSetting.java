@@ -26,11 +26,10 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
-import com.mandarin.bcu.androidutil.lineup.LineUpView;
 import com.mandarin.bcu.androidutil.getStrings;
+import com.mandarin.bcu.androidutil.lineup.LineUpView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import common.battle.BasisSet;
@@ -54,7 +53,7 @@ public class LUUnitSetting extends Fragment {
                 StaticStore.updateForm = false;
             }
 
-            handler.postDelayed(this,1);
+            handler.postDelayed(this,50);
         }
     };
 
@@ -78,7 +77,7 @@ public class LUUnitSetting extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
         view = inflater.inflate(R.layout.lineup_unit_set,group,false);
 
-        handler.postDelayed(runnable,1);
+        handler.postDelayed(runnable,50);
 
         return view;
     }
@@ -91,6 +90,9 @@ public class LUUnitSetting extends Fragment {
         CheckBox t = view.findViewById(R.id.lineuptalent);
         TextView hp = view.findViewById(R.id.lineupunithp);
         TextView atk = view.findViewById(R.id.lineupunitatk);
+        Button chform = view.findViewById(R.id.lineupchform);
+        TextView levt = view.findViewById(R.id.lineupunitlevt);
+
 
         if(StaticStore.position[0] == -1)
             f = null;
@@ -104,11 +106,11 @@ public class LUUnitSetting extends Fragment {
         }
 
         if(f == null) {
-            setDisappear(spinners[0],spinners[1],plus,row,t,tal);
+            setDisappear(spinners[0],spinners[1],plus,row,t,tal,chform,levt);
         } else {
             if(getContext() == null) return;
 
-            setAppear(spinners[0],spinners[1],plus,row,t,tal);
+            setAppear(spinners[0],spinners[1],plus,row,t,tal,chform,levt);
 
             getStrings s = new getStrings(getContext());
 
@@ -221,9 +223,6 @@ public class LUUnitSetting extends Fragment {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     int lev = (int)spinners[0].getSelectedItem();
                     int levp = (int)spinners[1].getSelectedItem();
-
-                    System.out.println(lev);
-                    System.out.println(levp);
 
                     int [] levs;
 
@@ -362,8 +361,6 @@ public class LUUnitSetting extends Fragment {
                 }
             }
 
-            Button chform = view.findViewById(R.id.lineupchform);
-
             chform.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -385,10 +382,50 @@ public class LUUnitSetting extends Fragment {
                     hp.setText(s.getHP(f,BasisSet.current.t(),lev+levp,f.getPCoin()!=null&&t.isChecked(),pcoin));
                     atk.setText(s.getAtk(f,BasisSet.current.t(),lev+levp,f.getPCoin()!=null&&t.isChecked(),pcoin));
 
-                    if(f.getPCoin() == null)
+                    if(f.getPCoin() == null) {
                         setDisappear(t,tal);
-                    else
-                        setAppear(t,tal);
+                        pcoin = new int[] {0, 0, 0, 0, 0, 0};
+                    } else {
+                        setAppear(t, tal);
+
+                        pcoin = BasisSet.current.sele.lu.getLv(f.unit);
+
+                        int [] max = f.getPCoin().max;
+
+                        for(int i = 1; i < max.length; i++) {
+                            final int ii = i - 1;
+
+                            List<Integer> list = new ArrayList<>();
+
+                            for (int j = 0; j < max[i] + 1; j++)
+                                list.add(j);
+
+                            ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), R.layout.spinneradapter, list);
+
+                            talents[i - 1].setAdapter(adapter);
+
+                            talents[i - 1].setSelection(getIndex(talents[i - 1], pcoin[i]));
+
+                            talents[i - 1].setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    talents[ii].setClickable(false);
+                                    Toast.makeText(getContext(), s.getTalentName(ii, f), Toast.LENGTH_SHORT).show();
+
+                                    return true;
+                                }
+                            });
+                        }
+
+                        if(pcoin[1] == 0 && pcoin[2] == 0 && pcoin[3] == 0 && pcoin[4] == 0 && pcoin[5] == 0) {
+                            t.setChecked(false);
+                            ViewGroup.LayoutParams params = tal.getLayoutParams();
+                            params.height = 0;
+                            tal.setLayoutParams(params);
+                        } else {
+                            t.setChecked(true);
+                        }
+                    }
                 }
             });
         }

@@ -11,4 +11,5 @@
     <color name="TableBorderN">#212121</color>
     <color name="UnitinfoNameN">#bdbdbd</color>
     <color name="iconPrimaryN">#eeeeee</color>
+    <color name="SelectionPrimaryN">#263238</color>
 </resources>

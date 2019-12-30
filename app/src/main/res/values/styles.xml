@@ -14,6 +14,7 @@
         <item name="TableBorder">@color/TableBorder</item>
         <item name="UnitinfoName">@color/UnitinfoName</item>
         <item name="iconPrimary">@color/iconPrimary</item>
+        <item name="SelectionPrimary">@color/SelectionPrimary</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
@@ -31,6 +32,7 @@
         <item name="TableBorder">@color/TableBorderN</item>
         <item name="UnitinfoName">@color/UnitinfoNameN</item>
         <item name="iconPrimary">@color/iconPrimaryN</item>
+        <item name="SelectionPrimary">@color/SelectionPrimaryN</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
@@ -48,6 +50,7 @@
         <item name="TableBorder">@color/TableBorder</item>
         <item name="UnitinfoName">@color/UnitinfoName</item>
         <item name="iconPrimary">@color/iconPrimary</item>
+        <item name="SelectionPrimary">@color/SelectionPrimary</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>

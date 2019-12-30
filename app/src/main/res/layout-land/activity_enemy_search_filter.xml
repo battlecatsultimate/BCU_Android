@@ -562,6 +562,14 @@
                         app:layout_constraintStart_toStartOf="@+id/eschchabimkb"
                         app:layout_constraintTop_toTopOf="@+id/eschchabrev" />
 
+                    <CheckBox
+                        android:id="@+id/eschchabpo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/TextPrimary"
+                        app:layout_constraintStart_toStartOf="@+id/eschchabimwv"
+                        app:layout_constraintTop_toTopOf="@+id/eschchabsb" />
+
                 </android.support.constraint.ConstraintLayout>
             </android.support.v4.widget.NestedScrollView>
 

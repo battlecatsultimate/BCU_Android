@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/constlev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/constlevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/castlelev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constlev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/castlelevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_castle"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/slowlev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/castlelev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/slowlevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_slow"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/walllev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/slowlev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/walllevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_wall"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/stoplev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/walllev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/stoplevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_stop"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/waterlev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stoplev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/waterlevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_water"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/zombielev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/waterlev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/zombielevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_zombie"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/breakerlev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
+                android:textColorHint="?attr/TextPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:helperText="1~20 Lv."
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/zombielev">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/breakerlevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_breaker"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </android.support.design.widget.TextInputLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>
