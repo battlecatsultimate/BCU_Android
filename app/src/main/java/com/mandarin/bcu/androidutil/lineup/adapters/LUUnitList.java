@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.lineup.adapters;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.mandarin.bcu.androidutil.lineup.LineUpView;
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import common.battle.BasisSet;
 import common.util.unit.Form;
@@ -35,6 +37,8 @@ public class LUUnitList extends Fragment {
 
         return ulist;
     }
+    private boolean destroyed = false;
+    private ArrayList<Integer> numbers = new ArrayList<>();
 
     @Nullable
     @Override
@@ -44,7 +48,7 @@ public class LUUnitList extends Fragment {
         if(getArguments() == null) return view;
 
         FilterEntity entity = new FilterEntity(StaticStore.unitnumber);
-        ArrayList<Integer> numbers = entity.setFilter();
+        numbers = entity.setFilter();
         ArrayList<String> names = new ArrayList<>();
 
         for(int i : numbers) {
@@ -57,10 +61,38 @@ public class LUUnitList extends Fragment {
 
         ulist.setAdapter(adapter);
 
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(StaticStore.updateList) {
+                    FilterEntity entity = new FilterEntity(StaticStore.unitnumber);
+                    numbers.clear();
+                    numbers = entity.setFilter();
+                    ArrayList<String> names = new ArrayList<>();
+
+                    for(int i : numbers) {
+                        names.add(StaticStore.LUnames[i]);
+                    }
+
+                    UnitListAdapter adapter = new UnitListAdapter(getActivity(),names.toArray(new String[0]),StaticStore.bitmaps,numbers);
+
+                    ulist.setAdapter(adapter);
+
+                    StaticStore.updateList = false;
+                }
+
+                if(!destroyed)
+                    handler.postDelayed(this,50);
+            }
+        };
+
+        handler.postDelayed(runnable,50);
+
         ulist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Form f = StaticStore.units.get(position).forms[StaticStore.units.get(position).forms.length-1];
+                Form f = StaticStore.units.get(numbers.get(position)).forms[StaticStore.units.get(numbers.get(position)).forms.length-1];
 
                 if(alreadyExist(f)) return;
 
@@ -98,6 +130,12 @@ public class LUUnitList extends Fragment {
         }
 
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        destroyed = !destroyed;
+        super.onDestroy();
     }
 
     public void setLineUp(LineUpView line) {

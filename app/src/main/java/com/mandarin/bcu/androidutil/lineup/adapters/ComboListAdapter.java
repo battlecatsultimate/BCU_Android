@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -60,35 +61,43 @@ public class ComboListAdapter extends ArrayAdapter<String> {
             holder = (ViewHolder) row.getTag();
         }
 
-        holder.comboname.setText(MultiLangCont.COMNAME.getCont(StaticStore.combos.get(position).name));
+        try {
+            holder.comboname.setText(MultiLangCont.COMNAME.getCont(StaticStore.combos.get(position).name));
 
-        String occ = getContext().getString(R.string.combo_occu)+" : "+BasisSet.current.sele.lu.occupance(StaticStore.combos.get(position));
+            String occ = getContext().getString(R.string.combo_occu) + " : " + BasisSet.current.sele.lu.occupance(StaticStore.combos.get(position));
 
-        holder.comboocc.setText(occ);
+            holder.comboocc.setText(occ);
 
-        holder.combodesc.setText(getDescription(StaticStore.combos.get(position)));
+            holder.combodesc.setText(getDescription(StaticStore.combos.get(position)));
 
-        holder.comimglayout.removeAllViews();
-        holder.icons.clear();
+            holder.comimglayout.removeAllViews();
+            holder.icons.clear();
 
-        for(int i = 0; i < 5; i++) {
-            if(StaticStore.combos.get(position).units.length <= i) {
-                ImageView icon = new ImageView(getContext());
-                icon.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
-                icon.setImageBitmap(StaticStore.empty(getContext(),24f,24f));
-                icon.setBackground(getContext().getDrawable(R.drawable.cell_shape));
+            for (int i = 0; i < 5; i++) {
+                if (StaticStore.combos.get(position).units.length <= i) {
+                    ImageView icon = new ImageView(getContext());
+                    icon.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f));
+                    icon.setImageBitmap(StaticStore.empty(getContext(), 24f, 24f));
+                    icon.setBackground(getContext().getDrawable(R.drawable.cell_shape));
 
-                holder.comimglayout.addView(icon);
-                holder.icons.add(icon);
-            } else {
-                ImageView icon = new ImageView(getContext());
-                icon.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
-                icon.setImageBitmap((Bitmap)StaticStore.units.get(StaticStore.combos.get(position).units[i][0]).forms[StaticStore.combos.get(position).units[i][1]].anim.uni.getImg().bimg());
-                icon.setBackground(getContext().getDrawable(R.drawable.cell_shape));
+                    holder.comimglayout.addView(icon);
+                    holder.icons.add(icon);
+                } else {
+                    ImageView icon = new ImageView(getContext());
+                    icon.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f));
+                    icon.setImageBitmap((Bitmap) StaticStore.units.get(StaticStore.combos.get(position).units[i][0]).forms[StaticStore.combos.get(position).units[i][1]].anim.uni.getImg().bimg());
+                    icon.setBackground(getContext().getDrawable(R.drawable.cell_shape));
 
-                holder.comimglayout.addView(icon);
-                holder.icons.add(icon);
+                    holder.comimglayout.addView(icon);
+                    holder.icons.add(icon);
+                }
             }
+        } catch(NullPointerException e) {
+            ErrorLogWriter.WriteLog(e);
+
+            return row;
+        } catch (IndexOutOfBoundsException e) {
+            return row;
         }
 
         return row;
@@ -166,19 +175,16 @@ public class ComboListAdapter extends ArrayAdapter<String> {
                 multi = " ( +"+(10 + 10*c.lv)+"% )";
                 break;
             case 21:
-                multi = " ( +"+(10 + 10*c.lv)+"% )";
+                multi = " ( +"+(20 + 10*c.lv)+"% )";
                 break;
             case 22:
-                multi = " ( +"+(20 + 10*c.lv)+"% )";
+                multi = " ( +"+(100 + 100*c.lv)+"% )";
                 break;
             case 23:
                 multi = " ( +"+(100 + 100*c.lv)+"% )";
                 break;
             case 24:
-                multi = " ( +"+(100 + 100*c.lv)+"% )";
-                break;
-            case 25:
-                multi = " ( +"+(2 + 2*c.lv)+"% )";
+                multi = " ( +"+(1 + c.lv)+"% )";
                 break;
         }
 

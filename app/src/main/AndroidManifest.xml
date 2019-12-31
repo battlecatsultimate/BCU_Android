@@ -28,7 +28,7 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".LineUpScreen"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="locked"/>
         <activity
             android:name=".ImageViewer"
             android:hardwareAccelerated="true"

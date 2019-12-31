@@ -3,15 +3,18 @@ package com.mandarin.bcu.androidutil.lineup.asynchs;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.SearchFilter;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager;
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
@@ -47,14 +51,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
+import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.io.InStream;
 import common.io.OutStream;
@@ -67,21 +68,16 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
     private final FragmentManager manager;
 
     private int prePosit;
-    private boolean TabInitialize = true;
+    private boolean initialized = false;
 
-    LUTab tab;
+    private LUTab tab;
 
     private final int [] ids = {R.string.lineup_list,R.string.lineup_unit,R.string.lineup_castle,R.string.lineup_treasure,R.string.lineup_construction,R.string.lineup_combo};
     private String [] names = new String[ids.length];
 
-    private ArrayList<Integer> posits = new ArrayList<>();
-
     public LUAdder(Activity activity, FragmentManager manager) {
         this.weakReference = new WeakReference<>(activity);
         this.manager = manager;
-
-        posits.add(-1);
-        posits.add(-1);
     }
 
     @Override
@@ -96,10 +92,15 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
 
+        View view = activity.findViewById(R.id.view);
+
         for(int i = 0; i < ids.length; i++)
             names[i] = activity.getString(ids[i]);
 
-        setDisappear(tabLayout,measureViewPager,line,row);
+        if(view == null)
+            setDisappear(tabLayout,measureViewPager,line,row);
+        else
+            setDisappear(tabLayout,measureViewPager,line,row,view);
     }
 
     @Override
@@ -192,73 +193,83 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             MeasureViewPager pager = activity.findViewById(R.id.lineuppager);
             TabLayout tabs = activity.findViewById(R.id.lineuptab);
             ImageButton bck = activity.findViewById(R.id.lineupbck);
+            ImageButton sch = activity.findViewById(R.id.linesch);
+            LineUpView line = activity.findViewById(R.id.lineupView);
+            ImageButton option = activity.findViewById(R.id.lineupsetting);
+
+            PopupMenu popupMenu = new PopupMenu(activity,option);
+            Menu menu = popupMenu.getMenu();
+            popupMenu.getMenuInflater().inflate(R.menu.lineup_menu,menu);
 
             setDisappear(prog,st);
 
-            bck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    save();
-                    activity.finish();
-                }
+            bck.setOnClickListener(v -> {
+                save();
+                StaticStore.setline[0] = 0;
+                StaticStore.setline[1] = 0;
+                StaticStore.filterReset();
+                StaticStore.set = null;
+                StaticStore.lu = null;
+                StaticStore.combos.clear();
+                activity.finish();
             });
 
-            LineUpView line = activity.findViewById(R.id.lineupView);
+            sch.setOnClickListener(v -> {
+                Intent intent = new Intent(activity, SearchFilter.class);
+                activity.startActivity(intent);
+            });
 
-            tab = new LUTab(manager,line,posits);
+            tab = new LUTab(manager,line);
 
-            line.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int [] posit = new int[2];
+            line.setOnTouchListener((v, event) -> {
+                int [] posit;
 
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            line.x = event.getX();
-                            line.y = event.getY();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        line.x = event.getX();
+                        line.y = event.getY();
 
-                            if(!line.drawFloating) {
-                                posit = line.getTouchedUnit(event.getX(), event.getY());
+                        if(!line.drawFloating) {
+                            posit = line.getTouchedUnit(event.getX(), event.getY());
 
-                                if(posit != null) {
-                                    line.prePosit = posit;
-                                }
+                            if(posit != null) {
+                                line.prePosit = posit;
                             }
+                        }
 
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            line.x = event.getX();
-                            line.y = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        line.x = event.getX();
+                        line.y = event.getY();
 
-                            if(!line.drawFloating) {
-                                line.floatB = line.getUnitImage(line.prePosit[0], line.prePosit[1]);
+                        if(!line.drawFloating) {
+                            line.floatB = line.getUnitImage(line.prePosit[0], line.prePosit[1]);
+                        }
+
+                        line.drawFloating = true;
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        line.CheckChange();
+
+                        int [] deleted = line.getTouchedUnit(event.getX(),event.getY());
+
+                        if(deleted != null) {
+                            if (deleted[0] == -100) {
+                                StaticStore.position = new int[]{-1, -1};
+                                StaticStore.updateForm = true;
+                            } else {
+                                StaticStore.position = deleted;
+                                StaticStore.updateForm = true;
                             }
+                        }
 
-                            line.drawFloating = true;
+                        line.drawFloating = false;
 
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            line.CheckChange();
-
-                            int [] deleted = line.getTouchedUnit(event.getX(),event.getY());
-
-                            if(deleted != null) {
-                                if (deleted[0] == -100) {
-                                    StaticStore.position = new int[]{-1, -1};
-                                    StaticStore.updateForm = true;
-                                } else {
-                                    StaticStore.position = deleted;
-                                    StaticStore.updateForm = true;
-                                }
-                            }
-
-                            line.drawFloating = false;
-
-                            break;
-                    }
-
-                    return  true;
+                        break;
                 }
+
+                return  true;
             });
 
             Spinner setspin = activity.findViewById(R.id.setspin);
@@ -276,7 +287,12 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             setspin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if(!initialized) return;
+
                     BasisSet.current = StaticStore.sets.get(position);
+
+                    StaticStore.setline[0] = position;
+                    StaticStore.setline[1] = 0;
 
                     List<String> luname = new ArrayList<>();
 
@@ -288,11 +304,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                     luspin.setAdapter(adapter1);
 
-                    posits.clear();
-                    posits.add(-1);
-                    posits.add(-1);
-
-                    tab = new LUTab(manager,line,posits);
+                    tab = new LUTab(manager,line);
                     StaticStore.updateForm = true;
 
                     pager.setAdapter(tab);
@@ -301,6 +313,20 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     tabs.setupWithViewPager(pager);
 
                     Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+
+                    if(position == 0) {
+                        menu.getItem(5).getSubMenu().getItem(0).setEnabled(false);
+                        menu.getItem(3).getSubMenu().getItem(0).setEnabled(false);
+                    } else {
+                        menu.getItem(5).getSubMenu().getItem(0).setEnabled(true);
+                        menu.getItem(3).getSubMenu().getItem(0).setEnabled(true);
+                    }
+
+                    if(!menu.getItem(5).getSubMenu().getItem(0).isEnabled() && !menu.getItem(5).getSubMenu().getItem(1).isEnabled()) {
+                        menu.getItem(5).setEnabled(false);
+                    } else {
+                        menu.getItem(5).setEnabled(true);
+                    }
                 }
 
                 @Override
@@ -308,8 +334,6 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                 }
             });
-
-            setspin.setSelection(0);
 
             List<String> LUname = new ArrayList<>();
 
@@ -324,15 +348,15 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             luspin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if(!initialized) return;
+
                     BasisSet.current.sele = BasisSet.current.lb.get(position);
+
+                    StaticStore.setline[1] = position;
 
                     line.ChangeFroms(BasisSet.current.sele.lu);
 
-                    posits.clear();
-                    posits.add(-1);
-                    posits.add(-1);
-
-                    tab = new LUTab(manager,line,posits);
+                    tab = new LUTab(manager,line);
                     StaticStore.updateForm = true;
 
                     pager.setAdapter(tab);
@@ -341,6 +365,18 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     tabs.setupWithViewPager(pager);
 
                     Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+
+                    if(BasisSet.current.lb.size() == 1) {
+                        menu.getItem(5).getSubMenu().getItem(1).setEnabled(false);
+                    } else {
+                        menu.getItem(5).getSubMenu().getItem(1).setEnabled(true);
+                    }
+
+                    if(!menu.getItem(5).getSubMenu().getItem(0).isEnabled() && !menu.getItem(5).getSubMenu().getItem(1).isEnabled()) {
+                        menu.getItem(5).setEnabled(false);
+                    } else {
+                        menu.getItem(5).setEnabled(true);
+                    }
                 }
 
                 @Override
@@ -349,144 +385,409 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                 }
             });
 
-            ImageButton option = activity.findViewById(R.id.lineupsetting);
+            if(StaticStore.set == null && StaticStore.lu == null) {
+                menu.getItem(2).setEnabled(false);
+                menu.getItem(2).getSubMenu().getItem(0).setEnabled(false);
+                menu.getItem(2).getSubMenu().getItem(1).setEnabled(false);
+            }
 
-            PopupMenu popupMenu = new PopupMenu(activity,option);
-            Menu menu = popupMenu.getMenu();
-            popupMenu.getMenuInflater().inflate(R.menu.lineup_menu,menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.lineup_create_set:
+                        Dialog dialog = new Dialog(activity);
 
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.lineup_create_set:
-                            Dialog dialog = new Dialog(activity);
+                        dialog.setContentView(R.layout.create_setlu_dialog);
 
-                            dialog.setContentView(R.layout.create_setlu_dialog);
+                        EditText edit = dialog.findViewById(R.id.setluedit);
+                        Button setdone = dialog.findViewById(R.id.setludone);
+                        Button cancel = dialog.findViewById(R.id.setlucancel);
 
-                            EditText edit = dialog.findViewById(R.id.setluedit);
-                            Button setdone = dialog.findViewById(R.id.setludone);
-                            Button cancel = dialog.findViewById(R.id.setlucancel);
+                        edit.setHint("set "+BasisSet.list.size());
 
-                            edit.setHint("set "+BasisSet.list.size());
+                        int [] rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
 
-                            setdone.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(edit.getText().toString().isEmpty())
-                                        new BasisSet();
-                                    else {
-                                        new BasisSet();
-                                        BasisSet.list.get(BasisSet.list.size()-1).name = edit.getText().toString();
-                                    }
+                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
 
-                                    List<String> names = new ArrayList<>();
+                        setdone.setOnClickListener(v -> {
+                            if(edit.getText().toString().isEmpty())
+                                new BasisSet();
+                            else {
+                                new BasisSet();
+                                BasisSet.list.get(BasisSet.list.size()-1).name = edit.getText().toString();
+                            }
 
-                                    for(int i = 0; i < BasisSet.list.size(); i++)
-                                        names.add(BasisSet.list.get(i).name);
+                            List<String> names = new ArrayList<>();
 
-                                    ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity,R.layout.spinneradapter,names);
+                            for(int i = 0; i < BasisSet.list.size(); i++)
+                                names.add(BasisSet.list.get(i).name);
 
-                                    setspin.setAdapter(adapter2);
+                            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity,R.layout.spinneradapter,names);
 
-                                    setspin.setSelection(setspin.getCount()-1);
+                            setspin.setAdapter(adapter2);
 
-                                    LUTab tab = new LUTab(manager,line);
-                                    StaticStore.updateForm = true;
+                            setspin.setSelection(setspin.getCount()-1);
 
-                                    pager.setAdapter(tab);
-                                    pager.setOffscreenPageLimit(5);
-                                    pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-                                    tabs.setupWithViewPager(pager);
+                            LUTab tab = new LUTab(manager,line);
+                            StaticStore.updateForm = true;
 
-                                    Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+                            pager.setAdapter(tab);
+                            pager.setOffscreenPageLimit(5);
+                            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+                            tabs.setupWithViewPager(pager);
 
-                                    save();
+                            Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
 
-                                    dialog.dismiss();
+                            save();
+
+                            dialog.dismiss();
+                        });
+
+                        cancel.setOnClickListener(v -> dialog.dismiss());
+
+                        dialog.show();
+
+                        return true;
+                    case R.id.lineup_create_lineup:
+                        dialog = new Dialog(activity);
+
+                        dialog.setContentView(R.layout.create_setlu_dialog);
+
+                        edit = dialog.findViewById(R.id.setluedit);
+                        setdone = dialog.findViewById(R.id.setludone);
+                        cancel = dialog.findViewById(R.id.setlucancel);
+
+                        edit.setHint("lineup "+BasisSet.current.lb.size());
+
+                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+
+                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+
+                        setdone.setOnClickListener(v -> {
+                            if(edit.getText().toString().isEmpty())
+                                BasisSet.current.add();
+                            else {
+                                BasisSet.current.add();
+                                BasisSet.current.lb.get(BasisSet.current.lb.size()-1).name = edit.getText().toString();
+                            }
+
+                            List<String> names = new ArrayList<>();
+
+                            for(int i = 0; i < BasisSet.current.lb.size(); i++)
+                                names.add(BasisSet.current.lb.get(i).name);
+
+                            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity,R.layout.spinneradapter,names);
+
+                            luspin.setAdapter(adapter2);
+
+                            luspin.setSelection(luspin.getCount()-1);
+
+                            LUTab tab = new LUTab(manager,line);
+                            StaticStore.updateForm = true;
+
+                            pager.setAdapter(tab);
+                            pager.setOffscreenPageLimit(5);
+                            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+                            tabs.setupWithViewPager(pager);
+
+                            Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+
+                            save();
+
+                            dialog.dismiss();
+                        });
+
+                        cancel.setOnClickListener(v -> dialog.dismiss());
+
+                        dialog.show();
+
+                        return true;
+                    case R.id.lineup_copy_set:
+                        StaticStore.set = BasisSet.current.copy();
+                        BasisSet.list.remove(BasisSet.list.size()-1);
+
+                        Toast.makeText(activity,R.string.lineup_set_copied,Toast.LENGTH_SHORT).show();
+                        menu.getItem(2).setEnabled(true);
+                        menu.getItem(2).getSubMenu().getItem(0).setEnabled(true);
+
+                        return true;
+                    case R.id.lineup_copy_lineup:
+                        StaticStore.lu = BasisSet.current.sele.copy();
+
+                        Toast.makeText(activity,R.string.lineup_lu_copied,Toast.LENGTH_SHORT).show();
+                        menu.getItem(2).setEnabled(true);
+                        menu.getItem(2).getSubMenu().getItem(1).setEnabled(true);
+
+                        return true;
+                    case R.id.lineup_paste_set:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle(R.string.lineup_pasting_set);
+                        builder.setMessage(R.string.lineup_paste_set_msg);
+                        builder.setPositiveButton(R.string.main_file_ok, (dialog1, which) -> {
+                            String name = BasisSet.current.name;
+
+                            BasisSet.list.remove(setspin.getSelectedItemPosition());
+                            BasisSet.list.add(setspin.getSelectedItemPosition(),StaticStore.set);
+
+                            BasisSet.current = BasisSet.list.get(setspin.getSelectedItemPosition());
+
+                            BasisSet.current.name = name;
+
+                            line.UpdateLineUp();
+
+                            List<String> LUname1 = new ArrayList<>();
+
+                            for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                                LUname1.add(BasisSet.current.lb.get(i).name);
+                            }
+
+                            ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname1);
+
+                            luspin.setAdapter(adapter11);
+
+                            Toast.makeText(activity,R.string.lineup_paste_set_done,Toast.LENGTH_SHORT).show();
+                        });
+
+                        builder.setNegativeButton(R.string.main_file_cancel, (dialog12, which) -> {
+
+                        });
+
+                        builder.show();
+
+                        return true;
+                    case R.id.lineup_paste_lineup:
+                        builder = new AlertDialog.Builder(activity);
+                        builder.setTitle(R.string.lineup_pasting_lu);
+                        builder.setMessage(R.string.lineup_paste_lu_msg);
+                        builder.setPositiveButton(R.string.main_file_ok, (dialog13, which) -> {
+                            String name = BasisSet.current.sele.name;
+
+                            BasisSet.current.lb.remove(luspin.getSelectedItemPosition());
+                            BasisSet.current.lb.add(luspin.getSelectedItemPosition(),StaticStore.lu);
+                            BasisSet.current.sele = BasisSet.current.lb.get(luspin.getSelectedItemPosition());
+
+                            BasisSet.current.sele.name = name;
+
+                            line.UpdateLineUp();
+
+                            Toast.makeText(activity,R.string.lineup_paste_lu_done,Toast.LENGTH_SHORT).show();
+                        });
+
+                        builder.setNegativeButton(R.string.main_file_cancel, (dialog14, which) -> {
+
+                        });
+
+                        builder.show();
+
+                        return true;
+                    case R.id.lineup_rename_set:
+                        dialog = new Dialog(activity);
+
+                        dialog.setContentView(R.layout.create_setlu_dialog);
+
+                        edit = dialog.findViewById(R.id.setluedit);
+                        setdone = dialog.findViewById(R.id.setludone);
+                        cancel = dialog.findViewById(R.id.setlucancel);
+                        TextView setluname = dialog.findViewById(R.id.setluname);
+
+                        setluname.setText(R.string.lineup_renaming_set);
+
+                        edit.setHint(BasisSet.current.name);
+
+                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+
+                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+
+                        setdone.setOnClickListener(v -> {
+                            if(!edit.getText().toString().isEmpty()) {
+                                BasisSet.current.name = edit.getText().toString();
+
+                                List<String> setname1 = new ArrayList<>();
+
+                                for(int i = 0; i < StaticStore.sets.size(); i++)
+                                    setname1.add(StaticStore.sets.get(i).name);
+
+                                ArrayAdapter<String> adapter22 = new ArrayAdapter<>(activity,R.layout.spinneradapter, setname1);
+
+                                int pos = setspin.getSelectedItemPosition();
+
+                                setspin.setAdapter(adapter22);
+
+                                setspin.setSelection(pos);
+
+                                save();
+                            }
+
+                            dialog.dismiss();
+                        });
+
+                        cancel.setOnClickListener(v -> dialog.dismiss());
+
+                        dialog.show();
+
+                        return true;
+                    case R.id.lineup_rename_lineup:
+                        dialog = new Dialog(activity);
+
+                        dialog.setContentView(R.layout.create_setlu_dialog);
+
+                        edit = dialog.findViewById(R.id.setluedit);
+                        setdone = dialog.findViewById(R.id.setludone);
+                        cancel = dialog.findViewById(R.id.setlucancel);
+                        setluname = dialog.findViewById(R.id.setluname);
+
+                        setluname.setText(R.string.lineup_renaming_lu);
+
+                        edit.setHint(BasisSet.current.sele.name);
+
+                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+
+                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+
+                        setdone.setOnClickListener(v -> {
+                            if(!edit.getText().toString().isEmpty()) {
+                                BasisSet.current.sele.name = edit.getText().toString();
+
+                                List<String> LUname1 = new ArrayList<>();
+
+                                for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                                    LUname1.add(BasisSet.current.lb.get(i).name);
                                 }
-                            });
 
-                            cancel.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
+                                ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname1);
 
-                            dialog.show();
+                                luspin.setAdapter(adapter11);
 
-                            return true;
-                        case R.id.lineup_create_lineup:
-                            dialog = new Dialog(activity);
+                                luspin.setSelection(BasisSet.current.lb.size()-1);
 
-                            dialog.setContentView(R.layout.create_setlu_dialog);
+                                save();
+                            }
 
-                            edit = dialog.findViewById(R.id.setluedit);
-                            setdone = dialog.findViewById(R.id.setludone);
-                            cancel = dialog.findViewById(R.id.setlucancel);
+                            dialog.dismiss();
+                        });
 
-                            edit.setHint("lineup "+BasisSet.current.lb.size());
+                        cancel.setOnClickListener(v -> dialog.dismiss());
 
-                            setdone.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(edit.getText().toString().isEmpty())
-                                        BasisSet.current.add();
-                                    else {
-                                        BasisSet.current.add();
-                                        BasisSet.current.lb.get(BasisSet.current.lb.size()-1).name = edit.getText().toString();
-                                    }
+                        dialog.show();
 
-                                    List<String> names = new ArrayList<>();
+                        return true;
+                    case R.id.lineup_clone_set:
+                        String origin = BasisSet.current.name;
 
-                                    for(int i = 0; i < BasisSet.current.lb.size(); i++)
-                                        names.add(BasisSet.current.lb.get(i).name);
+                        BasisSet.current.copy();
 
-                                    ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity,R.layout.spinneradapter,names);
+                        BasisSet.list.get(BasisSet.list.size()-1).name = origin+"`";
 
-                                    luspin.setAdapter(adapter2);
+                        List<String> setname1 = new ArrayList<>();
 
-                                    luspin.setSelection(luspin.getCount()-1);
+                        for(int i = 0; i < StaticStore.sets.size(); i++)
+                            setname1.add(StaticStore.sets.get(i).name);
 
-                                    LUTab tab = new LUTab(manager,line);
-                                    StaticStore.updateForm = true;
+                        ArrayAdapter<String> adapter22 = new ArrayAdapter<>(activity,R.layout.spinneradapter, setname1);
 
-                                    pager.setAdapter(tab);
-                                    pager.setOffscreenPageLimit(5);
-                                    pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-                                    tabs.setupWithViewPager(pager);
+                        setspin.setAdapter(adapter22);
 
-                                    Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+                        setspin.setSelection(BasisSet.list.size()-1);
 
-                                    save();
+                        save();
 
-                                    dialog.dismiss();
-                                }
-                            });
+                        Toast.makeText(activity,R.string.lineup_cloned_set,Toast.LENGTH_SHORT).show();
 
-                            cancel.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
+                        return true;
+                    case R.id.lineup_clone_lineup:
+                        BasisLU lu = BasisSet.current.sele.copy();
 
-                            dialog.show();
+                        lu.name = BasisSet.current.sele.name+ "`";
 
-                            return true;
-                    }
+                        BasisSet.current.lb.add(lu);
 
-                    return false;
+                        List<String> LUname1 = new ArrayList<>();
+
+                        for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                            LUname1.add(BasisSet.current.lb.get(i).name);
+                        }
+
+                        ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname1);
+
+                        luspin.setAdapter(adapter11);
+
+                        luspin.setSelection(BasisSet.current.lb.size()-1);
+
+                        BasisSet.current.sele.name += "`";
+
+                        save();
+
+                        Toast.makeText(activity,R.string.lineup_cloned_lineup,Toast.LENGTH_SHORT).show();
+
+                        return true;
+                    case R.id.lineup_remove_set:
+                        builder = new AlertDialog.Builder(activity);
+                        builder.setTitle(R.string.lineup_removing_set);
+                        builder.setMessage(R.string.lineup_remove_set_msg);
+                        builder.setPositiveButton(R.string.main_file_ok, (dialog15, which) -> {
+                            BasisSet.list.remove(setspin.getSelectedItemPosition());
+
+                            int pos = setspin.getSelectedItemPosition();
+
+                            List<String> setname2 = new ArrayList<>();
+
+                            for(int i = 0; i < StaticStore.sets.size(); i++)
+                                setname2.add(StaticStore.sets.get(i).name);
+
+                            ArrayAdapter<String> adapter23 = new ArrayAdapter<>(activity,R.layout.spinneradapter, setname2);
+
+                            setspin.setAdapter(adapter23);
+
+                            if(pos >= BasisSet.list.size())
+                                setspin.setSelection(BasisSet.list.size()-1);
+                            else
+                                setspin.setSelection(pos);
+                        });
+
+                        builder.setNegativeButton(R.string.main_file_cancel, (dialog16, which) -> {
+
+                        });
+
+                        builder.show();
+
+                        return true;
+                    case R.id.lineup_remove_lineup:
+                        builder = new AlertDialog.Builder(activity);
+                        builder.setTitle(R.string.lineup_removing_lu);
+                        builder.setMessage(R.string.lineup_remove_lu_msg);
+                        builder.setPositiveButton(R.string.main_file_ok, (dialog17, which) -> {
+                            BasisSet.current.lb.remove(luspin.getSelectedItemPosition());
+
+                            int pos = luspin.getSelectedItemPosition();
+
+                            List<String> LUname2 = new ArrayList<>();
+
+                            for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                                LUname2.add(BasisSet.current.lb.get(i).name);
+                            }
+
+                            ArrayAdapter<String> adapter12 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname2);
+
+                            luspin.setAdapter(adapter12);
+
+                            if(pos >= BasisSet.current.lb.size())
+                                luspin.setSelection(BasisSet.current.lb.size()-1);
+                            else
+                                luspin.setSelection(pos);
+                        });
+
+                        builder.setNegativeButton(R.string.main_file_cancel, (dialog18, which) -> {
+
+                        });
+
+                        builder.show();
+
+                        return true;
                 }
+
+                return false;
             });
 
-            option.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popupMenu.show();
-                }
-            });
+            option.setOnClickListener(v -> popupMenu.show());
 
             pager.setAdapter(tab);
             pager.setOffscreenPageLimit(5);
@@ -514,6 +815,12 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
             Objects.requireNonNull(tabs.getTabAt(StaticStore.LUtabPosition)).select();
 
+            initialized = true;
+
+            setspin.setSelection(StaticStore.setline[0]);
+            luspin.setSelection(StaticStore.setline[1]);
+
+
         } else if(result[0] == 0) {
             TextView st =activity.findViewById(R.id.lineupst);
 
@@ -532,7 +839,12 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
 
-        setAppear(tabLayout,measureViewPager,line,row);
+        View view = activity.findViewById(R.id.view);
+
+        if(view == null)
+            setAppear(tabLayout,measureViewPager,line,row);
+        else
+            setAppear(tabLayout,measureViewPager,line,row,view);
     }
 
     private void setDisappear(View... view) {
@@ -579,16 +891,11 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             this.lineup = line;
         }
 
-        LUTab(FragmentManager fm, LineUpView line, ArrayList<Integer> posit) {
-            super(fm);
-            this.lineup = line;
-        }
-
         @Override
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return LUUnitList.newInstance(StaticStore.LUnames, lineup);
+                    return LUUnitList.newInstance(StaticStore.LUnames,lineup);
                 case 1:
                     return LUUnitSetting.newInstance(lineup);
                 case 2:
@@ -610,7 +917,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         }
 
         @Override
-        public int getItemPosition(Object object) {
+        public int getItemPosition(@NonNull Object object) {
             return POSITION_NONE;
         }
 

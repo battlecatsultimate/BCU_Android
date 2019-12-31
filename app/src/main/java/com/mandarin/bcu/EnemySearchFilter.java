@@ -79,8 +79,8 @@ public class EnemySearchFilter extends AppCompatActivity {
 
     private int [] atkdraw = {212,112};
     private int [] trdraw = {219,220,221,222,223,224,225,226,227,-1,-1,-1};
-    private int [] abdraw = {195,197,198,207,266,196,199,200,201,208,213,214,215,216,210,-1,-1,-1,229,-100};
-    private String [] abfiles = {"","","","","","","","","","","","","","","","Curse.png","Burrow.png","Revive.png"};
+    private int [] abdraw = {195,197,198,207,266,196,199,200,201,208,213,214,215,216,210,-1,-1,-1,229,-1};
+    private String [] abfiles = {"","","","","","","","","","","","","","","","Curse.png","Burrow.png","Revive.png","","BCPoison.png"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

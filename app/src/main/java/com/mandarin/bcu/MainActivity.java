@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Button animbtn = findViewById(R.id.anvibtn);
         Button stagebtn = findViewById(R.id.stgbtn);
         Button emlistbtn = findViewById(R.id.eninfbtn);
-        Button bang = findViewById(R.id.bang);
+        Button basisbtn = findViewById(R.id.basisbtn);
 
         ImageButton config = findViewById(R.id.mainconfig);
 
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
         emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_enemy),null,null,null);
         emlistbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+        basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_basis),null,null,null);
 
         animbtn.setOnClickListener(new SingleClick() {
             @Override
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bang.setOnClickListener(new SingleClick() {
+        basisbtn.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
                 Intent intent = new Intent(MainActivity.this,LineUpScreen.class);

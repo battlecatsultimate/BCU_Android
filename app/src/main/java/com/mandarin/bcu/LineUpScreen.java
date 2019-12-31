@@ -3,6 +3,7 @@ package com.mandarin.bcu;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,13 @@ public class LineUpScreen extends AppCompatActivity {
             }
         }
 
+        if(shared.getInt("Orientation",0) == 1)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        else if(shared.getInt("Orientation",0) == 2)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        else if(shared.getInt("Orientation",0) == 0)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
         setContentView(R.layout.activity_line_up_screen);
 
         final int id = 128;
@@ -69,6 +77,13 @@ public class LineUpScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         StaticStore.SaveLineUp();
+        StaticStore.setline[0] = 0;
+        StaticStore.setline[1] = 0;
+        StaticStore.updateList = false;
+        StaticStore.filterReset();
+        StaticStore.set = null;
+        StaticStore.lu = null;
+        StaticStore.combos.clear();
         super.onBackPressed();
     }
 }

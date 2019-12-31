@@ -62,16 +62,12 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
 
             Bitmap resized;
 
-            if(procicon.get(location) != 31) {
-                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 28f);
-                } else {
-                    resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 24f);
-                }
-                viewHolder.abilicon.setImageBitmap(resized);
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 28f);
             } else {
-                viewHolder.abilicon.setImageBitmap(empty());
+                resized = StaticStore.getResizeb(StaticStore.picons[procicon.get(location)], context, 24f);
             }
+            viewHolder.abilicon.setImageBitmap(resized);
         }
     }
 

@@ -366,10 +366,10 @@ public class SearchFilter extends AppCompatActivity {
 
         StaticStore.empty = atkgroup.getCheckedRadioButtonId() == -1;
         setResult(RESULT_OK,result);
+        StaticStore.updateList = true;
         finish();
     }
 
-    @SuppressWarnings("unchecked")
     protected void Checker() {
         if (!StaticStore.empty)
             atkgroup.check(R.id.schrdatkmu);

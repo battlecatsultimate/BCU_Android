@@ -52,6 +52,8 @@ public class LUCatCombo extends Fragment {
 
         if(getContext() == null) return view;
 
+        StaticStore.combos.clear();
+
         for(int i = 0; i < Combo.combos.length; i++) {
             StaticStore.combos.addAll(Arrays.asList(Combo.combos[i]));
         }

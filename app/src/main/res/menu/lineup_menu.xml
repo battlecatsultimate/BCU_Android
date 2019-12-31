@@ -1,24 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Create"
+    <item android:title="@string/lineup_create"
         android:id="@+id/lineup_create">
         <menu>
-            <item android:title="Create Set"
+            <item android:title="@string/lineup_create_set"
                 android:id="@+id/lineup_create_set"/>
 
-            <item android:title="Create Lineup"
+            <item android:title="@string/lineup_create_lu"
                 android:id="@+id/lineup_create_lineup"/>
         </menu>
     </item>
 
-    <item android:title="Copy"
+    <item android:title="@string/lineup_copy"
         android:id="@+id/lineup_copy">
         <menu>
             <item android:id="@+id/lineup_copy_set"
-                android:title="Copy Set"/>
+                android:title="@string/lineup_copy_set"/>
 
             <item android:id="@+id/lineup_copy_lineup"
-                android:title="Copy Lineup"/>
+                android:title="@string/lineup_copy_lu"/>
         </menu>
     </item>
+
+    <item android:title="@string/lineup_paste"
+        android:id="@+id/lineup_paste">
+        <menu>
+            <item android:id="@+id/lineup_paste_set"
+                android:title="@string/lineup_paste_set"/>
+            <item android:id="@+id/lineup_paste_lineup"
+                android:title="@string/lineup_paste_lu"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/lineup_rename"
+        android:id="@+id/lineup_rename">
+        <menu>
+            <item android:id="@+id/lineup_rename_set"
+                android:title="@string/lineup_rename_set"/>
+            <item android:id="@+id/lineup_rename_lineup"
+                android:title="@string/lineup_rename_lu"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/lineup_clone"
+        android:id="@+id/lineup_clone">
+        <menu>
+            <item android:id="@+id/lineup_clone_set"
+                android:title="@string/lineup_clone_set"/>
+            <item android:id="@+id/lineup_clone_lineup"
+                android:title="@string/lineup_clone_lu"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/lineup_remove"
+        android:id="@+id/lineup_remove">
+        <menu>
+            <item android:id="@+id/lineup_remove_set"
+                android:title="@string/lineup_remove_Set"/>
+            <item android:id="@+id/lineup_remove_lineup"
+                android:title="@string/lineup_remove_lu"/>
+        </menu>
+    </item>
+
 </menu>

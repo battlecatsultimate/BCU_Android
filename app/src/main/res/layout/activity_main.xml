@@ -16,8 +16,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:paddingTop="12dp"
             android:paddingBottom="12dp">
 
@@ -65,8 +65,25 @@
                 android:text="@string/stg_inf"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="30sp"
-                app:layout_constraintHeight_percent="0.175" />
+                android:textSize="30sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <Button
+                android:id="@+id/basisbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:drawablePadding="10dp"
+                android:text="@string/main_equip"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="30sp" />
         </TableRow>
 
     </TableLayout>
@@ -83,14 +100,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_settings_black_24dp" />
-
-    <Button
-        android:id="@+id/bang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -75,7 +75,7 @@ public class StaticStore {
     public static String[] afiles = {"","","","","","","","MovingX.png","","SnipeX.png","TimeX.png","Ghost.png","PoisonX.png","","","","ThemeX.png",
             "","SealX.png","BossWaveX.png","",""};
     public static String[] pfiles = {"","","","","","","","","Curse.png","","","Burrow.png","Revive.png","","","","","","","","Snipe.png","Time.png","Seal.png"
-            ,"Summon.png","Moving.png","Theme.png","Poison.png","BossWave.png","CritX.png"};
+            ,"Summon.png","Moving.png","Theme.png","Poison.png","BossWave.png","CritX.png","","","BCPoison.png"};
 
     public static int [] colorid = {R.string.sch_wh,R.string.sch_red,R.string.sch_fl,R.string.sch_bla,R.string.sch_me,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.esch_eva,R.string.esch_witch};
     public static int [] starid = {R.string.unit_info_starred,R.string.unit_info_god1,R.string.unit_info_god2,R.string.unit_info_god3};
@@ -145,6 +145,10 @@ public class StaticStore {
     public static boolean updateForm = true;
     public static int [] position = {-1,-1};
     public static List<Combo> combos = new ArrayList<>();
+    public static int [] setline = {0,0};
+    public static boolean updateList = false;
+    public static BasisSet set = null;
+    public static BasisLU lu = null;
 
     /** Search Filter Variables **/
 
@@ -424,5 +428,12 @@ public class StaticStore {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static int[] getRGB(final int hex) {
+        int r = (hex & 0xFF0000) >> 16;
+        int g = (hex & 0xFF00) >> 8;
+        int b = (hex & 0xFF);
+        return new int[] {r, g, b};
     }
 }
