@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -21,7 +21,7 @@ import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader;
 import common.system.MultiLangCont;
 
 public class EnemyInfo extends AppCompatActivity {
-    ImageButton treasure;
+    FloatingActionButton treasure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

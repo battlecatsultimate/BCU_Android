@@ -18,29 +18,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/schreset"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
-        android:backgroundTint="?attr/UnitinfoName"
+        android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/def_schreset_cont"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/ic_refresh_black_24dp" />
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/eschbck"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:background="@android:color/transparent"
-        android:backgroundTint="?attr/UnitinfoName"
+        android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/def_schbck"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar"

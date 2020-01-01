@@ -11,13 +11,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -50,8 +50,8 @@ import static common.util.Data.P_WAVE;
 import static common.util.Data.P_WEAK;
 
 public class EnemySearchFilter extends AppCompatActivity {
-    private ImageButton back;
-    private ImageButton reset;
+    private FloatingActionButton back;
+    private FloatingActionButton reset;
     private RadioButton tgor;
     private RadioButton atkmu;
     private RadioButton atkor;

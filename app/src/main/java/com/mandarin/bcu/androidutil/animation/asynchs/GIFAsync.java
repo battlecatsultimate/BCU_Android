@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.AnimatedGifEncoder;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.animation.AnimationCView;
+import com.mandarin.bcu.androidutil.io.MediaScanner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,6 +98,8 @@ public class GIFAsync extends AsyncTask<Void,Void,Void> {
 
             fos.write(buffer);
             fos.close();
+
+            new MediaScanner(c,g);
 
             done = true;
         } catch (IOException e) {

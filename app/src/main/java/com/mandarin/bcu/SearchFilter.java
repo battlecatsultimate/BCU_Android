@@ -9,13 +9,13 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -25,8 +25,6 @@ import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.util.ArrayList;
-
-import common.system.P;
 
 import static common.util.Data.AB_BASE;
 import static common.util.Data.AB_EARN;
@@ -63,8 +61,8 @@ import static common.util.Data.P_WEAK;
 
 public class SearchFilter extends AppCompatActivity {
 
-    private ImageButton back;
-    private ImageButton reset;
+    private FloatingActionButton back;
+    private FloatingActionButton reset;
     private RadioButton tgor;
     private RadioButton atkmu;
     private RadioButton atkor;

@@ -48,16 +48,19 @@
                     android:textSize="14sp" />
             </android.support.design.widget.TextInputLayout>
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/techexpand"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
+                android:backgroundTint="?attr/backgroundPrimary"
                 android:contentDescription="@string/def_description"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:tint="?attr/iconPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="@+id/techlev"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/techlev"
@@ -301,16 +304,19 @@
                     android:textSize="14sp" />
             </android.support.design.widget.TextInputLayout>
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/eocexpand"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@android:color/transparent"
+                android:backgroundTint="?attr/backgroundPrimary"
                 android:contentDescription="@string/def_description"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:tint="?attr/iconPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="@+id/eoctrea"
                 app:layout_constraintStart_toEndOf="@+id/eoctrea"
                 app:layout_constraintTop_toTopOf="@+id/eoctrea"
@@ -490,16 +496,19 @@
                     android:textSize="14sp" />
             </android.support.design.widget.TextInputLayout>
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/eocitfexpand"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@android:color/transparent"
+                android:backgroundTint="?attr/backgroundPrimary"
                 android:contentDescription="@string/def_description"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:tint="?attr/iconPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="@+id/eocitftrea"
                 app:layout_constraintStart_toEndOf="@+id/eocitftrea"
                 app:layout_constraintTop_toBottomOf="@+id/eoclayout"
@@ -610,17 +619,20 @@
                     android:textSize="14sp" />
             </android.support.design.widget.TextInputLayout>
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/itfexpand"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
+                android:backgroundTint="?attr/backgroundPrimary"
                 android:contentDescription="@string/def_description"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:tint="?attr/iconPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="@id/itffruittrea"
                 app:layout_constraintStart_toEndOf="@+id/itffruittrea"
                 app:layout_constraintTop_toTopOf="@+id/itffruittrea"
@@ -754,16 +766,19 @@
                     android:textSize="14sp" />
             </android.support.design.widget.TextInputLayout>
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/cotcexpand"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@android:color/transparent"
+                android:backgroundTint="?attr/backgroundPrimary"
                 android:contentDescription="@string/def_description"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:tint="?attr/iconPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="@+id/cotctrea"
                 app:layout_constraintStart_toEndOf="@+id/cotctrea"
                 app:layout_constraintTop_toTopOf="@+id/cotctrea"

@@ -40,7 +40,6 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     private ArrayList<Boolean> remover = new ArrayList<>();
 
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt","ComboName.txt"};
     private String difffile = "Difficulty.txt";
     private String source;
     private String downloading;
@@ -204,7 +203,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                 dfos.close();
 
                 for (String s1 : lan) {
-                    for (String s : langfile) {
+                    for (String s : StaticStore.langfile) {
                         String langurl = lurl + s1 + s + RAW;
                         link = new URL(langurl);
                         connection = (HttpURLConnection) link.openConnection();

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageButton;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
@@ -83,7 +83,7 @@ public class StageList extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ImageButton bck = findViewById(R.id.stglistbck);
+        FloatingActionButton bck = findViewById(R.id.stglistbck);
 
         bck.performClick();
     }

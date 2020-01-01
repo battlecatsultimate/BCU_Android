@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -20,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.mandarin.bcu.R;
@@ -98,7 +98,7 @@ public class LUTreasureSetting extends Fragment {
     TextInputEditText [] maskes = new TextInputEditText[3];
     int [] maskeid = {R.id.masktreat,R.id.mask2treat,R.id.mask3treat};
 
-    ImageButton[] expands = new ImageButton[5];
+    FloatingActionButton[] expands = new FloatingActionButton[5];
     int [] expandid = {R.id.techexpand,R.id.eocexpand,R.id.eocitfexpand,R.id.itfexpand,R.id.cotcexpand};
 
     LinearLayout[] layouts = new LinearLayout[5];

@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -46,7 +45,7 @@ public class StageInfo extends AppCompatActivity {
 
         setContentView(R.layout.activity_stage_info);
 
-        ImageButton bck = findViewById(R.id.stginfobck);
+        FloatingActionButton bck = findViewById(R.id.stginfobck);
         bck.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
@@ -77,7 +76,7 @@ public class StageInfo extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ImageButton bck = findViewById(R.id.stginfobck);
+        FloatingActionButton bck = findViewById(R.id.stginfobck);
 
         bck.performClick();
     }

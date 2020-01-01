@@ -2,12 +2,9 @@ package com.mandarin.bcu.androidutil.stage.adapters;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +21,6 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.getStrings;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PropertyResourceBundle;
 
 import common.util.stage.SCDef;
 import common.util.stage.Stage;

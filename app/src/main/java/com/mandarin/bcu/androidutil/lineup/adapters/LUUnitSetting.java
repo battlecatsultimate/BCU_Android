@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -277,7 +277,7 @@ public class LUUnitSetting extends Fragment {
                     }
                 });
 
-                ImageButton info = view.findViewById(R.id.lineupunitinfo);
+                FloatingActionButton info = view.findViewById(R.id.lineupunitinfo);
 
                 info.setOnClickListener(new SingleClick() {
                     @Override

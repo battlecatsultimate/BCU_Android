@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mandarin.bcu.EnemyInfo;
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.androidutil.enemy.EDefiner;
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
+import com.mandarin.bcu.androidutil.enemy.EDefiner;
+import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -44,10 +44,10 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
 
         ListView listView = activity.findViewById(R.id.enlist);
         listView.setVisibility(View.GONE);
-        ImageButton search = activity.findViewById(R.id.enlistsch);
-        search.setVisibility(View.GONE);
+        FloatingActionButton search = activity.findViewById(R.id.enlistsch);
+        search.hide();
 
-        ImageButton back = activity.findViewById(R.id.enlistbck);
+        FloatingActionButton back = activity.findViewById(R.id.enlistbck);
         back.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
@@ -154,8 +154,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         list.setVisibility(View.VISIBLE);
         ProgressBar prog = activity.findViewById(R.id.enlistprog);
         prog.setVisibility(View.GONE);
-        ImageButton search = activity.findViewById(R.id.enlistsch);
-        search.setVisibility(View.VISIBLE);
+        FloatingActionButton search = activity.findViewById(R.id.enlistsch);
+        search.show();
     }
 
     private String number(int num) {

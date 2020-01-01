@@ -5,20 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
+import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
@@ -59,9 +59,9 @@ public class EnemyList extends AppCompatActivity {
 
         ImageBuilder.builder = new BMBuilder();
 
-        ImageButton back = findViewById(R.id.enlistbck);
+        FloatingActionButton back = findViewById(R.id.enlistbck);
         list = findViewById(R.id.enlist);
-        ImageButton search = findViewById(R.id.enlistsch);
+        FloatingActionButton search = findViewById(R.id.enlistsch);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

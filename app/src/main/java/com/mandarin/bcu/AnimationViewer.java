@@ -7,10 +7,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,9 +18,9 @@ import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
+import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 import com.mandarin.bcu.androidutil.unit.asynchs.Adder;
-import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ import common.util.unit.Form;
 
 public class AnimationViewer extends AppCompatActivity {
 
-    protected ImageButton search;
+    protected FloatingActionButton search;
     private ListView list;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
@@ -73,7 +73,7 @@ public class AnimationViewer extends AppCompatActivity {
 
         unitnumber = StaticStore.unitnumber;
 
-        ImageButton back = findViewById(R.id.animbck);
+        FloatingActionButton back = findViewById(R.id.animbck);
         search = findViewById(R.id.animsch);
 
         list = findViewById(R.id.unitinflist);

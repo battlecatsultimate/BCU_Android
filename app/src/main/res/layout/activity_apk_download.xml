@@ -33,7 +33,7 @@
         android:gravity="center_vertical"
         android:text="@string/down_state_rea"
         android:textColor="?attr/TextPrimary"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/apkretry"

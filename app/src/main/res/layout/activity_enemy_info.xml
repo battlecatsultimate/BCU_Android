@@ -25,15 +25,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/eneminfbck"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="@android:color/transparent"
-            android:backgroundTint="?attr/UnitinfoName"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="?attr/colorPrimary"
             android:contentDescription="@string/def_description"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
             app:layout_constraintStart_toStartOf="@+id/toolbar4"
             app:layout_constraintTop_toTopOf="@+id/toolbar4"
@@ -537,14 +540,18 @@
             </ScrollView>
         </android.support.constraint.ConstraintLayout>
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/enemtreasure"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="?attr/colorPrimary"
             android:contentDescription="@string/def_description"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
             app:layout_constraintEnd_toEndOf="@+id/toolbar4"
             app:layout_constraintTop_toTopOf="parent"

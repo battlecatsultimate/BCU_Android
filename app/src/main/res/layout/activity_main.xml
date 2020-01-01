@@ -75,6 +75,24 @@
             android:paddingBottom="12dp">
 
             <Button
+                android:id="@+id/medalbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:drawablePadding="10dp"
+                android:text="@string/main_medal"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="30sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <Button
                 android:id="@+id/basisbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,15 +106,20 @@
 
     </TableLayout>
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/mainconfig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
+        android:backgroundTint="?attr/ButtonPrimary"
         android:contentDescription="@string/def_config"
-        android:tint="?attr/UnitinfoName"
+        android:scaleType="center"
+        android:tint="?attr/iconPrimary"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_settings_black_24dp" />

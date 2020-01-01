@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -15,18 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
-import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader;
 import com.mandarin.bcu.androidutil.getStrings;
+import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader;
 
 public class UnitInfo extends AppCompatActivity {
-    private ImageButton treasure;
+    private FloatingActionButton treasure;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -106,7 +106,7 @@ public class UnitInfo extends AppCompatActivity {
 
         TextView unittitle = findViewById(R.id.unitinfrarname);
 
-        ImageButton back = findViewById(R.id.unitinfback);
+        FloatingActionButton back = findViewById(R.id.unitinfback);
         treasure = findViewById(R.id.treabutton);
 
         back.setOnClickListener(new View.OnClickListener() {

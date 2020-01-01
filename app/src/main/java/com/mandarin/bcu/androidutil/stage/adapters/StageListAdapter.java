@@ -49,6 +49,7 @@ public class StageListAdapter extends ArrayAdapter<String> {
     }
 
     @NonNull
+    @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
         View row;
         ViewHolder holder;

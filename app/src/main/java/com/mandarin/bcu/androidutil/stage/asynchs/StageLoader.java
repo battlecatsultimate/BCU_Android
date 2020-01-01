@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -85,7 +85,7 @@ public class StageLoader extends AsyncTask<Void,Integer,Void> {
             }
         });
 
-        ImageButton bck = activity.findViewById(R.id.stglistbck);
+        FloatingActionButton bck = activity.findViewById(R.id.stglistbck);
         bck.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {

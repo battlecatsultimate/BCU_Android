@@ -27,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -42,6 +41,7 @@ import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.animation.asynchs.EAnimationLoader;
 import com.mandarin.bcu.androidutil.animation.asynchs.UAnimationLoader;
+import com.mandarin.bcu.androidutil.io.MediaScanner;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,7 +111,7 @@ public class ImageViewer extends AppCompatActivity {
             form = extra.getInt("Form");
         }
 
-        ImageButton bck = findViewById(R.id.imgviewerbck);
+        FloatingActionButton bck = findViewById(R.id.imgviewerbck);
 
         TableRow row = findViewById(R.id.palyrow);
         SeekBar seekBar = findViewById(R.id.animframeseek);
@@ -133,7 +133,7 @@ public class ImageViewer extends AppCompatActivity {
 
         Spinner anims = findViewById(R.id.animselect);
 
-        ImageButton option = findViewById(R.id.imgvieweroption);
+        FloatingActionButton option = findViewById(R.id.imgvieweroption);
 
         switch(img) {
             case BG:
@@ -224,6 +224,8 @@ public class ImageViewer extends AppCompatActivity {
 
                                 fos.close();
 
+                                new MediaScanner(ImageViewer.this,g);
+
                                 Toast.makeText(ImageViewer.this,getString(R.string.anim_png_success).replace("-","/BCU/img/"+name),Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -249,7 +251,7 @@ public class ImageViewer extends AppCompatActivity {
                 row.setVisibility(View.GONE);
                 seekBar.setVisibility(View.GONE);
                 frame.setVisibility(View.GONE);
-                option.setVisibility(View.GONE);
+                option.hide();
                 fpsind.setVisibility(View.GONE);
                 gif.setVisibility(View.GONE);
                 prog.setVisibility(View.GONE);
@@ -432,7 +434,7 @@ public class ImageViewer extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ImageButton bck = findViewById(R.id.imgviewerbck);
+        FloatingActionButton bck = findViewById(R.id.imgviewerbck);
 
         bck.performClick();
     }

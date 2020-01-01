@@ -193,9 +193,9 @@
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
                             <entry key="height" value="48" />
-                            <entry key="outputName" value="ic_basis" />
+                            <entry key="outputName" value="ic_medal" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\basis.svg" />
+                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\medal.svg" />
                             <entry key="width" value="48" />
                           </map>
                         </option>

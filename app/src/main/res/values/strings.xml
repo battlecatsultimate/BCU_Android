@@ -495,4 +495,8 @@
     <string name="lineup_remove">Remove</string>
     <string name="lineup_remove_Set">Remove Set</string>
     <string name="lineup_remove_lu">Remove Lineup</string>
+    <string name="main_medal">Medal Info</string>
+    <string name="medal_reading_data">Reading Medal Data…</string>
+    <string name="medal_reading_icon">Loading Medal Icons…</string>
+    <string name="medal_loading_data">Processing Data…</string>
 </resources>

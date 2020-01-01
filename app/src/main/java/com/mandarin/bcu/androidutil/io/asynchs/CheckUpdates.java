@@ -48,7 +48,6 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
     private boolean lang;
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
-    private String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt","ComboName.txt"};
     private String source;
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
@@ -129,7 +128,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             if(!diff.exists()) lang = true;
 
             for(String s1 : lan) {
-                for(String s : langfile) {
+                for(String s : StaticStore.langfile) {
                     File f = new File(source+s1,s);
 
                     if(!f.exists()) {
@@ -169,7 +168,9 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                 durlis.close();
 
                 for (String s1 : lan) {
-                    for (String s : langfile) {
+                    for (String s : StaticStore.langfile) {
+                        if(lang) continue;
+
                         String langurl = url + s1 + s;
                         URL link = new URL(langurl);
                         HttpURLConnection c = (HttpURLConnection) link.openConnection();

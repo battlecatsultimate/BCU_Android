@@ -5,17 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 import com.mandarin.bcu.androidutil.Revalidater;
-import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 
 public class MainActivity extends AppCompatActivity {
     public static boolean isRunning = false;
@@ -63,14 +63,16 @@ public class MainActivity extends AppCompatActivity {
         Button stagebtn = findViewById(R.id.stgbtn);
         Button emlistbtn = findViewById(R.id.eninfbtn);
         Button basisbtn = findViewById(R.id.basisbtn);
+        Button medalbtn = findViewById(R.id.medalbtn);
 
-        ImageButton config = findViewById(R.id.mainconfig);
+        FloatingActionButton config = findViewById(R.id.mainconfig);
 
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_kasa_jizo), null, null, null);
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
         emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_enemy),null,null,null);
         emlistbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_basis),null,null,null);
+        medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_medal),null,null,null);
 
         animbtn.setOnClickListener(new SingleClick() {
             @Override
@@ -104,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 Intent intent = new Intent(MainActivity.this,LineUpScreen.class);
+                startActivity(intent);
+            }
+        });
+
+        medalbtn.setOnClickListener(new SingleClick() {
+            @Override
+            public void onSingleClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MedalList.class);
                 startActivity(intent);
             }
         });

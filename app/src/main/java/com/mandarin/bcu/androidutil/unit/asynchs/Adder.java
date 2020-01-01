@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,9 +15,9 @@ import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
-import com.mandarin.bcu.androidutil.unit.Definer;
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.unit.Definer;
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 
 import java.lang.ref.WeakReference;
@@ -45,10 +45,10 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         if(activity == null) return;
 
         ListView list = activity.findViewById(R.id.unitinflist);
-        ImageButton search = activity.findViewById(R.id.animsch);
+        FloatingActionButton search = activity.findViewById(R.id.animsch);
 
         list.setVisibility(View.GONE);
-        search.setVisibility(View.GONE);
+        search.hide();
     }
 
     @Override
@@ -156,11 +156,11 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         ListView list = activity.findViewById(R.id.unitinflist);
         ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         TextView ulistst = activity.findViewById(R.id.unitinfst);
-        ImageButton search = activity.findViewById(R.id.animsch);
+        FloatingActionButton search = activity.findViewById(R.id.animsch);
         list.setVisibility(View.VISIBLE);
         prog.setVisibility(View.GONE);
         ulistst.setVisibility(View.GONE);
-        search.setVisibility(View.VISIBLE);
+        search.show();
     }
 
     private String number(int num) {

@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -39,6 +38,7 @@ import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.animation.AnimationCView;
+import com.mandarin.bcu.androidutil.io.MediaScanner;
 import com.mandarin.bcu.androidutil.unit.Definer;
 
 import java.io.File;
@@ -77,7 +77,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
         Spinner anims = activity.findViewById(R.id.animselect);
         Spinner forms = activity.findViewById(R.id.formselect);
-        ImageButton setting = activity.findViewById(R.id.imgvieweroption);
+        FloatingActionButton setting = activity.findViewById(R.id.imgvieweroption);
         TableRow player = activity.findViewById(R.id.palyrow);
         SeekBar controller = activity.findViewById(R.id.animframeseek);
         TextView frame = activity.findViewById(R.id.animframe);
@@ -154,7 +154,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 TextView gif = activity.findViewById(R.id.imgviewergiffr);
                 FloatingActionButton [] buttons = {activity.findViewById(R.id.animbackward),activity.findViewById(R.id.animplay),activity.findViewById(R.id.animforward)};
                 LinearLayout cViewlayout = activity.findViewById(R.id.imgviewerln);
-                ImageButton option = activity.findViewById(R.id.imgvieweroption);
+                FloatingActionButton option = activity.findViewById(R.id.imgvieweroption);
 
                 SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
                 
@@ -286,12 +286,12 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                         frame.setTextColor(getAttributeColor(activity,R.attr.TextPrimary));
 
                         if(StaticStore.play) {
-                            buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_pause_black_24dp));
+                            buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_play_arrow_black_24dp));
                             buttons[0].show();
                             buttons[2].show();
                             controller.setEnabled(true);
                         } else {
-                            buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_play_arrow_black_24dp));
+                            buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_pause_black_24dp));
                             buttons[0].hide();
                             buttons[2].hide();
                             controller.setEnabled(false);
@@ -389,6 +389,8 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
                                     fos.close();
 
+                                    new MediaScanner(activity,f);
+
                                     Toast.makeText(activity,activity.getString(R.string.anim_png_success).replace("-","/BCU/img/"+name),Toast.LENGTH_SHORT).show();
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
@@ -437,6 +439,8 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
                                     fos.close();
 
+                                    new MediaScanner(activity,f);
+
                                     Toast.makeText(activity,activity.getString(R.string.anim_png_success).replace("-","/BCU/img/"+name),Toast.LENGTH_SHORT).show();
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
@@ -481,7 +485,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 anims.setSelection(StaticStore.animposition);
                 forms.setSelection(StaticStore.formposition);
 
-                ImageButton bck = activity.findViewById(R.id.imgviewerbck);
+                FloatingActionButton bck = activity.findViewById(R.id.imgviewerbck);
 
                 bck.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -538,7 +542,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
         Spinner anims = activity.findViewById(R.id.animselect);
         Spinner forms = activity.findViewById(R.id.formselect);
-        ImageButton setting = activity.findViewById(R.id.imgvieweroption);
+        FloatingActionButton setting = activity.findViewById(R.id.imgvieweroption);
         TableRow player = activity.findViewById(R.id.palyrow);
         SeekBar controller = activity.findViewById(R.id.animframeseek);
         TextView frame = activity.findViewById(R.id.animframe);

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +26,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -125,7 +125,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         publishProgress(0);
 
-        ImageButton treasure = activity.findViewById(R.id.treabutton);
+        FloatingActionButton treasure = activity.findViewById(R.id.treabutton);
         ConstraintLayout mainLayout = activity.findViewById(R.id.unitinfomain);
         ConstraintLayout treasuretab = activity.findViewById(R.id.treasurelayout);
 

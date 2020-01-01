@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +18,10 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Button;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -99,7 +99,7 @@ public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
             viewPager.setOffscreenPageLimit(1);
         }
 
-        ImageButton treasure = activity.findViewById(R.id.enemtreasure);
+        FloatingActionButton treasure = activity.findViewById(R.id.enemtreasure);
         ConstraintLayout main = activity.findViewById(R.id.enemmainlayout);
         ConstraintLayout treasurelay = activity.findViewById(R.id.enemtreasuretab);
 
@@ -168,7 +168,7 @@ public class EInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         if(activity == null) return;
 
-        ImageButton back = activity.findViewById(R.id.eneminfbck);
+        FloatingActionButton back = activity.findViewById(R.id.eneminfbck);
         Button eanim = activity.findViewById(R.id.eanimanim);
 
         back.setOnClickListener(new View.OnClickListener() {

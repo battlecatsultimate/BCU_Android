@@ -6,13 +6,13 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -23,14 +23,13 @@ import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import common.CommonStatic;
 
 public class ConfigScreen extends AppCompatActivity {
     SharedPreferences shared;
-    ImageButton back;
+    FloatingActionButton back;
     private int [] LangId = {R.string.lang_auto,R.string.def_lang_en,R.string.def_lang_zh,R.string.def_lang_ko,R.string.def_lang_ja};
     private String [] locales = StaticStore.lang;
     private  boolean started = false;

@@ -34,6 +34,7 @@ import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.io.OutStream;
+import common.system.MultiLangCont;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
 import common.util.pack.Background;
@@ -47,9 +48,10 @@ import common.util.unit.Unit;
 public class StaticStore {
     /** System/IO variables **/
     public static final String [] LIBREQ = { "000001", "000002", "000003", "080602", "080603","080604","080605","080700","080705","080706","080800","080801","080802",
-                                            "080900","080901","080902","081000","081001","081005","081006","090000","090001","090100","090101","090102","090103"};
+                                            "080900","080901","080902","081000","081001","081005","081006","090000","090001","090100","090101","090102","090103","090104"};
     public static final String [] OPTREQS = { "080504"  };
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
+    public static final String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt","ComboName.txt","MedalName.txt","MedalExplanation.txt"};
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/BCU/logs/";
     public static final long INTERVAL = 1000;
     public static final long INFO_INTERVAL = 350;
@@ -58,6 +60,7 @@ public class StaticStore {
     public static int enemeylang = 1;
     public static int stagelang = 1;
     public static int maplang = 1;
+    public static int medallang = 1;
 
     public static int root = 0;
 
@@ -124,6 +127,12 @@ public class StaticStore {
     public static boolean [] infoOpened = null;
     public static int stageSpinner = -1;
 
+    /** Variables for Medal **/
+    public static int medalnumber = 0;
+    public static List<Bitmap> medals = null;
+    public static MultiLangCont<Integer,String> MEDNAME = new MultiLangCont<>();
+    public static MultiLangCont<Integer,String> MEDEXP = new MultiLangCont<>();
+
     /** Variables for Animation **/
     public static boolean play = true;
     public static int frame = 0;
@@ -170,6 +179,7 @@ public class StaticStore {
         enemeylang = 1;
         stagelang = 1;
         maplang = 1;
+        medallang = 1;
 
         root = 0;
 
@@ -197,6 +207,11 @@ public class StaticStore {
         enemyinflistClick = SystemClock.elapsedRealtime();
         EisOpen = false;
 
+        medalnumber = 0;
+        medals = null;
+        MEDNAME.clear();
+        MEDEXP.clear();
+
         map = null;
         mapnames = null;
         eicons = null;
@@ -206,6 +221,20 @@ public class StaticStore {
         treasure = null;
         infoOpened = null;
         stageSpinner = -1;
+
+        LUnames = null;
+        sets = null;
+        LULoading = false;
+        LUread = false;
+        LUtabPosition = 0;
+        currentForms = null;
+        updateForm = true;
+        position = new int [] {-1,-1};
+        combos = null;
+        setline = new int [] {0,0};
+        updateList = false;
+        set = null;
+        lu = null;
 
         play = true;
         frame = 0;

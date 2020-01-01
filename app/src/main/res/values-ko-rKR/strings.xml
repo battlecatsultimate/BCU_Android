@@ -496,4 +496,8 @@
     <string name="lineup_rename">이름 바꾸기</string>
     <string name="lineup_rename_lu">편성표 이름 바꾸기</string>
     <string name="lineup_rename_set">세트 이름 바꾸기</string>
+    <string name="main_medal">메달 정보</string>
+    <string name="medal_reading_data">메달 데이터 읽는중…</string>
+    <string name="medal_reading_icon">메달 아이콘 읽는중…</string>
+    <string name="medal_loading_data">데이터 처리중…</string>
 </resources>
