@@ -6,8 +6,11 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ import common.system.files.VFile;
 public class EAdder extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
     private int enemnumber;
+    private ArrayList<Integer> numbers = new ArrayList<>();
 
     public EAdder(Activity activity,int enemnumber) {
         this.weakReference = new WeakReference<>(activity);
@@ -46,6 +50,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         listView.setVisibility(View.GONE);
         FloatingActionButton search = activity.findViewById(R.id.enlistsch);
         search.hide();
+        EditText schname = activity.findViewById(R.id.lineupschname);
+        schname.setVisibility(View.GONE);
 
         FloatingActionButton back = activity.findViewById(R.id.enlistbck);
         back.setOnClickListener(new SingleClick() {
@@ -116,7 +122,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
                 ListView list = activity.findViewById(R.id.enlist);
 
                 FilterEntity filterEntity = new FilterEntity(enemnumber);
-                ArrayList<Integer> numbers = filterEntity.EsetFilter();
+                numbers = filterEntity.EsetFilter();
                 ArrayList<String> names = new ArrayList<>();
 
                 for(int i : numbers)
@@ -137,6 +143,34 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
                         activity.startActivity(result);
                     }
                 });
+
+                EditText schname = activity.findViewById(R.id.lineupschname);
+
+                schname.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        FilterEntity filterEntity = new FilterEntity(enemnumber,s.toString());
+                        numbers = filterEntity.EsetFilter();
+                        ArrayList<String> names = new ArrayList<>();
+
+                        for(int i : numbers)
+                            names.add(StaticStore.enames[i]);
+
+                        EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),StaticStore.ebitmaps,numbers);
+                        list.setAdapter(enemy);
+                    }
+                });
+
                 break;
         }
     }
@@ -156,6 +190,8 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         prog.setVisibility(View.GONE);
         FloatingActionButton search = activity.findViewById(R.id.enlistsch);
         search.show();
+        EditText schname = activity.findViewById(R.id.lineupschname);
+        schname.setVisibility(View.VISIBLE);
     }
 
     private String number(int num) {

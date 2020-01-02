@@ -7,110 +7,138 @@
     android:background="?attr/backgroundPrimary"
     tools:context=".MainActivity">
 
-    <TableLayout
+    <HorizontalScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TableRow
+        <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+            android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/anvibtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="?attr/ButtonPrimary"
-                android:drawablePadding="4dp"
-                android:text="@string/main_unitinfo"
-                android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/eninfbtn"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/mainconfig"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
                 android:backgroundTint="?attr/ButtonPrimary"
-                android:text="@string/main_enemy_info"
-                android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="30sp" />
-        </TableRow>
+                android:contentDescription="@string/def_config"
+                android:scaleType="center"
+                android:tint="?attr/iconPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_settings_black_24dp" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp">
-
-            <Button
-                android:id="@+id/stgbtn"
+            <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="?attr/ButtonPrimary"
-                android:drawablePadding="4dp"
-                android:text="@string/stg_inf"
-                android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="30sp"
-                app:layout_constraintHeight_percent="0.175" />
+                android:layout_marginStart="144dp"
+                android:layout_marginEnd="144dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/medalbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:backgroundTint="?attr/ButtonPrimary"
-                android:drawablePadding="10dp"
-                android:text="@string/main_medal"
-                android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="30sp" />
-        </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+                    <Button
+                        android:id="@+id/anvibtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="4dp"
+                        android:text="@string/main_unitinfo"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp" />
 
-            <Button
-                android:id="@+id/basisbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="?attr/ButtonPrimary"
-                android:drawablePadding="4dp"
-                android:text="@string/main_equip"
-                android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="30sp" />
-        </TableRow>
+                    <Button
+                        android:id="@+id/eninfbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:text="@string/main_enemy_info"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp" />
+                </TableRow>
 
-    </TableLayout>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/mainconfig"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:backgroundTint="?attr/ButtonPrimary"
-        android:contentDescription="@string/def_config"
-        android:scaleType="center"
-        android:tint="?attr/iconPrimary"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
-        app:fabSize="normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_settings_black_24dp" />
+                    <Button
+                        android:id="@+id/stgbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="4dp"
+                        android:text="@string/stg_inf"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp"
+                        app:layout_constraintHeight_percent="0.175" />
+
+                    <Button
+                        android:id="@+id/medalbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="10dp"
+                        android:text="@string/main_medal"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <Button
+                        android:id="@+id/basisbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="4dp"
+                        android:text="@string/main_equip"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp" />
+
+                    <Button
+                        android:id="@+id/bgbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="10dp"
+                        android:text="@string/main_bg"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp" />
+                </TableRow>
+
+            </TableLayout>
+        </android.support.constraint.ConstraintLayout>
+    </HorizontalScrollView>
 
 </android.support.constraint.ConstraintLayout>

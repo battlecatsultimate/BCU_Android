@@ -12,5 +12,6 @@
     <attr name="UnitinfoName" format="color"/>
     <attr name="iconPrimary" format="color"/>
     <attr name="SelectionPrimary" format="color"/>
+    <attr name="HintPrimary" format="color"/>
     <attr name="themes" format="reference"/>
 </resources>

@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Button emlistbtn = findViewById(R.id.eninfbtn);
         Button basisbtn = findViewById(R.id.basisbtn);
         Button medalbtn = findViewById(R.id.medalbtn);
+        Button bgbtn = findViewById(R.id.bgbtn);
 
         FloatingActionButton config = findViewById(R.id.mainconfig);
 
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         emlistbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
         basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_basis),null,null,null);
         medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_medal),null,null,null);
+        bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_bg),null,null,null);
+        bgbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
 
         animbtn.setOnClickListener(new SingleClick() {
             @Override
@@ -114,6 +117,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MedalList.class);
+                startActivity(intent);
+            }
+        });
+
+        bgbtn.setOnClickListener(new SingleClick() {
+            @Override
+            public void onSingleClick(View v) {
+                Intent intent = new Intent(MainActivity.this,BackgroundList.class);
                 startActivity(intent);
             }
         });

@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,12 +8,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.TypedValue;
 
 import com.mandarin.bcu.R;
@@ -26,7 +22,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import common.CommonStatic;
@@ -37,8 +32,6 @@ import common.io.OutStream;
 import common.system.MultiLangCont;
 import common.system.fake.FakeImage;
 import common.util.anim.ImgCut;
-import common.util.pack.Background;
-import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
@@ -126,6 +119,8 @@ public class StaticStore {
     public static Bitmap treasure = null;
     public static boolean [] infoOpened = null;
     public static int stageSpinner = -1;
+    public static int bgnumber = 0;
+    public static long bglistClick = SystemClock.elapsedRealtime();
 
     /** Variables for Medal **/
     public static int medalnumber = 0;
@@ -158,6 +153,7 @@ public class StaticStore {
     public static boolean updateList = false;
     public static BasisSet set = null;
     public static BasisLU lu = null;
+    public static String lineunitname = null;
 
     /** Search Filter Variables **/
 
@@ -221,6 +217,8 @@ public class StaticStore {
         treasure = null;
         infoOpened = null;
         stageSpinner = -1;
+        bgnumber = 0;
+        bglistClick = SystemClock.elapsedRealtime();
 
         LUnames = null;
         sets = null;
@@ -235,6 +233,7 @@ public class StaticStore {
         updateList = false;
         set = null;
         lu = null;
+        lineunitname = null;
 
         play = true;
         frame = 0;

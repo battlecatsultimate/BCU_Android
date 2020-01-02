@@ -2,21 +2,32 @@ package com.mandarin.bcu.androidutil;
 
 import com.mandarin.bcu.util.Interpret;
 
+import java.util.ArrayList;
+
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
+import common.system.MultiLangCont;
 import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 
-import java.util.ArrayList;
-
 public class FilterEntity {
     private int entitynumber;
+    private String entityname = "";
 
 
     public FilterEntity(int entitynumber) {
         this.entitynumber = entitynumber;
+
+        if(StaticStore.lineunitname != null)
+            if(!StaticStore.lineunitname.isEmpty())
+                entityname = StaticStore.lineunitname;
+    }
+
+    public FilterEntity(int entitynumber, String entityname) {
+        this.entitynumber = entitynumber;
+        this.entityname = entityname;
     }
 
     public ArrayList<Integer> setFilter() {
@@ -136,9 +147,30 @@ public class FilterEntity {
         ArrayList<Integer> result = new ArrayList<>();
 
         for(int i =0;i<entitynumber;i++)
-            if(b0.get(i) && b1.get(i) && b2.get(i) && b3.get(i) && b4.get(i))
-                result.add(i);
+            if(b0.get(i) && b1.get(i) && b2.get(i) && b3.get(i) && b4.get(i)) {
+                if(!entityname.isEmpty()) {
+                    Unit u = StaticStore.units.get(i);
+                    boolean added = false;
 
+                    for(int j = 0; j < u.forms.length; j++) {
+                        if(added) continue;
+
+                        String name = MultiLangCont.FNAME.getCont(u.forms[j]);
+
+                        if(name == null) name = number(i);
+
+                        name = number(i) + " - " + name.toLowerCase();
+
+                        if(name.contains(entityname.toLowerCase()))
+                            added = true;
+                    }
+
+                    if(added)
+                        result.add(i);
+                } else {
+                    result.add(i);
+                }
+            }
 
         return result;
     }
@@ -239,9 +271,33 @@ public class FilterEntity {
         ArrayList<Integer> result = new ArrayList<>();
 
         for(int i =0;i<entitynumber;i++)
-            if(b0.get(i) && b1.get(i) && b2.get(i) && b3.get(i))
-                result.add(i);
+            if(b0.get(i) && b1.get(i) && b2.get(i) && b3.get(i)) {
+                if(!entityname.isEmpty()) {
+                    Enemy e = StaticStore.enemies.get(i);
+
+                    String name = MultiLangCont.ENAME.getCont(e);
+
+                    if(name == null) name = number(i);
+
+                    name = number(i) + " - " +name.toLowerCase();
+
+                    if(name.contains(entityname.toLowerCase()))
+                        result.add(i);
+                } else {
+                    result.add(i);
+                }
+            }
 
         return result;
+    }
+
+    private String number(int num) {
+        if (0 <= num && num < 10) {
+            return "00" + num;
+        } else if (10 <= num && num <= 99) {
+            return "0" + num;
+        } else {
+            return ""+num;
+        }
     }
 }

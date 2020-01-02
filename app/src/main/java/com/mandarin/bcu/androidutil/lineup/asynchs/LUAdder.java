@@ -15,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,6 +93,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         MeasureViewPager measureViewPager = activity.findViewById(R.id.lineuppager);
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
+        EditText schname = activity.findViewById(R.id.lineupschname);
 
         View view = activity.findViewById(R.id.view);
 
@@ -98,9 +101,9 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             names[i] = activity.getString(ids[i]);
 
         if(view == null)
-            setDisappear(tabLayout,measureViewPager,line,row);
+            setDisappear(tabLayout,measureViewPager,line,row,schname);
         else
-            setDisappear(tabLayout,measureViewPager,line,row,view);
+            setDisappear(tabLayout,measureViewPager,line,row,view,schname);
     }
 
     @Override
@@ -211,6 +214,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                 StaticStore.set = null;
                 StaticStore.lu = null;
                 StaticStore.combos.clear();
+                StaticStore.lineunitname = null;
                 activity.finish();
             });
 
@@ -390,6 +394,26 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                 menu.getItem(2).getSubMenu().getItem(0).setEnabled(false);
                 menu.getItem(2).getSubMenu().getItem(1).setEnabled(false);
             }
+
+            EditText schname = activity.findViewById(R.id.lineupschname);
+
+            schname.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    StaticStore.lineunitname = s.toString();
+                    StaticStore.updateList = true;
+                }
+            });
 
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
@@ -712,8 +736,6 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                         luspin.setSelection(BasisSet.current.lb.size()-1);
 
-                        BasisSet.current.sele.name += "`";
-
                         save();
 
                         Toast.makeText(activity,R.string.lineup_cloned_lineup,Toast.LENGTH_SHORT).show();
@@ -838,13 +860,14 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         MeasureViewPager measureViewPager = activity.findViewById(R.id.lineuppager);
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
+        EditText schname = activity.findViewById(R.id.lineupschname);
 
         View view = activity.findViewById(R.id.view);
 
         if(view == null)
-            setAppear(tabLayout,measureViewPager,line,row);
+            setAppear(tabLayout,measureViewPager,line,row,schname);
         else
-            setAppear(tabLayout,measureViewPager,line,row,view);
+            setAppear(tabLayout,measureViewPager,line,row,view,schname);
     }
 
     private void setDisappear(View... view) {

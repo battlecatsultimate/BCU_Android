@@ -27,9 +27,13 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MedalList"></activity>
+        <activity android:name=".BackgroundList"
+            android:screenOrientation="locked"/>
+        <activity android:name=".MedalList"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".LineUpScreen"
+            android:hardwareAccelerated="true"
             android:screenOrientation="locked" />
         <activity
             android:name=".ImageViewer"

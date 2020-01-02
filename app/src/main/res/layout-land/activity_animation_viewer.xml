@@ -36,7 +36,28 @@
         app:layout_constraintBottom_toBottomOf="@+id/animtool"
         app:layout_constraintEnd_toEndOf="@+id/animtool"
         app:layout_constraintTop_toTopOf="@+id/animtool"
-        app:srcCompat="@drawable/search" />
+        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
+
+    <EditText
+        android:id="@+id/lineupschname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/TextPrimary"
+        android:drawableEnd="@drawable/search"
+        android:ems="10"
+        android:hint="@string/unit_list_sch"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textColor="?attr/TextPrimary"
+        android:textColorHint="?attr/HintPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/animtool"
+        app:layout_constraintEnd_toStartOf="@+id/animsch"
+        app:layout_constraintStart_toEndOf="@+id/animbck"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="O" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/animbck"

@@ -31,6 +31,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineuptoolbar" />
 
+    <EditText
+        android:id="@+id/lineupschname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/TextPrimary"
+        android:drawableEnd="@drawable/search"
+        android:ems="10"
+        android:hint="@string/enem_list_sch"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textColor="?attr/TextPrimary"
+        android:textColorHint="?attr/HintPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/lineuptoolbar"
+        app:layout_constraintEnd_toStartOf="@+id/linesch"
+        app:layout_constraintStart_toEndOf="@+id/lineupbck"
+        app:layout_constraintTop_toTopOf="@+id/lineuptoolbar"
+        tools:targetApi="O" />
+
     <TextView
         android:id="@+id/lineupst"
         android:layout_width="wrap_content"
@@ -96,7 +117,7 @@
         app:fabSize="mini"
         app:layout_constraintEnd_toStartOf="@+id/lineupsetting"
         app:layout_constraintTop_toTopOf="@+id/lineupsetting"
-        app:srcCompat="@drawable/search" />
+        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
 
     <TableRow
         android:id="@+id/lineupsetrow"

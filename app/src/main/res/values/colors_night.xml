@@ -12,4 +12,5 @@
     <color name="UnitinfoNameN">#bdbdbd</color>
     <color name="iconPrimaryN">#eeeeee</color>
     <color name="SelectionPrimaryN">#263238</color>
+    <color name="HintPrimaryN">#80eeeeee</color>
 </resources>

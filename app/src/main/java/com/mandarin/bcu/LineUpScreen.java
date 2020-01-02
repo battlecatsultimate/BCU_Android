@@ -84,6 +84,7 @@ public class LineUpScreen extends AppCompatActivity {
         StaticStore.set = null;
         StaticStore.lu = null;
         StaticStore.combos.clear();
+        StaticStore.lineunitname = null;
         super.onBackPressed();
     }
 }

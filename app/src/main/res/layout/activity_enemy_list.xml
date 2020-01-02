@@ -35,6 +35,27 @@
         app:layout_constraintTop_toTopOf="@+id/enemlisttool"
         app:srcCompat="@drawable/back_button" />
 
+    <EditText
+        android:id="@+id/lineupschname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/TextPrimary"
+        android:drawableEnd="@drawable/search"
+        android:ems="10"
+        android:hint="@string/enem_list_sch"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textColor="?attr/TextPrimary"
+        android:textColorHint="?attr/HintPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/enemlisttool"
+        app:layout_constraintEnd_toStartOf="@+id/enlistsch"
+        app:layout_constraintStart_toEndOf="@+id/enlistbck"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="O" />
+
     <ListView
         android:id="@+id/enlist"
         android:layout_width="0dp"
@@ -70,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/enemlisttool"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/enemlisttool"
-        app:srcCompat="@drawable/search" />
+        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
 
     <TextView
         android:id="@+id/enlistst"
