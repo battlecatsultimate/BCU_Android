@@ -13,8 +13,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,10 +51,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import common.system.MultiLangCont;
-import common.system.files.VFile;
 
 public class EAnimationLoader extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
@@ -104,24 +102,6 @@ public class EAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
             for(int i = 0;i<StaticStore.emnumber;i++) {
                 StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(StaticStore.enemies.get(i)));
-            }
-        }
-
-        publishProgress(1);
-
-        if(StaticStore.ebitmaps == null) {
-            StaticStore.ebitmaps = new Bitmap[StaticStore.emnumber];
-
-            for(int i = 0;i < StaticStore.emnumber;i++) {
-                String shortPath = "./org/enemy/"+number(i)+"/edi_"+number(i)+".png";
-
-                try {
-                    float ratio = 32f/32f;
-                    StaticStore.ebitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(), activity, 85f*ratio, 32f*ratio);
-                } catch(NullPointerException e) {
-                    float ratio = 32f/32f;
-                    StaticStore.ebitmaps[i] = StaticStore.empty(activity, 85f*ratio, 32f*ratio);
-                }
             }
         }
         

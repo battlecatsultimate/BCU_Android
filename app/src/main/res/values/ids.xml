@@ -2,5 +2,6 @@
 <resources>
 
     <item name="lineupView" type="id"/>
+    <item name="battleView" type="id"/>
 
 </resources>

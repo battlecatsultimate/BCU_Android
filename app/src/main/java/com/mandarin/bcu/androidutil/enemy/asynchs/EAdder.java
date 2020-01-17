@@ -1,11 +1,12 @@
 package com.mandarin.bcu.androidutil.enemy.asynchs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -25,10 +26,8 @@ import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import common.system.MultiLangCont;
-import common.system.files.VFile;
 
 public class EAdder extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
@@ -50,7 +49,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         listView.setVisibility(View.GONE);
         FloatingActionButton search = activity.findViewById(R.id.enlistsch);
         search.hide();
-        EditText schname = activity.findViewById(R.id.lineupschname);
+        EditText schname = activity.findViewById(R.id.enemlistschname);
         schname.setVisibility(View.GONE);
 
         FloatingActionButton back = activity.findViewById(R.id.enlistbck);
@@ -81,28 +80,12 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
             }
         }
 
-        publishProgress(1);
-
-        if(StaticStore.ebitmaps == null) {
-            StaticStore.ebitmaps = new Bitmap[StaticStore.emnumber];
-
-            for(int i = 0;i < StaticStore.emnumber;i++) {
-                String shortPath = "./org/enemy/"+number(i)+"/edi_"+number(i)+".png";
-
-                try {
-                    float ratio = 32f/32f;
-                    StaticStore.ebitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(), activity, 85f*ratio, 32f*ratio);
-                } catch(NullPointerException e) {
-                    float ratio = 32f/32f;
-                    StaticStore.ebitmaps[i] = StaticStore.empty(activity, 85f*ratio, 32f*ratio);
-                }
-            }
-        }
         publishProgress(2);
 
         return null;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onProgressUpdate(Integer... results) {
         Activity activity = weakReference.get();
@@ -121,14 +104,22 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
             case 2:
                 ListView list = activity.findViewById(R.id.enlist);
 
-                FilterEntity filterEntity = new FilterEntity(enemnumber);
+                FilterEntity filterEntity;
+
+                TextInputEditText schname = activity.findViewById(R.id.enemlistschname);
+
+                if(schname.getText().toString().isEmpty())
+                    filterEntity = new FilterEntity(enemnumber);
+                else
+                    filterEntity = new FilterEntity(enemnumber,schname.getText().toString());
+
                 numbers = filterEntity.EsetFilter();
                 ArrayList<String> names = new ArrayList<>();
 
                 for(int i : numbers)
                     names.add(StaticStore.enames[i]);
 
-                EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),StaticStore.ebitmaps,numbers);
+                EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),numbers);
                 list.setAdapter(enemy);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -143,8 +134,6 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
                         activity.startActivity(result);
                     }
                 });
-
-                EditText schname = activity.findViewById(R.id.lineupschname);
 
                 schname.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -166,8 +155,14 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
                         for(int i : numbers)
                             names.add(StaticStore.enames[i]);
 
-                        EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),StaticStore.ebitmaps,numbers);
+                        EnemyListAdapter enemy = new EnemyListAdapter(activity,names.toArray(new String[0]),numbers);
                         list.setAdapter(enemy);
+
+                        if(s.toString().isEmpty()) {
+                            schname.setCompoundDrawablesWithIntrinsicBounds(null,null,activity.getDrawable(R.drawable.search),null);
+                        } else {
+                            schname.setCompoundDrawablesWithIntrinsicBounds(null,null,activity.getDrawable(R.drawable.ic_close_black_24dp),null);
+                        }
                     }
                 });
 
@@ -190,7 +185,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         prog.setVisibility(View.GONE);
         FloatingActionButton search = activity.findViewById(R.id.enlistsch);
         search.show();
-        EditText schname = activity.findViewById(R.id.lineupschname);
+        EditText schname = activity.findViewById(R.id.enemlistschname);
         schname.setVisibility(View.VISIBLE);
     }
 

@@ -23,6 +23,7 @@ public class AnimationView extends SurfaceView implements SurfaceHolder.Callback
 
     Canvas c;
     Paint p = new Paint();
+    Paint bp = new Paint();
     Paint p2 = new Paint();
     P p1;
 
@@ -76,7 +77,7 @@ public class AnimationView extends SurfaceView implements SurfaceHolder.Callback
 
                 if (c == null) return;
 
-                CVGraphics graphics = new CVGraphics(c, p,false);
+                CVGraphics graphics = new CVGraphics(c, p,bp,false);
 
                 try {
                     synchronized (holder) {

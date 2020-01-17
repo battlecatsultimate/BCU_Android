@@ -2,10 +2,9 @@ package com.mandarin.bcu.androidutil.unit.asynchs;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -25,10 +24,8 @@ import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import common.system.MultiLangCont;
-import common.system.files.VFile;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 
@@ -50,7 +47,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
 
         ListView list = activity.findViewById(R.id.unitinflist);
         FloatingActionButton search = activity.findViewById(R.id.animsch);
-        EditText schname = activity.findViewById(R.id.lineupschname);
+        EditText schname = activity.findViewById(R.id.animschname);
 
         list.setVisibility(View.GONE);
         search.hide();
@@ -72,25 +69,6 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
 
             for (int i = 0; i < StaticStore.names.length; i++) {
                 StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
-            }
-        }
-
-        publishProgress(1);
-
-        if (StaticStore.bitmaps == null) {
-            StaticStore.bitmaps = new Bitmap[StaticStore.unitnumber];
-
-
-            for (int i = 0; i < unitnumber; i++) {
-                String shortPath = "./org/unit/" + number(i) + "/f/uni" + number(i) + "_f00.png";
-
-                Bitmap b = (Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg();
-
-                if(b.getWidth() == b.getHeight())
-                    StaticStore.bitmaps[i] = StaticStore.getResizeb(b, activity, 48f);
-                else
-                    StaticStore.bitmaps[i] = StaticStore.MakeIcon(activity,b,48f);
-
             }
         }
 
@@ -116,14 +94,21 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                 break;
             case 2:
                 ListView list = activity.findViewById(R.id.unitinflist);
-                FilterEntity filterEntity = new FilterEntity(unitnumber);
+                FilterEntity filterEntity;
+                EditText schname = activity.findViewById(R.id.animschname);
+
+                if(schname.getText().toString().isEmpty())
+                    filterEntity = new FilterEntity(unitnumber);
+                else
+                    filterEntity = new FilterEntity(unitnumber,schname.getText().toString());
+
                 numbers = filterEntity.setFilter();
                 ArrayList<String> names = new ArrayList<>();
 
                 for (int i : numbers) {
                     names.add(StaticStore.names[i]);
                 }
-                UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), StaticStore.bitmaps, numbers);
+                UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), numbers);
                 list.setAdapter(adap);
                 list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
@@ -148,8 +133,6 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                     }
                 });
 
-                EditText schname = activity.findViewById(R.id.lineupschname);
-
                 schname.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -171,7 +154,8 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                         for (int i : numbers) {
                             names.add(StaticStore.names[i]);
                         }
-                        UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), StaticStore.bitmaps, numbers);
+
+                        UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), numbers);
                         list.setAdapter(adap);
                     }
                 });
@@ -192,7 +176,7 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         TextView ulistst = activity.findViewById(R.id.unitinfst);
         FloatingActionButton search = activity.findViewById(R.id.animsch);
-        EditText schname = activity.findViewById(R.id.lineupschname);
+        EditText schname = activity.findViewById(R.id.animschname);
         list.setVisibility(View.VISIBLE);
         prog.setVisibility(View.GONE);
         ulistst.setVisibility(View.GONE);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
             android:focusableInTouchMode="true">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/techlev"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -35,7 +35,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/techlevt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -46,9 +46,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/techexpand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 app:layout_constraintStart_toStartOf="@+id/techlev"
                 app:layout_constraintTop_toBottomOf="@+id/techlev">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cdlev"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -84,7 +84,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="1~30 Lv.">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/cdlevt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -96,9 +96,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/aclev"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="1~30 Lv.">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/aclevt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -119,9 +119,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/basehlev"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -130,7 +130,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="1~30 Lv.">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/basehlevt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -142,9 +142,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/worklev"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -153,7 +153,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="1~30 Lv.">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/worklevt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -165,9 +165,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/walletlev"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -176,7 +176,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="1~30 Lv.">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/walletlevt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -188,9 +188,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/rechargelev"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -199,7 +199,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="1~30 Lv.">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/rechargelevt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -211,10 +211,10 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/canatklev"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -233,7 +233,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/techlayout">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/canatklevt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -244,9 +244,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/canrangelev"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -265,7 +265,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/canatklev">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/canrangelevt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -276,9 +276,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/eoctrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -290,7 +290,7 @@
                 app:layout_constraintStart_toStartOf="@+id/canrangelev"
                 app:layout_constraintTop_toBottomOf="@+id/canrangelev">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eoctreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -302,9 +302,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/eocexpand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -331,7 +331,7 @@
                 app:layout_constraintStart_toStartOf="@+id/techlev"
                 app:layout_constraintTop_toBottomOf="@+id/eoctrea">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/atktrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -340,7 +340,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/atktreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -352,9 +352,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/healtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -363,7 +363,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/healtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -375,9 +375,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cdtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -386,7 +386,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/cdtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -398,9 +398,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/actrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -409,7 +409,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/actreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -421,9 +421,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/worktrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -432,7 +432,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/worktreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -444,9 +444,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/wallettrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -455,7 +455,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/wallettreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -467,10 +467,10 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/eocitftrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -482,7 +482,7 @@
                 app:layout_constraintStart_toStartOf="@+id/canrangelev"
                 app:layout_constraintTop_toBottomOf="@+id/eoclayout">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eocitftreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -494,9 +494,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/eocitfexpand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -523,7 +523,7 @@
                 app:layout_constraintStart_toStartOf="@+id/techlev"
                 app:layout_constraintTop_toBottomOf="@+id/eocitftrea">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/rechargetrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -532,7 +532,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~600 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/rechargetreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -544,9 +544,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/canatktrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -555,7 +555,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~600 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/canatktreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -567,9 +567,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/basehtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -578,7 +578,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~600 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/basehtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -590,10 +590,10 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/itffruittrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -605,7 +605,7 @@
                 app:layout_constraintStart_toStartOf="@+id/eocitftrea"
                 app:layout_constraintTop_toBottomOf="@+id/eocitflayout">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/itffruittreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -617,9 +617,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/itfexpand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -647,7 +647,7 @@
                 app:layout_constraintStart_toStartOf="@+id/eocitftrea"
                 app:layout_constraintTop_toBottomOf="@+id/itffruittrea">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/redfrtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -656,7 +656,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/redfrtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -668,9 +668,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/floatfrtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -679,7 +679,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/floatfrtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -691,9 +691,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/blacktrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -702,7 +702,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/blacktreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -714,9 +714,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/angelfrtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -725,7 +725,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/angelfrtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -737,10 +737,10 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cotctrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -752,7 +752,7 @@
                 app:layout_constraintStart_toStartOf="@+id/itffruittrea"
                 app:layout_constraintTop_toBottomOf="@+id/itffruitlayout">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/cotctreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -764,9 +764,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/cotcexpand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -793,7 +793,7 @@
                 app:layout_constraintStart_toStartOf="@+id/eocitftrea"
                 app:layout_constraintTop_toBottomOf="@+id/cotctrea">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/metalfrtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -802,7 +802,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/metalfrtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -814,9 +814,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/zombiefrtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -825,7 +825,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/zombiefrtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -837,9 +837,9 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/alienfrtrea"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -848,7 +848,7 @@
                     app:counterTextAppearance="@style/CounterStyle"
                     app:helperText="0~300 %">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/alienfrtreat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -860,11 +860,11 @@
                         android:textColor="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         android:textSize="14sp" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/itfcrytrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -876,7 +876,7 @@
                 app:layout_constraintStart_toStartOf="@+id/cotctrea"
                 app:layout_constraintTop_toBottomOf="@+id/cotclayout">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/itfcrytreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -888,9 +888,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cotccrytrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -902,7 +902,7 @@
                 app:layout_constraintStart_toStartOf="@+id/cotctrea"
                 app:layout_constraintTop_toBottomOf="@+id/itfcrytrea">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/cotccrytreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -914,9 +914,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/masktrea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -928,7 +928,7 @@
                 app:layout_constraintStart_toStartOf="@+id/cotctrea"
                 app:layout_constraintTop_toBottomOf="@+id/cotccrytrea">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/masktreat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -940,9 +940,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/mask2trea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -954,7 +954,7 @@
                 app:layout_constraintStart_toStartOf="@+id/cotctrea"
                 app:layout_constraintTop_toBottomOf="@+id/masktrea">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/mask2treat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -966,9 +966,9 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/mask3trea"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -983,7 +983,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mask2trea"
                 tools:ignore="TooManyViews">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/mask3treat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -995,11 +995,11 @@
                     android:textColor="?attr/TextPrimary"
                     android:textColorHint="?attr/TextPrimary"
                     android:textSize="14sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

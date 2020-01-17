@@ -6,14 +6,15 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -44,6 +45,7 @@ public class LUTreasureSetting extends Fragment {
 
     boolean CanbeEdited = true;
     boolean Initialized = false;
+    private boolean destroyed = false;
 
     TextInputLayout tech;
     TextInputLayout [] techs = new TextInputLayout[6];
@@ -122,6 +124,73 @@ public class LUTreasureSetting extends Fragment {
         Initialize(view);
 
         Listeners();
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(StaticStore.updateTreasure) {
+                    Treasure t = BasisSet.current.t();
+
+                    Initialized = false;
+
+                    itfcrye.setText(String.valueOf(t.alien));
+                    cotccrye.setText(String.valueOf(t.star));
+
+                    for(int i = 0; i < 6; i++) {
+                        teches[i].setText(String.valueOf(t.tech[i]));
+                    }
+
+                    canatke.setText(String.valueOf(t.tech[6]));
+                    canrangee.setText(String.valueOf(t.tech[7]));
+
+                    for(int i = 0; i < 6; i++) {
+                        eoces[i].setText(String.valueOf(t.trea[i]));
+                    }
+
+                    for(int i = 0; i < eocitfes.length; i++) {
+                        eocitfes[i].setText(String.valueOf(t.trea[i+6]));
+                    }
+
+                    for(int i = 0; i < 4; i++) {
+                        itfes[i].setText(String.valueOf(t.fruit[i]));
+                    }
+
+                    for(int i = 4; i < t.fruit.length; i++) {
+                        cotces[i-4].setText(String.valueOf(t.fruit[i]));
+                    }
+
+                    for(int i = 0; i < t.gods.length; i++) {
+                        maskes[i].setText(String.valueOf(t.gods[i]));
+                    }
+
+
+                    if(ValuesAllSame(0))
+                        teche.setText(String.valueOf(t.tech[0]));
+
+                    if(ValuesAllSame(1))
+                        eoce.setText(String.valueOf(t.trea[0]));
+
+                    if(ValuesAllSame(2))
+                        eocitfe.setText(String.valueOf(t.trea[6]));
+
+                    if(ValuesAllSame(3))
+                        itfe.setText(String.valueOf(t.fruit[0]));
+
+                    if(ValuesAllSame(4))
+                        cotce.setText(String.valueOf(t.fruit[4]));
+
+                    Initialized = true;
+
+                    StaticStore.updateTreasure = false;
+                }
+
+                if(!destroyed)
+                    handler.postDelayed(this,50);
+            }
+        };
+
+        handler.postDelayed(runnable,50);
 
         return view;
     }
@@ -709,5 +778,11 @@ public class LUTreasureSetting extends Fragment {
                 });
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destroyed = true;
     }
 }

@@ -77,15 +77,48 @@ public class ErrorLogWriter implements Thread.UncaughtExceptionHandler {
 
             File file = new File(path,name);
 
+            final Writer stringbuff = new StringWriter();
+            final PrintWriter printWriter = new PrintWriter(stringbuff);
+
+            error.printStackTrace(printWriter);
+
             if(!file.exists())
-                f.createNewFile();
+                file.createNewFile();
+            else {
+                file = new File(path,GetExistingFileName(path,name));
+                file.createNewFile();
+            }
 
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.append(error.toString());
+            fileWriter.append(printWriter.toString());
             fileWriter.flush();
             fileWriter.close();
+            printWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String GetExistingFileName(String path, String name) {
+        boolean decided = false;
+
+        int exist = 1;
+
+        String nam = name+"-"+exist;
+
+        while(!decided) {
+            File f = new File(path,nam);
+
+            if(!f.exists())
+                return nam;
+            else {
+                exist++;
+                nam = name + "-" + exist;
+            }
+
+            decided = true;
+        }
+
+        return nam;
     }
 }

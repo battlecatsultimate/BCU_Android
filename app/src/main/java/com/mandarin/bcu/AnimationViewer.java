@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,6 +37,7 @@ public class AnimationViewer extends AppCompatActivity {
     private ListView list;
     private int unitnumber;
     static final int REQUEST_CODE = 1;
+    private ArrayList<Integer> numbers = new ArrayList<>();
 
 
     @Override
@@ -149,25 +153,33 @@ public class AnimationViewer extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK) {
+            EditText schname = findViewById(R.id.animschname);
 
-            FilterEntity filterEntity = new FilterEntity(unitnumber);
-            ArrayList<Integer> newNumber = filterEntity.setFilter();
+            FilterEntity filterEntity;
+
+            if(schname.getText().toString().isEmpty())
+                filterEntity = new FilterEntity(unitnumber);
+            else
+                filterEntity = new FilterEntity(unitnumber,schname.getText().toString());
+
+            numbers = filterEntity.setFilter();
             ArrayList<String> newName = new ArrayList<>();
 
-            for(int i : newNumber) {
+            for(int i : numbers) {
                 newName.add(StaticStore.names[i]);
             }
 
-            UnitListAdapter unitListAdapter = new UnitListAdapter(this,newName.toArray(new String[0]),StaticStore.bitmaps,newNumber);
+            UnitListAdapter unitListAdapter = new UnitListAdapter(this,newName.toArray(new String[0]),numbers);
             list.setAdapter(unitListAdapter);
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(AnimationViewer.this,showName(newNumber.get(position)),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AnimationViewer.this,showName(numbers.get(position)),Toast.LENGTH_SHORT).show();
                     list.setClickable(false);
                     return true;
                 }
             });
+
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -175,10 +187,37 @@ public class AnimationViewer extends AppCompatActivity {
                         return;
 
                     Intent result = new Intent(AnimationViewer.this,UnitInfo.class);
-                    result.putExtra("ID",newNumber.get(position));
+                    result.putExtra("ID",numbers.get(position));
                     startActivity(result);
 
                     StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
+                }
+            });
+
+            schname.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    FilterEntity filterEntity = new FilterEntity(StaticStore.unitnumber,s.toString());
+                    numbers = filterEntity.setFilter();
+
+                    ArrayList<String> names = new ArrayList<>();
+
+                    for (int i : numbers) {
+                        names.add(StaticStore.names[i]);
+                    }
+
+                    UnitListAdapter adap = new UnitListAdapter(AnimationViewer.this, names.toArray(new String[0]), numbers);
+                    list.setAdapter(adap);
                 }
             });
         }

@@ -13,8 +13,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,10 +51,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import common.system.MultiLangCont;
-import common.system.files.VFile;
 import common.util.pack.Pack;
 
 public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
@@ -107,20 +105,6 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
             for (int i = 0; i < StaticStore.names.length; i++) {
                 StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
-            }
-        }
-
-        publishProgress(1);
-
-        if (StaticStore.bitmaps == null) {
-            StaticStore.bitmaps = new Bitmap[StaticStore.unitnumber];
-
-
-            for (int i = 0; i < StaticStore.unitnumber; i++) {
-                String shortPath = "./org/unit/" + number(i) + "/f/uni" + number(i) + "_f00.png";
-
-                StaticStore.bitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(), activity, 48f);
-
             }
         }
 

@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mandarin.bcu.CheckUpdateScreen;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 import com.mandarin.bcu.io.Reader;
 
 import java.io.BufferedInputStream;
@@ -26,17 +26,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import common.util.stage.MapColc;
-
 public class Downloader extends AsyncTask<Void,Integer,Void> {
 
     private int size;
-    private ArrayList<Long> sizes = new ArrayList<>();
+    private Map<String,Long> sizes = new HashMap<>();
     private ArrayList<Boolean> remover = new ArrayList<>();
 
     private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
@@ -84,13 +84,17 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         String RAW = "?raw=true";
         for(int i = 0; i<fileneed.size(); i++) {
             try {
+                File f= new File(path,fileneed.get(i)+".zip");
+
+                if(!f.exists()) continue;
+
                 url = urls +fileneed.get(i)+".zip" + RAW;
                 link = new URL(url);
-                connection = (HttpURLConnection) link.openConnection();
 
+                connection = (HttpURLConnection) link.openConnection();
                 size = connection.getContentLength();
 
-                sizes.add((long)size);
+                sizes.put(fileneed.get(i),(long)size);
 
                 connection.disconnect();
             } catch (MalformedURLException e) {
@@ -193,7 +197,9 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
                 while((len1 = dis.read(buffer)) != -1) {
                     total += len1;
-                    int progress = (int) (total *100/size);
+                    int progress = 0;
+                    if(size != 0)
+                         progress = (int) (total *100/size);
                     publishProgress(progress,100);
                     dfos.write(buffer,0,len1);
                 }
@@ -232,7 +238,9 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
                         while((len1 = is.read(buffer)) > 0) {
                             total += len1;
-                            int progress = (int) (total *100/size);
+                            int progress = 0;
+                            if(size != 0)
+                                progress = (int) (total *100/size);
                             publishProgress(progress,100);
                             fos.write(buffer,0,len1);
                         }
@@ -332,35 +340,35 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         }
     }
 
-    private void purify(ArrayList<Long> size) {
+    private void purify(Map<String,Long> size) {
         Activity activity = weakActivity.get();
+
+        if(size == null || size.size() == 0) {
+            purifyneed.addAll(fileneed);
+            return;
+        }
 
         if(activity == null) return;
 
         purifyneed = new ArrayList<>();
         ArrayList<Integer> result = new ArrayList<>();
 
-        if(fileneed.size() <= size.size()) {
-            for(int i = 0;i<fileneed.size();i++) {
-                File f= new File(path,fileneed.get(i)+".zip");
+        for(int i = 0;i<fileneed.size();i++) {
+            File f= new File(path,fileneed.get(i)+".zip");
 
-                if(f.exists()) {
-                    if(f.length() != size.get(i)) {
-                        result.add(i);
-                    }
-                } else {
+            if(f.exists()) {
+                if(f.length() != size.get(fileneed.get(i))) {
                     result.add(i);
                 }
+            } else {
+                result.add(i);
             }
+        }
 
-            if(!result.isEmpty()) {
-                for (int i = 0; i < result.size(); i++) {
-                    purifyneed.add(fileneed.get(result.get(i)));
-                }
+        if(!result.isEmpty()) {
+            for (int i = 0; i < result.size(); i++) {
+                purifyneed.add(fileneed.get(result.get(i)));
             }
-        } else {
-            Toast.makeText(activity,"Error : Size is smaller than fileneed size",Toast.LENGTH_SHORT).show();
-            activity.finish();
         }
     }
 }
@@ -431,10 +439,10 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                 zis.close();
 
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                ErrorLogWriter.WriteLog(e);
                 contin = false;
             } catch (IOException e) {
-                e.printStackTrace();
+                ErrorLogWriter.WriteLog(e);
                 contin = false;
             }
         }

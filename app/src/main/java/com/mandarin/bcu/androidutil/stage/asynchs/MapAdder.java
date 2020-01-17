@@ -11,13 +11,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.StageList;
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.enemy.EDefiner;
 import com.mandarin.bcu.androidutil.stage.MapDefiner;
-import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter;
 import com.mandarin.bcu.androidutil.unit.Definer;
 
@@ -26,8 +25,6 @@ import java.util.Objects;
 
 import common.system.MultiLangCont;
 import common.system.files.VFile;
-import common.util.stage.CharaGroup;
-import common.util.stage.Limit;
 
 public class MapAdder extends AsyncTask<Void,Integer,Void> {
     private final WeakReference<Activity> weakReference;
@@ -62,23 +59,6 @@ public class MapAdder extends AsyncTask<Void,Integer,Void> {
         publishProgress(1);
 
         new EDefiner().define(activity);
-
-        publishProgress(2);
-
-        if(StaticStore.ebitmaps == null) {
-            StaticStore.ebitmaps = new Bitmap[StaticStore.emnumber];
-
-            for(int i = 0; i < StaticStore.emnumber; i++) {
-                String shortPath = "./org/enemy/"+number(i)+"/edi_"+number(i)+".png";
-
-                try {
-                    float ratio = 32f/32f;
-                    StaticStore.ebitmaps[i] = StaticStore.getResizeb((Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg(),activity,85f*ratio,32f*ratio);
-                } catch (NullPointerException e) {
-                    StaticStore.ebitmaps[i] = StaticStore.empty(activity,85f,32f);
-                }
-            }
-        }
 
         publishProgress(3);
 

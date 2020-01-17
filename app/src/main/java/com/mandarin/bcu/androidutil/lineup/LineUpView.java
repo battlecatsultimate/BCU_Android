@@ -23,30 +23,44 @@ import common.battle.LineUp;
 import common.util.unit.Form;
 
 public class LineUpView extends View {
+    /**Bitmap list of unit icons**/
     private List<Bitmap> units = new ArrayList<>();
+    /**Bitmap of empty icon**/
     private final Bitmap empty;
+    /**Paint for whole lineup view**/
     private Paint p = new Paint();
+    /**Paint for whole icons**/
     private Paint icon = new Paint();
+    /**Paint for whole floating icons**/
     private Paint floating = new Paint();
+    /**Float value of 8 dpi**/
     private float f;
+    /**Bitmap from delete icon drawable**/
     private Bitmap bd;
+    /**Bitmap from replace icon drawable**/
     private Bitmap replace;
+    /**Positions of each units**/
     float [][][] position = new float[2][5][2];
 
     /**This boolean decides if floating image can be drawn or not**/
     public boolean drawFloating = false;
     /**Bitmap about floating unit icon**/
     public Bitmap floatB;
+    /**This boolean decides whether view calls onDraw**/
+    public boolean touched = false;
     /**Position where user firstly touched**/
     public int [] prePosit = new int[2];
     /**Last position of lineup**/
     public int lastPosit = 1;
+
+    private boolean drawOnce = true;
 
     /**X coordinate where user is touching**/
     public float x;
     /**Y coordinate where user is touching**/
     public float y;
 
+    /**Width/Height of unit icons**/
     float bw = 128f;
 
     /**Replacing area's form data**/
@@ -98,10 +112,12 @@ public class LineUpView extends View {
 
         DrawReplaceBox(c);
 
-        if(drawFloating)
+        if (drawFloating)
             DrawFloatingImage(c);
 
-        invalidate();
+        if(touched) {
+            invalidate();
+        }
     }
 
     /**If floatB is true, draws floating unit image**/
@@ -439,6 +455,8 @@ public class LineUpView extends View {
                 }
             }
         }
+
+        BasisSet.current.sele.lu.renew();
     }
 
     /**Change specific unit's form**/

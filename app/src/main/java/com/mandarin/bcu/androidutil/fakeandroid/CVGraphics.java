@@ -8,33 +8,78 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.RectF;
 import android.graphics.Shader;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
 
 public class CVGraphics implements FakeGraphics {
+
     private Canvas c;
-    private final Paint p;
+    private final Paint cp;
+    private final Paint bp;
+    private final Paint gp;
+    private static Deque<FTMT> ftmt = new ArrayDeque<>();
+
+    private PorterDuffXfermode src = new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER);
+    private PorterDuffXfermode add = new PorterDuffXfermode(PorterDuff.Mode.ADD);
 
     private Matrix m = new Matrix();
+    private Matrix m2 = new Matrix();
 
     private int color;
 
-    public CVGraphics(Canvas c, Paint p, boolean night) {
+    public static void clear() {
+        ftmt.clear();
+    }
+
+    public CVGraphics(Canvas c, Paint cp, Paint bp, boolean night) {
         this.c = c;
-        this.p = p;
+        this.cp = cp;
+        this.bp = bp;
+        this.gp = cp;
 
         if(night)
             color = Color.WHITE;
         else
             color = Color.BLACK;
 
-        p.setColor(color);
+        this.cp.setColor(color);
+
+        this.bp.setFilterBitmap(true);
+        this.bp.setAntiAlias(true);
+
+        gp.setStyle(Paint.Style.FILL);
+        gp.setAlpha(Color.argb(255,255,255,255));
     }
 
+    public CVGraphics(Canvas c, Paint cp, Paint bp, Paint gp, boolean night) {
+        this.c = c;
+        this.cp = cp;
+        this.bp = bp;
+        this.gp = gp;
+
+        if(night)
+            color = Color.WHITE;
+        else
+            color = Color.BLACK;
+
+        this.cp.setColor(color);
+
+        this.bp.setFilterBitmap(true);
+        this.bp.setAntiAlias(true);
+
+        this.gp.setStyle(Paint.Style.FILL);
+        this.gp.setAlpha(Color.argb(255,255,255,255));
+    }
+
+    public void setCanvas(Canvas c) {
+        this.c = c;
+    }
 
     @Override
     public void colRect(int x, int y, int w, int h, int r, int g, int b, int... a) {
@@ -42,25 +87,27 @@ public class CVGraphics implements FakeGraphics {
 
         int rgba = Color.argb(a1,r,g,b);
 
-        p.setColor(rgba);
+        cp.reset();
 
-        c.drawRect(new RectF(x,y,w,h),p);
+        cp.setColor(rgba);
 
-        p.setColor(color);
+        cp.setStyle(Paint.Style.FILL);
+
+        c.drawRect(x,y,x+w,y+h,cp);
     }
 
     @Override
     public void drawImage(FakeImage bimg, double x, double y) {
         Bitmap b = (Bitmap)bimg.bimg();
 
-        c.drawBitmap(b,(float)x,(float)y,p);
+        c.drawBitmap(b,(float)x,(float)y,bp);
     }
 
     @Override
     public void drawImage(FakeImage bimg, double x, double y, double d, double e) {
         Bitmap b = (Bitmap)bimg.bimg();
 
-        Matrix m2 = new Matrix();
+        m2.reset();
 
         c.setMatrix(m2);
 
@@ -75,58 +122,60 @@ public class CVGraphics implements FakeGraphics {
         m2.preTranslate((float)x,(float)y);
         m2.preScale(wr,hr);
 
-        c.drawBitmap(b,m2,p);
+        c.drawBitmap(b,m2,bp);
     }
 
     @Override
     public void drawLine(int i, int j, int x, int y) {
-        c.drawLine(i,j,x,y,p);
+        c.drawLine(i,j,x,y,cp);
     }
 
     @Override
     public void drawOval(int i, int j, int k, int l) {
-        p.setStyle(Paint.Style.STROKE);
+        cp.setStyle(Paint.Style.STROKE);
 
-        c.drawOval(i,j,k,l,p);
+        c.drawOval(i,j,k,l,cp);
     }
 
     @Override
     public void drawRect(int x, int y, int x2, int y2) {
-        p.setStyle(Paint.Style.STROKE);
-
-        c.drawRect(x,y,x2,y2,p);
+        cp.setStyle(Paint.Style.STROKE);
+        c.drawRect(x,y,x+x2,y+y2,cp);
     }
 
     @Override
     public void fillOval(int i, int j, int k, int l) {
-        p.setStyle(Paint.Style.FILL);
+        cp.setStyle(Paint.Style.FILL);
 
-        c.drawOval(i,j,k,l,p);
+        c.drawOval(i,j,k,l,cp);
     }
 
     @Override
     public void fillRect(int x, int y, int w, int h) {
-        p.setStyle(Paint.Style.FILL);
+        cp.setStyle(Paint.Style.FILL);
 
-        c.drawRect(x,y,x+w,y+h,p);
+        c.drawRect(x,y,x+w,y+h,cp);
     }
 
     @Override
     public FakeTransform getTransform() {
-        Matrix mc = new Matrix();
+        if(!ftmt.isEmpty()) {
+            FTMT f = ftmt.pollFirst();
+            f.updateMatrix(m);
 
-        mc.set(m);
+            return f;
+        }
 
-        return new FTMT(mc);
+        return new FTMT(m);
     }
 
     @Override
     public void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
         Shader s = new LinearGradient(x,y,x,x+h,Color.rgb(c[0],c[1],c[2]),Color.rgb(f[0],f[1],f[2]), Shader.TileMode.CLAMP);
 
-        p.setShader(s);
+        gp.setShader(s);
 
-        this.c.drawRect(x,y,x+w,y+h,p);
+        this.c.drawRect(x,y,x+w,y+h,gp);
     }
 
     @Override
@@ -143,20 +192,49 @@ public class CVGraphics implements FakeGraphics {
 
     @Override
     public void setColor(int c) {
-        color = c;
+        switch (c) {
+            case RED:
+                color = Color.RED;
+                cp.setColor(Color.RED);
+                break;
+            case YELLOW:
+                color = Color.YELLOW;
+                cp.setColor(Color.YELLOW);
+                break;
+            case BLACK:
+                color = Color.BLACK;
+                cp.setColor(Color.BLACK);
+                break;
+            case MAGENTA:
+                color = Color.MAGENTA;
+                cp.setColor(Color.MAGENTA);
+                break;
+            case BLUE:
+                color = Color.BLUE;
+                cp.setColor(Color.BLUE);
+                break;
+            case CYAN:
+                color = Color.CYAN;
+                cp.setColor(Color.CYAN);
+                break;
+            case WHITE:
+                color = Color.WHITE;
+                cp.setColor(Color.WHITE);
+                break;
+        }
     }
 
     @Override
     public void setComposite(int mode, int... para) {
         if(mode == DEF) {
-            p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
-            p.setAlpha(255);
+            bp.setXfermode(src);
+            bp.setAlpha(255);
         } else if(mode == TRANS) {
-            p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+            bp.setXfermode(src);
 
             int alpha = para.length != 0 ? para[0] > 255 ? 255 : para[0] : 255;
 
-            p.setAlpha(alpha);
+            bp.setAlpha(alpha);
         } else if(mode == BLEND) {
             int alpha = para.length != 0 ? para[0] > 255 ? 255 : para[0] : 255;
 
@@ -164,12 +242,12 @@ public class CVGraphics implements FakeGraphics {
 
             switch (m) {
                 case 0:
-                    p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
-                    p.setAlpha(alpha);
+                    bp.setXfermode(src);
+                    bp.setAlpha(alpha);
                     break;
                 case 1:
-                    p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.ADD));
-                    p.setAlpha(alpha);
+                    bp.setXfermode(add);
+                    bp.setAlpha(alpha);
                     break;
             }
         }
@@ -182,19 +260,62 @@ public class CVGraphics implements FakeGraphics {
 
     @Override
     public void setTransform(FakeTransform at) {
-        Matrix m1 = (Matrix)at.getAT();
-        m = m1;
+        ((FTMT)at).setMatrix(m);
 
-        c.setMatrix(m1);
+        c.setMatrix(m);
     }
 
     @Override
     public void translate(double x, double y) {
         m.preTranslate((float)x,(float)y);
+
         c.setMatrix(m);
     }
 
-    public void reset() {
-        m.reset();
+    @Override
+    public void delete(FakeTransform at) {
+        ftmt.add((FTMT) at);
+    }
+
+    private void Ctranslate(float x, float y) {
+        m.preTranslate(x,y);
+        c.setMatrix(m);
+    }
+
+    private void CsetTransform(FakeTransform at) {
+        m.set((Matrix)at.getAT());
+
+        c.setMatrix(m);
+    }
+
+    private void CScale(int hf, int vf) {
+        m.preScale(hf,vf);
+        c.setMatrix(m);
+    }
+
+    private void Crotate(double d) {
+        m.preRotate((float)Math.toDegrees(d));
+        c.setMatrix(m);
+    }
+
+    private void CdrawImage(FakeImage bimg, double x, double y, double d, double e) {
+        Bitmap b = (Bitmap)bimg.bimg();
+
+        m2.reset();
+
+        c.setMatrix(m2);
+
+        float w = b.getWidth();
+        float h = b.getHeight();
+
+        float wr = (float)d/w;
+        float hr = (float)e/h;
+
+        m2.set(m);
+
+        m2.preTranslate((float)x,(float)y);
+        m2.preScale(wr,hr);
+
+        c.drawBitmap(b,m2,bp);
     }
 }

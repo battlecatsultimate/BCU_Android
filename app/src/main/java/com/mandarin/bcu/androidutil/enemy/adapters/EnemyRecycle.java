@@ -1,17 +1,20 @@
 package com.mandarin.bcu.androidutil.enemy.adapters;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.graphics.Bitmap;
+import androidx.annotation.NonNull;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -127,7 +131,7 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
         viewHolder.name.setText(MultiLangCont.ENAME.getCont(em));
         viewHolder.enemid.setText(s.number(id));
         float ratio = 32f/32f;
-        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(StaticStore.ebitmaps[id],activity,85f*ratio,32f*ratio));
+        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb((Bitmap) em.anim.edi.getImg().bimg(),activity,85f*ratio,32f*ratio));
         viewHolder.enemhp.setText(s.getHP(em,multi));
         viewHolder.enemhb.setText(s.getHB(em));
         viewHolder.enemmulti.setText(String.valueOf(multi));
@@ -198,6 +202,21 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
         TextInputEditText itfcryt = activity.findViewById(R.id.itfcrytreat);
         TextInputEditText cotccryt = activity.findViewById(R.id.cotccrytreat);
         TextInputEditText[] godmaskt = {activity.findViewById(R.id.godmaskt),activity.findViewById(R.id.godmaskt1),activity.findViewById(R.id.godmaskt2)};
+
+        viewHolder.name.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(activity == null) return false;
+
+                ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData data = ClipData.newPlainText(null,viewHolder.name.getText());
+                clipboardManager.setPrimaryClip(data);
+
+                Toast.makeText(activity,R.string.enem_info_copied,Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
 
         Button reset = activity.findViewById(R.id.enemtreareset);
 

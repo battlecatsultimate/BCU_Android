@@ -3,20 +3,22 @@ package com.mandarin.bcu.androidutil.unit.adapters;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -219,6 +221,21 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         TextInputEditText atktreat = context.findViewById(R.id.atktreat);
         TextInputEditText healtreat = context.findViewById(R.id.healtreat);
         Button reset = context.findViewById(R.id.treasurereset);
+
+        viewHolder.unitname.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(context == null) return false;
+
+                ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData data = ClipData.newPlainText(null,viewHolder.unitname.getText());
+                clipboardManager.setPrimaryClip(data);
+
+                Toast.makeText(context,R.string.unit_info_copied,Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
 
         Treasure t = BasisSet.current.t();
         Form f = forms[viewHolder.getAdapterPosition()];
@@ -992,7 +1009,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
         viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
         viewHolder.unithb.setText(s.getHB(f,talents,pcoins));
-        if(viewHolder.unitatk.getText().toString().equals("DPS"))
+        if(viewHolder.unitatkb.getText().toString().equals("DPS"))
             viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoins));
         else
             viewHolder.unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoins));

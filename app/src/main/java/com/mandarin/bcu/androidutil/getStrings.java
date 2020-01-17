@@ -1,7 +1,7 @@
 package com.mandarin.bcu.androidutil;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.util.Interpret;
@@ -9,7 +9,6 @@ import com.mandarin.bcu.util.Interpret;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import common.battle.BasisSet;
@@ -18,7 +17,6 @@ import common.battle.data.MaskAtk;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.system.MultiLangCont;
-import common.system.P;
 import common.util.stage.Limit;
 import common.util.stage.SCDef;
 import common.util.unit.Enemy;
@@ -27,11 +25,11 @@ import common.util.unit.Unit;
 
 public class getStrings {
     private final Context c;
-    private String[] abilID = {"1","2","3","8","10","11","13","14","15","16","17","18","19","20","21","22","25","26","27","29","30","31","32","37","38","39","40"};
+    private String[] abilID = {"1","2","3","8","10","11","13","14","15","16","17","18","19","20","21","22","25","26","27","29","30","31","32","37","38","39","40","51"};
     private int[] talID = {R.string.sch_abi_we,R.string.sch_abi_fr,R.string.sch_abi_sl,R.string.sch_abi_kb,R.string.sch_abi_str,R.string.sch_abi_su,R.string.sch_abi_cr,
             R.string.sch_abi_zk,R.string.sch_abi_bb,R.string.sch_abi_em,R.string.sch_abi_wv,R.string.talen_we,R.string.talen_fr,R.string.talen_sl,R.string.talen_kb
             ,R.string.talen_wv,R.string.unit_info_cost,R.string.unit_info_cd,R.string.unit_info_spd,R.string.sch_abi_ic,R.string.talen_cu,
-            R.string.unit_info_atk,R.string.unit_info_hp,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re};
+            R.string.unit_info_atk,R.string.unit_info_hp,R.string.sch_an,R.string.sch_al,R.string.sch_zo,R.string.sch_re,R.string.sch_abi_iv};
     private String [] talTool = new String[talID.length];
     private String [] mapcolcid = {"N","S","C","CH","E","T","V","R","M","A","B"};
     private List<String> mapcodes = Arrays.asList("0","1","2","3","4","6","7","11","12","13","14");
@@ -395,7 +393,7 @@ public class getStrings {
         StringBuilder allcolor = new StringBuilder();
         StringBuilder alltrait = new StringBuilder();
 
-        for(int i = 0; i< Interpret.TRAIT.length; i++) {
+        for(int i = 0; i< 9; i++) {
             if (i != 0)
                 allcolor.append(Interpret.TRAIT[i]).append(", ");
             alltrait.append(Interpret.TRAIT[i]).append(", ");
@@ -426,7 +424,7 @@ public class getStrings {
         StringBuilder allcolor = new StringBuilder();
         StringBuilder alltrait = new StringBuilder();
 
-        for(int i = 0; i< Interpret.TRAIT.length; i++) {
+        for(int i = 0; i< 9; i++) {
             if (i != 0)
                 allcolor.append(Interpret.TRAIT[i]).append(", ");
             alltrait.append(Interpret.TRAIT[i]).append(", ");
@@ -529,7 +527,7 @@ public class getStrings {
     }
 
     public String getTalentName(int index,Form f) {
-        String ans = "";
+        String ans;
 
         int [][] info = f.getPCoin().info;
         List<String> abil = Arrays.asList(abilID);

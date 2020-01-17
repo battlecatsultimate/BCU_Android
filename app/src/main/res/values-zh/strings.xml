@@ -496,12 +496,16 @@
     <string name="lineup_rename">重新命名</string>
     <string name="lineup_rename_lu">重新命名出陣列表</string>
     <string name="lineup_rename_set">重新命名陣容集</string>
-    <string name="main_medal">Medal Info</string>
-    <string name="medal_reading_data">Reading Medal Data…</string>
-    <string name="medal_reading_icon">Loading Medal Icons…</string>
-    <string name="medal_loading_data">Processing Data…</string>
-    <string name="bg_names">Background-_</string>
-    <string name="main_bg">Backgrounds</string>
-    <string name="enem_list_sch">Search Enemies</string>
-    <string name="unit_list_sch">Search Units</string>
+    <string name="main_medal">貓咪獎章</string>
+    <string name="medal_reading_data">讀取獎章資料…</string>
+    <string name="medal_reading_icon">讀取獎章圖示…</string>
+    <string name="medal_loading_data">資料處理中…</string>
+    <string name="bg_names">背景 - _</string>
+    <string name="main_bg">關卡背景</string>
+    <string name="enem_list_sch">搜尋敵人</string>
+    <string name="unit_list_sch">搜尋貓咪</string>
+    <string name="battle_loading">Loading Battle Data…</string>
+    <string name="battle_prepare">Preparing Battle…</string>
+    <string name="unit_info_copied">Unit name has been copied to clipboard</string>
+    <string name="enem_info_copied">Enemy name has been copied to clipboard</string>
 </resources>

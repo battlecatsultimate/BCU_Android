@@ -6,9 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 
 import common.battle.BasisSet;
 
@@ -25,6 +27,8 @@ public class LUCastleSetting extends Fragment {
     public static LUCastleSetting newInstance() {
         return new LUCastleSetting();
     }
+
+    private boolean destroyed = false;
 
     @Nullable
     @Override
@@ -47,6 +51,23 @@ public class LUCastleSetting extends Fragment {
                 }
             });
         }
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(StaticStore.updateCastle) {
+                    drawCastle(castle);
+
+                    StaticStore.updateCastle = false;
+                }
+
+                if(!destroyed)
+                    handler.postDelayed(this,50);
+            }
+        };
+
+        handler.postDelayed(runnable,50);
 
         return view;
     }
@@ -88,5 +109,11 @@ public class LUCastleSetting extends Fragment {
         c.drawBitmap(lb,0,128,p);
 
         img.setImageBitmap(result);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destroyed = true;
     }
 }

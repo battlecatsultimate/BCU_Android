@@ -5,12 +5,13 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -19,13 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import common.battle.Basis;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.io.OutStream;
@@ -35,6 +36,7 @@ public class LUConstruction extends Fragment {
 
     private boolean initialized = false;
     private boolean editable = true;
+    private boolean destroyed = false;
 
     TextInputLayout construction;
     TextInputLayout [] constructions = new TextInputLayout[7];
@@ -68,6 +70,34 @@ public class LUConstruction extends Fragment {
         Initialize(view);
 
         Listeners();
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(StaticStore.updateConst) {
+                    initialized = false;
+
+                    if(ValuesAllSame())
+                        text.setText(String.valueOf(BasisSet.current.t().bslv[0]));
+
+                    int [] vals = BasisSet.current.t().bslv;
+
+                    for(int i = 0; i < vals.length; i++) {
+                        texts[i].setText(String.valueOf(vals[i]));
+                    }
+
+                    initialized = true;
+
+                    StaticStore.updateConst = false;
+                }
+
+                if(!destroyed)
+                    handler.postDelayed(this,50);
+            }
+        };
+
+        handler.postDelayed(runnable,50);
 
         return view;
     }

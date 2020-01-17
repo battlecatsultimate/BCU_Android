@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
 
 import com.mandarin.bcu.DownloadScreen;
@@ -128,7 +128,11 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             if(!diff.exists()) lang = true;
 
             for(String s1 : lan) {
+                if(lang) continue;
+
                 for(String s : StaticStore.langfile) {
+                    if(lang) continue;
+
                     File f = new File(source+s1,s);
 
                     if(!f.exists()) {
@@ -137,7 +141,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                 }
             }
 
-            if(!shared.getBoolean("Skip_Text",false) || config) {
+            if((!shared.getBoolean("Skip_Text",false) || config) && !lang) {
                 String url = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang";
                 String durl = url+"/"+difffile;
                 URL dlink = new URL(durl);
@@ -168,6 +172,8 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                 durlis.close();
 
                 for (String s1 : lan) {
+                    if(lang) continue;
+
                     for (String s : StaticStore.langfile) {
                         if(lang) continue;
 
@@ -285,6 +291,9 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
         try {
             Map<String, String> libmap = new TreeMap<>();
+
+            if(asset == null) return;
+
             JSONArray ja = asset.getJSONArray("android");
 
             for(int i=0;i<ja.length();i++) {

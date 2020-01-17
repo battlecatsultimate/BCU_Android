@@ -3,13 +3,13 @@ package com.mandarin.bcu.androidutil.fakeandroid;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 
 public class BMBuilder extends ImageBuilder {
     @Override
@@ -18,6 +18,8 @@ public class BMBuilder extends ImageBuilder {
             return null;
         if(o instanceof Bitmap)
             return new FIBM((Bitmap)o);
+        if(o instanceof FIBM)
+            return (FIBM) o;
 
         Bitmap b = null;
 

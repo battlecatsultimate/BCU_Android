@@ -1,5 +1,6 @@
 package com.mandarin.bcu;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +8,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.mandarin.bcu.androidutil.FilterEntity;
@@ -28,6 +32,7 @@ import common.system.fake.ImageBuilder;
 
 public class EnemyList extends AppCompatActivity {
     private ListView list;
+    private ArrayList<Integer> numbers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,20 +93,28 @@ public class EnemyList extends AppCompatActivity {
         startActivityForResult(intent,1);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
 
         if(resultCode == Activity.RESULT_OK) {
+            EditText schname = findViewById(R.id.enemlistschname);
 
-            FilterEntity filterEntity = new FilterEntity(StaticStore.emnumber);
-            ArrayList<Integer> newNumber = filterEntity.EsetFilter();
+            FilterEntity filterEntity;
+            
+            if(!schname.getText().toString().isEmpty())
+                filterEntity = new FilterEntity(StaticStore.emnumber,schname.getText().toString());
+            else
+                filterEntity = new FilterEntity(StaticStore.emnumber);
+            
+            numbers = filterEntity.EsetFilter();
             ArrayList<String> newName = new ArrayList<>();
 
-            for(int i : newNumber)
+            for(int i : numbers)
                 newName.add(StaticStore.enames[i]);
 
-            EnemyListAdapter enemyListAdapter = new EnemyListAdapter(this,newName.toArray(new String[0]),StaticStore.ebitmaps,newNumber);
+            EnemyListAdapter enemyListAdapter = new EnemyListAdapter(this,newName.toArray(new String[0]),numbers);
             list.setAdapter(enemyListAdapter);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -110,10 +123,43 @@ public class EnemyList extends AppCompatActivity {
                         return;
 
                     Intent result = new Intent(EnemyList.this,EnemyInfo.class);
-                    result.putExtra("ID",newNumber.get(position));
+                    result.putExtra("ID",numbers.get(position));
                     startActivity(result);
 
                     StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
+                }
+            });
+
+            schname.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    FilterEntity filterEntity = new FilterEntity(StaticStore.emnumber,s.toString());
+                    numbers = filterEntity.EsetFilter();
+
+                    ArrayList<String> names = new ArrayList<>();
+
+                    for (int i : numbers) {
+                        names.add(StaticStore.enames[i]);
+                    }
+
+                    EnemyListAdapter adap = new EnemyListAdapter(EnemyList.this, names.toArray(new String[0]), numbers);
+                    list.setAdapter(adap);
+
+                    if(s.toString().isEmpty()) {
+                        schname.setCompoundDrawablesWithIntrinsicBounds(null,null,getDrawable(R.drawable.search),null);
+                    } else {
+                        schname.setCompoundDrawablesWithIntrinsicBounds(null,null,getDrawable(R.drawable.ic_close_black_24dp),null);
+                    }
                 }
             });
         }

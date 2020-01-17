@@ -37,6 +37,7 @@ public class AnimationCView extends View {
     private Canvas c;
     private Paint p = new Paint();
     private Paint p1 = new Paint();
+    private Paint bp = new Paint();
     private Paint range = new Paint();
     private CVGraphics cv;
 
@@ -89,7 +90,7 @@ public class AnimationCView extends View {
         p1.setFilterBitmap(true);
 
         p2 = new P((float)getWidth()/2,(float)getHeight()*2f/3f);
-        cv = new CVGraphics(c, p1,night);
+        cv = new CVGraphics(c, p1,bp,night);
 
         this.night = night;
     }
@@ -121,7 +122,7 @@ public class AnimationCView extends View {
         p1.setFilterBitmap(true);
 
         p2 = new P((float)getWidth()/2,(float)getHeight()*2f/3f);
-        cv = new CVGraphics(c,p1,night);
+        cv = new CVGraphics(c,p1,bp,night);
 
         this.night = night;
     }
@@ -158,8 +159,8 @@ public class AnimationCView extends View {
                 fps = 1000L / (t - t1);
             }
 
-            p2 = new P((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
-            cv = new CVGraphics(c, p1, night);
+            p2 = P.newP((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
+            cv = new CVGraphics(c, p1,bp, night);
 
             if (fps < 30)
                 sleeptime = (int)(sleeptime*0.9 - 0.1);
@@ -176,13 +177,15 @@ public class AnimationCView extends View {
             StaticStore.frame++;
 
             t1 = t;
+
+            P.delete(p2);
         } else {
             if (t1 != -1 && t - t1 != 0) {
                 fps = 1000L / (t - t1);
             }
 
-            p2 = new P((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
-            cv = new CVGraphics(c, p1, night);
+            p2 = P.newP((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
+            cv = new CVGraphics(c, p1,bp, night);
 
             if (fps < 30)
                 sleeptime = (int)(sleeptime*0.9 - 0.1);
@@ -193,6 +196,8 @@ public class AnimationCView extends View {
                 c.drawRect(0, 0, getWidth(), getHeight(), p);
 
             anim.draw(cv, p2, siz);
+
+            P.delete(p2);
 
             t1 = t;
         }

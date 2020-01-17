@@ -10,7 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 
 import com.mandarin.bcu.R;
@@ -54,6 +54,10 @@ public class StaticStore {
     public static int stagelang = 1;
     public static int maplang = 1;
     public static int medallang = 1;
+    public static boolean effread = false;
+    public static boolean soulread = false;
+    public static boolean nycread = false;
+    public static boolean resread = false;
 
     public static int root = 0;
 
@@ -91,7 +95,6 @@ public class StaticStore {
 
     public static List<Unit> units = null;
     public static int unitnumber;
-    public static Bitmap[] bitmaps = null;
     public static String[] names = null;
     public static long unitinflistClick = SystemClock.elapsedRealtime();
     public static boolean UisOpen = false;
@@ -103,7 +106,6 @@ public class StaticStore {
 
     public static List<Enemy> enemies = null;
     public static String[] enames = null;
-    public static Bitmap[] ebitmaps = null;
     public static int emnumber;
     public static long enemyinflistClick = SystemClock.elapsedRealtime();
     public static boolean EisOpen = false;
@@ -146,11 +148,14 @@ public class StaticStore {
     public static boolean LUread = false;
     public static int LUtabPosition = 0;
     public static List<Form> currentForms = null;
-    public static boolean updateForm = true;
     public static int [] position = {-1,-1};
     public static List<Combo> combos = new ArrayList<>();
     public static int [] setline = {0,0};
     public static boolean updateList = false;
+    public static boolean updateForm = true;
+    public static boolean updateTreasure = false;
+    public static boolean updateConst = false;
+    public static boolean updateCastle = false;
     public static BasisSet set = null;
     public static BasisLU lu = null;
     public static String lineunitname = null;
@@ -188,7 +193,6 @@ public class StaticStore {
 
         units = null;
         unitnumber = 0;
-        bitmaps = null;
         names = null;
         unitinflistClick = SystemClock.elapsedRealtime();
         UisOpen = false;
@@ -198,7 +202,6 @@ public class StaticStore {
 
         enemies = null;
         enames = null;
-        ebitmaps = null;
         emnumber = 0;
         enemyinflistClick = SystemClock.elapsedRealtime();
         EisOpen = false;
@@ -265,6 +268,8 @@ public class StaticStore {
     }
 
     public static Bitmap getResizeb(Bitmap b, Context context, float dp) {
+        if(b == null) return empty(context,dp,dp);
+
         Resources r = context.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
         BitmapDrawable bd = new BitmapDrawable(context.getResources(),Bitmap.createScaledBitmap(b,(int)px,(int)px,true));
@@ -274,6 +279,8 @@ public class StaticStore {
     }
 
     public static Bitmap getResizeb(Bitmap b, Context context, float w, float h) {
+        if(b == null) return empty(context,w,h);
+
         Resources r = context.getResources();
         float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,w,r.getDisplayMetrics());
         float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,h,r.getDisplayMetrics());
@@ -422,6 +429,8 @@ public class StaticStore {
     }
 
     public static Bitmap MakeIcon(Context context,Bitmap b, float wh) {
+        if(b.getHeight() == b.getWidth()) return getResizeb(b,context,wh);
+
         Bitmap before = Bitmap.createBitmap(128,128, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(before);
         Paint p = new Paint();

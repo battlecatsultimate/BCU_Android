@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -55,6 +55,21 @@ public class StageLoader extends AsyncTask<Void,Integer,Void> {
 
         if(mc == null) return null;
 
+        publishProgress(0);
+
+        return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... result) {
+        Activity activity = weakReference.get();
+
+        if(activity == null) return;
+
+        MapColc mc = StaticStore.map.get(mapcode);
+
+        if(mc == null) return;
+
         StageMap stm = mc.maps[stid];
 
         String [] stages = new String[stm.list.size()];
@@ -92,8 +107,6 @@ public class StageLoader extends AsyncTask<Void,Integer,Void> {
                 activity.finish();
             }
         });
-
-        return null;
     }
 
     @Override

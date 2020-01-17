@@ -41,6 +41,7 @@ public class AddGIF extends AsyncTask<Void,Void,Void> {
         Bitmap b = Bitmap.createBitmap(w,h, Bitmap.Config.ARGB_4444);
         Canvas c = new Canvas(b);
         Paint p1 = new Paint();
+        Paint bp = new Paint();
 
         p1.setFilterBitmap(true);
         p1.setAntiAlias(true);
@@ -52,7 +53,7 @@ public class AddGIF extends AsyncTask<Void,Void,Void> {
         else
             back.setColor(Color.WHITE);
 
-        CVGraphics c2 = new CVGraphics(c,p1,night);
+        CVGraphics c2 = new CVGraphics(c,p1,bp,night);
 
         c.drawRect(0,0,w,h,back);
         animU.draw(c2,p,siz);

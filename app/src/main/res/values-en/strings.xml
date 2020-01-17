@@ -500,8 +500,12 @@
     <string name="medal_reading_data">Reading Medal Data…</string>
     <string name="medal_reading_icon">Loading Medal Icons…</string>
     <string name="medal_loading_data">Processing Data…</string>
-    <string name="bg_names">Background-_</string>
+    <string name="bg_names">Background - _</string>
     <string name="main_bg">Backgrounds</string>
     <string name="enem_list_sch">Search Enemies</string>
     <string name="unit_list_sch">Search Units</string>
+    <string name="battle_loading">Loading Battle Data…</string>
+    <string name="battle_prepare">Preparing Battle…</string>
+    <string name="unit_info_copied">Unit name has been copied to clipboard</string>
+    <string name="enem_info_copied">Enemy name has been copied to clipboard</string>
 </resources>

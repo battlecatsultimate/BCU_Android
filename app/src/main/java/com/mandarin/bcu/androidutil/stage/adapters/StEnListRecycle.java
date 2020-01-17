@@ -3,9 +3,10 @@ package com.mandarin.bcu.androidutil.stage.adapters;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,7 +150,7 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
             viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp));
         }
 
-        viewHolder.icon.setImageBitmap(StaticStore.ebitmaps[data[viewHolder.getAdapterPosition()][SCDef.E]]);
+        viewHolder.icon.setImageBitmap(StaticStore.MakeIcon(activity,(Bitmap) StaticStore.enemies.get(data[viewHolder.getAdapterPosition()][SCDef.E]).anim.edi.getImg().bimg(),48f));
         viewHolder.number.setText(s.getNumber(data[viewHolder.getAdapterPosition()]));
 
         viewHolder.info.setOnClickListener(new SingleClick() {

@@ -4,17 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -62,7 +61,6 @@ import common.battle.BasisSet;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.MultiLangCont;
-import common.system.files.VFile;
 import common.util.pack.Pack;
 
 public class LUAdder extends AsyncTask<Void,Integer,Void> {
@@ -93,7 +91,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         MeasureViewPager measureViewPager = activity.findViewById(R.id.lineuppager);
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
-        EditText schname = activity.findViewById(R.id.lineupschname);
+        EditText schname = activity.findViewById(R.id.animschname);
 
         View view = activity.findViewById(R.id.view);
 
@@ -122,22 +120,6 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             }
         }
 
-        if (StaticStore.bitmaps == null) {
-            StaticStore.bitmaps = new Bitmap[StaticStore.unitnumber];
-
-
-            for (int i = 0; i < StaticStore.unitnumber; i++) {
-                String shortPath = "./org/unit/" + number(i) + "/f/uni" + number(i) + "_f00.png";
-
-                Bitmap b = (Bitmap) Objects.requireNonNull(VFile.getFile(shortPath)).getData().getImg().bimg();
-
-                if(b.getWidth() == b.getHeight())
-                    StaticStore.bitmaps[i] = StaticStore.getResizeb(b, activity, 48f);
-                else
-                    StaticStore.bitmaps[i] = StaticStore.MakeIcon(activity,b,48f);
-            }
-        }
-
         publishProgress(0);
 
         if(!StaticStore.LUread) {
@@ -147,28 +129,32 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             File f = new File(Path);
 
             if (f.exists()) {
-                byte[] buff = new byte[(int) f.length()];
-
-                try {
-                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
-
-                    bis.read(buff, 0, buff.length);
-                    bis.close();
-
-                    InStream is = InStream.getIns(buff);
+                if(f.length() != 0) {
+                    byte[] buff = new byte[(int) f.length()];
 
                     try {
-                        BasisSet.read(is);
+                        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
+
+                        bis.read(buff, 0, buff.length);
+                        bis.close();
+
+                        InStream is = InStream.getIns(buff);
+
+                        try {
+                            BasisSet.read(is);
+                        } catch (Exception e) {
+                            publishProgress(R.string.lineup_file_err);
+                            BasisSet.list.clear();
+                            new BasisSet();
+                            ErrorLogWriter.WriteLog(e);
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     } catch (Exception e) {
-                        Toast.makeText(activity,R.string.lineup_file_err,Toast.LENGTH_SHORT).show();
-                        BasisSet.list.clear();
-                        new BasisSet();
                         ErrorLogWriter.WriteLog(e);
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -233,6 +219,9 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         line.x = event.getX();
                         line.y = event.getY();
 
+                        line.touched = true;
+                        line.invalidate();
+
                         if(!line.drawFloating) {
                             posit = line.getTouchedUnit(event.getX(), event.getY());
 
@@ -269,6 +258,8 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         }
 
                         line.drawFloating = false;
+
+                        line.touched = false;
 
                         break;
                 }
@@ -308,15 +299,10 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                     luspin.setAdapter(adapter1);
 
-                    tab = new LUTab(manager,line);
                     StaticStore.updateForm = true;
-
-                    pager.setAdapter(tab);
-                    pager.setOffscreenPageLimit(5);
-                    pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-                    tabs.setupWithViewPager(pager);
-
-                    Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+                    StaticStore.updateTreasure = true;
+                    StaticStore.updateConst = true;
+                    StaticStore.updateCastle = true;
 
                     if(position == 0) {
                         menu.getItem(5).getSubMenu().getItem(0).setEnabled(false);
@@ -331,6 +317,8 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     } else {
                         menu.getItem(5).setEnabled(true);
                     }
+
+                    line.invalidate();
                 }
 
                 @Override
@@ -360,15 +348,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                     line.ChangeFroms(BasisSet.current.sele.lu);
 
-                    tab = new LUTab(manager,line);
                     StaticStore.updateForm = true;
-
-                    pager.setAdapter(tab);
-                    pager.setOffscreenPageLimit(5);
-                    pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-                    tabs.setupWithViewPager(pager);
-
-                    Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
 
                     if(BasisSet.current.lb.size() == 1) {
                         menu.getItem(5).getSubMenu().getItem(1).setEnabled(false);
@@ -381,6 +361,8 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     } else {
                         menu.getItem(5).setEnabled(true);
                     }
+
+                    line.invalidate();
                 }
 
                 @Override
@@ -395,7 +377,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                 menu.getItem(2).getSubMenu().getItem(1).setEnabled(false);
             }
 
-            EditText schname = activity.findViewById(R.id.lineupschname);
+            EditText schname = activity.findViewById(R.id.animschname);
 
             schname.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -847,6 +829,8 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             TextView st =activity.findViewById(R.id.lineupst);
 
             st.setText(R.string.lineup_reading);
+        } else {
+            Toast.makeText(activity,result[0],Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -860,7 +844,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         MeasureViewPager measureViewPager = activity.findViewById(R.id.lineuppager);
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
-        EditText schname = activity.findViewById(R.id.lineupschname);
+        EditText schname = activity.findViewById(R.id.animschname);
 
         View view = activity.findViewById(R.id.view);
 

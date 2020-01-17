@@ -2,12 +2,11 @@ package com.mandarin.bcu.androidutil.stage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.Environment;
 
+import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 import com.mandarin.bcu.androidutil.io.DefineItf;
-import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.decode.ZipLib;
 
 import java.io.File;
@@ -17,13 +16,12 @@ import common.CommonStatic;
 import common.system.MultiLangCont;
 import common.system.fake.ImageBuilder;
 import common.system.files.AssetData;
-import common.util.pack.Pack;
+import common.util.pack.NyCastle;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.Combo;
 
 public class MapDefiner {
     private final String FILE = "StageName.txt";
@@ -38,6 +36,7 @@ public class MapDefiner {
                     MapColc.read();
                     CharaGroup.read();
                     Limit.read();
+                    NyCastle.read();
                 } catch (Exception e) {
                     StaticStore.clear();
 
@@ -47,6 +46,7 @@ public class MapDefiner {
                     ZipLib.init();
                     ZipLib.read();
                     StaticStore.getEnemynumber();
+                    NyCastle.read();
                     ImageBuilder.builder = new BMBuilder();
                     new DefineItf().init();
                     MapColc.read();

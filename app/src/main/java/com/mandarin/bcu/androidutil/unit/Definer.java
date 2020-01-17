@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -27,7 +27,6 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.PCoin;
 import common.system.MultiLangCont;
-import common.system.P;
 import common.system.fake.ImageBuilder;
 import common.system.files.AssetData;
 import common.util.pack.Pack;

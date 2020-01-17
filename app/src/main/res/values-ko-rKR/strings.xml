@@ -500,8 +500,12 @@
     <string name="medal_reading_data">메달 데이터 읽는중…</string>
     <string name="medal_reading_icon">메달 아이콘 읽는중…</string>
     <string name="medal_loading_data">데이터 처리중…</string>
-    <string name="bg_names">배경-_</string>
+    <string name="bg_names">배경 - _</string>
     <string name="main_bg">배경 리스트</string>
     <string name="enem_list_sch">적 이름 검색</string>
     <string name="unit_list_sch">유닛 이름 검색</string>
+    <string name="battle_loading">전투 데이터 로딩중…</string>
+    <string name="battle_prepare">전투 준비중…</string>
+    <string name="unit_info_copied">유닛 이름이 클립보드로 복사되었습니다</string>
+    <string name="enem_info_copied">적 이름이 클립보드로 복사되었습니다</string>
 </resources>

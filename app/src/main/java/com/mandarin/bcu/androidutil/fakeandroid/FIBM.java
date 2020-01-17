@@ -2,10 +2,10 @@ package com.mandarin.bcu.androidutil.fakeandroid;
 
 import android.graphics.Bitmap;
 
+import java.io.IOException;
+
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
-
-import java.io.IOException;
 
 public class FIBM implements FakeImage {
 
@@ -23,7 +23,7 @@ public class FIBM implements FakeImage {
     private final Bitmap bit;
 
     protected FIBM(Bitmap read) {
-        bit = read;
+        bit = read.copy(Bitmap.Config.ARGB_8888,true);
     }
 
     @Override

@@ -7,8 +7,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -109,7 +109,7 @@ public class BackgroundList extends AppCompatActivity {
     private String number(int n) {
         if(0 <= n && n < 10) {
             return "00"+n;
-        } else if(10 <= n && n < 99) {
+        } else if(10 <= n && n <= 99) {
             return "0"+n;
         } else {
             return String.valueOf(n);

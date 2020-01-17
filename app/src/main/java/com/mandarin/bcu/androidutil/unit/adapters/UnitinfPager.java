@@ -3,22 +3,24 @@ package com.mandarin.bcu.androidutil.unit.adapters;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -296,6 +298,21 @@ public class UnitinfPager extends Fragment {
 
         ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(activity, R.layout.spinneradapter, levels);
         ArrayAdapter<Integer> arrayAdapterp = new ArrayAdapter<>(activity, R.layout.spinneradapter, levelsp);
+
+        unitname.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(getActivity() == null) return false;
+
+                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData data = ClipData.newPlainText(null,unitname.getText());
+                clipboardManager.setPrimaryClip(data);
+
+                Toast.makeText(activity,R.string.unit_info_copied,Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
 
         int currentlev;
 
@@ -927,7 +944,7 @@ public class UnitinfPager extends Fragment {
         int levelp = (int)unitlevelp.getSelectedItem();
         unithp.setText(s.getHP(f,t,level+levelp,talents,pcoinlev));
         unithb.setText(s.getHB(f,talents,pcoinlev));
-        if(unitatk.getText().toString().equals("DPS"))
+        if(unitatkb.getText().toString().equals("DPS"))
             unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoinlev));
         else
             unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoinlev));

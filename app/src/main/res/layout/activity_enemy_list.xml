@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,7 @@
     android:background="?attr/backgroundPrimary"
     tools:context=".EnemyList">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/enemlisttool"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/enlistbck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,26 +35,28 @@
         app:layout_constraintTop_toTopOf="@+id/enemlisttool"
         app:srcCompat="@drawable/back_button" />
 
-    <EditText
-        android:id="@+id/lineupschname"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/enemlistschnamel"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="?attr/TextPrimary"
-        android:drawableEnd="@drawable/search"
-        android:ems="10"
-        android:hint="@string/enem_list_sch"
-        android:imeOptions="actionDone|flagNoExtractUi"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:textColor="?attr/TextPrimary"
+        android:hint="@string/unit_list_sch"
         android:textColorHint="?attr/HintPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/enemlisttool"
         app:layout_constraintEnd_toStartOf="@+id/enlistsch"
         app:layout_constraintStart_toEndOf="@+id/enlistbck"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="O" />
+        app:layout_constraintTop_toTopOf="@+id/enemlisttool"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/enemlistschname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/TextPrimary"
+            android:drawableEnd="@drawable/search"
+            android:textColor="?attr/TextPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ListView
         android:id="@+id/enlist"
@@ -77,7 +79,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enemlisttool" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/enlistsch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -103,4 +105,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enlistprog" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

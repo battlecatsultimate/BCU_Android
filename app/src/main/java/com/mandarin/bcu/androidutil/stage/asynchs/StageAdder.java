@@ -1,18 +1,22 @@
 package com.mandarin.bcu.androidutil.stage.asynchs;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mandarin.bcu.BattleSimulation;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.stage.adapters.EnemyListRecycle;
 import com.mandarin.bcu.androidutil.stage.adapters.StageRecycle;
 
@@ -92,6 +96,19 @@ public class StageAdder extends AsyncTask<Void,Integer,Void> {
                 if(posit >= stm.list.size() || posit < 0) return;
 
                 Stage stage = stm.list.get(posit);
+
+                Button battle = activity.findViewById(R.id.battlebtn);
+
+                battle.setOnClickListener(new SingleClick() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        Intent intent = new Intent(activity, BattleSimulation.class);
+                        intent.putExtra("mapcode",mapcode);
+                        intent.putExtra("stid",stid);
+                        intent.putExtra("stage",posit);
+                        activity.startActivity(intent);
+                    }
+                });
 
                 title.setText(MultiLangCont.STNAME.getCont(stage));
 

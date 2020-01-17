@@ -2,9 +2,9 @@ package com.mandarin.bcu.androidutil.lineup.adapters;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,6 @@ import com.mandarin.bcu.androidutil.lineup.LineUpView;
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import common.battle.BasisSet;
 import common.util.unit.Form;
@@ -45,6 +44,11 @@ public class LUUnitList extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
         view = inflater.inflate(R.layout.lineup_unit_list,group,false);
 
+        if(line == null) {
+            if(getActivity() != null)
+                line = getActivity().findViewById(R.id.lineupView);
+        }
+
         if(getArguments() == null) return view;
 
         FilterEntity entity = new FilterEntity(StaticStore.unitnumber);
@@ -55,7 +59,7 @@ public class LUUnitList extends Fragment {
             names.add(StaticStore.LUnames[i]);
         }
 
-        UnitListAdapter adapter = new UnitListAdapter(getActivity(),names.toArray(new String[0]),StaticStore.bitmaps,numbers);
+        UnitListAdapter adapter = new UnitListAdapter(getActivity(),names.toArray(new String[0]),numbers);
 
         ListView ulist = view.findViewById(R.id.lineupunitlist);
 
@@ -75,7 +79,7 @@ public class LUUnitList extends Fragment {
                         names.add(StaticStore.LUnames[i]);
                     }
 
-                    UnitListAdapter adapter = new UnitListAdapter(getActivity(),names.toArray(new String[0]),StaticStore.bitmaps,numbers);
+                    UnitListAdapter adapter = new UnitListAdapter(getActivity(),names.toArray(new String[0]),numbers);
 
                     ulist.setAdapter(adapter);
 
@@ -105,6 +109,7 @@ public class LUUnitList extends Fragment {
 
                 line.UpdateLineUp();
                 line.toFormArray();
+                line.invalidate();
             }
         });
 
