@@ -33,7 +33,7 @@
         <activity
             android:name=".BattleSimulation"
             android:hardwareAccelerated="true"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".BackgroundList"
             android:screenOrientation="locked" />

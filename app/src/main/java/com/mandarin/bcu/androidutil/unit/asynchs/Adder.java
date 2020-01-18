@@ -4,17 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
 import com.mandarin.bcu.androidutil.FilterEntity;
@@ -24,18 +25,17 @@ import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import common.system.MultiLangCont;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 
 public class Adder extends AsyncTask<Void, Integer, Void> {
-    private final int unitnumber;
     private final WeakReference<Activity> weakReference;
     private ArrayList<Integer> numbers = new ArrayList<>();
 
-    public Adder(int unitnumber, Activity context) {
-        this.unitnumber = unitnumber;
+    public Adder(Activity context) {
         this.weakReference = new WeakReference<>(context);
     }
 
@@ -47,11 +47,13 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
 
         ListView list = activity.findViewById(R.id.unitinflist);
         FloatingActionButton search = activity.findViewById(R.id.animsch);
-        EditText schname = activity.findViewById(R.id.animschname);
+        TextInputEditText schname = activity.findViewById(R.id.animschname);
+        TextInputLayout layout = activity.findViewById(R.id.animschnamel);
 
         list.setVisibility(View.GONE);
         search.hide();
         schname.setVisibility(View.GONE);
+        layout.setVisibility(View.GONE);
     }
 
     @Override
@@ -95,12 +97,12 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
             case 2:
                 ListView list = activity.findViewById(R.id.unitinflist);
                 FilterEntity filterEntity;
-                EditText schname = activity.findViewById(R.id.animschname);
+                TextInputEditText schname = activity.findViewById(R.id.animschname);
 
-                if(schname.getText().toString().isEmpty())
-                    filterEntity = new FilterEntity(unitnumber);
+                if(Objects.requireNonNull(schname.getText()).toString().isEmpty())
+                    filterEntity = new FilterEntity(StaticStore.unitnumber);
                 else
-                    filterEntity = new FilterEntity(unitnumber,schname.getText().toString());
+                    filterEntity = new FilterEntity(StaticStore.unitnumber,schname.getText().toString());
 
                 numbers = filterEntity.setFilter();
                 ArrayList<String> names = new ArrayList<>();
@@ -108,6 +110,9 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                 for (int i : numbers) {
                     names.add(StaticStore.names[i]);
                 }
+
+                System.out.println(names);
+
                 UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), numbers);
                 list.setAdapter(adap);
                 list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -176,12 +181,14 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
         ProgressBar prog = activity.findViewById(R.id.unitinfprog);
         TextView ulistst = activity.findViewById(R.id.unitinfst);
         FloatingActionButton search = activity.findViewById(R.id.animsch);
-        EditText schname = activity.findViewById(R.id.animschname);
+        TextInputEditText schname = activity.findViewById(R.id.animschname);
+        TextInputLayout layout = activity.findViewById(R.id.animschnamel);
         list.setVisibility(View.VISIBLE);
         prog.setVisibility(View.GONE);
         ulistst.setVisibility(View.GONE);
         search.show();
         schname.setVisibility(View.VISIBLE);
+        layout.setVisibility(View.VISIBLE);
     }
 
     private String number(int num) {

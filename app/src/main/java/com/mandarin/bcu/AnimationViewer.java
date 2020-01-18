@@ -6,17 +6,18 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -26,6 +27,7 @@ import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter;
 import com.mandarin.bcu.androidutil.unit.asynchs.Adder;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import common.system.MultiLangCont;
 import common.system.fake.ImageBuilder;
@@ -35,7 +37,6 @@ public class AnimationViewer extends AppCompatActivity {
 
     protected FloatingActionButton search;
     private ListView list;
-    private int unitnumber;
     static final int REQUEST_CODE = 1;
     private ArrayList<Integer> numbers = new ArrayList<>();
 
@@ -43,39 +44,37 @@ public class AnimationViewer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences("configuration", MODE_PRIVATE);
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         SharedPreferences.Editor ed;
-        if(!shared.contains("initial")) {
+        if (!shared.contains("initial")) {
             ed = shared.edit();
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         setContentView(R.layout.activity_animation_viewer);
 
         ImageBuilder.builder = new BMBuilder();
-
-        unitnumber = StaticStore.unitnumber;
 
         FloatingActionButton back = findViewById(R.id.animbck);
         search = findViewById(R.id.animsch);
@@ -97,16 +96,16 @@ public class AnimationViewer extends AppCompatActivity {
             }
         });
 
-        new Adder(unitnumber,this).execute();
+        new Adder(this).execute();
     }
 
     protected String showName(int location) {
         ArrayList<String> names = new ArrayList<>();
 
-        for(Form f : StaticStore.units.get(location).forms) {
+        for (Form f : StaticStore.units.get(location).forms) {
             String name = MultiLangCont.FNAME.getCont(f);
 
-            if(name == null)
+            if (name == null)
                 name = "";
 
             names.add(name);
@@ -114,7 +113,7 @@ public class AnimationViewer extends AppCompatActivity {
 
         StringBuilder result = new StringBuilder(withID(location, names.get(0)));
 
-        for(int i = 1; i < names.size();i++) {
+        for (int i = 1; i < names.size(); i++) {
             result.append(" - ").append(names.get(i));
         }
 
@@ -124,18 +123,18 @@ public class AnimationViewer extends AppCompatActivity {
     protected String withID(int id, String name) {
         String result;
 
-        if(name.equals("")) {
+        if (name.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+name;
+            result = number(id) + " - " + name;
         }
 
         return result;
     }
 
     protected void gotoFilter() {
-        Intent intent = new Intent(AnimationViewer.this,SearchFilter.class);
-        startActivityForResult(intent,REQUEST_CODE);
+        Intent intent = new Intent(AnimationViewer.this, SearchFilter.class);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     protected String number(int num) {
@@ -152,29 +151,29 @@ public class AnimationViewer extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK) {
-            EditText schname = findViewById(R.id.animschname);
+        if (resultCode == RESULT_OK) {
+            TextInputEditText schname = findViewById(R.id.animschname);
 
             FilterEntity filterEntity;
 
-            if(schname.getText().toString().isEmpty())
-                filterEntity = new FilterEntity(unitnumber);
+            if (Objects.requireNonNull(schname.getText()).toString().isEmpty())
+                filterEntity = new FilterEntity(StaticStore.unitnumber);
             else
-                filterEntity = new FilterEntity(unitnumber,schname.getText().toString());
+                filterEntity = new FilterEntity(StaticStore.unitnumber, schname.getText().toString());
 
             numbers = filterEntity.setFilter();
             ArrayList<String> newName = new ArrayList<>();
 
-            for(int i : numbers) {
+            for (int i : numbers) {
                 newName.add(StaticStore.names[i]);
             }
 
-            UnitListAdapter unitListAdapter = new UnitListAdapter(this,newName.toArray(new String[0]),numbers);
+            UnitListAdapter unitListAdapter = new UnitListAdapter(this, newName.toArray(new String[0]), numbers);
             list.setAdapter(unitListAdapter);
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(AnimationViewer.this,showName(numbers.get(position)),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AnimationViewer.this, showName(numbers.get(position)), Toast.LENGTH_SHORT).show();
                     list.setClickable(false);
                     return true;
                 }
@@ -183,11 +182,11 @@ public class AnimationViewer extends AppCompatActivity {
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL)
+                    if (SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL)
                         return;
 
-                    Intent result = new Intent(AnimationViewer.this,UnitInfo.class);
-                    result.putExtra("ID",numbers.get(position));
+                    Intent result = new Intent(AnimationViewer.this, UnitInfo.class);
+                    result.putExtra("ID", numbers.get(position));
                     startActivity(result);
 
                     StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
@@ -207,7 +206,7 @@ public class AnimationViewer extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    FilterEntity filterEntity = new FilterEntity(StaticStore.unitnumber,s.toString());
+                    FilterEntity filterEntity = new FilterEntity(StaticStore.unitnumber, s.toString());
                     numbers = filterEntity.setFilter();
 
                     ArrayList<String> names = new ArrayList<>();
@@ -225,8 +224,8 @@ public class AnimationViewer extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 
     @Override

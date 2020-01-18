@@ -77,29 +77,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/nestedScrollView3"
-                    android:layout_width="match_parent"
+                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+                    android:id="@+id/unitinftable"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:fillViewport="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:focusableInTouchMode="true"
+                    android:overScrollMode="never"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-                            android:id="@+id/unitinftable"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:descendantFocusability="blocksDescendants"
-                            android:focusableInTouchMode="true"
-                            android:overScrollMode="never" />
-                    </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
+                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
 
                 <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
                     android:id="@+id/unitinfpager"
@@ -139,7 +126,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nestedScrollView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/unitinftable" />
 
                 <TextView
                     android:id="@+id/cfinftext"
@@ -228,8 +215,9 @@
             android:id="@+id/treasurelayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="@drawable/tab_border"
+            android:background="?attr/backgroundPrimary"
             android:outlineProvider="bounds"
+            android:theme="?attr/TILtheme"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/unitinfscroll"
@@ -272,23 +260,30 @@
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
-                        android:backgroundTint="?attr/TextPrimary"
                         android:foregroundTint="?attr/TextPrimary"
                         android:hint="@string/treasure_cd_lev"
                         android:textColorHint="?attr/TextPrimary"
-                        app:counterTextAppearance="@style/CounterStyle"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
                         app:errorEnabled="true"
+                        app:errorTextColor="?attr/ErrorPrimary"
                         app:helperText="1~30"
                         app:helperTextEnabled="true"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/treasurename">
+                        app:layout_constraintTop_toBottomOf="@+id/treasurename"
+                        app:suffixText="@string/def_treasure_lv"
+                        app:suffixTextColor="?attr/HintPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/cdlevt"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:backgroundTint="?attr/TextPrimary"
                             android:imeOptions="flagNoExtractUi"
                             android:inputType="number"
                             android:maxLength="2"
@@ -296,18 +291,6 @@
                             android:textColorHint="?attr/TextPrimary"
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:id="@+id/cdlevst"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="lv."
-                        android:textColor="?attr/TextPrimary"
-                        app:layout_constraintBottom_toBottomOf="@+id/cdlev"
-                        app:layout_constraintEnd_toEndOf="@+id/cdlev"
-                        app:layout_constraintTop_toTopOf="@+id/cdlev" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/cdtrea"
@@ -317,15 +300,26 @@
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="24dp"
+                        android:foregroundTint="?attr/TextPrimary"
                         android:hint="@string/treasure_cd"
                         android:textColorHint="?attr/TextPrimary"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
                         app:counterTextAppearance="@style/CounterStyle"
+                        app:counterTextColor="?attr/TextPrimary"
                         app:errorEnabled="true"
+                        app:errorTextColor="?attr/ErrorPrimary"
                         app:helperText="0~300"
                         app:helperTextEnabled="true"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/cdlev">
+                        app:layout_constraintTop_toBottomOf="@+id/cdlev"
+                        app:suffixText="@string/def_treasure_perc"
+                        app:suffixTextColor="?attr/HintPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/cdtreat"
@@ -340,18 +334,6 @@
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/percent0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="%"
-                        android:textColor="?attr/TextPrimary"
-                        app:layout_constraintBottom_toBottomOf="@+id/cdtrea"
-                        app:layout_constraintEnd_toEndOf="@+id/cdtrea"
-                        app:layout_constraintTop_toTopOf="@+id/cdtrea" />
-
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/atktrea"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -360,15 +342,26 @@
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="24dp"
+                        android:foregroundTint="?attr/TextPrimary"
                         android:hint="@string/treasure_atk"
                         android:textColorHint="?attr/TextPrimary"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
                         app:counterTextAppearance="@style/CounterStyle"
+                        app:counterTextColor="?attr/TextPrimary"
                         app:errorEnabled="true"
+                        app:errorTextColor="?attr/ErrorPrimary"
                         app:helperText="0~300"
                         app:helperTextEnabled="true"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/cdtrea">
+                        app:layout_constraintTop_toBottomOf="@+id/cdtrea"
+                        app:suffixText="@string/def_treasure_perc"
+                        app:suffixTextColor="?attr/HintPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/atktreat"
@@ -383,18 +376,6 @@
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/percent1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="%"
-                        android:textColor="?attr/TextPrimary"
-                        app:layout_constraintBottom_toBottomOf="@+id/atktrea"
-                        app:layout_constraintEnd_toEndOf="@+id/atktrea"
-                        app:layout_constraintTop_toTopOf="@+id/atktrea" />
-
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/healtrea"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -404,16 +385,27 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="24dp"
+                        android:foregroundTint="?attr/TextPrimary"
                         android:hint="@string/treasure_heal"
                         android:textColorHint="?attr/TextPrimary"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
                         app:counterTextAppearance="@style/CounterStyle"
+                        app:counterTextColor="?attr/TextPrimary"
                         app:errorEnabled="true"
+                        app:errorTextColor="?attr/ErrorPrimary"
                         app:helperText="0~300"
                         app:helperTextEnabled="true"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/atktrea">
+                        app:layout_constraintTop_toBottomOf="@+id/atktrea"
+                        app:suffixText="@string/def_treasure_perc"
+                        app:suffixTextColor="?attr/HintPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/healtreat"
@@ -428,18 +420,6 @@
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/percent2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="%"
-                        android:textColor="?attr/TextPrimary"
-                        app:layout_constraintBottom_toBottomOf="@+id/healtrea"
-                        app:layout_constraintEnd_toEndOf="@+id/healtrea"
-                        app:layout_constraintTop_toTopOf="@+id/healtrea" />
-
                     <Button
                         android:id="@+id/treasurereset"
                         android:layout_width="wrap_content"
@@ -448,6 +428,7 @@
                         android:layout_marginEnd="24dp"
                         android:backgroundTint="?attr/ButtonPrimary"
                         android:text="@string/treasure_reset"
+                        android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         app:layout_constraintBottom_toBottomOf="@+id/treasurename"
                         app:layout_constraintEnd_toEndOf="parent"

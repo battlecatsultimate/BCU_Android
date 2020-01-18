@@ -5,17 +5,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mandarin.bcu.EnemyInfo;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.FilterEntity;
@@ -26,6 +26,7 @@ import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import common.system.MultiLangCont;
 
@@ -49,8 +50,10 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         listView.setVisibility(View.GONE);
         FloatingActionButton search = activity.findViewById(R.id.enlistsch);
         search.hide();
-        EditText schname = activity.findViewById(R.id.enemlistschname);
+        TextInputEditText schname = activity.findViewById(R.id.enemlistschname);
         schname.setVisibility(View.GONE);
+        TextInputLayout schnamel = activity.findViewById(R.id.enemlistschnamel);
+        schnamel.setVisibility(View.GONE);
 
         FloatingActionButton back = activity.findViewById(R.id.enlistbck);
         back.setOnClickListener(new SingleClick() {
@@ -108,7 +111,7 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
 
                 TextInputEditText schname = activity.findViewById(R.id.enemlistschname);
 
-                if(schname.getText().toString().isEmpty())
+                if(Objects.requireNonNull(schname.getText()).toString().isEmpty())
                     filterEntity = new FilterEntity(enemnumber);
                 else
                     filterEntity = new FilterEntity(enemnumber,schname.getText().toString());
@@ -185,8 +188,10 @@ public class EAdder extends AsyncTask<Void,Integer,Void> {
         prog.setVisibility(View.GONE);
         FloatingActionButton search = activity.findViewById(R.id.enlistsch);
         search.show();
-        EditText schname = activity.findViewById(R.id.enemlistschname);
+        TextInputEditText schname = activity.findViewById(R.id.enemlistschname);
         schname.setVisibility(View.VISIBLE);
+        TextInputLayout schnamel = activity.findViewById(R.id.enemlistschnamel);
+        schnamel.setVisibility(View.VISIBLE);
     }
 
     private String number(int num) {

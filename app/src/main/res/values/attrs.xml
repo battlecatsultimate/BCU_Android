@@ -14,4 +14,7 @@
     <attr name="SelectionPrimary" format="color"/>
     <attr name="HintPrimary" format="color"/>
     <attr name="themes" format="reference"/>
+    <attr name="TILtheme" format="reference"/>
+    <attr name="ErrorPrimary" format="color"/>
+    <attr name="SemiBackgroundPrimary" format="color"/>
 </resources>

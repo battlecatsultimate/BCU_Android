@@ -8,18 +8,19 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.io.asynchs.CheckApk;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
+import com.mandarin.bcu.androidutil.io.asynchs.CheckApk;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -96,7 +97,7 @@ public class CheckUpdateScreen extends AppCompatActivity {
         }
 
         if(!shared.contains("Lay_Port")) {
-            ed.putBoolean("Lay_Port",true);
+            ed.putBoolean("Lay_Port",false);
             ed.apply();
         }
 

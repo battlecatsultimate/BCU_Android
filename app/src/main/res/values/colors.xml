@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#A9A9A9</color>
     <color name="colorPrimaryDark">#A9A9A9</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#aed581</color>
     <color name="stageSelect">#D8D8D8</color>
     <color name="unitinfButton">#E9E9E9</color>
     <color name="backgroundPrimary">#FFFFFF</color>
@@ -11,7 +11,9 @@
     <color name="TableBorder">#999999</color>
     <color name="UnitinfoName">#D9D9D9</color>
     <color name="iconPrimary">#A9A9A9</color>
-    <color name="SelectionPrimary">#f8bbd0</color>
+    <color name="SelectionPrimary">#dcedc8</color>
     <color name="HintPrimary">#805b5b5b</color>
+    <color name="ErrorPrimary">#f44336</color>
+    <color name="SemiBackgroundPrimary">#7DFFFFFF</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/UnitinfoName</color>
 </resources>

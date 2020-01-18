@@ -3,17 +3,12 @@ package com.mandarin.bcu.androidutil.lineup.asynchs;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -30,6 +25,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.SearchFilter;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -47,7 +52,6 @@ import com.mandarin.bcu.androidutil.unit.Definer;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -63,7 +67,7 @@ import common.io.OutStream;
 import common.system.MultiLangCont;
 import common.util.pack.Pack;
 
-public class LUAdder extends AsyncTask<Void,Integer,Void> {
+public class LUAdder extends AsyncTask<Void, Integer, Void> {
     private final WeakReference<Activity> weakReference;
     private final FragmentManager manager;
 
@@ -72,8 +76,8 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
     private LUTab tab;
 
-    private final int [] ids = {R.string.lineup_list,R.string.lineup_unit,R.string.lineup_castle,R.string.lineup_treasure,R.string.lineup_construction,R.string.lineup_combo};
-    private String [] names = new String[ids.length];
+    private final int[] ids = {R.string.lineup_list, R.string.lineup_unit, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_combo};
+    private String[] names = new String[ids.length];
 
     public LUAdder(Activity activity, FragmentManager manager) {
         this.weakReference = new WeakReference<>(activity);
@@ -85,30 +89,31 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         StaticStore.LULoading = true;
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TabLayout tabLayout = activity.findViewById(R.id.lineuptab);
         MeasureViewPager measureViewPager = activity.findViewById(R.id.lineuppager);
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
-        EditText schname = activity.findViewById(R.id.animschname);
+        TextInputEditText schname = activity.findViewById(R.id.animschname);
+        TextInputLayout layout = activity.findViewById(R.id.animschnamel);
 
         View view = activity.findViewById(R.id.view);
 
-        for(int i = 0; i < ids.length; i++)
+        for (int i = 0; i < ids.length; i++)
             names[i] = activity.getString(ids[i]);
 
-        if(view == null)
-            setDisappear(tabLayout,measureViewPager,line,row,schname);
+        if (view == null)
+            setDisappear(tabLayout, measureViewPager, line, row, schname, layout);
         else
-            setDisappear(tabLayout,measureViewPager,line,row,view,schname);
+            setDisappear(tabLayout, measureViewPager, line, row, view, schname, layout);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
         new Definer().define(activity);
 
@@ -122,14 +127,14 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
         publishProgress(0);
 
-        if(!StaticStore.LUread) {
+        if (!StaticStore.LUread) {
 
             String Path = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/basis.v";
 
             File f = new File(Path);
 
             if (f.exists()) {
-                if(f.length() != 0) {
+                if (f.length() != 0) {
                     byte[] buff = new byte[(int) f.length()];
 
                     try {
@@ -148,10 +153,6 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                             new BasisSet();
                             ErrorLogWriter.WriteLog(e);
                         }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     } catch (Exception e) {
                         ErrorLogWriter.WriteLog(e);
                     }
@@ -173,10 +174,16 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
 
-        if(result[0] == 1) {
+        if (result[0] == 1) {
+
+            SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+
+            int setn = shared.getInt("equip_set",0);
+            int lun = shared.getInt("equip_lu",0);
+
             ProgressBar prog = activity.findViewById(R.id.lineupprog);
             TextView st = activity.findViewById(R.id.lineupst);
             MeasureViewPager pager = activity.findViewById(R.id.lineuppager);
@@ -186,11 +193,11 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
             LineUpView line = activity.findViewById(R.id.lineupView);
             FloatingActionButton option = activity.findViewById(R.id.lineupsetting);
 
-            PopupMenu popupMenu = new PopupMenu(activity,option);
+            PopupMenu popupMenu = new PopupMenu(activity, option);
             Menu menu = popupMenu.getMenu();
-            popupMenu.getMenuInflater().inflate(R.menu.lineup_menu,menu);
+            popupMenu.getMenuInflater().inflate(R.menu.lineup_menu, menu);
 
-            setDisappear(prog,st);
+            setDisappear(prog, st);
 
             bck.setOnClickListener(v -> {
                 save();
@@ -209,10 +216,10 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                 activity.startActivity(intent);
             });
 
-            tab = new LUTab(manager,line);
+            tab = new LUTab(manager, line);
 
             line.setOnTouchListener((v, event) -> {
-                int [] posit;
+                int[] posit;
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -222,10 +229,10 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         line.touched = true;
                         line.invalidate();
 
-                        if(!line.drawFloating) {
+                        if (!line.drawFloating) {
                             posit = line.getTouchedUnit(event.getX(), event.getY());
 
-                            if(posit != null) {
+                            if (posit != null) {
                                 line.prePosit = posit;
                             }
                         }
@@ -235,7 +242,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         line.x = event.getX();
                         line.y = event.getY();
 
-                        if(!line.drawFloating) {
+                        if (!line.drawFloating) {
                             line.floatB = line.getUnitImage(line.prePosit[0], line.prePosit[1]);
                         }
 
@@ -245,9 +252,9 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     case MotionEvent.ACTION_UP:
                         line.CheckChange();
 
-                        int [] deleted = line.getTouchedUnit(event.getX(),event.getY());
+                        int[] deleted = line.getTouchedUnit(event.getX(), event.getY());
 
-                        if(deleted != null) {
+                        if (deleted != null) {
                             if (deleted[0] == -100) {
                                 StaticStore.position = new int[]{-1, -1};
                                 StaticStore.updateForm = true;
@@ -264,7 +271,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         break;
                 }
 
-                return  true;
+                return true;
             });
 
             Spinner setspin = activity.findViewById(R.id.setspin);
@@ -272,30 +279,37 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
             List<String> setname = new ArrayList<>();
 
-            for(int i = 0; i < StaticStore.sets.size(); i++)
+            for (int i = 0; i < StaticStore.sets.size(); i++)
                 setname.add(StaticStore.sets.get(i).name);
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,R.layout.spinneradapter,setname);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, R.layout.spinneradapter, setname);
 
             setspin.setAdapter(adapter);
 
             setspin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(!initialized) return;
+                    if (!initialized) return;
 
                     BasisSet.current = StaticStore.sets.get(position);
+
+                    SharedPreferences preferences = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
+                    editor.putInt("equip_set",position);
+
+                    editor.apply();
 
                     StaticStore.setline[0] = position;
                     StaticStore.setline[1] = 0;
 
                     List<String> luname = new ArrayList<>();
 
-                    for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                    for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                         luname.add(BasisSet.current.lb.get(i).name);
                     }
 
-                    ArrayAdapter<String> adapter1 = new ArrayAdapter<>(activity,R.layout.spinneradapter,luname);
+                    ArrayAdapter<String> adapter1 = new ArrayAdapter<>(activity, R.layout.spinneradapter, luname);
 
                     luspin.setAdapter(adapter1);
 
@@ -304,7 +318,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     StaticStore.updateConst = true;
                     StaticStore.updateCastle = true;
 
-                    if(position == 0) {
+                    if (position == 0) {
                         menu.getItem(5).getSubMenu().getItem(0).setEnabled(false);
                         menu.getItem(3).getSubMenu().getItem(0).setEnabled(false);
                     } else {
@@ -312,7 +326,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         menu.getItem(3).getSubMenu().getItem(0).setEnabled(true);
                     }
 
-                    if(!menu.getItem(5).getSubMenu().getItem(0).isEnabled() && !menu.getItem(5).getSubMenu().getItem(1).isEnabled()) {
+                    if (!menu.getItem(5).getSubMenu().getItem(0).isEnabled() && !menu.getItem(5).getSubMenu().getItem(1).isEnabled()) {
                         menu.getItem(5).setEnabled(false);
                     } else {
                         menu.getItem(5).setEnabled(true);
@@ -329,20 +343,26 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
             List<String> LUname = new ArrayList<>();
 
-            for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+            for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                 LUname.add(BasisSet.current.lb.get(i).name);
             }
 
-            ArrayAdapter<String> adapter1 = new ArrayAdapter<>(activity,R.layout.spinneradapter,LUname);
+            ArrayAdapter<String> adapter1 = new ArrayAdapter<>(activity, R.layout.spinneradapter, LUname);
 
             luspin.setAdapter(adapter1);
 
             luspin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(!initialized) return;
+                    if (!initialized) return;
 
                     BasisSet.current.sele = BasisSet.current.lb.get(position);
+
+                    SharedPreferences preferences = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
+                    editor.putInt("equip_lu",position);
+                    editor.apply();
 
                     StaticStore.setline[1] = position;
 
@@ -350,13 +370,13 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                     StaticStore.updateForm = true;
 
-                    if(BasisSet.current.lb.size() == 1) {
+                    if (BasisSet.current.lb.size() == 1) {
                         menu.getItem(5).getSubMenu().getItem(1).setEnabled(false);
                     } else {
                         menu.getItem(5).getSubMenu().getItem(1).setEnabled(true);
                     }
 
-                    if(!menu.getItem(5).getSubMenu().getItem(0).isEnabled() && !menu.getItem(5).getSubMenu().getItem(1).isEnabled()) {
+                    if (!menu.getItem(5).getSubMenu().getItem(0).isEnabled() && !menu.getItem(5).getSubMenu().getItem(1).isEnabled()) {
                         menu.getItem(5).setEnabled(false);
                     } else {
                         menu.getItem(5).setEnabled(true);
@@ -371,13 +391,13 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                 }
             });
 
-            if(StaticStore.set == null && StaticStore.lu == null) {
+            if (StaticStore.set == null && StaticStore.lu == null) {
                 menu.getItem(2).setEnabled(false);
                 menu.getItem(2).getSubMenu().getItem(0).setEnabled(false);
                 menu.getItem(2).getSubMenu().getItem(1).setEnabled(false);
             }
 
-            EditText schname = activity.findViewById(R.id.animschname);
+            TextInputEditText schname = activity.findViewById(R.id.animschname);
 
             schname.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -408,32 +428,32 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         Button setdone = dialog.findViewById(R.id.setludone);
                         Button cancel = dialog.findViewById(R.id.setlucancel);
 
-                        edit.setHint("set "+BasisSet.list.size());
+                        edit.setHint("set " + BasisSet.list.size());
 
-                        int [] rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+                        int[] rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary));
 
-                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+                        edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]));
 
                         setdone.setOnClickListener(v -> {
-                            if(edit.getText().toString().isEmpty())
+                            if (edit.getText().toString().isEmpty())
                                 new BasisSet();
                             else {
                                 new BasisSet();
-                                BasisSet.list.get(BasisSet.list.size()-1).name = edit.getText().toString();
+                                BasisSet.list.get(BasisSet.list.size() - 1).name = edit.getText().toString();
                             }
 
                             List<String> names = new ArrayList<>();
 
-                            for(int i = 0; i < BasisSet.list.size(); i++)
+                            for (int i = 0; i < BasisSet.list.size(); i++)
                                 names.add(BasisSet.list.get(i).name);
 
-                            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity,R.layout.spinneradapter,names);
+                            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity, R.layout.spinneradapter, names);
 
                             setspin.setAdapter(adapter2);
 
-                            setspin.setSelection(setspin.getCount()-1);
+                            setspin.setSelection(setspin.getCount() - 1);
 
-                            LUTab tab = new LUTab(manager,line);
+                            LUTab tab = new LUTab(manager, line);
                             StaticStore.updateForm = true;
 
                             pager.setAdapter(tab);
@@ -462,32 +482,32 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         setdone = dialog.findViewById(R.id.setludone);
                         cancel = dialog.findViewById(R.id.setlucancel);
 
-                        edit.setHint("lineup "+BasisSet.current.lb.size());
+                        edit.setHint("lineup " + BasisSet.current.lb.size());
 
-                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary));
 
-                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+                        edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]));
 
                         setdone.setOnClickListener(v -> {
-                            if(edit.getText().toString().isEmpty())
+                            if (edit.getText().toString().isEmpty())
                                 BasisSet.current.add();
                             else {
                                 BasisSet.current.add();
-                                BasisSet.current.lb.get(BasisSet.current.lb.size()-1).name = edit.getText().toString();
+                                BasisSet.current.lb.get(BasisSet.current.lb.size() - 1).name = edit.getText().toString();
                             }
 
                             List<String> names = new ArrayList<>();
 
-                            for(int i = 0; i < BasisSet.current.lb.size(); i++)
+                            for (int i = 0; i < BasisSet.current.lb.size(); i++)
                                 names.add(BasisSet.current.lb.get(i).name);
 
-                            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity,R.layout.spinneradapter,names);
+                            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(activity, R.layout.spinneradapter, names);
 
                             luspin.setAdapter(adapter2);
 
-                            luspin.setSelection(luspin.getCount()-1);
+                            luspin.setSelection(luspin.getCount() - 1);
 
-                            LUTab tab = new LUTab(manager,line);
+                            LUTab tab = new LUTab(manager, line);
                             StaticStore.updateForm = true;
 
                             pager.setAdapter(tab);
@@ -509,9 +529,9 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                         return true;
                     case R.id.lineup_copy_set:
                         StaticStore.set = BasisSet.current.copy();
-                        BasisSet.list.remove(BasisSet.list.size()-1);
+                        BasisSet.list.remove(BasisSet.list.size() - 1);
 
-                        Toast.makeText(activity,R.string.lineup_set_copied,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.lineup_set_copied, Toast.LENGTH_SHORT).show();
                         menu.getItem(2).setEnabled(true);
                         menu.getItem(2).getSubMenu().getItem(0).setEnabled(true);
 
@@ -519,7 +539,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     case R.id.lineup_copy_lineup:
                         StaticStore.lu = BasisSet.current.sele.copy();
 
-                        Toast.makeText(activity,R.string.lineup_lu_copied,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.lineup_lu_copied, Toast.LENGTH_SHORT).show();
                         menu.getItem(2).setEnabled(true);
                         menu.getItem(2).getSubMenu().getItem(1).setEnabled(true);
 
@@ -532,7 +552,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                             String name = BasisSet.current.name;
 
                             BasisSet.list.remove(setspin.getSelectedItemPosition());
-                            BasisSet.list.add(setspin.getSelectedItemPosition(),StaticStore.set);
+                            BasisSet.list.add(setspin.getSelectedItemPosition(), StaticStore.set);
 
                             BasisSet.current = BasisSet.list.get(setspin.getSelectedItemPosition());
 
@@ -542,15 +562,15 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                             List<String> LUname1 = new ArrayList<>();
 
-                            for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                            for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                                 LUname1.add(BasisSet.current.lb.get(i).name);
                             }
 
-                            ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname1);
+                            ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity, R.layout.spinneradapter, LUname1);
 
                             luspin.setAdapter(adapter11);
 
-                            Toast.makeText(activity,R.string.lineup_paste_set_done,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, R.string.lineup_paste_set_done, Toast.LENGTH_SHORT).show();
                         });
 
                         builder.setNegativeButton(R.string.main_file_cancel, (dialog12, which) -> {
@@ -568,14 +588,14 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                             String name = BasisSet.current.sele.name;
 
                             BasisSet.current.lb.remove(luspin.getSelectedItemPosition());
-                            BasisSet.current.lb.add(luspin.getSelectedItemPosition(),StaticStore.lu);
+                            BasisSet.current.lb.add(luspin.getSelectedItemPosition(), StaticStore.lu);
                             BasisSet.current.sele = BasisSet.current.lb.get(luspin.getSelectedItemPosition());
 
                             BasisSet.current.sele.name = name;
 
                             line.UpdateLineUp();
 
-                            Toast.makeText(activity,R.string.lineup_paste_lu_done,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, R.string.lineup_paste_lu_done, Toast.LENGTH_SHORT).show();
                         });
 
                         builder.setNegativeButton(R.string.main_file_cancel, (dialog14, which) -> {
@@ -599,20 +619,20 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                         edit.setHint(BasisSet.current.name);
 
-                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary));
 
-                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+                        edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]));
 
                         setdone.setOnClickListener(v -> {
-                            if(!edit.getText().toString().isEmpty()) {
+                            if (!edit.getText().toString().isEmpty()) {
                                 BasisSet.current.name = edit.getText().toString();
 
                                 List<String> setname1 = new ArrayList<>();
 
-                                for(int i = 0; i < StaticStore.sets.size(); i++)
+                                for (int i = 0; i < StaticStore.sets.size(); i++)
                                     setname1.add(StaticStore.sets.get(i).name);
 
-                                ArrayAdapter<String> adapter22 = new ArrayAdapter<>(activity,R.layout.spinneradapter, setname1);
+                                ArrayAdapter<String> adapter22 = new ArrayAdapter<>(activity, R.layout.spinneradapter, setname1);
 
                                 int pos = setspin.getSelectedItemPosition();
 
@@ -645,25 +665,25 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                         edit.setHint(BasisSet.current.sele.name);
 
-                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity,R.attr.TextPrimary));
+                        rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary));
 
-                        edit.setHintTextColor(Color.argb(255/2,rgb[0],rgb[1],rgb[2]));
+                        edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]));
 
                         setdone.setOnClickListener(v -> {
-                            if(!edit.getText().toString().isEmpty()) {
+                            if (!edit.getText().toString().isEmpty()) {
                                 BasisSet.current.sele.name = edit.getText().toString();
 
                                 List<String> LUname1 = new ArrayList<>();
 
-                                for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                                for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                                     LUname1.add(BasisSet.current.lb.get(i).name);
                                 }
 
-                                ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname1);
+                                ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity, R.layout.spinneradapter, LUname1);
 
                                 luspin.setAdapter(adapter11);
 
-                                luspin.setSelection(BasisSet.current.lb.size()-1);
+                                luspin.setSelection(BasisSet.current.lb.size() - 1);
 
                                 save();
                             }
@@ -681,46 +701,46 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                         BasisSet.current.copy();
 
-                        BasisSet.list.get(BasisSet.list.size()-1).name = origin+"`";
+                        BasisSet.list.get(BasisSet.list.size() - 1).name = origin + "`";
 
                         List<String> setname1 = new ArrayList<>();
 
-                        for(int i = 0; i < StaticStore.sets.size(); i++)
+                        for (int i = 0; i < StaticStore.sets.size(); i++)
                             setname1.add(StaticStore.sets.get(i).name);
 
-                        ArrayAdapter<String> adapter22 = new ArrayAdapter<>(activity,R.layout.spinneradapter, setname1);
+                        ArrayAdapter<String> adapter22 = new ArrayAdapter<>(activity, R.layout.spinneradapter, setname1);
 
                         setspin.setAdapter(adapter22);
 
-                        setspin.setSelection(BasisSet.list.size()-1);
+                        setspin.setSelection(BasisSet.list.size() - 1);
 
                         save();
 
-                        Toast.makeText(activity,R.string.lineup_cloned_set,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.lineup_cloned_set, Toast.LENGTH_SHORT).show();
 
                         return true;
                     case R.id.lineup_clone_lineup:
                         BasisLU lu = BasisSet.current.sele.copy();
 
-                        lu.name = BasisSet.current.sele.name+ "`";
+                        lu.name = BasisSet.current.sele.name + "`";
 
                         BasisSet.current.lb.add(lu);
 
                         List<String> LUname1 = new ArrayList<>();
 
-                        for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                        for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                             LUname1.add(BasisSet.current.lb.get(i).name);
                         }
 
-                        ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname1);
+                        ArrayAdapter<String> adapter11 = new ArrayAdapter<>(activity, R.layout.spinneradapter, LUname1);
 
                         luspin.setAdapter(adapter11);
 
-                        luspin.setSelection(BasisSet.current.lb.size()-1);
+                        luspin.setSelection(BasisSet.current.lb.size() - 1);
 
                         save();
 
-                        Toast.makeText(activity,R.string.lineup_cloned_lineup,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, R.string.lineup_cloned_lineup, Toast.LENGTH_SHORT).show();
 
                         return true;
                     case R.id.lineup_remove_set:
@@ -734,15 +754,15 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                             List<String> setname2 = new ArrayList<>();
 
-                            for(int i = 0; i < StaticStore.sets.size(); i++)
+                            for (int i = 0; i < StaticStore.sets.size(); i++)
                                 setname2.add(StaticStore.sets.get(i).name);
 
-                            ArrayAdapter<String> adapter23 = new ArrayAdapter<>(activity,R.layout.spinneradapter, setname2);
+                            ArrayAdapter<String> adapter23 = new ArrayAdapter<>(activity, R.layout.spinneradapter, setname2);
 
                             setspin.setAdapter(adapter23);
 
-                            if(pos >= BasisSet.list.size())
-                                setspin.setSelection(BasisSet.list.size()-1);
+                            if (pos >= BasisSet.list.size())
+                                setspin.setSelection(BasisSet.list.size() - 1);
                             else
                                 setspin.setSelection(pos);
                         });
@@ -765,16 +785,16 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
                             List<String> LUname2 = new ArrayList<>();
 
-                            for(int i = 0; i < BasisSet.current.lb.size(); i++) {
+                            for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                                 LUname2.add(BasisSet.current.lb.get(i).name);
                             }
 
-                            ArrayAdapter<String> adapter12 = new ArrayAdapter<>(activity,R.layout.spinneradapter, LUname2);
+                            ArrayAdapter<String> adapter12 = new ArrayAdapter<>(activity, R.layout.spinneradapter, LUname2);
 
                             luspin.setAdapter(adapter12);
 
-                            if(pos >= BasisSet.current.lb.size())
-                                luspin.setSelection(BasisSet.current.lb.size()-1);
+                            if (pos >= BasisSet.current.lb.size())
+                                luspin.setSelection(BasisSet.current.lb.size() - 1);
                             else
                                 luspin.setSelection(pos);
                         });
@@ -821,16 +841,16 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
 
             initialized = true;
 
-            setspin.setSelection(StaticStore.setline[0]);
-            luspin.setSelection(StaticStore.setline[1]);
+            setspin.setSelection(setn);
+            luspin.setSelection(lun);
 
 
-        } else if(result[0] == 0) {
-            TextView st =activity.findViewById(R.id.lineupst);
+        } else if (result[0] == 0) {
+            TextView st = activity.findViewById(R.id.lineupst);
 
             st.setText(R.string.lineup_reading);
         } else {
-            Toast.makeText(activity,result[0],Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, result[0], Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -838,29 +858,30 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TabLayout tabLayout = activity.findViewById(R.id.lineuptab);
         MeasureViewPager measureViewPager = activity.findViewById(R.id.lineuppager);
         LineUpView line = activity.findViewById(R.id.lineupView);
         TableRow row = activity.findViewById(R.id.lineupsetrow);
-        EditText schname = activity.findViewById(R.id.animschname);
+        TextInputEditText schname = activity.findViewById(R.id.animschname);
+        TextInputLayout layout = activity.findViewById(R.id.animschnamel);
 
         View view = activity.findViewById(R.id.view);
 
-        if(view == null)
-            setAppear(tabLayout,measureViewPager,line,row,schname);
+        if (view == null)
+            setAppear(tabLayout, measureViewPager, line, row, schname, layout);
         else
-            setAppear(tabLayout,measureViewPager,line,row,view,schname);
+            setAppear(tabLayout, measureViewPager, line, row, view, schname, layout);
     }
 
     private void setDisappear(View... view) {
-        for(View v : view)
+        for (View v : view)
             v.setVisibility(View.GONE);
     }
 
     private void setAppear(View... view) {
-        for(View v : view)
+        for (View v : view)
             v.setVisibility(View.VISIBLE);
     }
 
@@ -878,13 +899,13 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         String result;
         String names = name;
 
-        if(names == null)
+        if (names == null)
             names = "";
 
-        if(names.equals("")) {
+        if (names.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+names;
+            result = number(id) + " - " + names;
         }
 
         return result;
@@ -894,15 +915,16 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
         private LineUpView lineup;
 
         LUTab(FragmentManager fm, LineUpView line) {
-            super(fm);
+            super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.lineup = line;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return LUUnitList.newInstance(StaticStore.LUnames,lineup);
+                    return LUUnitList.newInstance(StaticStore.LUnames, lineup);
                 case 1:
                     return LUUnitSetting.newInstance(lineup);
                 case 2:
@@ -915,7 +937,7 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
                     return LUCatCombo.newInstance(lineup);
             }
 
-            return null;
+            return new LUUnitSetting();
         }
 
         @Override
@@ -935,18 +957,18 @@ public class LUAdder extends AsyncTask<Void,Integer,Void> {
     }
 
     private void save() {
-        String Path = Environment.getExternalStorageDirectory().getPath()+"/BCU/user/basis.v";
-        String Direct = Environment.getExternalStorageDirectory().getPath()+"/BCU/user/";
+        String Path = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/basis.v";
+        String Direct = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/";
 
         File g = new File(Direct);
 
-        if(!g.exists())
+        if (!g.exists())
             g.mkdirs();
 
         File f = new File(Path);
 
         try {
-            if(!f.exists())
+            if (!f.exists())
                 f.createNewFile();
 
             OutputStream os = new FileOutputStream(f);

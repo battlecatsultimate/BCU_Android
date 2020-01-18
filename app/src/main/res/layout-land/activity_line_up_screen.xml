@@ -31,26 +31,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineuptoolbar" />
 
-    <EditText
-        android:id="@+id/animschname"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/animschnamel"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="?attr/TextPrimary"
-        android:drawableEnd="@drawable/search"
-        android:ems="10"
-        android:hint="@string/unit_list_sch"
-        android:imeOptions="actionDone|flagNoExtractUi"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:textColor="?attr/TextPrimary"
         android:textColorHint="?attr/HintPrimary"
+        app:endIconCheckable="true"
+        app:endIconDrawable="@drawable/ic_close_black_24dp"
+        app:endIconMode="clear_text"
+        app:endIconTint="?attr/TextPrimary"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@+id/lineuptoolbar"
         app:layout_constraintEnd_toStartOf="@+id/linesch"
         app:layout_constraintStart_toEndOf="@+id/lineupbck"
         app:layout_constraintTop_toTopOf="@+id/lineuptoolbar"
-        tools:targetApi="O" />
+        app:startIconDrawable="@drawable/search"
+        app:startIconTint="?attr/UnitinfoName">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/animschname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/TextPrimary"
+            android:hint="@string/unit_list_sch"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:singleLine="true"
+            android:textColor="?attr/TextPrimary"
+            android:textColorHint="?attr/HintPrimary"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/lineupst"

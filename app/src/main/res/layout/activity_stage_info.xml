@@ -58,60 +58,35 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="?attr/ButtonPrimary"
-                android:text="Start Battle"
+                android:text="@string/battle_preparation"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/stginfonest"
-                android:layout_width="0dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stginforec"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fillViewport="true"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/battlebtn">
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+            </androidx.recyclerview.widget.RecyclerView>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/stginforec"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
-                        android:focusableInTouchMode="true"
-                        android:overScrollMode="never" />
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
-
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/stginfoen"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stginfoenrec"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fillViewport="true"
-                app:layout_constraintTop_toBottomOf="@+id/stginfonest">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/stginfoenrec"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
-                        android:focusableInTouchMode="true"
-                        android:overScrollMode="never" />
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
+                android:layout_marginBottom="16dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stginforec" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

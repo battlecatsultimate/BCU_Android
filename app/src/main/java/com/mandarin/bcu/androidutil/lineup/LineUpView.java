@@ -56,9 +56,9 @@ public class LineUpView extends View {
     private boolean drawOnce = true;
 
     /**X coordinate where user is touching**/
-    public float x;
+    public float x = -1;
     /**Y coordinate where user is touching**/
-    public float y;
+    public float y = -1;
 
     /**Width/Height of unit icons**/
     float bw = 128f;

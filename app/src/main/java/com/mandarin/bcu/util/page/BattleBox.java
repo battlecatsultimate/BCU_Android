@@ -7,8 +7,6 @@ import com.mandarin.bcu.util.PP;
 import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
 import common.battle.StageBasis;
-import common.battle.attack.ContAb;
-import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
 import common.system.P;
 import common.system.SymCoord;
@@ -33,8 +31,8 @@ public interface BattleBox {
         private static final int DEP = 4;
         private static final int bar = 8, wave = 28, castw = 128, casth = 256;
         private static final int c0y = -130, c1y = -130, c2y = -258;
-        private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134 };
-        private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0 };
+        private static final int[] cany = new int[]{-134, -134, -134, -250, -250, -134, -134};
+        private static final int[] canx = new int[]{0, 0, 0, 64, 64, 0, 0};
 
         public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
             FakeImage bimg = NyCastle.main[2][inf[2]].getImg();
@@ -70,9 +68,9 @@ public interface BattleBox {
         private int midh, prew, preh; // in pix
 
         private P mouse; // in pix
-        private P p = new P(0,0);
-        private PP pp = new PP(0,0);
-        private SymCoord sc = new SymCoord(null,0,0,0,0);
+        private P p = new P(0, 0);
+        private PP pp = new PP(0, 0);
+        private SymCoord sc = new SymCoord(null, 0, 0, 0, 0);
 
         public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
             page = bip;
@@ -203,7 +201,7 @@ public interface BattleBox {
             iw = (int) (hr * right.getWidth());
             ih = (int) (hr * right.getHeight());
             g.drawImage(right, w - iw, h - ih, iw, ih);
-            setSym(g,hr,hr*5,h-hr*5,2);
+            setSym(g, hr, hr * 5, h - hr * 5, 2);
             Res.getCost(sb.next_lv, mtype > 0, sc);
             setSym(g, hr, hr * 5, h - hr * 130, 0);
             Res.getWorkerLv(sb.work_lv, mtype > 0, sc);
@@ -250,8 +248,8 @@ public interface BattleBox {
                     int dh = (int) (hr * 12);
                     double cd = 1.0 * cool / sb.elu.maxC[i / 5][i % 5];
                     int xw = (int) (cd * (iw - dw * 2));
-                    g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0);
-                    g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255);
+                    g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0,255);
+                    g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255,255);
                 } else {
                     setSym(g, hr, x += iw, y += ih, 3);
                     Res.getCost(pri, !b, sc);
@@ -299,40 +297,43 @@ public interface BattleBox {
             ImgCore.battle = true;
             for (int i = 0; i < 10; i++) {
                 int dep = i * DEP;
-                for (Entity e : sb.le)
-                    if (e.layer == i && (sb.s_stop == 0 || (e.getAbi() & Data.AB_TIMEI) == 0)) {
+                for (int j = 0; j < sb.le.size(); j++) {
+                    if (sb.le.get(j).layer == i && (sb.s_stop == 0 || (sb.le.get(j).getAbi() & Data.AB_TIMEI) == 0)) {
                         gra.setTransform(at);
-                        double p = getX(e.pos);
+                        double p = getX(sb.le.get(j).pos);
                         double y = midh - (road_h - dep) * siz;
-                        setP(p,y);
-                        e.anim.draw(gra, this.p, psiz);
+                        setP(p, y);
+                        sb.le.get(j).anim.draw(gra, this.p, psiz);
                         gra.setTransform(at);
-                        setP(p,y);
-                        e.anim.drawEff(gra, this.p, siz);
+                        setP(p, y);
+                        sb.le.get(j).anim.drawEff(gra, this.p, siz);
                     }
-                for (ContAb wc : sb.lw)
-                    if (wc.layer == i) {
+                }
+                for (int j = 0; j < sb.lw.size(); j++) {
+                    if (sb.lw.get(j).layer == i) {
                         gra.setTransform(at);
-                        double p = (wc.pos * ratio + off - wave) * siz + pos;
-                        double y = midh - (road_h - DEP * wc.layer) * siz;
-                        setP(p,y);
-                        wc.draw(gra, this.p, psiz);
+                        double p = (sb.lw.get(j).pos * ratio + off - wave) * siz + pos;
+                        double y = midh - (road_h - DEP * sb.lw.get(j).layer) * siz;
+                        setP(p, y);
+                        sb.lw.get(j).draw(gra, this.p, psiz);
                     }
-                for (EAnimCont eac : sb.lea)
-                    if (eac.layer == i) {
+                }
+                for (int j = 0; j < sb.lea.size(); j++) {
+                    if (sb.lea.get(j).layer == i) {
                         gra.setTransform(at);
-                        double p = getX(eac.pos);
-                        double y = midh - (road_h - DEP * eac.layer) * siz;
-                        setP(p,y);
-                        eac.draw(gra, this.p, psiz);
+                        double p = getX(sb.lea.get(j).pos);
+                        double y = midh - (road_h - DEP * sb.lea.get(j).layer) * siz;
+                        setP(p, y);
+                        sb.lea.get(j).draw(gra, this.p, psiz);
                     }
+                }
             }
 
             gra.setTransform(at);
             int can = cany[sb.canon.id];
             int disp = canx[sb.canon.id];
             setP(getX(sb.ubase.pos) + disp * siz, midh + (can - road_h) * siz);
-            sb.canon.drawBase(gra,p, psiz);
+            sb.canon.drawBase(gra, p, psiz);
             gra.setTransform(at);
             setP(getX(sb.canon.pos), midh - road_h * siz);
             sb.canon.drawAtk(gra, p, psiz);
@@ -344,21 +345,22 @@ public interface BattleBox {
             }
 
             if (sb.s_stop > 0) {
-                gra.setComposite(FakeGraphics.GRAY, 0);
+                gra.setComposite(FakeGraphics.GRAY, 0, 0);
                 gra.fillRect(0, 0, w, h);
                 for (int i = 0; i < 10; i++) {
                     int dep = i * DEP;
-                    for (Entity e : sb.le)
-                        if (e.layer == i && (e.getAbi() & Data.AB_TIMEI) > 0) {
+                    for (int j = 0; j < sb.le.size(); j++) {
+                        if (sb.le.get(j).layer == i && (sb.le.get(j).getAbi() & Data.AB_TIMEI) > 0) {
                             gra.setTransform(at);
-                            double p = getX(e.pos);
+                            double p = getX(sb.le.get(j).pos);
                             double y = midh - (road_h - dep) * siz;
-                            setP(p,y);
-                            e.anim.draw(gra, this.p, psiz);
+                            setP(p, y);
+                            sb.le.get(j).anim.draw(gra, this.p, psiz);
                             gra.setTransform(at);
-                            setP(p,y);
-                            e.anim.drawEff(gra, this.p, siz);
+                            setP(p, y);
+                            sb.le.get(j).anim.drawEff(gra, this.p, siz);
                         }
+                    }
                 }
             }
             gra.setTransform(at);
@@ -372,7 +374,6 @@ public interface BattleBox {
             P p = Res.getMoney((int) sb.mon, sb.max_mon, sc);
             int ih = (int) p.y;
             int n = 0;
-            setSym(g,1,w,0,1);
             FakeImage bimg = Res.battle[2][1].getImg();
             int cw = bimg.getWidth();
             if ((sb.conf[0] & 2) > 0) {

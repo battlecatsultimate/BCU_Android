@@ -13,4 +13,6 @@
     <color name="iconPrimaryN">#eeeeee</color>
     <color name="SelectionPrimaryN">#263238</color>
     <color name="HintPrimaryN">#80eeeeee</color>
+    <color name="ErrorPrimaryN">#f44336</color>
+    <color name="SemiBackgroundPrimaryN">#7D363636</color>
 </resources>

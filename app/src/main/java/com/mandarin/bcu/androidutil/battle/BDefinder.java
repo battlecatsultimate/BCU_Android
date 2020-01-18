@@ -37,7 +37,7 @@ public class BDefinder {
         if(!StaticStore.resread) {
             Res.readData();
 
-            StaticStore.resread = false;
+            StaticStore.resread = true;
         }
     }
 }

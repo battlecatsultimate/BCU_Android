@@ -354,203 +354,192 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/eschrgab" />
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/animnscview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:fillViewport="true"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/eschrgab">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <CheckBox
+                    android:id="@+id/eschchabwe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/eschchabfr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:layout_constraintEnd_toStartOf="@+id/eschchabsl"
+                    app:layout_constraintStart_toEndOf="@+id/eschchabwe"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabwe" />
+
+                <CheckBox
+                    android:id="@+id/eschchabsl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:layout_editor_absoluteY="280dp">
+                    app:layout_constraintTop_toTopOf="@+id/eschchabfr" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabwe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
+                <CheckBox
+                    android:id="@+id/eschchabkb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabwe"
+                    app:layout_constraintTop_toBottomOf="@+id/eschchabwe" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabfr"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabwp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintEnd_toStartOf="@+id/eschchabsl"
-                        app:layout_constraintStart_toEndOf="@+id/eschchabwe"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabwe" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabkb"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabfr"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabkb" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabsl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
+                <CheckBox
+                    android:id="@+id/eschchabstr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabfr" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabwp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabsl"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabwp" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabkb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabsu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabwe"
-                        app:layout_constraintTop_toBottomOf="@+id/eschchabwe" />
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabkb"
+                    app:layout_constraintTop_toBottomOf="@+id/eschchabkb" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabwp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabcd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabkb"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabfr"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabkb" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabsu"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabwp"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabsu" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabstr"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabcr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabwp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabsl"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabwp" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabcd"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabstr"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabcd" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabsu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabwv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabkb"
-                        app:layout_constraintTop_toBottomOf="@+id/eschchabkb" />
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabsu"
+                    app:layout_constraintTop_toBottomOf="@+id/eschchabsu" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabcd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabimwe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabsu"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabwp"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabsu" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabwv"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabcd"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabwv" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabcr"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabimfr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabcd"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabstr"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabcd" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabimwe"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabcr"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabimwe" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabwv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabimsl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabsu"
-                        app:layout_constraintTop_toBottomOf="@+id/eschchabsu" />
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabwv"
+                    app:layout_constraintTop_toBottomOf="@+id/eschchabwv" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabimwe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabimkb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabwv"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabcd"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabwv" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabimsl"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabimwe"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabimsl" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabimfr"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabimwv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabimwe"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabcr"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabimwe" />
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabimkb"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabimfr"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabimkb" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabimsl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabcu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabimsl"
+                    app:layout_constraintTop_toBottomOf="@+id/eschchabimsl" />
 
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabwv"
-                        app:layout_constraintTop_toBottomOf="@+id/eschchabwv" />
+                <CheckBox
+                    android:id="@+id/eschchabbu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabcu"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabimkb"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabcu" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabimkb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabrev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/eschchabbu"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabimwv"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabbu" />
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabimsl"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabimwe"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabimsl" />
+                <CheckBox
+                    android:id="@+id/eschchabsb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabcu"
+                    app:layout_constraintTop_toBottomOf="@+id/eschchabcu" />
 
-                    <CheckBox
-                        android:id="@+id/eschchabimwv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                <CheckBox
+                    android:id="@+id/eschchabpo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/TextPrimary"
+                    app:layout_constraintStart_toStartOf="@+id/eschchabbu"
+                    app:layout_constraintTop_toTopOf="@+id/eschchabsb" />
 
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabimkb"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabimfr"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabimkb" />
-
-                    <CheckBox
-                        android:id="@+id/eschchabcu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabimsl"
-                        app:layout_constraintTop_toBottomOf="@+id/eschchabimsl" />
-
-                    <CheckBox
-                        android:id="@+id/eschchabbu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabcu"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabimkb"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabcu" />
-
-                    <CheckBox
-                        android:id="@+id/eschchabrev"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="@+id/eschchabbu"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabimwv"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabbu" />
-
-                    <CheckBox
-                        android:id="@+id/eschchabsb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabcu"
-                        app:layout_constraintTop_toBottomOf="@+id/eschchabcu" />
-
-                    <CheckBox
-                        android:id="@+id/eschchabpo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?attr/TextPrimary"
-                        app:layout_constraintStart_toStartOf="@+id/eschchabbu"
-                        app:layout_constraintTop_toTopOf="@+id/eschchabsb" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RadioGroup
                 android:id="@+id/eschrgab"

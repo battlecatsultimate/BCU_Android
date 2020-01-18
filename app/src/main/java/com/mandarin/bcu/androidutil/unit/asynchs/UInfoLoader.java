@@ -8,17 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.core.view.ViewCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +19,19 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation;
@@ -224,8 +226,37 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         if(activity == null) return;
 
-        ScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
-        scrollView.setVisibility(View.VISIBLE);
+        SharedPreferences preferences = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+
+        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(preferences.getBoolean("Lay_Land",false)) {
+                ScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.VISIBLE);
+            } else {
+                NestedScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.VISIBLE);
+                scrollView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0,0);
+                    }
+                },0);
+            }
+        } else {
+            if(preferences.getBoolean("Lay_Land",false)) {
+                ScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.VISIBLE);
+            } else {
+                NestedScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.VISIBLE);
+                scrollView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0,0);
+                    }
+                },0);
+            }
+        }
 
         ConstraintLayout treasuretab = activity.findViewById(R.id.treasurelayout);
         treasuretab.setVisibility(View.VISIBLE);
@@ -246,7 +277,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         String[] title;
 
         ExplanationTab(FragmentManager fm, int number, int id, String[] title) {
-            super(fm);
+            super(fm,FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.number = number;
             this.id = id;
             this.title = title;
@@ -274,12 +305,13 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         String [] names;
 
         TableTab(FragmentManager fm, int form, int id,String [] names) {
-            super(fm);
+            super(fm,FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.form = form;
             this.id = id;
             this.names = names;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int i) {
             return UnitinfPager.newInstance(i,id,names);
@@ -345,7 +377,6 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(unitinfRecycle);
-        ViewCompat.setNestedScrollingEnabled(recyclerView,false);
 
         ViewPager viewPager = activity.findViewById(R.id.unitinfpager);
         viewPager.setAdapter(explain);

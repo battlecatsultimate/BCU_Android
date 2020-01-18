@@ -41,21 +41,29 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:hint="@string/unit_list_sch"
         android:textColorHint="?attr/HintPrimary"
+        app:endIconCheckable="true"
+        app:endIconDrawable="@drawable/ic_close_black_24dp"
+        app:endIconMode="clear_text"
+        app:endIconTint="?attr/TextPrimary"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@+id/enemlisttool"
         app:layout_constraintEnd_toStartOf="@+id/enlistsch"
         app:layout_constraintStart_toEndOf="@+id/enlistbck"
         app:layout_constraintTop_toTopOf="@+id/enemlisttool"
-        app:endIconMode="clear_text">
+        app:startIconDrawable="@drawable/search"
+        app:startIconTint="?attr/UnitinfoName">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/enemlistschname"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="?attr/TextPrimary"
-            android:drawableEnd="@drawable/search"
-            android:textColor="?attr/TextPrimary" />
+            android:hint="@string/enem_list_sch"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:singleLine="true"
+            android:textColor="?attr/TextPrimary"
+            android:textColorHint="?attr/HintPrimary" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ListView

@@ -58,7 +58,7 @@ public class AnimationCView extends View {
 
     boolean started = false;
 
-    public AnimationCView(Context context, int id, int form, int mode, boolean night,boolean axis, TextView textView, SeekBar seekBar, TextView fpsind, TextView gif) {
+    public AnimationCView(Context context, int id, int form, int mode, boolean night, boolean axis, TextView textView, SeekBar seekBar, TextView fpsind, TextView gif) {
         super(context);
 
         renderer = new Renderer();
@@ -79,18 +79,18 @@ public class AnimationCView extends View {
 
         range.setStyle(Paint.Style.STROKE);
 
-        if(night) {
-            p.setColor(Color.argb(255,54,54,54));
+        if (night) {
+            p.setColor(Color.argb(255, 54, 54, 54));
             range.setColor(Color.GREEN);
         } else {
-            p.setColor(Color.argb(255,255,255,255));
+            p.setColor(Color.argb(255, 255, 255, 255));
             range.setColor(Color.RED);
         }
 
         p1.setFilterBitmap(true);
 
-        p2 = new P((float)getWidth()/2,(float)getHeight()*2f/3f);
-        cv = new CVGraphics(c, p1,bp,night);
+        p2 = new P((float) getWidth() / 2, (float) getHeight() * 2f / 3f);
+        cv = new CVGraphics(c, p1, bp, night);
 
         this.night = night;
     }
@@ -113,7 +113,7 @@ public class AnimationCView extends View {
 
         ImgCore.ref = axis;
 
-        if(night) {
+        if (night) {
             p.setColor(0x363636);
         } else {
             p.setColor(Color.WHITE);
@@ -121,8 +121,8 @@ public class AnimationCView extends View {
 
         p1.setFilterBitmap(true);
 
-        p2 = new P((float)getWidth()/2,(float)getHeight()*2f/3f);
-        cv = new CVGraphics(c,p1,bp,night);
+        p2 = new P((float) getWidth() / 2, (float) getHeight() * 2f / 3f);
+        cv = new CVGraphics(c, p1, bp, night);
 
         this.night = night;
     }
@@ -131,7 +131,7 @@ public class AnimationCView extends View {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        postDelayed(renderer,0);
+        postDelayed(renderer, 0);
         started = true;
     }
 
@@ -140,34 +140,34 @@ public class AnimationCView extends View {
     public void onDraw(Canvas canvas) {
         c = canvas;
 
-        if(StaticStore.gifisSaving && !StaticStore.keepDoing) {
+        if (StaticStore.gifisSaving && !StaticStore.keepDoing) {
             async.keepDoing = false;
             StaticStore.keepDoing = true;
         }
 
-        if(StaticStore.enableGIF) {
+        if (StaticStore.enableGIF) {
             p2 = new P((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
 
-            if(form != -1)
-                new AddGIF(anim,getWidth(),getHeight(),p2,siz,night,id,true).execute();
+            if (form != -1)
+                new AddGIF(anim, getWidth(), getHeight(), p2, siz, night, id, true).execute();
             else
-                new AddGIF(anim,getWidth(),getHeight(),p2,siz,night,id,false).execute();
+                new AddGIF(anim, getWidth(), getHeight(), p2, siz, night, id, false).execute();
         }
 
-        if(StaticStore.play) {
+        if (StaticStore.play) {
             if (t1 != -1 && t - t1 != 0) {
                 fps = 1000L / (t - t1);
             }
 
             p2 = P.newP((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
-            cv = new CVGraphics(c, p1,bp, night);
+            cv = new CVGraphics(c, p1, bp, night);
 
             if (fps < 30)
-                sleeptime = (int)(sleeptime*0.9 - 0.1);
+                sleeptime = (int) (sleeptime * 0.9 - 0.1);
             else if (fps > 30)
-                sleeptime = (int)(sleeptime*0.9 + 0.1);
+                sleeptime = (int) (sleeptime * 0.9 + 0.1);
 
-            if(!trans)
+            if (!trans)
                 c.drawRect(0, 0, getWidth(), getHeight(), p);
 
             anim.draw(cv, p2, siz);
@@ -185,14 +185,14 @@ public class AnimationCView extends View {
             }
 
             p2 = P.newP((float) getWidth() / 2 + x, (float) getHeight() * 2 / 3 + y);
-            cv = new CVGraphics(c, p1,bp, night);
+            cv = new CVGraphics(c, p1, bp, night);
 
             if (fps < 30)
-                sleeptime = (int)(sleeptime*0.9 - 0.1);
+                sleeptime = (int) (sleeptime * 0.9 - 0.1);
             else if (fps > 30)
-                sleeptime = (int)(sleeptime*0.9 + 0.1);
+                sleeptime = (int) (sleeptime * 0.9 + 0.1);
 
-            if(!trans)
+            if (!trans)
                 c.drawRect(0, 0, getWidth(), getHeight(), p);
 
             anim.draw(cv, p2, siz);
@@ -211,10 +211,10 @@ public class AnimationCView extends View {
     }
 
     public void StartAsync(Activity activity) {
-        if(form != -1) {
-            async = new GIFAsync(this, activity,id,form);
+        if (form != -1) {
+            async = new GIFAsync(this, activity, id, form);
         } else {
-            async = new GIFAsync(this,activity,id);
+            async = new GIFAsync(this, activity, id);
         }
         async.execute();
     }
@@ -227,13 +227,13 @@ public class AnimationCView extends View {
 
             invalidate();
 
-            textView.setText(getContext().getText(R.string.anim_frame).toString().replace("-",""+StaticStore.frame));
-            fpsind.setText(getContext().getText(R.string.def_fps).toString().replace("-",""+fps));
+            textView.setText(getContext().getText(R.string.anim_frame).toString().replace("-", "" + StaticStore.frame));
+            fpsind.setText(getContext().getText(R.string.def_fps).toString().replace("-", "" + fps));
             seekBar.setProgress(StaticStore.frame);
-            gif.setText(getContext().getText(R.string.anim_gif_frame).toString().replace("-",""+StaticStore.gifFrame));
+            gif.setText(getContext().getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame));
 
-            if(started)
-                postDelayed(this,1000L/30L+sleeptime);
+            if (started)
+                postDelayed(this, 1000L / 30L + sleeptime);
         }
     }
 }

@@ -3,17 +3,19 @@ package com.mandarin.bcu.androidutil.stage.asynchs;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.mandarin.bcu.BattleSimulation;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mandarin.bcu.BattlePrepare;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -99,13 +101,35 @@ public class StageAdder extends AsyncTask<Void,Integer,Void> {
 
                 Button battle = activity.findViewById(R.id.battlebtn);
 
+                RecyclerView stgrec = activity.findViewById(R.id.stginforec);
+                stgrec.setLayoutManager(new LinearLayoutManager(activity));
+                ViewCompat.setNestedScrollingEnabled(stgrec,false);
+
+                StageRecycle stageRecycle = new StageRecycle(activity,mapcode,stid,posit);
+
+                stgrec.setAdapter(stageRecycle);
+
                 battle.setOnClickListener(new SingleClick() {
                     @Override
                     public void onSingleClick(View v) {
-                        Intent intent = new Intent(activity, BattleSimulation.class);
+                        Intent intent = new Intent(activity, BattlePrepare.class);
                         intent.putExtra("mapcode",mapcode);
                         intent.putExtra("stid",stid);
                         intent.putExtra("stage",posit);
+
+                        RecyclerView.LayoutManager manager = stgrec.getLayoutManager();
+
+                        if(manager != null) {
+                            View row = manager.findViewByPosition(0);
+
+                            if(row != null) {
+                                Spinner star = row.findViewById(R.id.stginfostarr);
+
+                                if(star != null)
+                                    intent.putExtra("selection",star.getSelectedItemPosition());
+                            }
+                        }
+
                         activity.startActivity(intent);
                     }
                 });
@@ -116,14 +140,6 @@ public class StageAdder extends AsyncTask<Void,Integer,Void> {
                 stgscroll.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
                 stgscroll.setFocusable(false);
                 stgscroll.setFocusableInTouchMode(true);
-
-                RecyclerView stgrec = activity.findViewById(R.id.stginforec);
-                stgrec.setLayoutManager(new LinearLayoutManager(activity));
-                ViewCompat.setNestedScrollingEnabled(stgrec,false);
-
-                StageRecycle stageRecycle = new StageRecycle(activity,mapcode,stid,posit);
-
-                stgrec.setAdapter(stageRecycle);
 
                 RecyclerView stgen = activity.findViewById(R.id.stginfoenrec);
                 stgen.setLayoutManager(new LinearLayoutManager(activity));

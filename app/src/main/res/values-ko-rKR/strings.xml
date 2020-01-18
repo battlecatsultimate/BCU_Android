@@ -508,4 +508,9 @@
     <string name="battle_prepare">전투 준비중…</string>
     <string name="unit_info_copied">유닛 이름이 클립보드로 복사되었습니다</string>
     <string name="enem_info_copied">적 이름이 클립보드로 복사되었습니다</string>
+    <string name="battle_preparation">전투 준비</string>
+    <string name="battle_rich">고양이 도령</string>
+    <string name="battle_sniper">스냥이퍼</string>
+    <string name="battle_start">전투 시작</string>
+    <string name="def_set_lineup">Set-Lineup</string>
 </resources>

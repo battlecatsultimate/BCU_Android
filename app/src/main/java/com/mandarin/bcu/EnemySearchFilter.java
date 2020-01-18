@@ -11,10 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.widget.NestedScrollView;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,6 +19,9 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 
@@ -65,7 +64,6 @@ public class EnemySearchFilter extends AppCompatActivity {
     private CheckBox[] attacks = new CheckBox[3];
     private CheckBox[] abilities = new CheckBox[20];
     private ScrollView sc;
-    private NestedScrollView nsc;
     private int[] trid = {R.id.eschchrd,R.id.eschchfl,R.id.eschchbla,R.id.eschchme,R.id.eschchan,R.id.eschchal,R.id.eschchzo,R.id.eschchre,R.id.eschchwh,R.id.eschwit,R.id.escheva,R.id.eschnone};
     private String [] colors = {"1","2","3","4","5","6","7","8","0","10","9",""};
     private int[] atkid = {R.id.eschchld,R.id.eschchom,R.id.eschchmu};
@@ -138,7 +136,6 @@ public class EnemySearchFilter extends AppCompatActivity {
         atkgroupor = findViewById(R.id.eschrgatkor);
         abgroup = findViewById(R.id.eschrgab);
         sc = findViewById(R.id.animsc);
-        nsc = findViewById(R.id.animnscview);
         for(int i = 0;i< trid.length;i++) {
             traits[i] = findViewById(trid[i]);
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && trdraw[i] != -1)
@@ -347,24 +344,6 @@ public class EnemySearchFilter extends AppCompatActivity {
                         StaticStore.ability.add(abilval);
                     else
                         StaticStore.ability.remove(abilval);
-                }
-            });
-
-            nsc.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch(event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            sc.requestDisallowInterceptTouchEvent(true);
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            sc.requestDisallowInterceptTouchEvent(false);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return false;
                 }
             });
 

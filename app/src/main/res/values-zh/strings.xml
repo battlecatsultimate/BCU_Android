@@ -508,4 +508,9 @@
     <string name="battle_prepare">Preparing Battle…</string>
     <string name="unit_info_copied">Unit name has been copied to clipboard</string>
     <string name="enem_info_copied">Enemy name has been copied to clipboard</string>
+    <string name="battle_preparation">Battle Preparation</string>
+    <string name="battle_rich">Rich</string>
+    <string name="battle_sniper">Sniper</string>
+    <string name="battle_start">Start Battle</string>
+    <string name="def_set_lineup">Set-Lineup</string>
 </resources>

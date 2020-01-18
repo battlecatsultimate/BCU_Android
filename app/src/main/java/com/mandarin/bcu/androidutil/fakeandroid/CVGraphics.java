@@ -82,21 +82,6 @@ public class CVGraphics implements FakeGraphics {
     }
 
     @Override
-    public void colRect(int x, int y, int w, int h, int r, int g, int b, int... a) {
-        int a1 = a.length != 0 ? a[0] : 255;
-
-        int rgba = Color.argb(a1,r,g,b);
-
-        cp.reset();
-
-        cp.setColor(rgba);
-
-        cp.setStyle(Paint.Style.FILL);
-
-        c.drawRect(x,y,x+w,y+h,cp);
-    }
-
-    @Override
     public void drawImage(FakeImage bimg, double x, double y) {
         Bitmap b = (Bitmap)bimg.bimg();
 
@@ -225,22 +210,23 @@ public class CVGraphics implements FakeGraphics {
     }
 
     @Override
-    public void setComposite(int mode, int... para) {
+    public void setComposite(int mode, int p0, int p1) {
+        int alpha = p0;
+
+        if(alpha < 0) alpha = 0;
+
+        if(alpha > 255) alpha = 255;
+
         if(mode == DEF) {
             bp.setXfermode(src);
             bp.setAlpha(255);
         } else if(mode == TRANS) {
             bp.setXfermode(src);
 
-            int alpha = para.length != 0 ? para[0] > 255 ? 255 : para[0] : 255;
-
             bp.setAlpha(alpha);
         } else if(mode == BLEND) {
-            int alpha = para.length != 0 ? para[0] > 255 ? 255 : para[0] : 255;
 
-            int m = para.length > 1 ? para[1] : 0;
-
-            switch (m) {
+            switch (p1) {
                 case 0:
                     bp.setXfermode(src);
                     bp.setAlpha(alpha);
@@ -270,6 +256,25 @@ public class CVGraphics implements FakeGraphics {
         m.preTranslate((float)x,(float)y);
 
         c.setMatrix(m);
+    }
+
+    @Override
+    public void colRect(int x, int y, int w, int h, int r, int g, int b, int a) {
+        int a1 = a;
+
+        if(a1 < 0) a1 = 0;
+
+        if(a1 > 255) a1 = 255;
+
+        int rgba = Color.argb(a1,r,g,b);
+
+        cp.reset();
+
+        cp.setColor(rgba);
+
+        cp.setStyle(Paint.Style.FILL);
+
+        c.drawRect(x,y,x+w,y+h,cp);
     }
 
     @Override

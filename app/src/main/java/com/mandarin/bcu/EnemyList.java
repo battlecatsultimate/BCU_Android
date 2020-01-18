@@ -8,16 +8,17 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.mandarin.bcu.androidutil.FilterEntity;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -27,6 +28,7 @@ import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder;
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import common.system.fake.ImageBuilder;
 
@@ -99,11 +101,11 @@ public class EnemyList extends AppCompatActivity {
         super.onActivityResult(requestCode,resultCode,data);
 
         if(resultCode == Activity.RESULT_OK) {
-            EditText schname = findViewById(R.id.enemlistschname);
+            TextInputEditText schname = findViewById(R.id.enemlistschname);
 
             FilterEntity filterEntity;
             
-            if(!schname.getText().toString().isEmpty())
+            if(!Objects.requireNonNull(schname.getText()).toString().isEmpty())
                 filterEntity = new FilterEntity(StaticStore.emnumber,schname.getText().toString());
             else
                 filterEntity = new FilterEntity(StaticStore.emnumber);

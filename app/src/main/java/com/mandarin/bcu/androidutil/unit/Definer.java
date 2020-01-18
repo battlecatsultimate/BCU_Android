@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
@@ -73,6 +74,8 @@ public class Definer {
                     PCoin.read();
                     Combo.readFile();
                     StaticStore.root = 1;
+
+                    System.out.println(StaticStore.unitnumber);
                 }
 
                 StaticStore.units = Pack.def.us.ulist.getList();

@@ -4,9 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +19,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.UnitInfo;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -36,16 +37,16 @@ import common.battle.BasisSet;
 import common.util.unit.Form;
 
 public class LUUnitSetting extends Fragment {
-    View view;
-    LineUpView line;
+    private View view;
+    private LineUpView line;
     private int [] pcoin;
     private int [] zeros = {0, 0, 0, 0, 0, 0};
 
     private int fid = 0;
 
-    Handler handler = new Handler();
+    private Handler handler = new Handler();
 
-    Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if(StaticStore.updateForm) {
@@ -92,6 +93,12 @@ public class LUUnitSetting extends Fragment {
         TextView atk = view.findViewById(R.id.lineupunitatk);
         Button chform = view.findViewById(R.id.lineupchform);
         TextView levt = view.findViewById(R.id.lineupunitlevt);
+
+        if(line == null) {
+            if(getActivity() == null) return;
+
+            line = getActivity().findViewById(R.id.lineupView);
+        }
 
 
         if(StaticStore.position[0] == -1)
@@ -425,9 +432,9 @@ public class LUUnitSetting extends Fragment {
                         } else {
                             t.setChecked(true);
                         }
-
-                        line.invalidate();
                     }
+
+                    line.invalidate();
                 }
             });
         }

@@ -71,6 +71,7 @@
             android:id="@+id/eneminfscroll"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,42 +96,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/nestedScrollView2"
-                    android:layout_width="0dp"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/eneminftable"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fillViewport="true"
+                    android:layout_marginTop="16dp"
+                    android:nestedScrollingEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/eanimanim">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/eneminftable"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:focusableInTouchMode="true"
-                            android:overScrollMode="never"
-                            app:layout_constrainedWidth="false" />
-                    </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
+                    app:layout_constraintTop_toBottomOf="@+id/eanimanim" />
 
                 <TextView
                     android:id="@+id/eneminfexptx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/enem_info_exp"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nestedScrollView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/eneminftable" />
 
                 <View
                     android:id="@+id/enemviewtop"
@@ -172,7 +159,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar4"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintVertical_bias="1.0"
+            android:theme="?attr/TILtheme">
 
             <ScrollView
                 android:id="@+id/enemtreascroll"

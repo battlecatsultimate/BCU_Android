@@ -18,16 +18,22 @@ import common.util.unit.Enemy;
 import common.util.unit.Form;
 
 @SuppressLint("ViewConstructor")
-public class BattleView extends View implements BattleBox {
+public class BattleView extends View implements BattleBox, BattleBox.OuterBox {
     public BBPainter painter;
+
     public boolean initialized = false;
+    public boolean paused = false;
+
+    public int spd = 0;
+    public int upd = 0;
+
     private CVGraphics cv;
     private Updater updater;
 
-    public BattleView(Context context, OuterBox box, BattleField field, int type, boolean axis) {
+    public BattleView(Context context, BattleField field, int type, boolean axis) {
         super(context);
 
-        this.painter = type == 0 ? new BBPainter(box,field,this) : new BBCtrl(box,(SBCtrl) field,this);
+        this.painter = type == 0 ? new BBPainter(this,field,this) : new BBCtrl(this,(SBCtrl) field,this);
 
         ImgCore.ref = axis;
 
@@ -63,7 +69,20 @@ public class BattleView extends View implements BattleBox {
 
             painter.draw(cv);
 
-            painter.bf.update();
+            if(!paused) {
+                if(spd > 0) {
+                    for (int i = 0; i < Math.pow(2, spd); i++)
+                        painter.bf.update();
+                } else if(spd < 0) {
+                    if((int)(upd/Math.pow(2,-spd)) == 1) {
+                        painter.bf.update();
+                        upd = 0;
+                    } else {
+                        upd++;
+                    }
+                } else
+                    painter.bf.update();
+            }
         }
     }
 
@@ -74,10 +93,21 @@ public class BattleView extends View implements BattleBox {
         removeCallbacks(updater);
     }
 
+    @Override
+    public int getSpeed() {
+        return spd;
+    }
+
+    @Override
+    public void callBack(Object o) {
+
+    }
+
     private class Updater implements Runnable {
         @Override
         public void run() {
-            invalidate();
+            if(!paused)
+                invalidate();
 
             postDelayed(this,1000L/30L);
         }

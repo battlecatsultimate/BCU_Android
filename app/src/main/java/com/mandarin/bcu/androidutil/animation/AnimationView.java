@@ -47,7 +47,7 @@ public class AnimationView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        h.postDelayed(animation,0);
+        h.postDelayed(animation, 0);
     }
 
     @Override
@@ -68,16 +68,16 @@ public class AnimationView extends SurfaceView implements SurfaceHolder.Callback
             long t;
             long t2;
 
-            if(!stop) {
+            if (!stop) {
                 t2 = System.currentTimeMillis();
 
                 c = holder.lockCanvas();
 
-                p1 = new P((float)getWidth()/2,(float)getHeight()/2);
+                p1 = new P((float) getWidth() / 2, (float) getHeight() / 2);
 
                 if (c == null) return;
 
-                CVGraphics graphics = new CVGraphics(c, p,bp,false);
+                CVGraphics graphics = new CVGraphics(c, p, bp, false);
 
                 try {
                     synchronized (holder) {
@@ -88,12 +88,12 @@ public class AnimationView extends SurfaceView implements SurfaceHolder.Callback
 
                         t = System.currentTimeMillis();
 
-                        long d = (1000/30)-(t-t2);
+                        long d = (1000 / 30) - (t - t2);
 
-                        if(d > 0)
-                            h.postDelayed(this,d);
+                        if (d > 0)
+                            h.postDelayed(this, d);
                         else
-                            h.postDelayed(this,0);
+                            h.postDelayed(this, 0);
                     }
                 } finally {
                     holder.unlockCanvasAndPost(c);

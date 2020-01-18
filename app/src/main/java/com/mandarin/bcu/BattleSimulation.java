@@ -3,25 +3,15 @@ package com.mandarin.bcu;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
-import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.battle.BattleView;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.mandarin.bcu.androidutil.battle.asynchs.BAdder;
-import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys;
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
-import com.mandarin.bcu.util.page.BattleBox;
 
-import common.battle.BasisSet;
-import common.battle.SBCtrl;
 import common.system.P;
-import common.util.stage.MapColc;
-import common.util.stage.Stage;
-import common.util.stage.StageMap;
 
 public class BattleSimulation extends AppCompatActivity {
 
@@ -38,9 +28,9 @@ public class BattleSimulation extends AppCompatActivity {
             ed.apply();
         } else {
             if(!shared.getBoolean("theme",false)) {
-                setTheme(R.style.AppTheme_night);
+                setTheme(R.style.AppTheme_designNight);
             } else {
-                setTheme(R.style.AppTheme_day);
+                setTheme(R.style.AppTheme_designDay);
             }
         }
 
@@ -56,48 +46,10 @@ public class BattleSimulation extends AppCompatActivity {
             int mapcode = bundle.getInt("mapcode");
             int stid = bundle.getInt("stid");
             int posit = bundle.getInt("stage");
+            int star = bundle.getInt("star");
+            int item = bundle.getInt("item");
 
-            LinearLayout layout = findViewById(R.id.battlelayout);
-
-            MapColc mc = StaticStore.map.get(mapcode);
-
-            if(mc == null)
-                return;
-
-            StageMap stm = mc.maps[stid];
-
-            if(stm == null)
-                return;
-
-            Stage stg = stm.list.get(posit);
-
-            if(stg == null)
-                return;
-
-            SBCtrl ctrl = new SBCtrl(new AndroidKeys(),stg,0,BasisSet.current.sele,new int [] {0},0L);
-
-            BattleBox.OuterBox outerBox = new BattleBox.OuterBox() {
-                @Override
-                public int getSpeed() {
-                    return 0;
-                }
-
-                @Override
-                public void callBack(Object o) {
-
-                }
-            };
-
-            boolean axis = shared.getBoolean("Axis",true);
-
-            BattleView view = new BattleView(this,outerBox,ctrl,1,axis);
-            view.initialized = false;
-            view.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-            view.setId(R.id.battleView);
-            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            layout.addView(view);
-
-            new BAdder(this).execute();
+            new BAdder(this,mapcode,stid,posit,star,item).execute();
         }
     }
 

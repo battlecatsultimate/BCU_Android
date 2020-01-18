@@ -7,18 +7,19 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -75,30 +76,36 @@ public class UnitInfo extends AppCompatActivity {
             StaticStore.unitinfreset = false;
         }
 
-        ScrollView scrollView = findViewById(R.id.unitinfscroll);
-        scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-        scrollView.setFocusable(false);
-        scrollView.setFocusableInTouchMode(true);
-        scrollView.setVisibility(View.GONE);
-
         ConstraintLayout treasuretab = findViewById(R.id.treasurelayout);
         treasuretab.setVisibility(View.GONE);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if(shared.getBoolean("Lay_Land",false)) {
+                ScrollView scrollView = findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.GONE);
+
                 ViewPager unittable = findViewById(R.id.unitinftable);
                 unittable.setFocusable(false);
                 unittable.requestFocusFromTouch();
             } else {
+                NestedScrollView scrollView = findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.GONE);
+
                 RecyclerView recyclerView = findViewById(R.id.unitinfrec);
                 recyclerView.requestFocusFromTouch();
             }
         } else {
             if(shared.getBoolean("Lay_Port",false)) {
+                ScrollView scrollView = findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.GONE);
+
                 ViewPager unittable = findViewById(R.id.unitinftable);
                 unittable.setFocusable(false);
                 unittable.requestFocusFromTouch();
             } else {
+                NestedScrollView scrollView = findViewById(R.id.unitinfscroll);
+                scrollView.setVisibility(View.GONE);
+
                 RecyclerView recyclerView = findViewById(R.id.unitinfrec);
                 recyclerView.requestFocusFromTouch();
             }
