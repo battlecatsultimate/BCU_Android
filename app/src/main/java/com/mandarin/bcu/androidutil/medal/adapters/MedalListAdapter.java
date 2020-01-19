@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -29,28 +30,28 @@ public class MedalListAdapter extends ArrayAdapter<String> {
     private final Activity activity;
     private int num;
     private int height;
-    
+
     private float imgwh;
 
-    public MedalListAdapter(Activity activity, int num, int width,float imgwh, String [] lines) {
-        super(activity,R.layout.medal_layout,lines);
+    public MedalListAdapter(Activity activity, int num, int width, float imgwh, String[] lines) {
+        super(activity, R.layout.medal_layout, lines);
         this.activity = activity;
         this.num = num;
         this.imgwh = imgwh;
 
-        height = width/num - StaticStore.dptopx(4f,activity);
+        height = width / num - StaticStore.dptopx(4f, activity);
     }
-    
+
     private static class ViewHolder {
         LinearLayout layout;
         List<ImageView> icons;
-        
+
         private ViewHolder(View view) {
             layout = view.findViewById(R.id.medallinear);
             icons = new ArrayList<>();
         }
     }
-    
+
     @NonNull
     @Override
     public View getView(int position, View view, @NonNull ViewGroup group) {
@@ -82,8 +83,8 @@ public class MedalListAdapter extends ArrayAdapter<String> {
                 icon.setBackground(activity.getDrawable(R.drawable.image_button_circular));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
                 params.height = height;
-                params.setMarginStart(StaticStore.dptopx(2f,activity));
-                params.setMarginEnd(StaticStore.dptopx(2f,activity));
+                params.setMarginStart(StaticStore.dptopx(2f, activity));
+                params.setMarginEnd(StaticStore.dptopx(2f, activity));
                 icon.setLayoutParams(params);
 
                 icon.setImageBitmap(b);
@@ -104,9 +105,9 @@ public class MedalListAdapter extends ArrayAdapter<String> {
                         TextView name = dialog.findViewById(R.id.medalname);
                         TextView desc = dialog.findViewById(R.id.medaldesc);
 
-                        icon.setImageBitmap(StaticStore.getResizeb(StaticStore.medals.get(posit+jj),activity,imgwh));
-                        name.setText(StaticStore.MEDNAME.getCont(posit+jj));
-                        desc.setText(StaticStore.MEDEXP.getCont(posit+jj));
+                        icon.setImageBitmap(StaticStore.getResizeb(StaticStore.medals.get(posit + jj), activity, imgwh));
+                        name.setText(StaticStore.MEDNAME.getCont(posit + jj));
+                        desc.setText(StaticStore.MEDEXP.getCont(posit + jj));
 
                         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                         lp.copyFrom(dialog.getWindow().getAttributes());

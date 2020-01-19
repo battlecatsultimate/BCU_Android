@@ -3,11 +3,6 @@ package com.mandarin.bcu.androidutil.stage.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +12,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.ImageViewer;
 import com.mandarin.bcu.R;
@@ -40,13 +41,13 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
     private final int stid;
     private final int posit;
     private final getStrings s;
-    private final int [] CASTLES = {45,44,43,42,41,40,39,38,37,36,35,34,32,31,30,29,28,27,26,25,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0,46,47,45,47,47,45,45};
+    private final int[] CASTLES = {45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 32, 31, 30, 29, 28, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 46, 47, 45, 47, 47, 45, 45};
 
-    private List<Integer> wc = Arrays.asList(3,4,5,10,12);
-    private List<Integer> ec = Arrays.asList(0,1,2,9);
-    private List<Integer> sc = Arrays.asList(6,7,8);
+    private List<Integer> wc = Arrays.asList(3, 4, 5, 10, 12);
+    private List<Integer> ec = Arrays.asList(0, 1, 2, 9);
+    private List<Integer> sc = Arrays.asList(6, 7, 8);
 
-    public StageRecycle(Activity activity,int mapcode, int stid, int posit) {
+    public StageRecycle(Activity activity, int mapcode, int stid, int posit) {
         this.activity = activity;
         this.mapcode = mapcode;
         this.stid = stid;
@@ -113,7 +114,7 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.stage_info_layout,viewGroup,false);
+        View row = LayoutInflater.from(activity).inflate(R.layout.stage_info_layout, viewGroup, false);
 
         return new ViewHolder(row);
     }
@@ -164,18 +165,18 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
 
                 Limit l = st.getLim(position);
 
-                if(none(l)) {
+                if (none(l)) {
                     viewHolder.limitNone.setVisibility(View.VISIBLE);
                     viewHolder.limitscroll.setVisibility(View.GONE);
                 } else {
                     viewHolder.limitscroll.setVisibility(View.VISIBLE);
                     viewHolder.limitNone.setVisibility(View.GONE);
 
-                    if(posit == l.sid || l.sid == -1) {
-                        if(viewHolder.star.getSelectedItemPosition() == l.star || l.star == -1) {
+                    if (posit == l.sid || l.sid == -1) {
+                        if (viewHolder.star.getSelectedItemPosition() == l.star || l.star == -1) {
                             viewHolder.limitrec.setLayoutManager(new LinearLayoutManager(activity));
-                            ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec,false);
-                            LimitRecycle limitRecycle = new LimitRecycle(activity,l);
+                            ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec, false);
+                            LimitRecycle limitRecycle = new LimitRecycle(activity, l);
 
                             viewHolder.limitrec.setAdapter(limitRecycle);
                         }
@@ -193,7 +194,7 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
             viewHolder.star.setSelection(StaticStore.stageSpinner);
         }
 
-        if(st.info != null) {
+        if (st.info != null) {
             if (mapcode == 0 || mapcode == 13)
                 viewHolder.xp.setText(s.getXP(st.info.xp, t, true));
             else
@@ -202,14 +203,14 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
             viewHolder.xp.setText("0");
         }
 
-        if(st.info != null)
+        if (st.info != null)
             viewHolder.energy.setText(String.valueOf(st.info.energy));
         else
             viewHolder.energy.setText("0");
 
         viewHolder.health.setText(String.valueOf(st.health));
 
-        if(st.info != null)
+        if (st.info != null)
             viewHolder.difficulty.setText(s.getDifficulty(st.info.diff));
         else
             viewHolder.difficulty.setText(R.string.unit_info_t_none);
@@ -279,7 +280,7 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
             }
         });
 
-        if(st.info != null) {
+        if (st.info != null) {
             if (st.info.drop.length > 0) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -317,18 +318,18 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
 
         Limit l = st.getLim(viewHolder.star.getSelectedItemPosition());
 
-        if(none(l)) {
+        if (none(l)) {
             viewHolder.limitscroll.setVisibility(View.GONE);
             viewHolder.limitNone.setVisibility(View.VISIBLE);
         } else {
             viewHolder.limitscroll.setVisibility(View.VISIBLE);
             viewHolder.limitNone.setVisibility(View.GONE);
 
-            if(posit == l.sid || l.sid == -1) {
-                if(viewHolder.star.getSelectedItemPosition() == l.star || l.star == -1) {
+            if (posit == l.sid || l.sid == -1) {
+                if (viewHolder.star.getSelectedItemPosition() == l.star || l.star == -1) {
                     viewHolder.limitrec.setLayoutManager(new LinearLayoutManager(activity));
-                    ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec,false);
-                    LimitRecycle limitRecycle = new LimitRecycle(activity,l);
+                    ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec, false);
+                    LimitRecycle limitRecycle = new LimitRecycle(activity, l);
 
                     viewHolder.limitrec.setAdapter(limitRecycle);
                 }
@@ -342,17 +343,17 @@ public class StageRecycle extends RecyclerView.Adapter<StageRecycle.ViewHolder> 
     }
 
     private String number(int n) {
-        if(0 <= n && n < 10) {
-            return "00"+n;
-        } else if(10 <= n && n < 99) {
-            return "0"+n;
+        if (0 <= n && n < 10) {
+            return "00" + n;
+        } else if (10 <= n && n < 99) {
+            return "0" + n;
         } else {
             return String.valueOf(n);
         }
     }
 
     private boolean none(Limit l) {
-        if(l == null) return true;
+        if (l == null) return true;
 
         boolean b0 = l.line == 0;
         boolean b1 = l.min == 0;

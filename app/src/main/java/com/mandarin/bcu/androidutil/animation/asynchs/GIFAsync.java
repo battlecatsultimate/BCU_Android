@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.view.View;
@@ -27,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class GIFAsync extends AsyncTask<Void,Void,Void> {
+public class GIFAsync extends AsyncTask<Void, Void, Void> {
     private final WeakReference<AnimationCView> weakReference;
     private final WeakReference<Activity> activityWeakReference;
     private int id = -1;
@@ -55,22 +53,22 @@ public class GIFAsync extends AsyncTask<Void,Void,Void> {
         Activity c = activityWeakReference.get();
         AnimationCView cView = weakReference.get();
 
-        if(c == null || cView == null) return null;
+        if (c == null || cView == null) return null;
 
         c.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        byte [] buffer = generateGIF();
+        byte[] buffer = generateGIF();
 
-        if(buffer == null) {
+        if (buffer == null) {
             StaticStore.frames.clear();
             StaticStore.gifFrame = 0;
             return null;
         }
 
-        String path = Environment.getExternalStorageDirectory().getPath()+"/BCU/gif/";
+        String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/gif/";
         File f = new File(path);
 
-        if(!f.exists())
+        if (!f.exists())
             f.mkdirs();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
@@ -78,20 +76,20 @@ public class GIFAsync extends AsyncTask<Void,Void,Void> {
 
         String name;
 
-        if(id != -1) {
+        if (id != -1) {
             if (form != -1) {
-                name = dateFormat.format(date)+"-U-"+id+"-"+form + ".gif";
+                name = dateFormat.format(date) + "-U-" + id + "-" + form + ".gif";
             } else {
-                name = dateFormat.format(date)+"-E-"+id + ".gif";
+                name = dateFormat.format(date) + "-E-" + id + ".gif";
             }
         } else {
-            name = dateFormat.format(date)+".gif";
+            name = dateFormat.format(date) + ".gif";
         }
 
-        File g = new File(path,name);
+        File g = new File(path, name);
 
         try {
-            if(!g.exists())
+            if (!g.exists())
                 g.createNewFile();
 
             FileOutputStream fos = new FileOutputStream(g);
@@ -99,7 +97,7 @@ public class GIFAsync extends AsyncTask<Void,Void,Void> {
             fos.write(buffer);
             fos.close();
 
-            new MediaScanner(c,g);
+            new MediaScanner(c, g);
 
             done = true;
         } catch (IOException e) {
@@ -116,38 +114,38 @@ public class GIFAsync extends AsyncTask<Void,Void,Void> {
         Activity c = activityWeakReference.get();
         AnimationCView cView = weakReference.get();
 
-        if(c == null || cView == null) return;
+        if (c == null || cView == null) return;
 
-        SharedPreferences shared = c.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = c.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             c.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             c.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             c.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         cView.gif.setVisibility(View.GONE);
 
-        String path = Environment.getExternalStorageDirectory().getPath()+"/BCU/gif/";
+        String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/gif/";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
         Date date = new Date();
 
-        String name = dateFormat.format(date)+".gif";
+        String name = dateFormat.format(date) + ".gif";
 
-        if(!keepDoing) {
-            File f = new File(path,name);
+        if (!keepDoing) {
+            File f = new File(path, name);
 
-            if(f.exists())
+            if (f.exists())
                 f.delete();
         }
 
-        if(done && keepDoing)
-            Toast.makeText(c,c.getText(R.string.anim_png_success).toString().replace("-",path+name),Toast.LENGTH_SHORT).show();
-        else if(!keepDoing)
-            Toast.makeText(c,R.string.anim_gif_cancel,Toast.LENGTH_SHORT).show();
+        if (done && keepDoing)
+            Toast.makeText(c, c.getText(R.string.anim_png_success).toString().replace("-", path + name), Toast.LENGTH_SHORT).show();
+        else if (!keepDoing)
+            Toast.makeText(c, R.string.anim_gif_cancel, Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(c,R.string.anim_png_fail,Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, R.string.anim_png_fail, Toast.LENGTH_SHORT).show();
 
         StaticStore.gifisSaving = false;
     }
@@ -158,7 +156,7 @@ public class GIFAsync extends AsyncTask<Void,Void,Void> {
         encoder.setFrameRate(30);
         encoder.start(bos);
         for (Bitmap bitmap : StaticStore.frames) {
-            if(keepDoing) {
+            if (keepDoing) {
                 encoder.addFrame(bitmap);
                 StaticStore.gifFrame--;
             } else {

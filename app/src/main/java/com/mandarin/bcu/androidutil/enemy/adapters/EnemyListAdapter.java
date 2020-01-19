@@ -2,13 +2,14 @@ package com.mandarin.bcu.androidutil.enemy.adapters;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -19,8 +20,8 @@ public class EnemyListAdapter extends ArrayAdapter<String> {
     private final String[] name;
     private final ArrayList<Integer> location;
 
-    public EnemyListAdapter(Activity activity, String [] name, ArrayList<Integer> location) {
-        super(activity, R.layout.listlayout,name);
+    public EnemyListAdapter(Activity activity, String[] name, ArrayList<Integer> location) {
+        super(activity, R.layout.listlayout, name);
         this.name = name;
         this.location = location;
     }
@@ -40,9 +41,9 @@ public class EnemyListAdapter extends ArrayAdapter<String> {
         View row;
         ViewHolder holder;
 
-        if(view == null) {
+        if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            row = inflater.inflate(R.layout.listlayout,parent,false);
+            row = inflater.inflate(R.layout.listlayout, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
@@ -51,11 +52,11 @@ public class EnemyListAdapter extends ArrayAdapter<String> {
         }
 
         holder.title.setText(name[position]);
-        if(StaticStore.enemies.get(location.get(position)).anim.edi.getImg() != null)
-            holder.img.setImageBitmap(StaticStore.getResizeb((Bitmap) StaticStore.enemies.get(location.get(position)).anim.edi.getImg().bimg(),getContext(),85f,32f));
+        if (StaticStore.enemies.get(location.get(position)).anim.edi.getImg() != null)
+            holder.img.setImageBitmap(StaticStore.getResizeb((Bitmap) StaticStore.enemies.get(location.get(position)).anim.edi.getImg().bimg(), getContext(), 85f, 32f));
         else
-            holder.img.setImageBitmap(StaticStore.empty(getContext(),85f,32f));
-        holder.img.setPadding(StaticStore.dptopx(8f,getContext()), StaticStore.dptopx(12f,getContext()),0,StaticStore.dptopx(12f,getContext()));
+            holder.img.setImageBitmap(StaticStore.empty(getContext(), 85f, 32f));
+        holder.img.setPadding(StaticStore.dptopx(8f, getContext()), StaticStore.dptopx(12f, getContext()), 0, StaticStore.dptopx(12f, getContext()));
 
         return row;
     }

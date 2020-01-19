@@ -36,8 +36,8 @@ import java.util.TreeSet;
 import common.system.fake.ImageBuilder;
 
 public class CheckUpdateScreen extends AppCompatActivity {
-    private final String [] LIB_REQUIRED = StaticStore.LIBREQ;
-    private final String PATH = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/apk/";
+    private final String[] LIB_REQUIRED = StaticStore.LIBREQ;
+    private final String PATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/apk/";
     private String path;
     private boolean config = false;
 
@@ -45,88 +45,88 @@ public class CheckUpdateScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed = shared.edit();
-        if(!shared.contains("initial")) {
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
-            ed.putBoolean("frame",true);
-            ed.putBoolean("apktest",false);
-            ed.putInt("default_level",50);
-            ed.putInt("Language",0);
-            ed.putInt("Orientation",0);
-            ed.putBoolean("Lay_Port",true);
-            ed.putBoolean("Lay_Land",false);
+        if (!shared.contains("initial")) {
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
+            ed.putBoolean("frame", true);
+            ed.putBoolean("apktest", false);
+            ed.putInt("default_level", 50);
+            ed.putInt("Language", 0);
+            ed.putInt("Orientation", 0);
+            ed.putBoolean("Lay_Port", true);
+            ed.putBoolean("Lay_Land", false);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(!shared.contains("apktest")) {
-            ed.putBoolean("apktest",true);
+        if (!shared.contains("apktest")) {
+            ed.putBoolean("apktest", true);
             ed.apply();
         }
 
-        if(!shared.contains("default_level")) {
-            ed.putInt("default_level",50);
+        if (!shared.contains("default_level")) {
+            ed.putInt("default_level", 50);
             ed.apply();
         }
 
-        if(!shared.contains("apktest")) {
-            ed.putBoolean("apktest",false);
+        if (!shared.contains("apktest")) {
+            ed.putBoolean("apktest", false);
             ed.apply();
         }
 
-        if(!shared.contains("Language")) {
-            ed.putInt("Language",0);
+        if (!shared.contains("Language")) {
+            ed.putInt("Language", 0);
             ed.apply();
         }
 
-        if(!shared.contains("frame")) {
-            ed.putBoolean("frame",true);
+        if (!shared.contains("frame")) {
+            ed.putBoolean("frame", true);
             ed.apply();
         }
 
-        if(!shared.contains("Orientation")) {
-            ed.putInt("Orientation",0);
+        if (!shared.contains("Orientation")) {
+            ed.putInt("Orientation", 0);
             ed.apply();
         }
 
-        if(!shared.contains("Lay_Port")) {
-            ed.putBoolean("Lay_Port",false);
+        if (!shared.contains("Lay_Port")) {
+            ed.putBoolean("Lay_Port", false);
             ed.apply();
         }
 
-        if(!shared.contains("Lay_Land")) {
-            ed.putBoolean("Lay_Land",false);
+        if (!shared.contains("Lay_Land")) {
+            ed.putBoolean("Lay_Land", false);
         }
 
-        if(!shared.contains("Skip_Text")) {
-            ed.putBoolean("Skip_Text",false);
+        if (!shared.contains("Skip_Text")) {
+            ed.putBoolean("Skip_Text", false);
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         Thread.setDefaultUncaughtExceptionHandler(new ErrorLogWriter(StaticStore.LOGPATH));
 
         setContentView(R.layout.activity_check_update_screen);
 
-        if(MainActivity.isRunning) finish();
+        if (MainActivity.isRunning) finish();
 
         deleter(new File(PATH));
 
         Intent result = getIntent();
 
-        if(result.getExtras() != null) {
+        if (result.getExtras() != null) {
             Bundle extra = result.getExtras();
 
             config = extra.getBoolean("Config");
@@ -138,20 +138,20 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
         retry.setVisibility(View.GONE);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        path = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU";
+        path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU";
 
         ImageBuilder.builder = new BMBuilder();
 
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connectivityManager.getActiveNetworkInfo() != null) {
+                if (connectivityManager.getActiveNetworkInfo() != null) {
                     retry.setVisibility(View.GONE);
                     mainprog.setVisibility(View.VISIBLE);
                     boolean lang = false;
-                    CheckApk checkApk = new CheckApk(path,lang,CheckUpdateScreen.this,cando());
+                    CheckApk checkApk = new CheckApk(path, lang, CheckUpdateScreen.this, cando());
                     checkApk.execute();
                 } else {
                     Toast.makeText(CheckUpdateScreen.this, R.string.needconnect, Toast.LENGTH_SHORT).show();
@@ -159,20 +159,20 @@ public class CheckUpdateScreen extends AppCompatActivity {
             }
         });
 
-        if(connectivityManager.getActiveNetworkInfo() != null) {
-            if(!config) {
+        if (connectivityManager.getActiveNetworkInfo() != null) {
+            if (!config) {
                 boolean lang = false;
                 CheckApk checkApk = new CheckApk(path, lang, this, cando());
                 checkApk.execute();
             } else {
                 boolean lang = false;
-                CheckApk checkApk = new CheckApk(path,lang,this,cando(),config);
+                CheckApk checkApk = new CheckApk(path, lang, this, cando(), config);
                 checkApk.execute();
             }
         } else {
-            if(cando()) {
+            if (cando()) {
                 boolean lang = false;
-                new CheckApk(path,lang,this,cando(),config).execute();
+                new CheckApk(path, lang, this, cando(), config).execute();
 
             } else {
                 mainprog.setVisibility(View.GONE);
@@ -187,9 +187,9 @@ public class CheckUpdateScreen extends AppCompatActivity {
         String infopath = path + "/files/info/";
         String filename = "info_android.ini";
 
-        File f = new File(infopath,filename);
+        File f = new File(infopath, filename);
 
-        if(f.exists()) {
+        if (f.exists()) {
             try {
                 String line;
 
@@ -206,8 +206,8 @@ public class CheckUpdateScreen extends AppCompatActivity {
                 try {
                     Set<String> libs = new TreeSet<>(Arrays.asList(lines.get(2).split("=")[1].split(",")));
 
-                    for(String s : LIB_REQUIRED)
-                        if(!libs.contains(s))
+                    for (String s : LIB_REQUIRED)
+                        if (!libs.contains(s))
                             return false;
 
                     return true;
@@ -228,8 +228,8 @@ public class CheckUpdateScreen extends AppCompatActivity {
     }
 
     private void deleter(File f) {
-        if(f.isDirectory())
-            for(File g : f.listFiles())
+        if (f.isDirectory())
+            for (File g : f.listFiles())
                 deleter(g);
         else
             f.delete();
@@ -243,7 +243,7 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 }

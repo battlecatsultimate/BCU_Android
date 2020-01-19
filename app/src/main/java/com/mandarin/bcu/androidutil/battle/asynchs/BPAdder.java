@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.BattleSimulation;
 import com.mandarin.bcu.LineUpScreen;
 import com.mandarin.bcu.R;
@@ -69,7 +70,7 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
     public void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView setname = activity.findViewById(R.id.lineupname);
         Spinner star = activity.findViewById(R.id.battlestar);
@@ -82,9 +83,9 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
 
         View v = activity.findViewById(R.id.view);
 
-        setDisappear(setname,star,equip,sniper,rich,start,layout,stname);
+        setDisappear(setname, star, equip, sniper, rich, start, layout, stname);
 
-        if(v != null)
+        if (v != null)
             setDisappear(v);
     }
 
@@ -92,7 +93,7 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
         new Definer().define(activity);
 
@@ -143,10 +144,10 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
 
         StaticStore.sets = BasisSet.list;
 
-        SharedPreferences preferences = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        int set = preferences.getInt("equip_set",0);
-        int lu = preferences.getInt("equip_lu",0);
+        int set = preferences.getInt("equip_set", 0);
+        int lu = preferences.getInt("equip_lu", 0);
 
         BasisSet.current = StaticStore.sets.get(set);
         BasisSet.current.sele = BasisSet.current.lb.get(lu);
@@ -161,7 +162,7 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
     protected void onProgressUpdate(Integer... results) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView loadt = activity.findViewById(R.id.preparet);
 
@@ -185,15 +186,15 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
 
                 MapColc mc = MapColc.MAPS.get(mapcode);
 
-                if(mc == null) return;
+                if (mc == null) return;
 
-                if(stid >= mc.maps.length) return;
+                if (stid >= mc.maps.length) return;
 
                 StageMap stm = mc.maps[stid];
 
-                if(stm == null) return;
+                if (stm == null) return;
 
-                if(posit >= stm.list.size()) return;
+                if (posit >= stm.list.size()) return;
 
                 Stage st = stm.list.get(posit);
 
@@ -201,30 +202,30 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
 
                 ArrayList<String> stars = new ArrayList<>();
 
-                for(int i = 0; i < stm.stars.length; i++) {
-                    String s = (i+1)+" ("+stm.stars[i]+" %)";
+                for (int i = 0; i < stm.stars.length; i++) {
+                    String s = (i + 1) + " (" + stm.stars[i] + " %)";
                     stars.add(s);
                 }
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(activity,R.layout.spinneradapter,stars);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(activity, R.layout.spinneradapter, stars);
 
                 star.setAdapter(arrayAdapter);
 
-                if(selection < stars.size() && selection >= 0)
+                if (selection < stars.size() && selection >= 0)
                     star.setSelection(selection);
 
                 equip.setOnClickListener(new SingleClick() {
                     @Override
                     public void onSingleClick(View v) {
                         Intent intent = new Intent(activity, LineUpScreen.class);
-                        activity.startActivityForResult(intent,0);
+                        activity.startActivityForResult(intent, 0);
                     }
                 });
 
                 sniper.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked) {
+                        if (isChecked) {
                             item += 2;
                         } else {
                             item -= 2;
@@ -237,7 +238,7 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
                 rich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked) {
+                        if (isChecked) {
                             item += 1;
                         } else {
                             item -= 1;
@@ -251,11 +252,11 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
                     @Override
                     public void onSingleClick(View v) {
                         Intent intent = new Intent(activity, BattleSimulation.class);
-                        intent.putExtra("mapcode",mapcode);
-                        intent.putExtra("stid",stid);
-                        intent.putExtra("stage",posit);
-                        intent.putExtra("star",star.getSelectedItemPosition());
-                        intent.putExtra("item",item);
+                        intent.putExtra("mapcode", mapcode);
+                        intent.putExtra("stid", stid);
+                        intent.putExtra("stage", posit);
+                        intent.putExtra("star", star.getSelectedItemPosition());
+                        intent.putExtra("item", item);
                         activity.startActivity(intent);
                         activity.finish();
                     }
@@ -316,9 +317,19 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
 
                     return true;
                 });
+
+                FloatingActionButton bck = activity.findViewById(R.id.battlebck);
+
+                bck.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.finish();
+                    }
+                });
+
                 break;
             default:
-                Toast.makeText(activity,results[0],Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, results[0], Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -326,7 +337,7 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
     public void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         LineUpView line = activity.findViewById(R.id.lineupView);
         TextView setname = activity.findViewById(R.id.lineupname);
@@ -341,12 +352,12 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
         ProgressBar prog = activity.findViewById(R.id.prepareprog);
         TextView t = activity.findViewById(R.id.preparet);
 
-        setAppear(line,setname,star,equip,sniper,rich,start,layout,stname);
-        setDisappear(prog,t);
+        setAppear(line, setname, star, equip, sniper, rich, start, layout, stname);
+        setDisappear(prog, t);
 
         View v = activity.findViewById(R.id.view);
 
-        if(v != null)
+        if (v != null)
             setAppear(v);
     }
 

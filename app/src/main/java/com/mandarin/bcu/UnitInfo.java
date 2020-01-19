@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,42 +35,42 @@ public class UnitInfo extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed;
-        if(!shared.contains("initial")) {
+        if (!shared.contains("initial")) {
             ed = shared.edit();
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(shared.getBoolean("Lay_Land",false)) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (shared.getBoolean("Lay_Land", false)) {
                 setContentView(R.layout.activity_unit_info);
             } else {
                 setContentView(R.layout.activity_unit_infor);
             }
         } else {
-            if(shared.getBoolean("Lay_Port",true)) {
+            if (shared.getBoolean("Lay_Port", true)) {
                 setContentView(R.layout.activity_unit_info);
             } else {
                 setContentView(R.layout.activity_unit_infor);
             }
         }
-        if(StaticStore.unitinfreset) {
+        if (StaticStore.unitinfreset) {
             StaticStore.unittabposition = 0;
             StaticStore.unitinfreset = false;
         }
@@ -79,9 +78,9 @@ public class UnitInfo extends AppCompatActivity {
         ConstraintLayout treasuretab = findViewById(R.id.treasurelayout);
         treasuretab.setVisibility(View.GONE);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(shared.getBoolean("Lay_Land",false)) {
-                ScrollView scrollView = findViewById(R.id.unitinfscroll);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (shared.getBoolean("Lay_Land", false)) {
+                NestedScrollView scrollView = findViewById(R.id.unitinfscroll);
                 scrollView.setVisibility(View.GONE);
 
                 ViewPager unittable = findViewById(R.id.unitinftable);
@@ -95,8 +94,8 @@ public class UnitInfo extends AppCompatActivity {
                 recyclerView.requestFocusFromTouch();
             }
         } else {
-            if(shared.getBoolean("Lay_Port",false)) {
-                ScrollView scrollView = findViewById(R.id.unitinfscroll);
+            if (shared.getBoolean("Lay_Port", false)) {
+                NestedScrollView scrollView = findViewById(R.id.unitinfscroll);
                 scrollView.setVisibility(View.GONE);
 
                 ViewPager unittable = findViewById(R.id.unitinftable);
@@ -128,7 +127,7 @@ public class UnitInfo extends AppCompatActivity {
         Intent result = getIntent();
         Bundle extra = result.getExtras();
 
-        if(extra != null) {
+        if (extra != null) {
             int id = extra.getInt("ID");
             getStrings s = new getStrings(this);
             unittitle.setText(s.getTitle(StaticStore.units.get(id).forms[0]));
@@ -138,25 +137,25 @@ public class UnitInfo extends AppCompatActivity {
             anim.setOnClickListener(new SingleClick() {
                 @Override
                 public void onSingleClick(View v) {
-                    Intent intent = new Intent(UnitInfo.this,ImageViewer.class);
+                    Intent intent = new Intent(UnitInfo.this, ImageViewer.class);
 
                     StaticStore.formposition = StaticStore.unittabposition;
 
-                    intent.putExtra("Img",2);
-                    intent.putExtra("ID",id);
-                    intent.putExtra("Form",StaticStore.formposition);
+                    intent.putExtra("Img", 2);
+                    intent.putExtra("ID", id);
+                    intent.putExtra("Form", StaticStore.formposition);
 
                     startActivity(intent);
                 }
             });
 
-            new UInfoLoader(id,this,getSupportFragmentManager()).execute();
+            new UInfoLoader(id, this, getSupportFragmentManager()).execute();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(StaticStore.UisOpen) {
+        if (StaticStore.UisOpen) {
             treasure.performClick();
         } else {
             super.onBackPressed();
@@ -166,8 +165,8 @@ public class UnitInfo extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 
 }

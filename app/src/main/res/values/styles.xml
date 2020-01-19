@@ -123,4 +123,11 @@
     <style name="CounterStyle" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textColor">?attr/TextPrimary</item>
     </style>
+
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name = "android:textColor">?attr/TextPrimary</item>
+        <item name = "android:textColorPrimary">?attr/TextPrimary</item>
+        <item name = "android:background">?attr/backgroundPrimary</item>
+        <item name = "android:colorPrimary">?attr/backgroundPrimary</item>
+    </style>
 </resources>

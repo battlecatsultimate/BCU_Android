@@ -3,16 +3,18 @@ package com.mandarin.bcu.androidutil.stage.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 
 import common.util.stage.Stage;
 
@@ -47,36 +49,36 @@ public class EnemyListRecycle extends RecyclerView.Adapter<EnemyListRecycle.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.stage_enemy_layout,viewGroup,false);
+        View row = LayoutInflater.from(activity).inflate(R.layout.stage_enemy_layout, viewGroup, false);
 
         return new ViewHolder(row);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
         viewHolder.listView.setLayoutManager(new LinearLayoutManager(activity));
-        ViewCompat.setNestedScrollingEnabled(viewHolder.listView,false);
+        ViewCompat.setNestedScrollingEnabled(viewHolder.listView, false);
 
-        StEnListRecycle listAdapter = new StEnListRecycle(activity,st,multi,shared.getBoolean("frame",true));
+        StEnListRecycle listAdapter = new StEnListRecycle(activity, st, multi, shared.getBoolean("frame", true));
 
         viewHolder.listView.setAdapter(listAdapter);
 
-        if(!shared.getBoolean("frame",true))
+        if (!shared.getBoolean("frame", true))
             viewHolder.frse.setText(activity.getString(R.string.config_seconds));
 
         viewHolder.frse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.frse.getText().toString().equals(activity.getString(R.string.config_frames))) {
-                    StEnListRecycle listAdapter = new StEnListRecycle(activity,st,multi,false);
+                if (viewHolder.frse.getText().toString().equals(activity.getString(R.string.config_frames))) {
+                    StEnListRecycle listAdapter = new StEnListRecycle(activity, st, multi, false);
 
                     viewHolder.listView.setAdapter(listAdapter);
 
                     viewHolder.frse.setText(activity.getString(R.string.config_seconds));
                 } else {
-                    StEnListRecycle listAdapter = new StEnListRecycle(activity,st,multi,true);
+                    StEnListRecycle listAdapter = new StEnListRecycle(activity, st, multi, true);
 
                     viewHolder.listView.setAdapter(listAdapter);
 

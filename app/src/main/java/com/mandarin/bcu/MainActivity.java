@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.content.res.AppCompatResources;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -28,29 +29,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed = shared.edit();
-        if(!shared.contains("initial")) {
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
-            ed.putBoolean("frame",true);
-            ed.putBoolean("apktest",false);
-            ed.putInt("default_level",50);
-            ed.putInt("Language",0);
+        if (!shared.contains("initial")) {
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
+            ed.putBoolean("frame", true);
+            ed.putBoolean("apktest", false);
+            ed.putInt("default_level", 50);
+            ed.putInt("Language", 0);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         Thread.setDefaultUncaughtExceptionHandler(new ErrorLogWriter(StaticStore.LOGPATH));
@@ -68,14 +69,14 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton config = findViewById(R.id.mainconfig);
 
-        animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_kasa_jizo), null, null, null);
-        stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_castle),null,null,null);
-        emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_enemy),null,null,null);
-        emlistbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
-        basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_basis),null,null,null);
-        medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_medal),null,null,null);
-        bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this,R.drawable.ic_bg),null,null,null);
-        bgbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f,this));
+        animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_kasa_jizo), null, null, null);
+        stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_castle), null, null, null);
+        emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_enemy), null, null, null);
+        emlistbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f, this));
+        basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_basis), null, null, null);
+        medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_medal), null, null, null);
+        bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_bg), null, null, null);
+        bgbtn.setCompoundDrawablePadding(StaticStore.dptopx(16f, this));
 
         animbtn.setOnClickListener(new SingleClick() {
             @Override
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         basisbtn.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
-                Intent intent = new Intent(MainActivity.this,LineUpScreen.class);
+                Intent intent = new Intent(MainActivity.this, LineUpScreen.class);
                 startActivity(intent);
             }
         });
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         bgbtn.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
-                Intent intent = new Intent(MainActivity.this,BackgroundList.class);
+                Intent intent = new Intent(MainActivity.this, BackgroundList.class);
                 startActivity(intent);
             }
         });
@@ -135,27 +136,26 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void stageinfoview()
-    {
+    protected void stageinfoview() {
         Intent intent = new Intent(this, MapList.class);
         startActivity(intent);
     }
 
     protected void gotoconfig() {
-        Intent intent = new Intent(this,ConfigScreen.class);
+        Intent intent = new Intent(this, ConfigScreen.class);
         startActivity(intent);
         finish();
     }
 
     protected void gotoenemyinf() {
-        Intent intent = new Intent(this,EnemyList.class);
+        Intent intent = new Intent(this, EnemyList.class);
         startActivity(intent);
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 
     @Override

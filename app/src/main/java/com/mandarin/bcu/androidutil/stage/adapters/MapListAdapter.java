@@ -1,12 +1,13 @@
 package com.mandarin.bcu.androidutil.stage.adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 
@@ -17,8 +18,8 @@ public class MapListAdapter extends ArrayAdapter<String> {
     private final String[] maps;
     private final int mapcode;
 
-    public MapListAdapter(Activity activity, String [] maps, int mapcode) {
-        super(activity, R.layout.map_list_layout,maps);
+    public MapListAdapter(Activity activity, String[] maps, int mapcode) {
+        super(activity, R.layout.map_list_layout, maps);
 
         this.activity = activity;
         this.maps = maps;
@@ -42,9 +43,9 @@ public class MapListAdapter extends ArrayAdapter<String> {
 
         MapColc mc = MapColc.MAPS.get(mapcode);
 
-        if(view == null) {
+        if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
-            row = inflater.inflate(R.layout.map_list_layout,parent,false);
+            row = inflater.inflate(R.layout.map_list_layout, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
@@ -52,12 +53,12 @@ public class MapListAdapter extends ArrayAdapter<String> {
             holder = (ViewHolder) row.getTag();
         }
 
-        holder.name.setText(withID(position,maps[position]));
+        holder.name.setText(withID(position, maps[position]));
 
         String numbers;
 
-        if(mc != null)
-            if(mc.maps[position].list.size() == 1)
+        if (mc != null)
+            if (mc.maps[position].list.size() == 1)
                 numbers = mc.maps[position].list.size() + activity.getString(R.string.map_list_stage);
             else
                 numbers = mc.maps[position].list.size() + activity.getString(R.string.map_list_stages);
@@ -66,29 +67,29 @@ public class MapListAdapter extends ArrayAdapter<String> {
 
         holder.count.setText(numbers);
 
-        return  row;
+        return row;
     }
 
     private String number(int num) {
-        if(0 <= num && num < 10)
-            return "00"+num;
-        else if(10 <= num && num < 100)
-            return "0"+num;
+        if (0 <= num && num < 10)
+            return "00" + num;
+        else if (10 <= num && num < 100)
+            return "0" + num;
         else
-            return ""+num;
+            return "" + num;
     }
 
     private String withID(int id, String name) {
         String result;
         String names = name;
 
-        if(names == null)
+        if (names == null)
             names = "";
 
-        if(names.equals("")) {
+        if (names.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+names;
+            result = number(id) + " - " + names;
         }
 
         return result;

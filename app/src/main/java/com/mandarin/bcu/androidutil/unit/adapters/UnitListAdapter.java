@@ -2,13 +2,14 @@ package com.mandarin.bcu.androidutil.unit.adapters;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -54,7 +55,7 @@ public class UnitListAdapter extends ArrayAdapter<String> {
         }
 
         holder.title.setText(name[position]);
-        holder.image.setImageBitmap(StaticStore.MakeIcon(getContext(),(Bitmap) StaticStore.units.get(locate.get(position)).forms[0].anim.uni.getImg().bimg(),48f));
+        holder.image.setImageBitmap(StaticStore.MakeIcon(getContext(), (Bitmap) StaticStore.units.get(locate.get(position)).forms[0].anim.uni.getImg().bimg(), 48f));
 
         return row;
     }

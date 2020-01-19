@@ -1,21 +1,22 @@
 package com.mandarin.bcu.androidutil.stage.adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.getStrings;
 
 import common.util.stage.Limit;
 
-public class LimitRecycle extends RecyclerView.Adapter<LimitRecycle.ViewHolder>{
+public class LimitRecycle extends RecyclerView.Adapter<LimitRecycle.ViewHolder> {
     private final Activity activity;
-    private String [] limits;
+    private String[] limits;
 
     public LimitRecycle(Activity activity, Limit l) {
         this.activity = activity;
@@ -38,7 +39,7 @@ public class LimitRecycle extends RecyclerView.Adapter<LimitRecycle.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.stg_limit_layout,viewGroup,false);
+        View row = LayoutInflater.from(activity).inflate(R.layout.stg_limit_layout, viewGroup, false);
 
         return new ViewHolder(row);
     }

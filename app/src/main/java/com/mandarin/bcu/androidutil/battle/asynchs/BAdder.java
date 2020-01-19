@@ -2,15 +2,20 @@ package com.mandarin.bcu.androidutil.battle.asynchs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.AsyncTask;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +28,7 @@ import com.mandarin.bcu.androidutil.battle.BDefinder;
 import com.mandarin.bcu.androidutil.battle.BattleView;
 import com.mandarin.bcu.androidutil.enemy.EDefiner;
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys;
+import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
 import com.mandarin.bcu.androidutil.stage.MapDefiner;
 import com.mandarin.bcu.androidutil.unit.Definer;
 import com.mandarin.bcu.util.page.BBCtrl;
@@ -31,16 +37,17 @@ import java.lang.ref.WeakReference;
 
 import common.battle.BasisSet;
 import common.battle.SBCtrl;
+import common.system.P;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 
-public class BAdder extends AsyncTask<Void,Integer,Void> {
+public class BAdder extends AsyncTask<Void, Integer, Void> {
     private final WeakReference<Activity> weakReference;
-    private final int mapcode,stid,stage,star,item;
-    private float x,y;
+    private final int mapcode, stid, stage, star, item;
+    private float x, y;
 
-    public BAdder(Activity activity,int mapcode, int stid, int stage, int star, int itme) {
+    public BAdder(Activity activity, int mapcode, int stid, int stage, int star, int itme) {
         this.weakReference = new WeakReference<>(activity);
         this.mapcode = mapcode;
         this.stid = stid;
@@ -53,7 +60,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
     public void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         FloatingActionButton fab = activity.findViewById(R.id.battlepause);
         FloatingActionButton fast = activity.findViewById(R.id.battlefast);
@@ -68,7 +75,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
         new Definer().define(activity);
 
@@ -94,7 +101,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView loadt = activity.findViewById(R.id.battleloadt);
 
@@ -113,28 +120,28 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
 
                 MapColc mc = StaticStore.map.get(mapcode);
 
-                if(mc == null)
+                if (mc == null)
                     return;
 
                 StageMap stm = mc.maps[stid];
 
-                if(stm == null)
+                if (stm == null)
                     return;
 
                 Stage stg = stm.list.get(stage);
 
-                if(stg == null)
+                if (stg == null)
                     return;
 
-                SBCtrl ctrl = new SBCtrl(new AndroidKeys(),stg,star, BasisSet.current.sele,new int [] {item},0L);
+                SBCtrl ctrl = new SBCtrl(new AndroidKeys(), stg, star, BasisSet.current.sele, new int[]{item}, 0L);
 
-                SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+                SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-                boolean axis = shared.getBoolean("Axis",true);
+                boolean axis = shared.getBoolean("Axis", true);
 
-                BattleView view = new BattleView(activity,ctrl,1,axis);
+                BattleView view = new BattleView(activity, ctrl, 1, axis);
                 view.initialized = false;
-                view.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+                view.setLayerType(View.LAYER_TYPE_HARDWARE, null);
                 view.setId(R.id.battleView);
                 view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 layout.addView(view);
@@ -143,7 +150,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
 
                 BattleView battleView = activity.findViewById(R.id.battleView);
 
-                ScaleGestureDetector detector = new ScaleGestureDetector(activity,new ScaleListener(battleView));
+                ScaleGestureDetector detector = new ScaleGestureDetector(activity, new ScaleListener(battleView));
 
                 FloatingActionButton actionButton = activity.findViewById(R.id.battlepause);
                 FloatingActionButton play = activity.findViewById(R.id.battleplay);
@@ -189,7 +196,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
                     public boolean onTouch(View v, MotionEvent event) {
                         detector.onTouchEvent(event);
 
-                        if(preid == -1)
+                        if (preid == -1)
                             preid = event.getPointerId(0);
 
                         int id = event.getPointerId(0);
@@ -198,16 +205,15 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
 
                         int action = event.getAction();
 
-                        if(action == MotionEvent.ACTION_DOWN) {
+                        if (action == MotionEvent.ACTION_DOWN) {
                             x = event.getX();
                             y = event.getY();
-                        } else if(action == MotionEvent.ACTION_UP) {
-                            battleView.getPainter().click(new Point((int)event.getX(),(int)event.getY()),action);
-                            System.out.println("Up : "+"("+event.getX()+","+event.getY()+")");
-                        } else if(action == MotionEvent.ACTION_MOVE) {
-                            if(event.getPointerCount() == 1 && id == preid) {
+                        } else if (action == MotionEvent.ACTION_UP) {
+                            battleView.getPainter().click(new Point((int) event.getX(), (int) event.getY()), action);
+                        } else if (action == MotionEvent.ACTION_MOVE) {
+                            if (event.getPointerCount() == 1 && id == preid) {
 
-                                battleView.painter.pos += x2-preX;
+                                battleView.painter.pos += x2 - preX;
                             }
                         }
 
@@ -233,13 +239,8 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
                 fast.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(battleView.spd < (battleView.painter instanceof BBCtrl ? 5 : 7)) {
+                        if (battleView.spd < (battleView.painter instanceof BBCtrl ? 5 : 7)) {
                             battleView.spd++;
-
-                            if(battleView.spd < 0 && battleView.upd >= Math.pow(2,-battleView.spd)) {
-                                battleView.painter.bf.update();
-                                battleView.upd = 0;
-                            }
 
                             battleView.painter.reset();
                         }
@@ -249,15 +250,74 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
                 slow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(battleView.spd > -5) {
+                        if (battleView.spd > -7) {
                             battleView.spd--;
 
-                            if(battleView.spd < 0 && battleView.upd >= Math.pow(2,-battleView.spd)) {
-                                battleView.painter.bf.update();
-                                battleView.upd = 0;
-                            }
-
                             battleView.painter.reset();
+                        }
+                    }
+                });
+
+                Button exitbattle = activity.findViewById(R.id.battleexit);
+
+                exitbattle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (battleView.painter.bf.sb.ebase.health > 0 && battleView.painter.bf.sb.ubase.health > 0 && shared.getBoolean("show", true)) {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(activity, R.style.AlertDialog);
+
+                            LayoutInflater inflater = LayoutInflater.from(activity);
+
+                            View layouts = inflater.inflate(R.layout.do_not_show_dialog, null);
+
+                            CheckBox donotshow = layouts.findViewById(R.id.donotshowcheck);
+                            Button cancel = layouts.findViewById(R.id.battlecancel);
+                            Button exit = layouts.findViewById(R.id.battledexit);
+
+                            alert.setView(layouts);
+
+                            donotshow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        SharedPreferences.Editor editor = shared.edit();
+
+                                        editor.putBoolean("show", false);
+
+                                        editor.apply();
+                                    } else {
+                                        SharedPreferences.Editor editor = shared.edit();
+
+                                        editor.putBoolean("show", true);
+
+                                        editor.apply();
+                                    }
+                                }
+                            });
+
+                            AlertDialog dialog = alert.create();
+
+                            cancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            exit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    P.stack.clear();
+                                    CVGraphics.clear();
+                                    activity.finish();
+                                }
+                            });
+
+                            dialog.show();
+                        } else {
+                            P.stack.clear();
+                            CVGraphics.clear();
+                            activity.finish();
                         }
                     }
                 });
@@ -270,7 +330,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         BattleView battleView = activity.findViewById(R.id.battleView);
         ProgressBar prog = activity.findViewById(R.id.battleprog);
@@ -285,19 +345,19 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
         fast.show();
         slow.show();
 
-        ((ViewManager)prog.getParent()).removeView(prog);
-        ((ViewManager)loadt.getParent()).removeView(loadt);
+        ((ViewManager) prog.getParent()).removeView(prog);
+        ((ViewManager) loadt.getParent()).removeView(loadt);
 
         battleView.initialized = true;
     }
 
     private void setDisappear(View... views) {
-        for(View v : views)
+        for (View v : views)
             v.setVisibility(View.GONE);
     }
 
     private void setAppear(View... views) {
-        for(View v : views)
+        for (View v : views)
             v.setVisibility(View.VISIBLE);
     }
 
@@ -312,7 +372,7 @@ public class BAdder extends AsyncTask<Void,Integer,Void> {
         public boolean onScale(ScaleGestureDetector detector) {
             cView.painter.siz *= detector.getScaleFactor();
 
-            if(cView.paused) {
+            if (cView.paused) {
                 cView.invalidate();
             }
 

@@ -33,13 +33,13 @@ import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class Downloader extends AsyncTask<Void,Integer,Void> {
+public class Downloader extends AsyncTask<Void, Integer, Void> {
 
     private int size;
-    private Map<String,Long> sizes = new HashMap<>();
+    private Map<String, Long> sizes = new HashMap<>();
     private ArrayList<Boolean> remover = new ArrayList<>();
 
-    private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
+    private String[] lan = {"/en/", "/jp/", "/kr/", "/zh/"};
     private String difffile = "Difficulty.txt";
     private String source;
     private String downloading;
@@ -59,7 +59,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         this.downloading = downloading;
         this.extracting = extracting;
         this.weakActivity = new WeakReference<>(context);
-        source = path+"lang";
+        source = path + "lang";
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         super.onPreExecute();
         Activity activity = weakActivity.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
@@ -82,19 +82,19 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         HttpURLConnection connection;
         String urls = "https://github.com/battlecatsultimate/bcu-resources/blob/master/resources/assets/";
         String RAW = "?raw=true";
-        for(int i = 0; i<fileneed.size(); i++) {
+        for (int i = 0; i < fileneed.size(); i++) {
             try {
-                File f= new File(path,fileneed.get(i)+".zip");
+                File f = new File(path, fileneed.get(i) + ".zip");
 
-                if(!f.exists()) continue;
+                if (!f.exists()) continue;
 
-                url = urls +fileneed.get(i)+".zip" + RAW;
+                url = urls + fileneed.get(i) + ".zip" + RAW;
                 link = new URL(url);
 
                 connection = (HttpURLConnection) link.openConnection();
                 size = connection.getContentLength();
 
-                sizes.put(fileneed.get(i),(long)size);
+                sizes.put(fileneed.get(i), (long) size);
 
                 connection.disconnect();
             } catch (MalformedURLException e) {
@@ -107,15 +107,15 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
         purify(sizes);
 
         int number;
-        if(purifyneed.contains("Language")) {
-            number = purifyneed.size()-1;
+        if (purifyneed.contains("Language")) {
+            number = purifyneed.size() - 1;
         } else {
             number = purifyneed.size();
         }
         long total;
-        for(int i = 0; i < number; i++) {
+        for (int i = 0; i < number; i++) {
             try {
-                url = urls +purifyneed.get(i)+".zip"+ RAW;
+                url = urls + purifyneed.get(i) + ".zip" + RAW;
                 link = new URL(url);
                 connection = (HttpURLConnection) link.openConnection();
                 connection.setRequestMethod("GET");
@@ -126,29 +126,29 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                 connection.getResponseCode();
 
 
-                output = new File(path,purifyneed.get(i)+".zip");
+                output = new File(path, purifyneed.get(i) + ".zip");
                 File pathes = new File(path);
 
-                if(!pathes.exists()) {
+                if (!pathes.exists()) {
                     pathes.mkdirs();
                 }
 
-                if(!output.exists()) {
+                if (!output.exists()) {
                     output.createNewFile();
                 }
 
                 FileOutputStream fos = new FileOutputStream(output);
                 InputStream is = connection.getInputStream();
 
-                byte [] buffer = new byte[1024];
+                byte[] buffer = new byte[1024];
                 int len1;
                 total = 0;
 
-                while((len1 = is.read(buffer)) != -1) {
+                while ((len1 = is.read(buffer)) != -1) {
                     total += Math.abs(len1);
-                    int progress = (int)(total *100/size);
-                    publishProgress(progress,i);
-                    fos.write(buffer,0,len1);
+                    int progress = (int) (total * 100 / size);
+                    publishProgress(progress, i);
+                    fos.write(buffer, 0, len1);
                 }
 
                 connection.disconnect();
@@ -160,31 +160,31 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                 output = null;
             }
 
-            if(output != null) {
+            if (output != null) {
                 remover.add(false);
             }
         }
 
-        if(purifyneed.contains("Language")) {
+        if (purifyneed.contains("Language")) {
             try {
                 String lurl = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang";
-                String durl = lurl+"/"+difffile;
+                String durl = lurl + "/" + difffile;
                 link = new URL(durl);
-                connection = (HttpURLConnection)link.openConnection();
+                connection = (HttpURLConnection) link.openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();
 
                 connection.getResponseCode();
 
-                output = new File(source+"/",difffile);
+                output = new File(source + "/", difffile);
 
                 File dpath = output.getParentFile();
 
-                if(!dpath.exists()) {
+                if (!dpath.exists()) {
                     dpath.mkdirs();
                 }
 
-                if(!output.exists()) {
+                if (!output.exists()) {
                     output.createNewFile();
                 }
 
@@ -195,13 +195,13 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                 int len1;
                 total = 0;
 
-                while((len1 = dis.read(buffer)) != -1) {
+                while ((len1 = dis.read(buffer)) != -1) {
                     total += len1;
                     int progress = 0;
-                    if(size != 0)
-                         progress = (int) (total *100/size);
-                    publishProgress(progress,100);
-                    dfos.write(buffer,0,len1);
+                    if (size != 0)
+                        progress = (int) (total * 100 / size);
+                    publishProgress(progress, 100);
+                    dfos.write(buffer, 0, len1);
                 }
 
                 connection.disconnect();
@@ -218,15 +218,15 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
                         connection.getResponseCode();
 
-                        output = new File(source + s1,s);
+                        output = new File(source + s1, s);
 
                         File pathes = new File(source + s1);
 
-                        if(!pathes.exists()) {
+                        if (!pathes.exists()) {
                             pathes.mkdirs();
                         }
 
-                        if(!output.exists()) {
+                        if (!output.exists()) {
                             output.createNewFile();
                         }
 
@@ -236,13 +236,13 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
                         buffer = new byte[1024];
                         total = 0;
 
-                        while((len1 = is.read(buffer)) > 0) {
+                        while ((len1 = is.read(buffer)) > 0) {
                             total += len1;
                             int progress = 0;
-                            if(size != 0)
-                                progress = (int) (total *100/size);
-                            publishProgress(progress,100);
-                            fos.write(buffer,0,len1);
+                            if (size != 0)
+                                progress = (int) (total * 100 / size);
+                            publishProgress(progress, 100);
+                            fos.write(buffer, 0, len1);
                         }
 
                         connection.disconnect();
@@ -279,19 +279,19 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakActivity.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
 
-        if(prog.isIndeterminate()) {
+        if (prog.isIndeterminate()) {
             prog.setIndeterminate(false);
         }
         prog.setProgress(values[0]);
-        if(values[1] != 100) {
+        if (values[1] != 100) {
             state.setText(downloading + purifyneed.get(values[1]));
         } else {
-            state.setText(downloading+"Language Files");
+            state.setText(downloading + "Language Files");
         }
     }
 
@@ -299,7 +299,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakActivity.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
@@ -307,57 +307,57 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
 
         ArrayList<String> results = new ArrayList<>();
 
-        if(remover.size() < purifyneed.size()) {
-            for(int i = 0; i < purifyneed.size()-remover.size();i++) {
+        if (remover.size() < purifyneed.size()) {
+            for (int i = 0; i < purifyneed.size() - remover.size(); i++) {
                 remover.add(true);
             }
         }
 
-        for(int i = 0; i < remover.size();i++) {
-            if(remover.get(i)) {
+        for (int i = 0; i < remover.size(); i++) {
+            if (remover.get(i)) {
                 results.add(fileneed.get(i));
             }
         }
 
         purifyneed = results;
 
-        if(prog.isIndeterminate()) {
+        if (prog.isIndeterminate()) {
             prog.setIndeterminate(false);
             prog.setProgress(100);
         }
 
-        if(!purifyneed.isEmpty() || output == null) {
-            if(purifyneed.isEmpty()) {
+        if (!purifyneed.isEmpty() || output == null) {
+            if (purifyneed.isEmpty()) {
                 state.setText(R.string.down_state_ok);
-                new Unzipper(path,fileneed, extracting,activity).execute();
+                new Unzipper(path, fileneed, extracting, activity).execute();
             } else {
                 state.setText(R.string.down_state_no);
                 retry.setVisibility(View.VISIBLE);
             }
         } else {
             state.setText(R.string.down_state_ok);
-            new Unzipper(path,fileneed, extracting,activity).execute();
+            new Unzipper(path, fileneed, extracting, activity).execute();
         }
     }
 
-    private void purify(Map<String,Long> size) {
+    private void purify(Map<String, Long> size) {
         Activity activity = weakActivity.get();
 
-        if(size == null || size.size() == 0) {
+        if (size == null || size.size() == 0) {
             purifyneed.addAll(fileneed);
             return;
         }
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         purifyneed = new ArrayList<>();
         ArrayList<Integer> result = new ArrayList<>();
 
-        for(int i = 0;i<fileneed.size();i++) {
-            File f= new File(path,fileneed.get(i)+".zip");
+        for (int i = 0; i < fileneed.size(); i++) {
+            File f = new File(path, fileneed.get(i) + ".zip");
 
-            if(f.exists()) {
-                if(f.length() != size.get(fileneed.get(i))) {
+            if (f.exists()) {
+                if (f.length() != size.get(fileneed.get(i))) {
                     result.add(i);
                 }
             } else {
@@ -365,7 +365,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
             }
         }
 
-        if(!result.isEmpty()) {
+        if (!result.isEmpty()) {
             for (int i = 0; i < result.size(); i++) {
                 purifyneed.add(fileneed.get(result.get(i)));
             }
@@ -373,7 +373,7 @@ public class Downloader extends AsyncTask<Void,Integer,Void> {
     }
 }
 
-class Unzipper extends AsyncTask<Void,Integer,Void> {
+class Unzipper extends AsyncTask<Void, Integer, Void> {
     private String destin;
     private ArrayList<String> fileneed;
     private final String path;
@@ -387,18 +387,18 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
         this.fileneed = fileneed;
         this.extracting = extracting;
         this.weakReference = new WeakReference<>(context);
-        destin = path+"files/";
+        destin = path + "files/";
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         int j;
-        if(fileneed.contains("Language"))
-            j = fileneed.size()-1;
+        if (fileneed.contains("Language"))
+            j = fileneed.size() - 1;
         else
             j = fileneed.size();
 
-        for(int i=0;i<j;i++) {
+        for (int i = 0; i < j; i++) {
             try {
                 String source = path + fileneed.get(i) + ".zip";
                 InputStream is = new FileInputStream(source);
@@ -407,29 +407,29 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
                 byte[] buffer = new byte[1024];
                 int count;
 
-                while((ze = zis.getNextEntry()) != null) {
+                while ((ze = zis.getNextEntry()) != null) {
                     String filenam = ze.getName();
 
-                    File f= new File(destin+filenam);
+                    File f = new File(destin + filenam);
 
-                    if(ze.isDirectory()) {
+                    if (ze.isDirectory()) {
                         if (!f.exists())
                             f.mkdirs();
                         continue;
                     }
 
                     File dir = new File(f.getParent());
-                    if(!dir.exists())
+                    if (!dir.exists())
                         dir.mkdirs();
 
-                    if(!f.exists())
+                    if (!f.exists())
                         f.createNewFile();
 
                     FileOutputStream fout = new FileOutputStream(f);
 
-                    while((count = zis.read(buffer)) != -1) {
+                    while ((count = zis.read(buffer)) != -1) {
                         publishProgress(i);
-                        fout.write(buffer,0,count);
+                        fout.write(buffer, 0, count);
                     }
 
                     fout.close();
@@ -454,7 +454,7 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ProgressBar prog = activity.findViewById(R.id.downprog);
         TextView state = activity.findViewById(R.id.downstate);
@@ -467,17 +467,17 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView state = activity.findViewById(R.id.downstate);
-        state.setText(extracting+fileneed.get(values[0]));
+        state.setText(extracting + fileneed.get(values[0]));
     }
 
     @Override
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         if (contin) {
             infowirter();
@@ -504,14 +504,14 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     }
 
     private void infowirter() {
-        String pathes = path+"files/info/";
+        String pathes = path + "files/info/";
         String filename = "info_android.ini";
 
-        File f = new File(pathes,filename);
+        File f = new File(pathes, filename);
         try {
             String libs = infolibbuild();
 
-            FileOutputStream fos = new FileOutputStream(f,false);
+            FileOutputStream fos = new FileOutputStream(f, false);
 
             fos.write((libs).getBytes());
             fos.close();
@@ -523,14 +523,14 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
     }
 
     private String infolibbuild() {
-        String pathes = path+"files/info/";
+        String pathes = path + "files/info/";
         String filename = "info_android.ini";
         Set<String> Original;
         StringBuilder result = new StringBuilder();
         StringBuilder abort = new StringBuilder();
 
-        for(int i = 0; i < fileneed.size();i++) {
-            if(i != fileneed.size() - 1) {
+        for (int i = 0; i < fileneed.size(); i++) {
+            if (i != fileneed.size() - 1) {
                 abort.append(fileneed.get(i)).append(",");
             } else {
                 abort.append(fileneed.get(i));
@@ -539,17 +539,17 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
         abort.insert(0, "file_version = 00040510\nnumber_of_libs = " + fileneed.size() + "\nlib=");
 
-        File f = new File(pathes,filename);
+        File f = new File(pathes, filename);
 
-        if(f.exists()) {
+        if (f.exists()) {
             try {
 
                 Original = Reader.getInfo(path);
 
-                if(Original != null)
+                if (Original != null)
                     System.out.println(Original);
 
-                if(Original == null) {
+                if (Original == null) {
                     Original = new TreeSet<>();
                 }
 
@@ -557,8 +557,8 @@ class Unzipper extends AsyncTask<Void,Integer,Void> {
 
                 ArrayList<String> combined = new ArrayList<>(Original);
 
-                for(int i = 0; i < combined.size();i++) {
-                    if(i != combined.size() - 1) {
+                for (int i = 0; i < combined.size(); i++) {
+                    if (i != combined.size() - 1) {
                         result.append(combined.get(i)).append(",");
                     } else {
                         result.append(combined.get(i));

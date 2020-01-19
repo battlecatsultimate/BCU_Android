@@ -29,6 +29,12 @@ public class AnimationView extends SurfaceView implements SurfaceHolder.Callback
 
     boolean stop = false;
 
+    public AnimationView(Context context) {
+        super(context);
+
+        this.holder = null;
+    }
+
     public AnimationView(Context context, int id, int form) {
         super(context);
 

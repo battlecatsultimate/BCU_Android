@@ -1,13 +1,14 @@
 package com.mandarin.bcu.androidutil.stage.adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.mandarin.bcu.R;
@@ -28,8 +29,8 @@ public class StageListAdapter extends ArrayAdapter<String> {
     private final int mapcode;
     private final int stid;
 
-    public StageListAdapter(Activity activity, String [] stages, int mapcode, int stid) {
-        super(activity, R.layout.stage_list_layout,stages);
+    public StageListAdapter(Activity activity, String[] stages, int mapcode, int stid) {
+        super(activity, R.layout.stage_list_layout, stages);
 
         this.activity = activity;
         this.stages = stages;
@@ -54,14 +55,14 @@ public class StageListAdapter extends ArrayAdapter<String> {
         View row;
         ViewHolder holder;
 
-        if(view == null) {
+        if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(activity);
-            row = inflater.inflate(R.layout.stage_list_layout,parent,false);
+            row = inflater.inflate(R.layout.stage_list_layout, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
             row = view;
-            holder = (ViewHolder)row.getTag();
+            holder = (ViewHolder) row.getTag();
         }
 
         holder.name.setText(stages[position]);
@@ -71,7 +72,7 @@ public class StageListAdapter extends ArrayAdapter<String> {
 
         MapColc mc = StaticStore.map.get(mapcode);
 
-        if(mc == null) return row;
+        if (mc == null) return row;
 
         StageMap stm = mc.maps[stid];
 
@@ -85,7 +86,7 @@ public class StageListAdapter extends ArrayAdapter<String> {
             icons[i] = new ImageView(activity);
             icons[i].setLayoutParams(new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             icons[i].setImageBitmap(StaticStore.eicons[ids.get(i)]);
-            icons[i].setPadding(StaticStore.dptopx(12f,activity),StaticStore.dptopx(4f,activity),0,StaticStore.dptopx(4f,activity));
+            icons[i].setPadding(StaticStore.dptopx(12f, activity), StaticStore.dptopx(4f, activity), 0, StaticStore.dptopx(4f, activity));
 
 
             holder.icons.addView(icons[i]);
@@ -96,8 +97,8 @@ public class StageListAdapter extends ArrayAdapter<String> {
     }
 
     private List<Integer> getid(SCDef stage) {
-        List<int []> result = new ArrayList<>();
-        int [][] data = reverse(stage.datas);
+        List<int[]> result = new ArrayList<>();
+        int[][] data = reverse(stage.datas);
 
         for (int[] datas : data) {
             if (result.isEmpty()) {
@@ -114,29 +115,29 @@ public class StageListAdapter extends ArrayAdapter<String> {
 
         List<Integer> ids = new ArrayList<>();
 
-        for(int [] datas : result) {
+        for (int[] datas : result) {
             ids.add(datas[SCDef.E]);
         }
 
         return ids;
     }
 
-    private boolean haveSame(int id, List<int []> result) {
-        if(id == 19 || id == 20 || id == 21) return false;
+    private boolean haveSame(int id, List<int[]> result) {
+        if (id == 19 || id == 20 || id == 21) return false;
 
-        for(int [] data : result) {
-            if(id == data[SCDef.E])
+        for (int[] data : result) {
+            if (id == data[SCDef.E])
                 return false;
         }
 
         return true;
     }
 
-    private int[][] reverse(int [][] data) {
-        int [][] result = new int[data.length][];
+    private int[][] reverse(int[][] data) {
+        int[][] result = new int[data.length][];
 
-        for(int i = 0; i < data.length; i++) {
-            result[i] = data[data.length-1-i];
+        for (int i = 0; i < data.length; i++) {
+            result[i] = data[data.length - 1 - i];
         }
 
         return result;

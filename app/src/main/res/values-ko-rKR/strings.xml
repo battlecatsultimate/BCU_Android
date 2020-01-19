@@ -513,4 +513,11 @@
     <string name="battle_sniper">스냥이퍼</string>
     <string name="battle_start">전투 시작</string>
     <string name="def_set_lineup">Set-Lineup</string>
+    <string name="battle_show_enem">적 정보 리스트 표시</string>
+    <string name="battle_show_unit">유닛 정보 리스트 표시</string>
+    <string name="exit_battle">전투 나가기</string>
+    <string name="battle_not_over">전투가 끝나지 않았습니다.</string>
+    <string name="battle_sure_go">정말로 전투에서 나가시겠습니까?</string>
+    <string name="battle_do_not_show">경고 다시 표시하지 않기</string>
+    <string name="battle_exit">나가기</string>
 </resources>

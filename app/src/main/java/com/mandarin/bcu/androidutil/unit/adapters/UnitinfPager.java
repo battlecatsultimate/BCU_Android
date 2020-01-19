@@ -11,16 +11,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -39,6 +29,17 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.AdapterAbil;
@@ -58,27 +59,27 @@ import common.util.unit.Form;
 
 public class UnitinfPager extends Fragment {
     View view;
-    
-    public static UnitinfPager newInstance(int form, int id, String [] names) {
+
+    public static UnitinfPager newInstance(int form, int id, String[] names) {
         UnitinfPager pager = new UnitinfPager();
         Bundle bundle = new Bundle();
-        bundle.putInt("Form",form);
-        bundle.putInt("ID",id);
-        bundle.putStringArray("Names",names);
+        bundle.putInt("Form", form);
+        bundle.putInt("ID", id);
+        bundle.putStringArray("Names", names);
         pager.setArguments(bundle);
-        
+
         return pager;
     }
-    
+
     int form;
     int id;
-    String [] names;
+    String[] names;
 
     private int fs = 0;
     private getStrings s;
-    private String [][] fragment = {{"Immune to "},{""}};
-    private int[][] states = new int[][] {
-            new int[] {android.R.attr.state_enabled}
+    private String[][] fragment = {{"Immune to "}, {""}};
+    private int[][] states = new int[][]{
+            new int[]{android.R.attr.state_enabled}
     };
 
     private int[] color;
@@ -121,19 +122,19 @@ public class UnitinfPager extends Fragment {
     Button npreset;
     TableRow nprow;
     Activity activity;
-    int [] ids = {R.id.talent0,R.id.talent1,R.id.talent2,R.id.talent3,R.id.talent4};
-    Spinner [] pcoins = new Spinner[ids.length];
-    
+    int[] ids = {R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4};
+    Spinner[] pcoins = new Spinner[ids.length];
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.unit_table,container,false);
-        activity =  getActivity();
+        view = inflater.inflate(R.layout.unit_table, container, false);
+        activity = getActivity();
         assert activity != null;
         s = new getStrings(activity);
         s.getTalList();
-        color = new int[] {
-                getAttributeColor(activity,R.attr.TextPrimary)
+        color = new int[]{
+                getAttributeColor(activity, R.attr.TextPrimary)
         };
         init(view);
         assert getArguments() != null;
@@ -161,14 +162,14 @@ public class UnitinfPager extends Fragment {
         healtrea.setCounterEnabled(true);
         healtrea.setCounterMaxLength(3);
 
-        cdlev.setHelperTextColor(new ColorStateList(states,color));
-        cdtrea.setHelperTextColor(new ColorStateList(states,color));
-        atktrea.setHelperTextColor(new ColorStateList(states,color));
-        healtrea.setHelperTextColor(new ColorStateList(states,color));
+        cdlev.setHelperTextColor(new ColorStateList(states, color));
+        cdtrea.setHelperTextColor(new ColorStateList(states, color));
+        atktrea.setHelperTextColor(new ColorStateList(states, color));
+        healtrea.setHelperTextColor(new ColorStateList(states, color));
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(shared.getBoolean("frame",true)) {
+        if (shared.getBoolean("frame", true)) {
             fs = 0;
             frse.setText(activity.getString(R.string.unit_info_fr));
         } else {
@@ -179,29 +180,29 @@ public class UnitinfPager extends Fragment {
         Treasure t = BasisSet.current.t();
         Form f = StaticStore.units.get(id).forms[form];
 
-        if(f.getPCoin()==null) {
+        if (f.getPCoin() == null) {
             unittalen.setVisibility(View.GONE);
             npreset.setVisibility(View.GONE);
             nprow.setVisibility(View.GONE);
             pcoinlev = null;
         } else {
-            int [] max = f.getPCoin().max;
+            int[] max = f.getPCoin().max;
             pcoinlev = new int[max.length];
             pcoinlev[0] = 0;
 
-            for(int j =0;j<pcoins.length;j++) {
+            for (int j = 0; j < pcoins.length; j++) {
                 List<Integer> plev = new ArrayList<>();
-                for(int k=0;k<max[j+1]+1;k++)
+                for (int k = 0; k < max[j + 1] + 1; k++)
                     plev.add(k);
-                ArrayAdapter<Integer> adapter = new ArrayAdapter<>(activity,R.layout.spinneradapter,plev);
+                ArrayAdapter<Integer> adapter = new ArrayAdapter<>(activity, R.layout.spinneradapter, plev);
                 pcoins[j].setAdapter(adapter);
-                pcoins[j].setSelection(getIndex(pcoins[j],max[j+1]));
+                pcoins[j].setSelection(getIndex(pcoins[j], max[j + 1]));
 
-                pcoinlev[j+1] = max[j+1];
+                pcoinlev[j + 1] = max[j + 1];
             }
         }
 
-        List<String> ability = Interpret.getAbi(f.du,fragment,StaticStore.addition,0);
+        List<String> ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0);
         List<Integer> abilityicon = Interpret.getAbiid(f.du);
 
         TextInputEditText cdlevt = activity.findViewById(R.id.cdlevt);
@@ -214,41 +215,41 @@ public class UnitinfPager extends Fragment {
         atktreat.setText(String.valueOf(t.trea[0]));
         healtreat.setText(String.valueOf(t.trea[1]));
 
-        String language = StaticStore.lang[shared.getInt("Language",0)];
-        if(language.equals("")) {
+        String language = StaticStore.lang[shared.getInt("Language", 0)];
+        if (language.equals("")) {
             language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         }
         List<String> proc;
-        if(language.equals("ko")) {
-            proc = Interpret.getProc(f.du,1,fs);
+        if (language.equals("ko")) {
+            proc = Interpret.getProc(f.du, 1, fs);
         } else {
-            proc = Interpret.getProc(f.du,0,fs);
+            proc = Interpret.getProc(f.du, 0, fs);
         }
         List<Integer> procicon = Interpret.getProcid(f.du);
 
         String name = MultiLangCont.FNAME.getCont(f);
 
-        if(name == null)
+        if (name == null)
             name = "";
 
         Bitmap icon = (Bitmap) f.anim.uni.getImg().bimg();
 
-        if(icon.getHeight() != icon.getWidth())
-            icon = StaticStore.MakeIcon(activity,icon,48f);
+        if (icon.getHeight() != icon.getWidth())
+            icon = StaticStore.MakeIcon(activity, icon, 48f);
         else
-            icon = StaticStore.getResizeb(icon,activity,48f);
+            icon = StaticStore.getResizeb(icon, activity, 48f);
 
         uniticon.setImageBitmap(icon);
         unitname.setText(name);
-        unitid.setText(s.getID(form,number(id)));
-        unithp.setText(s.getHP(f,t,f.unit.getPrefLv(),false,pcoinlev));
-        unithb.setText(s.getHB(f,false,pcoinlev));
-        unitatk.setText(s.getTotAtk(f,t,f.unit.getPrefLv(),false,pcoinlev));
-        unittrait.setText(s.getTrait(f,false,pcoinlev));
-        unitcost.setText(s.getCost(f,false,pcoinlev));
+        unitid.setText(s.getID(form, number(id)));
+        unithp.setText(s.getHP(f, t, f.unit.getPrefLv(), false, pcoinlev));
+        unithb.setText(s.getHB(f, false, pcoinlev));
+        unitatk.setText(s.getTotAtk(f, t, f.unit.getPrefLv(), false, pcoinlev));
+        unittrait.setText(s.getTrait(f, false, pcoinlev));
+        unitcost.setText(s.getCost(f, false, pcoinlev));
         unitsimu.setText(s.getSimu(f));
-        unitspd.setText(s.getSpd(f,false,pcoinlev));
-        unitcd.setText(s.getCD(f, t, fs,false,pcoinlev));
+        unitspd.setText(s.getSpd(f, false, pcoinlev));
+        unitcd.setText(s.getCD(f, t, fs, false, pcoinlev));
         unitrang.setText(s.getRange(f));
         unitpreatk.setText(s.getPre(f, fs));
         unitpost.setText(s.getPost(f, fs));
@@ -256,20 +257,20 @@ public class UnitinfPager extends Fragment {
         unitatkt.setText(s.getAtkTime(f, fs));
         unitabilt.setText(s.getAbilT(f));
 
-        if(ability.size()>0 || proc.size() > 0) {
+        if (ability.size() > 0 || proc.size() > 0) {
             none.setVisibility(View.GONE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             unitabil.setLayoutManager(linearLayoutManager);
-            AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon,activity);
+            AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, activity);
             unitabil.setAdapter(adapterAbil);
             ViewCompat.setNestedScrollingEnabled(unitabil, false);
         } else {
             unitabil.setVisibility(View.GONE);
         }
-        
+
         Listeners();
-        
+
         return view;
     }
 
@@ -289,11 +290,11 @@ public class UnitinfPager extends Fragment {
         Form f = StaticStore.units.get(id).forms[form];
 
         List<Integer> levels = new ArrayList<>();
-        for(int j =1;j < f.unit.max+1;j++)
+        for (int j = 1; j < f.unit.max + 1; j++)
             levels.add(j);
 
         ArrayList<Integer> levelsp = new ArrayList<>();
-        for(int j=0;j<f.unit.maxp+1;j++)
+        for (int j = 0; j < f.unit.maxp + 1; j++)
             levelsp.add(j);
 
         ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(activity, R.layout.spinneradapter, levels);
@@ -302,13 +303,13 @@ public class UnitinfPager extends Fragment {
         unitname.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(getActivity() == null) return false;
+                if (getActivity() == null) return false;
 
                 ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData data = ClipData.newPlainText(null,unitname.getText());
+                ClipData data = ClipData.newPlainText(null, unitname.getText());
                 clipboardManager.setPrimaryClip(data);
 
-                Toast.makeText(activity,R.string.unit_info_copied,Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.unit_info_copied, Toast.LENGTH_SHORT).show();
 
                 return true;
             }
@@ -316,26 +317,26 @@ public class UnitinfPager extends Fragment {
 
         int currentlev;
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(shared.getInt("default_level",50) > f.unit.max)
+        if (shared.getInt("default_level", 50) > f.unit.max)
             currentlev = f.unit.max;
-        else if(f.unit.rarity != 0)
-            currentlev = shared.getInt("default_level",50);
+        else if (f.unit.rarity != 0)
+            currentlev = shared.getInt("default_level", 50);
         else
             currentlev = f.unit.max;
 
         unitlevel.setAdapter(arrayAdapter);
-        unitlevel.setSelection(getIndex(unitlevel,currentlev));
+        unitlevel.setSelection(getIndex(unitlevel, currentlev));
         unitlevelp.setAdapter(arrayAdapterp);
 
-        if(f.unit.getPrefLv()-f.unit.max < 0) {
-            unitlevelp.setSelection(getIndex(unitlevelp,0));
+        if (f.unit.getPrefLv() - f.unit.max < 0) {
+            unitlevelp.setSelection(getIndex(unitlevelp, 0));
         } else {
             unitlevelp.setSelection(getIndex(unitlevelp, f.unit.getPrefLv() - f.unit.max));
         }
 
-        if(levelsp.size() == 1) {
+        if (levelsp.size() == 1) {
             unitlevelp.setVisibility(View.GONE);
             unitplus.setVisibility(View.GONE);
         }
@@ -343,19 +344,19 @@ public class UnitinfPager extends Fragment {
         frse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fs == 0) {
+                if (fs == 0) {
                     fs = 1;
-                    unitcd.setText(s.getCD(f,t,fs,talents,pcoinlev));
-                    unitpreatk.setText(s.getPre(f,fs));
-                    unitpost.setText(s.getPost(f,fs));
-                    unittba.setText(s.getTBA(f,fs));
-                    unitatkt.setText(s.getAtkTime(f,fs));
+                    unitcd.setText(s.getCD(f, t, fs, talents, pcoinlev));
+                    unitpreatk.setText(s.getPre(f, fs));
+                    unitpost.setText(s.getPost(f, fs));
+                    unittba.setText(s.getTBA(f, fs));
+                    unitatkt.setText(s.getAtkTime(f, fs));
                     frse.setText(activity.getString(R.string.unit_info_sec));
 
-                    if(unitabil.getVisibility() != View.GONE) {
+                    if (unitabil.getVisibility() != View.GONE) {
                         MaskUnit du = f.du;
-                        if(f.getPCoin() != null)
-                            du = talents?f.getPCoin().improve(pcoinlev):f.du;
+                        if (f.getPCoin() != null)
+                            du = talents ? f.getPCoin().improve(pcoinlev) : f.du;
 
                         List<String> ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0);
                         List<Integer> abilityicon = Interpret.getAbiid(du);
@@ -371,23 +372,23 @@ public class UnitinfPager extends Fragment {
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
                         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                         unitabil.setLayoutManager(linearLayoutManager);
-                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon,activity);
+                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, activity);
                         unitabil.setAdapter(adapterAbil);
                         ViewCompat.setNestedScrollingEnabled(unitabil, false);
                     }
                 } else {
                     fs = 0;
-                    unitcd.setText(s.getCD(f,t,fs,talents,pcoinlev));
-                    unitpreatk.setText(s.getPre(f,fs));
-                    unitpost.setText(s.getPost(f,fs));
-                    unittba.setText(s.getTBA(f,fs));
-                    unitatkt.setText(s.getAtkTime(f,fs));
+                    unitcd.setText(s.getCD(f, t, fs, talents, pcoinlev));
+                    unitpreatk.setText(s.getPre(f, fs));
+                    unitpost.setText(s.getPost(f, fs));
+                    unittba.setText(s.getTBA(f, fs));
+                    unitatkt.setText(s.getAtkTime(f, fs));
                     frse.setText(activity.getString(R.string.unit_info_fr));
 
-                    if(unitabil.getVisibility() != View.GONE) {
+                    if (unitabil.getVisibility() != View.GONE) {
                         MaskUnit du = f.du;
-                        if(f.getPCoin() != null)
-                            du = talents?f.getPCoin().improve(pcoinlev):f.du;
+                        if (f.getPCoin() != null)
+                            du = talents ? f.getPCoin().improve(pcoinlev) : f.du;
 
                         List<String> ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0);
                         List<Integer> abilityicon = Interpret.getAbiid(du);
@@ -405,7 +406,7 @@ public class UnitinfPager extends Fragment {
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
                         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                         unitabil.setLayoutManager(linearLayoutManager);
-                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon,activity);
+                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, activity);
                         unitabil.setAdapter(adapterAbil);
                         ViewCompat.setNestedScrollingEnabled(unitabil, false);
                     }
@@ -416,54 +417,54 @@ public class UnitinfPager extends Fragment {
         unitcdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(unitcd.getText().toString().endsWith("f"))
-                    unitcd.setText(s.getCD(f,t,1,talents,pcoinlev));
+                if (unitcd.getText().toString().endsWith("f"))
+                    unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
                 else
-                    unitcd.setText(s.getCD(f,t,0,talents,pcoinlev));
+                    unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
             }
         });
 
         unitpreatkb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(unitpreatk.getText().toString().endsWith("f"))
-                    unitpreatk.setText(s.getPre(f,1));
+                if (unitpreatk.getText().toString().endsWith("f"))
+                    unitpreatk.setText(s.getPre(f, 1));
                 else
-                    unitpreatk.setText(s.getPre(f,0));
+                    unitpreatk.setText(s.getPre(f, 0));
             }
         });
 
         unitpostb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(unitpost.getText().toString().endsWith("f"))
-                    unitpost.setText(s.getPost(f,1));
+                if (unitpost.getText().toString().endsWith("f"))
+                    unitpost.setText(s.getPost(f, 1));
                 else
-                    unitpost.setText(s.getPost(f,0));
+                    unitpost.setText(s.getPost(f, 0));
             }
         });
 
         unittbab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(unittba.getText().toString().endsWith("f"))
-                    unittba.setText(s.getTBA(f,1));
+                if (unittba.getText().toString().endsWith("f"))
+                    unittba.setText(s.getTBA(f, 1));
                 else
-                    unittba.setText(s.getTBA(f,0));
+                    unittba.setText(s.getTBA(f, 0));
             }
         });
 
         unitatkb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int level = (int)unitlevel.getSelectedItem();
-                int levelp = (int)unitlevelp.getSelectedItem();
-                if(unitatkb.getText().equals(activity.getString(R.string.unit_info_atk))) {
+                int level = (int) unitlevel.getSelectedItem();
+                int levelp = (int) unitlevelp.getSelectedItem();
+                if (unitatkb.getText().equals(activity.getString(R.string.unit_info_atk))) {
                     unitatkb.setText(activity.getString(R.string.unit_info_dps));
-                    unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoinlev));
+                    unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                 } else {
                     unitatkb.setText(activity.getString(R.string.unit_info_atk));
-                    unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoinlev));
+                    unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                 }
             }
         });
@@ -471,30 +472,30 @@ public class UnitinfPager extends Fragment {
         unitatktb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(unitatkt.getText().toString().endsWith("f"))
-                    unitatkt.setText(s.getAtkTime(f,1));
+                if (unitatkt.getText().toString().endsWith("f"))
+                    unitatkt.setText(s.getAtkTime(f, 1));
                 else
-                    unitatkt.setText(s.getAtkTime(f,0));
+                    unitatkt.setText(s.getAtkTime(f, 0));
             }
         });
 
         unitlevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int level = (int)unitlevel.getSelectedItem();
-                int levelp = (int)unitlevelp.getSelectedItem();
-                unithp.setText(s.getHP(f,t,level+levelp,talents,pcoinlev));
+                int level = (int) unitlevel.getSelectedItem();
+                int levelp = (int) unitlevelp.getSelectedItem();
+                unithp.setText(s.getHP(f, t, level + levelp, talents, pcoinlev));
 
-                if(f.du.rawAtkData().length > 1) {
+                if (f.du.rawAtkData().length > 1) {
                     if (unitatkb.getText().equals(activity.getString(R.string.unit_info_atk)))
-                        unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                     else
-                        unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                 } else {
                     if (unitatkb.getText().equals(activity.getString(R.string.unit_info_atk)))
-                        unitatk.setText(s.getTotAtk(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getTotAtk(f, t, level + levelp, talents, pcoinlev));
                     else
-                        unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                 }
 
             }
@@ -508,19 +509,19 @@ public class UnitinfPager extends Fragment {
         unitlevelp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int level = (int)unitlevel.getSelectedItem();
-                int levelp = (int)unitlevelp.getSelectedItem();
-                unithp.setText(s.getHP(f,t,level+levelp,talents,pcoinlev));
-                if(f.du.rawAtkData().length > 1) {
+                int level = (int) unitlevel.getSelectedItem();
+                int levelp = (int) unitlevelp.getSelectedItem();
+                unithp.setText(s.getHP(f, t, level + levelp, talents, pcoinlev));
+                if (f.du.rawAtkData().length > 1) {
                     if (unitatkb.getText().equals(activity.getString(R.string.unit_info_atk)))
-                        unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                     else
-                        unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                 } else {
                     if (unitatkb.getText().equals(activity.getString(R.string.unit_info_atk)))
-                        unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                     else
-                        unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                 }
             }
 
@@ -542,28 +543,28 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 30 || Integer.parseInt(s.toString()) <= 0) {
-                        if(cdlev.isHelperTextEnabled()) {
+                        if (cdlev.isHelperTextEnabled()) {
                             cdlev.setHelperTextEnabled(false);
                             cdlev.setErrorEnabled(true);
                             cdlev.setError(activity.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(cdlev.isErrorEnabled()) {
+                        if (cdlev.isErrorEnabled()) {
                             cdlev.setError(null);
                             cdlev.setErrorEnabled(false);
                             cdlev.setHelperTextEnabled(true);
-                            cdlev.setHelperTextColor(new ColorStateList(states,color));
+                            cdlev.setHelperTextColor(new ColorStateList(states, color));
                             cdlev.setHelperText("1~30");
                         }
                     }
                 } else {
-                    if(cdlev.isErrorEnabled()) {
+                    if (cdlev.isErrorEnabled()) {
                         cdlev.setError(null);
                         cdlev.setErrorEnabled(false);
                         cdlev.setHelperTextEnabled(true);
-                        cdlev.setHelperTextColor(new ColorStateList(states,color));
+                        cdlev.setHelperTextColor(new ColorStateList(states, color));
                         cdlev.setHelperText("1~30");
                     }
                 }
@@ -571,24 +572,24 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 30 && Integer.parseInt(text.toString()) > 0) {
                         int lev = Integer.parseInt(text.toString());
 
                         t.tech[0] = lev;
 
                         if (unitcd.getText().toString().endsWith("s")) {
-                            unitcd.setText(s.getCD(f, t, 1,talents,pcoinlev));
+                            unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
                         } else {
-                            unitcd.setText(s.getCD(f, t, 0,talents,pcoinlev));
+                            unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
                         }
                     }
                 } else {
                     t.tech[0] = 1;
-                    if(unitcd.getText().toString().endsWith("s")) {
-                        unitcd.setText(s.getCD(f,t,1,talents,pcoinlev));
+                    if (unitcd.getText().toString().endsWith("s")) {
+                        unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
                     } else {
-                        unitcd.setText(s.getCD(f,t,0,talents,pcoinlev));
+                        unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
                     }
                 }
             }
@@ -602,28 +603,28 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 300) {
-                        if(cdtrea.isHelperTextEnabled()) {
+                        if (cdtrea.isHelperTextEnabled()) {
                             cdtrea.setHelperTextEnabled(false);
                             cdtrea.setErrorEnabled(true);
                             cdtrea.setError(activity.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(cdtrea.isErrorEnabled()) {
+                        if (cdtrea.isErrorEnabled()) {
                             cdtrea.setError(null);
                             cdtrea.setErrorEnabled(false);
                             cdtrea.setHelperTextEnabled(true);
-                            cdtrea.setHelperTextColor(new ColorStateList(states,color));
+                            cdtrea.setHelperTextColor(new ColorStateList(states, color));
                             cdtrea.setHelperText("0~300");
                         }
                     }
                 } else {
-                    if(cdtrea.isErrorEnabled()) {
+                    if (cdtrea.isErrorEnabled()) {
                         cdtrea.setError(null);
                         cdtrea.setErrorEnabled(false);
                         cdtrea.setHelperTextEnabled(true);
-                        cdtrea.setHelperTextColor(new ColorStateList(states,color));
+                        cdtrea.setHelperTextColor(new ColorStateList(states, color));
                         cdtrea.setHelperText("0~300");
                     }
                 }
@@ -631,24 +632,24 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 300) {
                         int trea = Integer.parseInt(text.toString());
 
                         t.trea[2] = trea;
 
                         if (unitcd.getText().toString().endsWith("s")) {
-                            unitcd.setText(s.getCD(f, t, 1,talents,pcoinlev));
+                            unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
                         } else {
-                            unitcd.setText(s.getCD(f, t, 0,talents,pcoinlev));
+                            unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
                         }
                     }
                 } else {
                     t.trea[2] = 0;
-                    if(unitcd.getText().toString().endsWith("s")) {
-                        unitcd.setText(s.getCD(f,t,1,talents,pcoinlev));
+                    if (unitcd.getText().toString().endsWith("s")) {
+                        unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
                     } else {
-                        unitcd.setText(s.getCD(f,t,0,talents,pcoinlev));
+                        unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
                     }
                 }
             }
@@ -662,28 +663,28 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 300) {
-                        if(atktrea.isHelperTextEnabled()) {
+                        if (atktrea.isHelperTextEnabled()) {
                             atktrea.setHelperTextEnabled(false);
                             atktrea.setErrorEnabled(true);
                             atktrea.setError(activity.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(atktrea.isErrorEnabled()) {
+                        if (atktrea.isErrorEnabled()) {
                             atktrea.setError(null);
                             atktrea.setErrorEnabled(false);
                             atktrea.setHelperTextEnabled(true);
-                            atktrea.setHelperTextColor(new ColorStateList(states,color));
+                            atktrea.setHelperTextColor(new ColorStateList(states, color));
                             atktrea.setHelperText("0~300");
                         }
                     }
                 } else {
-                    if(atktrea.isErrorEnabled()) {
+                    if (atktrea.isErrorEnabled()) {
                         atktrea.setError(null);
                         atktrea.setErrorEnabled(false);
                         atktrea.setHelperTextEnabled(true);
-                        atktrea.setHelperTextColor(new ColorStateList(states,color));
+                        atktrea.setHelperTextColor(new ColorStateList(states, color));
                         atktrea.setHelperText("0~300");
                     }
                 }
@@ -691,7 +692,7 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 300) {
                         int trea = Integer.parseInt(text.toString());
 
@@ -700,20 +701,20 @@ public class UnitinfPager extends Fragment {
                         int levelp = (int) unitlevelp.getSelectedItem();
 
                         if (unitatkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
-                            unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoinlev));
+                            unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                         } else {
-                            unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoinlev));
+                            unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                         }
                     }
                 } else {
                     t.trea[0] = 0;
-                    int level = (int)unitlevel.getSelectedItem();
-                    int levelp = (int)unitlevelp.getSelectedItem();
+                    int level = (int) unitlevel.getSelectedItem();
+                    int levelp = (int) unitlevelp.getSelectedItem();
 
-                    if(unitatkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
-                        unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoinlev));
+                    if (unitatkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                        unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                     } else {
-                        unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoinlev));
+                        unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                     }
                 }
             }
@@ -727,28 +728,28 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 300) {
-                        if(healtrea.isHelperTextEnabled()) {
+                        if (healtrea.isHelperTextEnabled()) {
                             healtrea.setHelperTextEnabled(false);
                             healtrea.setErrorEnabled(true);
                             healtrea.setError(activity.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(healtrea.isErrorEnabled()) {
+                        if (healtrea.isErrorEnabled()) {
                             healtrea.setError(null);
                             healtrea.setErrorEnabled(false);
                             healtrea.setHelperTextEnabled(true);
-                            healtrea.setHelperTextColor(new ColorStateList(states,color));
+                            healtrea.setHelperTextColor(new ColorStateList(states, color));
                             healtrea.setHelperText("0~300");
                         }
                     }
                 } else {
-                    if(healtrea.isErrorEnabled()) {
+                    if (healtrea.isErrorEnabled()) {
                         healtrea.setError(null);
                         healtrea.setErrorEnabled(false);
                         healtrea.setHelperTextEnabled(true);
-                        healtrea.setHelperTextColor(new ColorStateList(states,color));
+                        healtrea.setHelperTextColor(new ColorStateList(states, color));
                         healtrea.setHelperText("0~300");
                     }
                 }
@@ -756,7 +757,7 @@ public class UnitinfPager extends Fragment {
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 300) {
                         int trea = Integer.parseInt(text.toString());
 
@@ -764,14 +765,14 @@ public class UnitinfPager extends Fragment {
                         int level = (int) unitlevel.getSelectedItem();
                         int levelp = (int) unitlevelp.getSelectedItem();
 
-                        unithp.setText(s.getHP(f, t, level + levelp,talents,pcoinlev));
+                        unithp.setText(s.getHP(f, t, level + levelp, talents, pcoinlev));
                     }
                 } else {
                     t.trea[1] = 0;
-                    int level = (int)unitlevel.getSelectedItem();
-                    int levelp = (int)unitlevelp.getSelectedItem();
+                    int level = (int) unitlevel.getSelectedItem();
+                    int levelp = (int) unitlevelp.getSelectedItem();
 
-                    unithp.setText(s.getHP(f,t,level+levelp,talents,pcoinlev));
+                    unithp.setText(s.getHP(f, t, level + levelp, talents, pcoinlev));
                 }
             }
         });
@@ -789,22 +790,22 @@ public class UnitinfPager extends Fragment {
                 atktreat.setText(String.valueOf(t.trea[1]));
                 healtreat.setText(String.valueOf(t.trea[2]));
 
-                int level = (int)unitlevel.getSelectedItem();
-                int levelp = (int)unitlevelp.getSelectedItem();
+                int level = (int) unitlevel.getSelectedItem();
+                int levelp = (int) unitlevelp.getSelectedItem();
 
-                if(unitcd.getText().toString().endsWith("s")) {
-                    unitcd.setText(s.getCD(f,t,1,talents,pcoinlev));
+                if (unitcd.getText().toString().endsWith("s")) {
+                    unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
                 } else {
-                    unitcd.setText(s.getCD(f,t,0,talents,pcoinlev));
+                    unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
                 }
 
-                if(unitatkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
-                    unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoinlev));
+                if (unitatkb.getText().toString().equals(activity.getString(R.string.unit_info_dps))) {
+                    unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
                 } else {
-                    unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoinlev));
+                    unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
                 }
 
-                unithp.setText(s.getHP(f,t,level+levelp,talents,pcoinlev));
+                unithp.setText(s.getHP(f, t, level + levelp, talents, pcoinlev));
             }
         });
 
@@ -813,9 +814,9 @@ public class UnitinfPager extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 talents = true;
 
-                validate(f,t);
-                if(isChecked) {
-                    ValueAnimator anim = ValueAnimator.ofInt(0,StaticStore.dptopx(100f,activity));
+                validate(f, t);
+                if (isChecked) {
+                    ValueAnimator anim = ValueAnimator.ofInt(0, StaticStore.dptopx(100f, activity));
                     anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -829,11 +830,11 @@ public class UnitinfPager extends Fragment {
                     anim.setInterpolator(new DecelerateInterpolator());
                     anim.start();
 
-                    ValueAnimator anim2 = ValueAnimator.ofInt(0,StaticStore.dptopx(48f,activity));
+                    ValueAnimator anim2 = ValueAnimator.ofInt(0, StaticStore.dptopx(48f, activity));
                     anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) nprow.getLayoutParams();
                             params.height = (int) (Integer) animation.getAnimatedValue();
                             nprow.setLayoutParams(params);
                         }
@@ -842,11 +843,11 @@ public class UnitinfPager extends Fragment {
                     anim2.setInterpolator(new DecelerateInterpolator());
                     anim2.start();
 
-                    ValueAnimator anim3 = ValueAnimator.ofInt(0,StaticStore.dptopx(16f,activity));
+                    ValueAnimator anim3 = ValueAnimator.ofInt(0, StaticStore.dptopx(16f, activity));
                     anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) nprow.getLayoutParams();
                             params.topMargin = (int) animation.getAnimatedValue();
                             nprow.setLayoutParams(params);
                         }
@@ -856,8 +857,8 @@ public class UnitinfPager extends Fragment {
                     anim3.start();
                 } else {
                     talents = false;
-                    validate(f,t);
-                    ValueAnimator anim = ValueAnimator.ofInt(StaticStore.dptopx(100f,activity),0);
+                    validate(f, t);
+                    ValueAnimator anim = ValueAnimator.ofInt(StaticStore.dptopx(100f, activity), 0);
                     anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -871,11 +872,11 @@ public class UnitinfPager extends Fragment {
                     anim.setInterpolator(new DecelerateInterpolator());
                     anim.start();
 
-                    ValueAnimator anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f,activity),0);
+                    ValueAnimator anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f, activity), 0);
                     anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) nprow.getLayoutParams();
                             params.height = (int) animation.getAnimatedValue();
                             nprow.setLayoutParams(params);
                         }
@@ -884,11 +885,11 @@ public class UnitinfPager extends Fragment {
                     anim2.setInterpolator(new DecelerateInterpolator());
                     anim2.start();
 
-                    ValueAnimator anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f,activity),0);
+                    ValueAnimator anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f, activity), 0);
                     anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) nprow.getLayoutParams();
                             params.topMargin = (int) animation.getAnimatedValue();
                             nprow.setLayoutParams(params);
                         }
@@ -900,13 +901,13 @@ public class UnitinfPager extends Fragment {
             }
         });
 
-        for(int i = 0;i<pcoins.length;i++) {
+        for (int i = 0; i < pcoins.length; i++) {
             final int finals = i;
             pcoins[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    pcoinlev[finals+1] = (int)pcoins[finals].getSelectedItem();
-                    validate(f,t);
+                    pcoinlev[finals + 1] = (int) pcoins[finals].getSelectedItem();
+                    validate(f, t);
                 }
 
                 @Override
@@ -919,7 +920,7 @@ public class UnitinfPager extends Fragment {
                 @Override
                 public boolean onLongClick(View v) {
                     pcoins[finals].setClickable(false);
-                    Toast.makeText(activity,s.getTalentName(finals,f),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, s.getTalentName(finals, f), Toast.LENGTH_SHORT).show();
 
                     return true;
                 }
@@ -929,71 +930,71 @@ public class UnitinfPager extends Fragment {
         npreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i =0;i<pcoins.length;i++) {
-                    pcoins[i].setSelection(getIndex(pcoins[i],f.getPCoin().max[i+1]));
-                    pcoinlev[i+1] = f.getPCoin().max[i+1];
+                for (int i = 0; i < pcoins.length; i++) {
+                    pcoins[i].setSelection(getIndex(pcoins[i], f.getPCoin().max[i + 1]));
+                    pcoinlev[i + 1] = f.getPCoin().max[i + 1];
                 }
 
-                validate(f,t);
+                validate(f, t);
             }
         });
     }
 
     private void validate(Form f, Treasure t) {
-        int level = (int)unitlevel.getSelectedItem();
-        int levelp = (int)unitlevelp.getSelectedItem();
-        unithp.setText(s.getHP(f,t,level+levelp,talents,pcoinlev));
-        unithb.setText(s.getHB(f,talents,pcoinlev));
-        if(unitatkb.getText().toString().equals("DPS"))
-            unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoinlev));
+        int level = (int) unitlevel.getSelectedItem();
+        int levelp = (int) unitlevelp.getSelectedItem();
+        unithp.setText(s.getHP(f, t, level + levelp, talents, pcoinlev));
+        unithb.setText(s.getHB(f, talents, pcoinlev));
+        if (unitatkb.getText().toString().equals("DPS"))
+            unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoinlev));
         else
-            unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoinlev));
-        unitcost.setText(s.getCost(f,talents,pcoinlev));
-        if(unitcd.getText().toString().endsWith("s"))
-            unitcd.setText(s.getCD(f,t,1,talents,pcoinlev));
+            unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoinlev));
+        unitcost.setText(s.getCost(f, talents, pcoinlev));
+        if (unitcd.getText().toString().endsWith("s"))
+            unitcd.setText(s.getCD(f, t, 1, talents, pcoinlev));
         else
-            unitcd.setText(s.getCD(f,t,0,talents,pcoinlev));
-        unittrait.setText(s.getTrait(f,talents,pcoinlev));
-        unitspd.setText(s.getSpd(f,talents,pcoinlev));
+            unitcd.setText(s.getCD(f, t, 0, talents, pcoinlev));
+        unittrait.setText(s.getTrait(f, talents, pcoinlev));
+        unitspd.setText(s.getSpd(f, talents, pcoinlev));
 
         MaskUnit du;
 
-        if(f.getPCoin() != null)
-            du = talents?f.getPCoin().improve(pcoinlev):f.du;
+        if (f.getPCoin() != null)
+            du = talents ? f.getPCoin().improve(pcoinlev) : f.du;
         else
             du = f.du;
 
-        List<String> abil = Interpret.getAbi(du,fragment,StaticStore.addition,0);
+        List<String> abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0);
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        String language = StaticStore.lang[shared.getInt("Language",0)];
-        if(language.equals("")) {
+        String language = StaticStore.lang[shared.getInt("Language", 0)];
+        if (language.equals("")) {
             language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         }
         List<String> proc;
-        if(language.equals("ko")) {
-            proc = Interpret.getProc(du,1,fs);
+        if (language.equals("ko")) {
+            proc = Interpret.getProc(du, 1, fs);
         } else {
-            proc = Interpret.getProc(du,0,fs);
+            proc = Interpret.getProc(du, 0, fs);
         }
 
         List<Integer> abilityicon = Interpret.getAbiid(du);
         List<Integer> procicon = Interpret.getProcid(du);
 
-        if(abil.size()>0 || proc.size() > 0) {
+        if (abil.size() > 0 || proc.size() > 0) {
             none.setVisibility(View.GONE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             unitabil.setLayoutManager(linearLayoutManager);
-            AdapterAbil adapterAbil = new AdapterAbil(abil, proc,abilityicon,procicon,activity);
+            AdapterAbil adapterAbil = new AdapterAbil(abil, proc, abilityicon, procicon, activity);
             unitabil.setAdapter(adapterAbil);
             ViewCompat.setNestedScrollingEnabled(unitabil, false);
         } else {
             unitabil.setVisibility(View.GONE);
         }
     }
-    
+
     private void init(View view) {
         frse = view.findViewById(R.id.unitinffrse);
         unitname = view.findViewById(R.id.unitinfname);
@@ -1030,7 +1031,7 @@ public class UnitinfPager extends Fragment {
         npreset = view.findViewById(R.id.unitinftalreset);
         npresetrow = view.findViewById(R.id.talresetrow);
         nprow = view.findViewById(R.id.talenrow);
-        for(int i = 0;i<ids.length;i++)
+        for (int i = 0; i < ids.length; i++)
             pcoins[i] = view.findViewById(ids[i]);
     }
 
@@ -1050,7 +1051,7 @@ public class UnitinfPager extends Fragment {
         int colorRes = typedValue.resourceId;
         int color = -1;
         try {
-            color = ContextCompat.getColor(context,colorRes);
+            color = ContextCompat.getColor(context, colorRes);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
@@ -1060,8 +1061,8 @@ public class UnitinfPager extends Fragment {
     private int getIndex(Spinner spinner, int lev) {
         int index = 0;
 
-        for(int i = 0; i< spinner.getCount();i++)
-            if (lev == (int)spinner.getItemAtPosition(i))
+        for (int i = 0; i < spinner.getCount(); i++)
+            if (lev == (int) spinner.getItemAtPosition(i))
                 index = i;
 
         return index;

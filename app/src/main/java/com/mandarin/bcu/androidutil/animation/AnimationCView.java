@@ -58,6 +58,10 @@ public class AnimationCView extends View {
 
     boolean started = false;
 
+    public AnimationCView(Context context) {
+        super(context);
+    }
+
     public AnimationCView(Context context, int id, int form, int mode, boolean night, boolean axis, TextView textView, SeekBar seekBar, TextView fpsind, TextView gif) {
         super(context);
 

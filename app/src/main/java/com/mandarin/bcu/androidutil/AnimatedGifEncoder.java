@@ -1,12 +1,12 @@
 package com.mandarin.bcu.androidutil;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class AnimatedGifEncoder {
 
@@ -58,8 +58,7 @@ public class AnimatedGifEncoder {
      * Sets the delay time between each frame, or changes it for subsequent frames
      * (applies to last frame added).
      *
-     * @param ms
-     *          int delay time in milliseconds
+     * @param ms int delay time in milliseconds
      */
     public void setDelay(int ms) {
         delay = ms / 10;
@@ -70,8 +69,7 @@ public class AnimatedGifEncoder {
      * subsequent frames. Default is 0 if no transparent color has been set,
      * otherwise 2.
      *
-     * @param code
-     *          int disposal code.
+     * @param code int disposal code.
      */
     public void setDispose(int code) {
         if (code >= 0) {
@@ -84,8 +82,7 @@ public class AnimatedGifEncoder {
      * 1; 0 means play indefinitely. Must be invoked before the first image is
      * added.
      *
-     * @param iter
-     *          int number of iterations.
+     * @param iter int number of iterations.
      * @return
      */
     public void setRepeat(int iter) {
@@ -101,8 +98,7 @@ public class AnimatedGifEncoder {
      * color becomes the transparent color for that frame. May be set to null to
      * indicate no transparent color.
      *
-     * @param c
-     *          Color to be treated as transparent on display.
+     * @param c Color to be treated as transparent on display.
      */
     public void setTransparent(int c) {
         transparent = c;
@@ -115,8 +111,7 @@ public class AnimatedGifEncoder {
      * <code>setSize</code> was not invoked, the size of the first image is used
      * for all subsequent frames.
      *
-     * @param im
-     *          BufferedImage containing frame to write.
+     * @param im BufferedImage containing frame to write.
      * @return true if successful.
      */
     public boolean addFrame(Bitmap im) {
@@ -190,12 +185,11 @@ public class AnimatedGifEncoder {
      * Sets frame rate in frames per second. Equivalent to
      * <code>setDelay(1000/fps)</code>.
      *
-     * @param fps
-     *          float frame rate (frames per second)
+     * @param fps float frame rate (frames per second)
      */
     public void setFrameRate(float fps) {
         if (fps != 0f) {
-            delay = (int)(100 / fps);
+            delay = (int) (100 / fps);
         }
     }
 
@@ -206,8 +200,7 @@ public class AnimatedGifEncoder {
      * default, and produces good color mapping at reasonable speeds. Values
      * greater than 20 do not yield significant improvements in speed.
      *
-     * @param quality
-     *          int greater than 0.
+     * @param quality int greater than 0.
      * @return
      */
     public void setQuality(int quality) {
@@ -220,10 +213,8 @@ public class AnimatedGifEncoder {
      * Sets the GIF frame size. The default size is the size of the first frame
      * added if this method is not invoked.
      *
-     * @param w
-     *          int frame width.
-     * @param h
-     *          int frame width.
+     * @param w int frame width.
+     * @param h int frame width.
      */
     public void setSize(int w, int h) {
         width = w;
@@ -239,10 +230,8 @@ public class AnimatedGifEncoder {
      * Sets the GIF frame position. The position is 0,0 by default.
      * Useful for only updating a section of the image
      *
-     * @param x
-     *          int frame width.
-     * @param y
-     *          int frame width.
+     * @param x int frame width.
+     * @param y int frame width.
      */
     public void setPosition(int x, int y) {
         this.x = x;
@@ -253,8 +242,7 @@ public class AnimatedGifEncoder {
      * Initiates GIF file creation on the given stream. The stream is not closed
      * automatically.
      *
-     * @param os
-     *          OutputStream on which GIF images are written.
+     * @param os OutputStream on which GIF images are written.
      * @return false if initial write failed.
      */
     public boolean start(OutputStream os) {
@@ -306,7 +294,6 @@ public class AnimatedGifEncoder {
 
     /**
      * Returns index of palette color closest to c
-     *
      */
     protected int findClosest(int c) {
         if (colorTab == null)
@@ -317,7 +304,7 @@ public class AnimatedGifEncoder {
         int minpos = 0;
         int dmin = 256 * 256 * 256;
         int len = colorTab.length;
-        for (int i = 0; i < len;) {
+        for (int i = 0; i < len; ) {
             int dr = r - (colorTab[i++] & 0xff);
             int dg = g - (colorTab[i++] & 0xff);
             int db = b - (colorTab[i] & 0xff);
@@ -355,6 +342,7 @@ public class AnimatedGifEncoder {
             pixels[tind] = (byte) ((td >> 16) & 0xFF);
         }
     }
+
     protected int[] getImageData(Bitmap img) {
         int w = img.getWidth();
         int h = img.getHeight();
@@ -1088,8 +1076,8 @@ class LZWEncoder {
 
     int cur_bits = 0;
 
-    int masks[] = { 0x0000, 0x0001, 0x0003, 0x0007, 0x000F, 0x001F, 0x003F, 0x007F, 0x00FF, 0x01FF,
-            0x03FF, 0x07FF, 0x0FFF, 0x1FFF, 0x3FFF, 0x7FFF, 0xFFFF };
+    int masks[] = {0x0000, 0x0001, 0x0003, 0x0007, 0x000F, 0x001F, 0x003F, 0x007F, 0x00FF, 0x01FF,
+            0x03FF, 0x07FF, 0x0FFF, 0x1FFF, 0x3FFF, 0x7FFF, 0xFFFF};
 
     // Number of characters so far in this 'packet'
     int a_count;
@@ -1165,7 +1153,8 @@ class LZWEncoder {
 
         output(ClearCode, outs);
 
-        outer_loop: while ((c = nextPixel()) != EOF) {
+        outer_loop:
+        while ((c = nextPixel()) != EOF) {
             fcode = (c << maxbits) + ent;
             i = (c << hshift) ^ ent; // xor hashing
 

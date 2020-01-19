@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
@@ -33,32 +34,32 @@ import common.util.unit.Enemy;
 
 public class EDefiner {
 
-    private String[] lan = {"/en/","/zh/","/kr/","/jp/"};
-    private String[] files = {"EnemyName.txt","EnemyExplanation.txt"};
+    private String[] lan = {"/en/", "/zh/", "/kr/", "/jp/"};
+    private String[] files = {"EnemyName.txt", "EnemyExplanation.txt"};
 
-    private int [] colorid = StaticStore.colorid;
-    private int [] starid = StaticStore.starid;
-    private String [] starstring = new String[5];
-    private String [] colorstring = new String[colorid.length];
-    private int [] procid = StaticStore.procid;
-    private String [] proc = new String[procid.length];
-    private int [] abiid = StaticStore.abiid;
-    private String [] abi = new String[abiid.length];
-    private int [] textid = StaticStore.textid;
-    private String [] textstring = new String[textid.length];
+    private int[] colorid = StaticStore.colorid;
+    private int[] starid = StaticStore.starid;
+    private String[] starstring = new String[5];
+    private String[] colorstring = new String[colorid.length];
+    private int[] procid = StaticStore.procid;
+    private String[] proc = new String[procid.length];
+    private int[] abiid = StaticStore.abiid;
+    private String[] abi = new String[abiid.length];
+    private int[] textid = StaticStore.textid;
+    private String[] textstring = new String[textid.length];
 
     public void define(Context context) {
         try {
-            if(StaticStore.enemies == null) {
+            if (StaticStore.enemies == null) {
                 try {
                     StaticStore.getEnemynumber();
                     Enemy.readData();
                 } catch (NullPointerException e) {
                     StaticStore.clear();
 
-                    SharedPreferences shared = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+                    SharedPreferences shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-                    StaticStore.getLang(shared.getInt("Language",0));
+                    StaticStore.getLang(shared.getInt("Language", 0));
                     ZipLib.init();
                     ZipLib.read();
                     ImageBuilder.builder = new BMBuilder();
@@ -85,14 +86,14 @@ public class EDefiner {
                     for (int i = 0; i < number.length; i++)
                         StaticStore.icons[i] = (Bitmap) StaticStore.img15[number[i]].bimg();
 
-                    String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
+                    String iconpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/page/icons/";
                     String[] files = StaticStore.afiles;
 
-                    for(int i = 0;i<files.length;i++) {
-                        if(files[i].equals(""))
+                    for (int i = 0; i < files.length; i++) {
+                        if (files[i].equals(""))
                             continue;
 
-                        StaticStore.icons[i] = BitmapFactory.decodeFile(iconpath+files[i]);
+                        StaticStore.icons[i] = BitmapFactory.decodeFile(iconpath + files[i]);
                     }
                 }
 
@@ -104,33 +105,33 @@ public class EDefiner {
                     for (int i = 0; i < number.length; i++)
                         StaticStore.picons[i] = (Bitmap) StaticStore.img15[number[i]].bimg();
 
-                    String iconpath = Environment.getExternalStorageDirectory().getPath()+"/Android/data/com.mandarin.BCU/files/org/page/icons/";
+                    String iconpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/page/icons/";
                     String[] files = StaticStore.pfiles;
 
-                    for(int i = 0;i<files.length;i++) {
-                        if(files[i].equals(""))
+                    for (int i = 0; i < files.length; i++) {
+                        if (files[i].equals(""))
                             continue;
 
-                        StaticStore.picons[i] = BitmapFactory.decodeFile(iconpath+files[i]);
+                        StaticStore.picons[i] = BitmapFactory.decodeFile(iconpath + files[i]);
                     }
                 }
 
-                for(int i = 0;i<colorid.length;i++) {
+                for (int i = 0; i < colorid.length; i++) {
                     colorstring[i] = context.getString(colorid[i]);
                 }
 
                 starstring[0] = "";
 
-                for(int i = 0;i<starid.length;i++)
-                    starstring[i+1] = context.getString(starid[i]);
+                for (int i = 0; i < starid.length; i++)
+                    starstring[i + 1] = context.getString(starid[i]);
 
-                for(int i =0;i<procid.length;i++)
+                for (int i = 0; i < procid.length; i++)
                     proc[i] = context.getString(procid[i]);
 
-                for(int i=0;i<abiid.length;i++)
+                for (int i = 0; i < abiid.length; i++)
                     abi[i] = context.getString(abiid[i]);
 
-                for(int i=0;i<textid.length;i++)
+                for (int i = 0; i < textid.length; i++)
                     textstring[i] = context.getString(textid[i]);
 
                 Interpret.TRAIT = colorstring;
@@ -140,7 +141,7 @@ public class EDefiner {
                 Interpret.TEXT = textstring;
             }
 
-            if(StaticStore.enemeylang == 1) {
+            if (StaticStore.enemeylang == 1) {
                 MultiLangCont.ENAME.clear();
                 MultiLangCont.EEXP.clear();
 
@@ -164,7 +165,7 @@ public class EDefiner {
                                         if (strs.length == 1)
                                             MultiLangCont.ENAME.put(l.substring(1, l.length() - 1), em, null);
                                         else
-                                            MultiLangCont.ENAME.put(l.substring(1, l.length() - 1), em, strs[1].trim().startsWith("【")?strs[1].trim().substring(1,strs[1].trim().length()-1):strs[1].trim());
+                                            MultiLangCont.ENAME.put(l.substring(1, l.length() - 1), em, strs[1].trim().startsWith("【") ? strs[1].trim().substring(1, strs[1].trim().length() - 1) : strs[1].trim());
                                     }
 
                                     break;
@@ -192,7 +193,7 @@ public class EDefiner {
                 StaticStore.enemeylang = 0;
             }
 
-            if(StaticStore.addition == null) {
+            if (StaticStore.addition == null) {
                 int[] addid = {R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas};
                 StaticStore.addition = new String[addid.length];
                 for (int i = 0; i < addid.length; i++)
@@ -204,33 +205,33 @@ public class EDefiner {
         }
     }
 
-    void redefine(Context context,String lang) {
-        SharedPreferences shared = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+    void redefine(Context context, String lang) {
+        SharedPreferences shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        StaticStore.getLang(shared.getInt("Language",0));
+        StaticStore.getLang(shared.getInt("Language", 0));
 
-        for(int i = 0;i<colorid.length;i++) {
-            colorstring[i] = getString(context,colorid[i],lang);
+        for (int i = 0; i < colorid.length; i++) {
+            colorstring[i] = getString(context, colorid[i], lang);
         }
 
         starstring[0] = "";
 
-        for(int i = 0;i<starid.length;i++)
-            starstring[i+1] = getString(context,starid[i],lang);
+        for (int i = 0; i < starid.length; i++)
+            starstring[i + 1] = getString(context, starid[i], lang);
 
-        for(int i =0;i<procid.length;i++)
-            proc[i] = getString(context,procid[i],lang);
+        for (int i = 0; i < procid.length; i++)
+            proc[i] = getString(context, procid[i], lang);
 
-        for(int i=0;i<abiid.length;i++)
-            abi[i] = getString(context,abiid[i],lang);
+        for (int i = 0; i < abiid.length; i++)
+            abi[i] = getString(context, abiid[i], lang);
 
-        for(int i=0;i<textid.length;i++)
-            textstring[i] = getString(context,textid[i],lang);
+        for (int i = 0; i < textid.length; i++)
+            textstring[i] = getString(context, textid[i], lang);
 
         int[] addid = {R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas};
         StaticStore.addition = new String[addid.length];
         for (int i = 0; i < addid.length; i++)
-            StaticStore.addition[i] = getString(context,addid[i],lang);
+            StaticStore.addition[i] = getString(context, addid[i], lang);
 
         Interpret.TRAIT = colorstring;
         Interpret.STAR = starstring;
@@ -241,7 +242,7 @@ public class EDefiner {
 
     @NonNull
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private String getString(Context context,int id,String lang) {
+    private String getString(Context context, int id, String lang) {
 
         Locale locale = new Locale(lang);
 

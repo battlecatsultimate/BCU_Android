@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +16,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -30,35 +31,35 @@ import common.CommonStatic;
 public class ConfigScreen extends AppCompatActivity {
     SharedPreferences shared;
     FloatingActionButton back;
-    private int [] LangId = {R.string.lang_auto,R.string.def_lang_en,R.string.def_lang_zh,R.string.def_lang_ko,R.string.def_lang_ja};
-    private String [] locales = StaticStore.lang;
-    private  boolean started = false;
+    private int[] LangId = {R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja};
+    private String[] locales = StaticStore.lang;
+    private boolean started = false;
     private boolean changed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed;
-        if(!shared.contains("initial")) {
+        if (!shared.contains("initial")) {
             ed = shared.edit();
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         setContentView(R.layout.activity_config_screen);
@@ -68,8 +69,8 @@ public class ConfigScreen extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConfigScreen.this,MainActivity.class);
-                intent.putExtra("Config",true);
+                Intent intent = new Intent(ConfigScreen.this, MainActivity.class);
+                intent.putExtra("Config", true);
                 startActivity(intent);
                 finish();
             }
@@ -80,8 +81,8 @@ public class ConfigScreen extends AppCompatActivity {
         RadioButton frames = findViewById(R.id.configframe);
         RadioButton seconds = findViewById(R.id.configsecond);
 
-        if(shared.contains("initial")) {
-            if(!shared.getBoolean("theme",false))
+        if (shared.contains("initial")) {
+            if (!shared.getBoolean("theme", false))
                 night.setChecked(true);
             else
                 day.setChecked(true);
@@ -97,14 +98,14 @@ public class ConfigScreen extends AppCompatActivity {
         theme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == day.getId()) {
+                if (checkedId == day.getId()) {
                     SharedPreferences.Editor ed = shared.edit();
-                    ed.putBoolean("theme",true);
+                    ed.putBoolean("theme", true);
                     ed.apply();
                     restart();
                 } else {
                     SharedPreferences.Editor ed = shared.edit();
-                    ed.putBoolean("theme",false);
+                    ed.putBoolean("theme", false);
                     ed.apply();
                     restart();
                 }
@@ -115,32 +116,32 @@ public class ConfigScreen extends AppCompatActivity {
         frse.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == frames.getId()) {
+                if (checkedId == frames.getId()) {
                     SharedPreferences.Editor ed = shared.edit();
-                    ed.putBoolean("frame",true);
+                    ed.putBoolean("frame", true);
                     ed.apply();
                 } else {
                     SharedPreferences.Editor ed = shared.edit();
-                    ed.putBoolean("frame",false);
+                    ed.putBoolean("frame", false);
                     ed.apply();
                 }
             }
         });
 
         List<Integer> levels = new ArrayList<>();
-        for(int j =1;j < 51;j++)
+        for (int j = 1; j < 51; j++)
             levels.add(j);
 
         Spinner deflev = findViewById(R.id.configdeflevsp);
-        ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(this,R.layout.spinneradapter,levels);
+        ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinneradapter, levels);
         deflev.setAdapter(arrayAdapter);
-        deflev.setSelection(getIndex(deflev,shared.getInt("default_level",50)));
+        deflev.setSelection(getIndex(deflev, shared.getInt("default_level", 50)));
 
         deflev.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor ed = shared.edit();
-                ed.putInt("default_level",(int)deflev.getSelectedItem());
+                ed.putInt("default_level", (int) deflev.getSelectedItem());
                 ed.apply();
             }
 
@@ -154,7 +155,7 @@ public class ConfigScreen extends AppCompatActivity {
 
         Switch apktest = findViewById(R.id.apktest);
 
-        if(!shared.getBoolean("apktest",false)) {
+        if (!shared.getBoolean("apktest", false)) {
             apktest.setChecked(false);
         } else {
             apktest.setChecked(true);
@@ -163,13 +164,13 @@ public class ConfigScreen extends AppCompatActivity {
         apktest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     SharedPreferences.Editor ed = shared.edit();
-                    ed.putBoolean("apktest",true);
+                    ed.putBoolean("apktest", true);
                     ed.apply();
                 } else {
                     SharedPreferences.Editor ed = shared.edit();
-                    ed.putBoolean("apktest",false);
+                    ed.putBoolean("apktest", false);
                     ed.apply();
                 }
             }
@@ -182,14 +183,14 @@ public class ConfigScreen extends AppCompatActivity {
             lang.add(getString(i1));
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.spinneradapter,lang);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinneradapter, lang);
         language.setAdapter(adapter);
-        language.setSelection(shared.getInt("Language",0));
+        language.setSelection(shared.getInt("Language", 0));
 
         language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(started) {
+                if (started) {
                     changed = true;
                     SharedPreferences.Editor ed = shared.edit();
                     ed.putInt("Language", position);
@@ -219,14 +220,14 @@ public class ConfigScreen extends AppCompatActivity {
         });
 
         RadioGroup orientation = findViewById(R.id.configorirg);
-        RadioButton[] oris = {findViewById(R.id.configoriauto),findViewById(R.id.configoriland),findViewById(R.id.configoriport)};
+        RadioButton[] oris = {findViewById(R.id.configoriauto), findViewById(R.id.configoriland), findViewById(R.id.configoriport)};
 
         orientation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(started)
-                    for(int i = 0;i<3;i++)
-                        if(i != shared.getInt("Orientation",0) && checkedId == oris[i].getId()) {
+                if (started)
+                    for (int i = 0; i < 3; i++)
+                        if (i != shared.getInt("Orientation", 0) && checkedId == oris[i].getId()) {
                             SharedPreferences.Editor ed = shared.edit();
                             ed.putInt("Orientation", i);
                             ed.apply();
@@ -235,13 +236,13 @@ public class ConfigScreen extends AppCompatActivity {
             }
         });
 
-        oris[shared.getInt("Orientation",0)].setChecked(true);
+        oris[shared.getInt("Orientation", 0)].setChecked(true);
 
         RadioGroup unitinfland = findViewById(R.id.configinfland);
         RadioButton unitinflandlist = findViewById(R.id.configlaylandlist);
         RadioButton unitinflandslide = findViewById(R.id.configlaylandslide);
 
-        if(shared.getBoolean("Lay_Land",true))
+        if (shared.getBoolean("Lay_Land", true))
             unitinflandslide.setChecked(true);
         else
             unitinflandlist.setChecked(true);
@@ -250,7 +251,7 @@ public class ConfigScreen extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 SharedPreferences.Editor ed = shared.edit();
-                ed.putBoolean("Lay_Land",checkedId == unitinflandslide.getId());
+                ed.putBoolean("Lay_Land", checkedId == unitinflandslide.getId());
                 ed.apply();
             }
         });
@@ -259,7 +260,7 @@ public class ConfigScreen extends AppCompatActivity {
         RadioButton unitinfportlist = findViewById(R.id.configlayportlist);
         RadioButton unitinfportslide = findViewById(R.id.configlayportslide);
 
-        if(shared.getBoolean("Lay_Port",true))
+        if (shared.getBoolean("Lay_Port", true))
             unitinfportslide.setChecked(true);
         else
             unitinfportlist.setChecked(true);
@@ -268,14 +269,14 @@ public class ConfigScreen extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 SharedPreferences.Editor ed = shared.edit();
-                ed.putBoolean("Lay_Port",checkedId == unitinfportslide.getId());
+                ed.putBoolean("Lay_Port", checkedId == unitinfportslide.getId());
                 ed.apply();
             }
         });
 
         Switch skiptext = findViewById(R.id.configskiptext);
 
-        if(shared.getBoolean("Skip_Text",false))
+        if (shared.getBoolean("Skip_Text", false))
             skiptext.setChecked(true);
         else
             skiptext.setChecked(false);
@@ -284,7 +285,7 @@ public class ConfigScreen extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor ed = shared.edit();
-                ed.putBoolean("Skip_Text",isChecked);
+                ed.putBoolean("Skip_Text", isChecked);
                 ed.apply();
             }
         });
@@ -294,8 +295,8 @@ public class ConfigScreen extends AppCompatActivity {
         Checkupdate.setOnClickListener(new SingleClick() {
             @Override
             public void onSingleClick(View v) {
-                Intent intent = new Intent(ConfigScreen.this,CheckUpdateScreen.class);
-                intent.putExtra("Config",true);
+                Intent intent = new Intent(ConfigScreen.this, CheckUpdateScreen.class);
+                intent.putExtra("Config", true);
                 startActivity(intent);
                 finish();
             }
@@ -303,7 +304,7 @@ public class ConfigScreen extends AppCompatActivity {
 
         Switch axis = findViewById(R.id.configaxis);
 
-        if(shared.getBoolean("Axis",true))
+        if (shared.getBoolean("Axis", true))
             axis.setChecked(true);
         else
             axis.setChecked(false);
@@ -312,14 +313,14 @@ public class ConfigScreen extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor ed = shared.edit();
-                ed.putBoolean("Axis",isChecked);
+                ed.putBoolean("Axis", isChecked);
                 ed.apply();
             }
         });
 
         Switch fps = findViewById(R.id.configfps);
 
-        if(shared.getBoolean("FPS",true))
+        if (shared.getBoolean("FPS", true))
             fps.setChecked(true);
         else
             fps.setChecked(false);
@@ -328,7 +329,7 @@ public class ConfigScreen extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor ed = shared.edit();
-                ed.putBoolean("FPS",isChecked);
+                ed.putBoolean("FPS", isChecked);
                 ed.apply();
             }
         });
@@ -337,15 +338,15 @@ public class ConfigScreen extends AppCompatActivity {
     private int getIndex(Spinner spinner, int lev) {
         int index = 0;
 
-        for(int i = 0; i< spinner.getCount();i++)
-            if (lev == (int)spinner.getItemAtPosition(i))
+        for (int i = 0; i < spinner.getCount(); i++)
+            if (lev == (int) spinner.getItemAtPosition(i))
                 index = i;
 
         return index;
     }
 
     protected void restart() {
-        Intent intent = new Intent(ConfigScreen.this,ConfigScreen.class);
+        Intent intent = new Intent(ConfigScreen.this, ConfigScreen.class);
         startActivity(intent);
         finish();
     }
@@ -357,7 +358,7 @@ public class ConfigScreen extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 }

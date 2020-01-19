@@ -29,28 +29,28 @@ public class ErrorLogWriter implements Thread.UncaughtExceptionHandler {
         String stacktrace = stringbuff.toString();
         printWriter.close();
 
-        if(path != null) {
+        if (path != null) {
             writeToFile(stacktrace);
         }
 
-        errors.uncaughtException(t,e);
+        errors.uncaughtException(t, e);
     }
 
     private void writeToFile(String current) {
         try {
             File f = new File(path);
 
-            if(!f.exists()) {
+            if (!f.exists()) {
                 f.mkdirs();
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
             Date date = new Date();
-            String name = dateFormat.format(date)+".txt";
+            String name = dateFormat.format(date) + ".txt";
 
-            File file = new File(path,name);
+            File file = new File(path, name);
 
-            if(!file.exists())
+            if (!file.exists())
                 f.createNewFile();
 
             FileWriter fileWriter = new FileWriter(file);
@@ -64,28 +64,28 @@ public class ErrorLogWriter implements Thread.UncaughtExceptionHandler {
 
     public static void WriteLog(Exception error) {
         try {
-            String path = Environment.getExternalStorageDirectory().getPath()+"/BCU/logs/";
+            String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/logs/";
             File f = new File(path);
 
-            if(!f.exists()) {
+            if (!f.exists()) {
                 f.mkdirs();
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
             Date date = new Date();
-            String name = dateFormat.format(date)+".txt";
+            String name = dateFormat.format(date) + ".txt";
 
-            File file = new File(path,name);
+            File file = new File(path, name);
 
             final Writer stringbuff = new StringWriter();
             final PrintWriter printWriter = new PrintWriter(stringbuff);
 
             error.printStackTrace(printWriter);
 
-            if(!file.exists())
+            if (!file.exists())
                 file.createNewFile();
             else {
-                file = new File(path,GetExistingFileName(path,name));
+                file = new File(path, GetExistingFileName(path, name));
                 file.createNewFile();
             }
 
@@ -104,12 +104,12 @@ public class ErrorLogWriter implements Thread.UncaughtExceptionHandler {
 
         int exist = 1;
 
-        String nam = name+"-"+exist;
+        String nam = name + "-" + exist;
 
-        while(!decided) {
-            File f = new File(path,nam);
+        while (!decided) {
+            File f = new File(path, nam);
 
-            if(!f.exists())
+            if (!f.exists())
                 return nam;
             else {
                 exist++;

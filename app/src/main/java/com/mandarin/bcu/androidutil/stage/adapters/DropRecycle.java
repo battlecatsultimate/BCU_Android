@@ -2,12 +2,13 @@ package com.mandarin.bcu.androidutil.stage.adapters;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -41,33 +42,33 @@ public class DropRecycle extends RecyclerView.Adapter<DropRecycle.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.drop_info_layout,viewGroup,false);
+        View row = LayoutInflater.from(activity).inflate(R.layout.drop_info_layout, viewGroup, false);
 
         return new ViewHolder(row);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        int [] data = st.info.drop[i];
+        int[] data = st.info.drop[i];
 
-        String chance = data[0] +" %";
+        String chance = data[0] + " %";
 
         viewHolder.chance.setText(chance);
 
         String reward = MultiLangCont.RWNAME.getCont(data[1]);
 
-        if(reward == null)
+        if (reward == null)
             reward = String.valueOf(data[1]);
 
-        if(i == 0) {
-            if(data[0] != 100) {
+        if (i == 0) {
+            if (data[0] != 100) {
                 BitmapDrawable bd = new BitmapDrawable(activity.getResources(), StaticStore.getResizeb(StaticStore.treasure, activity, 24f));
                 bd.setFilterBitmap(true);
                 bd.setAntiAlias(true);
                 viewHolder.item.setCompoundDrawablesWithIntrinsicBounds(null, null, bd, null);
             }
 
-            if(st.info.rand == 1 || data[1] >= 1000) {
+            if (st.info.rand == 1 || data[1] >= 1000) {
                 reward += activity.getString(R.string.stg_info_once);
                 viewHolder.item.setText(reward);
             } else {

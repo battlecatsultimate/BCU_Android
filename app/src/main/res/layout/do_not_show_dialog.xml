@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/battle_not_over"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView24"
+        android:layout_alignStart="@+id/textView24"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/battle_sure_go" />
+
+    <CheckBox
+        android:id="@+id/donotshowcheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView25"
+        android:layout_alignEnd="@+id/textView25"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="0dp"
+        android:text="@string/battle_do_not_show"
+        android:textColor="?attr/TextPrimary" />
+
+    <Button
+        android:id="@+id/battlecancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/battledexit"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/battledexit"
+        android:backgroundTint="?attr/backgroundPrimary"
+        android:stateListAnimator="@null"
+        android:text="@string/main_file_cancel"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary" />
+
+    <Button
+        android:id="@+id/battledexit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/donotshowcheck"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="?attr/backgroundPrimary"
+        android:stateListAnimator="@null"
+        android:text="@string/battle_exit"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary" />
+</RelativeLayout>

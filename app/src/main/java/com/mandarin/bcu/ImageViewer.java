@@ -16,12 +16,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +30,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -62,7 +63,7 @@ public class ImageViewer extends AppCompatActivity {
     private final int ANIMU = 2;
     private final int ANIME = 3;
 
-    private String path  = null;
+    private String path = null;
     private int img = -1;
     private int bgnum = -1;
 
@@ -74,33 +75,33 @@ public class ImageViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed;
-        if(!shared.contains("initial")) {
+        if (!shared.contains("initial")) {
             ed = shared.edit();
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         setContentView(R.layout.activity_image_viewer);
 
         Intent result = getIntent();
 
-        if(result.getExtras() != null) {
+        if (result.getExtras() != null) {
             Bundle extra = result.getExtras();
 
             path = extra.getString("Path");
@@ -135,7 +136,7 @@ public class ImageViewer extends AppCompatActivity {
 
         FloatingActionButton option = findViewById(R.id.imgvieweroption);
 
-        switch(img) {
+        switch (img) {
             case BG:
                 row.setVisibility(View.GONE);
                 seekBar.setVisibility(View.GONE);
@@ -158,13 +159,13 @@ public class ImageViewer extends AppCompatActivity {
                 paint.setAntiAlias(true);
                 paint.setDither(true);
 
-                Bitmap b = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+                Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
                 Canvas canvas = new Canvas(b);
 
-                if(getImgcut() == 1 || getImgcut() == 8) {
-                    Bitmap b1 = getImg(b.getHeight(),2);
-                    Bitmap b2 = getImg2(b.getHeight(),2);
+                if (getImgcut() == 1 || getImgcut() == 8) {
+                    Bitmap b1 = getImg(b.getHeight(), 2);
+                    Bitmap b2 = getImg2(b.getHeight(), 2);
 
                     int h = b1.getHeight();
                     int w = b1.getWidth();
@@ -174,7 +175,7 @@ public class ImageViewer extends AppCompatActivity {
                         canvas.drawBitmap(b1, w * i, height - h, paint);
                     }
                 } else {
-                    Bitmap b1 = getImg(b.getHeight(),2);
+                    Bitmap b1 = getImg(b.getHeight(), 2);
 
                     int h = b1.getHeight();
                     int w = b1.getWidth();
@@ -183,54 +184,54 @@ public class ImageViewer extends AppCompatActivity {
                         canvas.drawBitmap(b1, w * i, height - h, paint);
                     }
 
-                    Shader shader = new LinearGradient(0,0,0,height-h,getSkyUpper(),getSkyBelow(), Shader.TileMode.CLAMP);
+                    Shader shader = new LinearGradient(0, 0, 0, height - h, getSkyUpper(), getSkyBelow(), Shader.TileMode.CLAMP);
                     paint.setShader(shader);
-                    canvas.drawRect(new RectF(0,0,width,height-h),paint);
+                    canvas.drawRect(new RectF(0, 0, width, height - h), paint);
                 }
 
                 ImageView img = findViewById(R.id.imgviewerimg);
 
                 img.setImageBitmap(b);
 
-                PopupMenu popup = new PopupMenu(this,option);
+                PopupMenu popup = new PopupMenu(this, option);
                 Menu menu = popup.getMenu();
-                popup.getMenuInflater().inflate(R.menu.bg_menu,menu);
+                popup.getMenuInflater().inflate(R.menu.bg_menu, menu);
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getItemId() == R.id.anim_option_png) {
-                            String path = Environment.getExternalStorageDirectory().getPath()+"/BCU/img/";
+                        if (item.getItemId() == R.id.anim_option_png) {
+                            String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/img/";
 
                             File f = new File(path);
 
-                            if(!f.exists())
+                            if (!f.exists())
                                 f.mkdirs();
 
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
                             Date date = new Date();
 
-                            String name = dateFormat.format(date)+"-BG-"+bgnum+".png";
+                            String name = dateFormat.format(date) + "-BG-" + bgnum + ".png";
 
-                            File g = new File(path,name);
+                            File g = new File(path, name);
 
                             try {
-                                if(!g.exists())
+                                if (!g.exists())
                                     g.createNewFile();
 
                                 FileOutputStream fos = new FileOutputStream(g);
 
-                                b.compress(Bitmap.CompressFormat.PNG,100,fos);
+                                b.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
                                 fos.close();
 
-                                new MediaScanner(ImageViewer.this,g);
+                                new MediaScanner(ImageViewer.this, g);
 
-                                Toast.makeText(ImageViewer.this,getString(R.string.anim_png_success).replace("-","/BCU/img/"+name),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ImageViewer.this, getString(R.string.anim_png_success).replace("-", "/BCU/img/" + name), Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
 
-                                Toast.makeText(ImageViewer.this,R.string.anim_png_fail,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ImageViewer.this, R.string.anim_png_fail, Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -258,7 +259,7 @@ public class ImageViewer extends AppCompatActivity {
 
                 Bitmap b2 = (Bitmap) Objects.requireNonNull(VFile.getFile(path)).getData().getImg().bimg();
 
-                BitmapDrawable bd = new BitmapDrawable(getResources(),b2);
+                BitmapDrawable bd = new BitmapDrawable(getResources(), b2);
 
                 bd.setFilterBitmap(true);
                 bd.setAntiAlias(true);
@@ -273,34 +274,34 @@ public class ImageViewer extends AppCompatActivity {
                 ConstraintSet set = new ConstraintSet();
 
                 set.clone(constraintLayout);
-                set.connect(img.getId(),ConstraintSet.TOP,toolbar.getId(),ConstraintSet.BOTTOM,4);
-                set.connect(img.getId(),ConstraintSet.BOTTOM,constraintLayout.getId(),ConstraintSet.BOTTOM,4);
-                set.connect(img.getId(),ConstraintSet.LEFT,constraintLayout.getId(),ConstraintSet.LEFT,4);
-                set.connect(img.getId(),ConstraintSet.RIGHT,constraintLayout.getId(),ConstraintSet.RIGHT,4);
+                set.connect(img.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM, 4);
+                set.connect(img.getId(), ConstraintSet.BOTTOM, constraintLayout.getId(), ConstraintSet.BOTTOM, 4);
+                set.connect(img.getId(), ConstraintSet.LEFT, constraintLayout.getId(), ConstraintSet.LEFT, 4);
+                set.connect(img.getId(), ConstraintSet.RIGHT, constraintLayout.getId(), ConstraintSet.RIGHT, 4);
                 set.applyTo(constraintLayout);
 
-                Bitmap castle = StaticStore.getResizeb(bd.getBitmap(),this,bd.getBitmap().getWidth(),bd.getBitmap().getHeight());
+                Bitmap castle = StaticStore.getResizeb(bd.getBitmap(), this, bd.getBitmap().getWidth(), bd.getBitmap().getHeight());
 
                 img.setImageBitmap(castle);
 
                 break;
             case ANIMU:
-                new UAnimationLoader(this,id,form).execute();
+                new UAnimationLoader(this, id, form).execute();
 
                 break;
             case ANIME:
-                new EAnimationLoader(this,id).execute();
+                new EAnimationLoader(this, id).execute();
 
                 break;
         }
     }
 
-    private String [] getData() {
+    private String[] getData() {
         String datapath = "./org/battle/bg/bg.csv";
         Queue<String> qs = Objects.requireNonNull(VFile.getFile(datapath)).getData().readLine();
 
-        for(String s : qs) {
-            String [] data = s.trim().split(",");
+        for (String s : qs) {
+            String[] data = s.trim().split(",");
 
             try {
                 if (Integer.parseInt(data[0]) == bgnum)
@@ -316,14 +317,14 @@ public class ImageViewer extends AppCompatActivity {
     private Bitmap getImg(int height, float param) {
         String[] data = getData();
 
-        if (data == null) return StaticStore.empty(this,100f,100f);
+        if (data == null) return StaticStore.empty(this, 100f, 100f);
 
         String imgPath;
 
-        if(Integer.parseInt(data[13]) == 8)
-            imgPath = "./org/battle/bg/bg0"+1+".imgcut";
+        if (Integer.parseInt(data[13]) == 8)
+            imgPath = "./org/battle/bg/bg0" + 1 + ".imgcut";
         else
-            imgPath = "./org/battle/bg/bg0"+data[13]+".imgcut";
+            imgPath = "./org/battle/bg/bg0" + data[13] + ".imgcut";
 
         ImgCut img = ImgCut.newIns(imgPath);
 
@@ -332,15 +333,15 @@ public class ImageViewer extends AppCompatActivity {
         try {
             FakeImage png = FakeImage.read(f);
             FakeImage[] imgs = img.cut(png);
-            Bitmap b = (Bitmap)imgs[0].bimg();
+            Bitmap b = (Bitmap) imgs[0].bimg();
 
-            float ratio = (height/param)/b.getHeight();
+            float ratio = (height / param) / b.getHeight();
 
-            return StaticStore.getResizebp(b,this,ratio*b.getWidth(),ratio*b.getHeight());
+            return StaticStore.getResizebp(b, this, ratio * b.getWidth(), ratio * b.getHeight());
         } catch (IOException e) {
             e.printStackTrace();
 
-            return StaticStore.empty(this,100f,100f);
+            return StaticStore.empty(this, 100f, 100f);
         }
     }
 
@@ -348,14 +349,14 @@ public class ImageViewer extends AppCompatActivity {
     private Bitmap getImg2(int height, float param) {
         String[] data = getData();
 
-        if (data == null) return StaticStore.empty(this,100f,100f);
+        if (data == null) return StaticStore.empty(this, 100f, 100f);
 
         String imgPath;
 
-        if(Integer.parseInt(data[13]) == 8)
-            imgPath = "./org/battle/bg/bg0"+1+".imgcut";
+        if (Integer.parseInt(data[13]) == 8)
+            imgPath = "./org/battle/bg/bg0" + 1 + ".imgcut";
         else
-            imgPath = "./org/battle/bg/bg0"+data[13]+".imgcut";
+            imgPath = "./org/battle/bg/bg0" + data[13] + ".imgcut";
 
         ImgCut img = ImgCut.newIns(imgPath);
 
@@ -364,72 +365,72 @@ public class ImageViewer extends AppCompatActivity {
         try {
             FakeImage png = FakeImage.read(f);
             FakeImage[] imgs = img.cut(png);
-            Bitmap b = (Bitmap)imgs[20].bimg();
+            Bitmap b = (Bitmap) imgs[20].bimg();
 
-            float ratio = (height/param)/b.getHeight();
+            float ratio = (height / param) / b.getHeight();
 
-            return StaticStore.getResizebp(b,this,ratio*b.getWidth(),ratio*b.getHeight());
+            return StaticStore.getResizebp(b, this, ratio * b.getWidth(), ratio * b.getHeight());
         } catch (IOException e) {
             e.printStackTrace();
 
-            return StaticStore.empty(this,100f,100f);
+            return StaticStore.empty(this, 100f, 100f);
         }
     }
 
     private int getImgcut() {
-        String [] data = getData();
+        String[] data = getData();
 
-        if(data == null) return -1;
+        if (data == null) return -1;
 
         return Integer.parseInt(data[13]);
     }
 
     private int getSkyUpper() {
-        String [] data = getData();
+        String[] data = getData();
 
-        if(data == null) return 0;
+        if (data == null) return 0;
 
         int R = Integer.parseInt(data[1]);
         int G = Integer.parseInt(data[2]);
         int B = Integer.parseInt(data[3]);
 
-        return Color.rgb(R,G,B);
+        return Color.rgb(R, G, B);
     }
 
     private int getSkyBelow() {
-        String [] data = getData();
+        String[] data = getData();
 
-        if(data == null) return 0;
+        if (data == null) return 0;
 
         int R = Integer.parseInt(data[4]);
         int G = Integer.parseInt(data[5]);
         int B = Integer.parseInt(data[6]);
 
-        return Color.rgb(R,G,B);
+        return Color.rgb(R, G, B);
     }
 
     private int getGroundUpper() {
-        String [] data = getData();
+        String[] data = getData();
 
-        if(data == null) return 0;
+        if (data == null) return 0;
 
         int R = Integer.parseInt(data[7]);
         int G = Integer.parseInt(data[8]);
         int B = Integer.parseInt(data[9]);
 
-        return Color.rgb(R,G,B);
+        return Color.rgb(R, G, B);
     }
 
     private int getGroundBelow() {
-        String [] data = getData();
+        String[] data = getData();
 
-        if(data == null) return 0;
+        if (data == null) return 0;
 
         int R = Integer.parseInt(data[10]);
         int G = Integer.parseInt(data[11]);
         int B = Integer.parseInt(data[12]);
 
-        return Color.rgb(R,G,B);
+        return Color.rgb(R, G, B);
     }
 
     @Override
@@ -441,7 +442,7 @@ public class ImageViewer extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 }

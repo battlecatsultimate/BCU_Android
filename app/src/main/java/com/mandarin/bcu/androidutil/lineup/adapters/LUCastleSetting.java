@@ -7,14 +7,15 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -22,7 +23,7 @@ import com.mandarin.bcu.androidutil.StaticStore;
 import common.battle.BasisSet;
 
 public class LUCastleSetting extends Fragment {
-    View view;
+    private View view;
 
     public static LUCastleSetting newInstance() {
         return new LUCastleSetting();

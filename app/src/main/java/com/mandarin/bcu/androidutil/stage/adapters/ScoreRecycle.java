@@ -1,12 +1,13 @@
 package com.mandarin.bcu.androidutil.stage.adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 
@@ -17,7 +18,7 @@ public class ScoreRecycle extends RecyclerView.Adapter<ScoreRecycle.ViewHolder> 
     private final Stage st;
     private final Activity activity;
 
-    public ScoreRecycle(Stage st, Activity activity) {
+    ScoreRecycle(Stage st, Activity activity) {
         this.st = st;
         this.activity = activity;
     }
@@ -39,20 +40,20 @@ public class ScoreRecycle extends RecyclerView.Adapter<ScoreRecycle.ViewHolder> 
     @NonNull
     @Override
     public ScoreRecycle.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.drop_info_layout,viewGroup,false);
+        View row = LayoutInflater.from(activity).inflate(R.layout.drop_info_layout, viewGroup, false);
 
         return new ScoreRecycle.ViewHolder(row);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ScoreRecycle.ViewHolder viewHolder, int i) {
-        int [] data = st.info.time[i];
+        int[] data = st.info.time[i];
 
         viewHolder.score.setText(String.valueOf(data[0]));
 
         String reward = MultiLangCont.RWNAME.getCont(data[1]);
 
-        if(reward == null)
+        if (reward == null)
             reward = String.valueOf(data[1]);
 
         viewHolder.item.setText(reward);

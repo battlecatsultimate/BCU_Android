@@ -10,31 +10,31 @@ import common.util.pack.Soul;
 
 public class BDefinder {
     public void define() {
-        if(!StaticStore.effread) {
+        if (!StaticStore.effread) {
             EffAnim.read();
 
             StaticStore.effread = true;
         }
 
-        if(StaticStore.bgread == 0) {
+        if (StaticStore.bgread == 0) {
             Background.read();
 
             StaticStore.bgread = 1;
         }
 
-        if(!StaticStore.soulread) {
+        if (!StaticStore.soulread) {
             Soul.read();
 
             StaticStore.soulread = true;
         }
 
-        if(!StaticStore.nycread) {
+        if (!StaticStore.nycread) {
             NyCastle.read();
 
             StaticStore.nycread = true;
         }
 
-        if(!StaticStore.resread) {
+        if (!StaticStore.resread) {
             Res.readData();
 
             StaticStore.resread = true;

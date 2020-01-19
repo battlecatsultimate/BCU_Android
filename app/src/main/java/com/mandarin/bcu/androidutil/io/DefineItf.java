@@ -37,8 +37,8 @@ public class DefineItf implements CommonStatic.Itf {
 
     @Override
     public void delete(File file) {
-        if(file.isDirectory())
-            for(File g : file.listFiles())
+        if (file.isDirectory())
+            for (File g : file.listFiles())
                 delete(g);
         else
             file.delete();
@@ -57,10 +57,10 @@ public class DefineItf implements CommonStatic.Itf {
     @Override
     public InStream readBytes(File fi) {
         try {
-            byte[] bytes = new byte[(int)fi.length()];
+            byte[] bytes = new byte[(int) fi.length()];
 
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fi));
-            bis.read(bytes,0,bytes.length);
+            bis.read(bytes, 0, bytes.length);
             bis.close();
 
             return InStream.getIns(bytes);
@@ -81,10 +81,10 @@ public class DefineItf implements CommonStatic.Itf {
     public <T> T readSave(String path, Function<Queue<String>, T> func) {
         VFile<? extends FileData> f = VFile.getFile(path);
         Queue<String> qs = f.getData().readLine();
-        if(qs!=null)
+        if (qs != null)
             try {
                 T t = func.apply(qs);
-                if(t != null)
+                if (t != null)
                     return t;
             } catch (Exception e) {
                 e.printStackTrace();

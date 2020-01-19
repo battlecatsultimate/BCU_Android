@@ -13,10 +13,10 @@ public abstract class SingleClick implements View.OnClickListener {
     @Override
     public final void onClick(View v) {
         long currentTime = SystemClock.uptimeMillis();
-        long elapsed = currentTime-mLastClickTime;
+        long elapsed = currentTime - mLastClickTime;
         mLastClickTime = currentTime;
 
-        if(elapsed <= INTERVAL) {
+        if (elapsed <= INTERVAL) {
             return;
         }
 

@@ -22,8 +22,8 @@ public class FIBM implements FakeImage {
 
     private final Bitmap bit;
 
-    protected FIBM(Bitmap read) {
-        bit = read.copy(Bitmap.Config.ARGB_8888,true);
+    FIBM(Bitmap read) {
+        bit = read.copy(Bitmap.Config.ARGB_8888, true);
     }
 
     @Override
@@ -42,14 +42,14 @@ public class FIBM implements FakeImage {
     }
 
     @Override
-    public int getRGB(int i,int j) {
-        return bit.getPixel(i,j);
+    public int getRGB(int i, int j) {
+        return bit.getPixel(i, j);
     }
 
     @Override
-    public FIBM getSubimage(int i,int j,int k,int l) {
+    public FIBM getSubimage(int i, int j, int k, int l) {
         try {
-            return (FIBM) builder.build(Bitmap.createBitmap(bit,i,j,k,l));
+            return (FIBM) builder.build(Bitmap.createBitmap(bit, i, j, k, l));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -62,7 +62,7 @@ public class FIBM implements FakeImage {
     }
 
     @Override
-    public void setRGB(int i,int j,int p) {
-        bit.setPixel(i,j,p);
+    public void setRGB(int i, int j, int p) {
+        bit.setPixel(i, j, p);
     }
 }

@@ -16,7 +16,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,23 +44,23 @@ import java.util.Objects;
 
 import common.system.MultiLangCont;
 
-public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
+public class UInfoLoader extends AsyncTask<Void, Integer, Void> {
     private final WeakReference<Activity> weakActivity;
     private final int id;
     private ArrayList<String> names = new ArrayList<>();
     private final FragmentManager fm;
-    private int[] nformid = {R.string.unit_info_first,R.string.unit_info_second,R.string.unit_info_third};
+    private int[] nformid = {R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third};
     private String[] nform = new String[nformid.length];
     private TableTab table;
     private ExplanationTab explain;
     private UnitinfRecycle unitinfRecycle;
 
-    public UInfoLoader(int id,Activity activity,FragmentManager fm) {
+    public UInfoLoader(int id, Activity activity, FragmentManager fm) {
         this.id = id;
         this.weakActivity = new WeakReference<>(activity);
         this.fm = fm;
 
-        for(int i=0;i<nformid.length;i++)
+        for (int i = 0; i < nformid.length; i++)
             nform[i] = weakActivity.get().getString(nformid[i]);
     }
 
@@ -69,13 +68,13 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected void onPreExecute() {
         Activity activity = weakActivity.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView fruittext = activity.findViewById(R.id.cfinftext);
         ViewPager fruitpage = activity.findViewById(R.id.catfruitpager);
         Button anim = activity.findViewById(R.id.animanim);
 
-        if(StaticStore.units.get(id).info.evo == null) {
+        if (StaticStore.units.get(id).info.evo == null) {
             fruitpage.setVisibility(View.GONE);
             fruittext.setVisibility(View.GONE);
             anim.setVisibility(View.GONE);
@@ -88,14 +87,14 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakActivity.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        for(int i = 0; i<StaticStore.units.get(id).forms.length; i++) {
+        for (int i = 0; i < StaticStore.units.get(id).forms.length; i++) {
             String name = MultiLangCont.FNAME.getCont(StaticStore.units.get(id).forms[i]);
 
-            if(name == null)
+            if (name == null)
                 name = "";
 
             names.add(name);
@@ -103,25 +102,25 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
 
-        for(int i=0;i<StaticStore.units.get(id).forms.length;i++) {
+        for (int i = 0; i < StaticStore.units.get(id).forms.length; i++) {
             tabs.addTab(tabs.newTab().setText(nform[i]));
         }
 
-        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(shared.getBoolean("Lay_Land",false)) {
-                table = new TableTab(fm,tabs.getTabCount(),id,nform);
-                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (shared.getBoolean("Lay_Land", false)) {
+                table = new TableTab(fm, tabs.getTabCount(), id, nform);
+                explain = new ExplanationTab(fm, tabs.getTabCount(), id, nform);
             } else {
-                unitinfRecycle = new UnitinfRecycle(activity,names,StaticStore.units.get(id).forms, id);
-                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+                unitinfRecycle = new UnitinfRecycle(activity, names, StaticStore.units.get(id).forms, id);
+                explain = new ExplanationTab(fm, tabs.getTabCount(), id, nform);
             }
         } else {
-            if(shared.getBoolean("Lay_Port",true)) {
-                table = new TableTab(fm,tabs.getTabCount(),id,nform);
-                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+            if (shared.getBoolean("Lay_Port", true)) {
+                table = new TableTab(fm, tabs.getTabCount(), id, nform);
+                explain = new ExplanationTab(fm, tabs.getTabCount(), id, nform);
             } else {
-                unitinfRecycle = new UnitinfRecycle(activity,names,StaticStore.units.get(id).forms, id);
-                explain = new ExplanationTab(fm,tabs.getTabCount(),id,nform);
+                unitinfRecycle = new UnitinfRecycle(activity, names, StaticStore.units.get(id).forms, id);
+                explain = new ExplanationTab(fm, tabs.getTabCount(), id, nform);
             }
         }
 
@@ -139,12 +138,12 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         treasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!StaticStore.UisOpen) {
-                    ValueAnimator slider = ValueAnimator.ofInt(0,treasuretab.getWidth()).setDuration(300);
+                if (!StaticStore.UisOpen) {
+                    ValueAnimator slider = ValueAnimator.ofInt(0, treasuretab.getWidth()).setDuration(300);
                     slider.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            treasuretab.setTranslationX(-(int)animation.getAnimatedValue());
+                            treasuretab.setTranslationX(-(int) animation.getAnimatedValue());
                             treasuretab.requestLayout();
                         }
                     });
@@ -155,16 +154,16 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
                     StaticStore.UisOpen = true;
                 } else {
                     View view = activity.getCurrentFocus();
-                    if(view != null) {
-                        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         treasuretab.clearFocus();
                     }
-                    ValueAnimator slider = ValueAnimator.ofInt(treasuretab.getWidth(),0).setDuration(300);
+                    ValueAnimator slider = ValueAnimator.ofInt(treasuretab.getWidth(), 0).setDuration(300);
                     slider.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            treasuretab.setTranslationX(-(int)animation.getAnimatedValue());
+                            treasuretab.setTranslationX(-(int) animation.getAnimatedValue());
                             treasuretab.requestLayout();
                         }
                     });
@@ -186,8 +185,8 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         ViewPager fruitpage = activity.findViewById(R.id.catfruitpager);
 
-        if(StaticStore.units.get(id).info.evo != null){
-            fruitpage.setAdapter(new DynamicFruit(activity,id));
+        if (StaticStore.units.get(id).info.evo != null) {
+            fruitpage.setAdapter(new DynamicFruit(activity, id));
             fruitpage.setOffscreenPageLimit(1);
         }
 
@@ -198,23 +197,23 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... results) {
         Activity activity = weakActivity.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TabLayout tabs = activity.findViewById(R.id.unitinfexplain);
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(shared.getBoolean("Lay_Land",false)) {
-                setUinfo(activity,tabs);
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (shared.getBoolean("Lay_Land", false)) {
+                setUinfo(activity, tabs);
             } else {
-                setUinfoR(activity,tabs);
+                setUinfoR(activity, tabs);
             }
         } else {
-            if(shared.getBoolean("Lay_Port",true)) {
-                setUinfo(activity,tabs);
+            if (shared.getBoolean("Lay_Port", true)) {
+                setUinfo(activity, tabs);
             } else {
-                setUinfoR(activity,tabs);
+                setUinfoR(activity, tabs);
             }
         }
 
@@ -224,13 +223,13 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakActivity.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
-        SharedPreferences preferences = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(preferences.getBoolean("Lay_Land",false)) {
-                ScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (preferences.getBoolean("Lay_Land", false)) {
+                NestedScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
                 scrollView.setVisibility(View.VISIBLE);
             } else {
                 NestedScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
@@ -238,13 +237,13 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
                 scrollView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scrollView.scrollTo(0,0);
+                        scrollView.scrollTo(0, 0);
                     }
-                },0);
+                }, 0);
             }
         } else {
-            if(preferences.getBoolean("Lay_Land",false)) {
-                ScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
+            if (preferences.getBoolean("Lay_Port", false)) {
+                NestedScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
                 scrollView.setVisibility(View.VISIBLE);
             } else {
                 NestedScrollView scrollView = activity.findViewById(R.id.unitinfscroll);
@@ -252,9 +251,9 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
                 scrollView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scrollView.scrollTo(0,0);
+                        scrollView.scrollTo(0, 0);
                     }
-                },0);
+                }, 0);
             }
         }
 
@@ -277,7 +276,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         String[] title;
 
         ExplanationTab(FragmentManager fm, int number, int id, String[] title) {
-            super(fm,FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+            super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.number = number;
             this.id = id;
             this.title = title;
@@ -285,7 +284,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
 
         @Override
         public Fragment getItem(int i) {
-            return DynamicExplanation.newInstance(i,id,title);
+            return DynamicExplanation.newInstance(i, id, title);
         }
 
         @Override
@@ -302,10 +301,10 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
     protected class TableTab extends FragmentPagerAdapter {
         int form;
         int id;
-        String [] names;
+        String[] names;
 
-        TableTab(FragmentManager fm, int form, int id,String [] names) {
-            super(fm,FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        TableTab(FragmentManager fm, int form, int id, String[] names) {
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.form = form;
             this.id = id;
             this.names = names;
@@ -314,7 +313,7 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         @NonNull
         @Override
         public Fragment getItem(int i) {
-            return UnitinfPager.newInstance(i,id,names);
+            return UnitinfPager.newInstance(i, id, names);
         }
 
         @Override
@@ -323,7 +322,9 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {return names[position];}
+        public CharSequence getPageTitle(int position) {
+            return names[position];
+        }
     }
 
     private void setUinfo(Activity activity, TabLayout tabs) {
@@ -357,14 +358,14 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
             }
         });
 
-        if(StaticStore.units.get(id).info.evo == null)
-            viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
+        if (StaticStore.units.get(id).info.evo == null)
+            viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity));
 
         View view = activity.findViewById(R.id.view);
         View view2 = activity.findViewById(R.id.view2);
         TextView exp = activity.findViewById(R.id.unitinfexp);
 
-        if(MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {
+        if (MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {
             viewPager.setVisibility(View.GONE);
             view.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);
@@ -384,14 +385,14 @@ public class UInfoLoader extends AsyncTask<Void,Integer,Void> {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.setupWithViewPager(viewPager);
 
-        if(StaticStore.units.get(id).info.evo == null)
-            viewPager.setPadding(0,0,0,StaticStore.dptopx(24f,activity));
+        if (StaticStore.units.get(id).info.evo == null)
+            viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity));
 
         View view = activity.findViewById(R.id.view);
         View view2 = activity.findViewById(R.id.view2);
         TextView exp = activity.findViewById(R.id.unitinfexp);
 
-        if(MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {
+        if (MultiLangCont.FEXP.getCont(StaticStore.units.get(id).forms[0]) == null) {
             viewPager.setVisibility(View.GONE);
             view.setVisibility(View.GONE);
             view2.setVisibility(View.GONE);

@@ -8,13 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -24,6 +17,14 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 
@@ -31,94 +32,95 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.io.OutStream;
 
 public class LUTreasureSetting extends Fragment {
-    View view;
+    private View view;
 
     public static LUTreasureSetting newInstance() {
         return new LUTreasureSetting();
     }
 
-    boolean CanbeEdited = true;
-    boolean Initialized = false;
+    private boolean CanbeEdited = true;
+    private boolean Initialized = false;
     private boolean destroyed = false;
 
-    TextInputLayout tech;
-    TextInputLayout [] techs = new TextInputLayout[6];
-    int [] techid = {R.id.cdlev,R.id.aclev,R.id.basehlev,R.id.worklev,R.id.walletlev,R.id.rechargelev};
-    TextInputLayout canatk;
-    TextInputLayout canrange;
-    TextInputLayout eoc;
-    TextInputLayout [] eocs = new TextInputLayout[6];
-    int [] eocid = {R.id.atktrea,R.id.healtrea,R.id.cdtrea,R.id.actrea,R.id.worktrea,R.id.wallettrea};
-    TextInputLayout eocitf;
-    TextInputLayout [] eocitfs = new TextInputLayout[3];
-    int [] eocitfid = {R.id.rechargetrea,R.id.canatktrea,R.id.basehtrea};
-    TextInputLayout itf;
-    TextInputLayout [] itfs = new TextInputLayout[4];
-    int [] itfid = {R.id.redfrtrea,R.id.floatfrtrea,R.id.blacktrea,R.id.angelfrtrea};
-    TextInputLayout cotc;
-    TextInputLayout [] cotcs = new TextInputLayout[3];
-    int [] cotcid = {R.id.metalfrtrea,R.id.zombiefrtrea,R.id.alienfrtrea};
-    TextInputLayout itfcry;
-    TextInputLayout cotccry;
-    TextInputLayout [] masks = new TextInputLayout[3];
-    int [] maskid = {R.id.masktrea,R.id.mask2trea,R.id.mask3trea};
+    private TextInputLayout tech;
+    private TextInputLayout[] techs = new TextInputLayout[6];
+    private int[] techid = {R.id.cdlev, R.id.aclev, R.id.basehlev, R.id.worklev, R.id.walletlev, R.id.rechargelev};
+    private TextInputLayout canatk;
+    private TextInputLayout canrange;
+    private TextInputLayout eoc;
+    private TextInputLayout[] eocs = new TextInputLayout[6];
+    private int[] eocid = {R.id.atktrea, R.id.healtrea, R.id.cdtrea, R.id.actrea, R.id.worktrea, R.id.wallettrea};
+    private TextInputLayout eocitf;
+    private TextInputLayout[] eocitfs = new TextInputLayout[3];
+    private int[] eocitfid = {R.id.rechargetrea, R.id.canatktrea, R.id.basehtrea};
+    private TextInputLayout itf;
+    private TextInputLayout[] itfs = new TextInputLayout[4];
+    private int[] itfid = {R.id.redfrtrea, R.id.floatfrtrea, R.id.blacktrea, R.id.angelfrtrea};
+    private TextInputLayout cotc;
+    private TextInputLayout[] cotcs = new TextInputLayout[3];
+    private int[] cotcid = {R.id.metalfrtrea, R.id.zombiefrtrea, R.id.alienfrtrea};
+    private TextInputLayout itfcry;
+    private TextInputLayout cotccry;
+    private TextInputLayout[] masks = new TextInputLayout[3];
+    private int[] maskid = {R.id.masktrea, R.id.mask2trea, R.id.mask3trea};
 
-    TextInputLayout [] tils = {tech,canatk,canrange,eoc,eocitf,itf,cotc,itfcry,cotccry};
-    TextInputLayout [][] tilss = {techs,eocs,eocitfs,itfs,cotcs,masks};
-    int [] limitvals = {30,30,10,300,600,300,300,600,1500};
-    int [] limitmins = {1,1,1,0,0,0,0,0,0};
-    int [] limitvalss = {30,300,600,300,300,100};
-    int [] limitminss = {1,0,0,0,0,0};
-    String [] helpers = {"1~30 lv","1~30 lv","1~10 lv","0~300 %","0~600 %","0~300 %","0~300 %","0~600 %","0~1500 %"};
-    String [] helperss = {"1~30 lv", "0~300 %","0~600 %","0~300 %", "0~300 %", "0~100 %"};
+    private TextInputLayout[] tils = {tech, canatk, canrange, eoc, eocitf, itf, cotc, itfcry, cotccry};
+    private TextInputLayout[][] tilss = {techs, eocs, eocitfs, itfs, cotcs, masks};
+    private int[] limitvals = {30, 30, 10, 300, 600, 300, 300, 600, 1500};
+    private int[] limitmins = {1, 1, 1, 0, 0, 0, 0, 0, 0};
+    private int[] limitvalss = {30, 300, 600, 300, 300, 100};
+    private int[] limitminss = {1, 0, 0, 0, 0, 0};
+    private String[] helpers = {"1~30 lv", "1~30 lv", "1~10 lv", "0~300 %", "0~600 %", "0~300 %", "0~300 %", "0~600 %", "0~1500 %"};
+    private String[] helperss = {"1~30 lv", "0~300 %", "0~600 %", "0~300 %", "0~300 %", "0~100 %"};
 
-    TextInputEditText teche;
-    TextInputEditText [] teches = new TextInputEditText[6];
-    int [] techeid = {R.id.cdlevt,R.id.aclevt,R.id.basehlevt,R.id.worklevt,R.id.walletlevt,R.id.rechargelevt};
-    TextInputEditText canatke;
-    TextInputEditText canrangee;
-    TextInputEditText eoce;
-    TextInputEditText [] eoces = new TextInputEditText[6];
-    int [] eoceid = {R.id.atktreat,R.id.healtreat,R.id.cdtreat,R.id.actreat,R.id.worktreat,R.id.wallettreat};
-    TextInputEditText eocitfe;
-    TextInputEditText [] eocitfes = new TextInputEditText[3];
-    int [] eocitfeid = {R.id.rechargetreat,R.id.canatktreat,R.id.basehtreat};
-    TextInputEditText itfe;
-    TextInputEditText [] itfes = new TextInputEditText[4];
-    int [] itfeid = {R.id.redfrtreat,R.id.floatfrtreat,R.id.blacktreat,R.id.angelfrtreat};
-    TextInputEditText cotce;
-    TextInputEditText [] cotces = new TextInputEditText[3];
-    int [] cotceid = {R.id.metalfrtreat,R.id.zombiefrtreat,R.id.alienfrtreat};
-    TextInputEditText itfcrye;
-    TextInputEditText cotccrye;
-    TextInputEditText [] maskes = new TextInputEditText[3];
-    int [] maskeid = {R.id.masktreat,R.id.mask2treat,R.id.mask3treat};
+    private TextInputEditText teche;
+    private TextInputEditText[] teches = new TextInputEditText[6];
+    private int[] techeid = {R.id.cdlevt, R.id.aclevt, R.id.basehlevt, R.id.worklevt, R.id.walletlevt, R.id.rechargelevt};
+    private TextInputEditText canatke;
+    private TextInputEditText canrangee;
+    private TextInputEditText eoce;
+    private TextInputEditText[] eoces = new TextInputEditText[6];
+    private int[] eoceid = {R.id.atktreat, R.id.healtreat, R.id.cdtreat, R.id.actreat, R.id.worktreat, R.id.wallettreat};
+    private TextInputEditText eocitfe;
+    private TextInputEditText[] eocitfes = new TextInputEditText[3];
+    private int[] eocitfeid = {R.id.rechargetreat, R.id.canatktreat, R.id.basehtreat};
+    private TextInputEditText itfe;
+    private TextInputEditText[] itfes = new TextInputEditText[4];
+    private int[] itfeid = {R.id.redfrtreat, R.id.floatfrtreat, R.id.blacktreat, R.id.angelfrtreat};
+    private TextInputEditText cotce;
+    private TextInputEditText[] cotces = new TextInputEditText[3];
+    private int[] cotceid = {R.id.metalfrtreat, R.id.zombiefrtreat, R.id.alienfrtreat};
+    private TextInputEditText itfcrye;
+    private TextInputEditText cotccrye;
+    private TextInputEditText[] maskes = new TextInputEditText[3];
+    private int[] maskeid = {R.id.masktreat, R.id.mask2treat, R.id.mask3treat};
 
-    FloatingActionButton[] expands = new FloatingActionButton[5];
-    int [] expandid = {R.id.techexpand,R.id.eocexpand,R.id.eocitfexpand,R.id.itfexpand,R.id.cotcexpand};
+    private FloatingActionButton[] expands = new FloatingActionButton[5];
+    private int[] expandid = {R.id.techexpand, R.id.eocexpand, R.id.eocitfexpand, R.id.itfexpand, R.id.cotcexpand};
 
-    LinearLayout[] layouts = new LinearLayout[5];
-    int [] layoutid = {R.id.techlayout,R.id.eoclayout,R.id.eocitflayout,R.id.itffruitlayout,R.id.cotclayout};
+    private LinearLayout[] layouts = new LinearLayout[5];
+    private int[] layoutid = {R.id.techlayout, R.id.eoclayout, R.id.eocitflayout, R.id.itffruitlayout, R.id.cotclayout};
 
-    private int[][] states = new int[][] {
-            new int[] {android.R.attr.state_enabled}
+    private int[][] states = new int[][]{
+            new int[]{android.R.attr.state_enabled}
     };
 
-    private int [] color;
+    private int[] color;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.lineup_treasure_set,group,false);
+        view = inflater.inflate(R.layout.lineup_treasure_set, group, false);
 
-        color = new int [] {
-                getAttributeColor(getContext(),R.attr.TextPrimary)
+        color = new int[]{
+                getAttributeColor(Objects.requireNonNull(getContext()), R.attr.TextPrimary)
         };
 
         Initialize(view);
@@ -129,7 +131,7 @@ public class LUTreasureSetting extends Fragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if(StaticStore.updateTreasure) {
+                if (StaticStore.updateTreasure) {
                     Treasure t = BasisSet.current.t();
 
                     Initialized = false;
@@ -137,47 +139,47 @@ public class LUTreasureSetting extends Fragment {
                     itfcrye.setText(String.valueOf(t.alien));
                     cotccrye.setText(String.valueOf(t.star));
 
-                    for(int i = 0; i < 6; i++) {
+                    for (int i = 0; i < 6; i++) {
                         teches[i].setText(String.valueOf(t.tech[i]));
                     }
 
                     canatke.setText(String.valueOf(t.tech[6]));
                     canrangee.setText(String.valueOf(t.tech[7]));
 
-                    for(int i = 0; i < 6; i++) {
+                    for (int i = 0; i < 6; i++) {
                         eoces[i].setText(String.valueOf(t.trea[i]));
                     }
 
-                    for(int i = 0; i < eocitfes.length; i++) {
-                        eocitfes[i].setText(String.valueOf(t.trea[i+6]));
+                    for (int i = 0; i < eocitfes.length; i++) {
+                        eocitfes[i].setText(String.valueOf(t.trea[i + 6]));
                     }
 
-                    for(int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 4; i++) {
                         itfes[i].setText(String.valueOf(t.fruit[i]));
                     }
 
-                    for(int i = 4; i < t.fruit.length; i++) {
-                        cotces[i-4].setText(String.valueOf(t.fruit[i]));
+                    for (int i = 4; i < t.fruit.length; i++) {
+                        cotces[i - 4].setText(String.valueOf(t.fruit[i]));
                     }
 
-                    for(int i = 0; i < t.gods.length; i++) {
+                    for (int i = 0; i < t.gods.length; i++) {
                         maskes[i].setText(String.valueOf(t.gods[i]));
                     }
 
 
-                    if(ValuesAllSame(0))
+                    if (ValuesAllSame(0))
                         teche.setText(String.valueOf(t.tech[0]));
 
-                    if(ValuesAllSame(1))
+                    if (ValuesAllSame(1))
                         eoce.setText(String.valueOf(t.trea[0]));
 
-                    if(ValuesAllSame(2))
+                    if (ValuesAllSame(2))
                         eocitfe.setText(String.valueOf(t.trea[6]));
 
-                    if(ValuesAllSame(3))
+                    if (ValuesAllSame(3))
                         itfe.setText(String.valueOf(t.fruit[0]));
 
-                    if(ValuesAllSame(4))
+                    if (ValuesAllSame(4))
                         cotce.setText(String.valueOf(t.fruit[4]));
 
                     Initialized = true;
@@ -185,17 +187,19 @@ public class LUTreasureSetting extends Fragment {
                     StaticStore.updateTreasure = false;
                 }
 
-                if(!destroyed)
-                    handler.postDelayed(this,50);
+                if (!destroyed)
+                    handler.postDelayed(this, 50);
             }
         };
 
-        handler.postDelayed(runnable,50);
+        handler.postDelayed(runnable, 50);
 
         return view;
     }
 
-    /** Initialize view components **/
+    /**
+     * Initialize view components
+     **/
     private void Initialize(View view) {
         tech = view.findViewById(R.id.techlev);
         canatk = view.findViewById(R.id.canatklev);
@@ -217,37 +221,37 @@ public class LUTreasureSetting extends Fragment {
         itfcrye = view.findViewById(R.id.itfcrytreat);
         cotccrye = view.findViewById(R.id.cotccrytreat);
 
-        for(int i = 0; i < expands.length; i++) {
+        for (int i = 0; i < expands.length; i++) {
             expands[i] = view.findViewById(expandid[i]);
             layouts[i] = view.findViewById(layoutid[i]);
         }
 
-        for(int i = 0; i < techs.length; i++) {
+        for (int i = 0; i < techs.length; i++) {
             techs[i] = view.findViewById(techid[i]);
             teches[i] = view.findViewById(techeid[i]);
         }
 
-        for(int i = 0; i < eocs.length; i++) {
+        for (int i = 0; i < eocs.length; i++) {
             eocs[i] = view.findViewById(eocid[i]);
             eoces[i] = view.findViewById(eoceid[i]);
         }
 
-        for(int i = 0; i < eocitfs.length; i++) {
+        for (int i = 0; i < eocitfs.length; i++) {
             eocitfs[i] = view.findViewById(eocitfid[i]);
             eocitfes[i] = view.findViewById(eocitfeid[i]);
         }
 
-        for(int i = 0; i < itfs.length; i++) {
+        for (int i = 0; i < itfs.length; i++) {
             itfs[i] = view.findViewById(itfid[i]);
             itfes[i] = view.findViewById(itfeid[i]);
         }
 
-        for(int i = 0; i < cotcs.length; i++) {
+        for (int i = 0; i < cotcs.length; i++) {
             cotcs[i] = view.findViewById(cotcid[i]);
             cotces[i] = view.findViewById(cotceid[i]);
         }
 
-        for(int i = 0; i < masks.length; i++) {
+        for (int i = 0; i < masks.length; i++) {
             masks[i] = view.findViewById(maskid[i]);
             maskes[i] = view.findViewById(maskeid[i]);
         }
@@ -257,23 +261,23 @@ public class LUTreasureSetting extends Fragment {
         Treasure t = BasisSet.current.t();
 
         //Listeners for expand image buttons
-        for(int i = 0; i < expands.length; i++) {
+        for (int i = 0; i < expands.length; i++) {
             final int ii = i;
 
             expands[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(SystemClock.elapsedRealtime() - StaticStore.infoClick < StaticStore.INFO_INTERVAL)
+                    if (SystemClock.elapsedRealtime() - StaticStore.infoClick < StaticStore.INFO_INTERVAL)
                         return;
 
                     StaticStore.infoClick = SystemClock.elapsedRealtime();
 
-                    if(layouts[ii].getHeight() == 0) {
-                        layouts[ii].measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    if (layouts[ii].getHeight() == 0) {
+                        layouts[ii].measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                         int height = layouts[ii].getMeasuredHeight();
 
-                        ValueAnimator anim = ValueAnimator.ofInt(0,height);
+                        ValueAnimator anim = ValueAnimator.ofInt(0, height);
                         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
@@ -288,13 +292,13 @@ public class LUTreasureSetting extends Fragment {
                         anim.setInterpolator(new DecelerateInterpolator());
                         anim.start();
 
-                        expands[ii].setImageDrawable(getContext().getDrawable(R.drawable.ic_expand_more_black_24dp));
+                        expands[ii].setImageDrawable(Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_expand_more_black_24dp));
                     } else {
-                        layouts[ii].measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                        layouts[ii].measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                         int height = layouts[ii].getMeasuredHeight();
 
-                        ValueAnimator anim = ValueAnimator.ofInt(height,0);
+                        ValueAnimator anim = ValueAnimator.ofInt(height, 0);
                         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
@@ -309,7 +313,7 @@ public class LUTreasureSetting extends Fragment {
                         anim.setInterpolator(new DecelerateInterpolator());
                         anim.start();
 
-                        expands[ii].setImageDrawable(getContext().getDrawable(R.drawable.ic_expand_less_black_24dp));
+                        expands[ii].setImageDrawable(Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_expand_less_black_24dp));
                     }
                 }
             });
@@ -320,43 +324,43 @@ public class LUTreasureSetting extends Fragment {
         itfcrye.setText(String.valueOf(t.alien));
         cotccrye.setText(String.valueOf(t.star));
 
-        SetListenerforTextInputLayout(tech,canatk,canrange,eoc,eocitf,itf,cotc,itfcry,cotccry);
-        SetListenerforTextInputLayouts(techs,eocs,eocitfs,itfs,cotcs,masks);
+        SetListenerforTextInputLayout(tech, canatk, canrange, eoc, eocitf, itf, cotc, itfcry, cotccry);
+        SetListenerforTextInputLayouts(techs, eocs, eocitfs, itfs, cotcs, masks);
 
-        tils = new TextInputLayout[]{tech,canatk,canrange,eoc,eocitf,itf,cotc,itfcry,cotccry};
-        tilss = new TextInputLayout[][]{techs,eocs,eocitfs,itfs,cotcs,masks};
+        tils = new TextInputLayout[]{tech, canatk, canrange, eoc, eocitf, itf, cotc, itfcry, cotccry};
+        tilss = new TextInputLayout[][]{techs, eocs, eocitfs, itfs, cotcs, masks};
 
         //Listeners for TextInputLayouts
 
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             teches[i].setText(String.valueOf(t.tech[i]));
         }
 
         canatke.setText(String.valueOf(t.tech[6]));
         canrangee.setText(String.valueOf(t.tech[7]));
 
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             eoces[i].setText(String.valueOf(t.trea[i]));
         }
 
-        for(int i = 0; i < eocitfes.length; i++) {
-            eocitfes[i].setText(String.valueOf(t.trea[i+6]));
+        for (int i = 0; i < eocitfes.length; i++) {
+            eocitfes[i].setText(String.valueOf(t.trea[i + 6]));
         }
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             itfes[i].setText(String.valueOf(t.fruit[i]));
         }
 
-        for(int i = 4; i < t.fruit.length; i++) {
-            cotces[i-4].setText(String.valueOf(t.fruit[i]));
+        for (int i = 4; i < t.fruit.length; i++) {
+            cotces[i - 4].setText(String.valueOf(t.fruit[i]));
         }
 
-        for(int i = 0; i < t.gods.length; i++) {
+        for (int i = 0; i < t.gods.length; i++) {
             maskes[i].setText(String.valueOf(t.gods[i]));
         }
 
 
-        if(ValuesAllSame(0))
+        if (ValuesAllSame(0))
             teche.post(new Runnable() {
                 @Override
                 public void run() {
@@ -364,7 +368,7 @@ public class LUTreasureSetting extends Fragment {
                 }
             });
 
-        if(ValuesAllSame(1))
+        if (ValuesAllSame(1))
             eoce.post(new Runnable() {
                 @Override
                 public void run() {
@@ -372,7 +376,7 @@ public class LUTreasureSetting extends Fragment {
                 }
             });
 
-        if(ValuesAllSame(2))
+        if (ValuesAllSame(2))
             eocitfe.post(new Runnable() {
                 @Override
                 public void run() {
@@ -380,7 +384,7 @@ public class LUTreasureSetting extends Fragment {
                 }
             });
 
-        if(ValuesAllSame(3))
+        if (ValuesAllSame(3))
             itfe.post(new Runnable() {
                 @Override
                 public void run() {
@@ -388,7 +392,7 @@ public class LUTreasureSetting extends Fragment {
                 }
             });
 
-        if(ValuesAllSame(4))
+        if (ValuesAllSame(4))
             cotce.post(new Runnable() {
                 @Override
                 public void run() {
@@ -396,25 +400,25 @@ public class LUTreasureSetting extends Fragment {
                 }
             });
 
-        SetListenerforTextInputEditText(teche,canatke,canrangee,eoce,eocitfe,itfe,cotce,itfcrye,cotccrye);
-        SetListenerforTextInptEditTexts(teches,eoces,eocitfes,itfes,cotces,maskes);
+        SetListenerforTextInputEditText(teche, canatke, canrangee, eoce, eocitfe, itfe, cotce, itfcrye, cotccrye);
+        SetListenerforTextInptEditTexts(teches, eoces, eocitfes, itfes, cotces, maskes);
 
         Initialized = true;
     }
 
     private void save() {
-        String Path = Environment.getExternalStorageDirectory().getPath()+"/BCU/user/basis.v";
-        String Direct = Environment.getExternalStorageDirectory().getPath()+"/BCU/user/";
+        String Path = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/basis.v";
+        String Direct = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/";
 
         File g = new File(Direct);
 
-        if(!g.exists())
+        if (!g.exists())
             g.mkdirs();
 
         File f = new File(Path);
 
         try {
-            if(!f.exists())
+            if (!f.exists())
                 f.createNewFile();
 
             OutputStream os = new FileOutputStream(f);
@@ -434,7 +438,7 @@ public class LUTreasureSetting extends Fragment {
             case 0:
                 int val = BasisSet.current.t().tech[0];
 
-                for(int i = 1; i < 6; i++) {
+                for (int i = 1; i < 6; i++) {
                     if (val != BasisSet.current.t().tech[i])
                         return false;
                 }
@@ -443,7 +447,7 @@ public class LUTreasureSetting extends Fragment {
             case 1:
                 val = BasisSet.current.t().trea[0];
 
-                for(int i = 1; i < 6; i++) {
+                for (int i = 1; i < 6; i++) {
                     if (val != BasisSet.current.t().trea[i])
                         return false;
                 }
@@ -452,24 +456,24 @@ public class LUTreasureSetting extends Fragment {
             case 2:
                 val = BasisSet.current.t().trea[6];
 
-                for(int i = 7; i < 9; i++)
-                    if(val != BasisSet.current.t().trea[i])
+                for (int i = 7; i < 9; i++)
+                    if (val != BasisSet.current.t().trea[i])
                         return false;
 
                 return true;
             case 3:
                 val = BasisSet.current.t().fruit[0];
 
-                for(int i = 1; i < 4; i++)
-                    if(val != BasisSet.current.t().fruit[i])
+                for (int i = 1; i < 4; i++)
+                    if (val != BasisSet.current.t().fruit[i])
                         return false;
 
                 return true;
             case 4:
                 val = BasisSet.current.t().fruit[4];
 
-                for(int i = 5; i < BasisSet.current.t().fruit.length; i++)
-                    if(val != BasisSet.current.t().fruit[i])
+                for (int i = 5; i < BasisSet.current.t().fruit.length; i++)
+                    if (val != BasisSet.current.t().fruit[i])
                         return false;
 
                 return true;
@@ -484,7 +488,7 @@ public class LUTreasureSetting extends Fragment {
         int colorRes = typedValue.resourceId;
         int color = -1;
         try {
-            color = ContextCompat.getColor(context,colorRes);
+            color = ContextCompat.getColor(context, colorRes);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
@@ -492,23 +496,23 @@ public class LUTreasureSetting extends Fragment {
     }
 
     private void SetListenerforTextInputLayout(TextInputLayout... texts) {
-        for(TextInputLayout t : texts) {
-            t.setHelperTextColor(new ColorStateList(states,color));
+        for (TextInputLayout t : texts) {
+            t.setHelperTextColor(new ColorStateList(states, color));
         }
     }
 
     private void SetListenerforTextInputLayouts(TextInputLayout[]... texts) {
-        for(TextInputLayout[] ts : texts) {
-            for(TextInputLayout t : ts) {
-                t.setHelperTextColor(new ColorStateList(states,color));
+        for (TextInputLayout[] ts : texts) {
+            for (TextInputLayout t : ts) {
+                t.setHelperTextColor(new ColorStateList(states, color));
             }
         }
     }
 
     private void SetListenerforTextInputEditText(TextInputEditText... texts) {
-        if(getContext() == null) return;
+        if (getContext() == null) return;
 
-        for(int i = 0; i < texts.length; i++) {
+        for (int i = 0; i < texts.length; i++) {
             final int ii = i;
             texts[i].addTextChangedListener(new TextWatcher() {
                 @Override
@@ -518,28 +522,28 @@ public class LUTreasureSetting extends Fragment {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(!s.toString().isEmpty()) {
-                        if(Integer.parseInt(s.toString()) > limitvals[ii] || Integer.parseInt(s.toString()) < limitmins[ii]) {
-                            if(tils[ii].isHelperTextEnabled()) {
+                    if (!s.toString().isEmpty()) {
+                        if (Integer.parseInt(s.toString()) > limitvals[ii] || Integer.parseInt(s.toString()) < limitmins[ii]) {
+                            if (tils[ii].isHelperTextEnabled()) {
                                 tils[ii].setHelperTextEnabled(false);
                                 tils[ii].setErrorEnabled(true);
-                                tils[ii].setError(getContext().getText(R.string.treasure_invalid));
+                                tils[ii].setError(Objects.requireNonNull(getContext()).getText(R.string.treasure_invalid));
                             }
                         } else {
-                            if(tils[ii].isErrorEnabled()) {
+                            if (tils[ii].isErrorEnabled()) {
                                 tils[ii].setError(null);
                                 tils[ii].setErrorEnabled(false);
                                 tils[ii].setHelperTextEnabled(true);
-                                tils[ii].setHelperTextColor(new ColorStateList(states,color));
+                                tils[ii].setHelperTextColor(new ColorStateList(states, color));
                                 tils[ii].setHelperText(helpers[ii]);
                             }
                         }
                     } else {
-                        if(tils[ii].isErrorEnabled()) {
+                        if (tils[ii].isErrorEnabled()) {
                             tils[ii].setError(null);
                             tils[ii].setErrorEnabled(false);
                             tils[ii].setHelperTextEnabled(true);
-                            tils[ii].setHelperTextColor(new ColorStateList(states,color));
+                            tils[ii].setHelperTextColor(new ColorStateList(states, color));
                             tils[ii].setHelperText(helpers[ii]);
                         }
                     }
@@ -547,7 +551,7 @@ public class LUTreasureSetting extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if(!Initialized)
+                    if (!Initialized)
                         return;
 
                     if (!s.toString().isEmpty()) {
@@ -671,11 +675,11 @@ public class LUTreasureSetting extends Fragment {
         }
     }
 
-    private void SetListenerforTextInptEditTexts(TextInputEditText []... texts) {
-        if(getContext() == null) return;
+    private void SetListenerforTextInptEditTexts(TextInputEditText[]... texts) {
+        if (getContext() == null) return;
 
-        for(int i = 0; i < texts.length; i++) {
-            for(int j = 0; j < texts[i].length; j++) {
+        for (int i = 0; i < texts.length; i++) {
+            for (int j = 0; j < texts[i].length; j++) {
                 final int ii = i;
                 final int jj = j;
 
@@ -687,31 +691,31 @@ public class LUTreasureSetting extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if(!Initialized)
+                        if (!Initialized)
                             return;
 
-                        if(!s.toString().isEmpty()) {
-                            if(Integer.parseInt(s.toString()) > limitvalss[ii] || Integer.parseInt(s.toString()) < limitminss[ii]) {
+                        if (!s.toString().isEmpty()) {
+                            if (Integer.parseInt(s.toString()) > limitvalss[ii] || Integer.parseInt(s.toString()) < limitminss[ii]) {
                                 if (tilss[ii][jj].isHelperTextEnabled()) {
                                     tilss[ii][jj].setHelperTextEnabled(false);
                                     tilss[ii][jj].setErrorEnabled(true);
-                                    tilss[ii][jj].setError(getContext().getText(R.string.treasure_invalid));
+                                    tilss[ii][jj].setError(Objects.requireNonNull(getContext()).getText(R.string.treasure_invalid));
                                 }
                             } else {
-                                    if (tilss[ii][jj].isErrorEnabled()) {
-                                        tilss[ii][jj].setError(null);
-                                        tilss[ii][jj].setErrorEnabled(false);
-                                        tilss[ii][jj].setHelperTextEnabled(true);
-                                        tilss[ii][jj].setHelperTextColor(new ColorStateList(states, color));
-                                        tilss[ii][jj].setHelperText(helperss[ii]);
-                                    }
+                                if (tilss[ii][jj].isErrorEnabled()) {
+                                    tilss[ii][jj].setError(null);
+                                    tilss[ii][jj].setErrorEnabled(false);
+                                    tilss[ii][jj].setHelperTextEnabled(true);
+                                    tilss[ii][jj].setHelperTextColor(new ColorStateList(states, color));
+                                    tilss[ii][jj].setHelperText(helperss[ii]);
+                                }
                             }
                         } else {
-                            if(tilss[ii][jj].isErrorEnabled()) {
+                            if (tilss[ii][jj].isErrorEnabled()) {
                                 tilss[ii][jj].setError(null);
                                 tilss[ii][jj].setErrorEnabled(false);
                                 tilss[ii][jj].setHelperTextEnabled(true);
-                                tilss[ii][jj].setHelperTextColor(new ColorStateList(states,color));
+                                tilss[ii][jj].setHelperTextColor(new ColorStateList(states, color));
                                 tilss[ii][jj].setHelperText(helperss[ii]);
                             }
                         }
@@ -719,13 +723,13 @@ public class LUTreasureSetting extends Fragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(!s.toString().isEmpty()) {
+                        if (!s.toString().isEmpty()) {
                             Treasure t = BasisSet.current.t();
 
-                            if(CanbeEdited && Integer.parseInt(s.toString()) <= limitvalss[ii] && Integer.parseInt(s.toString()) >= limitminss[ii]) {
+                            if (CanbeEdited && Integer.parseInt(s.toString()) <= limitvalss[ii] && Integer.parseInt(s.toString()) >= limitminss[ii]) {
                                 int val = Integer.parseInt(s.toString());
 
-                                switch(ii) {
+                                switch (ii) {
                                     case 0:
                                         t.tech[jj] = val;
 
@@ -742,7 +746,7 @@ public class LUTreasureSetting extends Fragment {
 
                                         break;
                                     case 2:
-                                        t.trea[jj+6] = val;
+                                        t.trea[jj + 6] = val;
 
                                         eocitfe.setText(null);
                                         eocitf.setHelperTextEnabled(true);
@@ -758,7 +762,7 @@ public class LUTreasureSetting extends Fragment {
 
                                         break;
                                     case 4:
-                                        t.fruit[jj+4] = val;
+                                        t.fruit[jj + 4] = val;
 
                                         cotce.setText(null);
                                         cotc.setHelperTextEnabled(true);

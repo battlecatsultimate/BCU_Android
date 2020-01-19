@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mandarin.bcu.ApkDownload;
-import com.mandarin.bcu.CheckUpdateScreen;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
-public class CheckApk extends AsyncTask<Void,String,Void> {
+public class CheckApk extends AsyncTask<Void, String, Void> {
     private final WeakReference<Activity> weakReference;
     private String thisver;
     private boolean cando;
@@ -66,10 +66,10 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
-        try{
-            PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(),0);
+        try {
+            PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
             thisver = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -88,14 +88,14 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return  null;
+        if (activity == null) return null;
 
-        try{
+        try {
             JSONObject update = new JSONObject();
             String apklink = "http://battle-cats-ultimate.000webhostapp.com/api/java/getupdate.php";
-            update.put("bcuver",thisver);
+            update.put("bcuver", thisver);
             URL apkurl = new URL(apklink);
-            HttpURLConnection apkcon = (HttpURLConnection)apkurl.openConnection();
+            HttpURLConnection apkcon = (HttpURLConnection) apkurl.openConnection();
             apkcon.setDoInput(true);
             apkcon.setDoOutput(true);
             apkcon.setRequestMethod("POST");
@@ -108,18 +108,18 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
             InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
             StringBuilder sb = new StringBuilder();
             int cp;
-            while((cp = isr.read())!=-1) {
-                sb.append((char)cp);
+            while ((cp = isr.read()) != -1) {
+                sb.append((char) cp);
             }
             String result = sb.toString();
             JSONObject ans = new JSONObject(result);
             in.close();
             apkcon.disconnect();
 
-            SharedPreferences shared = activity.getSharedPreferences("configuration",MODE_PRIVATE);
+            SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
             String thatver;
 
-            if(shared.getBoolean("apktest",false)) {
+            if (shared.getBoolean("apktest", false)) {
                 thatver = ans.getString("android_test");
             } else {
                 thatver = ans.getString("android_ver");
@@ -150,18 +150,18 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
     protected void onPostExecute(Void results) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
-        if(!contin) {
-            if(cando)
-                if(!config)
-                    new CheckUpdates(path,lang,fileneed,filenum,activity, true).execute();
+        if (!contin) {
+            if (cando)
+                if (!config)
+                    new CheckUpdates(path, lang, fileneed, filenum, activity, true).execute();
                 else
-                    new CheckUpdates(path,lang,fileneed,filenum,activity, true, true).execute();
+                    new CheckUpdates(path, lang, fileneed, filenum, activity, true, true).execute();
             else {
-                ConnectivityManager connectivityManager = (ConnectivityManager)activity.getSystemService(CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(CONNECTIVITY_SERVICE);
 
-                if(connectivityManager.getActiveNetworkInfo() == null) {
+                if (connectivityManager.getActiveNetworkInfo() == null) {
                     Button checkup = activity.findViewById(R.id.checkupretry);
                     ProgressBar prog = activity.findViewById(R.id.mainprogup);
                     TextView mainstup = activity.findViewById(R.id.mainstup);
@@ -169,8 +169,8 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
                     checkup.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(connectivityManager.getActiveNetworkInfo() != null)
-                                new CheckApk(path,lang,weakReference.get(),cando).execute();
+                            if (connectivityManager.getActiveNetworkInfo() != null)
+                                new CheckApk(path, lang, weakReference.get(), cando).execute();
                             else
                                 Toast.makeText(activity, R.string.needconnect, Toast.LENGTH_SHORT).show();
                         }
@@ -191,19 +191,19 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
         String[] thisnum = thisver.split("\\.");
         String[] thatnum = ver.split("\\.");
 
-        boolean update = check(thisnum,thatnum);
+        boolean update = check(thisnum, thatnum);
 
-        if(update) {
+        if (update) {
             AlertDialog.Builder apkdon = new AlertDialog.Builder(activity);
             apkdon.setCancelable(false);
             apkdon.setTitle(R.string.apk_down_title);
-            String content = activity.getString(R.string.apk_down_content)+ver;
+            String content = activity.getString(R.string.apk_down_content) + ver;
             apkdon.setMessage(content);
             apkdon.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent result = new Intent(activity, ApkDownload.class);
-                    result.putExtra("ver",ver);
+                    result.putExtra("ver", ver);
                     activity.startActivity(result);
                     activity.finish();
                 }
@@ -211,34 +211,34 @@ public class CheckApk extends AsyncTask<Void,String,Void> {
             apkdon.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(!config)
-                        new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+                    if (!config)
+                        new CheckUpdates(path, lang, fileneed, filenum, activity, cando).execute();
                     else
-                        new CheckUpdates(path,lang,fileneed,filenum,activity,cando, true).execute();
+                        new CheckUpdates(path, lang, fileneed, filenum, activity, cando, true).execute();
                 }
             });
 
             AlertDialog apkdown = apkdon.create();
             apkdown.show();
         } else {
-            if(!config)
-                new CheckUpdates(path,lang,fileneed,filenum,activity,cando).execute();
+            if (!config)
+                new CheckUpdates(path, lang, fileneed, filenum, activity, cando).execute();
             else
-                new CheckUpdates(path,lang,fileneed,filenum,activity,cando, true).execute();
+                new CheckUpdates(path, lang, fileneed, filenum, activity, cando, true).execute();
         }
     }
 
     public boolean check(String[] thisnum, String[] thatnum) {
         boolean update = false;
 
-        int [] these = {Integer.parseInt(thisnum[0]),Integer.parseInt(thisnum[1]),Integer.parseInt(thisnum[2])};
-        int [] those = {Integer.parseInt(thatnum[0]),Integer.parseInt(thatnum[1]),Integer.parseInt(thatnum[2])};
+        int[] these = {Integer.parseInt(thisnum[0]), Integer.parseInt(thisnum[1]), Integer.parseInt(thisnum[2])};
+        int[] those = {Integer.parseInt(thatnum[0]), Integer.parseInt(thatnum[1]), Integer.parseInt(thatnum[2])};
 
-        if(these[0] < those[0])
+        if (these[0] < those[0])
             update = true;
-        else if(these[0] == those[0] && these[1] < those[1])
+        else if (these[0] == those[0] && these[1] < those[1])
             update = true;
-        else if(these[0] == those[0] && these[1] == those[1] && these[2] < those[2])
+        else if (these[0] == those[0] && these[1] == those[1] && these[2] < those[2])
             update = true;
 
         return update;

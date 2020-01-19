@@ -13,12 +13,13 @@ public class MediaScanner implements MediaScannerConnection.MediaScannerConnecti
 
     public MediaScanner(Context context, File f) {
         this.file = f;
-        connection = new MediaScannerConnection(context,this);
+        connection = new MediaScannerConnection(context, this);
         connection.connect();
     }
+
     @Override
     public void onMediaScannerConnected() {
-        connection.scanFile(file.getAbsolutePath(),null);
+        connection.scanFile(file.getAbsolutePath(), null);
     }
 
     @Override

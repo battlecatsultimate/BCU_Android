@@ -14,35 +14,35 @@ import common.system.fake.ImageBuilder;
 public class BMBuilder extends ImageBuilder {
     @Override
     public FIBM build(Object o) {
-        if(o == null)
+        if (o == null)
             return null;
-        if(o instanceof Bitmap)
-            return new FIBM((Bitmap)o);
-        if(o instanceof FIBM)
+        if (o instanceof Bitmap)
+            return new FIBM((Bitmap) o);
+        if (o instanceof FIBM)
             return (FIBM) o;
 
         Bitmap b = null;
 
-        if(o instanceof File)
+        if (o instanceof File)
             b = BitmapFactory.decodeFile(((File) o).getAbsolutePath());
         else if (o instanceof byte[]) {
-            b = BitmapFactory.decodeByteArray((byte[])o,0,((byte[]) o).length);
+            b = BitmapFactory.decodeByteArray((byte[]) o, 0, ((byte[]) o).length);
         }
-        return b == null ? null:new FIBM(b);
+        return b == null ? null : new FIBM(b);
     }
 
     @Override
     public boolean write(FakeImage img, String fmt, Object o) throws IOException {
-        Bitmap b = (Bitmap)img.bimg();
+        Bitmap b = (Bitmap) img.bimg();
 
-        if(b == null)
+        if (b == null)
             return false;
-        if(o instanceof File) {
-            OutputStream os = new FileOutputStream((File)o);
-            return b.compress(Bitmap.CompressFormat.PNG,100,os);
+        if (o instanceof File) {
+            OutputStream os = new FileOutputStream((File) o);
+            return b.compress(Bitmap.CompressFormat.PNG, 100, os);
         }
-        if(o instanceof OutputStream)
-            return b.compress(Bitmap.CompressFormat.PNG,100,(OutputStream) o);
+        if (o instanceof OutputStream)
+            return b.compress(Bitmap.CompressFormat.PNG, 100, (OutputStream) o);
         return false;
     }
 }

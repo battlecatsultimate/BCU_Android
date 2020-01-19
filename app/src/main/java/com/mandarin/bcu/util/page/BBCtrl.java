@@ -22,13 +22,13 @@ public class BBCtrl extends BattleBox.BBPainter {
 
     @Override
     public void click(Point p, int action) {
-        if(action == MotionEvent.ACTION_UP) {
+        if (action == MotionEvent.ACTION_UP) {
             int w = box.getWidth();
             int h = box.getHeight();
             double hr = unir;
 
-            for(int i = 0; i < 10; i++) {
-                Form f = ctrl.sb.b.lu.fs[i/5][i%5];
+            for (int i = 0; i < 10; i++) {
+                Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
 
                 FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
 
@@ -37,7 +37,7 @@ public class BBCtrl extends BattleBox.BBPainter {
                 int x = (w - iw * 5) / 2 + iw * (i % 5);
                 int y = h - ih * (2 - i / 5);
 
-                if(!new PP(p).out(new P(x,y), new P(x+iw,y+ih),0))
+                if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
                     ctrl.action.add(i);
             }
 
@@ -65,13 +65,13 @@ public class BBCtrl extends BattleBox.BBPainter {
             }
 
             reset();
-        } else if(action == ACTION_LONG) {
+        } else if (action == ACTION_LONG) {
             int w = box.getWidth();
             int h = box.getHeight();
             double hr = unir;
 
-            for(int i = 0; i < 10; i++) {
-                Form f = ctrl.sb.b.lu.fs[i/5][i%5];
+            for (int i = 0; i < 10; i++) {
+                Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
 
                 FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
 
@@ -80,7 +80,7 @@ public class BBCtrl extends BattleBox.BBPainter {
                 int x = (w - iw * 5) / 2 + iw * (i % 5);
                 int y = h - ih * (2 - i / 5);
 
-                if(!new PP(p).out(new P(x,y), new P(x+iw,y+ih),0))
+                if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
                     ctrl.action.add(i);
 
                 ctrl.action.add(10);

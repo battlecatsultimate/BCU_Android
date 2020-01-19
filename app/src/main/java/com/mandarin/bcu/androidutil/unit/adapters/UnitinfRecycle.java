@@ -11,14 +11,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -37,6 +29,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.AdapterAbil;
@@ -60,9 +61,9 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
     private final int id;
     private int fs = 0;
     private getStrings s;
-    private String [][] fragment = {{"Immune to "},{""}};
-    private int[][] states = new int[][] {
-            new int[] {android.R.attr.state_enabled}
+    private String[][] fragment = {{"Immune to "}, {""}};
+    private int[][] states = new int[][]{
+            new int[]{android.R.attr.state_enabled}
     };
 
     private int[] color;
@@ -79,15 +80,15 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         this.id = id;
         s = new getStrings(this.context);
         s.getTalList();
-        color = new int[] {
-                getAttributeColor(context,R.attr.TextPrimary)
+        color = new int[]{
+                getAttributeColor(context, R.attr.TextPrimary)
         };
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(context).inflate(R.layout.unit_table,viewGroup,false);
+        View row = LayoutInflater.from(context).inflate(R.layout.unit_table, viewGroup, false);
 
         return new ViewHolder(row);
     }
@@ -111,14 +112,14 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         healtrea.setCounterEnabled(true);
         healtrea.setCounterMaxLength(3);
 
-        cdlev.setHelperTextColor(new ColorStateList(states,color));
-        cdtrea.setHelperTextColor(new ColorStateList(states,color));
-        atktrea.setHelperTextColor(new ColorStateList(states,color));
-        healtrea.setHelperTextColor(new ColorStateList(states,color));
+        cdlev.setHelperTextColor(new ColorStateList(states, color));
+        cdtrea.setHelperTextColor(new ColorStateList(states, color));
+        atktrea.setHelperTextColor(new ColorStateList(states, color));
+        healtrea.setHelperTextColor(new ColorStateList(states, color));
 
-        SharedPreferences shared = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(shared.getBoolean("frame",true)) {
+        if (shared.getBoolean("frame", true)) {
             fs = 0;
             viewHolder.frse.setText(context.getString(R.string.unit_info_fr));
         } else {
@@ -129,29 +130,29 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         Treasure t = BasisSet.current.t();
         Form f = forms[viewHolder.getAdapterPosition()];
 
-        if(f.getPCoin()==null) {
+        if (f.getPCoin() == null) {
             viewHolder.unittalen.setVisibility(View.GONE);
             viewHolder.npreset.setVisibility(View.GONE);
             viewHolder.nprow.setVisibility(View.GONE);
             pcoins = null;
         } else {
-            int [] max = f.getPCoin().max;
+            int[] max = f.getPCoin().max;
             pcoins = new int[max.length];
             pcoins[0] = 0;
 
-            for(int j =0;j<viewHolder.pcoins.length;j++) {
+            for (int j = 0; j < viewHolder.pcoins.length; j++) {
                 List<Integer> plev = new ArrayList<>();
-                for(int k=0;k<max[j+1]+1;k++)
+                for (int k = 0; k < max[j + 1] + 1; k++)
                     plev.add(k);
-                ArrayAdapter<Integer> adapter = new ArrayAdapter<>(context,R.layout.spinneradapter,plev);
+                ArrayAdapter<Integer> adapter = new ArrayAdapter<>(context, R.layout.spinneradapter, plev);
                 viewHolder.pcoins[j].setAdapter(adapter);
-                viewHolder.pcoins[j].setSelection(getIndex(viewHolder.pcoins[j],max[j+1]));
+                viewHolder.pcoins[j].setSelection(getIndex(viewHolder.pcoins[j], max[j + 1]));
 
-                pcoins[j+1] = max[j+1];
+                pcoins[j + 1] = max[j + 1];
             }
         }
 
-        List<String> ability = Interpret.getAbi(f.du,fragment,StaticStore.addition,0);
+        List<String> ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0);
         List<Integer> abilityicon = Interpret.getAbiid(f.du);
 
         TextInputEditText cdlevt = context.findViewById(R.id.cdlevt);
@@ -165,29 +166,29 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         healtreat.setText(String.valueOf(t.trea[1]));
 
 
-        String language = StaticStore.lang[shared.getInt("Language",0)];
-        if(language.equals("")) {
+        String language = StaticStore.lang[shared.getInt("Language", 0)];
+        if (language.equals("")) {
             language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         }
         List<String> proc;
-        if(language.equals("ko")) {
-            proc = Interpret.getProc(f.du,1,fs);
+        if (language.equals("ko")) {
+            proc = Interpret.getProc(f.du, 1, fs);
         } else {
-            proc = Interpret.getProc(f.du,0,fs);
+            proc = Interpret.getProc(f.du, 0, fs);
         }
         List<Integer> procicon = Interpret.getProcid(f.du);
 
-        viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb((Bitmap)f.anim.uni.getImg().bimg(),context,48));
+        viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb((Bitmap) f.anim.uni.getImg().bimg(), context, 48));
         viewHolder.unitname.setText(names.get(i));
-        viewHolder.unitid.setText(s.getID(viewHolder,number(id)));
-        viewHolder.unithp.setText(s.getHP(f,t,f.unit.getPrefLv(),false,pcoins));
-        viewHolder.unithb.setText(s.getHB(f,false,pcoins));
-        viewHolder.unitatk.setText(s.getTotAtk(f,t,f.unit.getPrefLv(),false,pcoins));
-        viewHolder.unittrait.setText(s.getTrait(f,false,pcoins));
-        viewHolder.unitcost.setText(s.getCost(f,false,pcoins));
+        viewHolder.unitid.setText(s.getID(viewHolder, number(id)));
+        viewHolder.unithp.setText(s.getHP(f, t, f.unit.getPrefLv(), false, pcoins));
+        viewHolder.unithb.setText(s.getHB(f, false, pcoins));
+        viewHolder.unitatk.setText(s.getTotAtk(f, t, f.unit.getPrefLv(), false, pcoins));
+        viewHolder.unittrait.setText(s.getTrait(f, false, pcoins));
+        viewHolder.unitcost.setText(s.getCost(f, false, pcoins));
         viewHolder.unitsimu.setText(s.getSimu(f));
-        viewHolder.unitspd.setText(s.getSpd(f,false,pcoins));
-        viewHolder.unitcd.setText(s.getCD(f, t, fs,false,pcoins));
+        viewHolder.unitspd.setText(s.getSpd(f, false, pcoins));
+        viewHolder.unitcd.setText(s.getCD(f, t, fs, false, pcoins));
         viewHolder.unitrang.setText(s.getRange(f));
         viewHolder.unitpreatk.setText(s.getPre(f, fs));
         viewHolder.unitpost.setText(s.getPost(f, fs));
@@ -195,12 +196,12 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.unitatkt.setText(s.getAtkTime(f, fs));
         viewHolder.unitabilt.setText(s.getAbilT(f));
 
-        if(ability.size()>0 || proc.size() > 0) {
+        if (ability.size() > 0 || proc.size() > 0) {
             viewHolder.none.setVisibility(View.GONE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             viewHolder.unitabil.setLayoutManager(linearLayoutManager);
-            AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon,context);
+            AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, context);
             viewHolder.unitabil.setAdapter(adapterAbil);
             ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
         } else {
@@ -225,13 +226,13 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.unitname.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(context == null) return false;
+                if (context == null) return false;
 
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData data = ClipData.newPlainText(null,viewHolder.unitname.getText());
+                ClipData data = ClipData.newPlainText(null, viewHolder.unitname.getText());
                 clipboardManager.setPrimaryClip(data);
 
-                Toast.makeText(context,R.string.unit_info_copied,Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.unit_info_copied, Toast.LENGTH_SHORT).show();
 
                 return true;
             }
@@ -241,11 +242,11 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         Form f = forms[viewHolder.getAdapterPosition()];
 
         List<Integer> levels = new ArrayList<>();
-        for(int j =1;j < f.unit.max+1;j++)
+        for (int j = 1; j < f.unit.max + 1; j++)
             levels.add(j);
 
         ArrayList<Integer> levelsp = new ArrayList<>();
-        for(int j=0;j<f.unit.maxp+1;j++)
+        for (int j = 0; j < f.unit.maxp + 1; j++)
             levelsp.add(j);
 
         ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<>(context, R.layout.spinneradapter, levels);
@@ -253,27 +254,26 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
         int currentlev;
 
-        SharedPreferences shared = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        if(shared.getInt("default_level",50) > f.unit.max)
+        if (shared.getInt("default_level", 50) > f.unit.max)
             currentlev = f.unit.max;
+        else if (f.unit.rarity != 0)
+            currentlev = shared.getInt("default_level", 50);
         else
-            if(f.unit.rarity != 0)
-                currentlev = shared.getInt("default_level",50);
-            else
-                currentlev = f.unit.max;
+            currentlev = f.unit.max;
 
         viewHolder.unitlevel.setAdapter(arrayAdapter);
-        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel,currentlev));
+        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel, currentlev));
         viewHolder.unitlevelp.setAdapter(arrayAdapterp);
 
-        if(f.unit.getPrefLv()-f.unit.max < 0) {
-            viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp,0));
+        if (f.unit.getPrefLv() - f.unit.max < 0) {
+            viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, 0));
         } else {
             viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, f.unit.getPrefLv() - f.unit.max));
         }
 
-        if(levelsp.size() == 1) {
+        if (levelsp.size() == 1) {
             viewHolder.unitlevelp.setVisibility(View.GONE);
             viewHolder.unitplus.setVisibility(View.GONE);
         }
@@ -281,19 +281,19 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.frse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fs == 0) {
+                if (fs == 0) {
                     fs = 1;
-                    viewHolder.unitcd.setText(s.getCD(f,t,fs,talents,pcoins));
-                    viewHolder.unitpreatk.setText(s.getPre(f,fs));
-                    viewHolder.unitpost.setText(s.getPost(f,fs));
-                    viewHolder.unittba.setText(s.getTBA(f,fs));
-                    viewHolder.unitatkt.setText(s.getAtkTime(f,fs));
+                    viewHolder.unitcd.setText(s.getCD(f, t, fs, talents, pcoins));
+                    viewHolder.unitpreatk.setText(s.getPre(f, fs));
+                    viewHolder.unitpost.setText(s.getPost(f, fs));
+                    viewHolder.unittba.setText(s.getTBA(f, fs));
+                    viewHolder.unitatkt.setText(s.getAtkTime(f, fs));
                     viewHolder.frse.setText(context.getString(R.string.unit_info_sec));
 
-                    if(viewHolder.unitabil.getVisibility() != View.GONE) {
+                    if (viewHolder.unitabil.getVisibility() != View.GONE) {
                         MaskUnit du = f.du;
-                        if(f.getPCoin() != null)
-                            du = talents?f.getPCoin().improve(pcoins):f.du;
+                        if (f.getPCoin() != null)
+                            du = talents ? f.getPCoin().improve(pcoins) : f.du;
 
                         List<String> ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0);
                         List<Integer> abilityicon = Interpret.getAbiid(du);
@@ -309,23 +309,23 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                         viewHolder.unitabil.setLayoutManager(linearLayoutManager);
-                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon,context);
+                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, context);
                         viewHolder.unitabil.setAdapter(adapterAbil);
                         ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
                     }
                 } else {
                     fs = 0;
-                    viewHolder.unitcd.setText(s.getCD(f,t,fs,talents,pcoins));
-                    viewHolder.unitpreatk.setText(s.getPre(f,fs));
-                    viewHolder.unitpost.setText(s.getPost(f,fs));
-                    viewHolder.unittba.setText(s.getTBA(f,fs));
-                    viewHolder.unitatkt.setText(s.getAtkTime(f,fs));
+                    viewHolder.unitcd.setText(s.getCD(f, t, fs, talents, pcoins));
+                    viewHolder.unitpreatk.setText(s.getPre(f, fs));
+                    viewHolder.unitpost.setText(s.getPost(f, fs));
+                    viewHolder.unittba.setText(s.getTBA(f, fs));
+                    viewHolder.unitatkt.setText(s.getAtkTime(f, fs));
                     viewHolder.frse.setText(context.getString(R.string.unit_info_fr));
 
-                    if(viewHolder.unitabil.getVisibility() != View.GONE) {
+                    if (viewHolder.unitabil.getVisibility() != View.GONE) {
                         MaskUnit du = f.du;
-                        if(f.getPCoin() != null)
-                            du = talents?f.getPCoin().improve(pcoins):f.du;
+                        if (f.getPCoin() != null)
+                            du = talents ? f.getPCoin().improve(pcoins) : f.du;
 
                         List<String> ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0);
                         List<Integer> abilityicon = Interpret.getAbiid(du);
@@ -343,7 +343,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                         viewHolder.unitabil.setLayoutManager(linearLayoutManager);
-                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc,abilityicon,procicon,context);
+                        AdapterAbil adapterAbil = new AdapterAbil(ability, proc, abilityicon, procicon, context);
                         viewHolder.unitabil.setAdapter(adapterAbil);
                         ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
                     }
@@ -354,54 +354,54 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.unitcdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.unitcd.getText().toString().endsWith("f"))
-                    viewHolder.unitcd.setText(s.getCD(f,t,1,talents,pcoins));
+                if (viewHolder.unitcd.getText().toString().endsWith("f"))
+                    viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
                 else
-                    viewHolder.unitcd.setText(s.getCD(f,t,0,talents,pcoins));
+                    viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
             }
         });
 
         viewHolder.unitpreatkb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.unitpreatk.getText().toString().endsWith("f"))
-                    viewHolder.unitpreatk.setText(s.getPre(f,1));
+                if (viewHolder.unitpreatk.getText().toString().endsWith("f"))
+                    viewHolder.unitpreatk.setText(s.getPre(f, 1));
                 else
-                    viewHolder.unitpreatk.setText(s.getPre(f,0));
+                    viewHolder.unitpreatk.setText(s.getPre(f, 0));
             }
         });
 
         viewHolder.unitpostb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.unitpost.getText().toString().endsWith("f"))
-                    viewHolder.unitpost.setText(s.getPost(f,1));
+                if (viewHolder.unitpost.getText().toString().endsWith("f"))
+                    viewHolder.unitpost.setText(s.getPost(f, 1));
                 else
-                    viewHolder.unitpost.setText(s.getPost(f,0));
+                    viewHolder.unitpost.setText(s.getPost(f, 0));
             }
         });
 
         viewHolder.unittbab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.unittba.getText().toString().endsWith("f"))
-                    viewHolder.unittba.setText(s.getTBA(f,1));
+                if (viewHolder.unittba.getText().toString().endsWith("f"))
+                    viewHolder.unittba.setText(s.getTBA(f, 1));
                 else
-                    viewHolder.unittba.setText(s.getTBA(f,0));
+                    viewHolder.unittba.setText(s.getTBA(f, 0));
             }
         });
 
         viewHolder.unitatkb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int level = (int)viewHolder.unitlevel.getSelectedItem();
-                int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
-                if(viewHolder.unitatkb.getText().equals(context.getString(R.string.unit_info_atk))) {
+                int level = (int) viewHolder.unitlevel.getSelectedItem();
+                int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
+                if (viewHolder.unitatkb.getText().equals(context.getString(R.string.unit_info_atk))) {
                     viewHolder.unitatkb.setText(context.getString(R.string.unit_info_dps));
-                    viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoins));
+                    viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                 } else {
                     viewHolder.unitatkb.setText(context.getString(R.string.unit_info_atk));
-                    viewHolder.unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoins));
+                    viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                 }
             }
         });
@@ -409,30 +409,30 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.unitatktb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.unitatkt.getText().toString().endsWith("f"))
-                    viewHolder.unitatkt.setText(s.getAtkTime(f,1));
+                if (viewHolder.unitatkt.getText().toString().endsWith("f"))
+                    viewHolder.unitatkt.setText(s.getAtkTime(f, 1));
                 else
-                    viewHolder.unitatkt.setText(s.getAtkTime(f,0));
+                    viewHolder.unitatkt.setText(s.getAtkTime(f, 0));
             }
         });
 
         viewHolder.unitlevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int level = (int)viewHolder.unitlevel.getSelectedItem();
-                int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
-                viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
+                int level = (int) viewHolder.unitlevel.getSelectedItem();
+                int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
+                viewHolder.unithp.setText(s.getHP(f, t, level + levelp, talents, pcoins));
 
-                if(f.du.rawAtkData().length > 1) {
+                if (f.du.rawAtkData().length > 1) {
                     if (viewHolder.unitatkb.getText().equals(context.getString(R.string.unit_info_atk)))
-                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                     else
-                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                 } else {
                     if (viewHolder.unitatkb.getText().equals(context.getString(R.string.unit_info_atk)))
-                        viewHolder.unitatk.setText(s.getTotAtk(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getTotAtk(f, t, level + levelp, talents, pcoins));
                     else
-                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                 }
 
             }
@@ -446,19 +446,19 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.unitlevelp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int level = (int)viewHolder.unitlevel.getSelectedItem();
-                int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
-                viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
-                if(f.du.rawAtkData().length > 1) {
+                int level = (int) viewHolder.unitlevel.getSelectedItem();
+                int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
+                viewHolder.unithp.setText(s.getHP(f, t, level + levelp, talents, pcoins));
+                if (f.du.rawAtkData().length > 1) {
                     if (viewHolder.unitatkb.getText().equals(context.getString(R.string.unit_info_atk)))
-                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                     else
-                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                 } else {
                     if (viewHolder.unitatkb.getText().equals(context.getString(R.string.unit_info_atk)))
-                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                     else
-                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                 }
             }
 
@@ -480,28 +480,28 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 30 || Integer.parseInt(s.toString()) <= 0) {
-                        if(cdlev.isHelperTextEnabled()) {
+                        if (cdlev.isHelperTextEnabled()) {
                             cdlev.setHelperTextEnabled(false);
                             cdlev.setErrorEnabled(true);
                             cdlev.setError(context.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(cdlev.isErrorEnabled()) {
+                        if (cdlev.isErrorEnabled()) {
                             cdlev.setError(null);
                             cdlev.setErrorEnabled(false);
                             cdlev.setHelperTextEnabled(true);
-                            cdlev.setHelperTextColor(new ColorStateList(states,color));
+                            cdlev.setHelperTextColor(new ColorStateList(states, color));
                             cdlev.setHelperText("1~30");
                         }
                     }
                 } else {
-                    if(cdlev.isErrorEnabled()) {
+                    if (cdlev.isErrorEnabled()) {
                         cdlev.setError(null);
                         cdlev.setErrorEnabled(false);
                         cdlev.setHelperTextEnabled(true);
-                        cdlev.setHelperTextColor(new ColorStateList(states,color));
+                        cdlev.setHelperTextColor(new ColorStateList(states, color));
                         cdlev.setHelperText("1~30");
                     }
                 }
@@ -509,24 +509,24 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 30 && Integer.parseInt(text.toString()) > 0) {
                         int lev = Integer.parseInt(text.toString());
 
                         t.tech[0] = lev;
 
                         if (viewHolder.unitcd.getText().toString().endsWith("s")) {
-                            viewHolder.unitcd.setText(s.getCD(f, t, 1,talents,pcoins));
+                            viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
                         } else {
-                            viewHolder.unitcd.setText(s.getCD(f, t, 0,talents,pcoins));
+                            viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
                         }
                     }
                 } else {
                     t.tech[0] = 1;
-                    if(viewHolder.unitcd.getText().toString().endsWith("s")) {
-                        viewHolder.unitcd.setText(s.getCD(f,t,1,talents,pcoins));
+                    if (viewHolder.unitcd.getText().toString().endsWith("s")) {
+                        viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
                     } else {
-                        viewHolder.unitcd.setText(s.getCD(f,t,0,talents,pcoins));
+                        viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
                     }
                 }
             }
@@ -540,28 +540,28 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 300) {
-                        if(cdtrea.isHelperTextEnabled()) {
+                        if (cdtrea.isHelperTextEnabled()) {
                             cdtrea.setHelperTextEnabled(false);
                             cdtrea.setErrorEnabled(true);
                             cdtrea.setError(context.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(cdtrea.isErrorEnabled()) {
+                        if (cdtrea.isErrorEnabled()) {
                             cdtrea.setError(null);
                             cdtrea.setErrorEnabled(false);
                             cdtrea.setHelperTextEnabled(true);
-                            cdtrea.setHelperTextColor(new ColorStateList(states,color));
+                            cdtrea.setHelperTextColor(new ColorStateList(states, color));
                             cdtrea.setHelperText("0~300");
                         }
                     }
                 } else {
-                    if(cdtrea.isErrorEnabled()) {
+                    if (cdtrea.isErrorEnabled()) {
                         cdtrea.setError(null);
                         cdtrea.setErrorEnabled(false);
                         cdtrea.setHelperTextEnabled(true);
-                        cdtrea.setHelperTextColor(new ColorStateList(states,color));
+                        cdtrea.setHelperTextColor(new ColorStateList(states, color));
                         cdtrea.setHelperText("0~300");
                     }
                 }
@@ -569,24 +569,24 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 300) {
                         int trea = Integer.parseInt(text.toString());
 
                         t.trea[2] = trea;
 
                         if (viewHolder.unitcd.getText().toString().endsWith("s")) {
-                            viewHolder.unitcd.setText(s.getCD(f, t, 1,talents,pcoins));
+                            viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
                         } else {
-                            viewHolder.unitcd.setText(s.getCD(f, t, 0,talents,pcoins));
+                            viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
                         }
                     }
                 } else {
                     t.trea[2] = 0;
-                    if(viewHolder.unitcd.getText().toString().endsWith("s")) {
-                        viewHolder.unitcd.setText(s.getCD(f,t,1,talents,pcoins));
+                    if (viewHolder.unitcd.getText().toString().endsWith("s")) {
+                        viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
                     } else {
-                        viewHolder.unitcd.setText(s.getCD(f,t,0,talents,pcoins));
+                        viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
                     }
                 }
             }
@@ -600,28 +600,28 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 300) {
-                        if(atktrea.isHelperTextEnabled()) {
+                        if (atktrea.isHelperTextEnabled()) {
                             atktrea.setHelperTextEnabled(false);
                             atktrea.setErrorEnabled(true);
                             atktrea.setError(context.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(atktrea.isErrorEnabled()) {
+                        if (atktrea.isErrorEnabled()) {
                             atktrea.setError(null);
                             atktrea.setErrorEnabled(false);
                             atktrea.setHelperTextEnabled(true);
-                            atktrea.setHelperTextColor(new ColorStateList(states,color));
+                            atktrea.setHelperTextColor(new ColorStateList(states, color));
                             atktrea.setHelperText("0~300");
                         }
                     }
                 } else {
-                    if(atktrea.isErrorEnabled()) {
+                    if (atktrea.isErrorEnabled()) {
                         atktrea.setError(null);
                         atktrea.setErrorEnabled(false);
                         atktrea.setHelperTextEnabled(true);
-                        atktrea.setHelperTextColor(new ColorStateList(states,color));
+                        atktrea.setHelperTextColor(new ColorStateList(states, color));
                         atktrea.setHelperText("0~300");
                     }
                 }
@@ -629,7 +629,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 300) {
                         int trea = Integer.parseInt(text.toString());
 
@@ -638,20 +638,20 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
 
                         if (viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
-                            viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp,talents,pcoins));
+                            viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                         } else {
-                            viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoins));
+                            viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                         }
                     }
                 } else {
                     t.trea[0] = 0;
-                    int level = (int)viewHolder.unitlevel.getSelectedItem();
-                    int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
+                    int level = (int) viewHolder.unitlevel.getSelectedItem();
+                    int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
 
-                    if(viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
-                        viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoins));
+                    if (viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
+                        viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                     } else {
-                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                     }
                 }
             }
@@ -665,28 +665,28 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty()) {
                     if (Integer.parseInt(s.toString()) > 300) {
-                        if(healtrea.isHelperTextEnabled()) {
+                        if (healtrea.isHelperTextEnabled()) {
                             healtrea.setHelperTextEnabled(false);
                             healtrea.setErrorEnabled(true);
                             healtrea.setError(context.getString(R.string.treasure_invalid));
                         }
                     } else {
-                        if(healtrea.isErrorEnabled()) {
+                        if (healtrea.isErrorEnabled()) {
                             healtrea.setError(null);
                             healtrea.setErrorEnabled(false);
                             healtrea.setHelperTextEnabled(true);
-                            healtrea.setHelperTextColor(new ColorStateList(states,color));
+                            healtrea.setHelperTextColor(new ColorStateList(states, color));
                             healtrea.setHelperText("0~300");
                         }
                     }
                 } else {
-                    if(healtrea.isErrorEnabled()) {
+                    if (healtrea.isErrorEnabled()) {
                         healtrea.setError(null);
                         healtrea.setErrorEnabled(false);
                         healtrea.setHelperTextEnabled(true);
-                        healtrea.setHelperTextColor(new ColorStateList(states,color));
+                        healtrea.setHelperTextColor(new ColorStateList(states, color));
                         healtrea.setHelperText("0~300");
                     }
                 }
@@ -694,7 +694,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
 
             @Override
             public void afterTextChanged(Editable text) {
-                if(!text.toString().isEmpty()) {
+                if (!text.toString().isEmpty()) {
                     if (Integer.parseInt(text.toString()) <= 300) {
                         int trea = Integer.parseInt(text.toString());
 
@@ -702,14 +702,14 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                         int level = (int) viewHolder.unitlevel.getSelectedItem();
                         int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
 
-                        viewHolder.unithp.setText(s.getHP(f, t, level + levelp,talents,pcoins));
+                        viewHolder.unithp.setText(s.getHP(f, t, level + levelp, talents, pcoins));
                     }
                 } else {
                     t.trea[1] = 0;
-                    int level = (int)viewHolder.unitlevel.getSelectedItem();
-                    int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
+                    int level = (int) viewHolder.unitlevel.getSelectedItem();
+                    int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
 
-                    viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
+                    viewHolder.unithp.setText(s.getHP(f, t, level + levelp, talents, pcoins));
                 }
             }
         });
@@ -727,22 +727,22 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                 atktreat.setText(String.valueOf(t.trea[1]));
                 healtreat.setText(String.valueOf(t.trea[2]));
 
-                int level = (int)viewHolder.unitlevel.getSelectedItem();
-                int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
+                int level = (int) viewHolder.unitlevel.getSelectedItem();
+                int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
 
-                if(viewHolder.unitcd.getText().toString().endsWith("s")) {
-                    viewHolder.unitcd.setText(s.getCD(f,t,1,talents,pcoins));
+                if (viewHolder.unitcd.getText().toString().endsWith("s")) {
+                    viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
                 } else {
-                    viewHolder.unitcd.setText(s.getCD(f,t,0,talents,pcoins));
+                    viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
                 }
 
-                if(viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
-                    viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoins));
+                if (viewHolder.unitatkb.getText().toString().equals(context.getString(R.string.unit_info_dps))) {
+                    viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
                 } else {
-                    viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp,talents,pcoins));
+                    viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
                 }
 
-                viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
+                viewHolder.unithp.setText(s.getHP(f, t, level + levelp, talents, pcoins));
             }
         });
 
@@ -750,9 +750,9 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 talents = true;
-                validate(viewHolder,f,t);
-                if(isChecked) {
-                    ValueAnimator anim = ValueAnimator.ofInt(0,StaticStore.dptopx(100f,context));
+                validate(viewHolder, f, t);
+                if (isChecked) {
+                    ValueAnimator anim = ValueAnimator.ofInt(0, StaticStore.dptopx(100f, context));
                     anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -767,7 +767,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim.start();
 
                     ValueAnimator anim2;
-                    if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                         anim2 = ValueAnimator.ofInt(0, StaticStore.dptopx(48f, context));
                     } else {
                         anim2 = ValueAnimator.ofInt(0, StaticStore.dptopx(56f, context));
@@ -776,7 +776,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)viewHolder.nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) viewHolder.nprow.getLayoutParams();
                             params.height = (int) (Integer) animation.getAnimatedValue();
                             viewHolder.nprow.setLayoutParams(params);
                         }
@@ -785,11 +785,11 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim2.setInterpolator(new DecelerateInterpolator());
                     anim2.start();
 
-                    ValueAnimator anim3 = ValueAnimator.ofInt(0,StaticStore.dptopx(16f,context));
+                    ValueAnimator anim3 = ValueAnimator.ofInt(0, StaticStore.dptopx(16f, context));
                     anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)viewHolder.nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) viewHolder.nprow.getLayoutParams();
                             params.topMargin = (int) animation.getAnimatedValue();
                             viewHolder.nprow.setLayoutParams(params);
                         }
@@ -799,8 +799,8 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim3.start();
                 } else {
                     talents = false;
-                    validate(viewHolder,f,t);
-                    ValueAnimator anim = ValueAnimator.ofInt(StaticStore.dptopx(100f,context),0);
+                    validate(viewHolder, f, t);
+                    ValueAnimator anim = ValueAnimator.ofInt(StaticStore.dptopx(100f, context), 0);
                     anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -815,14 +815,14 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim.start();
 
                     ValueAnimator anim2;
-                    if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-                        anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f,context),0);
+                    if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                        anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f, context), 0);
                     else
-                        anim2 = ValueAnimator.ofInt(StaticStore.dptopx(56f,context),0);
+                        anim2 = ValueAnimator.ofInt(StaticStore.dptopx(56f, context), 0);
                     anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)viewHolder.nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) viewHolder.nprow.getLayoutParams();
                             params.height = (int) animation.getAnimatedValue();
                             viewHolder.nprow.setLayoutParams(params);
                         }
@@ -831,11 +831,11 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                     anim2.setInterpolator(new DecelerateInterpolator());
                     anim2.start();
 
-                    ValueAnimator anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f,context),0);
+                    ValueAnimator anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f, context), 0);
                     anim3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)viewHolder.nprow.getLayoutParams();
+                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) viewHolder.nprow.getLayoutParams();
                             params.topMargin = (int) animation.getAnimatedValue();
                             viewHolder.nprow.setLayoutParams(params);
                         }
@@ -847,13 +847,13 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             }
         });
 
-        for(int i = 0;i<viewHolder.pcoins.length;i++) {
+        for (int i = 0; i < viewHolder.pcoins.length; i++) {
             final int finals = i;
             viewHolder.pcoins[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    pcoins[finals+1] = (int)viewHolder.pcoins[finals].getSelectedItem();
-                    validate(viewHolder,f,t);
+                    pcoins[finals + 1] = (int) viewHolder.pcoins[finals].getSelectedItem();
+                    validate(viewHolder, f, t);
                 }
 
                 @Override
@@ -866,7 +866,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
                 @Override
                 public boolean onLongClick(View v) {
                     viewHolder.pcoins[finals].setClickable(false);
-                    Toast.makeText(context,s.getTalentName(finals,f),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, s.getTalentName(finals, f), Toast.LENGTH_SHORT).show();
 
                     return true;
                 }
@@ -876,12 +876,12 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         viewHolder.npreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i =0;i<viewHolder.pcoins.length;i++) {
-                    viewHolder.pcoins[i].setSelection(getIndex(viewHolder.pcoins[i],f.getPCoin().max[i+1]));
-                    pcoins[i+1] = f.getPCoin().max[i+1];
+                for (int i = 0; i < viewHolder.pcoins.length; i++) {
+                    viewHolder.pcoins[i].setSelection(getIndex(viewHolder.pcoins[i], f.getPCoin().max[i + 1]));
+                    pcoins[i + 1] = f.getPCoin().max[i + 1];
                 }
 
-                validate(viewHolder,f,t);
+                validate(viewHolder, f, t);
             }
         });
     }
@@ -889,8 +889,8 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
     private int getIndex(Spinner spinner, int lev) {
         int index = 0;
 
-        for(int i = 0; i< spinner.getCount();i++)
-            if (lev == (int)spinner.getItemAtPosition(i))
+        for (int i = 0; i < spinner.getCount(); i++)
+            if (lev == (int) spinner.getItemAtPosition(i))
                 index = i;
 
         return index;
@@ -935,8 +935,8 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         TableRow npresetrow;
         Button npreset;
         TableRow nprow;
-        int [] ids = {R.id.talent0,R.id.talent1,R.id.talent2,R.id.talent3,R.id.talent4};
-        Spinner [] pcoins = new Spinner[ids.length];
+        int[] ids = {R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4};
+        Spinner[] pcoins = new Spinner[ids.length];
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -976,7 +976,7 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
             npreset = itemView.findViewById(R.id.unitinftalreset);
             npresetrow = itemView.findViewById(R.id.talresetrow);
             nprow = itemView.findViewById(R.id.talenrow);
-            for(int i = 0;i<ids.length;i++)
+            for (int i = 0; i < ids.length; i++)
                 pcoins[i] = itemView.findViewById(ids[i]);
         }
     }
@@ -997,61 +997,61 @@ public class UnitinfRecycle extends RecyclerView.Adapter<UnitinfRecycle.ViewHold
         int colorRes = typedValue.resourceId;
         int color = -1;
         try {
-            color = ContextCompat.getColor(context,colorRes);
+            color = ContextCompat.getColor(context, colorRes);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
         return color;
     }
 
-    private void validate(ViewHolder viewHolder,Form f,Treasure t) {
-        int level = (int)viewHolder.unitlevel.getSelectedItem();
-        int levelp = (int)viewHolder.unitlevelp.getSelectedItem();
-        viewHolder.unithp.setText(s.getHP(f,t,level+levelp,talents,pcoins));
-        viewHolder.unithb.setText(s.getHB(f,talents,pcoins));
-        if(viewHolder.unitatkb.getText().toString().equals("DPS"))
-            viewHolder.unitatk.setText(s.getDPS(f,t,level+levelp,talents,pcoins));
+    private void validate(ViewHolder viewHolder, Form f, Treasure t) {
+        int level = (int) viewHolder.unitlevel.getSelectedItem();
+        int levelp = (int) viewHolder.unitlevelp.getSelectedItem();
+        viewHolder.unithp.setText(s.getHP(f, t, level + levelp, talents, pcoins));
+        viewHolder.unithb.setText(s.getHB(f, talents, pcoins));
+        if (viewHolder.unitatkb.getText().toString().equals("DPS"))
+            viewHolder.unitatk.setText(s.getDPS(f, t, level + levelp, talents, pcoins));
         else
-            viewHolder.unitatk.setText(s.getAtk(f,t,level+levelp,talents,pcoins));
-        viewHolder.unitcost.setText(s.getCost(f,talents,pcoins));
-        if(viewHolder.unitcd.getText().toString().endsWith("s"))
-            viewHolder.unitcd.setText(s.getCD(f,t,1,talents,pcoins));
+            viewHolder.unitatk.setText(s.getAtk(f, t, level + levelp, talents, pcoins));
+        viewHolder.unitcost.setText(s.getCost(f, talents, pcoins));
+        if (viewHolder.unitcd.getText().toString().endsWith("s"))
+            viewHolder.unitcd.setText(s.getCD(f, t, 1, talents, pcoins));
         else
-            viewHolder.unitcd.setText(s.getCD(f,t,0,talents,pcoins));
-        viewHolder.unittrait.setText(s.getTrait(f,talents,pcoins));
-        viewHolder.unitspd.setText(s.getSpd(f,talents,pcoins));
+            viewHolder.unitcd.setText(s.getCD(f, t, 0, talents, pcoins));
+        viewHolder.unittrait.setText(s.getTrait(f, talents, pcoins));
+        viewHolder.unitspd.setText(s.getSpd(f, talents, pcoins));
 
         MaskUnit du;
 
-        if(f.getPCoin() != null)
-            du = talents?f.getPCoin().improve(pcoins):f.du;
+        if (f.getPCoin() != null)
+            du = talents ? f.getPCoin().improve(pcoins) : f.du;
         else
             du = f.du;
 
-        List<String> abil = Interpret.getAbi(du,fragment,StaticStore.addition,0);
+        List<String> abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0);
 
-        SharedPreferences shared = context.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+        SharedPreferences shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        String language = StaticStore.lang[shared.getInt("Language",0)];
-        if(language.equals("")) {
+        String language = StaticStore.lang[shared.getInt("Language", 0)];
+        if (language.equals("")) {
             language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         }
         List<String> proc;
-        if(language.equals("ko")) {
-            proc = Interpret.getProc(du,1,fs);
+        if (language.equals("ko")) {
+            proc = Interpret.getProc(du, 1, fs);
         } else {
-            proc = Interpret.getProc(du,0,fs);
+            proc = Interpret.getProc(du, 0, fs);
         }
 
         List<Integer> abilityicon = Interpret.getAbiid(du);
         List<Integer> procicon = Interpret.getProcid(du);
 
-        if(abil.size()>0 || proc.size() > 0) {
+        if (abil.size() > 0 || proc.size() > 0) {
             viewHolder.none.setVisibility(View.GONE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             viewHolder.unitabil.setLayoutManager(linearLayoutManager);
-            AdapterAbil adapterAbil = new AdapterAbil(abil, proc,abilityicon,procicon,context);
+            AdapterAbil adapterAbil = new AdapterAbil(abil, proc, abilityicon, procicon, context);
             viewHolder.unitabil.setAdapter(adapterAbil);
             ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false);
         } else {

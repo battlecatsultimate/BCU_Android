@@ -40,26 +40,26 @@ public class EnemyList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences shared = getSharedPreferences("configuration",MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed;
-        if(!shared.contains("initial")) {
+        if (!shared.contains("initial")) {
             ed = shared.edit();
-            ed.putBoolean("initial",true);
-            ed.putBoolean("theme",true);
+            ed.putBoolean("initial", true);
+            ed.putBoolean("theme", true);
             ed.apply();
         } else {
-            if(!shared.getBoolean("theme",false)) {
+            if (!shared.getBoolean("theme", false)) {
                 setTheme(R.style.AppTheme_night);
             } else {
                 setTheme(R.style.AppTheme_day);
             }
         }
 
-        if(shared.getInt("Orientation",0) == 1)
+        if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        else if(shared.getInt("Orientation",0) == 2)
+        else if (shared.getInt("Orientation", 0) == 2)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        else if(shared.getInt("Orientation",0) == 0)
+        else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         setContentView(R.layout.activity_enemy_list);
@@ -87,45 +87,45 @@ public class EnemyList extends AppCompatActivity {
 
         StaticStore.getEnemynumber();
 
-        new EAdder(this,StaticStore.emnumber).execute();
+        new EAdder(this, StaticStore.emnumber).execute();
     }
 
     protected void gotoFilter() {
-        Intent intent = new Intent(EnemyList.this,EnemySearchFilter.class);
-        startActivityForResult(intent,1);
+        Intent intent = new Intent(EnemyList.this, EnemySearchFilter.class);
+        startActivityForResult(intent, 1);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             TextInputEditText schname = findViewById(R.id.enemlistschname);
 
             FilterEntity filterEntity;
-            
-            if(!Objects.requireNonNull(schname.getText()).toString().isEmpty())
-                filterEntity = new FilterEntity(StaticStore.emnumber,schname.getText().toString());
+
+            if (!Objects.requireNonNull(schname.getText()).toString().isEmpty())
+                filterEntity = new FilterEntity(StaticStore.emnumber, schname.getText().toString());
             else
                 filterEntity = new FilterEntity(StaticStore.emnumber);
-            
+
             numbers = filterEntity.EsetFilter();
             ArrayList<String> newName = new ArrayList<>();
 
-            for(int i : numbers)
+            for (int i : numbers)
                 newName.add(StaticStore.enames[i]);
 
-            EnemyListAdapter enemyListAdapter = new EnemyListAdapter(this,newName.toArray(new String[0]),numbers);
+            EnemyListAdapter enemyListAdapter = new EnemyListAdapter(this, newName.toArray(new String[0]), numbers);
             list.setAdapter(enemyListAdapter);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
+                    if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
                         return;
 
-                    Intent result = new Intent(EnemyList.this,EnemyInfo.class);
-                    result.putExtra("ID",numbers.get(position));
+                    Intent result = new Intent(EnemyList.this, EnemyInfo.class);
+                    result.putExtra("ID", numbers.get(position));
                     startActivity(result);
 
                     StaticStore.unitinflistClick = SystemClock.elapsedRealtime();
@@ -145,7 +145,7 @@ public class EnemyList extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    FilterEntity filterEntity = new FilterEntity(StaticStore.emnumber,s.toString());
+                    FilterEntity filterEntity = new FilterEntity(StaticStore.emnumber, s.toString());
                     numbers = filterEntity.EsetFilter();
 
                     ArrayList<String> names = new ArrayList<>();
@@ -157,10 +157,10 @@ public class EnemyList extends AppCompatActivity {
                     EnemyListAdapter adap = new EnemyListAdapter(EnemyList.this, names.toArray(new String[0]), numbers);
                     list.setAdapter(adap);
 
-                    if(s.toString().isEmpty()) {
-                        schname.setCompoundDrawablesWithIntrinsicBounds(null,null,getDrawable(R.drawable.search),null);
+                    if (s.toString().isEmpty()) {
+                        schname.setCompoundDrawablesWithIntrinsicBounds(null, null, getDrawable(R.drawable.search), null);
                     } else {
-                        schname.setCompoundDrawablesWithIntrinsicBounds(null,null,getDrawable(R.drawable.ic_close_black_24dp),null);
+                        schname.setCompoundDrawablesWithIntrinsicBounds(null, null, getDrawable(R.drawable.ic_close_black_24dp), null);
                     }
                 }
             });
@@ -169,8 +169,8 @@ public class EnemyList extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-        super.attachBaseContext(Revalidater.LangChange(newBase,shared.getInt("Language",0)));
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+        super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 
     @Override

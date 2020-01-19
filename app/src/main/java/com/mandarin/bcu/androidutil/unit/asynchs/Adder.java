@@ -111,8 +111,6 @@ public class Adder extends AsyncTask<Void, Integer, Void> {
                     names.add(StaticStore.names[i]);
                 }
 
-                System.out.println(names);
-
                 UnitListAdapter adap = new UnitListAdapter(activity, names.toArray(new String[0]), numbers);
                 list.setAdapter(adap);
                 list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

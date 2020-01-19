@@ -26,7 +26,7 @@
         android:backgroundTint="?attr/colorPrimary"
         android:clickable="true"
         android:focusable="true"
-        app:tint="?attr/iconPrimary"
+        app:tint="?attr/UnitinfoName"
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
@@ -43,7 +43,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar10"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar10"/>
 
     <TextView
         android:id="@+id/lineupname"
@@ -61,6 +61,7 @@
         android:id="@+id/battlestar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:popupBackground="?attr/backgroundPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/lineupname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/lineupname"

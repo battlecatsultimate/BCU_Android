@@ -33,16 +33,16 @@ public class BattleView extends View implements BattleBox, BattleBox.OuterBox {
     public BattleView(Context context, BattleField field, int type, boolean axis) {
         super(context);
 
-        this.painter = type == 0 ? new BBPainter(this,field,this) : new BBCtrl(this,(SBCtrl) field,this);
+        this.painter = type == 0 ? new BBPainter(this, field, this) : new BBCtrl(this, (SBCtrl) field, this);
 
         ImgCore.ref = axis;
 
         updater = new Updater();
 
-        for(Form [] fs : painter.bf.sb.b.lu.fs)
-            for(Form f : fs)
-                if(f != null) {
-                    if(f.anim.uni.getImg().getHeight() == f.anim.uni.getImg().getWidth()) {
+        for (Form[] fs : painter.bf.sb.b.lu.fs)
+            for (Form f : fs)
+                if (f != null) {
+                    if (f.anim.uni.getImg().getHeight() == f.anim.uni.getImg().getWidth()) {
                         ImgCut cut = ImgCut.newIns("./org/data/uni.imgcut");
 
                         f.anim.uni.setCut(cut);
@@ -52,29 +52,29 @@ public class BattleView extends View implements BattleBox, BattleBox.OuterBox {
                     }
                 }
 
-        for(Enemy e : painter.bf.sb.st.data.getAllEnemy())
+        for (Enemy e : painter.bf.sb.st.data.getAllEnemy())
             e.anim.check();
         updater.run();
 
         Paint cp = new Paint();
         Paint bp = new Paint();
         Paint gp = new Paint();
-        cv = new CVGraphics(null, cp, bp, gp,true);
+        cv = new CVGraphics(null, cp, bp, gp, true);
     }
 
     @Override
     public void onDraw(Canvas c) {
-        if(initialized) {
+        if (initialized) {
             cv.setCanvas(c);
 
             painter.draw(cv);
 
-            if(!paused) {
-                if(spd > 0) {
+            if (!paused) {
+                if (spd > 0) {
                     for (int i = 0; i < Math.pow(2, spd); i++)
                         painter.bf.update();
-                } else if(spd < 0) {
-                    if((int)(upd/Math.pow(2,-spd)) == 1) {
+                } else if (spd < 0) {
+                    if (upd / (1 - spd) >= 1) {
                         painter.bf.update();
                         upd = 0;
                     } else {
@@ -106,10 +106,10 @@ public class BattleView extends View implements BattleBox, BattleBox.OuterBox {
     private class Updater implements Runnable {
         @Override
         public void run() {
-            if(!paused)
+            if (!paused)
                 invalidate();
 
-            postDelayed(this,1000L/30L);
+            postDelayed(this, 1000L / 30L);
         }
     }
 

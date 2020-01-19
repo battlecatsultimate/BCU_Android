@@ -513,4 +513,11 @@
     <string name="battle_sniper">Sniper</string>
     <string name="battle_start">Start Battle</string>
     <string name="def_set_lineup">Set-Lineup</string>
+    <string name="battle_show_enem">Show enemy info list</string>
+    <string name="battle_show_unit">Show unit info list</string>
+    <string name="exit_battle">Exit Battle</string>
+    <string name="battle_not_over">Battle isn\'t over yet</string>
+    <string name="battle_sure_go">Are you sure you want to exit battle?</string>
+    <string name="battle_do_not_show">Do not show this warn again</string>
+    <string name="battle_exit">Exit</string>
 </resources>

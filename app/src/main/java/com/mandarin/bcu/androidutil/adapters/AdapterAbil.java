@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -36,18 +37,18 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(context).inflate(R.layout.ability_layout,viewGroup,false);
+        View row = LayoutInflater.from(context).inflate(R.layout.ability_layout, viewGroup, false);
 
         return new ViewHolder(row);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        if(viewHolder.getAdapterPosition() < ability.size()) {
+        if (viewHolder.getAdapterPosition() < ability.size()) {
             viewHolder.abiltext.setText(ability.get(viewHolder.getAdapterPosition()));
             if (abilicon.get(viewHolder.getAdapterPosition()) != 15 && abilicon.get(viewHolder.getAdapterPosition()) != 19) {
                 Bitmap resized;
-                if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     resized = StaticStore.getResizeb(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())], context, 28f);
                 } else {
                     resized = StaticStore.getResizeb(StaticStore.icons[abilicon.get(viewHolder.getAdapterPosition())], context, 24f);
@@ -57,7 +58,7 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
                 viewHolder.abilicon.setImageBitmap(empty());
             }
         } else {
-            int location = viewHolder.getAdapterPosition()-ability.size();
+            int location = viewHolder.getAdapterPosition() - ability.size();
             viewHolder.abiltext.setText(procs.get(location));
 
             Bitmap resized;
@@ -73,7 +74,7 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return ability.size()+procs.size();
+        return ability.size() + procs.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,15 +90,15 @@ public class AdapterAbil extends RecyclerView.Adapter<AdapterAbil.ViewHolder> {
     }
 
     private Bitmap empty() {
-        float dp =28f;
+        float dp = 28f;
 
-        if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             dp = 24f;
 
         Resources r = context.getResources();
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,r.getDisplayMetrics());
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        return Bitmap.createBitmap((int)px,(int)px,conf);
+        return Bitmap.createBitmap((int) px, (int) px, conf);
     }
 
 }

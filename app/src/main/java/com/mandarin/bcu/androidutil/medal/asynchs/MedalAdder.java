@@ -23,7 +23,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class MedalAdder extends AsyncTask<Void,Integer,Void> {
+public class MedalAdder extends AsyncTask<Void, Integer, Void> {
     private WeakReference<Activity> weakReference;
 
     public MedalAdder(Activity activity) {
@@ -34,7 +34,7 @@ public class MedalAdder extends AsyncTask<Void,Integer,Void> {
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ListView listView = activity.findViewById(R.id.medallist);
 
@@ -45,13 +45,13 @@ public class MedalAdder extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
         new MDefiner().define();
 
         publishProgress(0);
 
-        if(StaticStore.medals == null) {
+        if (StaticStore.medals == null) {
             StaticStore.medals = new ArrayList<>();
 
             for (int i = 0; i < StaticStore.medalnumber; i++) {
@@ -84,7 +84,7 @@ public class MedalAdder extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView mlistst = activity.findViewById(R.id.medalloadt);
 
@@ -106,20 +106,20 @@ public class MedalAdder extends AsyncTask<Void,Integer,Void> {
 
                 float wh;
 
-                if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
                     wh = 72f;
                 else
                     wh = 90f;
 
-                int num = (width-StaticStore.dptopx(16f,activity))/ StaticStore.dptopx(wh,activity);
-                int line = StaticStore.medalnumber/num;
+                int num = (width - StaticStore.dptopx(16f, activity)) / StaticStore.dptopx(wh, activity);
+                int line = StaticStore.medalnumber / num;
 
-                if(StaticStore.medalnumber%num != 0)
+                if (StaticStore.medalnumber % num != 0)
                     line++;
 
-                String [] lines = new String[line];
+                String[] lines = new String[line];
 
-                MedalListAdapter adapter = new MedalListAdapter(activity,num,width,wh,lines);
+                MedalListAdapter adapter = new MedalListAdapter(activity, num, width, wh, lines);
 
                 medallist.setAdapter(adapter);
                 medallist.setClickable(false);
@@ -132,24 +132,24 @@ public class MedalAdder extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ListView listView = activity.findViewById(R.id.medallist);
         ProgressBar prog = activity.findViewById(R.id.medalprog);
         TextView medalt = activity.findViewById(R.id.medalloadt);
 
         setAppear(listView);
-        setDisappear(prog,medalt);
+        setDisappear(prog, medalt);
     }
 
     private void setDisappear(View... views) {
-        for(View v : views) {
+        for (View v : views) {
             v.setVisibility(View.GONE);
         }
     }
 
     private void setAppear(View... views) {
-        for(View v : views) {
+        for (View v : views) {
             v.setVisibility(View.VISIBLE);
         }
     }

@@ -16,7 +16,7 @@ import common.util.pack.Pack;
 import common.util.stage.MapColc;
 
 public class Revalidater extends ContextWrapper {
-    private static String [] locales = StaticStore.lang;
+    private static String[] locales = StaticStore.lang;
     private final int unitnumber;
 
     public Revalidater(Context context) {
@@ -24,73 +24,73 @@ public class Revalidater extends ContextWrapper {
         this.unitnumber = StaticStore.unitnumber;
     }
 
-    public static ContextWrapper LangChange(Context context,int position) {
+    public static ContextWrapper LangChange(Context context, int position) {
         String lang = locales[position];
 
-        if(lang.equals("")) {
+        if (lang.equals("")) {
             lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         }
 
         Configuration config = context.getResources().getConfiguration();
 
-        if(!lang.equals("")) {
+        if (!lang.equals("")) {
             Locale locale = new Locale(lang);
 
             Locale.setDefault(locale);
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                setSystemLocale(config,locale);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                setSystemLocale(config, locale);
             } else {
-                setSystemLocaleLegacy(config,locale);
+                setSystemLocaleLegacy(config, locale);
             }
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             context = context.createConfigurationContext(config);
         } else {
-            context.getResources().updateConfiguration(config,context.getResources().getDisplayMetrics());
+            context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
         }
 
         return new Revalidater(context);
     }
 
     @SuppressWarnings("deprecation")
-    public static void setSystemLocaleLegacy(Configuration config, Locale locale){
+    public static void setSystemLocaleLegacy(Configuration config, Locale locale) {
         config.locale = locale;
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    public static void setSystemLocale(Configuration config, Locale locale){
+    public static void setSystemLocale(Configuration config, Locale locale) {
         config.setLocale(locale);
     }
 
     public void Validate(String lang, Context context) {
 
-        new Definer().redefine(context,lang);
+        new Definer().redefine(context, lang);
 
-        if(StaticStore.names != null) {
+        if (StaticStore.names != null) {
             StaticStore.names = new String[unitnumber];
 
-            for(int i =0;i<unitnumber;i++) {
+            for (int i = 0; i < unitnumber; i++) {
                 StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist.get(i).forms[0]));
             }
         }
 
-        if(StaticStore.enames != null) {
+        if (StaticStore.enames != null) {
             StaticStore.enames = new String[StaticStore.emnumber];
 
-            for(int i = 0;i < StaticStore.emnumber;i++) {
-                StaticStore.enames[i] = withID(i,MultiLangCont.ENAME.getCont(Pack.def.es.get(i)));
+            for (int i = 0; i < StaticStore.emnumber; i++) {
+                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(Pack.def.es.get(i)));
             }
         }
 
-        if(StaticStore.mapnames != null) {
-            for(int i = 0;i < MapColc.MAPS.size(); i++) {
+        if (StaticStore.mapnames != null) {
+            for (int i = 0; i < MapColc.MAPS.size(); i++) {
                 MapColc mc = MapColc.MAPS.get(StaticStore.MAPCODE[i]);
 
-                if(mc == null) continue;
+                if (mc == null) continue;
 
-                for(int k = 0; k < mc.maps.length; k ++) {
+                for (int k = 0; k < mc.maps.length; k++) {
                     StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k]);
                 }
             }
@@ -101,13 +101,13 @@ public class Revalidater extends ContextWrapper {
         String result;
         String names = name;
 
-        if(name == null)
+        if (name == null)
             names = "";
 
-        if(names.equals("")) {
+        if (names.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+names;
+            result = number(id) + " - " + names;
         }
 
         return result;

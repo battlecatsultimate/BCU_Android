@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mandarin.bcu.EnemyInfo;
 import com.mandarin.bcu.R;
@@ -27,7 +28,7 @@ import common.util.stage.SCDef;
 import common.util.stage.Stage;
 import common.util.unit.Enemy;
 
-public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewHolder>{
+public class StEnListRecycle extends RecyclerView.Adapter<StEnListRecycle.ViewHolder> {
     private final Activity activity;
     private final Stage st;
 
@@ -38,13 +39,13 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
         this.activity = activity;
         this.st = st;
 
-        if(StaticStore.infoOpened == null) {
+        if (StaticStore.infoOpened == null) {
             StaticStore.infoOpened = new boolean[st.data.datas.length];
 
             for (int i = 0; i < st.data.datas.length; i++) {
                 StaticStore.infoOpened[i] = false;
             }
-        } else if(StaticStore.infoOpened.length < st.data.datas.length) {
+        } else if (StaticStore.infoOpened.length < st.data.datas.length) {
             StaticStore.infoOpened = new boolean[st.data.datas.length];
 
             for (int i = 0; i < st.data.datas.length; i++) {
@@ -59,13 +60,13 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
         this.multi = multi;
         this.frse = frse;
 
-        if(StaticStore.infoOpened == null) {
+        if (StaticStore.infoOpened == null) {
             StaticStore.infoOpened = new boolean[st.data.datas.length];
 
             for (int i = 0; i < st.data.datas.length; i++) {
                 StaticStore.infoOpened[i] = false;
             }
-        } else if(StaticStore.infoOpened.length < st.data.datas.length) {
+        } else if (StaticStore.infoOpened.length < st.data.datas.length) {
             StaticStore.infoOpened = new boolean[st.data.datas.length];
 
             for (int i = 0; i < st.data.datas.length; i++) {
@@ -77,7 +78,7 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.stage_enemy_list_layout,viewGroup,false);
+        View row = LayoutInflater.from(activity).inflate(R.layout.stage_enemy_list_layout, viewGroup, false);
 
         return new ViewHolder(row);
     }
@@ -95,8 +96,8 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
 
                 StaticStore.infoClick = SystemClock.elapsedRealtime();
 
-                if(viewHolder.moreinfo.getHeight() == 0) {
-                    viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                if (viewHolder.moreinfo.getHeight() == 0) {
+                    viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                     int height = viewHolder.moreinfo.getMeasuredHeight();
 
@@ -117,7 +118,7 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
                     viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp));
                     StaticStore.infoOpened[viewHolder.getAdapterPosition()] = true;
                 } else {
-                    viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                     int height = viewHolder.moreinfo.getMeasuredHeight();
 
@@ -141,8 +142,8 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
             }
         });
 
-        if(StaticStore.infoOpened[viewHolder.getAdapterPosition()]) {
-            viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (StaticStore.infoOpened[viewHolder.getAdapterPosition()]) {
+            viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             ViewGroup.LayoutParams layout = viewHolder.moreinfo.getLayoutParams();
             layout.height = viewHolder.moreinfo.getMeasuredHeight();
             viewHolder.moreinfo.setLayoutParams(layout);
@@ -150,7 +151,7 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
             viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp));
         }
 
-        viewHolder.icon.setImageBitmap(StaticStore.MakeIcon(activity,(Bitmap) StaticStore.enemies.get(data[viewHolder.getAdapterPosition()][SCDef.E]).anim.edi.getImg().bimg(),48f));
+        viewHolder.icon.setImageBitmap(StaticStore.MakeIcon(activity, (Bitmap) StaticStore.enemies.get(data[viewHolder.getAdapterPosition()][SCDef.E]).anim.edi.getImg().bimg(), 48f));
         viewHolder.number.setText(s.getNumber(data[viewHolder.getAdapterPosition()]));
 
         viewHolder.info.setOnClickListener(new SingleClick() {
@@ -159,17 +160,17 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
                 Enemy en = StaticStore.enemies.get(data[viewHolder.getAdapterPosition()][SCDef.E]);
 
                 Intent intent = new Intent(activity, EnemyInfo.class);
-                intent.putExtra("ID",en.id);
-                intent.putExtra("Multiply",(int)((float)data[viewHolder.getAdapterPosition()][SCDef.M]*(float)multi/(float)100));
+                intent.putExtra("ID", en.id);
+                intent.putExtra("Multiply", (int) ((float) data[viewHolder.getAdapterPosition()][SCDef.M] * (float) multi / (float) 100));
 
                 activity.startActivity(intent);
             }
         });
 
-        viewHolder.multiply.setText(s.getMultiply(data[viewHolder.getAdapterPosition()],multi));
+        viewHolder.multiply.setText(s.getMultiply(data[viewHolder.getAdapterPosition()], multi));
         viewHolder.bh.setText(s.getBaseHealth(data[viewHolder.getAdapterPosition()]));
 
-        if(data[viewHolder.getAdapterPosition()][SCDef.B] == 0)
+        if (data[viewHolder.getAdapterPosition()][SCDef.B] == 0)
             viewHolder.isboss.setText(activity.getString(R.string.unit_info_false));
         else
             viewHolder.isboss.setText(activity.getString(R.string.unit_info_true));
@@ -179,26 +180,26 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
         viewHolder.startb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.start.getText().toString().endsWith("f"))
-                    viewHolder.start.setText(s.getStart(data[viewHolder.getAdapterPosition()],false));
+                if (viewHolder.start.getText().toString().endsWith("f"))
+                    viewHolder.start.setText(s.getStart(data[viewHolder.getAdapterPosition()], false));
                 else
-                    viewHolder.start.setText(s.getStart(data[viewHolder.getAdapterPosition()],true));
+                    viewHolder.start.setText(s.getStart(data[viewHolder.getAdapterPosition()], true));
             }
         });
 
-        viewHolder.start.setText(s.getStart(data[viewHolder.getAdapterPosition()],frse));
+        viewHolder.start.setText(s.getStart(data[viewHolder.getAdapterPosition()], frse));
 
         viewHolder.respawnb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.respawn.getText().toString().endsWith("f"))
-                    viewHolder.respawn.setText(s.getRespawn(data[viewHolder.getAdapterPosition()],false));
+                if (viewHolder.respawn.getText().toString().endsWith("f"))
+                    viewHolder.respawn.setText(s.getRespawn(data[viewHolder.getAdapterPosition()], false));
                 else
-                    viewHolder.respawn.setText(s.getRespawn(data[viewHolder.getAdapterPosition()],true));
+                    viewHolder.respawn.setText(s.getRespawn(data[viewHolder.getAdapterPosition()], true));
             }
         });
 
-        viewHolder.respawn.setText(s.getRespawn(data[viewHolder.getAdapterPosition()],frse));
+        viewHolder.respawn.setText(s.getRespawn(data[viewHolder.getAdapterPosition()], frse));
     }
 
     @Override
@@ -241,11 +242,11 @@ public class StEnListRecycle extends  RecyclerView.Adapter<StEnListRecycle.ViewH
         }
     }
 
-    private int[][] reverse(int [][] data) {
-        int [][] result = new int[data.length][];
+    private int[][] reverse(int[][] data) {
+        int[][] result = new int[data.length][];
 
-        for(int i = 0; i < data.length; i++) {
-            result[i] = data[data.length-1-i];
+        for (int i = 0; i < data.length; i++) {
+            result[i] = data[data.length - 1 - i];
         }
 
         return result;

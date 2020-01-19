@@ -104,7 +104,7 @@ public class SearchFilter extends AppCompatActivity {
         if (StaticStore.img15 == null)
             StaticStore.readImg();
 
-        SharedPreferences shared = getSharedPreferences("configuration", MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed;
         if (!shared.contains("initial")) {
             ed = shared.edit();
@@ -403,7 +403,7 @@ public class SearchFilter extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        SharedPreferences shared = newBase.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 }

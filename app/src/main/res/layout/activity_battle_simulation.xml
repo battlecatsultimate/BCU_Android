@@ -131,7 +131,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
-                android:text="Show unit info list"
+                android:text="@string/battle_show_unit"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="12sp" />
 
@@ -145,9 +145,24 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="0dp"
-                android:text="Show enemy info list"
+                android:text="@string/battle_show_enem"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/battleexit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/showenemy"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:text="@string/exit_battle"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary" />
 
         </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 

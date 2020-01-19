@@ -10,8 +10,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
-import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
+
+import androidx.core.content.ContextCompat;
 
 import com.mandarin.bcu.R;
 
@@ -46,6 +47,7 @@ public class StaticStore {
     public static final String [] lang = { "", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es" };
     public static final String [] langfile = {"EnemyName.txt","StageName.txt","UnitName.txt","UnitExplanation.txt","EnemyExplanation.txt","CatFruitExplanation.txt","RewardName.txt","ComboName.txt","MedalName.txt","MedalExplanation.txt"};
     public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath()+"/BCU/logs/";
+    public static final String CONFIG = "configuration";
     public static final long INTERVAL = 1000;
     public static final long INFO_INTERVAL = 350;
     public static int bgread = 0;

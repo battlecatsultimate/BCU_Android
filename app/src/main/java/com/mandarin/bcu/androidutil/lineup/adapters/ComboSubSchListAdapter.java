@@ -1,13 +1,14 @@
 package com.mandarin.bcu.androidutil.lineup.adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
@@ -21,7 +22,7 @@ import common.util.unit.Combo;
 
 public class ComboSubSchListAdapter extends ArrayAdapter<String> {
     private List<String> sch;
-    private boolean [] combocat;
+    private boolean[] combocat;
     private ListView combolist;
     private Activity activity;
     private ComboListAdapter comboListAdapter;
@@ -30,7 +31,7 @@ public class ComboSubSchListAdapter extends ArrayAdapter<String> {
     private List<Integer> defcom;
 
     ComboSubSchListAdapter(Activity activity, List<String> sch, ListView combolist, List<Integer> defcom, ComboListAdapter comboListAdapter) {
-        super(activity, R.layout.spinneradapter,sch);
+        super(activity, R.layout.spinneradapter, sch);
         this.sch = sch;
         this.combolist = combolist;
         this.activity = activity;
@@ -53,9 +54,9 @@ public class ComboSubSchListAdapter extends ArrayAdapter<String> {
         View row;
         ViewHolder holder;
 
-        if(view == null) {
+        if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            row = inflater.inflate(R.layout.spinneradapter,parent,false);
+            row = inflater.inflate(R.layout.spinneradapter, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
@@ -65,15 +66,15 @@ public class ComboSubSchListAdapter extends ArrayAdapter<String> {
 
         holder.category.setText(sch.get(position));
 
-        holder.category.setBackgroundColor(combocat[position] ?StaticStore.getAttributeColor(getContext(),R.attr.SelectionPrimary):getContext().getColor(android.R.color.transparent));
+        holder.category.setBackgroundColor(combocat[position] ? StaticStore.getAttributeColor(getContext(), R.attr.SelectionPrimary) : getContext().getColor(android.R.color.transparent));
 
         holder.category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 combocat[position] = !combocat[position];
-                holder.category.setBackgroundColor(combocat[position] ?StaticStore.getAttributeColor(getContext(),R.attr.SelectionPrimary):getContext().getColor(android.R.color.transparent));
+                holder.category.setBackgroundColor(combocat[position] ? StaticStore.getAttributeColor(getContext(), R.attr.SelectionPrimary) : getContext().getColor(android.R.color.transparent));
 
-                if(combocat[position]) {
+                if (combocat[position]) {
                     comid.add(String.valueOf(defcom.get(position)));
                 } else {
                     comid.remove(String.valueOf(defcom.get(position)));
@@ -81,33 +82,33 @@ public class ComboSubSchListAdapter extends ArrayAdapter<String> {
 
                 StaticStore.combos.clear();
 
-                if(comid.isEmpty()) {
-                    for(int i = 0; i < defcom.size(); i++) {
+                if (comid.isEmpty()) {
+                    for (int i = 0; i < defcom.size(); i++) {
                         StaticStore.combos.addAll(Arrays.asList(Combo.combos[defcom.get(i)]));
                     }
 
-                    String [] names = new String[StaticStore.combos.size()];
+                    String[] names = new String[StaticStore.combos.size()];
 
-                    for(int i = 0; i < StaticStore.combos.size(); i++) {
+                    for (int i = 0; i < StaticStore.combos.size(); i++) {
                         names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos.get(i).name);
                     }
 
-                    comboListAdapter = new ComboListAdapter(activity,names);
+                    comboListAdapter = new ComboListAdapter(activity, names);
 
                     combolist.setAdapter(comboListAdapter);
                 } else {
 
-                    for(int i = 0; i < comid.size(); i++) {
+                    for (int i = 0; i < comid.size(); i++) {
                         StaticStore.combos.addAll(Arrays.asList(Combo.combos[Integer.parseInt(comid.get(i))]));
                     }
 
-                    String [] names = new String[StaticStore.combos.size()];
+                    String[] names = new String[StaticStore.combos.size()];
 
-                    for(int i = 0; i < StaticStore.combos.size(); i++) {
+                    for (int i = 0; i < StaticStore.combos.size(); i++) {
                         names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos.get(i).name);
                     }
 
-                    comboListAdapter = new ComboListAdapter(activity,names);
+                    comboListAdapter = new ComboListAdapter(activity, names);
 
                     combolist.setAdapter(comboListAdapter);
                 }

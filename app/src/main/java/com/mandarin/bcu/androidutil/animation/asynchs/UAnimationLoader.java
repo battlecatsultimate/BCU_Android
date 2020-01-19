@@ -13,8 +13,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Environment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +32,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
@@ -55,13 +56,13 @@ import java.util.Locale;
 import common.system.MultiLangCont;
 import common.util.pack.Pack;
 
-public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
+public class UAnimationLoader extends AsyncTask<Void, Integer, Void> {
     private final WeakReference<Activity> weakReference;
     private final int id;
     private int form;
-    private final int [] animS = {R.string.anim_move,R.string.anim_wait,R.string.anim_atk,R.string.anim_kb,R.string.anim_burrow,R.string.anim_under,R.string.anim_burrowup};
+    private final int[] animS = {R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup};
 
-    public UAnimationLoader(Activity activity,int id, int form) {
+    public UAnimationLoader(Activity activity, int id, int form) {
         this.weakReference = new WeakReference<>(activity);
         this.id = id;
         this.form = form;
@@ -71,7 +72,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         Spinner anims = activity.findViewById(R.id.animselect);
         Spinner forms = activity.findViewById(R.id.formselect);
@@ -87,14 +88,14 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
         loadst.setText(R.string.unit_list_unitload);
 
-        setDisappear(anims,forms,setting,player,controller,frame,fps,gif,cViewlayout,img);
+        setDisappear(anims, forms, setting, player, controller, frame, fps, gif, cViewlayout, img);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
         new Definer().define(activity);
 
@@ -118,7 +119,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView st = activity.findViewById(R.id.imgviewerst);
 
@@ -136,27 +137,27 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 TextView frame = activity.findViewById(R.id.animframe);
                 TextView fps = activity.findViewById(R.id.imgviewerfps);
                 TextView gif = activity.findViewById(R.id.imgviewergiffr);
-                FloatingActionButton [] buttons = {activity.findViewById(R.id.animbackward),activity.findViewById(R.id.animplay),activity.findViewById(R.id.animforward)};
+                FloatingActionButton[] buttons = {activity.findViewById(R.id.animbackward), activity.findViewById(R.id.animplay), activity.findViewById(R.id.animforward)};
                 LinearLayout cViewlayout = activity.findViewById(R.id.imgviewerln);
                 FloatingActionButton option = activity.findViewById(R.id.imgvieweroption);
 
-                SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
-                
-                AnimationCView cView = new AnimationCView(activity,id,StaticStore.formposition,0,!shared.getBoolean("theme",false),shared.getBoolean("Axis",true),frame,controller,fps,gif);
-                cView.siz = (float)StaticStore.dptopx(1f,activity)/1.25f;
+                SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-                ScaleGestureDetector detector = new ScaleGestureDetector(activity,new ScaleListener(cView));
+                AnimationCView cView = new AnimationCView(activity, id, StaticStore.formposition, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif);
+                cView.siz = (float) StaticStore.dptopx(1f, activity) / 1.25f;
+
+                ScaleGestureDetector detector = new ScaleGestureDetector(activity, new ScaleListener(cView));
 
                 cView.setOnTouchListener(new View.OnTouchListener() {
                     float preid = -1;
                     float preX;
                     float preY;
-                    
+
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         detector.onTouchEvent(event);
 
-                        if(preid == -1)
+                        if (preid == -1)
                             preid = event.getPointerId(0);
 
                         int id = event.getPointerId(0);
@@ -184,26 +185,26 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 });
 
                 cView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                
+
                 cViewlayout.addView(cView);
-                
+
                 forms.setSelection(form);
 
                 List<String> name = new ArrayList<>();
 
-                for(int i = 0; i < StaticStore.units.get(id).forms[0].anim.anims.length; i++) {
+                for (int i = 0; i < StaticStore.units.get(id).forms[0].anim.anims.length; i++) {
                     name.add(activity.getString(animS[i]));
                 }
 
                 List<String> ids = new ArrayList<>();
 
-                for(int i = 0; i < StaticStore.units.get(id).forms.length; i++) {
-                    ids.add(id+"-"+i);
+                for (int i = 0; i < StaticStore.units.get(id).forms.length; i++) {
+                    ids.add(id + "-" + i);
                 }
 
-                ArrayAdapter<String> adapter1 = new ArrayAdapter<>(activity,R.layout.spinneradapter,ids);
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<>(activity, R.layout.spinneradapter, ids);
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,R.layout.spinneradapter,name);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, R.layout.spinneradapter, name);
 
                 anims.setAdapter(adapter);
 
@@ -212,7 +213,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 forms.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long ids) {
-                        if(StaticStore.formposition != position) {
+                        if (StaticStore.formposition != position) {
                             StaticStore.formposition = position;
                             cView.anim = StaticStore.units.get(id).forms[position].getEAnim(anims.getSelectedItemPosition());
                             controller.setMax(cView.anim.len());
@@ -230,7 +231,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 anims.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if(StaticStore.animposition != position) {
+                        if (StaticStore.animposition != position) {
                             StaticStore.animposition = position;
                             cView.anim.changeAnim(position);
                             controller.setMax(cView.anim.len());
@@ -247,18 +248,18 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
                 buttons[0].setOnClickListener(new View.OnClickListener() {
                     Toast toast;
-                    
+
                     @Override
                     public void onClick(View v) {
-                        if(StaticStore.frame > 0) {
+                        if (StaticStore.frame > 0) {
                             StaticStore.frame--;
                             cView.anim.setTime(StaticStore.frame);
                         } else {
                             frame.setTextColor(Color.rgb(227, 66, 66));
 
-                            toast = Toast.makeText(activity,R.string.anim_warn_frame,Toast.LENGTH_SHORT);
+                            toast = Toast.makeText(activity, R.string.anim_warn_frame, Toast.LENGTH_SHORT);
 
-                            if(toast.getView().isShown())
+                            if (toast.getView().isShown())
                                 toast.show();
                         }
                     }
@@ -267,9 +268,9 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 buttons[1].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        frame.setTextColor(getAttributeColor(activity,R.attr.TextPrimary));
+                        frame.setTextColor(getAttributeColor(activity, R.attr.TextPrimary));
 
-                        if(StaticStore.play) {
+                        if (StaticStore.play) {
                             buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_play_arrow_black_24dp));
                             buttons[0].show();
                             buttons[2].show();
@@ -290,14 +291,14 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                     public void onClick(View v) {
                         StaticStore.frame++;
                         cView.anim.setTime(StaticStore.frame);
-                        frame.setTextColor(getAttributeColor(activity,R.attr.TextPrimary));
+                        frame.setTextColor(getAttributeColor(activity, R.attr.TextPrimary));
                     }
                 });
 
                 controller.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if(fromUser) {
+                        if (fromUser) {
                             StaticStore.frame = progress;
                             cView.anim.setTime(StaticStore.frame);
                         }
@@ -314,129 +315,129 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                     }
                 });
 
-                frame.setText(activity.getString(R.string.anim_frame).replace("-",""+StaticStore.frame));
+                frame.setText(activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame));
                 cView.anim.changeAnim(StaticStore.animposition);
                 cView.anim.setTime(StaticStore.frame);
                 controller.setMax(cView.anim.len());
 
-                PopupMenu popup = new PopupMenu(activity,option);
+                PopupMenu popup = new PopupMenu(activity, option);
                 Menu menu = popup.getMenu();
-                popup.getMenuInflater().inflate(R.menu.animation_menu,menu);
+                popup.getMenuInflater().inflate(R.menu.animation_menu, menu);
 
-                if(StaticStore.enableGIF)
+                if (StaticStore.enableGIF)
                     popup.getMenu().getItem(3).setTitle(R.string.anim_option_gifstop);
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId()) {
+                        switch (item.getItemId()) {
                             case R.id.anim_option_reset:
                                 cView.x = 0;
                                 cView.y = 0;
-                                cView.siz = StaticStore.dptopx(1f,activity)/1.25f;
+                                cView.siz = StaticStore.dptopx(1f, activity) / 1.25f;
 
                                 return true;
                             case R.id.anim_option_png:
-                                Bitmap b = Bitmap.createBitmap(cView.getWidth(),cView.getHeight(), Bitmap.Config.ARGB_8888);
+                                Bitmap b = Bitmap.createBitmap(cView.getWidth(), cView.getHeight(), Bitmap.Config.ARGB_8888);
                                 Canvas c = new Canvas(b);
                                 Paint p = new Paint();
 
-                                if(!shared.getBoolean("theme",false))
-                                    p.setColor(Color.argb(255,54,54,54));
+                                if (!shared.getBoolean("theme", false))
+                                    p.setColor(Color.argb(255, 54, 54, 54));
                                 else
-                                    p.setColor(Color.argb(255,255,255,255));
+                                    p.setColor(Color.argb(255, 255, 255, 255));
 
-                                c.drawRect(0,0,b.getWidth(),b.getHeight(),p);
+                                c.drawRect(0, 0, b.getWidth(), b.getHeight(), p);
                                 cView.draw(c);
 
-                                String path = Environment.getExternalStorageDirectory().getPath()+"/BCU/img/";
+                                String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/img/";
 
                                 File g = new File(path);
 
-                                if(!g.exists())
+                                if (!g.exists())
                                     g.mkdirs();
 
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
                                 Date date = new Date();
 
-                                String name = dateFormat.format(date)+"-U-"+id+"-"+form+".png";
+                                String name = dateFormat.format(date) + "-U-" + id + "-" + form + ".png";
 
-                                File f = new File(path,name);
+                                File f = new File(path, name);
 
                                 try {
-                                    if(!f.exists())
+                                    if (!f.exists())
                                         f.createNewFile();
 
                                     FileOutputStream fos = new FileOutputStream(f);
 
-                                    b.compress(Bitmap.CompressFormat.PNG,100,fos);
+                                    b.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
                                     fos.close();
 
-                                    new MediaScanner(activity,f);
+                                    new MediaScanner(activity, f);
 
-                                    Toast.makeText(activity,activity.getString(R.string.anim_png_success).replace("-","/BCU/img/"+name),Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/" + name), Toast.LENGTH_SHORT).show();
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(activity,R.string.anim_png_fail,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, R.string.anim_png_fail, Toast.LENGTH_SHORT).show();
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(activity,R.string.anim_png_fail,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, R.string.anim_png_fail, Toast.LENGTH_SHORT).show();
                                 }
 
                                 return true;
                             case R.id.anim_option_pngtr:
-                                b = Bitmap.createBitmap(cView.getWidth(),cView.getHeight(), Bitmap.Config.ARGB_8888);
+                                b = Bitmap.createBitmap(cView.getWidth(), cView.getHeight(), Bitmap.Config.ARGB_8888);
                                 c = new Canvas(b);
                                 p = new Paint();
 
-                                if(!shared.getBoolean("theme",false))
-                                    p.setColor(Color.argb(255,54,54,54));
+                                if (!shared.getBoolean("theme", false))
+                                    p.setColor(Color.argb(255, 54, 54, 54));
                                 else
-                                    p.setColor(Color.argb(255,255,255,255));
+                                    p.setColor(Color.argb(255, 255, 255, 255));
 
                                 cView.trans = true;
                                 cView.draw(c);
                                 cView.trans = false;
 
-                                path = Environment.getExternalStorageDirectory().getPath()+"/BCU/img/";
+                                path = Environment.getExternalStorageDirectory().getPath() + "/BCU/img/";
 
                                 g = new File(path);
 
-                                if(!g.exists())
+                                if (!g.exists())
                                     g.mkdirs();
 
                                 dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
                                 date = new Date();
 
-                                name = dateFormat.format(date)+"-U-Trans-"+id+"-"+form+".png";
+                                name = dateFormat.format(date) + "-U-Trans-" + id + "-" + form + ".png";
 
-                                f = new File(path,name);
+                                f = new File(path, name);
 
                                 try {
-                                    if(!f.exists())
+                                    if (!f.exists())
                                         f.createNewFile();
 
                                     FileOutputStream fos = new FileOutputStream(f);
 
-                                    b.compress(Bitmap.CompressFormat.PNG,100,fos);
+                                    b.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
                                     fos.close();
 
-                                    new MediaScanner(activity,f);
+                                    new MediaScanner(activity, f);
 
-                                    Toast.makeText(activity,activity.getString(R.string.anim_png_success).replace("-","/BCU/img/"+name),Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/" + name), Toast.LENGTH_SHORT).show();
                                 } catch (FileNotFoundException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(activity,R.string.anim_png_fail,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, R.string.anim_png_fail, Toast.LENGTH_SHORT).show();
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(activity,R.string.anim_png_fail,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, R.string.anim_png_fail, Toast.LENGTH_SHORT).show();
                                 }
 
                                 return true;
                             case R.id.anim_option_gif:
-                                if(!StaticStore.gifisSaving) {
+                                if (!StaticStore.gifisSaving) {
                                     if (!StaticStore.enableGIF) {
                                         gif.setVisibility(View.VISIBLE);
                                         item.setTitle(R.string.anim_option_gifstop);
@@ -448,7 +449,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
 
                                     StaticStore.enableGIF = !StaticStore.enableGIF;
                                 } else {
-                                    Toast.makeText(activity,R.string.gif_saving,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, R.string.gif_saving, Toast.LENGTH_SHORT).show();
                                 }
 
                                 return true;
@@ -474,7 +475,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
                 bck.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!StaticStore.gifisSaving) {
+                        if (!StaticStore.gifisSaving) {
                             StaticStore.play = true;
                             StaticStore.frame = 0;
                             StaticStore.animposition = 0;
@@ -517,12 +518,12 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         ProgressBar imgprog = activity.findViewById(R.id.imgviewerprog);
         TextView st = activity.findViewById(R.id.imgviewerst);
 
-        setDisappear(imgprog,st);
+        setDisappear(imgprog, st);
 
         Spinner anims = activity.findViewById(R.id.animselect);
         Spinner forms = activity.findViewById(R.id.formselect);
@@ -533,16 +534,16 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
         TextView fps = activity.findViewById(R.id.imgviewerfps);
         TextView gif = activity.findViewById(R.id.imgviewergiffr);
         LinearLayout cViewlayout = activity.findViewById(R.id.imgviewerln);
-        FloatingActionButton [] buttons = {activity.findViewById(R.id.animbackward),activity.findViewById(R.id.animplay),activity.findViewById(R.id.animforward)};
+        FloatingActionButton[] buttons = {activity.findViewById(R.id.animbackward), activity.findViewById(R.id.animplay), activity.findViewById(R.id.animforward)};
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-        setAppear(anims,forms,setting,player,controller,frame,fps,cViewlayout);
+        setAppear(anims, forms, setting, player, controller, frame, fps, cViewlayout);
 
-        if(StaticStore.enableGIF || StaticStore.gifisSaving)
+        if (StaticStore.enableGIF || StaticStore.gifisSaving)
             gif.setVisibility(View.VISIBLE);
 
-        if(StaticStore.play) {
+        if (StaticStore.play) {
             buttons[0].hide();
             buttons[2].hide();
             controller.setEnabled(false);
@@ -550,18 +551,18 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
             buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_pause_black_24dp));
         }
 
-        if(!shared.getBoolean("FPS",true))
+        if (!shared.getBoolean("FPS", true))
             fps.setVisibility(View.GONE);
     }
 
     private void setDisappear(View... views) {
-        for(View v : views) {
+        for (View v : views) {
             v.setVisibility(View.GONE);
         }
     }
 
     private void setAppear(View... views) {
-        for(View v : views) {
+        for (View v : views) {
             v.setVisibility(View.VISIBLE);
         }
     }
@@ -580,13 +581,13 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
         String result;
         String names = name;
 
-        if(names == null)
+        if (names == null)
             names = "";
 
-        if(names.equals("")) {
+        if (names.equals("")) {
             result = number(id);
         } else {
-            result = number(id)+" - "+names;
+            result = number(id) + " - " + names;
         }
 
         return result;
@@ -598,7 +599,7 @@ public class UAnimationLoader extends AsyncTask<Void,Integer,Void> {
         int colorRes = typedValue.resourceId;
         int color = -1;
         try {
-            color = ContextCompat.getColor(context,colorRes);
+            color = ContextCompat.getColor(context, colorRes);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }

@@ -7,14 +7,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.mandarin.bcu.DownloadScreen;
 import com.mandarin.bcu.MainActivity;
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.androidutil.io.DefineItf;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.io.DefineItf;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,14 +41,14 @@ import java.util.TreeMap;
 
 import main.MainBCU;
 
-public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
+public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
     private final String path;
     private final boolean cando;
 
     private final WeakReference<Activity> weakReference;
 
     private boolean lang;
-    private String [] lan = {"/en/","/jp/","/kr/","/zh/"};
+    private String[] lan = {"/en/", "/jp/", "/kr/", "/zh/"};
     private String source;
     private ArrayList<String> fileneed;
     private ArrayList<String> filenum;
@@ -64,7 +65,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         this.weakReference = new WeakReference<>(context);
         this.cando = cando;
 
-        source = path+"/lang";
+        source = path + "/lang";
     }
 
     CheckUpdates(String path, boolean lang, ArrayList<String> fileneed, ArrayList<String> filenum, Activity context, boolean cando, boolean config) {
@@ -76,18 +77,18 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
         this.cando = cando;
         this.config = config;
 
-        source = path+"/lang";
+        source = path + "/lang";
     }
 
     @Override
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView checkstate = activity.findViewById(R.id.mainstup);
 
-        if(checkstate != null)
+        if (checkstate != null)
             checkstate.setText(R.string.main_check_up);
     }
 
@@ -120,30 +121,30 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
             Activity activity = weakReference.get();
 
-            SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+            SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
             String difffile = "Difficulty.txt";
-            File diff = new File(source+"/", difffile);
+            File diff = new File(source + "/", difffile);
 
-            if(!diff.exists()) lang = true;
+            if (!diff.exists()) lang = true;
 
-            for(String s1 : lan) {
-                if(lang) continue;
+            for (String s1 : lan) {
+                if (lang) continue;
 
-                for(String s : StaticStore.langfile) {
-                    if(lang) continue;
+                for (String s : StaticStore.langfile) {
+                    if (lang) continue;
 
-                    File f = new File(source+s1,s);
+                    File f = new File(source + s1, s);
 
-                    if(!f.exists()) {
+                    if (!f.exists()) {
                         lang = true;
                     }
                 }
             }
 
-            if((!shared.getBoolean("Skip_Text",false) || config) && !lang) {
+            if ((!shared.getBoolean("Skip_Text", false) || config) && !lang) {
                 String url = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang";
-                String durl = url+"/"+difffile;
+                String durl = url + "/" + difffile;
                 URL dlink = new URL(durl);
                 HttpURLConnection dc = (HttpURLConnection) dlink.openConnection();
                 dc.setRequestMethod("GET");
@@ -151,17 +152,17 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
 
                 InputStream durlis = dc.getInputStream();
 
-                byte [] dbuf = new byte[1024];
+                byte[] dbuf = new byte[1024];
                 int dlen;
                 int dsize = 0;
-                while((dlen = durlis.read(dbuf)) != -1) {
+                while ((dlen = durlis.read(dbuf)) != -1) {
                     dsize += dlen;
                 }
 
-                output = new File(source+"/",difffile);
+                output = new File(source + "/", difffile);
 
-                if(output.exists()) {
-                    if(output.length() != dsize) {
+                if (output.exists()) {
+                    if (output.length() != dsize) {
                         lang = true;
                     }
                 } else {
@@ -172,10 +173,10 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
                 durlis.close();
 
                 for (String s1 : lan) {
-                    if(lang) continue;
+                    if (lang) continue;
 
                     for (String s : StaticStore.langfile) {
-                        if(lang) continue;
+                        if (lang) continue;
 
                         String langurl = url + s1 + s;
                         URL link = new URL(langurl);
@@ -239,33 +240,33 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     protected void onProgressUpdate(Integer... values) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView checkstate = activity.findViewById(R.id.mainstup);
 
         if (values[0] == 1) {
-            if(checkstate != null)
+            if (checkstate != null)
                 checkstate.setText(R.string.main_check_file);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        if(contin || cando) {
+        if (contin || cando) {
             Activity activity = weakReference.get();
 
-            if(activity == null) return;
+            if (activity == null) return;
 
-            ConnectivityManager connectivityManager = (ConnectivityManager)activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            if(connectivityManager.getActiveNetworkInfo() != null)
+            if (connectivityManager.getActiveNetworkInfo() != null)
                 checkFiles(ans);
 
             if (fileneed.isEmpty() && filenum.isEmpty()) {
                 new AddPathes(activity).execute();
             }
         } else {
-            new CheckUpdates(path,lang,fileneed,filenum,weakReference.get(), false).execute();
+            new CheckUpdates(path, lang, fileneed, filenum, weakReference.get(), false).execute();
         }
     }
 
@@ -274,7 +275,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             StringBuilder sb = new StringBuilder();
             int chara;
             while ((chara = rd.read()) != -1) {
-                sb.append((char)chara);
+                sb.append((char) chara);
             }
 
             return sb.toString();
@@ -287,18 +288,18 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     private void checkFiles(JSONObject asset) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         try {
             Map<String, String> libmap = new TreeMap<>();
 
-            if(asset == null) return;
+            if (asset == null) return;
 
             JSONArray ja = asset.getJSONArray("android");
 
-            for(int i=0;i<ja.length();i++) {
+            for (int i = 0; i < ja.length(); i++) {
                 JSONArray ent = ja.getJSONArray(i);
-                libmap.put(ent.getString(0),ent.getString(1));
+                libmap.put(ent.getString(0), ent.getString(1));
             }
 
             ArrayList<String> lib = new ArrayList<>(libmap.keySet());
@@ -312,7 +313,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             donloader.setPositiveButton(R.string.main_file_ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(lang && !fileneed.contains("Language")) {
+                    if (lang && !fileneed.contains("Language")) {
                         fileneed.add("Language");
                         filenum.add(String.valueOf(filenum.size()));
                     }
@@ -327,7 +328,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             donloader.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(!cando || lang)
+                    if (!cando || lang)
                         activity.finish();
                     else
                         new AddPathes(activity).execute();
@@ -339,7 +340,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
             try {
                 Set<String> libs = com.mandarin.bcu.io.Reader.getInfo(path);
 
-                if(libs != null && libs.isEmpty()) {
+                if (libs != null && libs.isEmpty()) {
                     for (int i = 0; i < lib.size(); i++) {
                         fileneed.add(lib.get(i));
                         filenum.add(String.valueOf(i));
@@ -382,7 +383,7 @@ public class CheckUpdates extends AsyncTask<Void,Integer,Void> {
     }
 }
 
-class AddPathes extends AsyncTask<Void,Integer,Void> {
+class AddPathes extends AsyncTask<Void, Integer, Void> {
     private final WeakReference<Activity> weakReference;
 
     AddPathes(Activity activity) {
@@ -393,11 +394,11 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected void onPreExecute() {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
         TextView checkstate = activity.findViewById(R.id.mainstup);
 
-        if(checkstate != null)
+        if (checkstate != null)
             checkstate.setText(R.string.main_file_read);
     }
 
@@ -406,9 +407,9 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected Void doInBackground(Void... voids) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return null;
+        if (activity == null) return null;
 
-        SharedPreferences shared = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
         com.mandarin.bcu.decode.ZipLib.init();
         com.mandarin.bcu.decode.ZipLib.read();
 
@@ -418,7 +419,7 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
 
         new DefineItf().init();
 
-        StaticStore.getLang(shared.getInt("Language",0));
+        StaticStore.getLang(shared.getInt("Language", 0));
 
         return null;
     }
@@ -427,9 +428,9 @@ class AddPathes extends AsyncTask<Void,Integer,Void> {
     protected void onPostExecute(Void result) {
         Activity activity = weakReference.get();
 
-        if(activity == null) return;
+        if (activity == null) return;
 
-        if(!MainActivity.isRunning) {
+        if (!MainActivity.isRunning) {
             Intent intent = new Intent(activity, MainActivity.class);
             activity.startActivity(intent);
             activity.finish();

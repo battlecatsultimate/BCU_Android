@@ -179,10 +179,10 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
         if (result[0] == 1) {
 
-            SharedPreferences shared = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+            SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
-            int setn = shared.getInt("equip_set",0);
-            int lun = shared.getInt("equip_lu",0);
+            int setn = shared.getInt("equip_set", 0);
+            int lun = shared.getInt("equip_lu", 0);
 
             ProgressBar prog = activity.findViewById(R.id.lineupprog);
             TextView st = activity.findViewById(R.id.lineupst);
@@ -293,10 +293,10 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
                     BasisSet.current = StaticStore.sets.get(position);
 
-                    SharedPreferences preferences = activity.getSharedPreferences("configuration", Context.MODE_PRIVATE);
+                    SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
 
-                    editor.putInt("equip_set",position);
+                    editor.putInt("equip_set", position);
 
                     editor.apply();
 
@@ -358,10 +358,10 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
                     BasisSet.current.sele = BasisSet.current.lb.get(position);
 
-                    SharedPreferences preferences = activity.getSharedPreferences("configuration",Context.MODE_PRIVATE);
+                    SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
 
-                    editor.putInt("equip_lu",position);
+                    editor.putInt("equip_lu", position);
                     editor.apply();
 
                     StaticStore.setline[1] = position;
@@ -571,6 +571,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                             luspin.setAdapter(adapter11);
 
                             Toast.makeText(activity, R.string.lineup_paste_set_done, Toast.LENGTH_SHORT).show();
+
+                            save();
                         });
 
                         builder.setNegativeButton(R.string.main_file_cancel, (dialog12, which) -> {
@@ -596,6 +598,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                             line.UpdateLineUp();
 
                             Toast.makeText(activity, R.string.lineup_paste_lu_done, Toast.LENGTH_SHORT).show();
+
+                            save();
                         });
 
                         builder.setNegativeButton(R.string.main_file_cancel, (dialog14, which) -> {
@@ -765,6 +769,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                                 setspin.setSelection(BasisSet.list.size() - 1);
                             else
                                 setspin.setSelection(pos);
+
+                            StaticStore.SaveLineUp();
                         });
 
                         builder.setNegativeButton(R.string.main_file_cancel, (dialog16, which) -> {
@@ -797,6 +803,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                                 luspin.setSelection(BasisSet.current.lb.size() - 1);
                             else
                                 luspin.setSelection(pos);
+
+                            StaticStore.SaveLineUp();
                         });
 
                         builder.setNegativeButton(R.string.main_file_cancel, (dialog18, which) -> {
@@ -841,7 +849,12 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
             initialized = true;
 
+            if (setn >= BasisSet.list.size()) setn = BasisSet.list.size() - 1;
+
             setspin.setSelection(setn);
+
+            if (setn >= BasisSet.current.lb.size()) lun = BasisSet.current.lb.size() - 1;
+
             luspin.setSelection(lun);
 
 
