@@ -55,7 +55,7 @@ public class CheckUpdateScreen extends AppCompatActivity {
             ed.putInt("default_level", 50);
             ed.putInt("Language", 0);
             ed.putInt("Orientation", 0);
-            ed.putBoolean("Lay_Port", true);
+            ed.putBoolean("Lay_Port", false);
             ed.putBoolean("Lay_Land", false);
             ed.apply();
         } else {
@@ -109,6 +109,30 @@ public class CheckUpdateScreen extends AppCompatActivity {
             ed.putBoolean("Skip_Text", false);
         }
 
+        if(!shared.contains("upload")) {
+            ed.putBoolean("upload",false);
+        }
+
+        if(!shared.contains("ask_upload")) {
+            ed.putBoolean("ask_upload",true);
+        }
+
+        if(!shared.contains("music")) {
+            ed.putBoolean("music",true);
+        }
+
+        if(!shared.contains("mus_vol")) {
+            ed.putInt("mus_vol",99);
+        }
+
+        if(!shared.contains("SE")) {
+            ed.putBoolean("SE",true);
+        }
+
+        if(!shared.contains("se_vol")) {
+            ed.putInt("se_vol",99);
+        }
+
         if (shared.getInt("Orientation", 0) == 1)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         else if (shared.getInt("Orientation", 0) == 2)
@@ -116,9 +140,13 @@ public class CheckUpdateScreen extends AppCompatActivity {
         else if (shared.getInt("Orientation", 0) == 0)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
-        Thread.setDefaultUncaughtExceptionHandler(new ErrorLogWriter(StaticStore.LOGPATH));
+        SharedPreferences preferences = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
+
+        Thread.setDefaultUncaughtExceptionHandler(new ErrorLogWriter(StaticStore.LOGPATH, preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true)));
 
         setContentView(R.layout.activity_check_update_screen);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (MainActivity.isRunning) finish();
 
@@ -137,8 +165,6 @@ public class CheckUpdateScreen extends AppCompatActivity {
         Button retry = findViewById(R.id.checkupretry);
 
         retry.setVisibility(View.GONE);
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU";
 

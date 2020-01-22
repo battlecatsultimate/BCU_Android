@@ -67,13 +67,15 @@
 
             <TextView
                 android:id="@+id/lineupname"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/def_set_lineup"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,41 +83,41 @@
                 android:id="@+id/battlestar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:popupBackground="?attr/backgroundPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/lineupname"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/lineupname"
-                app:layout_constraintTop_toTopOf="@+id/lineupname" />
+                app:layout_constraintStart_toStartOf="@+id/battleequip"
+                app:layout_constraintTop_toBottomOf="@+id/battleequip" />
 
             <Button
                 android:id="@+id/battleequip"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:backgroundTint="?attr/ButtonPrimary"
                 android:text="@string/main_equip"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/lineupname"
                 app:layout_constraintTop_toBottomOf="@+id/lineupname" />
 
             <CheckBox
                 android:id="@+id/battlerich"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:text="@string/battle_rich"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/battleequip"
-                app:layout_constraintStart_toEndOf="@+id/battleequip"
-                app:layout_constraintTop_toTopOf="@+id/battleequip" />
+                app:layout_constraintBottom_toBottomOf="@+id/battlestar"
+                app:layout_constraintStart_toEndOf="@+id/battlestar"
+                app:layout_constraintTop_toTopOf="@+id/battlestar" />
 
             <CheckBox
                 android:id="@+id/battlesniper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:text="@string/battle_sniper"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/battlerich"

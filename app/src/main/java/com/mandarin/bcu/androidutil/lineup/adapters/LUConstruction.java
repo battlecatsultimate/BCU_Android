@@ -33,18 +33,13 @@ import common.battle.Treasure;
 import common.io.OutStream;
 
 public class LUConstruction extends Fragment {
-    private View view;
 
     private boolean initialized = false;
     private boolean editable = true;
     private boolean destroyed = false;
 
-    private TextInputLayout construction;
-    private TextInputLayout[] constructions = new TextInputLayout[7];
     private int[] layoutid = {R.id.castlelev, R.id.slowlev, R.id.walllev, R.id.stoplev, R.id.waterlev, R.id.zombielev, R.id.breakerlev};
 
-    private TextInputEditText text;
-    private TextInputEditText[] texts = new TextInputEditText[7];
     private int[] textid = {R.id.castlelevt, R.id.slowlevt, R.id.walllevt, R.id.stoplevt, R.id.waterlevt, R.id.zombielevt, R.id.breakerlevt};
 
     public static LUConstruction newInstance() {
@@ -57,10 +52,13 @@ public class LUConstruction extends Fragment {
 
     private int[] color;
 
+    private Handler handler = new Handler();
+    private Runnable runnable;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.lineup_construction, group, false);
+        View view = inflater.inflate(R.layout.lineup_construction, group, false);
 
         if (getContext() == null) return view;
 
@@ -68,16 +66,17 @@ public class LUConstruction extends Fragment {
                 getAttributeColor(getContext(), R.attr.TextPrimary)
         };
 
-        Initialize(view);
+        Listeners(view);
 
-        Listeners();
-
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 if (StaticStore.updateConst) {
                     initialized = false;
+
+                    TextInputEditText[] texts = new TextInputEditText[7];
+
+                    TextInputEditText text = view.findViewById(R.id.constlevt);
 
                     if (ValuesAllSame())
                         text.setText(String.valueOf(BasisSet.current.t().bslv[0]));
@@ -85,6 +84,7 @@ public class LUConstruction extends Fragment {
                     int[] vals = BasisSet.current.t().bslv;
 
                     for (int i = 0; i < vals.length; i++) {
+                        texts[i] = view.findViewById(textid[i]);
                         texts[i].setText(String.valueOf(vals[i]));
                     }
 
@@ -103,17 +103,23 @@ public class LUConstruction extends Fragment {
         return view;
     }
 
-    private void Initialize(View view) {
-        construction = view.findViewById(R.id.constlev);
-        text = view.findViewById(R.id.constlevt);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
+    }
+
+    private void Listeners(View view) {
+        TextInputLayout[] constructions = new TextInputLayout[7];
+        TextInputLayout construction = view.findViewById(R.id.constlev);
+        TextInputEditText text = view.findViewById(R.id.constlevt);
+        TextInputEditText[] texts = new TextInputEditText[7];
 
         for (int i = 0; i < layoutid.length; i++) {
             constructions[i] = view.findViewById(layoutid[i]);
             texts[i] = view.findViewById(textid[i]);
         }
-    }
 
-    private void Listeners() {
         construction.setHelperTextColor(new ColorStateList(states, color));
         SetListenerforTextInputLayouts(constructions);
 
@@ -187,7 +193,7 @@ public class LUConstruction extends Fragment {
             }
         });
 
-        SetListenerforTextInputEditTexts(texts);
+        SetListenerforTextInputEditTexts(construction,text,constructions,texts);
 
         initialized = true;
     }
@@ -198,7 +204,7 @@ public class LUConstruction extends Fragment {
         }
     }
 
-    private void SetListenerforTextInputEditTexts(TextInputEditText[] texts) {
+    private void SetListenerforTextInputEditTexts(TextInputLayout construction, TextInputEditText text, TextInputLayout[] constructions, TextInputEditText[] texts) {
         if (getContext() == null) return;
 
         for (int i = 0; i < texts.length; i++) {

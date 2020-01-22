@@ -7,15 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.mandarin.bcu.DownloadScreen;
-import com.mandarin.bcu.MainActivity;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.io.DefineItf;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
@@ -35,11 +33,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-
-import main.MainBCU;
 
 public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
     private final String path;
@@ -48,6 +42,7 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
     private final WeakReference<Activity> weakReference;
 
     private boolean lang;
+    private boolean music;
     private String[] lan = {"/en/", "/jp/", "/kr/", "/zh/"};
     private String source;
     private ArrayList<String> fileneed;
@@ -94,34 +89,22 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        Activity activity = weakReference.get();
+
+        if(activity == null) return null;
+
         File output;
         try {
-            JSONObject inp = new JSONObject();
-            inp.put("bcuver", MainBCU.ver);
+            if(!config) {
+                String assetlink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json";
+                URL asseturl = new URL(assetlink);
 
-            String assetlink = "http://battle-cats-ultimate.000webhostapp.com/api/java/getupdate.php";
-            URL asseturl = new URL(assetlink);
-            HttpURLConnection connection = (HttpURLConnection) asseturl.openConnection();
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setRequestMethod("POST");
-
-            OutputStream os = connection.getOutputStream();
-            os.write(inp.toString().getBytes(StandardCharsets.UTF_8));
-            os.close();
-
-            InputStream is = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-            String result = readAll(new BufferedReader(isr));
-
-            ans = new JSONObject(result);
-            is.close();
-            connection.disconnect();
-
-            Activity activity = weakReference.get();
-
-            SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+                InputStream is = asseturl.openStream();
+                InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                String result = readAll(new BufferedReader(isr));
+                ans = new JSONObject(result);
+                is.close();
+            }
 
             String difffile = "Difficulty.txt";
             File diff = new File(source + "/", difffile);
@@ -141,6 +124,8 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
                     }
                 }
             }
+
+            SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
 
             if ((!shared.getBoolean("Skip_Text", false) || config) && !lang) {
                 String url = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang";
@@ -263,7 +248,7 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
                 checkFiles(ans);
 
             if (fileneed.isEmpty() && filenum.isEmpty()) {
-                new AddPathes(activity).execute();
+                new AddPathes(activity, config).execute();
             }
         } else {
             new CheckUpdates(path, lang, fileneed, filenum, weakReference.get(), false).execute();
@@ -291,20 +276,41 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
         if (activity == null) return;
 
         try {
-            Map<String, String> libmap = new TreeMap<>();
+            ArrayList<String> libmap = new ArrayList<>();
 
             if (asset == null) return;
 
             JSONArray ja = asset.getJSONArray("android");
 
-            for (int i = 0; i < ja.length(); i++) {
-                JSONArray ent = ja.getJSONArray(i);
-                libmap.put(ent.getString(0), ent.getString(1));
+            int mus = asset.getInt("music");
+
+            String musicPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/com.mandarin.bcu/music/";
+
+            ArrayList<String> musics = new ArrayList<>();
+
+            for(int i = 0; i < mus; i++) {
+                if(music) continue;
+
+                String name = number(i)+".ogg";
+
+                File mf = new File(musicPath,name);
+
+                if(!mf.exists()) {
+                    music = true;
+
+                    for(int j = i; j < mus; j++) {
+                        musics.add(number(j)+".ogg");
+                    }
+                }
             }
 
-            ArrayList<String> lib = new ArrayList<>(libmap.keySet());
+            System.out.println(musics);
 
-            System.out.println(lib.toString());
+            for (int i = 0; i < ja.length(); i++) {
+                libmap.add(ja.getString(i));
+            }
+
+            System.out.println(libmap.toString());
 
             AlertDialog.Builder donloader = new AlertDialog.Builder(activity);
             final Intent intent = new Intent(activity, DownloadScreen.class);
@@ -317,9 +323,16 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
                         fileneed.add("Language");
                         filenum.add(String.valueOf(filenum.size()));
                     }
+
+                    if(music && !fileneed.contains("Music")) {
+                        fileneed.add("Music");
+                        filenum.add("Music");
+                    }
+
                     System.out.println(fileneed.toString());
                     intent.putExtra("fileneed", fileneed);
                     intent.putExtra("filenum", filenum);
+                    intent.putExtra("music",musics);
                     activity.startActivity(intent);
                     activity.finish();
                 }
@@ -328,10 +341,10 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
             donloader.setNegativeButton(R.string.main_file_cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (!cando || lang)
+                    if (!cando || lang || music)
                         activity.finish();
                     else
-                        new AddPathes(activity).execute();
+                        new AddPathes(activity,config).execute();
                 }
             });
 
@@ -341,16 +354,16 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
                 Set<String> libs = com.mandarin.bcu.io.Reader.getInfo(path);
 
                 if (libs != null && libs.isEmpty()) {
-                    for (int i = 0; i < lib.size(); i++) {
-                        fileneed.add(lib.get(i));
+                    for (int i = 0; i < libmap.size(); i++) {
+                        fileneed.add(libmap.get(i));
                         filenum.add(String.valueOf(i));
                     }
                     AlertDialog downloader = donloader.create();
                     downloader.show();
                 } else {
-                    for (int i = 0; i < lib.size(); i++) {
-                        if (!(libs != null && libs.contains(lib.get(i)))) {
-                            fileneed.add(lib.get(i));
+                    for (int i = 0; i < libmap.size(); i++) {
+                        if (!(libs != null && libs.contains(libmap.get(i)))) {
+                            fileneed.add(libmap.get(i));
                             filenum.add(String.valueOf(i));
                         }
                     }
@@ -365,11 +378,17 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
                         donloader.setTitle(R.string.main_file_x);
                         AlertDialog downloader = donloader.create();
                         downloader.show();
+                    } else if (music) {
+                        fileneed.add("Music");
+                        filenum.add("Music");
+                        donloader.setTitle(R.string.main_file_x);
+                        AlertDialog downloader = donloader.create();
+                        downloader.show();
                     }
                 }
             } catch (Exception e) {
-                for (int i = 0; i < lib.size(); i++) {
-                    fileneed.add(lib.get(i));
+                for (int i = 0; i < libmap.size(); i++) {
+                    fileneed.add(libmap.get(i));
                     filenum.add(String.valueOf(i));
                 }
                 donloader.setTitle(R.string.main_info_corr);
@@ -381,59 +400,14 @@ public class CheckUpdates extends AsyncTask<Void, Integer, Void> {
             e.printStackTrace();
         }
     }
-}
 
-class AddPathes extends AsyncTask<Void, Integer, Void> {
-    private final WeakReference<Activity> weakReference;
-
-    AddPathes(Activity activity) {
-        this.weakReference = new WeakReference<>(activity);
-    }
-
-    @Override
-    protected void onPreExecute() {
-        Activity activity = weakReference.get();
-
-        if (activity == null) return;
-
-        TextView checkstate = activity.findViewById(R.id.mainstup);
-
-        if (checkstate != null)
-            checkstate.setText(R.string.main_file_read);
-    }
-
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-        Activity activity = weakReference.get();
-
-        if (activity == null) return null;
-
-        SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
-        com.mandarin.bcu.decode.ZipLib.init();
-        com.mandarin.bcu.decode.ZipLib.read();
-
-        StaticStore.getUnitnumber();
-        StaticStore.getEnemynumber();
-        StaticStore.root = 1;
-
-        new DefineItf().init();
-
-        StaticStore.getLang(shared.getInt("Language", 0));
-
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-        Activity activity = weakReference.get();
-
-        if (activity == null) return;
-
-        if (!MainActivity.isRunning) {
-            Intent intent = new Intent(activity, MainActivity.class);
-            activity.startActivity(intent);
-            activity.finish();
+    private String number(int n) {
+        if (0 <= n && n < 10) {
+            return "00" + n;
+        } else if (10 <= n && n <= 99) {
+            return "0" + n;
+        } else {
+            return String.valueOf(n);
         }
     }
 }

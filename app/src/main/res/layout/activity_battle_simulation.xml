@@ -43,12 +43,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="?attr/colorAccent"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/colorAccent"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_fast_rewind_black_24dp"
-        app:backgroundTint="?attr/colorAccent"
+        app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
@@ -61,11 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:backgroundTint="?attr/colorAccent"
+        android:backgroundTint="@color/colorAccent"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_fast_forward_black_24dp"
-        app:backgroundTint="?attr/colorAccent"
+        app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
@@ -75,15 +75,35 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.circularreveal.CircularRevealRelativeLayout
             android:id="@+id/battleconfiglayout"
             android:layout_width="225dp"
             android:layout_height="match_parent"
             android:background="?attr/SemiBackgroundPrimary"
+            android:theme="@style/AppTheme.designDay"
             android:visibility="invisible"
             app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
+
+            <Button
+                android:id="@+id/battleexit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/switchse"
+                android:layout_alignEnd="@+id/switchse"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:text="@string/exit_battle"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/battleplay"
@@ -92,11 +112,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="?attr/colorAccent"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/colorAccent"
                 android:clickable="true"
                 android:focusable="true"
-                app:backgroundTint="?attr/colorAccent"
+                app:backgroundTint="@color/colorAccent"
                 app:borderWidth="0dp"
                 app:elevation="0dp"
                 app:fabSize="mini"
@@ -109,12 +129,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:layout_toEndOf="@+id/battleplay"
-                android:backgroundTint="?attr/colorAccent"
+                android:backgroundTint="@color/colorAccent"
                 android:clickable="true"
                 android:focusable="true"
-                app:backgroundTint="?attr/colorAccent"
+                app:backgroundTint="@color/colorAccent"
                 app:borderWidth="0dp"
                 app:elevation="0dp"
                 app:fabSize="mini"
@@ -129,7 +149,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/battle_show_unit"
                 android:textColor="?attr/TextPrimary"
@@ -149,20 +169,55 @@
                 android:textColor="?attr/TextPrimary"
                 android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/battleexit"
+            <Switch
+                android:id="@+id/switchmus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/showenemy"
+                android:layout_alignStart="@+id/showenemy"
+                android:layout_alignEnd="@+id/showenemy"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="0dp"
+                android:text="@string/config_music"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <SeekBar
+                android:id="@+id/seekmus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switchmus"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="24dp"
-                android:backgroundTint="?attr/ButtonPrimary"
-                android:text="@string/exit_battle"
-                android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp" />
+
+            <Switch
+                android:id="@+id/switchse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seekmus"
+                android:layout_alignStart="@+id/switchmus"
+                android:layout_alignEnd="@+id/switchmus"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="0dp"
+                android:text="@string/config_se"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <SeekBar
+                android:id="@+id/seekse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switchse"
+                android:layout_alignStart="@+id/seekmus"
+                android:layout_alignEnd="@+id/seekmus"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="0dp" />
 
         </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 
@@ -171,11 +226,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="28dp"
-            android:backgroundTint="?attr/colorAccent"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorAccent"
             android:clickable="true"
             android:focusable="true"
-            app:backgroundTint="?attr/colorAccent"
+            app:backgroundTint="@color/colorAccent"
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:fabSize="mini"

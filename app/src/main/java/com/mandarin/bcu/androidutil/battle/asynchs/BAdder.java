@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,14 +19,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.adapters.MediaPrepare;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.battle.BDefinder;
 import com.mandarin.bcu.androidutil.battle.BattleView;
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler;
 import com.mandarin.bcu.androidutil.enemy.EDefiner;
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys;
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
@@ -209,11 +214,17 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
                             x = event.getX();
                             y = event.getY();
                         } else if (action == MotionEvent.ACTION_UP) {
-                            battleView.getPainter().click(new Point((int) event.getX(), (int) event.getY()), action);
+                            if(battleView.painter.bf.sb.ubase.health > 0 && battleView.painter.bf.sb.ebase.health > 0) {
+                                battleView.getPainter().click(new Point((int) event.getX(), (int) event.getY()), action);
+                            }
                         } else if (action == MotionEvent.ACTION_MOVE) {
                             if (event.getPointerCount() == 1 && id == preid) {
 
                                 battleView.painter.pos += x2 - preX;
+
+                                if(battleView.paused) {
+                                    battleView.invalidate();
+                                }
                             }
                         }
 
@@ -230,7 +241,9 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
                 battleView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        battleView.getPainter().click(new Point((int) x, (int) y), BBCtrl.ACTION_LONG);
+                        if(battleView.painter.bf.sb.ubase.health > 0 && battleView.painter.bf.sb.ebase.health > 0) {
+                            battleView.getPainter().click(new Point((int) x, (int) y), BBCtrl.ACTION_LONG);
+                        }
 
                         return true;
                     }
@@ -241,6 +254,7 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
                     public void onClick(View v) {
                         if (battleView.spd < (battleView.painter instanceof BBCtrl ? 5 : 7)) {
                             battleView.spd++;
+                            SoundHandler.speed++;
 
                             battleView.painter.reset();
                         }
@@ -252,6 +266,7 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
                     public void onClick(View v) {
                         if (battleView.spd > -7) {
                             battleView.spd--;
+                            SoundHandler.speed--;
 
                             battleView.painter.reset();
                         }
@@ -309,6 +324,23 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
                                 public void onClick(View v) {
                                     P.stack.clear();
                                     CVGraphics.clear();
+                                    dialog.dismiss();
+
+                                    SoundHandler.ResetHandler();
+
+                                    if(SoundHandler.MUSIC != null) {
+                                        if(SoundHandler.MUSIC.isInitialized()) {
+                                            if(SoundHandler.MUSIC.isRunning()) {
+                                                SoundHandler.MUSIC.stop();
+                                                SoundHandler.MUSIC.release();
+                                                SoundHandler.MUSIC = null;
+                                            } else {
+                                                SoundHandler.MUSIC.release();
+                                                SoundHandler.MUSIC = null;
+                                            }
+                                        }
+                                    }
+
                                     activity.finish();
                                 }
                             });
@@ -317,8 +349,163 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
                         } else {
                             P.stack.clear();
                             CVGraphics.clear();
+
+                            SoundHandler.ResetHandler();
+
+                            if(SoundHandler.MUSIC != null) {
+                                if(SoundHandler.MUSIC.isInitialized()) {
+                                    if(SoundHandler.MUSIC.isRunning()) {
+                                        SoundHandler.MUSIC.stop();
+                                        SoundHandler.MUSIC.release();
+                                        SoundHandler.MUSIC = null;
+                                    } else {
+                                        SoundHandler.MUSIC.release();
+                                        SoundHandler.MUSIC = null;
+                                    }
+                                }
+                            }
                             activity.finish();
                         }
+                    }
+                });
+
+                Switch mus = activity.findViewById(R.id.switchmus);
+
+                SeekBar musvol = activity.findViewById(R.id.seekmus);
+
+                mus.setChecked(shared.getBoolean("music",true));
+                musvol.setEnabled(shared.getBoolean("music",true));
+
+                musvol.setMax(99);
+
+                mus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mus.setClickable(false);
+
+                        mus.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mus.setClickable(true);
+                            }
+                        },1000);
+
+                        if(isChecked) {
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putBoolean("music",true);
+                            editor.apply();
+                            SoundHandler.musicPlay = true;
+                            musvol.setEnabled(true);
+
+                            if(SoundHandler.MUSIC != null) {
+                                if (!SoundHandler.MUSIC.isPlaying() && SoundHandler.MUSIC.isInitialized()) {
+                                    SoundHandler.MUSIC.start();
+                                }
+                            }
+                        } else {
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putBoolean("music",false);
+                            editor.apply();
+                            SoundHandler.musicPlay = false;
+                            musvol.setEnabled(false);
+
+                            if(SoundHandler.MUSIC != null) {
+                                if (SoundHandler.MUSIC.isInitialized() && SoundHandler.MUSIC.isRunning()) {
+                                    if (SoundHandler.MUSIC.isPlaying())
+                                        SoundHandler.MUSIC.pause();
+                                }
+                            }
+                        }
+                    }
+                });
+                musvol.setProgress(shared.getInt("mus_vol",99));
+
+                musvol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if(fromUser) {
+                            if(progress >= 100 || progress < 0) return;
+
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putInt("mus_vol",progress);
+                            editor.apply();
+
+                            float log1 = (float)(1-(Math.log(100-progress)/Math.log(100)));
+
+                            SoundHandler.MUSIC.setVolume(log1,log1);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+                Switch switchse = activity.findViewById(R.id.switchse);
+                SeekBar seekse = activity.findViewById(R.id.seekse);
+
+                switchse.setChecked(shared.getBoolean("SE",true));
+                seekse.setEnabled(shared.getBoolean("SE",true));
+
+                seekse.setMax(99);
+                seekse.setProgress(shared.getInt("se_vol",99));
+
+                switchse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        switchse.setClickable(false);
+
+                        switchse.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                switchse.setClickable(true);
+                            }
+                        },1000);
+
+                        if(isChecked) {
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putBoolean("SE",true);
+                            editor.apply();
+                            SoundHandler.se_vol = StaticStore.getVolumScaler((int)(shared.getInt("se_vol",99)*0.85));
+                            seekse.setEnabled(true);
+                        } else {
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putBoolean("SE",false);
+                            editor.apply();
+                            SoundHandler.se_vol = 0;
+                            seekse.setEnabled(false);
+                        }
+                    }
+                });
+
+                seekse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if(fromUser) {
+                            if(progress >= 100 || progress < 0) return;
+
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putInt("se_vol",progress);
+                            editor.apply();
+
+                            SoundHandler.se_vol = StaticStore.getVolumScaler((int)(progress*0.85));
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
                     }
                 });
 
@@ -349,6 +536,18 @@ public class BAdder extends AsyncTask<Void, Integer, Void> {
         ((ViewManager) loadt.getParent()).removeView(loadt);
 
         battleView.initialized = true;
+        if(SoundHandler.MUSIC != null)
+            if(SoundHandler.MUSIC.isInitialized() && !SoundHandler.MUSIC.isRunning()) {
+                SoundHandler.MUSIC.prepareAsync();
+                SoundHandler.MUSIC.setOnPreparedListener(new MediaPrepare() {
+                    @Override
+                    public void PrePare(MediaPlayer mp) {
+                        if(SoundHandler.musicPlay)
+                            SoundHandler.MUSIC.start();
+                    }
+                });
+            }
+
     }
 
     private void setDisappear(View... views) {

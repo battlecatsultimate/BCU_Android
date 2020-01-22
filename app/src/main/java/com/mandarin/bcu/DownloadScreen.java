@@ -29,6 +29,7 @@ import java.util.ArrayList;
 public class DownloadScreen extends AppCompatActivity {
     private String path;
     private ArrayList<String> fileneed;
+    private ArrayList<String> musics;
 
     private Button retry;
 
@@ -75,13 +76,14 @@ public class DownloadScreen extends AppCompatActivity {
 
         Intent result = getIntent();
         fileneed = result.getStringArrayListExtra("fileneed");
+        musics = result.getStringArrayListExtra("music");
 
         retry = findViewById(R.id.retry);
         retry.setVisibility(View.GONE);
         ProgressBar prog = findViewById(R.id.downprog);
         prog.setMax(100);
 
-        new Downloader(path, fileneed, downloading, extracting, DownloadScreen.this).execute();
+        new Downloader(path, fileneed, musics, downloading, extracting, DownloadScreen.this).execute();
 
         Listeners();
 
@@ -92,7 +94,7 @@ public class DownloadScreen extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 retry.setVisibility(View.GONE);
-                new Downloader(path, fileneed, downloading, extracting, DownloadScreen.this).execute();
+                new Downloader(path, fileneed, musics, downloading, extracting, DownloadScreen.this).execute();
             }
         });
     }

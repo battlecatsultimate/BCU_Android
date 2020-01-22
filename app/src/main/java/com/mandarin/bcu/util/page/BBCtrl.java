@@ -15,9 +15,12 @@ public class BBCtrl extends BattleBox.BBPainter {
     private SBCtrl ctrl;
     public static final int ACTION_LONG = 100;
 
-    public BBCtrl(BattleBox.OuterBox bip, SBCtrl bas, BattleBox bb) {
+    private final float dpi;
+
+    public BBCtrl(BattleBox.OuterBox bip, SBCtrl bas, BattleBox bb, float dpi) {
         super(bip, bas, bb);
         ctrl = bas;
+        this.dpi = dpi;
     }
 
     @Override
@@ -45,21 +48,23 @@ public class BBCtrl extends BattleBox.BBPainter {
             FakeImage left = Res.battle[0][0].getImg();
             FakeImage right = Res.battle[1][0].getImg();
 
-            int ih = (int) (hr * left.getHeight());
-            int iw = (int) (hr * left.getWidth());
+            float ratio = dpi/58f;
+
+            int ih = (int) (hr * left.getHeight()*ratio);
+            int iw = (int) (hr * left.getWidth()*ratio);
             if (!new PP(p).out(new P(0, h - ih), new P(iw, h), 0))
                 ctrl.action.add(-1);
 
-            iw = (int) (hr * right.getWidth());
-            ih = (int) (hr * right.getHeight());
+            iw = (int) (hr * right.getWidth()*ratio);
+            ih = (int) (hr * right.getHeight()*ratio);
             if (!new PP(p).out(new P(w - iw, h - ih), new P(w, h), 0))
                 ctrl.action.add(-2);
 
             if ((ctrl.sb.conf[0] & 2) > 0) {
                 FakeImage bimg = Res.battle[2][1].getImg();
-                int cw = bimg.getWidth();
-                int ch = bimg.getHeight();
-                int mh = Res.num[0][0].getImg().getHeight();
+                int cw = (int)(bimg.getWidth()*ratio);
+                int ch = (int)(bimg.getHeight()*ratio);
+                int mh = (int)(Res.num[0][0].getImg().getHeight()*ratio);
                 if (!new PP(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
                     ctrl.action.add(-3);
             }

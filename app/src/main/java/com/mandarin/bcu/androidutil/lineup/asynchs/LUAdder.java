@@ -133,6 +133,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
             File f = new File(Path);
 
+            SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+
             if (f.exists()) {
                 if (f.length() != 0) {
                     byte[] buff = new byte[(int) f.length()];
@@ -149,12 +151,25 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                             BasisSet.read(is);
                         } catch (Exception e) {
                             publishProgress(R.string.lineup_file_err);
+
+                            BasisSet def = BasisSet.list.get(0);
+
                             BasisSet.list.clear();
-                            new BasisSet();
-                            ErrorLogWriter.WriteLog(e);
+
+                            BasisSet.list.add(def);
+
+                            ErrorLogWriter.WriteLog(e,preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true));
                         }
                     } catch (Exception e) {
-                        ErrorLogWriter.WriteLog(e);
+                        publishProgress(R.string.lineup_file_err);
+
+                        BasisSet def = BasisSet.list.get(0);
+
+                        BasisSet.list.clear();
+
+                        BasisSet.list.add(def);
+
+                        ErrorLogWriter.WriteLog(e,preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true));
                     }
                 }
             }
@@ -201,8 +216,6 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
             bck.setOnClickListener(v -> {
                 save();
-                StaticStore.setline[0] = 0;
-                StaticStore.setline[1] = 0;
                 StaticStore.filterReset();
                 StaticStore.set = null;
                 StaticStore.lu = null;
@@ -277,6 +290,10 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
             Spinner setspin = activity.findViewById(R.id.setspin);
             Spinner luspin = activity.findViewById(R.id.luspin);
 
+            if (setn >= BasisSet.list.size()) setn = BasisSet.list.size() - 1;
+
+            BasisSet.current = BasisSet.list.get(setn);
+
             List<String> setname = new ArrayList<>();
 
             for (int i = 0; i < StaticStore.sets.size(); i++)
@@ -289,7 +306,11 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
             setspin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (!initialized) return;
+                    if (!initialized) {
+                        initialized = true;
+
+                        return;
+                    }
 
                     BasisSet.current = StaticStore.sets.get(position);
 
@@ -299,9 +320,6 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                     editor.putInt("equip_set", position);
 
                     editor.apply();
-
-                    StaticStore.setline[0] = position;
-                    StaticStore.setline[1] = 0;
 
                     List<String> luname = new ArrayList<>();
 
@@ -343,6 +361,10 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
             List<String> LUname = new ArrayList<>();
 
+            if (lun >= BasisSet.current.lb.size()) lun = BasisSet.current.lb.size() - 1;
+
+            BasisSet.current.sele = BasisSet.current.lb.get(lun);
+
             for (int i = 0; i < BasisSet.current.lb.size(); i++) {
                 LUname.add(BasisSet.current.lb.get(i).name);
             }
@@ -363,8 +385,6 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
                     editor.putInt("equip_lu", position);
                     editor.apply();
-
-                    StaticStore.setline[1] = position;
 
                     line.ChangeFroms(BasisSet.current.sele.lu);
 
@@ -453,15 +473,10 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
                             setspin.setSelection(setspin.getCount() - 1);
 
-                            LUTab tab = new LUTab(manager, line);
                             StaticStore.updateForm = true;
-
-                            pager.setAdapter(tab);
-                            pager.setOffscreenPageLimit(5);
-                            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-                            tabs.setupWithViewPager(pager);
-
-                            Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
+                            StaticStore.updateTreasure = true;
+                            StaticStore.updateConst = true;
+                            StaticStore.updateCastle = true;
 
                             save();
 
@@ -507,15 +522,7 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
                             luspin.setSelection(luspin.getCount() - 1);
 
-                            LUTab tab = new LUTab(manager, line);
                             StaticStore.updateForm = true;
-
-                            pager.setAdapter(tab);
-                            pager.setOffscreenPageLimit(5);
-                            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-                            tabs.setupWithViewPager(pager);
-
-                            Objects.requireNonNull(tabs.getTabAt(prePosit)).select();
 
                             save();
 
@@ -560,6 +567,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
                             line.UpdateLineUp();
 
+                            line.invalidate();
+
                             List<String> LUname1 = new ArrayList<>();
 
                             for (int i = 0; i < BasisSet.current.lb.size(); i++) {
@@ -596,6 +605,8 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
                             BasisSet.current.sele.name = name;
 
                             line.UpdateLineUp();
+
+                            line.invalidate();
 
                             Toast.makeText(activity, R.string.lineup_paste_lu_done, Toast.LENGTH_SHORT).show();
 
@@ -847,23 +858,15 @@ public class LUAdder extends AsyncTask<Void, Integer, Void> {
 
             Objects.requireNonNull(tabs.getTabAt(StaticStore.LUtabPosition)).select();
 
-            initialized = true;
-
-            if (setn >= BasisSet.list.size()) setn = BasisSet.list.size() - 1;
-
             setspin.setSelection(setn);
 
-            if (setn >= BasisSet.current.lb.size()) lun = BasisSet.current.lb.size() - 1;
-
             luspin.setSelection(lun);
-
-
         } else if (result[0] == 0) {
             TextView st = activity.findViewById(R.id.lineupst);
 
             st.setText(R.string.lineup_reading);
         } else {
-            Toast.makeText(activity, result[0], Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.lineup_file_err, Toast.LENGTH_SHORT).show();
         }
     }
 

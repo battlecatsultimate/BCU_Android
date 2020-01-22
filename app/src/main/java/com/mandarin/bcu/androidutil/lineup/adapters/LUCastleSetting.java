@@ -23,7 +23,6 @@ import com.mandarin.bcu.androidutil.StaticStore;
 import common.battle.BasisSet;
 
 public class LUCastleSetting extends Fragment {
-    private View view;
 
     public static LUCastleSetting newInstance() {
         return new LUCastleSetting();
@@ -34,13 +33,13 @@ public class LUCastleSetting extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.lineup_castle_set,group,false);
+        View view = inflater.inflate(R.layout.lineup_castle_set, group, false);
 
         ImageView castle = view.findViewById(R.id.lineupcastle);
 
         drawCastle(castle);
 
-        Button[] buttons = {view.findViewById(R.id.lineupchcannon),view.findViewById(R.id.lineupchlabel),view.findViewById(R.id.lineupchbase)};
+        Button[] buttons = {view.findViewById(R.id.lineupchcannon), view.findViewById(R.id.lineupchlabel), view.findViewById(R.id.lineupchbase)};
 
         for(int i = 0; i < buttons.length; i++) {
             final int ii = i;

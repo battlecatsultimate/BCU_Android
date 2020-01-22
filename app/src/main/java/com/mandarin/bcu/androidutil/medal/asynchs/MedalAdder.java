@@ -1,6 +1,8 @@
 package com.mandarin.bcu.androidutil.medal.asynchs;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,6 +56,8 @@ public class MedalAdder extends AsyncTask<Void, Integer, Void> {
         if (StaticStore.medals == null) {
             StaticStore.medals = new ArrayList<>();
 
+            SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+
             for (int i = 0; i < StaticStore.medalnumber; i++) {
                 String path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/page/medal/";
 
@@ -70,7 +74,7 @@ public class MedalAdder extends AsyncTask<Void, Integer, Void> {
 
                     StaticStore.medals.add(b);
                 } catch (Exception e) {
-                    ErrorLogWriter.WriteLog(e);
+                    ErrorLogWriter.WriteLog(e,preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true));
                 }
             }
         }

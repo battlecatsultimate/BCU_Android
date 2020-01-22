@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundPrimary"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/errortitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/main_err_detect"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/errorcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/errortitle"
+        android:layout_alignStart="@+id/errortitle"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/main_err_ask"
+        android:textColor="?attr/TextPrimary" />
+
+    <RadioGroup
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/errorcontent"
+        android:layout_alignStart="@+id/errorcontent"
+        android:layout_alignEnd="@+id/errorcontent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp">
+
+        <RadioButton
+            android:id="@+id/radiosend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_err_always"
+            android:textColor="?attr/TextPrimary" />
+
+        <RadioButton
+            android:id="@+id/radionotshow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_err_notshow"
+            android:textColor="?attr/TextPrimary" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/errorno"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/errorupload"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_toStartOf="@+id/errorupload"
+        android:text="@string/main_err_no"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/errorupload"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radio"
+        android:layout_alignEnd="@+id/radio"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        android:text="@string/main_err_yes"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</RelativeLayout>

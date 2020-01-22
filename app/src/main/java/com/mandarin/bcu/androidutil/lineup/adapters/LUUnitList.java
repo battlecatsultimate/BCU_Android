@@ -25,8 +25,9 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 
 public class LUUnitList extends Fragment {
-    private View view;
     private LineUpView line;
+    private Handler handler = new Handler();
+    private Runnable runnable;
 
     public static LUUnitList newInstance(String[] names, LineUpView line) {
         LUUnitList ulist = new LUUnitList();
@@ -44,7 +45,7 @@ public class LUUnitList extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.lineup_unit_list, group, false);
+        View view = inflater.inflate(R.layout.lineup_unit_list, group, false);
 
         if (line == null) {
             if (getActivity() != null)
@@ -67,8 +68,7 @@ public class LUUnitList extends Fragment {
 
         ulist.setAdapter(adapter);
 
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 if (StaticStore.updateList) {
@@ -142,10 +142,11 @@ public class LUUnitList extends Fragment {
     @Override
     public void onDestroy() {
         destroyed = !destroyed;
+        handler.removeCallbacks(runnable);
         super.onDestroy();
     }
 
-    public void setLineUp(LineUpView line) {
+    private void setLineUp(LineUpView line) {
         this.line = line;
     }
 }

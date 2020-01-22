@@ -81,8 +81,6 @@ public class LineUpView extends View {
      **/
     public int lastPosit = 1;
 
-    private boolean drawOnce = true;
-
     /**
      * X coordinate where user is touching
      **/
@@ -110,9 +108,9 @@ public class LineUpView extends View {
         File f = new File(path);
 
         if (!f.exists()) {
-            empty = StaticStore.empty(context, 10, 10);
+            empty = StaticStore.empty(128,128);
         } else {
-            empty = BitmapFactory.decodeFile(path);
+            empty = StaticStore.MakeIconp(BitmapFactory.decodeFile(path),128);
         }
 
         this.f = StaticStore.dptopx(8f, context);
@@ -194,6 +192,7 @@ public class LineUpView extends View {
         if (posit[0] != 100) {
             if (posit[0] * 5 + posit[1] < StaticStore.currentForms.size()) {
                 StaticStore.currentForms.remove(posit[0] * 5 + posit[1]);
+                StaticStore.currentForms.add(null);
                 units.remove(posit[0] * 5 + posit[1]);
                 units.add(empty);
             }
@@ -219,15 +218,15 @@ public class LineUpView extends View {
      **/
     private void DrawReplaceBox(Canvas c) {
         if (repform == null) {
-            c.drawBitmap(StaticStore.getResizebp(empty, bw, bw), 0, bw * 2, p);
+            c.drawBitmap(empty, 0, bw * 2, p);
             c.drawBitmap(replace, bw / 2 - (float) replace.getWidth() / 2, bw * 2.5f - (float) replace.getHeight() / 2, icon);
         } else {
             Bitmap icon = (Bitmap) repform.anim.uni.getImg().bimg();
 
             if (icon.getWidth() != icon.getHeight())
-                icon = StaticStore.MakeIcon(getContext(), icon, 48f);
+                icon = StaticStore.MakeIconp(icon,bw);
 
-            c.drawBitmap(StaticStore.getResizebp(icon, bw, bw), 0, bw * 2, p);
+            c.drawBitmap(icon, 0, bw * 2, p);
         }
     }
 
@@ -240,9 +239,9 @@ public class LineUpView extends View {
         for (float[][] floats : position) {
             for (float[] aFloat : floats) {
                 if (k >= units.size())
-                    c.drawBitmap(StaticStore.getResizebp(empty, bw, bw), aFloat[0], aFloat[1], p);
+                    c.drawBitmap(empty, aFloat[0], aFloat[1], p);
                 else
-                    c.drawBitmap(StaticStore.getResizebp(units.get(k), bw, bw), aFloat[0], aFloat[1], p);
+                    c.drawBitmap(units.get(k), aFloat[0], aFloat[1], p);
 
                 k += 1;
             }
@@ -254,7 +253,7 @@ public class LineUpView extends View {
             changeUnitImage(lastPosit, (Bitmap) Objects.requireNonNull(f.udi).getImg().bimg());
             lastPosit += 1;
         } else {
-            units.set(units.size() - 1, (Bitmap) Objects.requireNonNull(f.udi).bimg.bimg());
+            units.set(units.size() - 1, StaticStore.MakeIconp((Bitmap) Objects.requireNonNull(f.udi).bimg.bimg(),128));
         }
     }
 
@@ -275,12 +274,12 @@ public class LineUpView extends View {
         if (b2 != empty) {
             units.remove(from);
             StaticStore.currentForms.remove(from);
-            units.add(to, b);
+            units.add(to, StaticStore.MakeIconp(b,bw));
             StaticStore.currentForms.add(to, f);
         } else {
             units.remove(from);
             StaticStore.currentForms.remove(from);
-            units.add(lastPosit - 1, b);
+            units.add(lastPosit - 1, StaticStore.MakeIconp(b,bw));
             StaticStore.currentForms.add(lastPosit - 1, f);
         }
 
@@ -353,7 +352,7 @@ public class LineUpView extends View {
             } else {
                 units.remove(from);
                 StaticStore.currentForms.remove(from);
-                units.add(from, b2);
+                units.add(from, StaticStore.MakeIconp(b2,bw));
                 StaticStore.currentForms.add(from, f2);
 
                 repform = f;
@@ -363,7 +362,7 @@ public class LineUpView extends View {
 
             if (f2 == null) {
                 units.remove(to);
-                units.add(lastPosit, b);
+                units.add(lastPosit, StaticStore.MakeIconp(b,bw));
                 StaticStore.currentForms.remove(to);
                 StaticStore.currentForms.add(lastPosit, f);
 
@@ -373,7 +372,7 @@ public class LineUpView extends View {
             } else {
                 units.remove(to);
                 StaticStore.currentForms.remove(to);
-                units.add(to, b);
+                units.add(to, StaticStore.MakeIconp(b,bw));
                 StaticStore.currentForms.add(to, f);
 
                 repform = f2;
@@ -409,7 +408,7 @@ public class LineUpView extends View {
      * Changes unit icon
      **/
     public void changeUnitImage(int position, Bitmap newb) {
-        units.set(position, newb);
+        units.set(position, StaticStore.MakeIconp(newb,128));
     }
 
     /**

@@ -43,7 +43,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3"
         app:layout_constraintVertical_bias="1.0">
@@ -193,7 +193,19 @@
                 android:textColor="?attr/TextPrimary"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/senderror" />
+
+            <Switch
+                android:id="@+id/senderror"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/config_send_err"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/tableRow3"
+                app:layout_constraintStart_toStartOf="@+id/tableRow3"
                 app:layout_constraintTop_toBottomOf="@+id/tableRow3" />
 
             <TableRow
@@ -399,14 +411,68 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
                 android:text="@string/config_fps"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/configaxis"
                 app:layout_constraintStart_toStartOf="@+id/configaxis"
-                app:layout_constraintTop_toBottomOf="@+id/configaxis"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/configaxis" />
+
+            <TextView
+                android:id="@+id/sound"
+                android:layout_width="58dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/config_sound"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/configmus"
+                app:layout_constraintTop_toBottomOf="@+id/configfps" />
+
+            <Switch
+                android:id="@+id/configmus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/config_music"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configfps"
+                app:layout_constraintStart_toStartOf="@+id/configfps"
+                app:layout_constraintTop_toBottomOf="@+id/sound" />
+
+            <SeekBar
+                android:id="@+id/configmusvol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/configmus" />
+
+            <Switch
+                android:id="@+id/configse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/config_se"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configmus"
+                app:layout_constraintStart_toStartOf="@+id/configmus"
+                app:layout_constraintTop_toBottomOf="@+id/configmusvol" />
+
+            <SeekBar
+                android:id="@+id/configsevol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/configmusvol"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/configmusvol"
+                app:layout_constraintTop_toBottomOf="@+id/configse" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

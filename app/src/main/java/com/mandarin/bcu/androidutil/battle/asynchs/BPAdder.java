@@ -113,6 +113,8 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
 
             File f = new File(Path);
 
+            SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG,Context.MODE_PRIVATE);
+
             if (f.exists()) {
                 if (f.length() != 0) {
                     byte[] buff = new byte[(int) f.length()];
@@ -131,10 +133,10 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
                             publishProgress(R.string.lineup_file_err);
                             BasisSet.list.clear();
                             new BasisSet();
-                            ErrorLogWriter.WriteLog(e);
+                            ErrorLogWriter.WriteLog(e,preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true));
                         }
                     } catch (Exception e) {
-                        ErrorLogWriter.WriteLog(e);
+                        ErrorLogWriter.WriteLog(e,preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true));
                     }
                 }
             }
@@ -149,7 +151,12 @@ public class BPAdder extends AsyncTask<Void, Integer, Void> {
         int set = preferences.getInt("equip_set", 0);
         int lu = preferences.getInt("equip_lu", 0);
 
+        if(set >= BasisSet.list.size()) set = BasisSet.list.size()-1;
+
         BasisSet.current = StaticStore.sets.get(set);
+
+        if(lu >= BasisSet.current.lb.size()) lu = BasisSet.current.lb.size()-1;
+
         BasisSet.current.sele = BasisSet.current.lb.get(lu);
 
         publishProgress(1);

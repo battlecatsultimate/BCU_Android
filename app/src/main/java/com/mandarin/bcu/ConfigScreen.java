@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -22,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.adapters.SingleClick;
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,6 +162,29 @@ public class ConfigScreen extends AppCompatActivity {
         } else {
             apktest.setChecked(true);
         }
+
+        Switch senderr = findViewById(R.id.senderror);
+
+        if (!shared.getBoolean("upload", false)) {
+            senderr.setChecked(false);
+        } else {
+            senderr.setChecked(true);
+        }
+
+        senderr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SharedPreferences.Editor ed = shared.edit();
+                    ed.putBoolean("upload", true);
+                    ed.apply();
+                } else {
+                    SharedPreferences.Editor ed = shared.edit();
+                    ed.putBoolean("upload", false);
+                    ed.apply();
+                }
+            }
+        });
 
         apktest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -331,6 +356,109 @@ public class ConfigScreen extends AppCompatActivity {
                 SharedPreferences.Editor ed = shared.edit();
                 ed.putBoolean("FPS", isChecked);
                 ed.apply();
+            }
+        });
+
+        Switch mus = findViewById(R.id.configmus);
+        SeekBar musvol = findViewById(R.id.configmusvol);
+        
+        mus.setChecked(shared.getBoolean("music",true));
+        musvol.setEnabled(shared.getBoolean("music",true));
+        musvol.setMax(99);
+        musvol.setProgress(shared.getInt("mus_vol",99));
+        
+        mus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putBoolean("music",true);
+                    editor.apply();
+                    SoundHandler.musicPlay = true;
+                    musvol.setEnabled(true);
+                } else {
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putBoolean("music",false);
+                    editor.apply();
+                    SoundHandler.musicPlay = false;
+                    musvol.setEnabled(false);
+                }
+            }
+        });
+
+        musvol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser) {
+                    if(progress >= 100 || progress < 0) return;
+
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putInt("mus_vol",progress);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        Switch soundeff = findViewById(R.id.configse);
+        SeekBar sevol = findViewById(R.id.configsevol);
+
+        soundeff.setChecked(shared.getBoolean("SE",true));
+        sevol.setEnabled(shared.getBoolean("SE",true));
+
+        sevol.setMax(99);
+        sevol.setProgress(shared.getInt("se_vol",99));
+
+        soundeff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putBoolean("SE",true);
+                    editor.apply();
+                    SoundHandler.se_vol = StaticStore.getVolumScaler((int) (shared.getInt("se_vol",99)*0.85));
+                    sevol.setEnabled(true);
+                } else {
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putBoolean("SE",false);
+                    editor.apply();
+                    SoundHandler.se_vol = 0;
+                    sevol.setEnabled(false);
+                }
+            }
+        });
+
+        sevol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser) {
+                    if(progress >= 100 || progress < 0) return;
+
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putInt("se_vol",progress);
+                    editor.apply();
+
+                    SoundHandler.se_vol = StaticStore.getVolumScaler((int)(progress*0.85));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
     }

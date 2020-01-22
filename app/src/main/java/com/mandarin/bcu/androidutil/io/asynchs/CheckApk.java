@@ -25,9 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -71,6 +69,7 @@ public class CheckApk extends AsyncTask<Void, String, Void> {
         try {
             PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
             thisver = packageInfo.versionName;
+            StaticStore.VER = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -91,20 +90,10 @@ public class CheckApk extends AsyncTask<Void, String, Void> {
         if (activity == null) return null;
 
         try {
-            JSONObject update = new JSONObject();
-            String apklink = "http://battle-cats-ultimate.000webhostapp.com/api/java/getupdate.php";
-            update.put("bcuver", thisver);
+            String apklink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json";
             URL apkurl = new URL(apklink);
-            HttpURLConnection apkcon = (HttpURLConnection) apkurl.openConnection();
-            apkcon.setDoInput(true);
-            apkcon.setDoOutput(true);
-            apkcon.setRequestMethod("POST");
-            apkcon.connect();
-            OutputStream os = apkcon.getOutputStream();
-            os.write(update.toString().getBytes(StandardCharsets.UTF_8));
-            os.close();
 
-            InputStream in = apkcon.getInputStream();
+            InputStream in = apkurl.openStream();
             InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
             StringBuilder sb = new StringBuilder();
             int cp;
@@ -114,7 +103,6 @@ public class CheckApk extends AsyncTask<Void, String, Void> {
             String result = sb.toString();
             JSONObject ans = new JSONObject(result);
             in.close();
-            apkcon.disconnect();
 
             SharedPreferences shared = activity.getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
             String thatver;

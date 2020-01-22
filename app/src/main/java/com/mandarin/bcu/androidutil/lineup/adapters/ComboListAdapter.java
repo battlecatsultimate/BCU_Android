@@ -1,6 +1,8 @@
 package com.mandarin.bcu.androidutil.lineup.adapters;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,7 +96,9 @@ public class ComboListAdapter extends ArrayAdapter<String> {
                 }
             }
         } catch (NullPointerException e) {
-            ErrorLogWriter.WriteLog(e);
+            SharedPreferences preferences = getContext().getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+
+            ErrorLogWriter.WriteLog(e,preferences.getBoolean("upload",false)||preferences.getBoolean("ask_upload",true));
 
             return row;
         } catch (IndexOutOfBoundsException e) {

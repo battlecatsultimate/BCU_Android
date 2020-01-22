@@ -40,6 +40,7 @@ import java.util.Objects;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.system.MultiLangCont;
+import common.system.fake.FakeImage;
 import common.util.unit.Enemy;
 
 public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
@@ -132,7 +133,15 @@ public class EnemyRecycle extends RecyclerView.Adapter<EnemyRecycle.ViewHolder> 
         viewHolder.name.setText(MultiLangCont.ENAME.getCont(em));
         viewHolder.enemid.setText(s.number(id));
         float ratio = 32f / 32f;
-        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb((Bitmap) em.anim.edi.getImg().bimg(), activity, 85f * ratio, 32f * ratio));
+
+        FakeImage img = em.anim.edi.getImg();
+
+        Bitmap b = null;
+
+        if(img != null)
+            b = (Bitmap)img.bimg();
+
+        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(b, activity, 85f * ratio, 32f * ratio));
         viewHolder.enemhp.setText(s.getHP(em, multi));
         viewHolder.enemhb.setText(s.getHB(em));
         viewHolder.enemmulti.setText(String.valueOf(multi));

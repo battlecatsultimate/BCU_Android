@@ -520,4 +520,19 @@
     <string name="battle_sure_go">정말로 전투에서 나가시겠습니까?</string>
     <string name="battle_do_not_show">경고 다시 표시하지 않기</string>
     <string name="battle_exit">나가기</string>
+    <string name="main_err_upload">앱 충돌 감지됨, 서버에 업로드 중</string>
+    <string name="main_err_ask">앱 충돌이 감지되었습니다. 생성된 에러 로그 파일들을 서버에 업로드하시겠습니까?</string>
+    <string name="main_err_detect">앱 충돌 감지됨</string>
+    <string name="main_err_yes">업로드</string>
+    <string name="main_err_no">아니오</string>
+    <string name="main_err_notshow">알림 표시하지 않기</string>
+    <string name="main_err_always">항상 로그 파일 서버로 전송</string>
+    <string name="main_err_start">업로드 시작 중…</string>
+    <string name="config_send_err">항상 서버에 에러 로그 전송</string>
+    <string name="down_state_music">"음악 다운로드중… : "</string>
+    <string name="err_send_log">로그 보내는 중… : -/_</string>
+    <string name="err_send_result">로그 보냄 | 성공 : - / 실패 : _</string>
+    <string name="config_music">배경음악</string>
+    <string name="config_se">효과음</string>
+    <string name="config_sound">소리</string>
 </resources>

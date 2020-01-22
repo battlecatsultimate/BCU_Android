@@ -34,6 +34,8 @@ public interface BattleBox {
         private static final int[] cany = new int[]{-134, -134, -134, -250, -250, -134, -134};
         private static final int[] canx = new int[]{0, 0, 0, 64, 64, 0, 0};
 
+        public int dpi = 1;
+
         public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
             FakeImage bimg = NyCastle.main[2][inf[2]].getImg();
             int bw = bimg.getWidth();
@@ -370,25 +372,26 @@ public interface BattleBox {
 
         private void drawTop(FakeGraphics g) {
             int w = box.getWidth();
-            setSym(g, 1.5, w, 0, 1);
+            float ratio = dpi/42f;
+            setSym(g, ratio, w, 0, 1);
             P p = Res.getMoney((int) sb.mon, sb.max_mon, sc);
             int ih = (int) p.y;
             int n = 0;
             FakeImage bimg = Res.battle[2][1].getImg();
-            int cw = bimg.getWidth();
+            int cw = (int)(bimg.getWidth()*ratio);
             if ((sb.conf[0] & 2) > 0) {
                 bimg = Res.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
-                g.drawImage(bimg, w - cw, ih);
+                g.drawImage(bimg, w - cw, ih,dpi,dpi);
                 n++;
             }
             bimg = Res.battle[2][1].getImg();
             if ((sb.conf[0] & 1) > 0) {
-                g.drawImage(bimg, w - cw * (n + 1), ih);
+                g.drawImage(bimg, w - cw * (n + 1), ih,dpi,dpi);
                 n++;
             }
             bimg = Res.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
             for (int i = 0; i < Math.abs(page.getSpeed()); i++)
-                g.drawImage(bimg, w - cw * (i + 1 + n), ih);
+                g.drawImage(bimg, w - cw * (i + 1 + n), ih,dpi,dpi);
         }
 
         private synchronized void press(Point p) {

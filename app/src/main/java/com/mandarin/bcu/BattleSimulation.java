@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler;
 import com.mandarin.bcu.androidutil.battle.asynchs.BAdder;
 
 public class BattleSimulation extends AppCompatActivity {
@@ -38,6 +39,8 @@ public class BattleSimulation extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_battle_simulation);
+
+        SoundHandler.inBattle = true;
 
         Intent intent = getIntent();
 

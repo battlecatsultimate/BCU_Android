@@ -520,4 +520,19 @@
     <string name="battle_sure_go">Are you sure you want to exit battle?</string>
     <string name="battle_do_not_show">Do not show this warn again</string>
     <string name="battle_exit">Exit</string>
+    <string name="main_err_upload">App crash detected, uploading to server</string>
+    <string name="main_err_ask">Error log files are generated. Do you want to upload these error log files to server?</string>
+    <string name="main_err_detect">App crash detected</string>
+    <string name="main_err_yes">Upload</string>
+    <string name="main_err_no">No</string>
+    <string name="main_err_notshow">Do not show this dialog again</string>
+    <string name="main_err_always">Always send error logs to server</string>
+    <string name="main_err_start">Start uploading log files…</string>
+    <string name="config_send_err">Always send error logs to server</string>
+    <string name="down_state_music">"Downloading Musics… : "</string>
+    <string name="err_send_log">Sending Log… : -/_</string>
+    <string name="err_send_result">Sent Log | Succeeded : - / Failed : _</string>
+    <string name="config_music">Music</string>
+    <string name="config_se">Sound Effect</string>
+    <string name="config_sound">Sound</string>
 </resources>

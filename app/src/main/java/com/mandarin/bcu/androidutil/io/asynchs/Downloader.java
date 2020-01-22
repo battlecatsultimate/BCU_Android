@@ -1,23 +1,18 @@
 package com.mandarin.bcu.androidutil.io.asynchs;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mandarin.bcu.CheckUpdateScreen;
 import com.mandarin.bcu.R;
 import com.mandarin.bcu.androidutil.StaticStore;
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
-import com.mandarin.bcu.io.Reader;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class Downloader extends AsyncTask<Void, Integer, Void> {
 
@@ -45,7 +36,9 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
     private String downloading;
     private String extracting;
     private final String path;
+    private final String mpath;
     private ArrayList<String> fileneed;
+    private ArrayList<String> musics;
 
     private final WeakReference<Activity> weakActivity;
 
@@ -53,13 +46,15 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
 
     private File output = null;
 
-    public Downloader(String path, ArrayList<String> fileneed, String downloading, String extracting, Activity context) {
+    public Downloader(String path, ArrayList<String> fileneed, ArrayList<String> music, String downloading, String extracting, Activity context) {
         this.path = path;
         this.fileneed = fileneed;
         this.downloading = downloading;
         this.extracting = extracting;
         this.weakActivity = new WeakReference<>(context);
+        this.musics = music;
         source = path + "lang";
+        mpath = path + "music/";
     }
 
     @Override
@@ -107,7 +102,9 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
         purify(sizes);
 
         int number;
-        if (purifyneed.contains("Language")) {
+        if(purifyneed.contains("Language") && purifyneed.contains("Music")) {
+            number = purifyneed.size() - 2;
+        } else if (purifyneed.contains("Language") || purifyneed.contains("Music")) {
             number = purifyneed.size() - 1;
         } else {
             number = purifyneed.size();
@@ -163,6 +160,71 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
             if (output != null) {
                 remover.add(false);
             }
+        }
+
+        System.out.println(musics);
+
+        if(purifyneed.contains("Music")) {
+            if(!musics.isEmpty()) {
+                try {
+                    for(int i = 0; i < musics.size(); i++) {
+                        String murl = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/music/";
+                        String mfile = musics.get(i);
+
+                        link = new URL(murl+mfile);
+
+                        connection = (HttpURLConnection) link.openConnection();
+                        connection.setRequestMethod("GET");
+                        connection.connect();
+
+                        connection.getResponseCode();
+
+                        size = connection.getContentLength();
+
+                        output = new File(mpath,mfile);
+
+                        File mf = output.getParentFile();
+
+                        if(!mf.exists()) {
+                            mf.mkdirs();
+                        }
+
+                        if(!output.exists()) {
+                            output.createNewFile();
+                        }
+
+                        FileOutputStream fos = new FileOutputStream(output);
+                        InputStream is = connection.getInputStream();
+
+                        byte [] buffer = new byte[1024];
+                        int len1;
+                        total = 0;
+
+                        while((len1 = is.read(buffer)) != -1) {
+                            total += len1;
+
+                            int progress = 0;
+
+                            if(size != 0)
+                                progress = (int) (total*100/size);
+
+                            publishProgress(progress,50,i);
+
+                            fos.write(buffer,0,len1);
+                        }
+
+                        connection.disconnect();
+
+                        fos.close();
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            purifyneed.remove("Music");
+            fileneed.remove("Music");
         }
 
         if (purifyneed.contains("Language")) {
@@ -258,9 +320,6 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
                     StaticStore.stagelang = 1;
                     StaticStore.maplang = 1;
                 }
-            } catch (MalformedURLException e) {
-                output = null;
-                e.printStackTrace();
             } catch (IOException e) {
                 output = null;
                 e.printStackTrace();
@@ -288,8 +347,12 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
             prog.setIndeterminate(false);
         }
         prog.setProgress(values[0]);
-        if (values[1] != 100) {
+        if (values[1] != 100 && values[1] != 50) {
             state.setText(downloading + purifyneed.get(values[1]));
+        } else if(values[1] == 50) {
+            String mdownload = activity.getString(R.string.down_state_music)+musics.get(values[2]);
+
+            state.setText(mdownload);
         } else {
             state.setText(downloading + "Language Files");
         }
@@ -326,17 +389,19 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
             prog.setProgress(100);
         }
 
+        SharedPreferences preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
+
         if (!purifyneed.isEmpty() || output == null) {
             if (purifyneed.isEmpty()) {
                 state.setText(R.string.down_state_ok);
-                new Unzipper(path, fileneed, extracting, activity).execute();
+                new Unzipper(path, fileneed, extracting, activity, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true)).execute();
             } else {
                 state.setText(R.string.down_state_no);
                 retry.setVisibility(View.VISIBLE);
             }
         } else {
             state.setText(R.string.down_state_ok);
-            new Unzipper(path, fileneed, extracting, activity).execute();
+            new Unzipper(path, fileneed, extracting, activity, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true)).execute();
         }
     }
 
@@ -373,207 +438,3 @@ public class Downloader extends AsyncTask<Void, Integer, Void> {
     }
 }
 
-class Unzipper extends AsyncTask<Void, Integer, Void> {
-    private String destin;
-    private ArrayList<String> fileneed;
-    private final String path;
-    private final String extracting;
-    private boolean contin = true;
-
-    private WeakReference<Activity> weakReference;
-
-    Unzipper(String path, ArrayList<String> fileneed, String extracting, Activity context) {
-        this.path = path;
-        this.fileneed = fileneed;
-        this.extracting = extracting;
-        this.weakReference = new WeakReference<>(context);
-        destin = path + "files/";
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-        int j;
-        if (fileneed.contains("Language"))
-            j = fileneed.size() - 1;
-        else
-            j = fileneed.size();
-
-        for (int i = 0; i < j; i++) {
-            try {
-                String source = path + fileneed.get(i) + ".zip";
-                InputStream is = new FileInputStream(source);
-                ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
-                ZipEntry ze;
-                byte[] buffer = new byte[1024];
-                int count;
-
-                while ((ze = zis.getNextEntry()) != null) {
-                    String filenam = ze.getName();
-
-                    File f = new File(destin + filenam);
-
-                    if (ze.isDirectory()) {
-                        if (!f.exists())
-                            f.mkdirs();
-                        continue;
-                    }
-
-                    File dir = new File(f.getParent());
-                    if (!dir.exists())
-                        dir.mkdirs();
-
-                    if (!f.exists())
-                        f.createNewFile();
-
-                    FileOutputStream fout = new FileOutputStream(f);
-
-                    while ((count = zis.read(buffer)) != -1) {
-                        publishProgress(i);
-                        fout.write(buffer, 0, count);
-                    }
-
-                    fout.close();
-                    zis.closeEntry();
-                }
-
-                zis.close();
-
-            } catch (FileNotFoundException e) {
-                ErrorLogWriter.WriteLog(e);
-                contin = false;
-            } catch (IOException e) {
-                ErrorLogWriter.WriteLog(e);
-                contin = false;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        Activity activity = weakReference.get();
-
-        if (activity == null) return;
-
-        ProgressBar prog = activity.findViewById(R.id.downprog);
-        TextView state = activity.findViewById(R.id.downstate);
-        prog.setIndeterminate(true);
-        state.setText(R.string.down_zip_ex);
-    }
-
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        Activity activity = weakReference.get();
-
-        if (activity == null) return;
-
-        TextView state = activity.findViewById(R.id.downstate);
-        state.setText(extracting + fileneed.get(values[0]));
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-        Activity activity = weakReference.get();
-
-        if (activity == null) return;
-
-        if (contin) {
-            infowirter();
-            for (String s : fileneed) {
-                File f = new File(path, s + ".zip");
-
-                if (f.exists()) {
-                    f.delete();
-                }
-            }
-            Intent intent = new Intent(activity, CheckUpdateScreen.class);
-            StaticStore.clear();
-            activity.startActivity(intent);
-            activity.finish();
-        } else {
-            Button retry = activity.findViewById(R.id.retry);
-            TextView checkstate = activity.findViewById(R.id.downstate);
-            ProgressBar prog = activity.findViewById(R.id.downprog);
-
-            checkstate.setText(R.string.unzip_fail);
-            prog.setIndeterminate(false);
-            retry.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void infowirter() {
-        String pathes = path + "files/info/";
-        String filename = "info_android.ini";
-
-        File f = new File(pathes, filename);
-        try {
-            String libs = infolibbuild();
-
-            FileOutputStream fos = new FileOutputStream(f, false);
-
-            fos.write((libs).getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String infolibbuild() {
-        String pathes = path + "files/info/";
-        String filename = "info_android.ini";
-        Set<String> Original;
-        StringBuilder result = new StringBuilder();
-        StringBuilder abort = new StringBuilder();
-
-        for (int i = 0; i < fileneed.size(); i++) {
-            if (i != fileneed.size() - 1) {
-                abort.append(fileneed.get(i)).append(",");
-            } else {
-                abort.append(fileneed.get(i));
-            }
-        }
-
-        abort.insert(0, "file_version = 00040510\nnumber_of_libs = " + fileneed.size() + "\nlib=");
-
-        File f = new File(pathes, filename);
-
-        if (f.exists()) {
-            try {
-
-                Original = Reader.getInfo(path);
-
-                if (Original != null)
-                    System.out.println(Original);
-
-                if (Original == null) {
-                    Original = new TreeSet<>();
-                }
-
-                Original.addAll(fileneed);
-
-                ArrayList<String> combined = new ArrayList<>(Original);
-
-                for (int i = 0; i < combined.size(); i++) {
-                    if (i != combined.size() - 1) {
-                        result.append(combined.get(i)).append(",");
-                    } else {
-                        result.append(combined.get(i));
-                    }
-                }
-
-                result.insert(0, "file_version = 00040510\nnumber_of_libs = " + combined.size() + "\nlib=");
-
-                return result.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return abort.toString();
-            }
-        } else {
-            return abort.toString();
-        }
-    }
-}

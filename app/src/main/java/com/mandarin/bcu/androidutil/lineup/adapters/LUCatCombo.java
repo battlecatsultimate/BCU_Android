@@ -26,7 +26,6 @@ import common.system.MultiLangCont;
 import common.util.unit.Combo;
 
 public class LUCatCombo extends Fragment {
-    private View view;
 
     public static LUCatCombo newInstance(LineUpView line) {
         LUCatCombo combo = new LUCatCombo();
@@ -49,7 +48,7 @@ public class LUCatCombo extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.lineup_cat_combo, group, false);
+        View view = inflater.inflate(R.layout.lineup_cat_combo, group, false);
 
         if (getContext() == null) return view;
 

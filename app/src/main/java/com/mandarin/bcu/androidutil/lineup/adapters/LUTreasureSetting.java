@@ -39,7 +39,6 @@ import common.battle.Treasure;
 import common.io.OutStream;
 
 public class LUTreasureSetting extends Fragment {
-    private View view;
 
     public static LUTreasureSetting newInstance() {
         return new LUTreasureSetting();
@@ -112,12 +111,15 @@ public class LUTreasureSetting extends Fragment {
             new int[]{android.R.attr.state_enabled}
     };
 
+    private Handler handler = new Handler();
+    private Runnable runnable;
+
     private int[] color;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup group, @Nullable Bundle bundle) {
-        view = inflater.inflate(R.layout.lineup_treasure_set, group, false);
+        View view = inflater.inflate(R.layout.lineup_treasure_set, group, false);
 
         color = new int[]{
                 getAttributeColor(Objects.requireNonNull(getContext()), R.attr.TextPrimary)
@@ -127,8 +129,7 @@ public class LUTreasureSetting extends Fragment {
 
         Listeners();
 
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 if (StaticStore.updateTreasure) {
@@ -782,11 +783,5 @@ public class LUTreasureSetting extends Fragment {
                 });
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        destroyed = true;
     }
 }

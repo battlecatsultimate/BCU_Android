@@ -2,6 +2,8 @@ package com.mandarin.bcu.androidutil.io;
 
 import android.graphics.BitmapFactory;
 
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -99,7 +101,7 @@ public class DefineItf implements CommonStatic.Itf {
 
     @Override
     public void setSE(int ind) {
-
+        SoundHandler.setSE(ind);
     }
 
     @Override

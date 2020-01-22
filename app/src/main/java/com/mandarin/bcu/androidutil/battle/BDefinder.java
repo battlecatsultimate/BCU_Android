@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.battle;
 
 import com.mandarin.bcu.androidutil.StaticStore;
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler;
 
 import common.util.Res;
 import common.util.pack.Background;
@@ -38,6 +39,12 @@ public class BDefinder {
             Res.readData();
 
             StaticStore.resread = true;
+        }
+
+        if (!StaticStore.musicread) {
+            SoundHandler.read();
+
+            StaticStore.musicread = true;
         }
     }
 }

@@ -16,13 +16,23 @@ import com.mandarin.bcu.androidutil.Revalidater;
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.lineup.LineUpView;
 import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 public class LineUpScreen extends AppCompatActivity {
+    private static LineUpScreen lineup;
+    public static boolean installed = false;
+    private static RefWatcher watcher;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!installed) {
+            watcher = LeakCanary.install(getApplication());
+            installed = true;
+        }
 
         SharedPreferences shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor ed;
@@ -48,6 +58,8 @@ public class LineUpScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_line_up_screen);
 
+        lineup = this;
+
         LineUpView line = new LineUpView(this);
         line.setId(R.id.lineupView);
         LinearLayout layout = findViewById(R.id.lineuplayout);
@@ -67,6 +79,20 @@ public class LineUpScreen extends AppCompatActivity {
         new LUAdder(this, getSupportFragmentManager()).execute();
     }
 
+    public void mustDie(Object object) {
+        if(watcher != null) {
+            watcher.watch(object);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LinearLayout layout = findViewById(R.id.lineuplayout);
+        layout.removeAllViews();
+        LineUpScreen.lineup.mustDie(this);
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
@@ -76,8 +102,6 @@ public class LineUpScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         StaticStore.SaveLineUp();
-        StaticStore.setline[0] = 0;
-        StaticStore.setline[1] = 0;
         StaticStore.updateList = false;
         StaticStore.filterReset();
         StaticStore.set = null;
