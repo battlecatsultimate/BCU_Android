@@ -27,6 +27,8 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick;
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler;
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 import com.mandarin.bcu.androidutil.io.asynchs.UploadLogs;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
 
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean send = false;
     private boolean show = false;
+
+    public static boolean installed = false;
+    public static RefWatcher watcher;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -63,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 setTheme(R.style.AppTheme_day);
             }
+        }
+
+        if(!installed && shared.getBoolean("DEV_MODE",false)) {
+            watcher = LeakCanary.install(getApplication());
+            installed = true;
         }
 
         if (shared.getInt("Orientation", 0) == 1)
@@ -331,6 +341,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void mustDie(Object object) {
+        if(watcher != null) {
+            watcher.watch(object);
+        }
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
@@ -348,6 +364,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         isRunning = false;
         StaticStore.dialogisShwed = false;
+        mustDie(this);
         super.onDestroy();
     }
 

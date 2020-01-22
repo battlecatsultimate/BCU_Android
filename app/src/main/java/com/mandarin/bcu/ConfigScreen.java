@@ -6,17 +6,22 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -461,6 +466,67 @@ public class ConfigScreen extends AppCompatActivity {
 
             }
         });
+
+        TextView build = findViewById(R.id.configbuildver);
+
+        String text = getString(R.string.config_build_ver).replace("-", shared.getBoolean("DEV_MODE",false) ? BuildConfig.VERSION_NAME+"_DEV_MODE" : BuildConfig.VERSION_NAME);
+
+        build.setText(text);
+
+        build.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(!shared.getBoolean("DEV_MODE",false)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ConfigScreen.this);
+
+                    LayoutInflater inflater = LayoutInflater.from(ConfigScreen.this);
+
+                    View view = inflater.inflate(R.layout.dev_mode_password,null);
+
+                    builder.setView(view);
+
+                    Button active = view.findViewById(R.id.devpassactive);
+                    EditText password = view.findViewById(R.id.devpassedit);
+
+                    AlertDialog dialog = builder.create();
+
+                    dialog.setCancelable(true);
+
+                    dialog.show();
+
+                    active.setOnClickListener(new SingleClick() {
+                        @Override
+                        public void onSingleClick(View v) {
+                            String pass = password.getText().toString();
+
+                            if(!pass.isEmpty()) {
+                                if(pass.equals(BuildConfig.YOU_CANT_FIND_PASSWORD)) {
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putBoolean("DEV_MODE",true);
+                                    editor.apply();
+
+                                    String text = getString(R.string.config_build_ver).replace("-",BuildConfig.VERSION_NAME+"_DEV_MODE");
+
+                                    build.setText(text);
+
+                                    Toast.makeText(ConfigScreen.this,R.string.dev_pass_activated,Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ConfigScreen.this,R.string.dev_pass_wrong,Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(ConfigScreen.this,R.string.dev_pass_wrong,Toast.LENGTH_SHORT).show();
+                            }
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     private int getIndex(Spinner spinner, int lev) {
@@ -488,5 +554,17 @@ public class ConfigScreen extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mustDie(this);
+    }
+
+    public void mustDie(Object object) {
+        if(MainActivity.watcher != null) {
+            MainActivity.watcher.watch(object);
+        }
     }
 }

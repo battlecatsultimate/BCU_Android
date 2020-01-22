@@ -97,12 +97,12 @@ public class CheckUpdateScreen extends AppCompatActivity {
         }
 
         if (!shared.contains("Lay_Port")) {
-            ed.putBoolean("Lay_Port", false);
+            ed.putBoolean("Lay_Port", true);
             ed.apply();
         }
 
         if (!shared.contains("Lay_Land")) {
-            ed.putBoolean("Lay_Land", false);
+            ed.putBoolean("Lay_Land", true);
         }
 
         if (!shared.contains("Skip_Text")) {
@@ -131,6 +131,10 @@ public class CheckUpdateScreen extends AppCompatActivity {
 
         if(!shared.contains("se_vol")) {
             ed.putInt("se_vol",99);
+        }
+
+        if(!shared.contains("DEV_MODE")) {
+            ed.putBoolean("DEV_MODE",false);
         }
 
         if (shared.getInt("Orientation", 0) == 1)
@@ -271,5 +275,17 @@ public class CheckUpdateScreen extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         SharedPreferences shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE);
         super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mustDie(this);
+    }
+
+    public void mustDie(Object object) {
+        if(MainActivity.watcher != null) {
+            MainActivity.watcher.watch(object);
+        }
     }
 }

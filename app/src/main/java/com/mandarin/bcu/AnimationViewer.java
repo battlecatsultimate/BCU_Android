@@ -229,6 +229,18 @@ public class AnimationViewer extends AppCompatActivity {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mustDie(this);
+    }
+
+    public void mustDie(Object object) {
+        if(MainActivity.watcher != null) {
+            MainActivity.watcher.watch(object);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         StaticStore.filterReset();

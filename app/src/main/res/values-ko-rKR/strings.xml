@@ -535,4 +535,12 @@
     <string name="config_music">배경음악</string>
     <string name="config_se">효과음</string>
     <string name="config_sound">소리</string>
+    <string name="config_app_name">Battle Cats Ultimate</string>
+    <string name="config_build_ver">"빌드 버전 : - "</string>
+    <string name="dev_activate">활성화</string>
+    <string name="dev_pass_active">개발자 모드를 활성화하기 위해 비밀번호를 입력해주세요</string>
+    <string name="dev_pass_req">비밀번호 필요</string>
+    <string name="dev_password">비밀번호</string>
+    <string name="dev_pass_wrong">잘못된 비밀번호를 입력하셨습니다</string>
+    <string name="dev_pass_activated">개발자 모드 활성화됨</string>
 </resources>

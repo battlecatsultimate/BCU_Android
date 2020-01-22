@@ -178,4 +178,16 @@ public class EnemyList extends AppCompatActivity {
         StaticStore.filterReset();
         super.onBackPressed();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mustDie(this);
+    }
+
+    public void mustDie(Object object) {
+        if(MainActivity.watcher != null) {
+            MainActivity.watcher.watch(object);
+        }
+    }
 }

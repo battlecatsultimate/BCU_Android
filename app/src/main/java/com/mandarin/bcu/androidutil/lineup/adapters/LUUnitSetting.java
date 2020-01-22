@@ -212,8 +212,8 @@ public class LUUnitSetting extends Fragment {
                         atk.setText(s.getAtk(f, BasisSet.current.t(), lev + levp, f.getPCoin() != null && t.isChecked(), pcoin));
                     } else {
                         levs = new int[]{lev + levp, 0, 0, 0, 0, 0};
-                        hp.setText(s.getHP(f, BasisSet.current.t(), lev + levp, f.getPCoin() != null && t.isChecked(), zeros));
-                        atk.setText(s.getAtk(f, BasisSet.current.t(), lev + levp, f.getPCoin() != null && t.isChecked(), zeros));
+                        hp.setText(s.getHP(f, BasisSet.current.t(), lev + levp, (f != null && f.getPCoin() != null) && t.isChecked(), zeros));
+                        atk.setText(s.getAtk(f, BasisSet.current.t(), lev + levp, (f != null && f.getPCoin() != null) && t.isChecked(), zeros));
                     }
 
                     BasisSet.current.sele.lu.setLv(f.unit, levs);

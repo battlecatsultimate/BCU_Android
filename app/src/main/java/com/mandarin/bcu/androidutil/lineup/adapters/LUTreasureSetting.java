@@ -48,30 +48,13 @@ public class LUTreasureSetting extends Fragment {
     private boolean Initialized = false;
     private boolean destroyed = false;
 
-    private TextInputLayout tech;
-    private TextInputLayout[] techs = new TextInputLayout[6];
     private int[] techid = {R.id.cdlev, R.id.aclev, R.id.basehlev, R.id.worklev, R.id.walletlev, R.id.rechargelev};
-    private TextInputLayout canatk;
-    private TextInputLayout canrange;
-    private TextInputLayout eoc;
-    private TextInputLayout[] eocs = new TextInputLayout[6];
     private int[] eocid = {R.id.atktrea, R.id.healtrea, R.id.cdtrea, R.id.actrea, R.id.worktrea, R.id.wallettrea};
-    private TextInputLayout eocitf;
-    private TextInputLayout[] eocitfs = new TextInputLayout[3];
     private int[] eocitfid = {R.id.rechargetrea, R.id.canatktrea, R.id.basehtrea};
-    private TextInputLayout itf;
-    private TextInputLayout[] itfs = new TextInputLayout[4];
     private int[] itfid = {R.id.redfrtrea, R.id.floatfrtrea, R.id.blacktrea, R.id.angelfrtrea};
-    private TextInputLayout cotc;
-    private TextInputLayout[] cotcs = new TextInputLayout[3];
     private int[] cotcid = {R.id.metalfrtrea, R.id.zombiefrtrea, R.id.alienfrtrea};
-    private TextInputLayout itfcry;
-    private TextInputLayout cotccry;
-    private TextInputLayout[] masks = new TextInputLayout[3];
     private int[] maskid = {R.id.masktrea, R.id.mask2trea, R.id.mask3trea};
 
-    private TextInputLayout[] tils = {tech, canatk, canrange, eoc, eocitf, itf, cotc, itfcry, cotccry};
-    private TextInputLayout[][] tilss = {techs, eocs, eocitfs, itfs, cotcs, masks};
     private int[] limitvals = {30, 30, 10, 300, 600, 300, 300, 600, 1500};
     private int[] limitmins = {1, 1, 1, 0, 0, 0, 0, 0, 0};
     private int[] limitvalss = {30, 300, 600, 300, 300, 100};
@@ -79,40 +62,25 @@ public class LUTreasureSetting extends Fragment {
     private String[] helpers = {"1~30 lv", "1~30 lv", "1~10 lv", "0~300 %", "0~600 %", "0~300 %", "0~300 %", "0~600 %", "0~1500 %"};
     private String[] helperss = {"1~30 lv", "0~300 %", "0~600 %", "0~300 %", "0~300 %", "0~100 %"};
 
-    private TextInputEditText teche;
-    private TextInputEditText[] teches = new TextInputEditText[6];
     private int[] techeid = {R.id.cdlevt, R.id.aclevt, R.id.basehlevt, R.id.worklevt, R.id.walletlevt, R.id.rechargelevt};
-    private TextInputEditText canatke;
-    private TextInputEditText canrangee;
-    private TextInputEditText eoce;
-    private TextInputEditText[] eoces = new TextInputEditText[6];
     private int[] eoceid = {R.id.atktreat, R.id.healtreat, R.id.cdtreat, R.id.actreat, R.id.worktreat, R.id.wallettreat};
-    private TextInputEditText eocitfe;
-    private TextInputEditText[] eocitfes = new TextInputEditText[3];
     private int[] eocitfeid = {R.id.rechargetreat, R.id.canatktreat, R.id.basehtreat};
-    private TextInputEditText itfe;
-    private TextInputEditText[] itfes = new TextInputEditText[4];
     private int[] itfeid = {R.id.redfrtreat, R.id.floatfrtreat, R.id.blacktreat, R.id.angelfrtreat};
-    private TextInputEditText cotce;
-    private TextInputEditText[] cotces = new TextInputEditText[3];
     private int[] cotceid = {R.id.metalfrtreat, R.id.zombiefrtreat, R.id.alienfrtreat};
-    private TextInputEditText itfcrye;
-    private TextInputEditText cotccrye;
-    private TextInputEditText[] maskes = new TextInputEditText[3];
     private int[] maskeid = {R.id.masktreat, R.id.mask2treat, R.id.mask3treat};
 
-    private FloatingActionButton[] expands = new FloatingActionButton[5];
     private int[] expandid = {R.id.techexpand, R.id.eocexpand, R.id.eocitfexpand, R.id.itfexpand, R.id.cotcexpand};
 
-    private LinearLayout[] layouts = new LinearLayout[5];
     private int[] layoutid = {R.id.techlayout, R.id.eoclayout, R.id.eocitflayout, R.id.itffruitlayout, R.id.cotclayout};
 
     private int[][] states = new int[][]{
             new int[]{android.R.attr.state_enabled}
     };
 
+    private int [] tilid = {R.id.techlev, R.id.canatklev, R.id.canrangelev, R.id.eoctrea, R.id.eocitftrea, R.id.itffruittrea, R.id.cotctrea, R.id.itfcrytrea, R.id.cotccrytrea};
+    private int [][] tilsid = {techid,eocid,eocitfid,itfid,cotcid,maskid};
+
     private Handler handler = new Handler();
-    private Runnable runnable;
 
     private int[] color;
 
@@ -125,11 +93,59 @@ public class LUTreasureSetting extends Fragment {
                 getAttributeColor(Objects.requireNonNull(getContext()), R.attr.TextPrimary)
         };
 
-        Initialize(view);
+        Listeners(view);
 
-        Listeners();
+        TextInputEditText teche = view.findViewById(R.id.techlevt);
+        TextInputEditText canatke = view.findViewById(R.id.canatklevt);
+        TextInputEditText canrangee = view.findViewById(R.id.canrangelevt);
+        TextInputEditText eoce = view.findViewById(R.id.eoctreat);
+        TextInputEditText eocitfe = view.findViewById(R.id.eocitftreat);
 
-        runnable = new Runnable() {
+        TextInputEditText[] teches = new TextInputEditText[6];
+
+        for (int i = 0; i < teches.length; i++) {
+            teches[i] = view.findViewById(techeid[i]);
+        }
+
+        TextInputEditText[] eoces = new TextInputEditText[6];
+
+        for (int i = 0; i < eoces.length; i++) {
+            eoces[i] = view.findViewById(eoceid[i]);
+        }
+
+        TextInputEditText[] eocitfes = new TextInputEditText[3];
+
+        for (int i = 0; i < eocitfes.length; i++) {
+            eocitfes[i] = view.findViewById(eocitfeid[i]);
+        }
+
+        TextInputEditText itfe = view.findViewById(R.id.itffruittreat);
+
+        TextInputEditText[] itfes = new TextInputEditText[4];
+
+        for (int i = 0; i < itfes.length; i++) {
+            itfes[i] = view.findViewById(itfeid[i]);
+        }
+
+        TextInputEditText cotce = view.findViewById(R.id.cotctreat);
+
+        TextInputEditText[] cotces = new TextInputEditText[3];
+
+        for (int i = 0; i < cotces.length; i++) {
+            cotces[i] = view.findViewById(cotceid[i]);
+        }
+
+        TextInputEditText itfcrye = view.findViewById(R.id.itfcrytreat);
+
+        TextInputEditText cotccrye = view.findViewById(R.id.cotccrytreat);
+
+        TextInputEditText[] maskes = new TextInputEditText[3];
+
+        for (int i = 0; i < maskes.length; i++) {
+            maskes[i] = view.findViewById(maskeid[i]);
+        }
+
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (StaticStore.updateTreasure) {
@@ -198,68 +214,91 @@ public class LUTreasureSetting extends Fragment {
         return view;
     }
 
-    /**
-     * Initialize view components
-     **/
-    private void Initialize(View view) {
-        tech = view.findViewById(R.id.techlev);
-        canatk = view.findViewById(R.id.canatklev);
-        canrange = view.findViewById(R.id.canrangelev);
-        eoc = view.findViewById(R.id.eoctrea);
-        eocitf = view.findViewById(R.id.eocitftrea);
-        itf = view.findViewById(R.id.itffruittrea);
-        cotc = view.findViewById(R.id.cotctrea);
-        itfcry = view.findViewById(R.id.itfcrytrea);
-        cotccry = view.findViewById(R.id.cotccrytrea);
+    private void Listeners(View view) {
+        Treasure t = BasisSet.current.t();
 
-        teche = view.findViewById(R.id.techlevt);
-        canatke = view.findViewById(R.id.canatklevt);
-        canrangee = view.findViewById(R.id.canrangelevt);
-        eoce = view.findViewById(R.id.eoctreat);
-        eocitfe = view.findViewById(R.id.eocitftreat);
-        itfe = view.findViewById(R.id.itffruittreat);
-        cotce = view.findViewById(R.id.cotctreat);
-        itfcrye = view.findViewById(R.id.itfcrytreat);
-        cotccrye = view.findViewById(R.id.cotccrytreat);
+        TextInputLayout tech = view.findViewById(R.id.techlev);
+        TextInputEditText teche = view.findViewById(R.id.techlevt);
 
-        for (int i = 0; i < expands.length; i++) {
-            expands[i] = view.findViewById(expandid[i]);
-            layouts[i] = view.findViewById(layoutid[i]);
-        }
+        TextInputLayout[] techs = new TextInputLayout[6];
+        TextInputEditText[] teches = new TextInputEditText[6];
 
         for (int i = 0; i < techs.length; i++) {
             techs[i] = view.findViewById(techid[i]);
             teches[i] = view.findViewById(techeid[i]);
         }
 
+        TextInputLayout canatk = view.findViewById(R.id.canatklev);
+        TextInputEditText canatke = view.findViewById(R.id.canatklevt);
+
+        TextInputLayout canrange = view.findViewById(R.id.canrangelev);
+        TextInputEditText canrangee = view.findViewById(R.id.canrangelevt);
+
+        TextInputLayout eoc = view.findViewById(R.id.eoctrea);
+        TextInputEditText eoce = view.findViewById(R.id.eoctreat);
+
+        TextInputLayout eocitf = view.findViewById(R.id.eocitftrea);
+        TextInputEditText eocitfe = view.findViewById(R.id.eocitftreat);
+
+        TextInputLayout[] eocs = new TextInputLayout[6];
+        TextInputEditText[] eoces = new TextInputEditText[6];
+
         for (int i = 0; i < eocs.length; i++) {
             eocs[i] = view.findViewById(eocid[i]);
             eoces[i] = view.findViewById(eoceid[i]);
         }
+
+        TextInputLayout itf = view.findViewById(R.id.itffruittrea);
+        TextInputEditText itfe = view.findViewById(R.id.itffruittreat);
+
+        TextInputLayout[] eocitfs = new TextInputLayout[3];
+        TextInputEditText[] eocitfes = new TextInputEditText[3];
 
         for (int i = 0; i < eocitfs.length; i++) {
             eocitfs[i] = view.findViewById(eocitfid[i]);
             eocitfes[i] = view.findViewById(eocitfeid[i]);
         }
 
+        TextInputLayout[] itfs = new TextInputLayout[4];
+        TextInputEditText[] itfes = new TextInputEditText[4];
+
         for (int i = 0; i < itfs.length; i++) {
             itfs[i] = view.findViewById(itfid[i]);
             itfes[i] = view.findViewById(itfeid[i]);
         }
+
+        TextInputLayout cotc = view.findViewById(R.id.cotctrea);
+        TextInputEditText cotce = view.findViewById(R.id.cotctreat);
+
+        TextInputLayout[] cotcs = new TextInputLayout[3];
+        TextInputEditText[] cotces = new TextInputEditText[3];
 
         for (int i = 0; i < cotcs.length; i++) {
             cotcs[i] = view.findViewById(cotcid[i]);
             cotces[i] = view.findViewById(cotceid[i]);
         }
 
+        TextInputLayout itfcry = view.findViewById(R.id.itfcrytrea);
+        TextInputEditText itfcrye = view.findViewById(R.id.itfcrytreat);
+
+        TextInputLayout cotccry = view.findViewById(R.id.cotccrytrea);
+        TextInputEditText cotccrye = view.findViewById(R.id.cotccrytreat);
+
+        TextInputLayout[] masks = new TextInputLayout[3];
+        TextInputEditText[] maskes = new TextInputEditText[3];
+
         for (int i = 0; i < masks.length; i++) {
             masks[i] = view.findViewById(maskid[i]);
             maskes[i] = view.findViewById(maskeid[i]);
         }
-    }
 
-    private void Listeners() {
-        Treasure t = BasisSet.current.t();
+        FloatingActionButton[] expands = new FloatingActionButton[5];
+        LinearLayout[] layouts = new LinearLayout[5];
+
+        for (int i = 0; i < expands.length; i++) {
+            expands[i] = view.findViewById(expandid[i]);
+            layouts[i] = view.findViewById(layoutid[i]);
+        }
 
         //Listeners for expand image buttons
         for (int i = 0; i < expands.length; i++) {
@@ -328,9 +367,6 @@ public class LUTreasureSetting extends Fragment {
         SetListenerforTextInputLayout(tech, canatk, canrange, eoc, eocitf, itf, cotc, itfcry, cotccry);
         SetListenerforTextInputLayouts(techs, eocs, eocitfs, itfs, cotcs, masks);
 
-        tils = new TextInputLayout[]{tech, canatk, canrange, eoc, eocitf, itf, cotc, itfcry, cotccry};
-        tilss = new TextInputLayout[][]{techs, eocs, eocitfs, itfs, cotcs, masks};
-
         //Listeners for TextInputLayouts
 
         for (int i = 0; i < 6; i++) {
@@ -362,47 +398,22 @@ public class LUTreasureSetting extends Fragment {
 
 
         if (ValuesAllSame(0))
-            teche.post(new Runnable() {
-                @Override
-                public void run() {
-                    teche.setText(String.valueOf(t.tech[0]));
-                }
-            });
+            teche.setText(String.valueOf(t.tech[0]));
 
         if (ValuesAllSame(1))
-            eoce.post(new Runnable() {
-                @Override
-                public void run() {
-                    eoce.setText(String.valueOf(t.trea[0]));
-                }
-            });
+            eoce.setText(String.valueOf(t.trea[0]));
 
         if (ValuesAllSame(2))
-            eocitfe.post(new Runnable() {
-                @Override
-                public void run() {
-                    eocitfe.setText(String.valueOf(t.trea[6]));
-                }
-            });
+            eocitfe.setText(String.valueOf(t.trea[6]));
 
         if (ValuesAllSame(3))
-            itfe.post(new Runnable() {
-                @Override
-                public void run() {
-                    itfe.setText(String.valueOf(t.fruit[0]));
-                }
-            });
+            itfe.setText(String.valueOf(t.fruit[0]));
 
         if (ValuesAllSame(4))
-            cotce.post(new Runnable() {
-                @Override
-                public void run() {
-                    cotce.setText(String.valueOf(t.fruit[4]));
-                }
-            });
+            cotce.setText(String.valueOf(t.fruit[4]));
 
         SetListenerforTextInputEditText(teche, canatke, canrangee, eoce, eocitfe, itfe, cotce, itfcrye, cotccrye);
-        SetListenerforTextInptEditTexts(teches, eoces, eocitfes, itfes, cotces, maskes);
+        SetListenerforTextInptEditTexts(view, teches, eoces, eocitfes, itfes, cotces, maskes);
 
         Initialized = true;
     }
@@ -510,8 +521,38 @@ public class LUTreasureSetting extends Fragment {
         }
     }
 
-    private void SetListenerforTextInputEditText(TextInputEditText... texts) {
+    private void SetListenerforTextInputEditText(View view, TextInputEditText... texts) {
         if (getContext() == null) return;
+
+        TextInputEditText[] teches = new TextInputEditText[6];
+
+        for (int i = 0; i < teches.length; i++) {
+            teches[i] = view.findViewById(techeid[i]);
+        }
+
+        TextInputEditText[] eoces = new TextInputEditText[6];
+
+        for (int i = 0; i < eoces.length; i++) {
+            eoces[i] = view.findViewById(eoceid[i]);
+        }
+
+        TextInputEditText[] eocitfes = new TextInputEditText[3];
+
+        for (int i = 0; i < eocitfes.length; i++) {
+            eocitfes[i] = view.findViewById(eocitfeid[i]);
+        }
+
+        TextInputEditText[] itfes = new TextInputEditText[4];
+
+        for (int i = 0; i < itfes.length; i++) {
+            itfes[i] = view.findViewById(itfeid[i]);
+        }
+
+        TextInputEditText[] cotces = new TextInputEditText[3];
+
+        for (int i = 0; i < cotces.length; i++) {
+            cotces[i] = view.findViewById(cotceid[i]);
+        }
 
         for (int i = 0; i < texts.length; i++) {
             final int ii = i;
@@ -523,29 +564,32 @@ public class LUTreasureSetting extends Fragment {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    TextInputLayout tils = view.findViewById(tilid[ii]);
+
                     if (!s.toString().isEmpty()) {
+
                         if (Integer.parseInt(s.toString()) > limitvals[ii] || Integer.parseInt(s.toString()) < limitmins[ii]) {
-                            if (tils[ii].isHelperTextEnabled()) {
-                                tils[ii].setHelperTextEnabled(false);
-                                tils[ii].setErrorEnabled(true);
-                                tils[ii].setError(Objects.requireNonNull(getContext()).getText(R.string.treasure_invalid));
+                            if (tils.isHelperTextEnabled()) {
+                                tils.setHelperTextEnabled(false);
+                                tils.setErrorEnabled(true);
+                                tils.setError(Objects.requireNonNull(getContext()).getText(R.string.treasure_invalid));
                             }
                         } else {
-                            if (tils[ii].isErrorEnabled()) {
-                                tils[ii].setError(null);
-                                tils[ii].setErrorEnabled(false);
-                                tils[ii].setHelperTextEnabled(true);
-                                tils[ii].setHelperTextColor(new ColorStateList(states, color));
-                                tils[ii].setHelperText(helpers[ii]);
+                            if (tils.isErrorEnabled()) {
+                                tils.setError(null);
+                                tils.setErrorEnabled(false);
+                                tils.setHelperTextEnabled(true);
+                                tils.setHelperTextColor(new ColorStateList(states, color));
+                                tils.setHelperText(helpers[ii]);
                             }
                         }
                     } else {
-                        if (tils[ii].isErrorEnabled()) {
-                            tils[ii].setError(null);
-                            tils[ii].setErrorEnabled(false);
-                            tils[ii].setHelperTextEnabled(true);
-                            tils[ii].setHelperTextColor(new ColorStateList(states, color));
-                            tils[ii].setHelperText(helpers[ii]);
+                        if (tils.isErrorEnabled()) {
+                            tils.setError(null);
+                            tils.setErrorEnabled(false);
+                            tils.setHelperTextEnabled(true);
+                            tils.setHelperTextColor(new ColorStateList(states, color));
+                            tils.setHelperText(helpers[ii]);
                         }
                     }
                 }
@@ -676,8 +720,23 @@ public class LUTreasureSetting extends Fragment {
         }
     }
 
-    private void SetListenerforTextInptEditTexts(TextInputEditText[]... texts) {
+    private void SetListenerforTextInptEditTexts(View view, TextInputEditText[]... texts) {
         if (getContext() == null) return;
+
+        TextInputLayout tech = view.findViewById(R.id.techlev);
+        TextInputEditText teche = view.findViewById(R.id.techlevt);
+
+        TextInputLayout eoc = view.findViewById(R.id.eoctrea);
+        TextInputEditText eoce = view.findViewById(R.id.eoctreat);
+
+        TextInputLayout eocitf = view.findViewById(R.id.eocitftrea);
+        TextInputEditText eocitfe = view.findViewById(R.id.eocitftreat);
+
+        TextInputLayout itf = view.findViewById(R.id.itffruittrea);
+        TextInputEditText itfe = view.findViewById(R.id.itffruittreat);
+
+        TextInputLayout cotc = view.findViewById(R.id.cotctrea);
+        TextInputEditText cotce = view.findViewById(R.id.cotctreat);
 
         for (int i = 0; i < texts.length; i++) {
             for (int j = 0; j < texts[i].length; j++) {
@@ -695,29 +754,31 @@ public class LUTreasureSetting extends Fragment {
                         if (!Initialized)
                             return;
 
+                        TextInputLayout tilss = view.findViewById(tilsid[ii][jj]);
+
                         if (!s.toString().isEmpty()) {
                             if (Integer.parseInt(s.toString()) > limitvalss[ii] || Integer.parseInt(s.toString()) < limitminss[ii]) {
-                                if (tilss[ii][jj].isHelperTextEnabled()) {
-                                    tilss[ii][jj].setHelperTextEnabled(false);
-                                    tilss[ii][jj].setErrorEnabled(true);
-                                    tilss[ii][jj].setError(Objects.requireNonNull(getContext()).getText(R.string.treasure_invalid));
+                                if (tilss.isHelperTextEnabled()) {
+                                    tilss.setHelperTextEnabled(false);
+                                    tilss.setErrorEnabled(true);
+                                    tilss.setError(Objects.requireNonNull(getContext()).getText(R.string.treasure_invalid));
                                 }
                             } else {
-                                if (tilss[ii][jj].isErrorEnabled()) {
-                                    tilss[ii][jj].setError(null);
-                                    tilss[ii][jj].setErrorEnabled(false);
-                                    tilss[ii][jj].setHelperTextEnabled(true);
-                                    tilss[ii][jj].setHelperTextColor(new ColorStateList(states, color));
-                                    tilss[ii][jj].setHelperText(helperss[ii]);
+                                if (tilss.isErrorEnabled()) {
+                                    tilss.setError(null);
+                                    tilss.setErrorEnabled(false);
+                                    tilss.setHelperTextEnabled(true);
+                                    tilss.setHelperTextColor(new ColorStateList(states, color));
+                                    tilss.setHelperText(helperss[ii]);
                                 }
                             }
                         } else {
-                            if (tilss[ii][jj].isErrorEnabled()) {
-                                tilss[ii][jj].setError(null);
-                                tilss[ii][jj].setErrorEnabled(false);
-                                tilss[ii][jj].setHelperTextEnabled(true);
-                                tilss[ii][jj].setHelperTextColor(new ColorStateList(states, color));
-                                tilss[ii][jj].setHelperText(helperss[ii]);
+                            if (tilss.isErrorEnabled()) {
+                                tilss.setError(null);
+                                tilss.setErrorEnabled(false);
+                                tilss.setHelperTextEnabled(true);
+                                tilss.setHelperTextColor(new ColorStateList(states, color));
+                                tilss.setHelperText(helperss[ii]);
                             }
                         }
                     }
@@ -783,5 +844,11 @@ public class LUTreasureSetting extends Fragment {
                 });
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destroyed = true;
     }
 }

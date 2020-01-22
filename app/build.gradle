@@ -7,10 +7,10 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
-        versionName "0.11.5"
+        versionName "0.11.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "String","CLIENT","\""+getClient()+"\""
+        buildConfigField "String","YOU_CANT_FIND_PASSWORD","\""+getPassword()+"\""
     }
     buildTypes {
         release {
@@ -51,8 +51,8 @@ dependencies {
     implementation 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
 }
 
-def getClient() {
+def getPassword() {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty("googleclientid")
+    return properties.getProperty("password")
 }

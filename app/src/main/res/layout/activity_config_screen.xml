@@ -281,6 +281,7 @@
                     android:layout_weight="1"
                     android:text="@string/config_port"
                     android:textColor="?attr/TextPrimary" />
+
             </RadioGroup>
 
             <TextView
@@ -467,12 +468,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/configmusvol"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/configmusvol"
                 app:layout_constraintTop_toBottomOf="@+id/configse" />
+
+            <TextView
+                android:id="@+id/configappname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/config_app_name"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="@+id/configse"
+                app:layout_constraintTop_toBottomOf="@+id/configsevol" />
+
+            <TextView
+                android:id="@+id/configbuildver"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/config_build_ver"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/configappname"
+                app:layout_constraintTop_toBottomOf="@+id/configappname" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

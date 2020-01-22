@@ -117,4 +117,16 @@ public class BattlePrepare extends AppCompatActivity {
     private String getSetLUName() {
         return BasisSet.current.name + " - " + BasisSet.current.sele.name;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mustDie(this);
+    }
+
+    public void mustDie(Object object) {
+        if(MainActivity.watcher != null) {
+            MainActivity.watcher.watch(object);
+        }
+    }
 }

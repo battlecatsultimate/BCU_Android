@@ -169,4 +169,15 @@ public class UnitInfo extends AppCompatActivity {
         super.attachBaseContext(Revalidater.LangChange(newBase, shared.getInt("Language", 0)));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mustDie(this);
+    }
+
+    public void mustDie(Object object) {
+        if(MainActivity.watcher != null) {
+            MainActivity.watcher.watch(object);
+        }
+    }
 }

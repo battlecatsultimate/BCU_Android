@@ -534,4 +534,12 @@
     <string name="config_sound">Sound</string>
     <string name="config_music">Music</string>
     <string name="config_se">Sound Effect</string>
+    <string name="dev_pass_req">Password Required</string>
+    <string name="dev_pass_active">Enter password to activate developer mode</string>
+    <string name="dev_password">Password</string>
+    <string name="dev_activate">Activate</string>
+    <string name="config_app_name">Battle Cats Ultimate</string>
+    <string name="config_build_ver">Build Version : -</string>
+    <string name="dev_pass_wrong">You entered wrong password</string>
+    <string name="dev_pass_activated">Developer Mode Activated</string>
 </resources>
