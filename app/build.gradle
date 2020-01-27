@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
@@ -7,7 +9,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
-        versionName "0.11.6"
+        versionName "0.11.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String","YOU_CANT_FIND_PASSWORD","\""+getPassword()+"\""
@@ -19,8 +21,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
     }
     externalNativeBuild {
         cmake {
@@ -28,6 +30,10 @@ android {
             path file('src/main/jni/CMakeLists.txt')
         }
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
@@ -49,6 +55,11 @@ dependencies {
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
+    implementation "androidx.core:core-ktx:1.1.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
 
 def getPassword() {

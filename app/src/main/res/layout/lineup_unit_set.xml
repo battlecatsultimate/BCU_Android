@@ -24,38 +24,42 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Spinner
-                android:id="@+id/lineuplevspin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:backgroundTint="?attr/TextPrimary"
-                android:popupBackground="?attr/backgroundPrimary"
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 app:layout_constraintBottom_toBottomOf="@+id/lineupunitlevt"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/lineupunitlevt"
-                app:layout_constraintTop_toTopOf="@+id/lineupunitlevt" />
+                app:layout_constraintTop_toTopOf="@+id/lineupunitlevt">
 
-            <TextView
-                android:id="@+id/lineuplevplus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/unit_info_plus"
-                android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/lineuplevspin"
-                app:layout_constraintStart_toEndOf="@+id/lineuplevspin"
-                app:layout_constraintTop_toTopOf="@+id/lineuplevspin" />
+                <Spinner
+                    android:id="@+id/lineuplevspin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:popupBackground="?attr/backgroundPrimary" />
 
-            <Spinner
-                android:id="@+id/lineuplevpspin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:backgroundTint="?attr/TextPrimary"
-                android:popupBackground="?attr/backgroundPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/lineuplevspin"
-                app:layout_constraintStart_toEndOf="@+id/lineuplevplus"
-                app:layout_constraintTop_toTopOf="@+id/lineuplevspin" />
+                <TextView
+                    android:id="@+id/lineuplevplus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/unit_info_plus"
+                    android:textColor="?attr/TextPrimary" />
+
+                <Spinner
+                    android:id="@+id/lineuplevpspin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:popupBackground="?attr/backgroundPrimary" />
+            </TableRow>
 
             <Button
                 android:id="@+id/lineupchform"

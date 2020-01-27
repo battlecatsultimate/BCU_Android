@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -30,13 +29,16 @@
         android:largeHeap="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".BattlePrepare"
+            android:configChanges="locale"
             android:screenOrientation="locked"/>
         <activity
             android:name=".BattleSimulation"
             android:hardwareAccelerated="true"
+            android:configChanges="locale"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".BackgroundList"
+            android:configChanges="locale"
             android:screenOrientation="locked" />
         <activity
             android:name=".MedalList"
@@ -57,7 +59,7 @@
             android:screenOrientation="locked" />
         <activity
             android:name=".CheckUpdateScreen"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,6 +78,7 @@
             android:screenOrientation="locked" />
         <activity
             android:name=".ConfigScreen"
+            android:configChanges="locale"
             android:screenOrientation="locked" />
         <activity
             android:name=".ApkDownload"

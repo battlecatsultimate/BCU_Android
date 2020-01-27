@@ -3,6 +3,8 @@ package main;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.mandarin.bcu.androidutil.StaticStore;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +26,7 @@ public class MainBCU {
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
-			Toast.makeText(context,"Low Memory! Performance may be slow",Toast.LENGTH_SHORT).show();
+			StaticStore.showShortMessage(context,"Low Memory! Performance may be slow");
 			String mems = "Required Memory : "+(int)(Opts.MEMORY)+" Current memory : "+(int)(mem >> 20);
 			Toast.makeText(context,mems,Toast.LENGTH_SHORT).show();
 		}

@@ -1,9 +1,6 @@
 package com.mandarin.bcu.androidutil;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -46,9 +44,8 @@ public class StaticStore {
     /**
      * System/IO variables
      **/
-    public static String VER;
+    public static String VER = "0.11.7";
     public static String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
-    public static boolean UPLOAD = false;
     public static final String[] LIBREQ = {"000001", "000002", "000003", "080602", "080603", "080604", "080605", "080700", "080705", "080706", "080800", "080801", "080802",
             "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104"};
     public static final String[] OPTREQS = {"080504"};
@@ -70,6 +67,7 @@ public class StaticStore {
     public static boolean resread = false;
     public static boolean musicread = false;
     public static boolean dialogisShwed = false;
+    public static Toast toast = null;
 
     public static int root = 0;
 
@@ -315,16 +313,11 @@ public class StaticStore {
     /**
      * Gets resized Bitmap.
      *
-     * @param b
-     * Source Bitmap.
-     * @param context
-     * Used when converting dpi value to pixel value.
-     * @param w
-     * Width of generated Bitmap. Must be dpi value.
-     * @param h
-     * Height of generated Bitmap. Must be dpi value.
-     * @return
-     * Returns resized Bitmap using specified dpi value.
+     * @param b       Source Bitmap.
+     * @param context Used when converting dpi value to pixel value.
+     * @param w       Width of generated Bitmap. Must be dpi value.
+     * @param h       Height of generated Bitmap. Must be dpi value.
+     * @return Returns resized Bitmap using specified dpi value.
      */
     public static Bitmap getResizeb(Bitmap b, Context context, float w, float h) {
         if (b == null) return empty(context, w, h);
@@ -341,14 +334,10 @@ public class StaticStore {
     /**
      * Generates empty Bitmap.
      *
-     * @param context
-     * Used when converting dpi value to pixel value.
-     * @param w
-     * Width of generated Bitmap. Must be dpi value.
-     * @param h
-     * Height of generated Bitmap. Must be dpi value.
-     * @return
-     * Returns empty Bitmap using specified dpi value.
+     * @param context Used when converting dpi value to pixel value.
+     * @param w       Width of generated Bitmap. Must be dpi value.
+     * @param h       Height of generated Bitmap. Must be dpi value.
+     * @return Returns empty Bitmap using specified dpi value.
      */
     public static Bitmap empty(Context context, float w, float h) {
         Resources r = context.getResources();
@@ -361,30 +350,22 @@ public class StaticStore {
     /**
      * Generates empty Bitmap.
      *
-     * @param w
-     * Width of generated Bitmap. Must be pixel value.
-     * @param h
-     * Height of generated Bitmap. Must be pixel value.
-     * @return
-     * Returns empty Bitmap using specified pixel value.
+     * @param w Width of generated Bitmap. Must be pixel value.
+     * @param h Height of generated Bitmap. Must be pixel value.
+     * @return Returns empty Bitmap using specified pixel value.
      */
     public static Bitmap empty(int w, int h) {
-        return Bitmap.createBitmap(w,h, Bitmap.Config.ARGB_8888);
+        return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
     }
 
     /**
      * Gets resized bitmap using antialiasing.
      *
-     * @param b
-     * Source Bitmap.
-     * @param context
-     * Used when initializing BitmapDrawable.
-     * @param w
-     * Width of generated Bitmap. Must be pixel value.
-     * @param h
-     * Height of generated Bitmap. Must be pixel value.
-     * @return
-     * Returns resized bitmap using antialiasing.
+     * @param b       Source Bitmap.
+     * @param context Used when initializing BitmapDrawable.
+     * @param w       Width of generated Bitmap. Must be pixel value.
+     * @param h       Height of generated Bitmap. Must be pixel value.
+     * @return Returns resized bitmap using antialiasing.
      */
     public static Bitmap getResizebp(Bitmap b, Context context, float w, float h) {
         BitmapDrawable bd = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(b, (int) w, (int) h, true));
@@ -396,14 +377,10 @@ public class StaticStore {
     /**
      * Gets resized bitmap.
      *
-     * @param b
-     * Source Bitmap.
-     * @param w
-     * Width of generated Bitmap. Must be pixel value.
-     * @param h
-     * Height of generated Bitmap. Must be pixel value.
-     * @return
-     * Returns resized bitmap using specified width and height.
+     * @param b Source Bitmap.
+     * @param w Width of generated Bitmap. Must be pixel value.
+     * @param h Height of generated Bitmap. Must be pixel value.
+     * @return Returns resized bitmap using specified width and height.
      */
     public static Bitmap getResizebp(Bitmap b, float w, float h) {
         Matrix matrix = new Matrix();
@@ -468,9 +445,8 @@ public class StaticStore {
     /**
      * Decides CommonStatic.lang value.
      *
-     * @param lan
-     * Code of language refers to StaticStore.lang.
-     * 0 is Auto.
+     * @param lan Code of language refers to StaticStore.lang.
+     *            0 is Auto.
      */
     public static void getLang(int lan) {
         String language;
@@ -510,10 +486,8 @@ public class StaticStore {
     /**
      * Gets possible position in specific lineup.
      *
-     * @param f
-     * Arrays of forms in Lineup.
-     * @return
-     * Returns first empty position in Lineup.
+     * @param f Arrays of forms in Lineup.
+     * @return Returns first empty position in Lineup.
      * If Lineup is full, it will return position of replacing area.
      */
     public static int[] getPossiblePosition(Form[][] f) {
@@ -530,12 +504,9 @@ public class StaticStore {
     /**
      * Get Color value using Attr ID.
      *
-     * @param context
-     * Decides TypedValue using Theme from Context.
-     * @param attributeId
-     * ID of color from Attr. Format must be color.
-     * @return
-     * Gets real ID of color considering Theme.
+     * @param context     Decides TypedValue using Theme from Context.
+     * @param attributeId ID of color from Attr. Format must be color.
+     * @return Gets real ID of color considering Theme.
      * It will return Color value as Hex.
      */
     public static int getAttributeColor(Context context, int attributeId) {
@@ -556,12 +527,9 @@ public class StaticStore {
      * Generate Bitmap from Vector Asset.
      * Icon's tint color is ?attr/TextPrimary.
      *
-     * @param context
-     * Get drawable and set tint color to it.
-     * @param vectid
-     * Id from Vector Asset. Use "R.drawable._ID_".
-     * @return
-     * Returns created Bitmap using Vector Asset.
+     * @param context Get drawable and set tint color to it.
+     * @param vectid  Id from Vector Asset. Use "R.drawable._ID_".
+     * @return Returns created Bitmap using Vector Asset.
      * If vectid returns null, then it will generate empty icon.
      */
     public static Bitmap getBitmapFromVector(Context context, int vectid) {
@@ -581,25 +549,19 @@ public class StaticStore {
     }
 
     /**
-     *
      * Check if specified icon has different width and height.
      * If they are different, it will generate icon which has same width and height.
      * Width and Height's default value is 128 pixels.
      *
-     * @param context
-     * Using Context to convert dpi value to pixel value.
-     * @param b
-     * Source Bitmap.
-     * @param wh
-     * This parameter decides width and height of created icon.
-     * It must be dpi value.
-     *
-     * @return
-     * If source has same width and height, it will return source.
+     * @param context Using Context to convert dpi value to pixel value.
+     * @param b       Source Bitmap.
+     * @param wh      This parameter decides width and height of created icon.
+     *                It must be dpi value.
+     * @return If source has same width and height, it will return source.
      * If not, it will return icon which has same width and height.
      */
     public static Bitmap MakeIcon(Context context, Bitmap b, float wh) {
-        if(b == null) return empty(context,24f,24f);
+        if (b == null) return empty(context, 24f, 24f);
 
         if (b.getHeight() == b.getWidth()) return getResizeb(b, context, wh);
 
@@ -613,25 +575,20 @@ public class StaticStore {
     }
 
     /**
-     *
      * Check if specified icon has different width and height.
      * If they are different, it will generate icon which has same width and height.
      * Width and Height's default value is 128 pixels.
      *
-     * @param b
-     * Source Bitmap.
-     * @param wh
-     * This parameter decides width and height of created icon.
-     * It must be pixel value.
-     *
-     * @return
-     * If source has same width and height, it will return source.
+     * @param b  Source Bitmap.
+     * @param wh This parameter decides width and height of created icon.
+     *           It must be pixel value.
+     * @return If source has same width and height, it will return source.
      * If not, it will return icon which has same width and height.
      */
     public static Bitmap MakeIconp(Bitmap b, float wh) {
-        if(b == null) return empty(128, 128);
+        if (b == null) return empty(128, 128);
 
-        if (b.getHeight() == b.getWidth()) return getResizebp(b, wh,wh);
+        if (b.getHeight() == b.getWidth()) return getResizebp(b, wh, wh);
 
         Bitmap before = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(before);
@@ -639,7 +596,7 @@ public class StaticStore {
 
         c.drawBitmap(b, 64 - (b.getWidth() / 2f), 64 - (b.getHeight() / 2f), p);
 
-        if(wh == 128) return before;
+        if (wh == 128) return before;
 
         return getResizebp(before, wh, wh);
     }
@@ -675,12 +632,10 @@ public class StaticStore {
     }
 
     /**
-     *
      * Get RGB value from specified HEX color value.
-     * @param hex
-     * Color HEX value which will be converted to RGB values.
-     * @return
-     * Return as three integer array, first is R, second is G, and third is B.
+     *
+     * @param hex Color HEX value which will be converted to RGB values.
+     * @return Return as three integer array, first is R, second is G, and third is B.
      */
     public static int[] getRGB(final int hex) {
         int r = (hex & 0xFF0000) >> 16;
@@ -690,35 +645,39 @@ public class StaticStore {
     }
 
     /**
-     *
-     * Set StaticStore.VER using PackageInfo from offered Activity.
-     * @param activity
-     * This parameter is required to get version name from PackageInfo.
-     * @throws PackageManager.NameNotFoundException
-     * If PackageInfo doesn't contain specified key.
-     *
-     */
-    public static void getVER(Activity activity) throws PackageManager.NameNotFoundException {
-        PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-
-        VER = packageInfo.versionName;
-    }
-
-    /**
-     *
      * Get scaled volume value considering log calculation.
      *
-     * @param vol
-     * This parameter must be 0 ~ 99.
-     * If vol is lower than 0, then it will consider as 0.
-     * If vol is larger than 99, then it will consider as 99.
-     * @return
-     * Volume is scaled as logarithmically, it will return calculated value.
+     * @param vol This parameter must be 0 ~ 99.
+     *            If vol is lower than 0, then it will consider as 0.
+     *            If vol is larger than 99, then it will consider as 99.
+     * @return Volume is scaled as logarithmically, it will return calculated value.
      */
     public static float getVolumScaler(int vol) {
-        if(vol < 0) vol = 0;
-        if(vol >= 100) vol = 99;
+        if (vol < 0) vol = 0;
+        if (vol >= 100) vol = 99;
 
-        return (float)(1-(Math.log(100-vol)/Math.log(100)));
+        return (float) (1 - (Math.log(100 - vol) / Math.log(100)));
+    }
+
+    public static void showShortMessage(Context context, String msg) {
+        if (toast == null) {
+            toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
+        }
+    }
+
+    public static void showShortMessage(Context context, int resid) {
+        String msg = context.getString(resid);
+
+        if (toast == null) {
+            toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            toast.setText(msg);
+            toast.show();
+        }
     }
 }
