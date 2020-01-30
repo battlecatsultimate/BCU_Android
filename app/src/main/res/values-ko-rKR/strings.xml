@@ -543,4 +543,6 @@
     <string name="dev_password">비밀번호</string>
     <string name="dev_pass_wrong">잘못된 비밀번호를 입력하셨습니다</string>
     <string name="dev_pass_activated">개발자 모드 활성화됨</string>
+    <string name="main_music">음악 리스트</string>
+    <string name="music_read">음악 데이터 읽는중…</string>
 </resources>

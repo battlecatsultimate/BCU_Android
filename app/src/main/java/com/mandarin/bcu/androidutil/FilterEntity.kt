@@ -97,6 +97,7 @@ class FilterEntity {
                 result.add(i)
             }
         }
+
         return result
     }
 

@@ -149,6 +149,11 @@ public class StaticStore {
     public static MultiLangCont<Integer, String> MEDEXP = new MultiLangCont<>();
 
     /**
+     * Variables for Music
+     */
+    public static List<String> musicnames = new ArrayList<>();
+
+    /**
      * Variables for Animation
      **/
     public static boolean play = true;
@@ -237,6 +242,8 @@ public class StaticStore {
         medals = null;
         MEDNAME.clear();
         MEDEXP.clear();
+
+        musicnames.clear();
 
         map = null;
         mapnames = null;

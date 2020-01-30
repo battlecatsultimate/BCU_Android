@@ -543,4 +543,6 @@
     <string name="dev_password">Password</string>
     <string name="dev_pass_wrong">You entered wrong password</string>
     <string name="dev_pass_activated">Developer Mode Activated</string>
+    <string name="music_read">Reading Music Data…</string>
+    <string name="main_music">Music</string>
 </resources>

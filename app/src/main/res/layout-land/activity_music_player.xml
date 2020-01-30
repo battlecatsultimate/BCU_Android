@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundPrimary"
+    tools:context=".MusicPlayer">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/musictool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/musicbck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="?attr/colorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/musictool"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_button" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/musicclose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="?attr/colorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/musictool"
+        app:layout_constraintEnd_toEndOf="@+id/musictool"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/musicmenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="?attr/colorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/musictool"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_menu_black_24dp" />
+
+    <LinearLayout
+        android:id="@+id/listlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/backgroundPrimary"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/TableBorder" />
+
+        <ListView
+            android:id="@+id/musiclist"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/musictool">
+
+        <ImageView
+            android:id="@+id/musicalbum"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:tint="?attr/HintPrimary"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_cd" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/musicplayerlayout"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/musicmute"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@null"
+                android:tint="?attr/HintPrimary"
+                android:tintMode="src_in"
+                app:layout_constraintBottom_toBottomOf="@+id/musicloop"
+                app:layout_constraintStart_toEndOf="@+id/musicloop"
+                app:layout_constraintTop_toTopOf="@+id/musicloop"
+                app:srcCompat="@drawable/ic_volume_mute_black_24dp" />
+
+            <ImageView
+                android:id="@+id/musicvol"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@null"
+                android:tint="?attr/HintPrimary"
+                android:tintMode="src_in"
+                app:layout_constraintBottom_toBottomOf="@+id/musicshuff"
+                app:layout_constraintEnd_toStartOf="@+id/musicshuff"
+                app:layout_constraintTop_toTopOf="@+id/musicshuff"
+                app:srcCompat="@drawable/ic_volume_up_black_24dp" />
+
+            <TextView
+                android:id="@+id/musiccurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/musicprogress"
+                app:layout_constraintStart_toStartOf="@+id/constraintLayout3" />
+
+            <TextView
+                android:id="@+id/musicmaxdu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/musicprogress"
+                app:layout_constraintEnd_toEndOf="@+id/constraintLayout3" />
+
+            <TextView
+                android:id="@+id/musicname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/musiccurrent"
+                app:layout_constraintStart_toStartOf="@+id/constraintLayout3" />
+
+            <SeekBar
+                android:id="@+id/musicprogress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:thumb="@android:color/transparent"
+                app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/musicloop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="?attr/backgroundPrimary"
+                android:clickable="true"
+                android:focusable="true"
+                android:tint="?attr/HintPrimary"
+                android:tintMode="src_in"
+                app:backgroundTint="?attr/backgroundPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/ic_loop_black_24dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/musicshuff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="?attr/backgroundPrimary"
+                android:clickable="true"
+                android:focusable="true"
+                android:tint="?attr/HintPrimary"
+                android:tintMode="src_in"
+                app:backgroundTint="?attr/backgroundPrimary"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_trending_flat_black_24dp" />
+
+            <SeekBar
+                android:id="@+id/musicsound"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/musicshuff"
+                app:layout_constraintEnd_toStartOf="@+id/musicvol"
+                app:layout_constraintStart_toEndOf="@+id/musicmute"
+                app:layout_constraintTop_toTopOf="@+id/musicshuff" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/musicsound"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/musicprev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="?attr/backgroundPrimary"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="?attr/TextPrimary"
+                    app:backgroundTint="?attr/backgroundPrimary"
+                    app:borderWidth="0dp"
+                    app:elevation="0dp"
+                    app:fabSize="mini"
+                    app:layout_constraintBottom_toBottomOf="@+id/musicplay"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/musicplay"
+                    app:srcCompat="@drawable/ic_skip_previous_black_24dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/musicplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="?attr/colorAccent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="@color/TextPrimaryN"
+                    app:backgroundTint="?attr/colorAccent"
+                    app:borderWidth="0dp"
+                    app:elevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_pause_black_24dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/musicnext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="?attr/backgroundPrimary"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:backgroundTint="?attr/backgroundPrimary"
+                    app:borderWidth="0dp"
+                    app:elevation="0dp"
+                    app:fabSize="mini"
+                    app:layout_constraintBottom_toBottomOf="@+id/musicplay"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/musicplay"
+                    app:layout_constraintTop_toTopOf="@+id/musicplay"
+                    app:srcCompat="@drawable/ic_skip_next_black_24dp"
+                    app:tint="?attr/TextPrimary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

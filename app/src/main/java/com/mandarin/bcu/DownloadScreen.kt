@@ -27,7 +27,6 @@ open class DownloadScreen : AppCompatActivity() {
     private var path: String? = null
     private var fileneed: ArrayList<String>? = null
     private var musics: ArrayList<String>? = null
-    private var retry: Button? = null
     private var downloading: String? = null
     private var extracting: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,9 +67,11 @@ open class DownloadScreen : AppCompatActivity() {
     }
 
     private fun listeners() {
-        retry!!.setOnClickListener(object : SingleClick() {
+        val retry: Button = findViewById(R.id.retry)
+
+        retry.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                retry!!.visibility = View.GONE
+                retry.visibility = View.GONE
                 Downloader(path ?: Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/", fileneed ?: ArrayList(), musics ?: ArrayList(), downloading ?: "Downloading Files : ", extracting ?: "Extracting Files : ", this@DownloadScreen).execute()
             }
         })

@@ -46,8 +46,10 @@ class ImageViewer : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -60,8 +62,16 @@ class ImageViewer : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        if (shared.getInt("Orientation", 0) == 1)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        else if (shared.getInt("Orientation", 0) == 2)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+        else if (shared.getInt("Orientation", 0) == 0)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
         setContentView(R.layout.activity_image_viewer)
+
         val result = intent
         val extra = result.extras
         if (extra != null) {

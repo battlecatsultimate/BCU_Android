@@ -9,10 +9,11 @@ abstract class SingleClick : View.OnClickListener {
     override fun onClick(v: View) {
         val currentTime = SystemClock.uptimeMillis()
         val elapsed = currentTime - mLastClickTime
-        mLastClickTime = currentTime
         if (elapsed <= INTERVAL) {
             return
         }
+
+        mLastClickTime = currentTime
         onSingleClick(v)
     }
 

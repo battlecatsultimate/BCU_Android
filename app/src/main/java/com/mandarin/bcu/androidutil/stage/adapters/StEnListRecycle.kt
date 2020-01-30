@@ -85,7 +85,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.moreinfo.layoutParams = layout
             viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp))
         }
-        viewHolder.icon.setImageBitmap(StaticStore.MakeIcon(activity, StaticStore.enemies[data[viewHolder.adapterPosition]!![SCDef.E]].anim.edi.img.bimg() as Bitmap, 48f))
+        viewHolder.icon.setImageBitmap(StaticStore.getResizeb(StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0].anim.edi.img.bimg() as Bitmap,activity, 85f, 32f))
         viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition]!!)
         viewHolder.info.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {

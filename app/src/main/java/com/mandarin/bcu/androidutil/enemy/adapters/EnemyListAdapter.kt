@@ -35,7 +35,11 @@ class EnemyListAdapter(activity: Activity, private val name: Array<String>, priv
         }
 
         holder.title.text = name[position]
-        if (StaticStore.enemies[location[position]].anim.edi.img != null) holder.img.setImageBitmap(StaticStore.getResizeb(StaticStore.enemies[location[position]].anim.edi.img.bimg() as Bitmap, context, 85f, 32f)) else holder.img.setImageBitmap(StaticStore.empty(context, 85f, 32f))
+        if (StaticStore.enemies[location[position]].anim.edi.img != null)
+            holder.img.setImageBitmap(StaticStore.getResizeb(StaticStore.enemies[location[position]].anim.edi.img.bimg() as Bitmap, context, 85f, 32f))
+        else
+            holder.img.setImageBitmap(StaticStore.empty(context, 85f, 32f))
+
         holder.img.setPadding(StaticStore.dptopx(8f, context), StaticStore.dptopx(12f, context), 0, StaticStore.dptopx(12f, context))
         return row
     }

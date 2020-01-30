@@ -17,7 +17,6 @@ class UnitListAdapter(context: Activity, private val name: Array<String>, privat
     private class ViewHolder constructor(row: View) {
         var title: TextView = row.findViewById(R.id.unitname)
         var image: ImageView = row.findViewById(R.id.uniticon)
-
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -25,7 +24,7 @@ class UnitListAdapter(context: Activity, private val name: Array<String>, privat
         val row: View
 
         if(view == null) {
-            val inf = LayoutInflater.from(context);
+            val inf = LayoutInflater.from(context)
             row = inf.inflate(R.layout.listlayout,parent,false)
             holder = ViewHolder(row)
             row.tag = holder
@@ -33,6 +32,9 @@ class UnitListAdapter(context: Activity, private val name: Array<String>, privat
             row = view
             holder = row.tag as ViewHolder
         }
+
+        if(name.isEmpty() or locate.isEmpty()) return row
+
         holder.title.text = name[position]
         holder.image.setImageBitmap(StaticStore.MakeIcon(context, StaticStore.units[locate[position]].forms[0].anim.uni.img.bimg() as Bitmap, 48f))
 

@@ -457,7 +457,7 @@
     <string name="lineup_combo">Cat Combo</string>
     <string name="combo_use">Use</string>
     <string name="combo_rep">Replace</string>
-    <string name="lineup_file_err">Error occured while reading data. Resetting basis data…</string>
+    <string name="lineup_file_err">Error occurred while reading data. Resetting basis data…</string>
     <string name="combo_bsh">Base Health</string>
     <string name="combo_using">Using</string>
     <string name="lineup_set_copied">Set Copied</string>
@@ -542,4 +542,6 @@
     <string name="config_build_ver">Build Version : -</string>
     <string name="dev_pass_wrong">You entered wrong password</string>
     <string name="dev_pass_activated">Developer Mode Activated</string>
+    <string name="main_music">Music</string>
+    <string name="music_read">Reading Music Data…</string>
 </resources>

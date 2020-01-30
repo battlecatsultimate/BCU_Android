@@ -3,6 +3,7 @@ package com.mandarin.bcu
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.AsyncTask
@@ -177,6 +178,8 @@ class MainActivity : AppCompatActivity() {
         val medalbtn = findViewById<Button>(R.id.medalbtn)
         val bgbtn = findViewById<Button>(R.id.bgbtn)
         val config = findViewById<FloatingActionButton>(R.id.mainconfig)
+        val musbtn = findViewById<Button>(R.id.mubtn)
+
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_kasa_jizo), null, null, null)
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_castle), null, null, null)
         emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_enemy), null, null, null)
@@ -185,6 +188,8 @@ class MainActivity : AppCompatActivity() {
         medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_medal), null, null, null)
         bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_bg), null, null, null)
         bgbtn.compoundDrawablePadding = StaticStore.dptopx(16f, this)
+        musbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_music), null, null, null)
+
         animbtn.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 animationview()
@@ -223,6 +228,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
+
+        musbtn.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@MainActivity, MusicList::class.java)
+                startActivity(intent)
+            }
+
+        })
     }
 
     private fun animationview() {
@@ -256,18 +269,15 @@ class MainActivity : AppCompatActivity() {
         val shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val lang = shared?.getInt("Language",0) ?: 0
 
-        println("Lang : $lang")
-
-        val loc = LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0)
-
+        val config = Configuration()
         var language = StaticStore.lang[lang]
 
-        if (language == "")
+        if(language == "")
             language = Resources.getSystem().configuration.locales.get(0).toString()
 
-        loc.resources.configuration.setLocale(Locale(language))
-
-        super.attachBaseContext(loc)
+        config.setLocale(Locale(language))
+        applyOverrideConfiguration(config)
+        super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     override fun onBackPressed() {

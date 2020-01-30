@@ -75,6 +75,18 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp" />
+
+                    <Button
+                        android:id="@+id/mubtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="10dp"
+                        android:text="@string/main_music"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp" />
                 </TableRow>
 
                 <TableRow

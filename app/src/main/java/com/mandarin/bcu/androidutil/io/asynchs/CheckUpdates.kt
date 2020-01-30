@@ -71,15 +71,14 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
         val activity = weakReference.get() ?: return null
         var output: File
         try {
-            if (!config) {
-                val assetlink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json"
-                val asseturl = URL(assetlink)
-                val `is` = asseturl.openStream()
-                val isr = InputStreamReader(`is`, StandardCharsets.UTF_8)
-                val result = readAll(BufferedReader(isr))
-                ans = JSONObject(result)
-                `is`.close()
-            }
+            val assetlink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json"
+            val asseturl = URL(assetlink)
+            val `is` = asseturl.openStream()
+            val isr = InputStreamReader(`is`, StandardCharsets.UTF_8)
+            val result = readAll(BufferedReader(isr))
+            ans = JSONObject(result)
+            `is`.close()
+
             val difffile = "Difficulty.txt"
             val diff = File("$source/", difffile)
             if (!diff.exists()) lang = true

@@ -95,7 +95,7 @@ class Adder(context: Activity) : AsyncTask<Void?, Int?, Void?>() {
                         for (i in numbers) {
                             names1.add(StaticStore.names[i])
                         }
-                        val adap1 = UnitListAdapter(activity, names.toTypedArray(), numbers)
+                        val adap1 = UnitListAdapter(activity, names1.toTypedArray(), numbers)
                         list.adapter = adap1
                     }
                 })

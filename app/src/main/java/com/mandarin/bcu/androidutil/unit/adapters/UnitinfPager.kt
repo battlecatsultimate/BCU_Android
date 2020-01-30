@@ -654,7 +654,7 @@ class UnitinfPager : Fragment() {
         }
         for (i in pcoins.indices) {
             pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, views: View, position: Int, id: Long) {
                     pcoinlev[+1] = pcoins[i]!!.selectedItem as Int
                     validate(view, f, t)
                 }

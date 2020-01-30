@@ -180,7 +180,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_fast_rewind_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_trending_flat_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -190,9 +190,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
-                            <entry key="outputName" value="ic_fast_rewind_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\bg.svg" />
+                            <entry key="outputName" value="ic_cd" />
+                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\cd.svg" />
                           </map>
                         </option>
                       </PersistentState>

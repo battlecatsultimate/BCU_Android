@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -25,7 +26,7 @@ import common.CommonStatic
 import java.util.*
 
 open class ConfigScreen : AppCompatActivity() {
-    private val LangId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja)
+    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja)
     private val locales = StaticStore.lang
     private var started = false
     private var changed = false
@@ -54,8 +55,6 @@ open class ConfigScreen : AppCompatActivity() {
 
         setContentView(R.layout.activity_config_screen)
 
-        println("CONFIG : "+resources.configuration.locales.get(0).language)
-
         val back = findViewById<ImageButton>(R.id.configback)
         back.setOnClickListener {
             val intent = Intent(this@ConfigScreen, MainActivity::class.java)
@@ -78,16 +77,18 @@ open class ConfigScreen : AppCompatActivity() {
         }
         val theme = findViewById<RadioGroup>(R.id.configrgtheme)
         theme.setOnCheckedChangeListener { _, checkedId ->
-            if (checkedId == day.id) {
-                val ed1 = shared.edit()
-                ed1.putBoolean("theme", true)
-                ed1.apply()
-                restart()
-            } else {
-                val ed1 = shared.edit()
-                ed1.putBoolean("theme", false)
-                ed1.apply()
-                restart()
+            if(started) {
+                if (checkedId == day.id) {
+                    val ed1 = shared.edit()
+                    ed1.putBoolean("theme", true)
+                    ed1.apply()
+                    restart()
+                } else {
+                    val ed1 = shared.edit()
+                    ed1.putBoolean("theme", false)
+                    ed1.apply()
+                    restart()
+                }
             }
         }
         val frse = findViewById<RadioGroup>(R.id.configfrse)
@@ -109,7 +110,7 @@ open class ConfigScreen : AppCompatActivity() {
         deflev.adapter = arrayAdapter
         deflev.setSelection(getIndex(deflev, shared.getInt("default_level", 50)))
         deflev.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val ed1 = shared.edit()
                 ed1.putInt("default_level", deflev.selectedItem as Int)
                 ed1.apply()
@@ -146,14 +147,14 @@ open class ConfigScreen : AppCompatActivity() {
         }
         val language = findViewById<Spinner>(R.id.configlangsp)
         val lang: MutableList<String> = ArrayList()
-        for (i1 in LangId) {
+        for (i1 in langId) {
             lang.add(getString(i1))
         }
         val adapter = ArrayAdapter(this, R.layout.spinneradapter, lang)
         language.adapter = adapter
         language.setSelection(shared.getInt("Language", 0))
         language.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (started) {
                     changed = true
                     val ed1 = shared.edit()
@@ -166,7 +167,6 @@ open class ConfigScreen : AppCompatActivity() {
                     }
                     restart()
                 }
-                started = true
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -337,6 +337,10 @@ open class ConfigScreen : AppCompatActivity() {
             }
             false
         })
+
+        Handler().postDelayed({
+            started = true
+        }, 100)
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {
@@ -346,6 +350,8 @@ open class ConfigScreen : AppCompatActivity() {
     }
 
     private fun restart() {
+        if(!started) return
+
         val intent = Intent(this@ConfigScreen, ConfigScreen::class.java)
         startActivity(intent)
         finish()

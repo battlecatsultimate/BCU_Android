@@ -23,7 +23,7 @@ class SoundPlayer : MediaPlayer() {
     /**
      * State which tells if SoundPlayer is prepared.
      */
-    private var isPrepared = false
+    var isPrepared = false
 
     /**
      * State which tells if SoundPlayer is released
@@ -41,6 +41,8 @@ class SoundPlayer : MediaPlayer() {
     }
 
     override fun isPlaying(): Boolean {
+        if(!safeCheck()) return false
+
         if(isReleased) return false
 
         return super.isPlaying()
@@ -53,7 +55,17 @@ class SoundPlayer : MediaPlayer() {
 
     @Throws(IOException::class)
     override fun setDataSource(path: String) {
+        if(isReleased) {
+            Log.e("SoundPlayerIllegal", "This SoundPlayer is already released")
+        }
+
+        if(isInitialized || isPrepared) {
+            Log.e("SoundPlayerIllegal","This SoundPlayer is already initialized, need to be reset")
+            return
+        }
+
         super.setDataSource(path)
+        isPrepared = false
         isInitialized = true
     }
 
@@ -68,6 +80,8 @@ class SoundPlayer : MediaPlayer() {
      * Improved start() method by checking SoundPlayer is prepared.
      */
     override fun start() {
+        if(!safeCheck()) return
+
         if (!isInitialized) {
             isRunning = false
             if (isPlaying) {
@@ -86,7 +100,8 @@ class SoundPlayer : MediaPlayer() {
                         mp!!.start()
                     }
                 })
-            } catch (ignored: IllegalStateException) {
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
                 Log.e("SoundPlayerIllegal", "Something went wrong while calling SoundPlayer line 47")
             }
         } else {
@@ -96,6 +111,8 @@ class SoundPlayer : MediaPlayer() {
     }
 
     fun start(se: Boolean) {
+        if(!safeCheck()) return
+
         if (se) {
             setVolume(SoundHandler.se_vol, SoundHandler.se_vol)
             start()
@@ -105,17 +122,30 @@ class SoundPlayer : MediaPlayer() {
     }
 
     override fun stop() {
+        if(!safeCheck()) return
+
         super.start()
         isRunning = false
     }
 
     override fun pause() {
+        if(!safeCheck()) return
+
         super.pause()
         isRunning = false
     }
 
-    fun setPrepared(prepare: Boolean) {
-        isPrepared = prepare
-    }
+    private fun safeCheck() : Boolean {
+        if(isReleased) {
+            Log.e("SoundPlayerIllegal","This SoundPlaeyer is already released")
+            return false
+        }
 
+        if(!isInitialized) {
+            Log.e("SoundPlayerIlegal","This SoundPlayer isn't initialized yet")
+            return false
+        }
+
+        return true
+    }
 }
