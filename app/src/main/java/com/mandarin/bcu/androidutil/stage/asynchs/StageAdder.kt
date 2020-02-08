@@ -45,46 +45,6 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
         when (results[0]) {
             0 -> {
                 st.setText(R.string.stg_info_loadbg)
-                st.setText(R.string.stg_info_loadfilt)
-                val title = activity.findViewById<TextView>(R.id.stginfoname)
-                val mc = MapColc.MAPS[mapcode] ?: return
-                if (stid >= mc.maps.size || stid < 0) return
-                val stm = mc.maps[stid] ?: return
-                if (posit >= stm.list.size || posit < 0) return
-                val stage = stm.list[posit]
-                val battle = activity.findViewById<Button>(R.id.battlebtn)
-                val stgrec: RecyclerView = activity.findViewById(R.id.stginforec)
-                stgrec.layoutManager = LinearLayoutManager(activity)
-                ViewCompat.setNestedScrollingEnabled(stgrec, false)
-                val stageRecycle = StageRecycle(activity, mapcode, stid, posit)
-                stgrec.adapter = stageRecycle
-                battle.setOnClickListener(object : SingleClick() {
-                    override fun onSingleClick(v: View?) {
-                        val intent = Intent(activity, BattlePrepare::class.java)
-                        intent.putExtra("mapcode", mapcode)
-                        intent.putExtra("stid", stid)
-                        intent.putExtra("stage", posit)
-                        val manager = stgrec.layoutManager
-                        if (manager != null) {
-                            val row = manager.findViewByPosition(0)
-                            if (row != null) {
-                                val star = row.findViewById<Spinner>(R.id.stginfostarr)
-                                if (star != null) intent.putExtra("selection", star.selectedItemPosition)
-                            }
-                        }
-                        activity.startActivity(intent)
-                    }
-                })
-                title.text = MultiLangCont.STNAME.getCont(stage)
-                val stgscroll = activity.findViewById<ScrollView>(R.id.stginfoscroll)
-                stgscroll.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                stgscroll.isFocusable = false
-                stgscroll.isFocusableInTouchMode = true
-                val stgen: RecyclerView = activity.findViewById(R.id.stginfoenrec)
-                stgen.layoutManager = LinearLayoutManager(activity)
-                ViewCompat.setNestedScrollingEnabled(stgen, false)
-                val enemyListRecycle = EnemyListRecycle(activity, stage)
-                stgen.adapter = enemyListRecycle
             }
             1 -> {
                 st.setText(R.string.stg_info_loadfilt)
@@ -117,7 +77,7 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
                         activity.startActivity(intent)
                     }
                 })
-                title.text = MultiLangCont.STNAME.getCont(stage)
+                title.text = MultiLangCont.STNAME.getCont(stage) ?: getStageName(posit)
                 val stgscroll = activity.findViewById<ScrollView>(R.id.stginfoscroll)
                 stgscroll.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
                 stgscroll.isFocusable = false
@@ -139,6 +99,24 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
         scrollView.visibility = View.VISIBLE
         prog.visibility = View.GONE
         st.visibility = View.GONE
+    }
+
+    private fun getStageName(posit: Int) : String {
+        return "Stage"+number(posit)
+    }
+
+    private fun number(n: Int) : String {
+        return when (n) {
+            in 0..9 -> {
+                "00$n"
+            }
+            in 10..99 -> {
+                "0$n"
+            }
+            else -> {
+                "$n"
+            }
+        }
     }
 
 }

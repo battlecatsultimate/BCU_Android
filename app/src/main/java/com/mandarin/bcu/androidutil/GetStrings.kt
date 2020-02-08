@@ -22,8 +22,8 @@ class GetStrings(private val c: Context) {
             , R.string.talen_wv, R.string.unit_info_cost, R.string.unit_info_cd, R.string.unit_info_spd, R.string.sch_abi_ic, R.string.talen_cu,
             R.string.unit_info_atk, R.string.unit_info_hp, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_abi_iv)
     private val talTool = arrayOfNulls<String>(talID.size)
-    private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B")
-    private val mapcodes = listOf("0", "1", "2", "3", "4", "6", "7", "11", "12", "13", "14")
+    private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA")
+    private val mapcodes = listOf("0", "1", "2", "3", "4", "6", "7", "11", "12", "13", "14", "24")
     private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
     val talList: Unit
         get() {
@@ -49,12 +49,12 @@ class GetStrings(private val c: Context) {
 
     fun getAtkTime(f: Form?, frse: Int): String {
         if (f == null) return ""
-        return if (frse == 0) f.du.itv.toString() + " f" else DecimalFormat("#.##").format(f.du.itv.toDouble() / 30) + " s"
+        return if (frse == 0) f.du.itv.toString() + "f" else DecimalFormat("#.##").format(f.du.itv.toDouble() / 30) + "s"
     }
 
     fun getAtkTime(em: Enemy?, frse: Int): String {
         if (em == null) return ""
-        return if (frse == 0) em.de.itv.toString() + " f" else DecimalFormat("#.##").format(em.de.itv.toDouble() / 30) + " s"
+        return if (frse == 0) em.de.itv.toString() + "f" else DecimalFormat("#.##").format(em.de.itv.toDouble() / 30) + "s"
     }
 
     fun getAbilT(f: Form?): String {
@@ -87,22 +87,22 @@ class GetStrings(private val c: Context) {
 
     fun getPost(f: Form?, frse: Int): String {
         if (f == null) return ""
-        return if (frse == 0) f.du.post.toString() + " f" else DecimalFormat("#.##").format(f.du.post.toDouble() / 30) + " s"
+        return if (frse == 0) f.du.post.toString() + "f" else DecimalFormat("#.##").format(f.du.post.toDouble() / 30) + "s"
     }
 
     fun getPost(em: Enemy?, frse: Int): String {
         if (em == null) return ""
-        return if (frse == 0) em.de.post.toString() + " f" else DecimalFormat("#.##").format(em.de.post.toDouble() / 30) + " s"
+        return if (frse == 0) em.de.post.toString() + "f" else DecimalFormat("#.##").format(em.de.post.toDouble() / 30) + "s"
     }
 
     fun getTBA(f: Form?, frse: Int): String {
         if (f == null) return ""
-        return if (frse == 0) f.du.tba.toString() + " f" else DecimalFormat("#.##").format(f.du.tba.toDouble() / 30) + " s"
+        return if (frse == 0) f.du.tba.toString() + "f" else DecimalFormat("#.##").format(f.du.tba.toDouble() / 30) + "s"
     }
 
     fun getTBA(em: Enemy?, frse: Int): String {
         if (em == null) return ""
-        return if (frse == 0) em.de.tba.toString() + " f" else DecimalFormat("#.##").format(em.de.tba.toDouble() / 30) + " s"
+        return if (frse == 0) em.de.tba.toString() + "f" else DecimalFormat("#.##").format(em.de.tba.toDouble() / 30) + "s"
     }
 
     fun getPre(f: Form?, frse: Int): String {
@@ -112,18 +112,18 @@ class GetStrings(private val c: Context) {
             if (atkdat.size > 1) {
                 val result = StringBuilder()
                 for (i in atkdat.indices) {
-                    if (i != atkdat.size - 1) result.append(atkdat[i][1]).append(" f / ") else result.append(atkdat[i][1]).append(" f")
+                    if (i != atkdat.size - 1) result.append(atkdat[i][1]).append("f / ") else result.append(atkdat[i][1]).append("f")
                 }
                 result.toString()
-            } else atkdat[0][1].toString() + " f"
+            } else atkdat[0][1].toString() + "f"
         } else {
             if (atkdat.size > 1) {
                 val result = StringBuilder()
                 for (i in atkdat.indices) {
-                    if (i != atkdat.size - 1) result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append(" s / ") else result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append(" s")
+                    if (i != atkdat.size - 1) result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append("s / ") else result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append("s")
                 }
                 result.toString()
-            } else DecimalFormat("#.##").format(atkdat[0][1].toDouble() / 30) + " s"
+            } else DecimalFormat("#.##").format(atkdat[0][1].toDouble() / 30) + "s"
         }
     }
 
@@ -134,18 +134,18 @@ class GetStrings(private val c: Context) {
             if (atkdat.size > 1) {
                 val result = StringBuilder()
                 for (i in atkdat.indices) {
-                    if (i != atkdat.size - 1) result.append(atkdat[i][1]).append(" f / ") else result.append(atkdat[i][1]).append(" f")
+                    if (i != atkdat.size - 1) result.append(atkdat[i][1]).append(" f / ") else result.append(atkdat[i][1]).append("f")
                 }
                 result.toString()
-            } else atkdat[0][1].toString() + " f"
+            } else atkdat[0][1].toString() + "f"
         } else {
             if (atkdat.size > 1) {
                 val result = StringBuilder()
                 for (i in atkdat.indices) {
-                    if (i != atkdat.size - 1) result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append(" s / ") else result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append(" s")
+                    if (i != atkdat.size - 1) result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append(" s / ") else result.append(DecimalFormat("#.##").format(atkdat[i][1].toDouble() / 30)).append("s")
                 }
                 result.toString()
-            } else DecimalFormat("#.##").format(atkdat[0][1].toDouble() / 30) + " s"
+            } else DecimalFormat("#.##").format(atkdat[0][1].toDouble() / 30) + "s"
         }
     }
 
@@ -182,7 +182,7 @@ class GetStrings(private val c: Context) {
     fun getCD(f: Form?, t: Treasure?, frse: Int, talent: Boolean, lvs: IntArray?): String {
         if (f == null || t == null) return ""
         val du: MaskUnit = if (lvs != null && f.pCoin != null) if (talent) f.pCoin.improve(lvs) else f.du else f.du
-        return if (frse == 0) t.getFinRes(du.respawn).toString() + " f" else DecimalFormat("#.##").format(t.getFinRes(du.respawn).toDouble() / 30) + " s"
+        return if (frse == 0) t.getFinRes(du.respawn).toString() + "f" else DecimalFormat("#.##").format(t.getFinRes(du.respawn).toDouble() / 30) + "s"
     }
 
     fun getAtk(f: Form?, t: Treasure?, lev: Int, talent: Boolean, lvs: IntArray?): String {
@@ -385,7 +385,7 @@ class GetStrings(private val c: Context) {
     }
 
     fun getRespawn(data: IntArray, frse: Boolean): String {
-        return if (data[SCDef.R0] == data[SCDef.R1]) if (frse) data[SCDef.R0].toString() + " f" else DecimalFormat("#.##").format(data[SCDef.R0].toFloat() / 30.toDouble()) + " s" else if (frse) data[SCDef.R0].toString() + " f ~ " + data[SCDef.R1] + " f" else DecimalFormat("#.##").format(data[SCDef.R0].toFloat() / 30.toDouble()) + " s ~ " + DecimalFormat("#.##").format(data[SCDef.R1].toFloat() / 30.toDouble()) + " s"
+        return if (data[SCDef.R0] == data[SCDef.R1]) if (frse) data[SCDef.R0].toString() + "f" else DecimalFormat("#.##").format(data[SCDef.R0].toFloat() / 30.toDouble()) + "s" else if (frse) data[SCDef.R0].toString() + " f ~ " + data[SCDef.R1] + "f" else DecimalFormat("#.##").format(data[SCDef.R0].toFloat() / 30.toDouble()) + " s ~ " + DecimalFormat("#.##").format(data[SCDef.R1].toFloat() / 30.toDouble()) + "s"
     }
 
     fun getBaseHealth(data: IntArray): String {
@@ -401,7 +401,7 @@ class GetStrings(private val c: Context) {
     }
 
     fun getStart(data: IntArray, frse: Boolean): String {
-        return if (frse) data[SCDef.S0].toString() + " f" else DecimalFormat("#.##").format(data[SCDef.S0].toFloat() / 30.toDouble()) + " s"
+        return if (frse) data[SCDef.S0].toString() + "f" else DecimalFormat("#.##").format(data[SCDef.S0].toFloat() / 30.toDouble()) + "s"
     }
 
     fun getLimit(l: Limit?): Array<String> {

@@ -26,6 +26,8 @@ public class AnimatedGifEncoder {
 
     protected int delay = 0; // frame delay (hundredths)
 
+    public float fps = 0f;
+
     protected boolean started = false; // ready to output frames
 
     protected OutputStream out;
@@ -190,7 +192,12 @@ public class AnimatedGifEncoder {
     public void setFrameRate(float fps) {
         if (fps != 0f) {
             delay = (int) (100 / fps);
+            this.fps = fps;
         }
+    }
+
+    public float getFrameRate() {
+        return this.fps;
     }
 
     /**

@@ -16,6 +16,7 @@ class CVGraphics : FakeGraphics {
     private val m = Matrix()
     private val m2 = Matrix()
     private var color = 0
+    var independent = false
 
     constructor(c: Canvas, cp: Paint, bp: Paint, night: Boolean) {
         this.c = c
@@ -90,9 +91,13 @@ class CVGraphics : FakeGraphics {
         c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), cp)
     }
 
+    @Synchronized
     override fun getTransform(): FakeTransform {
+        if(independent) return FTMT(m)
+
         if (!ftmt.isEmpty()) {
             val f = ftmt.pollFirst()
+
             f.updateMatrix(m)
             return f
         }
@@ -199,6 +204,8 @@ class CVGraphics : FakeGraphics {
     }
 
     override fun delete(at: FakeTransform) {
+        if(independent) return
+
         ftmt.add(at as FTMT)
     }
 

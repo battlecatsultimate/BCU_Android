@@ -196,7 +196,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 val adapter = ArrayAdapter(activity, R.layout.spinneradapter, setname)
                 setspin.adapter = adapter
                 setspin.onItemSelectedListener = object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (!initialized) {
                             initialized = true
                             return
@@ -238,7 +238,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 val adapter1 = ArrayAdapter(activity, R.layout.spinneradapter, luname)
                 luspin.adapter = adapter1
                 luspin.onItemSelectedListener = object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (!initialized) return
                         BasisSet.current.sele = BasisSet.current.lb[position]
                         val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)

@@ -29,13 +29,14 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
                 val source = path + fileneed[i] + ".zip"
                 val `is`: InputStream = FileInputStream(source)
                 val zis = ZipInputStream(BufferedInputStream(`is`))
-                var ze: ZipEntry
+                var ze: ZipEntry?
                 val buffer = ByteArray(1024)
                 var count: Int
                 while (zis.nextEntry.also { ze = it } != null) {
-                    val filenam = ze.name
+                    if(ze == null) break
+                    val filenam = ze?.name
                     val f = File(destin + filenam)
-                    if (ze.isDirectory) {
+                    if (ze?.isDirectory == true) {
                         if (!f.exists()) f.mkdirs()
                         continue
                     }

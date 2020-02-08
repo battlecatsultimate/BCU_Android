@@ -10,6 +10,7 @@ class FTMT internal constructor(m: Matrix?) : FakeTransform {
     }
 
     fun updateMatrix(m: Matrix?) {
+        this.m.reset()
         this.m.set(m)
     }
 

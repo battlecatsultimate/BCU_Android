@@ -89,7 +89,7 @@ public class Interpret extends Data {
             {0, -1, 3, 1}, {0, -1}, {0, -1, 1, 4}, {0, -1, 1}, {5, -1, 6}, {0, -1}, {-1, 7, 4},
             {-1, 7, 9, 10}, {-1, 14}, {-1, 13}, {-1, 13}, {-1, 15}, {-1, 13}, {-1, 16}, {-1, 13}, {0, -1},
             {0, -1, 1}, {0, -1, 1}, {0, -1, 4}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
-            {0, -1, 1}, {0, -1, 18}};
+            {0, -1, 1}, {0, -1, 18}, {0, -1, 1, 19, 20}};
 
     /**
      * proc data locator
@@ -98,7 +98,7 @@ public class Interpret extends Data {
             {0, -1, 2, 1}, {0, -1}, {0, -1, 1, 2}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {-1, 0, 1},
             {-1, 0, 1, 2}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {0, -1},
             {0, -1, 1}, {0, -1, 1}, {0, -1, 2}, {0, -1, 3}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 1},
-            {0, -1, 1}, {0, -1, 1}};
+            {0, -1, 1}, {0, -1, 1}, {0, -1, 3, 1, 2}};
 
     /**
      * proc data formatter for KR,JP
@@ -107,7 +107,7 @@ public class Interpret extends Data {
             {0, 3, 1, -1}, {0, -1}, {0, 1, 4, -1}, {0, 1, -1}, {5, 6, -1}, {0, -1}, {4, 7, -1},
             {9, 10, 7, -1}, {-1, 14}, {-1, 13}, {-1, 13}, {-1, 15}, {-1, 13}, {-1, 16}, {-1, 13}, {0, -1},
             {0, 1, -1}, {0, 1, -1}, {0, 4, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
-            {0, 1, -1}, {0, -1, 18}};
+            {0, 1, -1}, {0, -1, 18}, {0, 1, -1, 19, 20}};
 
     /**
      * proc data locator for KR,JP
@@ -116,7 +116,7 @@ public class Interpret extends Data {
             {0, 2, 1, -1}, {0, -1}, {0, 1, 2, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {1, 0, -1},
             {1, 2, 0, -1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {0, -1},
             {0, 1, -1}, {0, 1, -1}, {0, 2, -1}, {0, 3, -1}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 1},
-            {0, 1, -1}, {0, -1, 1}};
+            {0, 1, -1}, {0, -1, 1}, {0, 3, -1, 1, 2}};
 
     /**
      * combo string component
@@ -261,10 +261,10 @@ public class Interpret extends Data {
                             else if (!immune.contains(i))
                                 ans.append(TEXT[CMP[i][j]].replace("_", rep));
                         } else {
-                            if (TEXT[CMP[i][j]].contains("_ f")) {
+                            if (TEXT[CMP[i][j]].contains("_f")) {
                                 int pro = ma.getProc(i)[LOC[i][j]];
                                 String rep = pro == -1 ? "infinity" : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP[i][j]].replace("_ f", "_ s").replace("_", rep));
+                                ans.append(TEXT[CMP[i][j]].replace("_f", "_s").replace("_", rep));
                             } else {
                                 int pro = ma.getProc(i)[LOC[i][j]];
                                 String rep = pro == -1 ? "infinity" : "" + pro;
@@ -303,10 +303,10 @@ public class Interpret extends Data {
                             else if (!immune.contains(i))
                                 ans.append(TEXT[CMP2[i][j]].replace("_", rep));
                         } else {
-                            if (TEXT[CMP2[i][j]].contains("_ f")) {
+                            if (TEXT[CMP2[i][j]].contains("_f")) {
                                 int pro = ma.getProc(i)[LOC2[i][j]];
                                 String rep = pro == -1 ? "infinity" : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP2[i][j]].replace("_ f", "_ s").replace("_", rep));
+                                ans.append(TEXT[CMP2[i][j]].replace("_f", "_s").replace("_", rep));
                             } else {
                                 int pro = ma.getProc(i)[LOC2[i][j]];
                                 String rep = pro == -1 ? "infinity" : "" + pro;
@@ -359,19 +359,6 @@ public class Interpret extends Data {
                             else if (!immune.contains(i)) {
                                 switch (i) {
                                     case 11:
-                                        if (lang.equals("en")) {
-                                            if (pro == 1 && CMP[i][j] == 7)
-                                                ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
-                                            else if (pro == 2 && CMP[i][j] == 7)
-                                                ans.append(TEXT[CMP[i][j]].replace("_", "Twice"));
-                                            else if (CMP[i][j] == 7)
-                                                ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
-                                            else
-                                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                        } else
-                                            ans.append(TEXT[CMP[i][j]].replace("_", rep));
-
-                                        break;
                                     case 12:
                                         if (lang.equals("en")) {
                                             if (pro == 1 && CMP[i][j] == 7)
@@ -384,6 +371,7 @@ public class Interpret extends Data {
                                                 ans.append(TEXT[CMP[i][j]].replace("_", rep));
                                         } else
                                             ans.append(TEXT[CMP[i][j]].replace("_", rep));
+
                                         break;
                                     default:
                                         ans.append(TEXT[CMP[i][j]].replace("_", rep));
@@ -391,10 +379,10 @@ public class Interpret extends Data {
                                 }
                             }
                         } else {
-                            if (TEXT[CMP[i][j]].contains("_ f")) {
+                            if (TEXT[CMP[i][j]].contains("_f")) {
                                 int pro = ma.getProc(i)[LOC[i][j]];
                                 String rep = pro == -1 ? activity.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP[i][j]].replace("_ f", "_ s").replace("_", rep));
+                                ans.append(TEXT[CMP[i][j]].replace("_f", "_s").replace("_", rep));
                             } else {
                                 int pro = ma.getProc(i)[LOC[i][j]];
                                 String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
@@ -403,19 +391,6 @@ public class Interpret extends Data {
                                 else if (!immune.contains(i))
                                     switch (i) {
                                         case 11:
-                                            if (lang.equals("en")) {
-                                                if (pro == 1 && CMP[i][j] == 7)
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
-                                                else if (pro == 2 && CMP[i][j] == 7)
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", "Twice"));
-                                                else if (CMP[i][j] == 7)
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
-                                                else
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                            } else
-                                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
-
-                                            break;
                                         case 12:
                                             if (lang.equals("en")) {
                                                 if (pro == 1 && CMP[i][j] == 7)
@@ -428,6 +403,7 @@ public class Interpret extends Data {
                                                     ans.append(TEXT[CMP[i][j]].replace("_", rep));
                                             } else
                                                 ans.append(TEXT[CMP[i][j]].replace("_", rep));
+
                                             break;
                                         default:
                                             ans.append(TEXT[CMP[i][j]].replace("_", rep));
@@ -464,10 +440,10 @@ public class Interpret extends Data {
                             else if (!immune.contains(i))
                                 ans.append(TEXT[CMP2[i][j]].replace("_", rep));
                         } else {
-                            if (TEXT[CMP2[i][j]].contains("_ f")) {
+                            if (TEXT[CMP2[i][j]].contains("_f")) {
                                 int pro = ma.getProc(i)[LOC2[i][j]];
                                 String rep = pro == -1 ? activity.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP2[i][j]].replace("_ f", "_ s").replace("_", rep));
+                                ans.append(TEXT[CMP2[i][j]].replace("_f", "_s").replace("_", rep));
                             } else {
                                 int pro = ma.getProc(i)[LOC2[i][j]];
                                 String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;

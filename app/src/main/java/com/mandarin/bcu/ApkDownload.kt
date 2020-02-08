@@ -39,7 +39,13 @@ class ApkDownload : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
         setContentView(R.layout.activity_apk_download)
         requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 786)
         if (ContextCompat.checkSelfPermission(this@ApkDownload, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -78,7 +84,7 @@ class ApkDownload : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)

@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mandarin.bcu.BattlePrepare
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.LineUpScreen
 import com.mandarin.bcu.R
@@ -138,7 +139,7 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
                 val stm = mc.maps[stid] ?: return
                 if (posit >= stm.list.size) return
                 val st = stm.list[posit]
-                stname.text = MultiLangCont.STNAME.getCont(st)
+                stname.text = MultiLangCont.STNAME.getCont(st) ?: getStageName(posit)
                 val stars = ArrayList<String>()
                 var i = 0
                 while (i < stm.stars.size) {
@@ -155,20 +156,33 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
                         activity.startActivityForResult(intent, 0)
                     }
                 })
+                sniper.isChecked = BattlePrepare.sniper
+
+                if(BattlePrepare.sniper) {
+                    item += 2
+                }
+
+                if(BattlePrepare.rich) {
+                    item += 1
+                }
+
                 sniper.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
                         item += 2
                     } else {
                         item -= 2
                     }
+                    BattlePrepare.sniper = isChecked
                     println(item)
                 }
+                rich.isChecked = BattlePrepare.rich
                 rich.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
                         item += 1
                     } else {
                         item -= 1
                     }
+                    BattlePrepare.rich = isChecked
                     println(item)
                 }
                 start.setOnClickListener(object : SingleClick() {
@@ -180,6 +194,8 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
                         intent.putExtra("star", star.selectedItemPosition)
                         intent.putExtra("item", item)
                         activity.startActivity(intent)
+                        BattlePrepare.rich = false
+                        BattlePrepare.sniper = false
                         activity.finish()
                     }
                 })
@@ -225,7 +241,11 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
                     true
                 }
                 val bck: FloatingActionButton = activity.findViewById(R.id.battlebck)
-                bck.setOnClickListener { activity.finish() }
+                bck.setOnClickListener {
+                    BattlePrepare.rich = false
+                    BattlePrepare.sniper = false
+                    activity.finish()
+                }
             }
             else -> StaticStore.showShortMessage(activity, results[0] ?: R.string.app_name)
         }
@@ -259,6 +279,10 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
 
     private fun setAppear(vararg views: View) {
         for (v in views) v.visibility = View.VISIBLE
+    }
+
+    private fun getStageName(posit: Int) : String {
+        return "Stage"+number(posit)
     }
 
     private fun number(num: Int): String {

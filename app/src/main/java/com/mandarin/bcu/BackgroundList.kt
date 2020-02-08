@@ -23,8 +23,10 @@ import java.util.*
 class BackgroundList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed = shared.edit()
+
         if (!shared.contains("initial")) {
             ed.putBoolean("initial", true)
             ed.putBoolean("theme", true)
@@ -40,19 +42,31 @@ class BackgroundList : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
         setContentView(R.layout.activity_background_list)
+
         val listView = findViewById<ListView>(R.id.bglist)
+
         if (StaticStore.bgnumber == 0) {
             val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/img/bg/"
             val f = File(path)
             StaticStore.bgnumber = f.list().size - 1
         }
+
         val names = arrayOfNulls<String>(StaticStore.bgnumber)
+
         for (i in names.indices) {
             names[i] = getString(R.string.bg_names).replace("_", number(i))
         }
+
         val adapter = ArrayAdapter(this, R.layout.list_layout_text, names)
+
         listView.adapter = adapter
         listView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             if (SystemClock.elapsedRealtime() - StaticStore.bglistClick < StaticStore.INTERVAL) return@OnItemClickListener
@@ -63,7 +77,9 @@ class BackgroundList : AppCompatActivity() {
             intent.putExtra("BGNum", position)
             startActivity(intent)
         }
+
         val bck = findViewById<FloatingActionButton>(R.id.bgbck)
+
         bck.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 finish()
@@ -78,7 +94,7 @@ class BackgroundList : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)

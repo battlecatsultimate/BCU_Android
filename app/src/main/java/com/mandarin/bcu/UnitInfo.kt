@@ -18,10 +18,10 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader
 import java.util.*
 
@@ -138,7 +138,7 @@ class UnitInfo : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)

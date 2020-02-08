@@ -75,7 +75,7 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
                 val stageset = activity.findViewById<Spinner>(R.id.stgspin)
                 val maplist = activity.findViewById<ListView>(R.id.maplist)
                 stageset.onItemSelectedListener = object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         val mapListAdapter = MapListAdapter(activity, StaticStore.mapnames[position], StaticStore.MAPCODE[position])
                         maplist.adapter = mapListAdapter
                     }

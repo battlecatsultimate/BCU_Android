@@ -1,15 +1,13 @@
 package com.mandarin.bcu.androidutil
 
 import android.content.Context
-import android.content.ContextWrapper
+import com.mandarin.bcu.androidutil.StaticStore.unitnumber
 import com.mandarin.bcu.androidutil.unit.Definer
 import common.system.MultiLangCont
 import common.util.pack.Pack
 import common.util.stage.MapColc
 
-class Revalidater(context: Context?) : ContextWrapper(context) {
-
-    private val unitnumber: Int = StaticStore.unitnumber
+object Revalidater {
     fun validate(lang: String, context: Context) {
         Definer().redefine(context, lang)
         if (StaticStore.names != null) {

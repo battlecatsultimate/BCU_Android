@@ -170,7 +170,7 @@ class LUUnitSetting : Fragment() {
             spinners[1].setSelection(getIndex(spinners[1], floadlevp))
 
             spinners[0].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, v: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
                     val lev = spinners[0].selectedItem as Int
                     val levp1 = spinners[1].selectedItem as Int
 
@@ -196,7 +196,7 @@ class LUUnitSetting : Fragment() {
             }
 
             spinners[1].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, v: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
                     val lev = spinners[0].selectedItem as Int
                     val levp1 = spinners[1].selectedItem as Int
 
@@ -223,7 +223,7 @@ class LUUnitSetting : Fragment() {
             for (i in talents.indices) {
 
                 talents[i]?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, v: View, position: Int, id: Long) {
+                    override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
                         pcoin[i + 1] = position
 
                         val lev = spinners[0].selectedItem as Int

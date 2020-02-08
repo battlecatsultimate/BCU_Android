@@ -160,7 +160,7 @@ class ImageViewer : AppCompatActivity() {
                             val fos = FileOutputStream(g)
                             b.compress(Bitmap.CompressFormat.PNG, 100, fos)
                             fos.close()
-                            MediaScanner(this@ImageViewer, g)
+                            MediaScanner.scan(this@ImageViewer,g)
                             StaticStore.showShortMessage(this@ImageViewer, getString(R.string.anim_png_success).replace("-", "/BCU/img/$name"))
                         } catch (e: IOException) {
                             e.printStackTrace()
@@ -312,7 +312,7 @@ class ImageViewer : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)

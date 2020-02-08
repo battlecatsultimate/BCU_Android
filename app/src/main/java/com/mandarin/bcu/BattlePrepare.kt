@@ -21,6 +21,11 @@ import common.battle.BasisSet
 import java.util.*
 
 class BattlePrepare : AppCompatActivity() {
+    companion object {
+        var rich = false
+        var sniper = false
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +86,7 @@ class BattlePrepare : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)

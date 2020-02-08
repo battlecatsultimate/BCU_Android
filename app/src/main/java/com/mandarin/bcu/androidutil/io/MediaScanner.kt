@@ -1,22 +1,15 @@
 package com.mandarin.bcu.androidutil.io
 
 import android.content.Context
-import android.media.MediaScannerConnection
-import android.media.MediaScannerConnection.MediaScannerConnectionClient
+import android.content.Intent
 import android.net.Uri
 import java.io.File
 
-class MediaScanner(context: Context?, private val file: File) : MediaScannerConnectionClient {
-    private val connection: MediaScannerConnection = MediaScannerConnection(context, this)
-    override fun onMediaScannerConnected() {
-        connection.scanFile(file.absolutePath, null)
-    }
-
-    override fun onScanCompleted(path: String, uri: Uri) {
-        connection.disconnect()
-    }
-
-    init {
-        connection.connect()
+object MediaScanner {
+    fun scan(c: Context, f: File) {
+        val uri = Uri.fromFile(f)
+        val mediaIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        mediaIntent.data = uri
+        c.sendBroadcast(mediaIntent)
     }
 }

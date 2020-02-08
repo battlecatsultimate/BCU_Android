@@ -131,7 +131,7 @@ class MapDefiner {
                     val mc = StaticStore.map[StaticStore.MAPCODE[i]] ?: continue
                     StaticStore.mapnames[i] = arrayOfNulls(mc.maps.size)
                     for (k in mc.maps.indices) {
-                        StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k])
+                        StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k]) ?: ""
                     }
                 }
                 StaticStore.maplang = 0

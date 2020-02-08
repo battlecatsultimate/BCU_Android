@@ -24,6 +24,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.AnimatedGifEncoder
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
@@ -31,6 +32,7 @@ import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.unit.Definer
 import common.system.MultiLangCont
 import common.util.pack.Pack
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -139,7 +141,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                 anims.adapter = adapter
                 forms.adapter = adapter1
                 forms.onItemSelectedListener = object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, ids: Long) {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, ids: Long) {
                         if (StaticStore.formposition != position) {
                             StaticStore.formposition = position
                             cView.anim = StaticStore.units[id].forms[position].getEAnim(anims.selectedItemPosition)
@@ -152,7 +154,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
                 anims.onItemSelectedListener = object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
                             cView.anim!!.changeAnim(position)
@@ -239,7 +241,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                                 val fos = FileOutputStream(f)
                                 b.compress(Bitmap.CompressFormat.PNG, 100, fos)
                                 fos.close()
-                                MediaScanner(activity, f)
+                                MediaScanner.scan(activity,f)
                                 StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/$name2"))
                             } catch (e: IOException) {
                                 e.printStackTrace()
@@ -267,7 +269,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                                 val fos = FileOutputStream(f)
                                 b.compress(Bitmap.CompressFormat.PNG, 100, fos)
                                 fos.close()
-                                MediaScanner(activity, f)
+                                MediaScanner.scan(activity,f)
                                 StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/$name1"))
                             } catch (e: IOException) {
                                 e.printStackTrace()
@@ -282,7 +284,6 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                                     item.setTitle(R.string.anim_option_gifstop)
                                 } else {
                                     item.setTitle(R.string.anim_option_gifstart)
-                                    cView.startAsync(activity)
                                     StaticStore.gifisSaving = true
                                 }
                                 StaticStore.enableGIF = !StaticStore.enableGIF
@@ -304,25 +305,34 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                 forms.setSelection(StaticStore.formposition)
                 val bck: FloatingActionButton = activity.findViewById(R.id.imgviewerbck)
                 bck.setOnClickListener {
-                    if (!StaticStore.gifisSaving) {
+                    if (!StaticStore.gifisSaving && !StaticStore.enableGIF) {
                         StaticStore.play = true
                         StaticStore.frame = 0
                         StaticStore.animposition = 0
                         StaticStore.formposition = 0
                         StaticStore.enableGIF = false
                         StaticStore.gifFrame = 0
-                        StaticStore.frames.clear()
+                        AddGIF.frame = 0
+                        AddGIF.encoder = AnimatedGifEncoder()
+                        AddGIF.bos = ByteArrayOutputStream()
                         activity.finish()
                     } else {
                         val builder = AlertDialog.Builder(activity)
                         builder.setTitle(R.string.anim_gif_warn)
                         builder.setMessage(R.string.anim_gif_recording)
                         builder.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                            StaticStore.showShortMessage(activity, R.string.anim_gif_cancel)
                             StaticStore.play = true
                             StaticStore.frame = 0
                             StaticStore.animposition = 0
                             StaticStore.formposition = 0
                             StaticStore.keepDoing = false
+                            StaticStore.enableGIF = false
+                            StaticStore.gifisSaving = false
+                            StaticStore.gifFrame = 0
+                            AddGIF.frame = 0
+                            AddGIF.encoder = AnimatedGifEncoder()
+                            AddGIF.bos = ByteArrayOutputStream()
                             activity.finish()
                         }
                         builder.setNegativeButton(R.string.main_file_cancel) { _, _ -> }

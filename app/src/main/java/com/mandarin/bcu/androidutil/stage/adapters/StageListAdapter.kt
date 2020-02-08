@@ -36,7 +36,7 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
             holder = row.tag as ViewHolder
         }
 
-        holder.name.text = stages[position]
+        holder.name.text = stages[position] ?: getStageName(position)
         holder.images.clear()
         holder.icons.removeAllViews()
         val mc = StaticStore.map[mapcode] ?: return row
@@ -89,6 +89,14 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
             result[i] = data[data.size - 1 - i]
         }
         return result
+    }
+
+    private fun getStageName(num: Int) : String {
+        return "Stage"+number(num)
+    }
+
+    private fun number(num: Int): String {
+        return if (num in 0..9) "00$num" else if (num in 10..99) "0$num" else "" + num
     }
 
 }

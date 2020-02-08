@@ -18,6 +18,7 @@
         <item>챌린지 배틀</item>
         <item>신 레전드 스토리</item>
         <item>드링크 스테이지</item>
+        <item>RA</item>
     </string-array>
     <string name="sch_bla">검은적</string>
     <string name="sch_fl">떠있는적</string>
@@ -142,7 +143,7 @@
     <string name="abi_sum">소환</string>
     <string name="abi_mvatk">이동중 공격</string>
     <string name="abi_thch">전투 초기화</string>
-    <string name="abi_poi">독</string>
+    <string name="abi_poi">맹독</string>
     <string name="abi_boswv">보스 파동</string>
     <string name="abi_imvatk">이동중 공격 무효</string>
     <string name="abi_isnk">스나이퍼 넉백 무효</string>
@@ -152,7 +153,7 @@
     <string name="abi_istt">시간 정지 무효</string>
     <string name="abi_ithch">전투 초기화 무효</string>
     <string name="abi_sui">한번만 공격</string>
-    <string name="abi_ipoi">독 무효</string>
+    <string name="abi_ipoi">맹독 무효</string>
     <string name="unit_info_strong">" (피격 시 x0.5~x0.4 / 공격 시 x1.5~x1.8)"</string>
     <string name="unit_info_masdam">" (공격 시 x3~x4)"</string>
     <string name="unit_info_resis">" (피격 시 x0.25~x0.2)"</string>
@@ -163,17 +164,17 @@
     <string name="unit_info_wkill">" (피격 시 x0.1 / 공격 시 x5)"</string>
     <string name="def_unit_s_icon">Unit\'s Icon</string>
     <string name="unit_info_evakill">" (피격 시 x0.2 / 공격 시 x5)"</string>
-    <string name="unit_info_text0">"_ % 확률로 "</string>
-    <string name="unit_info_text1">"_ f 동안 "</string>
+    <string name="unit_info_text0">"_% 확률로 "</string>
+    <string name="unit_info_text1">"_f 동안 "</string>
     <string name="unit_info_text2">"레벨 _ "</string>
-    <string name="unit_info_text3">"적을 _ % 로 "</string>
+    <string name="unit_info_text3">"적을 _% 로 "</string>
     <string name="unit_info_text4">"_ 만큼 "</string>
-    <string name="unit_info_text5">"_ % 체력에서, "</string>
-    <string name="unit_info_text6">"_ % 만큼 "</string>
-    <string name="unit_info_text7">"_ 번 "</string>
+    <string name="unit_info_text5">"_% 체력에서, "</string>
+    <string name="unit_info_text6">"_% 만큼 "</string>
+    <string name="unit_info_text7">"_번 "</string>
     <string name="def_unit_info_text8">times</string>
-    <string name="unit_info_text9">_ f 뒤에</string>
-    <string name="unit_info_text10">" _ % 의 체력으로 "</string>
+    <string name="unit_info_text9">_f 뒤에</string>
+    <string name="unit_info_text10">" _% 의 체력으로 "</string>
     <string name="def_unit_info_text11">"Immune to "</string>
     <string name="unit_info_first">1단</string>
     <string name="unit_info_second">2단</string>
@@ -218,10 +219,10 @@
     <string name="talen_trait">"속성 : "</string>
     <string name="talen_abil">"능력 : "</string>
     <string name="def_unit_info_text12">"Resist to "</string>
-    <string name="unit_info_text13">" (시간 _ % 감소)"</string>
-    <string name="unit_info_text14">" (밀쳐나는 거리 _ % 감소)"</string>
-    <string name="unit_info_text15">" (받는 데미지 _ % 감소)"</string>
-    <string name="unit_info_text16">" (워프시간 _ % 감소)"</string>
+    <string name="unit_info_text13">" (시간 _% 감소)"</string>
+    <string name="unit_info_text14">" (밀쳐나는 거리 _% 감소)"</string>
+    <string name="unit_info_text15">" (받는 데미지 _% 감소)"</string>
+    <string name="unit_info_text16">" (워프시간 _% 감소)"</string>
     <string name="talen_warp">워프 내성</string>
     <string name="unzip_fail">추출 실패…</string>
     <string name="fruit9">초록 개다래 열매</string>
@@ -275,7 +276,7 @@
     <string name="stg_info_stgd">맵 정보 불러오는 중…</string>
     <string name="stg_info_stgs">맵 필터링 중…</string>
     <string name="sch_abi_sb">혼신의 일격</string>
-    <string name="unit_info_text17">" ( _ % 만큼 더 데미지)"</string>
+    <string name="unit_info_text17">" ( _% 만큼 더 데미지)"</string>
     <string name="abi_imcri">크리티컬 무효</string>
     <string name="stg_list_enemic">적 아이콘 불러오는 중…</string>
     <string name="stg_list_stl">스테이지 정보 불러오는 중…</string>
@@ -415,7 +416,7 @@
     <string name="trea_zombiefr">명계의 과실</string>
     <string name="trea_alienfr">외계의 과실</string>
     <string name="sch_abi_poi">독 데미지</string>
-    <string name="unit_info_text18">" (상대 체력의 _ % 만큼 공격)"</string>
+    <string name="unit_info_text18">" (상대 체력의 _% 만큼 공격)"</string>
     <string name="lineup_const">오토토 레벨</string>
     <string name="lineup_const_breaker">캐논포 레벨</string>
     <string name="lineup_const_castle">냥코 성 레벨</string>
@@ -545,4 +546,12 @@
     <string name="dev_pass_activated">개발자 모드 활성화됨</string>
     <string name="main_music">음악 리스트</string>
     <string name="music_read">음악 데이터 읽는중…</string>
+    <string name="battle_lost">전투에서 패배했습니다</string>
+    <string name="battle_won">전투에서 승리했습니다</string>
+    <string name="battle_lost_boss">전투에서 패배했습니다\n보스 체력 : _%</string>
+    <string name="battle_retry">다시시작</string>
+    <string name="battle_sure_retry">정말로 전투를 다시 시작하시겠습니까?</string>
+    <string name="sch_abi_surge">열파 공격</string>
+    <string name="unit_info_text20">" ~ _ 사이에서 랜덤으로 생성)"</string>
+    <string name="unit_info_text19">" ( _"</string>
 </resources>

@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         SoundHandler.mu_vol = StaticStore.getVolumScaler(preferences.getInt("mu_vol", 99))
         SoundHandler.sePlay = preferences.getBoolean("SE", true)
         SoundHandler.se_vol = StaticStore.getVolumScaler((preferences.getInt("se_vol", 99) * 0.85).toInt())
+        StaticStore.upload = preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true)
         val result = intent
         var conf = false
         val bundle = result.extras
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         val upload = File(upath)
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (upload.exists() && upload.listFiles().isNotEmpty() && connectivityManager.activeNetworkInfo != null) {
-            if (preferences.getBoolean("ask_upload", true) && !StaticStore.dialogisShwed && !conf) {
+            if (preferences.getBoolean("ask_upload", true) && !StaticStore.dialogisShowed && !conf) {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
                 val builder = AlertDialog.Builder(this)
                 val inflater = LayoutInflater.from(this)
@@ -163,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 dialog.setOnDismissListener {
                     if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                    StaticStore.dialogisShwed = true
+                    StaticStore.dialogisShowed = true
                 }
             } else if (preferences.getBoolean("upload", false)) {
                 StaticStore.showShortMessage(this, R.string.main_err_upload)
@@ -273,7 +274,7 @@ class MainActivity : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
@@ -282,13 +283,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         isRunning = false
-        StaticStore.dialogisShwed = false
+        StaticStore.dialogisShowed = false
         super.onBackPressed()
     }
 
     public override fun onDestroy() {
         isRunning = false
-        StaticStore.dialogisShwed = false
+        StaticStore.dialogisShowed = false
         mustDie(this)
         StaticStore.toast = null
         super.onDestroy()

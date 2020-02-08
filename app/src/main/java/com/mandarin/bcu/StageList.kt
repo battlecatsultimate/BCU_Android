@@ -48,7 +48,7 @@ class StageList : AppCompatActivity() {
         if (mc != null) {
             val stm = mc.maps[stid]
             var stname = MultiLangCont.SMNAME.getCont(stm)
-            if (stname == null) stname = ""
+            if (stname == null) stname = number(stid)
             name.text = stname
         }
         val stageLoader = StageLoader(this, mapcode, stid)
@@ -63,7 +63,7 @@ class StageList : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if(language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
@@ -84,6 +84,20 @@ class StageList : AppCompatActivity() {
     fun mustDie(`object`: Any?) {
         if (MainActivity.watcher != null) {
             MainActivity.watcher!!.watch(`object`)
+        }
+    }
+
+    private fun number(num: Int): String {
+        return when (num) {
+            in 0..9 -> {
+                "00$num"
+            }
+            in 10..99 -> {
+                "0$num"
+            }
+            else -> {
+                num.toString()
+            }
         }
     }
 }

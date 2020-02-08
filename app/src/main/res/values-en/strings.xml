@@ -18,6 +18,7 @@
         <item>Challenge Battle</item>
         <item>Uncanny Legends</item>
         <item>Night Stages</item>
+        <item>RA</item>
     </string-array>
     <string name="sch_bla">Black</string>
     <string name="sch_fl">Float</string>
@@ -142,7 +143,7 @@
     <string name="abi_sum">Summon</string>
     <string name="abi_mvatk">Moving Attack</string>
     <string name="abi_thch">Theme Change</string>
-    <string name="abi_poi">Poison</string>
+    <string name="abi_poi">Venom</string>
     <string name="abi_boswv">Boss Wave</string>
     <string name="abi_imvatk">Imu.Moving Attack</string>
     <string name="abi_isnk">Imu.Sniper KB</string>
@@ -152,7 +153,7 @@
     <string name="abi_istt">Imu.Stop Time</string>
     <string name="abi_ithch">Imu.Theme Change</string>
     <string name="abi_sui">Suicide</string>
-    <string name="abi_ipoi">Imu.Poison</string>
+    <string name="abi_ipoi">Imu.Venom</string>
     <string name="unit_info_strong">" (Takes damage x0.5~x0.4 / Gives damage x1.5~x1.8)"</string>
     <string name="unit_info_masdam">" (Gives damage x3~x4)"</string>
     <string name="unit_info_resis">" (Takes damage x0.25~x0.2)"</string>
@@ -163,17 +164,17 @@
     <string name="unit_info_wkill">" (Takes damge x0.1 / Gives damage x5)"</string>
     <string name="def_unit_s_icon">Unit\'s Icon</string>
     <string name="unit_info_evakill">" (Takes damage x0.2 / Gives damage x5)"</string>
-    <string name="unit_info_text0">"_ % chance to "</string>
-    <string name="unit_info_text1">" for _ f"</string>
+    <string name="unit_info_text0">"_% chance to "</string>
+    <string name="unit_info_text1">" for _f"</string>
     <string name="unit_info_text2">"create Lv._ "</string>
-    <string name="unit_info_text3">" enemy to _ %"</string>
+    <string name="unit_info_text3">" enemy to _%"</string>
     <string name="unit_info_text4">" to distance of _"</string>
-    <string name="unit_info_text5">"At _ % health, "</string>
-    <string name="unit_info_text6">" to _ %"</string>
+    <string name="unit_info_text5">"At _% health, "</string>
+    <string name="unit_info_text6">" to _%"</string>
     <string name="unit_info_text7">" _"</string>
     <string name="def_unit_info_text8">times</string>
-    <string name="unit_info_text9">" after _ f"</string>
-    <string name="unit_info_text10">" with _ % health"</string>
+    <string name="unit_info_text9">" after _f"</string>
+    <string name="unit_info_text10">" with _% health"</string>
     <string name="def_unit_info_text11">"Immune to "</string>
     <string name="unit_info_first">First</string>
     <string name="unit_info_second">Second</string>
@@ -218,10 +219,10 @@
     <string name="talen_trait">"Trait : "</string>
     <string name="talen_abil">"Ability : "</string>
     <string name="def_unit_info_text12">"Resist to "</string>
-    <string name="unit_info_text13">" (Reduces _ % of time)"</string>
-    <string name="unit_info_text14">" (Reduces _ % of distance)"</string>
-    <string name="unit_info_text15">" (Reduces _ % of damage)"</string>
-    <string name="unit_info_text16">" (Reduces _ % of duration)"</string>
+    <string name="unit_info_text13">" (Reduces _% of time)"</string>
+    <string name="unit_info_text14">" (Reduces _% of distance)"</string>
+    <string name="unit_info_text15">" (Reduces _% of damage)"</string>
+    <string name="unit_info_text16">" (Reduces _% of duration)"</string>
     <string name="talen_warp">Res.Warp</string>
     <string name="unzip_fail">Unzip Failed…</string>
     <string name="fruit9">Green Catfruit</string>
@@ -275,7 +276,7 @@
     <string name="stg_info_enem">Loading Enemy Data…</string>
     <string name="stg_info_stgs">Filtering Maps…</string>
     <string name="sch_abi_sb">Savage Blow</string>
-    <string name="unit_info_text17">" (Gives damage  _ % more)"</string>
+    <string name="unit_info_text17">" (Gives damage  _% more)"</string>
     <string name="abi_imcri">Imu.Critical</string>
     <string name="stg_list_enemic">Loading Enemy Icons…</string>
     <string name="stg_list_stl">Loading Stage Data…</string>
@@ -415,7 +416,7 @@
     <string name="trea_redfr">Red Fruit Treasure</string>
     <string name="trea_zombiefr">Zombie Fruit Treasure</string>
     <string name="sch_abi_poi">Poison</string>
-    <string name="unit_info_text18">" (Attacks _ % of target's max hp)"</string>
+    <string name="unit_info_text18">" (Attacks _% of target's max hp)"</string>
     <string name="lineup_const">Construction Level</string>
     <string name="lineup_const_breaker">Breaker Cannon Level</string>
     <string name="lineup_const_castle">Castle Level</string>
@@ -545,4 +546,12 @@
     <string name="dev_pass_activated">Developer Mode Activated</string>
     <string name="music_read">Reading Music Data…</string>
     <string name="main_music">Music</string>
+    <string name="battle_lost">You lost the battle</string>
+    <string name="battle_won">You won the battle</string>
+    <string name="battle_lost_boss">You lost the battle\nBoss health : _%</string>
+    <string name="battle_retry">Retry</string>
+    <string name="battle_sure_retry">Are you sure you want to retyr battle?</string>
+    <string name="sch_abi_surge">Surge Attack</string>
+    <string name="unit_info_text20">" ~ _ )"</string>
+    <string name="unit_info_text19">" (Created randomly between _"</string>
 </resources>

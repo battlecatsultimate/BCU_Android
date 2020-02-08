@@ -270,7 +270,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if (language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
 

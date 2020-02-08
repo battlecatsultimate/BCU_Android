@@ -217,12 +217,14 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setUinfo(activity: Activity, tabs: TabLayout) {
         val tablePager: ViewPager = activity.findViewById(R.id.unitinftable)
         tablePager.adapter = table
         tablePager.offscreenPageLimit = 2
         tablePager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
         tabs.setupWithViewPager(tablePager)
+
         val viewPager: ViewPager = activity.findViewById(R.id.unitinfpager)
         viewPager.adapter = explain
         viewPager.offscreenPageLimit = 2

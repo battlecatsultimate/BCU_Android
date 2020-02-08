@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -108,16 +107,8 @@ open class ConfigScreen : AppCompatActivity() {
         val deflev = findViewById<Spinner>(R.id.configdeflevsp)
         val arrayAdapter = ArrayAdapter(this, R.layout.spinneradapter, levels)
         deflev.adapter = arrayAdapter
-        deflev.setSelection(getIndex(deflev, shared.getInt("default_level", 50)))
-        deflev.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val ed1 = shared.edit()
-                ed1.putInt("default_level", deflev.selectedItem as Int)
-                ed1.apply()
-            }
+        deflev.setSelection(getIndex(deflev, shared.getInt("default_level", 50)),false)
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
         println(CommonStatic.Lang.lang)
         val apktest = findViewById<Switch>(R.id.apktest)
         apktest.isChecked = shared.getBoolean("apktest", false)
@@ -133,6 +124,8 @@ open class ConfigScreen : AppCompatActivity() {
                 ed1.putBoolean("upload", false)
                 ed1.apply()
             }
+
+            StaticStore.upload = shared.getBoolean("upload",false) || shared.getBoolean("ask_upload",true)
         }
         apktest.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -152,25 +145,8 @@ open class ConfigScreen : AppCompatActivity() {
         }
         val adapter = ArrayAdapter(this, R.layout.spinneradapter, lang)
         language.adapter = adapter
-        language.setSelection(shared.getInt("Language", 0))
-        language.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (started) {
-                    changed = true
-                    val ed1 = shared.edit()
-                    ed1.putInt("Language", position)
-                    ed1.apply()
-                    var lang1 = locales[position]
-                    if (lang1 == "") lang1 = Resources.getSystem().configuration.locales[0].language
-                    if (StaticStore.units != null || StaticStore.enemies != null) Revalidater(this@ConfigScreen).validate(lang1, this@ConfigScreen) else {
-                        StaticStore.getLang(position)
-                    }
-                    restart()
-                }
-            }
+        language.setSelection(shared.getInt("Language", 0), false)
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
         val orientation = findViewById<RadioGroup>(R.id.configorirg)
         val oris = arrayOf(findViewById(R.id.configoriauto), findViewById(R.id.configoriland), findViewById<RadioButton>(R.id.configoriport))
         orientation.setOnCheckedChangeListener { _, checkedId ->
@@ -337,10 +313,48 @@ open class ConfigScreen : AppCompatActivity() {
             }
             false
         })
+    }
 
-        Handler().postDelayed({
-            started = true
-        }, 100)
+    override fun onStart() {
+        val deflev: Spinner = findViewById(R.id.configdeflevsp)
+        val language: Spinner = findViewById(R.id.configlangsp)
+        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+        language.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                println("Started : $started")
+
+                if (started) {
+                    changed = true
+                    val ed1 = shared.edit()
+                    ed1.putInt("Language", position)
+                    ed1.apply()
+                    var lang1 = locales[position]
+                    if (lang1 == "") lang1 = Resources.getSystem().configuration.locales[0].language
+                    if (StaticStore.units != null || StaticStore.enemies != null) Revalidater.validate(lang1, this@ConfigScreen) else {
+                        StaticStore.getLang(position)
+                    }
+
+                    restart()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        deflev.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val ed1 = shared.edit()
+                ed1.putInt("default_level", deflev.selectedItem as Int)
+                ed1.apply()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        started = true
+
+        super.onStart()
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {
@@ -350,6 +364,7 @@ open class ConfigScreen : AppCompatActivity() {
     }
 
     private fun restart() {
+        println(Arrays.toString(Throwable().stackTrace))
         if(!started) return
 
         val intent = Intent(this@ConfigScreen, ConfigScreen::class.java)
@@ -368,7 +383,7 @@ open class ConfigScreen : AppCompatActivity() {
         var language = StaticStore.lang[lang]
 
         if (language == "")
-            language = Resources.getSystem().configuration.locales.get(0).toString()
+            language = Resources.getSystem().configuration.locales.get(0).language
 
         config.setLocale(Locale(language))
 

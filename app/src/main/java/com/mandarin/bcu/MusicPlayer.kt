@@ -39,6 +39,7 @@ class MusicPlayer : AppCompatActivity() {
         private var paused = false
         private var prog = 0
         private var volume = 99
+        private var opened = false
     }
 
     private fun reset() {
@@ -47,6 +48,7 @@ class MusicPlayer : AppCompatActivity() {
         looping = false
         completed = false
         paused = false
+        opened = false
         prog = 0
         volume = 99
     }
@@ -55,6 +57,7 @@ class MusicPlayer : AppCompatActivity() {
     private var ah = -1
     private var destroyed = false
     private var isControlling = false
+    private var musicreceive = MusicReceiver(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,14 +84,17 @@ class MusicPlayer : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
-        registerReceiver(MusicReceiver(this), IntentFilter(Intent.ACTION_HEADSET_PLUG))
+        registerReceiver(musicreceive, IntentFilter(Intent.ACTION_HEADSET_PLUG))
 
         setContentView(R.layout.activity_music_player)
 
         val bundle = intent.extras
 
         if(bundle != null) {
-            posit = bundle.getInt("Music")
+            if(!opened) {
+                posit = bundle.getInt("Music")
+                opened = true
+            }
 
             if(posit >= StaticStore.musicnames.size) return
 
@@ -118,6 +124,9 @@ class MusicPlayer : AppCompatActivity() {
                     }
 
                     sound.reset()
+                }
+                sound.setOnCompletionListener {
+
                 }
                 reset()
                 finish()
@@ -352,24 +361,15 @@ class MusicPlayer : AppCompatActivity() {
 
                     sound.setDataSource(g.absolutePath)
 
+                    muprog.max = StaticStore.durations[posit]
                     name.text = g.name
                     max.text = StaticStore.musicnames[posit]
-
-                    val mmr = MediaMetadataRetriever()
-                    mmr.setDataSource(g.absolutePath)
-
-                    muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
 
                     sound.start()
                 }
             }
 
-            val mmr = MediaMetadataRetriever()
-            mmr.setDataSource(f.absolutePath)
-
-            val time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-
-            muprog.max = time.toInt()
+            muprog.max = StaticStore.durations[posit]
             muprog.progress = prog
             name.text = f.name
             max.text = StaticStore.musicnames[posit]
@@ -405,6 +405,7 @@ class MusicPlayer : AppCompatActivity() {
                 } else {
                     nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer,R.attr.colorAccent))
                     sound.isLooping = false
+                    looping = false
                     loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer,R.attr.HintPrimary))
                 }
 
@@ -559,6 +560,8 @@ class MusicPlayer : AppCompatActivity() {
 
     override fun onDestroy() {
         destroyed = true
+        musicreceive.unregister()
+        unregisterReceiver(musicreceive)
         super.onDestroy()
     }
 
@@ -567,11 +570,16 @@ class MusicPlayer : AppCompatActivity() {
 
         var tim = time.toFloat()/1000f
 
-        val min = (tim / 60f).toInt()
+        var min = (tim / 60f).toInt()
 
         tim -= min*60f
 
-        val sec = round(tim).toInt()
+        var sec = round(tim).toInt()
+
+        if(sec == 60) {
+            sec = 0
+            min += 1
+        }
 
         t = if(sec < 10)
             "$min:0$sec"
@@ -592,9 +600,20 @@ class MusicPlayer : AppCompatActivity() {
     }
 
     private class MusicReceiver(private val ac: Activity) : BroadcastReceiver() {
+        private var unregister = false
+        private var rotated = true
+
         override fun onReceive(context: Context?, intent: Intent?) {
+            if(rotated) {
+                rotated = false
+                return
+            }
+
+            if(unregister) return
+
             if(intent?.action.equals(Intent.ACTION_HEADSET_PLUG)) {
-                when(intent?.getIntExtra("state",-1)) {
+
+                when(intent?.getIntExtra("state",-1) ?: -1) {
                     0 -> if(sound.isInitialized && !sound.isReleased) {
                         if(sound.isRunning || sound.isPlaying) {
                             val play: FloatingActionButton = ac.findViewById(R.id.musicplay)
@@ -604,6 +623,10 @@ class MusicPlayer : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        fun unregister() {
+            unregister = true
         }
 
     }

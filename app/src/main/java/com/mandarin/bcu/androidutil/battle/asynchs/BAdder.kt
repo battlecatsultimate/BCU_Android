@@ -33,9 +33,8 @@ import common.system.P
 import java.lang.ref.WeakReference
 import kotlin.math.ln
 
-class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int, private val stage: Int, private val star: Int, itme: Int) : AsyncTask<Void?, Int?, Void?>() {
+class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int, private val stage: Int, private val star: Int, private val item: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
-    private val item = itme
     private var x = 0f
     private var y = 0f
     public override fun onPreExecute() {
@@ -77,7 +76,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                 val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current.sele, intArrayOf(item), 0L)
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                 val axis = shared.getBoolean("Axis", true)
-                val view = BattleView(activity, ctrl, 1, axis)
+                val view = BattleView(activity, ctrl, 1, axis,activity)
                 view.initialized = false
                 view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
                 view.id = R.id.battleView
@@ -216,6 +215,44 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                         activity.finish()
                     }
                 }
+                val retry = activity.findViewById<Button>(R.id.battleretry)
+                retry.setOnClickListener {
+                    if (battleView.painter.bf.sb.ebase.health > 0 && battleView.painter.bf.sb.ubase.health > 0 && shared.getBoolean("retry_show", true)) {
+                        val alert = AlertDialog.Builder(activity, R.style.AlertDialog)
+                        val inflater = LayoutInflater.from(activity)
+                        val layouts = inflater.inflate(R.layout.do_not_show_dialog, null)
+                        val donotshow = layouts.findViewById<CheckBox>(R.id.donotshowcheck)
+                        val content = layouts.findViewById<TextView>(R.id.donotshowcontent)
+                        val cancel = layouts.findViewById<Button>(R.id.battlecancel)
+                        val exit = layouts.findViewById<Button>(R.id.battledexit)
+                        exit.text = activity.getString(R.string.battle_retry)
+                        content.text = activity.getString(R.string.battle_sure_retry)
+                        alert.setView(layouts)
+                        donotshow.setOnCheckedChangeListener { _, isChecked ->
+                            if (isChecked) {
+                                val editor = shared.edit()
+                                editor.putBoolean("retry_show", false)
+                                editor.apply()
+                            } else {
+                                val editor = shared.edit()
+                                editor.putBoolean("retry_show", true)
+                                editor.apply()
+                            }
+                        }
+                        val dialog = alert.create()
+                        cancel.setOnClickListener { dialog.cancel() }
+                        exit.setOnClickListener {
+                            battleView.retry()
+                            P.stack.clear()
+                            clear()
+                            dialog.dismiss()
+                        }
+                        dialog.show()
+                    } else {
+                        battleView.retry()
+                    }
+                }
+
                 val mus = activity.findViewById<Switch>(R.id.switchmus)
                 val musvol = activity.findViewById<SeekBar>(R.id.seekmus)
                 mus.isChecked = shared.getBoolean("music", true)

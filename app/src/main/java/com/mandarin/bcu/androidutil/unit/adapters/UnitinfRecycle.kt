@@ -261,7 +261,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
         viewHolder.unitatktb.setOnClickListener { if (viewHolder.unitatkt.text.toString().endsWith("f")) viewHolder.unitatkt.text = s.getAtkTime(f, 1) else viewHolder.unitatkt.text = s.getAtkTime(f, 0) }
         viewHolder.unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
                 viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
@@ -275,7 +275,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         viewHolder.unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
                 viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
@@ -590,7 +590,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
         for (i in viewHolder.pcoins.indices) {
             viewHolder.pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     pcoins[+1] = viewHolder.pcoins[i]!!.selectedItem as Int
                     validate(viewHolder, f, t)
                 }

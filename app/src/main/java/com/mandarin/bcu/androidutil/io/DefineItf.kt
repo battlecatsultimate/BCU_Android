@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.io
 
 import android.graphics.BitmapFactory
+import android.os.Environment
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import common.CommonStatic
 import common.CommonStatic.Itf
@@ -8,6 +9,7 @@ import common.io.InStream
 import common.io.OutStream
 import common.system.VImg
 import common.system.files.VFile
+import common.util.anim.AnimC
 import java.io.*
 import java.util.*
 import java.util.function.Function
@@ -23,6 +25,10 @@ class DefineItf : Itf {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    override fun loadAnim(ins: InStream?): AnimC.AnimLoader {
+        return AACLoader(ins)
     }
 
     override fun delete(file: File) {
@@ -48,6 +54,14 @@ class DefineItf : Itf {
 
     override fun readReal(fi: File): VImg {
         return VImg(BitmapFactory.decodeFile(fi.absolutePath))
+    }
+
+    override fun route(path: String?): File {
+        val dir = Environment.getExternalStorageDirectory().absolutePath+"/BCU"
+
+        val realPath = path?.replace(".",dir)
+
+        return File(realPath)
     }
 
     override fun <T> readSave(path: String, func: Function<Queue<String>, T>): T {

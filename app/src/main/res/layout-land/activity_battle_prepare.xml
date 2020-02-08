@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/def_set_lineup"
                 android:textColor="?attr/TextPrimary"
@@ -83,7 +83,7 @@
                 android:id="@+id/battlestar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:popupBackground="?attr/backgroundPrimary"
                 app:layout_constraintStart_toStartOf="@+id/battleequip"
                 app:layout_constraintTop_toBottomOf="@+id/battleequip" />
@@ -109,25 +109,25 @@
                 android:layout_marginStart="16dp"
                 android:text="@string/battle_rich"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/battlestar"
-                app:layout_constraintStart_toEndOf="@+id/battlestar"
-                app:layout_constraintTop_toTopOf="@+id/battlestar" />
+                app:layout_constraintBottom_toBottomOf="@+id/battlesniper"
+                app:layout_constraintStart_toEndOf="@+id/battlesniper"
+                app:layout_constraintTop_toTopOf="@+id/battlesniper" />
 
             <CheckBox
                 android:id="@+id/battlesniper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/battle_sniper"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/battlerich"
-                app:layout_constraintStart_toEndOf="@+id/battlerich"
-                app:layout_constraintTop_toTopOf="@+id/battlerich" />
+                app:layout_constraintStart_toStartOf="@+id/battlestar"
+                app:layout_constraintTop_toBottomOf="@+id/battlestar" />
 
             <Button
                 android:id="@+id/battlestart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="24dp"
                 android:backgroundTint="?attr/ButtonPrimary"
@@ -135,7 +135,9 @@
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/battleequip" />
+                app:layout_constraintStart_toStartOf="@+id/battleequip"
+                app:layout_constraintTop_toBottomOf="@+id/battlesniper"
+                app:layout_constraintVertical_bias="1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
@@ -144,10 +146,11 @@
         android:id="@+id/battlestgname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:text="@string/def_stage_name"
         android:textColor="?attr/UnitinfoName"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/battlebck"
         app:layout_constraintStart_toEndOf="@+id/battlebck"
         app:layout_constraintTop_toTopOf="@+id/battlebck" />

@@ -12,7 +12,6 @@ import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.asynchs.AddGIF
-import com.mandarin.bcu.androidutil.animation.asynchs.GIFAsync
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import common.system.P
 import common.util.ImgCore
@@ -21,6 +20,7 @@ import common.util.anim.EAnimU
 class AnimationCView : View {
     @JvmField
     var anim: EAnimU? = null
+    val activity: Activity?
     private var night = false
     @JvmField
     var trans = false
@@ -37,7 +37,7 @@ class AnimationCView : View {
     private val range = Paint()
     private var cv: CVGraphics? = null
     private var p2: P? = null
-    private var async: GIFAsync? = null
+    private var animP: P? = null
     private var t: Long = -1
     private var t1: Long = -1
     var fps: Long = 0
@@ -47,7 +47,8 @@ class AnimationCView : View {
     var sleeptime: Long = 0
     var started = false
 
-    constructor(context: Context?, id: Int, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, id: Int, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+        activity = context
         renderer = Renderer()
         this.id = id
         this.form = form
@@ -70,10 +71,12 @@ class AnimationCView : View {
         p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
         cv = CVGraphics(Canvas(), p1, bp, night)
         this.night = night
+        StaticStore.keepDoing = true
     }
 
-    constructor(context: Context?, id: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, id: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
         this.id = id
+        activity = context
         anim = StaticStore.enemies[id].getEAnim(mode)
         anim?.setTime(StaticStore.frame)
         this.textView = textView
@@ -91,6 +94,7 @@ class AnimationCView : View {
         p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
         cv = CVGraphics(Canvas(), p1, bp, night)
         this.night = night
+        StaticStore.keepDoing = true
     }
 
     public override fun onAttachedToWindow() {
@@ -102,12 +106,12 @@ class AnimationCView : View {
     @SuppressLint("DrawAllocation")
     public override fun onDraw(canvas: Canvas) {
         if (StaticStore.gifisSaving && !StaticStore.keepDoing) {
-            async!!.keepDoing = false
             StaticStore.keepDoing = true
         }
         if (StaticStore.enableGIF) {
-            p2 = P((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
-            if (form != -1) AddGIF(width, height, p2 ?: P((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble()), size, night, id, true).execute() else AddGIF(width, height, p2 ?: P((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble()), size, night, id, false).execute()
+            animP = P.newP((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
+            AddGIF(activity, width, height, animP, size, night, id, form != -1).execute()
+            StaticStore.gifFrame++
         }
         if (StaticStore.play) {
             if (t1 != -1L && t - t1 != 0L) {
@@ -141,15 +145,6 @@ class AnimationCView : View {
         removeCallbacks(renderer)
     }
 
-    fun startAsync(activity: Activity) {
-        async = if (form != -1) {
-            GIFAsync(this, activity, id, form)
-        } else {
-            GIFAsync(this, activity, id)
-        }
-        async!!.execute()
-    }
-
     private inner class Renderer : Runnable {
         override fun run() {
             t = System.currentTimeMillis()
@@ -157,7 +152,17 @@ class AnimationCView : View {
             textView!!.text = context.getText(R.string.anim_frame).toString().replace("-", "" + StaticStore.frame)
             fpsind!!.text = context.getText(R.string.def_fps).toString().replace("-", "" + fps)
             seekBar!!.progress = StaticStore.frame
-            gif!!.text = context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame)
+            if(StaticStore.enableGIF || StaticStore.gifisSaving) {
+                val giftext = if (StaticStore.gifFrame != 0)
+                    context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame) + " (" + (AddGIF.frame.toFloat() / StaticStore.gifFrame.toFloat() * 100f).toInt() + "%)"
+                else
+                    context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame)
+                gif!!.text = giftext
+            } else {
+                if(gif?.visibility != GONE) {
+                    gif?.visibility = GONE
+                }
+            }
             if (started) postDelayed(this, 1000L / 30L + sleeptime)
         }
     }

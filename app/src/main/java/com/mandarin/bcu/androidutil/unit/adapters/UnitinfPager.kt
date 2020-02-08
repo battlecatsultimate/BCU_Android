@@ -184,7 +184,7 @@ class UnitinfPager : Fragment() {
             unitabil.layoutManager = linearLayoutManager
             val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, activity)
             unitabil.adapter = adapterAbil
-            ViewCompat.setNestedScrollingEnabled(unitabil, false)
+            ViewCompat.setNestedScrollingEnabled(unitabil, true)
         } else {
             unitabil.visibility = View.GONE
         }
@@ -329,7 +329,7 @@ class UnitinfPager : Fragment() {
         }
         unitatktb.setOnClickListener { if (unitatkt.text.toString().endsWith("f")) unitatkt.text = s!!.getAtkTime(f, 1) else unitatkt.text = s!!.getAtkTime(f, 0) }
         unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
                 unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
@@ -343,7 +343,7 @@ class UnitinfPager : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
                 unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
@@ -654,7 +654,7 @@ class UnitinfPager : Fragment() {
         }
         for (i in pcoins.indices) {
             pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, views: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
                     pcoinlev[+1] = pcoins[i]!!.selectedItem as Int
                     validate(view, f, t)
                 }

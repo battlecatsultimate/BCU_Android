@@ -3,6 +3,7 @@
 
     <item name="lineupView" type="id"/>
     <item name="battleView" type="id"/>
+    <item name="animationView" type="id"/>
     <item name="unitshowlist" type="id"/>
     <item name="enemyshowlist" type="id"/>
 

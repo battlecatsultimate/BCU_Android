@@ -78,9 +78,9 @@
                 <TextView
                     android:id="@+id/configdeflev"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.7"
-                    android:gravity="center_vertical"
                     android:text="@string/config_deflev"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="14sp" />
@@ -222,9 +222,9 @@
                 <TextView
                     android:id="@+id/configlang"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.6"
-                    android:gravity="center_vertical"
                     android:text="@string/config_lang"
                     android:textColor="?attr/TextPrimary" />
 

@@ -2,8 +2,6 @@ package com.mandarin.bcu.androidutil.music.asynchs
 
 import android.app.Activity
 import android.content.Intent
-import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.AsyncTask
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
@@ -14,6 +12,7 @@ import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.music.adapters.MusicListAdapter
 import common.CommonStatic
 import common.util.pack.Pack
@@ -41,11 +40,14 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
             for(i in Pack.def.ms.list.indices) {
                 val f = Pack.def.ms[i]
 
-                val uri = Uri.parse(f.absolutePath)
-                val mmr = MediaMetadataRetriever()
-                mmr.setDataSource(ac,uri)
+                val sp = SoundPlayer()
+                sp.setDataSource(f.toString())
+                sp.prepare()
+                StaticStore.durations.add(sp.duration)
 
-                var time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toFloat()/1000f
+                var time = sp.duration.toFloat()/1000f
+
+                sp.release()
 
                 val min = (time/60f).toInt()
 

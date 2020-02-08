@@ -73,6 +73,9 @@ object SoundHandler {
             if (mp == null) {
                 available--
                 return SoundPlayer()
+            } else if(mp.isReleased) {
+                available--
+                return SoundPlayer()
             }
             available--
             return mp

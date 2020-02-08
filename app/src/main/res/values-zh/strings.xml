@@ -18,6 +18,7 @@
         <item>挑戰賽</item>
         <item>真傳奇關卡</item>
         <item>喵力達專用關卡</item>
+        <item>RA</item>
     </string-array>
     <string name="sch_bla">黑色敵人</string>
     <string name="sch_fl">飄浮敵人</string>
@@ -142,7 +143,7 @@
     <string name="abi_sum">Summon</string>
     <string name="abi_mvatk">Moving Attack</string>
     <string name="abi_thch">Theme Change</string>
-    <string name="abi_poi">Poison</string>
+    <string name="abi_poi">Venom</string>
     <string name="abi_boswv">Boss Wave</string>
     <string name="abi_imvatk">Imu.Moving Attack</string>
     <string name="abi_isnk">Imu.Sniper KB</string>
@@ -152,7 +153,7 @@
     <string name="abi_istt">Imu.Stop Time</string>
     <string name="abi_ithch">Imu.Theme Change</string>
     <string name="abi_sui">Suicide</string>
-    <string name="abi_ipoi">Imu.Poison</string>
+    <string name="abi_ipoi">Imu.Venom</string>
     <string name="unit_info_strong">" (受到傷害 x0.5~x0.4 / 輸出傷害 x1.5~x1.8)"</string>
     <string name="unit_info_masdam">" (輸出傷害 x3~x4)"</string>
     <string name="unit_info_resis">" (受到傷害 x0.25~x0.2)"</string>
@@ -163,17 +164,17 @@
     <string name="unit_info_wkill">" (受到傷害 x0.1 / 輸出傷害 x5)"</string>
     <string name="def_unit_s_icon">Unit\'s Icon</string>
     <string name="unit_info_evakill">" (受到傷害 x0.2 / 輸出傷害 x5)"</string>
-    <string name="unit_info_text0">"_ % 機會"</string>
-    <string name="unit_info_text1">"持續 _ f"</string>
+    <string name="unit_info_text0">_% 機會</string>
+    <string name="unit_info_text1">持續 _f</string>
     <string name="unit_info_text2">"製造等級 _ "</string>
-    <string name="unit_info_text3">"至 _ %"</string>
+    <string name="unit_info_text3">至 _%</string>
     <string name="unit_info_text4">"至 _ 後方"</string>
-    <string name="unit_info_text5">"殘餘 _ % 體力, "</string>
-    <string name="unit_info_text6">" _ %"</string>
-    <string name="unit_info_text7">" _ 次"</string>
+    <string name="unit_info_text5">"殘餘 _% 體力, "</string>
+    <string name="unit_info_text6">" _%"</string>
+    <string name="unit_info_text7">" _次"</string>
     <string name="def_unit_info_text8">次</string>
-    <string name="unit_info_text9">"在 _ f 後"</string>
-    <string name="unit_info_text10">"有著 _ % 血量"</string>
+    <string name="unit_info_text9">在 _f 後</string>
+    <string name="unit_info_text10">有著 _% 血量</string>
     <string name="def_unit_info_text11">"Immune to "</string>
     <string name="unit_info_first">First</string>
     <string name="unit_info_second">Second</string>
@@ -218,10 +219,10 @@
     <string name="talen_trait">"攻擊對象 : "</string>
     <string name="talen_abil">"能力 : "</string>
     <string name="def_unit_info_text12">"Resist to "</string>
-    <string name="unit_info_text13">" (減少 _ % 時間)"</string>
-    <string name="unit_info_text14">" (減少 _ % 距離)"</string>
-    <string name="unit_info_text15">" (減少 _ % 傷害)"</string>
-    <string name="unit_info_text16">" (減少 _ % 時間)"</string>
+    <string name="unit_info_text13">" (減少 _% 時間)"</string>
+    <string name="unit_info_text14">" (減少 _% 距離)"</string>
+    <string name="unit_info_text15">" (減少 _% 傷害)"</string>
+    <string name="unit_info_text16">" (減少 _% 時間)"</string>
     <string name="talen_warp">抗傳耐性</string>
     <string name="unzip_fail">解壓縮失敗…</string>
     <string name="fruit9">綠色貓薄荷</string>
@@ -275,7 +276,7 @@
     <string name="stg_info_stgd">載入篇章資料…</string>
     <string name="stg_info_stgs">篩選篇章…</string>
     <string name="sch_abi_sb">渾身一擊</string>
-    <string name="unit_info_text17">" (攻擊力增加 _ %)"</string>
+    <string name="unit_info_text17">" (攻擊力增加 _%)"</string>
     <string name="abi_imcri">Imu.Critical</string>
     <string name="stg_list_enemic">載入敵人圖示…</string>
     <string name="stg_list_stl">載入關卡資料…</string>
@@ -415,7 +416,7 @@
     <string name="trea_redfr">血紅果實</string>
     <string name="trea_zombiefr">冥界果實</string>
     <string name="sch_abi_poi">劇毒</string>
-    <string name="unit_info_text18">" (殘害 _ % 目標的生命值)"</string>
+    <string name="unit_info_text18">" (殘害 _% 目標的生命值)"</string>
     <string name="lineup_const">城堡寶開發隊</string>
     <string name="lineup_const_breaker">斬盾砲</string>
     <string name="lineup_const_castle">貓咪城</string>
@@ -536,13 +537,21 @@
     <string name="config_se">音效</string>
     <string name="config_sound">音量</string>
     <string name="config_app_name">Battle Cats Ultimate</string>
-    <string name="config_build_ver">Build Version : -</string>
-    <string name="dev_activate">Activate</string>
-    <string name="dev_pass_active">Enter password to activate developer mode</string>
-    <string name="dev_pass_req">Password Required</string>
-    <string name="dev_password">Password</string>
-    <string name="dev_pass_wrong">You entered wrong password</string>
-    <string name="dev_pass_activated">Developer Mode Activated</string>
-    <string name="music_read">Reading Music Data…</string>
-    <string name="main_music">Music</string>
+    <string name="config_build_ver">版本 : -</string>
+    <string name="dev_activate">傳送</string>
+    <string name="dev_pass_active">需要密語才能進入另一個世界</string>
+    <string name="dev_pass_req">你不應該在這裡的</string>
+    <string name="dev_password">ㄇㄧㄇㄚ</string>
+    <string name="dev_pass_wrong">滾</string>
+    <string name="dev_pass_activated">歡迎</string>
+    <string name="music_read">讀取音樂資料…</string>
+    <string name="main_music">背景音樂</string>
+    <string name="battle_lost">慘敗…</string>
+    <string name="battle_won">大獲全勝!!</string>
+    <string name="battle_lost_boss">慘敗…\n魔王體力 : _%</string>
+    <string name="battle_retry">重試</string>
+    <string name="battle_sure_retry">要重試戰鬥嗎?</string>
+    <string name="sch_abi_surge">Surge Attack</string>
+    <string name="unit_info_text20">" ~ _ )"</string>
+    <string name="unit_info_text19">" (Created randomly between _"</string>
 </resources>

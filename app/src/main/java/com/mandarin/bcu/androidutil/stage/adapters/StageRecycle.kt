@@ -76,7 +76,7 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         val arrayAdapter = ArrayAdapter(activity, R.layout.spinneradapter, stars)
         viewHolder.star.adapter = arrayAdapter
         viewHolder.star.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val enrec: RecyclerView = activity.findViewById(R.id.stginfoenrec)
                 enrec.layoutManager = LinearLayoutManager(activity)
                 ViewCompat.setNestedScrollingEnabled(enrec, false)
