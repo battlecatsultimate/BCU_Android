@@ -26,9 +26,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.AdapterAbil
-import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.system.MultiLangCont
@@ -134,7 +134,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             language = Resources.getSystem().configuration.locales[0].language
         }
         val proc: List<String>
-        proc = if (language == "ko") {
+        proc = if (language == "ko" || language == "ja") {
             Interpret.getProc(em.de, 1, fs, activity)
         } else {
             Interpret.getProc(em.de, 0, fs, activity)
@@ -542,7 +542,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             language = Resources.getSystem().configuration.locales[0].language
         }
         val proc: List<String>
-        proc = if (language == "ko") {
+        proc = if (language == "ko" || language == "ja") {
             Interpret.getProc(em.de, 1, fs, activity)
         } else {
             Interpret.getProc(em.de, 0, fs, activity)

@@ -553,4 +553,18 @@
     <string name="sch_abi_surge">Surge Attack</string>
     <string name="unit_info_text19">" (Created randomly between _"</string>
     <string name="unit_info_text20">" ~ _ )"</string>
+    <string name="music_err">Error has occurred while loading music files</string>
+    <string name="stg_sch_enem">Enemies</string>
+    <string name="stg_sch_hasboss">Has Boss</string>
+    <string name="stg_sch_less">Less than</string>
+    <string name="stg_sch_greater">Greater than</string>
+    <string name="stg_sch_same">Same</string>
+    <string name="stg_sch_enemy">Enemy</string>
+    <string name="stg_sch_nob">No Boss</string>
+    <string name="stg_sch_star1">1 Star</string>
+    <string name="stg_sch_star2">2 Stars</string>
+    <string name="stg_sch_star3">3 Stars</string>
+    <string name="stg_sch_star4">4 Stars</string>
+    <string name="gif_exit">Exit</string>
+    <string name="filter_nores">No Results</string>
 </resources>

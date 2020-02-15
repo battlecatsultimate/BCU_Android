@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.mandarin.bcu.R
 import common.util.stage.MapColc
 
-class MapListAdapter(private val activity: Activity, private val maps: Array<String>, private val mapcode: Int) : ArrayAdapter<String?>(activity, R.layout.map_list_layout, maps) {
+class MapListAdapter(private val activity: Activity, private val maps: Array<String>, private val mapcode: Int, private val positions: ArrayList<Int>) : ArrayAdapter<String?>(activity, R.layout.map_list_layout, maps) {
 
     private class ViewHolder constructor(row: View) {
         var name: TextView = row.findViewById(R.id.map_list_name)
@@ -32,9 +32,16 @@ class MapListAdapter(private val activity: Activity, private val maps: Array<Str
             holder = row.tag as ViewHolder
         }
 
-        holder.name.text = withID(position, maps[position])
+        holder.name.text = withID(positions[position], maps[position])
         val numbers: String
-        numbers = if (mc != null) if (mc.maps[position].list.size == 1) mc.maps[position].list.size.toString() + activity.getString(R.string.map_list_stage) else mc.maps[position].list.size.toString() + activity.getString(R.string.map_list_stages) else 0.toString() + activity.getString(R.string.map_list_stages)
+        numbers =
+                if (mc != null)
+                    if (mc.maps[positions[position]].list.size == 1)
+                        mc.maps[positions[position]].list.size.toString() + activity.getString(R.string.map_list_stage)
+                    else
+                        mc.maps[positions[position]].list.size.toString() + activity.getString(R.string.map_list_stages)
+                else
+                    0.toString() + activity.getString(R.string.map_list_stages)
         holder.count.text = numbers
         return row
     }

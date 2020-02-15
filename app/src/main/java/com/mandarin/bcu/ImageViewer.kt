@@ -63,12 +63,11 @@ class ImageViewer : AppCompatActivity() {
             }
         }
 
-        if (shared.getInt("Orientation", 0) == 1)
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        else if (shared.getInt("Orientation", 0) == 2)
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-        else if (shared.getInt("Orientation", 0) == 0)
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
 
         setContentView(R.layout.activity_image_viewer)
 

@@ -168,7 +168,7 @@
     <string name="unit_info_text1">"_f 동안 "</string>
     <string name="unit_info_text2">"레벨 _ "</string>
     <string name="unit_info_text3">"적을 _% 로 "</string>
-    <string name="unit_info_text4">"_ 만큼 "</string>
+    <string name="unit_info_text4">"거리 _ 만큼 "</string>
     <string name="unit_info_text5">"_% 체력에서, "</string>
     <string name="unit_info_text6">"_% 만큼 "</string>
     <string name="unit_info_text7">"_번 "</string>
@@ -554,4 +554,17 @@
     <string name="sch_abi_surge">열파 공격</string>
     <string name="unit_info_text20">" ~ _ 사이에서 랜덤으로 생성)"</string>
     <string name="unit_info_text19">" ( _"</string>
+    <string name="music_err">음악 파일을 불러오는 도중 오류가 발생했습니다</string>
+    <string name="stg_sch_enem">적</string>
+    <string name="stg_sch_greater">초과</string>
+    <string name="stg_sch_hasboss">보스 존재</string>
+    <string name="stg_sch_less">미만</string>
+    <string name="stg_sch_same">동일</string>
+    <string name="stg_sch_enemy">적</string>
+    <string name="stg_sch_nob">보스 없음</string>
+    <string name="stg_sch_star1">1 성</string>
+    <string name="stg_sch_star2">2 성</string>
+    <string name="stg_sch_star3">3 성</string>
+    <string name="stg_sch_star4">4 성</string>
+    <string name="gif_exit">나가기</string>
 </resources>

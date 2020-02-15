@@ -34,7 +34,10 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
     override fun doInBackground(vararg params: Void?): Void? {
         val ac = weak.get() ?: return null
 
-        SoundHandler.read()
+        if(!StaticStore.musicread) {
+            SoundHandler.read()
+            StaticStore.musicread = true
+        }
 
         if(StaticStore.musicnames.size != Pack.def.ms.size())
             for(i in Pack.def.ms.list.indices) {
@@ -49,11 +52,16 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                 sp.release()
 
-                val min = (time/60f).toInt()
+                var min = (time/60f).toInt()
 
                 time -= min.toFloat()*60f
 
-                val sec = round(time).toInt()
+                var sec = round(time).toInt()
+
+                if(sec == 60) {
+                    min += 1
+                    sec = 0
+                }
 
                 val mins = min.toString()
 

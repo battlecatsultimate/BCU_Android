@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -121,20 +122,38 @@ class AnimationViewer : AppCompatActivity() {
 
         if (resultCode == Activity.RESULT_OK) {
             val schname = findViewById<TextInputEditText>(R.id.animschname)
+
             val filterEntity: FilterEntity
+
             filterEntity = if (Objects.requireNonNull(schname.text).toString().isEmpty()) FilterEntity(StaticStore.unitnumber) else FilterEntity(StaticStore.unitnumber, schname.text.toString())
+
             numbers = filterEntity.setFilter()
+
+            val loadt = findViewById<TextView>(R.id.unitinfst)
+
+            if(numbers.isEmpty()) {
+                loadt.visibility = View.VISIBLE
+                loadt.setText(R.string.filter_nores)
+            } else {
+                loadt.visibility = View.GONE
+            }
+
             val newName = ArrayList<String>()
+
             for (i in numbers) {
                 newName.add(StaticStore.names[i])
             }
+
             val unitListAdapter = UnitListAdapter(this, newName.toTypedArray(), numbers)
+
             list!!.adapter = unitListAdapter
+
             list.onItemLongClickListener = OnItemLongClickListener { _, _, position, _ ->
                 StaticStore.showShortMessage(this@AnimationViewer, showName(numbers[position]))
                 list.isClickable = false
                 true
             }
+
             list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
                 if (SystemClock.elapsedRealtime() - StaticStore.unitinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
                 val result = Intent(this@AnimationViewer, UnitInfo::class.java)
@@ -142,6 +161,7 @@ class AnimationViewer : AppCompatActivity() {
                 startActivity(result)
                 StaticStore.unitinflistClick = SystemClock.elapsedRealtime()
             }
+
             schname.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}

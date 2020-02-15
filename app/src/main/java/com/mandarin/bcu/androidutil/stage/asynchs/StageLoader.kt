@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.StageInfo
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.StaticStore.filter
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.stage.adapters.StageListAdapter
 import common.system.MultiLangCont
@@ -36,12 +37,31 @@ class StageLoader(activity: Activity, private val mapcode: Int, private val stid
     override fun onProgressUpdate(vararg result: Int?) {
         val activity = weakReference.get() ?: return
         val mc = StaticStore.map[mapcode] ?: return
-        val stm = mc.maps[stid]
-        val stages = arrayOfNulls<String>(stm.list.size)
-        for (i in stages.indices) {
-            stages[i] = MultiLangCont.STNAME.getCont(stm.list[i])
+        val stm = mc.maps[stid] ?: return
+
+        val stageListAdapter:StageListAdapter
+        val positions = ArrayList<Int>()
+
+        if(filter == null) {
+            val stages = arrayOfNulls<String>(stm.list.size)
+
+            for (i in stages.indices) {
+                stages[i] = MultiLangCont.STNAME.getCont(stm.list[i])
+                positions.add(i)
+            }
+
+            stageListAdapter = StageListAdapter(activity, stages, mapcode, stid, positions)
+        } else {
+            val stages = arrayOfNulls<String>(filter[mapcode][stid].size)
+
+            for(i in stages.indices) {
+                stages[i] = MultiLangCont.STNAME.getCont(stm.list[filter[mapcode][stid][i]])
+                positions.add(filter[mapcode][stid][i])
+            }
+
+            stageListAdapter = StageListAdapter(activity, stages, mapcode, stid,positions)
         }
-        val stageListAdapter = StageListAdapter(activity, stages, mapcode, stid)
+
         val stglist = activity.findViewById<ListView>(R.id.stglist)
         stglist.adapter = stageListAdapter
         stglist.onItemClickListener = OnItemClickListener { _, _, position, _ ->
@@ -50,7 +70,7 @@ class StageLoader(activity: Activity, private val mapcode: Int, private val stid
             val intent = Intent(activity, StageInfo::class.java)
             intent.putExtra("mapcode", mapcode)
             intent.putExtra("stid", stid)
-            intent.putExtra("posit", position)
+            intent.putExtra("posit", positions[position])
             activity.startActivity(intent)
         }
         val bck: FloatingActionButton = activity.findViewById(R.id.stglistbck)

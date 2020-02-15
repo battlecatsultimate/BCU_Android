@@ -13,8 +13,9 @@ import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
+import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -29,8 +30,8 @@ import common.system.fake.ImageBuilder
 import java.util.*
 
 open class EnemyList : AppCompatActivity() {
-    private var list: ListView? = null
     private var numbers = ArrayList<Int>()
+    private var mode = EAdder.MODE_INFO
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
@@ -49,9 +50,16 @@ open class EnemyList : AppCompatActivity() {
         }
         if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         setContentView(R.layout.activity_enemy_list)
+
         ImageBuilder.builder = BMBuilder()
+
+        val extra = intent.extras
+
+        if(extra != null) {
+            mode = extra.getInt("mode")
+        }
+
         val back = findViewById<FloatingActionButton>(R.id.enlistbck)
-        list = findViewById(R.id.enlist)
         val search = findViewById<FloatingActionButton>(R.id.enlistsch)
         back.setOnClickListener {
             StaticStore.filterReset()
@@ -63,7 +71,7 @@ open class EnemyList : AppCompatActivity() {
             }
         })
         StaticStore.getEnemynumber()
-        EAdder(this, StaticStore.emnumber).execute()
+        EAdder(this, StaticStore.emnumber,mode).execute()
     }
 
     protected fun gotoFilter() {
@@ -74,22 +82,74 @@ open class EnemyList : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode == Activity.RESULT_OK) {
             val schname = findViewById<TextInputEditText>(R.id.enemlistschname)
+            val list = findViewById<ListView>(R.id.enlist)
+
             val filterEntity: FilterEntity
+
             filterEntity = if (Objects.requireNonNull(schname.text).toString().isNotEmpty()) FilterEntity(StaticStore.emnumber, schname.text.toString()) else FilterEntity(StaticStore.emnumber)
+
             numbers = filterEntity.eSetFilter()
-            val newName = ArrayList<String>()
-            for (i in numbers) newName.add(StaticStore.enames[i])
-            val enemyListAdapter = EnemyListAdapter(this, newName.toTypedArray(), numbers)
-            list!!.adapter = enemyListAdapter
-            list!!.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-                if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
-                val result = Intent(this@EnemyList, EnemyInfo::class.java)
-                result.putExtra("ID", numbers[position])
-                startActivity(result)
-                StaticStore.unitinflistClick = SystemClock.elapsedRealtime()
+
+            val loadt = findViewById<TextView>(R.id.enlistst)
+
+            if(numbers.isEmpty()) {
+                loadt.visibility = View.VISIBLE
+                loadt.setText(R.string.filter_nores)
+            } else {
+                loadt.visibility = View.GONE
             }
+
+            val newName = ArrayList<String>()
+
+            for (i in numbers)
+                newName.add(StaticStore.enames[i])
+
+            val enemyListAdapter = EnemyListAdapter(this, newName.toTypedArray(), numbers)
+
+            list.adapter = enemyListAdapter
+
+            when(mode) {
+                EAdder.MODE_INFO -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
+                            return@OnItemClickListener
+
+                        val result = Intent(this@EnemyList, EnemyInfo::class.java)
+
+                        result.putExtra("ID", numbers[position])
+
+                        startActivity(result)
+
+                        StaticStore.unitinflistClick = SystemClock.elapsedRealtime()
+                    }
+                }
+                EAdder.MODE_SELECTION -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        val intent = Intent()
+                        intent.putExtra("id", numbers[position])
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    }
+                }
+                else -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
+                            return@OnItemClickListener
+
+                        val result = Intent(this@EnemyList, EnemyInfo::class.java)
+
+                        result.putExtra("ID", numbers[position])
+
+                        startActivity(result)
+
+                        StaticStore.unitinflistClick = SystemClock.elapsedRealtime()
+                    }
+                }
+            }
+
             schname.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}

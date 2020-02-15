@@ -48,7 +48,12 @@ class Adder(context: Activity) : AsyncTask<Void?, Int?, Void?>() {
         if (StaticStore.names == null) {
             StaticStore.names = arrayOfNulls(StaticStore.unitnumber)
             for (i in StaticStore.names.indices) {
-                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
+                try {
+                    StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0])
+                            ?: "")
+                } catch (e: NullPointerException) {
+                    StaticStore.names[i] = ""
+                }
             }
         }
         publishProgress(2)
@@ -67,6 +72,14 @@ class Adder(context: Activity) : AsyncTask<Void?, Int?, Void?>() {
                 val schname: TextInputEditText = activity.findViewById(R.id.animschname)
                 filterEntity = if (Objects.requireNonNull(schname.text).toString().isEmpty()) FilterEntity(StaticStore.unitnumber) else FilterEntity(StaticStore.unitnumber, schname.text.toString())
                 numbers = filterEntity.setFilter()
+
+                if(numbers.isEmpty()) {
+                    ulistst.visibility = View.VISIBLE
+                    ulistst.setText(R.string.filter_nores)
+                } else {
+                    ulistst.visibility = View.GONE
+                }
+
                 val names = ArrayList<String>()
                 for (i in numbers) {
                     names.add(StaticStore.names[i])
@@ -91,6 +104,14 @@ class Adder(context: Activity) : AsyncTask<Void?, Int?, Void?>() {
                     override fun afterTextChanged(s: Editable) {
                         val filterEntity1 = FilterEntity(StaticStore.unitnumber, s.toString())
                         numbers = filterEntity1.setFilter()
+
+                        if(numbers.isEmpty()) {
+                            ulistst.visibility = View.VISIBLE
+                            ulistst.setText(R.string.filter_nores)
+                        } else {
+                            ulistst.visibility = View.GONE
+                        }
+
                         val names1 = ArrayList<String>()
                         for (i in numbers) {
                             names1.add(StaticStore.names[i])
@@ -109,13 +130,11 @@ class Adder(context: Activity) : AsyncTask<Void?, Int?, Void?>() {
         if (activity == null) return
         val list = activity.findViewById<ListView>(R.id.unitinflist)
         val prog = activity.findViewById<ProgressBar>(R.id.unitinfprog)
-        val ulistst = activity.findViewById<TextView>(R.id.unitinfst)
         val search: FloatingActionButton = activity.findViewById(R.id.animsch)
         val schname: TextInputEditText = activity.findViewById(R.id.animschname)
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         list.visibility = View.VISIBLE
         prog.visibility = View.GONE
-        ulistst.visibility = View.GONE
         search.show()
         schname.visibility = View.VISIBLE
         layout.visibility = View.VISIBLE

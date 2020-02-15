@@ -6,5 +6,5 @@
     <item name="animationView" type="id"/>
     <item name="unitshowlist" type="id"/>
     <item name="enemyshowlist" type="id"/>
-
+    <item name="enemychip" type="id"/>
 </resources>

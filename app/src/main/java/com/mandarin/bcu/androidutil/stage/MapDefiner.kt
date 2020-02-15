@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.stage
 import android.content.Context
 import android.os.Environment
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.decode.ZipLib
@@ -10,6 +11,7 @@ import common.CommonStatic
 import common.system.MultiLangCont
 import common.system.fake.ImageBuilder
 import common.system.files.AssetData
+import common.util.pack.Background
 import common.util.pack.NyCastle
 import common.util.stage.CharaGroup
 import common.util.stage.Limit
@@ -25,10 +27,35 @@ class MapDefiner {
         try {
             if (StaticStore.map == null) {
                 try {
-                    MapColc.read()
-                    CharaGroup.read()
-                    Limit.read()
-                    NyCastle.read()
+                    if(!StaticStore.mapread) {
+                        MapColc.read()
+                        StaticStore.mapread = true
+                    }
+
+                    if(!StaticStore.chararead) {
+                        CharaGroup.read()
+                        StaticStore.chararead = true
+                    }
+
+                    if(!StaticStore.limitread) {
+                        Limit.read()
+                        StaticStore.limitread = true
+                    }
+
+                    if(!StaticStore.nycread) {
+                        NyCastle.read()
+                        StaticStore.nycread = true
+                    }
+
+                    if(!StaticStore.musicread) {
+                        SoundHandler.read()
+                        StaticStore.musicread = true
+                    }
+
+                    if(StaticStore.bgread == 0) {
+                        Background.read()
+                        StaticStore.bgread = 1
+                    }
                 } catch (e: Exception) {
                     StaticStore.clear()
                     val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
@@ -36,13 +63,39 @@ class MapDefiner {
                     ZipLib.init()
                     ZipLib.read()
                     StaticStore.getEnemynumber()
-                    NyCastle.read()
                     ImageBuilder.builder = BMBuilder()
                     DefineItf().init()
-                    MapColc.read()
-                    CharaGroup.read()
-                    Limit.read()
                     StaticStore.root = 1
+
+                    if(!StaticStore.mapread) {
+                        MapColc.read()
+                        StaticStore.mapread = true
+                    }
+
+                    if(!StaticStore.chararead) {
+                        CharaGroup.read()
+                        StaticStore.chararead = true
+                    }
+
+                    if(!StaticStore.limitread) {
+                        Limit.read()
+                        StaticStore.limitread = true
+                    }
+
+                    if(!StaticStore.nycread) {
+                        NyCastle.read()
+                        StaticStore.nycread = true
+                    }
+
+                    if(!StaticStore.musicread) {
+                        SoundHandler.read()
+                        StaticStore.musicread = true
+                    }
+
+                    if(StaticStore.bgread == 0) {
+                        Background.read()
+                        StaticStore.bgread = 1
+                    }
                 }
                 StaticStore.map = MapColc.MAPS
             }

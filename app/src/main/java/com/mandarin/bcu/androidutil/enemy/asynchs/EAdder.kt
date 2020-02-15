@@ -26,7 +26,12 @@ import common.system.MultiLangCont
 import java.lang.ref.WeakReference
 import java.util.*
 
-class EAdder(activity: Activity, private val enemnumber: Int) : AsyncTask<Void?, Int?, Void?>() {
+class EAdder(activity: Activity, private val enemnumber: Int, private val mode: Int) : AsyncTask<Void?, Int?, Void?>() {
+    companion object {
+        const val MODE_INFO = 0
+        const val MODE_SELECTION = 1
+    }
+
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var numbers = ArrayList<Int>()
     override fun onPreExecute() {
@@ -75,23 +80,61 @@ class EAdder(activity: Activity, private val enemnumber: Int) : AsyncTask<Void?,
                 val schname: TextInputEditText = activity.findViewById(R.id.enemlistschname)
                 filterEntity = if (Objects.requireNonNull(schname.text).toString().isEmpty()) FilterEntity(enemnumber) else FilterEntity(enemnumber, schname.text.toString())
                 numbers = filterEntity.eSetFilter()
+
+                if(numbers.isEmpty()) {
+                    enlistst.visibility = View.VISIBLE
+                    enlistst.setText(R.string.filter_nores)
+                } else {
+                    enlistst.visibility = View.GONE
+                }
+
                 val names = ArrayList<String>()
                 for (i in numbers) names.add(StaticStore.enames[i])
                 val enemy = EnemyListAdapter(activity, names.toTypedArray(), numbers)
                 list.adapter = enemy
-                list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-                    if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
-                    StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
-                    val result = Intent(activity, EnemyInfo::class.java)
-                    result.putExtra("ID", numbers[position])
-                    activity.startActivity(result)
+                when(mode) {
+                    MODE_INFO -> {
+                        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
+                            if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
+                            StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
+                            val result = Intent(activity, EnemyInfo::class.java)
+                            result.putExtra("ID", numbers[position])
+                            activity.startActivity(result)
+                        }
+                    }
+                    MODE_SELECTION -> {
+                        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
+                            val intent = Intent()
+                            intent.putExtra("id", numbers[position])
+                            activity.setResult(Activity.RESULT_OK, intent)
+                            activity.finish()
+                        }
+                    }
+                    else -> {
+                        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
+                            if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
+                            StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
+                            val result = Intent(activity, EnemyInfo::class.java)
+                            result.putExtra("ID", numbers[position])
+                            activity.startActivity(result)
+                        }
+                    }
                 }
+
                 schname.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
                     override fun afterTextChanged(s: Editable) {
                         val filterEntity1 = FilterEntity(enemnumber, s.toString())
                         numbers = filterEntity1.eSetFilter()
+
+                        if(numbers.isEmpty()) {
+                            enlistst.visibility = View.VISIBLE
+                            enlistst.setText(R.string.filter_nores)
+                        } else {
+                            enlistst.visibility = View.GONE
+                        }
+
                         val names1 = ArrayList<String>()
                         for (i in numbers) names1.add(StaticStore.enames[i])
                         val enemy1 = EnemyListAdapter(activity, names1.toTypedArray(), numbers)
@@ -110,8 +153,6 @@ class EAdder(activity: Activity, private val enemnumber: Int) : AsyncTask<Void?,
     override fun onPostExecute(result: Void?) {
         val activity = weakReference.get() ?: return
         super.onPostExecute(result)
-        val enlistst = activity.findViewById<TextView>(R.id.enlistst)
-        enlistst.visibility = View.GONE
         val list = activity.findViewById<ListView>(R.id.enlist)
         list.visibility = View.VISIBLE
         val prog = activity.findViewById<ProgressBar>(R.id.enlistprog)

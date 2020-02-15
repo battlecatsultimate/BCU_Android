@@ -40,7 +40,7 @@ class LUUnitList : Fragment() {
         val names = ArrayList<String>()
 
         for (i in numbers) {
-            names.add(StaticStore.LUnames[i])
+            names.add(StaticStore.names[i])
         }
 
         val adapter = UnitListAdapter(activity!!, names.toTypedArray(), numbers)
@@ -58,7 +58,7 @@ class LUUnitList : Fragment() {
                     val names1 = ArrayList<String>()
 
                     for (i in numbers) {
-                        names1.add(StaticStore.LUnames[i])
+                        names1.add(StaticStore.names[i])
                     }
 
                     val adapter1 = UnitListAdapter(activity!!, names1.toTypedArray(), numbers)

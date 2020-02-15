@@ -212,7 +212,8 @@ class LUUnitSetting : Fragment() {
                         atk.text = s.getAtk(f, BasisSet.current.t(), lev + levp1, f?.pCoin != null && t.isChecked, zeros)
                     }
 
-                    BasisSet.current.sele.lu.setLv(f?.unit, levs1)
+                    if(f != null)
+                        BasisSet.current.sele.lu.setLv(f?.unit, levs1)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {

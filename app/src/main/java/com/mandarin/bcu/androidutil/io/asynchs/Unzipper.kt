@@ -32,11 +32,12 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
                 var ze: ZipEntry?
                 val buffer = ByteArray(1024)
                 var count: Int
-                while (zis.nextEntry.also { ze = it } != null) {
+                while (true) {
+                    ze = zis.nextEntry
                     if(ze == null) break
-                    val filenam = ze?.name
+                    val filenam = ze.name
                     val f = File(destin + filenam)
-                    if (ze?.isDirectory == true) {
+                    if (ze.isDirectory) {
                         if (!f.exists()) f.mkdirs()
                         continue
                     }

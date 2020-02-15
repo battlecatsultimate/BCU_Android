@@ -26,6 +26,7 @@ class LUCatCombo : Fragment() {
     private val locateid = arrayOf(intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd), intArrayOf(R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit), intArrayOf(R.string.combo_caninch, R.string.combo_canatk, R.string.combo_canchtime, R.string.combo_bsh), intArrayOf(R.string.combo_initmon, R.string.combo_work, R.string.combo_wal), intArrayOf(R.string.combo_cd, R.string.combo_ac, R.string.combo_xp))
     private val sch = arrayOfNulls<String>(schid.size)
     private var comboListAdapter: ComboListAdapter? = null
+
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_cat_combo, group, false)
         if (context == null) return view
@@ -42,7 +43,7 @@ class LUCatCombo : Fragment() {
         val schlist1 = view.findViewById<ListView>(R.id.comschlist2)
         val use = view.findViewById<Button>(R.id.combouse)
         for (i in schid.indices) {
-            sch[i] = context!!.getString(schid[i])
+            sch[i] = context?.getString(schid[i])
         }
         val subsch: MutableList<String> = ArrayList()
         val locates: MutableList<Int> = ArrayList()
@@ -53,7 +54,7 @@ class LUCatCombo : Fragment() {
         }
         for (i in locater.indices) {
             for (element in locateid[i]) {
-                subsch.add(context!!.getString(element))
+                subsch.add(context?.getString(element) ?: "")
             }
         }
         val adapter = ComboSchListAdapter(activity!!, sch, schlist1, combolist, comboListAdapter)
@@ -86,12 +87,12 @@ class LUCatCombo : Fragment() {
             if (posit < 0) return@OnClickListener
             val c = StaticStore.combos[posit]
             BasisSet.current.sele.lu.set(c.units)
-            line!!.updateLineUp()
+            line?.updateLineUp()
             use.setText(R.string.combo_using)
             use.setTextColor(StaticStore.getAttributeColor(context, R.attr.TextPrimary))
             use.isClickable = false
-            comboListAdapter!!.notifyDataSetChanged()
-            line!!.invalidate()
+            comboListAdapter?.notifyDataSetChanged()
+            line?.invalidate()
         })
         return view
     }

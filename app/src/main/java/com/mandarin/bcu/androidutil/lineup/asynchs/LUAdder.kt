@@ -68,10 +68,10 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         Definer().define(activity)
-        if (StaticStore.LUnames == null) {
-            StaticStore.LUnames = arrayOfNulls(StaticStore.unitnumber)
-            for (i in StaticStore.LUnames.indices) {
-                StaticStore.LUnames[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
+        if (StaticStore.names == null) {
+            StaticStore.names = arrayOfNulls(StaticStore.unitnumber)
+            for (i in StaticStore.names.indices) {
+                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
             }
         }
         publishProgress(0)
@@ -614,7 +614,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
     private inner class LUTab internal constructor(fm: FragmentManager?, private val lineup: LineUpView) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(i: Int): Fragment {
             when (i) {
-                0 -> return LUUnitList.newInstance(StaticStore.LUnames, lineup)
+                0 -> return LUUnitList.newInstance(StaticStore.names, lineup)
                 1 -> return LUUnitSetting.newInstance(lineup)
                 2 -> return LUCastleSetting.newInstance()
                 3 -> return LUTreasureSetting.newInstance()

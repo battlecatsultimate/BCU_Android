@@ -520,7 +520,7 @@
     <string name="battle_not_over">戰鬥尚未結束</string>
     <string name="battle_sure_go">要中止戰鬥嗎?</string>
     <string name="battle_do_not_show">別再顯示此警告</string>
-    <string name="battle_exit">是</string>
+    <string name="battle_exit">離開</string>
     <string name="main_err_upload">偵測到應用程式崩潰 上傳給開發者</string>
     <string name="main_err_ask">已生成錯誤紀錄報告 要上傳給開發者嗎?</string>
     <string name="main_err_detect">偵測到應用程式崩潰</string>
@@ -551,7 +551,20 @@
     <string name="battle_lost_boss">慘敗…\n魔王體力 : _%</string>
     <string name="battle_retry">重試</string>
     <string name="battle_sure_retry">要重試戰鬥嗎?</string>
-    <string name="sch_abi_surge">Surge Attack</string>
-    <string name="unit_info_text20">" ~ _ )"</string>
-    <string name="unit_info_text19">" (Created randomly between _"</string>
+    <string name="sch_abi_surge">烈波攻擊</string>
+    <string name="unit_info_text20">" 至 _ 之間)"</string>
+    <string name="unit_info_text19">" (隨機生成在範圍 _"</string>
+    <string name="music_err">Error has occurred while loading music files</string>
+    <string name="stg_sch_enem">Enemies</string>
+    <string name="stg_sch_less">Less than</string>
+    <string name="stg_sch_greater">Greater than</string>
+    <string name="stg_sch_same">Same</string>
+    <string name="stg_sch_hasboss">Has Boss</string>
+    <string name="stg_sch_enemy">Enemy</string>
+    <string name="stg_sch_nob">No Boss</string>
+    <string name="stg_sch_star1">1 Star</string>
+    <string name="stg_sch_star2">2 Stars</string>
+    <string name="stg_sch_star3">3 Stars</string>
+    <string name="stg_sch_star4">4 Stars</string>
+    <string name="gif_exit">Exit</string>
 </resources>

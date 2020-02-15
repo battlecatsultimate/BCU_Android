@@ -71,10 +71,10 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         Definer().define(activity)
-        if (StaticStore.LUnames == null) {
-            StaticStore.LUnames = arrayOfNulls(StaticStore.unitnumber)
-            for (i in StaticStore.LUnames.indices) {
-                StaticStore.LUnames[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
+        if (StaticStore.names == null) {
+            StaticStore.names = arrayOfNulls(StaticStore.unitnumber)
+            for (i in StaticStore.names.indices) {
+                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
             }
         }
         publishProgress(0)
@@ -109,9 +109,9 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
         val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         var set = preferences.getInt("equip_set", 0)
         var lu = preferences.getInt("equip_lu", 0)
-        if (set >= BasisSet.list.size) set = BasisSet.list.size - 1
+        if (set >= BasisSet.list.size) set = if(BasisSet.list.size == 0) 0 else BasisSet.list.size - 1
         BasisSet.current = StaticStore.sets[set]
-        if (lu >= BasisSet.current.lb.size) lu = BasisSet.current.lb.size - 1
+        if (lu >= BasisSet.current.lb.size) lu = if(BasisSet.current.lb.size == 0) 0 else BasisSet.current.lb.size - 1
         BasisSet.current.sele = BasisSet.current.lb[lu]
         publishProgress(1)
         return null

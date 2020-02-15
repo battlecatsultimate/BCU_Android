@@ -11,9 +11,8 @@ import com.google.android.flexbox.FlexboxLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.util.stage.SCDef
-import java.util.*
 
-class StageListAdapter(private val activity: Activity, private val stages: Array<String?>, private val mapcode: Int, private val stid: Int) : ArrayAdapter<String?>(activity, R.layout.stage_list_layout, stages) {
+class StageListAdapter(private val activity: Activity, private val stages: Array<String?>, private val mapcode: Int, private val stid: Int, private val positions: ArrayList<Int>) : ArrayAdapter<String?>(activity, R.layout.stage_list_layout, stages) {
 
     private class ViewHolder constructor(row: View) {
         var name: TextView = row.findViewById(R.id.stagename)
@@ -39,19 +38,26 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
         holder.name.text = stages[position] ?: getStageName(position)
         holder.images.clear()
         holder.icons.removeAllViews()
+
         val mc = StaticStore.map[mapcode] ?: return row
-        val stm = mc.maps[stid]
-        val st = stm.list[position]
+
+        val stm = mc.maps[stid] ?: return row
+
+        val st = stm.list[positions[position]] ?: return row
+
         val ids = getid(st.data)
+
         val icons = arrayOfNulls<ImageView>(ids.size)
+
         for (i in ids.indices) {
             icons[i] = ImageView(activity)
-            icons[i]!!.layoutParams = FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            icons[i]!!.setImageBitmap(StaticStore.eicons[ids[i]])
-            icons[i]!!.setPadding(StaticStore.dptopx(12f, activity), StaticStore.dptopx(4f, activity), 0, StaticStore.dptopx(4f, activity))
+            icons[i]?.layoutParams = FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            icons[i]?.setImageBitmap(StaticStore.eicons[ids[i]])
+            icons[i]?.setPadding(StaticStore.dptopx(12f, activity), StaticStore.dptopx(4f, activity), 0, StaticStore.dptopx(4f, activity))
             holder.icons.addView(icons[i])
             holder.images.add(icons[i])
         }
+
         return row
     }
 

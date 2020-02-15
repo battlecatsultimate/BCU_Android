@@ -67,7 +67,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
         if (StaticStore.names == null) {
             StaticStore.names = arrayOfNulls(StaticStore.unitnumber)
             for (i in StaticStore.names.indices) {
-                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]))
+                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
             }
         }
         publishProgress(2)
@@ -320,7 +320,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                         val builder = AlertDialog.Builder(activity)
                         builder.setTitle(R.string.anim_gif_warn)
                         builder.setMessage(R.string.anim_gif_recording)
-                        builder.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                        builder.setPositiveButton(R.string.gif_exit) { _, _ ->
                             StaticStore.showShortMessage(activity, R.string.anim_gif_cancel)
                             StaticStore.play = true
                             StaticStore.frame = 0

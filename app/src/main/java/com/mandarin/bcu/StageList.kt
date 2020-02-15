@@ -21,8 +21,10 @@ class StageList : AppCompatActivity() {
     private var stid = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -35,23 +37,36 @@ class StageList : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
         setContentView(R.layout.activity_stage_list)
+
         val result = intent
         val extra = result.extras
+
         if (extra != null) {
             mapcode = extra.getInt("mapcode")
             stid = extra.getInt("stid")
         }
+
         val name = findViewById<TextView>(R.id.stglistname)
+
         val mc = MapColc.MAPS[mapcode]
+
         if (mc != null) {
             val stm = mc.maps[stid]
             var stname = MultiLangCont.SMNAME.getCont(stm)
             if (stname == null) stname = number(stid)
             name.text = stname
         }
+
         val stageLoader = StageLoader(this, mapcode, stid)
+
         stageLoader.execute()
     }
 

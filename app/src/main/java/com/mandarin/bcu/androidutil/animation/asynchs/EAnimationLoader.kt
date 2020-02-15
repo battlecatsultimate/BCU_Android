@@ -293,7 +293,7 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
                         val builder = AlertDialog.Builder(activity)
                         builder.setTitle(R.string.anim_gif_warn)
                         builder.setMessage(R.string.anim_gif_recording)
-                        builder.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                        builder.setPositiveButton(R.string.gif_exit) { _, _ ->
                             StaticStore.play = true
                             StaticStore.frame = 0
                             StaticStore.animposition = 0

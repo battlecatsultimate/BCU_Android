@@ -43,6 +43,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val s = GetStrings(activity)
         val data = reverse(st.data.datas)
+
         viewHolder.expand.setOnClickListener(View.OnClickListener {
             if (SystemClock.elapsedRealtime() - StaticStore.infoClick < StaticStore.INFO_INTERVAL) return@OnClickListener
             StaticStore.infoClick = SystemClock.elapsedRealtime()
@@ -78,6 +79,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
                 StaticStore.infoOpened[viewHolder.adapterPosition] = false
             }
         })
+
         if (StaticStore.infoOpened[viewHolder.adapterPosition]) {
             viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val layout = viewHolder.moreinfo.layoutParams
@@ -85,25 +87,50 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.moreinfo.layoutParams = layout
             viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp))
         }
+
         viewHolder.icon.setImageBitmap(StaticStore.getResizeb(StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0].anim.edi.img.bimg() as Bitmap,activity, 85f, 32f))
-        viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition]!!)
+
+        viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
+
+
         viewHolder.info.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                val en = StaticStore.enemies[data[viewHolder.adapterPosition]!![SCDef.E]]
+                val en = StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0]
                 val intent = Intent(activity, EnemyInfo::class.java)
                 intent.putExtra("ID", en.id)
-                intent.putExtra("Multiply", (data[viewHolder.adapterPosition]!![SCDef.M].toFloat() * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("Multiply", (data[viewHolder.adapterPosition]?.get(SCDef.M)?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
                 activity.startActivity(intent)
             }
         })
-        viewHolder.multiply.text = s.getMultiply(data[viewHolder.adapterPosition]!!, multi)
-        viewHolder.bh.text = s.getBaseHealth(data[viewHolder.adapterPosition]!!)
-        if (data[viewHolder.adapterPosition]!![SCDef.B] == 0) viewHolder.isboss.text = activity.getString(R.string.unit_info_false) else viewHolder.isboss.text = activity.getString(R.string.unit_info_true)
-        viewHolder.layer.text = s.getLayer(data[viewHolder.adapterPosition]!!)
-        viewHolder.startb.setOnClickListener { if (viewHolder.start.text.toString().endsWith("f")) viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition]!!, false) else viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition]!!, true) }
-        viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition]!!, frse)
-        viewHolder.respawnb.setOnClickListener { if (viewHolder.respawn.text.toString().endsWith("f")) viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition]!!, false) else viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition]!!, true) }
-        viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition]!!, frse)
+
+        viewHolder.multiply.text = s.getMultiply(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), multi)
+
+        viewHolder.bh.text = s.getBaseHealth(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
+
+        if (data[viewHolder.adapterPosition]?.get(SCDef.B) ?: -1 == 0)
+            viewHolder.isboss.text = activity.getString(R.string.unit_info_false)
+        else
+            viewHolder.isboss.text = activity.getString(R.string.unit_info_true)
+
+        viewHolder.layer.text = s.getLayer(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
+
+        viewHolder.startb.setOnClickListener {
+            if (viewHolder.start.text.toString().endsWith("f"))
+                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), false)
+            else
+                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), true)
+        }
+
+        viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), frse)
+
+        viewHolder.respawnb.setOnClickListener {
+            if (viewHolder.respawn.text.toString().endsWith("f"))
+                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), false)
+            else
+                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), true)
+        }
+
+        viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), frse)
     }
 
     override fun getItemCount(): Int {

@@ -9,9 +9,8 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ErrorLogWriter(private val path: String?, upload: Boolean) : Thread.UncaughtExceptionHandler {
+class ErrorLogWriter(private val path: String?, private val upload: Boolean) : Thread.UncaughtExceptionHandler {
     private val errors: Thread.UncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
-    private val upload: Boolean = upload
     override fun uncaughtException(t: Thread, e: Throwable) {
         if (path != null) {
             writeToFile(e)

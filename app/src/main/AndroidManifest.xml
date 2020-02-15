@@ -28,7 +28,8 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MusicPlayer"></activity>
+        <activity android:name=".StageSearchFilter" />
+        <activity android:name=".MusicPlayer" />
         <activity android:name=".MusicList" />
         <activity
             android:name=".BattlePrepare"
@@ -119,7 +120,7 @@
 
         <receiver android:name=".MusicPlayer$MusicReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.HEADSET_PLUG"/>
+                <action android:name="android.intent.action.HEADSET_PLUG" />
             </intent-filter>
         </receiver>
     </application>

@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -50,7 +51,7 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.12.2";
+    public static final String VER = "0.12.3";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
@@ -68,34 +69,72 @@ public class StaticStore {
     public static final String DATAPATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/";
     /**Shared preferences name**/
     public static final String CONFIG = "configuration";
+    /**
+     * This value prevents button is performed less than every 1 sec<br>
+     * Used when preventing activity is opened double
+     */
     public static final long INTERVAL = 1000;
+    /**
+     * This value prevents button is performed less than every 350 ms<br>
+     * Used when preventing animation working incorrectly
+     */
     public static final long INFO_INTERVAL = 350;
+    /** Value which tells if Background data is loaded **/
     public static int bgread = 0;
+    /** Value which tells if Unit language data is loaded **/
     public static int unitlang = 1;
+    /** Value which tells if Enemy language data is loaded **/
     public static int enemeylang = 1;
+    /** Value which tells if Stage language data is loaded **/
     public static int stagelang = 1;
+    /** Value which tells if Map language data is loaded **/
     public static int maplang = 1;
+    /** Value which tells if Medal language data is loaded **/
     public static int medallang = 1;
+    /** Boolean which tells if Map data is loaded **/
+    public static boolean mapread = false;
+    /** Boolean which tells if Character group data is loaded **/
+    public static boolean chararead = false;
+    /** Boolean which tells if Effect data is loaded **/
     public static boolean effread = false;
+    /** Boolean which tells if Soul data is loaded **/
     public static boolean soulread = false;
+    /** Boolean which tells if Castle data is loaded **/
     public static boolean nycread = false;
+    /** Boolean which tells if Res data is loaded **/
     public static boolean resread = false;
+    /** Boolean which tells if Music data is loaded **/
     public static boolean musicread = false;
+    /** Boolean which tells if Limit data is loaded **/
+    public static boolean limitread = false;
+    /** Boolean which tells if error log dialog is already opened once **/
     public static boolean dialogisShowed = false;
+    /** Boolean which tells if user allowed auto error log uploading **/
     public static boolean upload = false;
+    /**
+     * Toast which is used in every activity<br>
+     * Must be null when activity is destroyed to prevent memory leaks
+     */
     public static Toast toast = null;
 
+    /** Value which tells if file paths are added to memory **/
     public static int root = 0;
 
      //Image/Text variables
 
+    /** Treasure which is from Pack.def **/
     public static Treasure t = null;
+    /** img15.png's parts **/
     public static FakeImage[] img15 = null;
+    /** Ability icons **/
     public static Bitmap[] icons = null;
+    /** Proc icons **/
     public static Bitmap[] picons = null;
+    /** Cat fruit icons **/
     public static Bitmap[] fruit = null;
+    /** Additional ability explanation texts **/
     public static String[] addition = null;
-
+    /** Imgcut index list of ablities **/
     public static int[] anumber = {203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114};
     public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 227, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 49, 45, 47, 51, 43, 53, 109};
     public static String[] afiles = {"", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "", "ThemeX.png",
@@ -153,6 +192,16 @@ public class StaticStore {
     public static int stageSpinner = -1;
     public static int bgnumber = 0;
     public static long bglistClick = SystemClock.elapsedRealtime();
+    public static List<Integer> stgenem = new ArrayList<>();
+    public static boolean stgenemorand = true;
+    public static int stgmusic = -1;
+    public static int stgbg = -1;
+    public static int stgstar = 0;
+    public static int stgbh = -1;
+    public static int bhop = -1;
+    public static int stgcontin = -1;
+    public static int stgboss = -1;
+    public static SparseArray<SparseArray<ArrayList<Integer>>> filter = null;
 
     /**
      * Variables for Medal
@@ -167,6 +216,7 @@ public class StaticStore {
      */
     public static List<String> musicnames = new ArrayList<>();
     public static List<Integer> durations = new ArrayList<>();
+    public static List<Integer> bgmlist = new ArrayList<>();
 
     /**
      * Variables for Animation
@@ -183,7 +233,6 @@ public class StaticStore {
     /**
      * Variables for LineUp
      **/
-    public static String[] LUnames = null;
     public static List<BasisSet> sets = null;
     public static boolean LULoading = false;
     public static boolean LUread = false;
@@ -227,6 +276,14 @@ public class StaticStore {
         stagelang = 1;
         maplang = 1;
         medallang = 1;
+        effread = false;
+        soulread = false;
+        nycread = false;
+        resread = false;
+        musicread = false;
+        limitread = false;
+
+        toast = null;
 
         root = 0;
 
@@ -270,8 +327,16 @@ public class StaticStore {
         stageSpinner = -1;
         bgnumber = 0;
         bglistClick = SystemClock.elapsedRealtime();
+        stgenem = new ArrayList<>();
+        stgenemorand = true;
+        stgmusic = -1;
+        stgbg = -1;
+        stgstar = 0;
+        stgbh = -1;
+        bhop = -1;
+        stgcontin = -1;
+        stgboss = -1;
 
-        LUnames = null;
         sets = null;
         LULoading = false;
         LUread = false;
@@ -291,6 +356,8 @@ public class StaticStore {
         animposition = 0;
 
         CommonStatic.clearData();
+        filterReset();
+        stgFilterReset();
     }
 
     /**
@@ -502,6 +569,22 @@ public class StaticStore {
         empty = true;
         talents = false;
         starred = false;
+    }
+
+    /**
+     * Resets stage filter data<br>
+     * Must be called when exiting Map list
+     */
+    public static void stgFilterReset() {
+        stgenem = new ArrayList<>();
+        stgenemorand = true;
+        stgmusic = -1;
+        stgstar = 0;
+        stgbh = -1;
+        bhop = -1;
+        stgcontin = -1;
+        stgboss = -1;
+        filter = null;
     }
 
     /**

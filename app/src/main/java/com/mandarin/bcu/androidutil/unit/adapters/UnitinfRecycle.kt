@@ -115,7 +115,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             language = Resources.getSystem().configuration.locales[0].language
         }
         val proc: List<String>
-        proc = if (language == "ko") {
+        proc = if (language == "ko" || language == "ja") {
             Interpret.getProc(f.du, 1, fs)
         } else {
             Interpret.getProc(f.du, 0, fs)
@@ -209,7 +209,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                     val abilityicon = Interpret.getAbiid(du)
                     val language = Locale.getDefault().language
                     val proc: List<String>
-                    proc = if (language == "ko") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
+                    proc = if (language == "ko" || language == "ja") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
                     val procicon = Interpret.getProcid(du)
                     val linearLayoutManager = LinearLayoutManager(context)
                     linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -233,7 +233,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                     val abilityicon = Interpret.getAbiid(du)
                     val language = Locale.getDefault().language
                     val proc: List<String>
-                    proc = if (language == "ko") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
+                    proc = if (language == "ko" || language == "ja") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
                     val procicon = Interpret.getProcid(du)
                     val linearLayoutManager = LinearLayoutManager(context)
                     linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -697,7 +697,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             language = Resources.getSystem().configuration.locales[0].language
         }
         val proc: List<String>
-        proc = if (language == "ko") {
+        proc = if (language == "ko" || language == "ja") {
             Interpret.getProc(du, 1, fs)
         } else {
             Interpret.getProc(du, 0, fs)
