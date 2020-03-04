@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.mandarin.bcu.R;
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,12 +50,13 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.12.3";
+    public static final String VER = "0.12.7";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
     public static final String[] LIBREQ = {"000001", "000002", "000003", "080602", "080603", "080604", "080605", "080700", "080705", "080706", "080800", "080801", "080802",
-            "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104", "090200", "090201", "090300", "090301"};
+            "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104", "090200", "090201",
+            "090300", "090301", "090400", "090401", "090402", "090403"};
     /**Optional libraries list**/
     public static final String[] OPTREQS = {"080504"};
     /**Locale codes list**/
@@ -136,7 +136,7 @@ public class StaticStore {
     public static String[] addition = null;
     /** Imgcut index list of ablities **/
     public static int[] anumber = {203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114};
-    public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 227, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 49, 45, 47, 51, 43, 53, 109};
+    public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 227, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 49, 45, 47, 51, 43, 53, 109};
     public static String[] afiles = {"", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "", "ThemeX.png",
             "", "SealX.png", "BossWaveX.png", "", ""};
     public static String[] pfiles = {"", "", "", "", "", "", "", "", "Curse.png", "", "", "Burrow.png", "Revive.png", "", "", "", "", "", "", "", "Snipe.png", "Time.png", "Seal.png"
@@ -147,8 +147,8 @@ public class StaticStore {
     public static int[] procid = {R.string.sch_abi_kb, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_cr, R.string.sch_abi_wv, R.string.sch_abi_we, R.string.sch_abi_bb, R.string.sch_abi_wa, R.string.abi_cu,
             R.string.sch_abi_str, R.string.sch_abi_su, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_ik, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_iwv, R.string.sch_abi_iw, R.string.sch_abi_iwa,
             R.string.sch_abi_ic, R.string.abi_snk, R.string.abi_stt, R.string.abi_seal, R.string.abi_sum, R.string.abi_mvatk, R.string.abi_thch, R.string.abi_poi, R.string.abi_boswv
-            , R.string.abi_imcri, R.string.sch_abi_sb, R.string.sch_abi_iv, R.string.sch_abi_poi, R.string.sch_abi_surge, R.string.talen_kb, R.string.talen_fr, R.string.talen_sl, R.string.talen_wv, R.string.talen_we, R.string.talen_warp,
-            R.string.talen_cu};
+            , R.string.abi_imcri, R.string.sch_abi_sb, R.string.sch_abi_iv, R.string.sch_abi_poi, R.string.sch_abi_surge, R.string.sch_abi_impoi, R.string.talen_kb, R.string.talen_fr,
+            R.string.talen_sl, R.string.talen_wv, R.string.talen_we, R.string.talen_warp, R.string.talen_cu};
     public static int[] abiid = {R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.abi_imvatk, R.string.sch_abi_ws,
             R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.abi_ipoi, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva,
             R.string.abi_iseal, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id};
@@ -182,7 +182,7 @@ public class StaticStore {
      **/
     public static Map<Integer, MapColc> map = null;
     public static String[][] mapnames = null;
-    public static final int[] MAPCODE = {0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24};
+    public static final int[] MAPCODE = {0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24, 25};
     public static Bitmap[] eicons = null;
     public static long maplistClick = SystemClock.elapsedRealtime();
     public static long stglistClick = SystemClock.elapsedRealtime();
@@ -216,7 +216,6 @@ public class StaticStore {
      */
     public static List<String> musicnames = new ArrayList<>();
     public static List<Integer> durations = new ArrayList<>();
-    public static List<Integer> bgmlist = new ArrayList<>();
 
     /**
      * Variables for Animation
@@ -264,6 +263,7 @@ public class StaticStore {
     public static boolean empty = true;
     public static boolean talents = false;
     public static boolean starred = false;
+    public static String stgschname = "";
 
     /**
      * Resets all values stored in StaticStore.
@@ -276,6 +276,8 @@ public class StaticStore {
         stagelang = 1;
         maplang = 1;
         medallang = 1;
+        mapread = false;
+        chararead = false;
         effread = false;
         soulread = false;
         nycread = false;
@@ -336,6 +338,7 @@ public class StaticStore {
         bhop = -1;
         stgcontin = -1;
         stgboss = -1;
+        stgschname = "";
 
         sets = null;
         LULoading = false;
@@ -584,6 +587,7 @@ public class StaticStore {
         bhop = -1;
         stgcontin = -1;
         stgboss = -1;
+        stgschname = "";
         filter = null;
     }
 
@@ -708,33 +712,27 @@ public class StaticStore {
     /**
      * Saves lineup file.
      */
-    public static void SaveLineUp() {
+    public static void SaveLineUp() throws Exception {
         String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/basis.v";
         String direct = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/";
 
-        try {
-            File g = new File(direct);
+        File g = new File(direct);
 
-            if (!g.exists())
-                g.mkdirs();
+        if (!g.exists())
+            g.mkdirs();
 
-            File f = new File(path);
+        File f = new File(path);
 
-            if (!f.exists())
-                f.createNewFile();
+        if (!f.exists())
+            f.createNewFile();
 
-            OutputStream os = new FileOutputStream(f);
+        OutputStream os = new FileOutputStream(f);
 
-            OutStream out = BasisSet.writeAll();
+        OutStream out = BasisSet.writeAll();
 
-            out.flush(os);
+        out.flush(os);
 
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            ErrorLogWriter.Companion.writeLog(e,upload);
-        }
+        os.close();
     }
 
     /**

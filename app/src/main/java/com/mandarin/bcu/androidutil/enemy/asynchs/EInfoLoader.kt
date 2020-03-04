@@ -110,17 +110,27 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
                 StaticStore.EisOpen = false
             }
         }
+
         treasurelay.setOnTouchListener { _, _ ->
             main.isClickable = false
             true
         }
+
         return null
     }
 
     override fun onPostExecute(result: Void?) {
         val activity = weakReference.get() ?: return
+
         val back: FloatingActionButton = activity.findViewById(R.id.eneminfbck)
         val eanim = activity.findViewById<Button>(R.id.eanimanim)
+        val treasurelay: ConstraintLayout = activity.findViewById(R.id.enemtreasuretab)
+
+        if(StaticStore.EisOpen) {
+            treasurelay.translationX = -treasurelay.width.toFloat()
+            treasurelay.requestLayout()
+        }
+
         back.setOnClickListener {
             StaticStore.EisOpen = false
             activity.finish()

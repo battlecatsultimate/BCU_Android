@@ -20,16 +20,16 @@
 
     <TextView
         android:id="@+id/apkstate"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/apkprog"
         android:layout_alignStart="@+id/apkprog"
+        android:layout_alignEnd="@+id/apkprog"
         android:layout_alignBottom="@+id/apkretry"
         android:layout_marginStart="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
-        android:layout_toStartOf="@+id/apkretry"
         android:gravity="center_vertical"
         android:text="@string/down_state_rea"
         android:textColor="?attr/TextPrimary"

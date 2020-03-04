@@ -23,6 +23,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.asynchs.EAnimationLoader
 import com.mandarin.bcu.androidutil.animation.asynchs.UAnimationLoader
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import common.system.fake.FakeImage
 import common.system.files.VFile
@@ -208,16 +209,23 @@ class ImageViewer : AppCompatActivity() {
 
     private val data: Array<String>?
         get() {
-            val datapath = "./org/battle/bg/bg.csv"
-            val qs = Objects.requireNonNull(VFile.getFile(datapath)).data.readLine()
-            for (s in qs) {
-                val data = s.trim { it <= ' ' }.split(",").toTypedArray()
-                try {
-                    if (data[0].toInt() == bgnum) return data
-                } catch (ignored: Exception) {
+            try {
+                val datapath = "./org/battle/bg/bg.csv"
+                val qs = VFile.getFile(datapath).data.readLine()
+                for (s in qs) {
+                    val data = s.trim { it <= ' ' }.split(",").toTypedArray()
+                    try {
+                        if (data[0].toInt() == bgnum) return data
+                    } catch (ignored: Exception) {
+                    }
                 }
+                return null
+            } catch(e : Exception) {
+                ErrorLogWriter.writeLog(e, StaticStore.upload)
+                StaticStore.showShortMessage(this,getString(R.string.err_file_not_exist).replace("_","bg.csv"))
+
+                return null
             }
-            return null
         }
 
     private fun getImg(height: Int, param: Float): Bitmap {

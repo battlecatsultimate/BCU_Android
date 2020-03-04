@@ -104,6 +104,7 @@
             android:id="@+id/musicalbum"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:contentDescription="@null"
             android:tint="?attr/HintPrimary"
             android:tintMode="src_in"

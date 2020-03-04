@@ -6,6 +6,7 @@ import android.os.Environment
 import android.view.View
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.battle.BasisSet
 import common.battle.LineUp
 import common.util.unit.Form
@@ -130,6 +131,10 @@ class LineUpView(context: Context?) : View(context) {
      * Remove unit from lineup and itself using position
      */
     private fun removeUnit(posit: IntArray) {
+        if (StaticStore.currentForms == null) {
+            toFormList()
+        }
+
         if (posit[0] * 5 + posit[1] >= StaticStore.currentForms.size || posit[0] * 5 + posit[1] < 0) if (posit[0] != 100) return
         if (posit[0] != 100) {
             if (posit[0] * 5 + posit[1] < StaticStore.currentForms.size) {
@@ -282,7 +287,13 @@ class LineUpView(context: Context?) : View(context) {
             changeUnitPosition(5 * prePosit[0] + prePosit[1], 5 * posit[0] + posit[1])
         }
         BasisSet.current.sele.lu.renew()
-        StaticStore.SaveLineUp()
+
+        try {
+            StaticStore.SaveLineUp()
+        } catch(e: Exception) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload)
+            StaticStore.showShortMessage(context, R.string.err_lusave_fail)
+        }
     }
 
     /**

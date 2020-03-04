@@ -18,13 +18,14 @@ class SoundAsync(private val ind: Int) : AsyncTask<Void?, Void?, Void?>() {
             releaseAll()
             return null
         }
+
         if (available == 0) return null
-        val mp = getMP(ind)
+        val mmp = getMP(ind)
         try {
-            if (!mp.isInitialized) {
+            if (!mmp.isInitialized) {
                 if (ind == 45 && SoundHandler.twoMusic && SoundHandler.haveToChange) {
                     if (!SoundHandler.Changed) {
-                        returnBack(mp, ind)
+                        returnBack(mmp, ind)
                         if (SoundHandler.MUSIC.isRunning) SoundHandler.MUSIC.pause()
                         SoundHandler.MUSIC.reset()
                         SoundHandler.MUSIC.isLooping = false
@@ -75,30 +76,30 @@ class SoundAsync(private val ind: Int) : AsyncTask<Void?, Void?, Void?>() {
                 val f = Pack.def.ms[ind] ?: return null
                 if (!f.exists()) return null
                 val path = f.absolutePath
-                mp.setDataSource(path)
-                mp.isLooping = false
-                mp.prepareAsync()
-                mp.setOnPreparedListener(object : MediaPrepare() {
-                    override fun prepare(mmp : MediaPlayer?) {
-                        mp.start(true)
+                mmp.setDataSource(path)
+                mmp.isLooping = false
+                mmp.prepareAsync()
+                mmp.setOnPreparedListener(object : MediaPrepare() {
+                    override fun prepare(mp : MediaPlayer?) {
+                        mmp.start(true)
                     }
                 })
-                mp.setOnCompletionListener {
-                    mp.isRunning = false
-                    returnBack(mp, ind)
+                mmp.setOnCompletionListener {
+                    mmp.isRunning = false
+                    returnBack(mmp, ind)
                 }
             } else {
-                if (!mp.isRunning && mp.isInitialized) {
-                    mp.start(true)
+                if (!mmp.isRunning && mmp.isInitialized) {
+                    mmp.start(true)
                 } else {
-                    mp.reset()
-                    returnBack(mp, ind)
+                    mmp.reset()
+                    returnBack(mmp, ind)
                 }
             }
         } catch (e: IOException) {
-            mp.release()
+            mmp.release()
         } catch (e: IllegalStateException) {
-            mp.release()
+            mmp.release()
         }
         return null
     }

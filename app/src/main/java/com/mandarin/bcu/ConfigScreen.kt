@@ -1,5 +1,6 @@
 package com.mandarin.bcu
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
@@ -29,6 +30,7 @@ open class ConfigScreen : AppCompatActivity() {
     private val locales = StaticStore.lang
     private var started = false
     private var changed = false
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
@@ -55,6 +57,7 @@ open class ConfigScreen : AppCompatActivity() {
         setContentView(R.layout.activity_config_screen)
 
         val back = findViewById<ImageButton>(R.id.configback)
+
         back.setOnClickListener {
             val intent = Intent(this@ConfigScreen, MainActivity::class.java)
             intent.putExtra("Config", true)
@@ -66,6 +69,7 @@ open class ConfigScreen : AppCompatActivity() {
         val night = findViewById<RadioButton>(R.id.themenight)
         val frames = findViewById<RadioButton>(R.id.configframe)
         val seconds = findViewById<RadioButton>(R.id.configsecond)
+
         if (shared.contains("initial")) {
             if (!shared.getBoolean("theme", false)) night.isChecked = true else day.isChecked = true
         }
@@ -74,7 +78,9 @@ open class ConfigScreen : AppCompatActivity() {
         } else {
             seconds.isChecked = true
         }
+
         val theme = findViewById<RadioGroup>(R.id.configrgtheme)
+
         theme.setOnCheckedChangeListener { _, checkedId ->
             if(started) {
                 if (checkedId == day.id) {
@@ -90,7 +96,9 @@ open class ConfigScreen : AppCompatActivity() {
                 }
             }
         }
+
         val frse = findViewById<RadioGroup>(R.id.configfrse)
+
         frse.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == frames.id) {
                 val ed1 = shared.edit()
@@ -102,18 +110,38 @@ open class ConfigScreen : AppCompatActivity() {
                 ed1.apply()
             }
         }
+
         val levels: MutableList<Int> = ArrayList()
+
         for (j in 1..50) levels.add(j)
+
         val deflev = findViewById<Spinner>(R.id.configdeflevsp)
+
         val arrayAdapter = ArrayAdapter(this, R.layout.spinneradapter, levels)
+
         deflev.adapter = arrayAdapter
         deflev.setSelection(getIndex(deflev, shared.getInt("default_level", 50)),false)
 
+        deflev.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val ed1 = shared.edit()
+                ed1.putInt("default_level", deflev.selectedItem as Int)
+                ed1.apply()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
         println(CommonStatic.Lang.lang)
+
         val apktest = findViewById<Switch>(R.id.apktest)
+
         apktest.isChecked = shared.getBoolean("apktest", false)
+
         val senderr = findViewById<Switch>(R.id.senderror)
+
         senderr.isChecked = shared.getBoolean("upload", false)
+
         senderr.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val ed1 = shared.edit()
@@ -127,6 +155,7 @@ open class ConfigScreen : AppCompatActivity() {
 
             StaticStore.upload = shared.getBoolean("upload",false) || shared.getBoolean("ask_upload",true)
         }
+
         apktest.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val ed1 = shared.edit()
@@ -138,17 +167,50 @@ open class ConfigScreen : AppCompatActivity() {
                 ed1.apply()
             }
         }
+
         val language = findViewById<Spinner>(R.id.configlangsp)
+
         val lang: MutableList<String> = ArrayList()
+
         for (i1 in langId) {
             lang.add(getString(i1))
         }
+
         val adapter = ArrayAdapter(this, R.layout.spinneradapter, lang)
+
         language.adapter = adapter
         language.setSelection(shared.getInt("Language", 0), false)
 
+        language.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                println("Started : $started")
+
+                if (started) {
+                    changed = true
+                    val ed1 = shared.edit()
+                    ed1.putInt("Language", position)
+                    ed1.apply()
+                    var lang1 = locales[position]
+                    if (lang1 == "") lang1 = Resources.getSystem().configuration.locales[0].language
+                    if (StaticStore.units != null || StaticStore.enemies != null) Revalidater.validate(lang1, this@ConfigScreen) else {
+                        StaticStore.getLang(position)
+                    }
+
+                    restart()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        language.post {
+            started = true
+        }
+
         val orientation = findViewById<RadioGroup>(R.id.configorirg)
+
         val oris = arrayOf(findViewById(R.id.configoriauto), findViewById(R.id.configoriland), findViewById<RadioButton>(R.id.configoriport))
+
         orientation.setOnCheckedChangeListener { _, checkedId ->
             if (started) for (i in 0..2) if (i != shared.getInt("Orientation", 0) && checkedId == oris[i].id) {
                 val ed1 = shared.edit()
@@ -157,33 +219,51 @@ open class ConfigScreen : AppCompatActivity() {
                 restart()
             }
         }
+
         oris[shared.getInt("Orientation", 0)].isChecked = true
+
         val unitinfland = findViewById<RadioGroup>(R.id.configinfland)
         val unitinflandlist = findViewById<RadioButton>(R.id.configlaylandlist)
         val unitinflandslide = findViewById<RadioButton>(R.id.configlaylandslide)
-        if (shared.getBoolean("Lay_Land", true)) unitinflandslide.isChecked = true else unitinflandlist.isChecked = true
+
+        if (shared.getBoolean("Lay_Land", true))
+            unitinflandslide.isChecked = true
+        else
+            unitinflandlist.isChecked = true
+
         unitinfland.setOnCheckedChangeListener { _, checkedId ->
             val ed1 = shared.edit()
             ed1.putBoolean("Lay_Land", checkedId == unitinflandslide.id)
             ed1.apply()
         }
+
         val unitinfport = findViewById<RadioGroup>(R.id.configinfport)
         val unitinfportlist = findViewById<RadioButton>(R.id.configlayportlist)
         val unitinfportslide = findViewById<RadioButton>(R.id.configlayportslide)
-        if (shared.getBoolean("Lay_Port", true)) unitinfportslide.isChecked = true else unitinfportlist.isChecked = true
+
+        if (shared.getBoolean("Lay_Port", true))
+            unitinfportslide.isChecked = true
+        else
+            unitinfportlist.isChecked = true
+
         unitinfport.setOnCheckedChangeListener { _, checkedId ->
             val ed1 = shared.edit()
             ed1.putBoolean("Lay_Port", checkedId == unitinfportslide.id)
             ed1.apply()
         }
+
         val skiptext = findViewById<Switch>(R.id.configskiptext)
+
         skiptext.isChecked = shared.getBoolean("Skip_Text", false)
+
         skiptext.setOnCheckedChangeListener { _, isChecked ->
             val ed1 = shared.edit()
             ed1.putBoolean("Skip_Text", isChecked)
             ed1.apply()
         }
+
         val checkupdate = findViewById<Button>(R.id.configcheckup)
+
         checkupdate.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@ConfigScreen, CheckUpdateScreen::class.java)
@@ -192,26 +272,35 @@ open class ConfigScreen : AppCompatActivity() {
                 finish()
             }
         })
+
         val axis = findViewById<Switch>(R.id.configaxis)
+
         axis.isChecked = shared.getBoolean("Axis", true)
+
         axis.setOnCheckedChangeListener { _, isChecked ->
             val ed1 = shared.edit()
             ed1.putBoolean("Axis", isChecked)
             ed1.apply()
         }
+
         val fps = findViewById<Switch>(R.id.configfps)
+
         fps.isChecked = shared.getBoolean("FPS", true)
+
         fps.setOnCheckedChangeListener { _, isChecked ->
             val ed1 = shared.edit()
             ed1.putBoolean("FPS", isChecked)
             ed1.apply()
         }
+
         val mus = findViewById<Switch>(R.id.configmus)
         val musvol = findViewById<SeekBar>(R.id.configmusvol)
+
         mus.isChecked = shared.getBoolean("music", true)
         musvol.isEnabled = shared.getBoolean("music", true)
         musvol.max = 99
         musvol.progress = shared.getInt("mus_vol", 99)
+
         mus.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val editor = shared.edit()
@@ -227,6 +316,7 @@ open class ConfigScreen : AppCompatActivity() {
                 musvol.isEnabled = false
             }
         }
+
         musvol.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -240,12 +330,15 @@ open class ConfigScreen : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+
         val soundeff = findViewById<Switch>(R.id.configse)
         val sevol = findViewById<SeekBar>(R.id.configsevol)
+
         soundeff.isChecked = shared.getBoolean("SE", true)
         sevol.isEnabled = shared.getBoolean("SE", true)
         sevol.max = 99
         sevol.progress = shared.getInt("se_vol", 99)
+
         soundeff.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val editor = shared.edit()
@@ -261,6 +354,7 @@ open class ConfigScreen : AppCompatActivity() {
                 sevol.isEnabled = false
             }
         }
+
         sevol.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -275,9 +369,13 @@ open class ConfigScreen : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+
         val build = findViewById<TextView>(R.id.configbuildver)
+
         val text = getString(R.string.config_build_ver).replace("-", if (shared.getBoolean("DEV_MODE", false)) BuildConfig.VERSION_NAME + "_DEV_MODE" else BuildConfig.VERSION_NAME)
+
         build.text = text
+
         build.setOnLongClickListener(OnLongClickListener {
             if (!shared.getBoolean("DEV_MODE", false)) {
                 val builder = AlertDialog.Builder(this@ConfigScreen)
@@ -315,48 +413,6 @@ open class ConfigScreen : AppCompatActivity() {
         })
     }
 
-    override fun onStart() {
-        val deflev: Spinner = findViewById(R.id.configdeflevsp)
-        val language: Spinner = findViewById(R.id.configlangsp)
-        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-
-        language.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                println("Started : $started")
-
-                if (started) {
-                    changed = true
-                    val ed1 = shared.edit()
-                    ed1.putInt("Language", position)
-                    ed1.apply()
-                    var lang1 = locales[position]
-                    if (lang1 == "") lang1 = Resources.getSystem().configuration.locales[0].language
-                    if (StaticStore.units != null || StaticStore.enemies != null) Revalidater.validate(lang1, this@ConfigScreen) else {
-                        StaticStore.getLang(position)
-                    }
-
-                    restart()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        deflev.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val ed1 = shared.edit()
-                ed1.putInt("default_level", deflev.selectedItem as Int)
-                ed1.apply()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        started = true
-
-        super.onStart()
-    }
-
     private fun getIndex(spinner: Spinner, lev: Int): Int {
         var index = 0
         for (i in 0 until spinner.count) if (lev == spinner.getItemAtPosition(i) as Int) index = i
@@ -364,7 +420,6 @@ open class ConfigScreen : AppCompatActivity() {
     }
 
     private fun restart() {
-        println(Arrays.toString(Throwable().stackTrace))
         if(!started) return
 
         val intent = Intent(this@ConfigScreen, ConfigScreen::class.java)

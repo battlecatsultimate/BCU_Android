@@ -16,7 +16,8 @@
         <item>チャレンジバトル</item>
         <item>真レジェンドステージ</item>
         <item>ネコビタンステージ</item>
-        <item>RA</item>
+        <item>強襲ステージ</item>
+        <item>H</item>
     </string-array>
     <string name="def_stgbck">メインページへ戻る</string>
     <string name="sch_nm">絞り込み検索</string>
@@ -79,12 +80,12 @@
     <string name="sch_abi_wk">魔女キラー</string>
     <string name="main_file_x">アップデートが見つかりました！</string>
     <string name="main_file_cont">このアプリケーションを実行するには、追加のファイルをダウンロードする必要があります。ファイルをダウンロードしますか?</string>
-    <string name="main_file_ok">終了</string>
+    <string name="main_file_ok">承認</string>
     <string name="main_file_cancel">キャンセル</string>
     <string name="down_wait">接続を待っています…</string>
     <string name="down_state_ok">ダウンロードが完了しました！</string>
     <string name="down_state_no">ダウンロードに失敗しました…</string>
-    <string name="down_state_doing">ファイルをダウンロードしているからしばらくお待ち下さい… : </string>
+    <string name="down_state_doing">ファイルをダウンロードしているのでしばらくお待ち下さい… : </string>
     <string name="down_state_rea">準備完了</string>
     <string name="down_redown">再試行</string>
     <string name="down_zip_ex">"抽出しています… : "</string>
@@ -199,7 +200,7 @@
     <string name="def_treasure_set">お宝設定を開く</string>
     <string name="treasure_invalid">無効な範囲</string>
     <string name="treasure_reset">リセット</string>
-    <string name="config_testapk">アプリをテストバージョンへ更新</string>
+    <string name="config_testapk">常にアプリをテストバージョンへ更新</string>
     <string name="config_deflev">デフォルトレベル</string>
     <string name="def_lang_en">English</string>
     <string name="def_lang_ko">한국어</string>
@@ -425,7 +426,7 @@
     <string name="lineup_const_zombie">エンジェル砲Lv.</string>
     <string name="lineup_const_breaker">キャノンブレイク砲Lv.</string>
     <string name="lineup_construction">構造</string>
-    <string name="combo_all">全て</string>
+    <string name="combo_all">全部</string>
     <string name="combo_str">ステータス関連</string>
     <string name="combo_abil">特性効果上昇</string>
     <string name="combo_bscan">お城・にゃんこ砲関連</string>
@@ -553,17 +554,23 @@
     <string name="sch_abi_surge">烈波</string>
     <string name="unit_info_text19">" (ランダムな射程 _"</string>
     <string name="unit_info_text20">" ~ _ に烈波を放つ)"</string>
-    <string name="music_err">Error has occurred while loading music files</string>
-    <string name="stg_sch_enem">Enemies</string>
-    <string name="stg_sch_less">Less than</string>
-    <string name="stg_sch_greater">Greater than</string>
-    <string name="stg_sch_same">Same</string>
-    <string name="stg_sch_hasboss">Has Boss</string>
-    <string name="stg_sch_enemy">Enemy</string>
-    <string name="stg_sch_nob">No Boss</string>
-    <string name="stg_sch_star1">1 Star</string>
-    <string name="stg_sch_star2">2 Stars</string>
-    <string name="stg_sch_star3">3 Stars</string>
-    <string name="stg_sch_star4">4 Stars</string>
+    <string name="music_err">音楽ファイルの読み込み中にエラーが発生しました</string>
+    <string name="stg_sch_enem">敵</string>
+    <string name="stg_sch_less">より小さい</string>
+    <string name="stg_sch_greater">より大きい</string>
+    <string name="stg_sch_same">と同じ</string>
+    <string name="stg_sch_hasboss">衝撃波有</string>
+    <string name="stg_sch_enemy">敵</string>
+    <string name="stg_sch_nob">衝撃波無</string>
+    <string name="stg_sch_star1">星1</string>
+    <string name="stg_sch_star2">星2</string>
+    <string name="stg_sch_star3">星3</string>
+    <string name="stg_sch_star4">星4</string>
     <string name="gif_exit">終了</string>
+    <string name="filter_nores">結果なし</string>
+    <string name="err_lusave_fail">スロットデータの保存に失敗しました</string>
+    <string name="err_file_not_exist">ファイル _ は存在\しません。 追加データの再ダウンロードをお試し下さい。</string>
+    <string name="stg_sch_name">名前</string>
+    <string name="stg_sch_stgname">ステージの名前</string>
+    <string name="sch_abi_impoi">Imu.Poison</string>
 </resources>

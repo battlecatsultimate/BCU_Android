@@ -19,6 +19,7 @@
         <item>真傳奇關卡</item>
         <item>喵力達專用關卡</item>
         <item>RA</item>
+        <item>H</item>
     </string-array>
     <string name="sch_bla">黑色敵人</string>
     <string name="sch_fl">飄浮敵人</string>
@@ -152,7 +153,7 @@
     <string name="abi_iseal">Imu.Seal</string>
     <string name="abi_istt">Imu.Stop Time</string>
     <string name="abi_ithch">Imu.Theme Change</string>
-    <string name="abi_sui">Suicide</string>
+    <string name="abi_sui">一次攻擊</string>
     <string name="abi_ipoi">Imu.Venom</string>
     <string name="unit_info_strong">" (受到傷害 x0.5~x0.4 / 輸出傷害 x1.5~x1.8)"</string>
     <string name="unit_info_masdam">" (輸出傷害 x3~x4)"</string>
@@ -554,17 +555,23 @@
     <string name="sch_abi_surge">烈波攻擊</string>
     <string name="unit_info_text20">" 至 _ 之間)"</string>
     <string name="unit_info_text19">" (隨機生成在範圍 _"</string>
-    <string name="music_err">Error has occurred while loading music files</string>
-    <string name="stg_sch_enem">Enemies</string>
-    <string name="stg_sch_less">Less than</string>
-    <string name="stg_sch_greater">Greater than</string>
-    <string name="stg_sch_same">Same</string>
-    <string name="stg_sch_hasboss">Has Boss</string>
-    <string name="stg_sch_enemy">Enemy</string>
-    <string name="stg_sch_nob">No Boss</string>
-    <string name="stg_sch_star1">1 Star</string>
-    <string name="stg_sch_star2">2 Stars</string>
-    <string name="stg_sch_star3">3 Stars</string>
-    <string name="stg_sch_star4">4 Stars</string>
-    <string name="gif_exit">Exit</string>
+    <string name="music_err">載入音樂檔案時發生錯誤</string>
+    <string name="stg_sch_enem">敵人</string>
+    <string name="stg_sch_less">少於</string>
+    <string name="stg_sch_greater">多於</string>
+    <string name="stg_sch_same">等於</string>
+    <string name="stg_sch_hasboss">有魔王</string>
+    <string name="stg_sch_enemy">敵人</string>
+    <string name="stg_sch_nob">沒魔王</string>
+    <string name="stg_sch_star1">★</string>
+    <string name="stg_sch_star2">★★</string>
+    <string name="stg_sch_star3">★★★</string>
+    <string name="stg_sch_star4">★★★★</string>
+    <string name="gif_exit">離開</string>
+    <string name="filter_nores">查無結果</string>
+    <string name="err_file_not_exist">檔案 _ 不存在. 請試著重新下載檔案</string>
+    <string name="err_lusave_fail">隊伍編成儲存失敗</string>
+    <string name="stg_sch_name">名稱</string>
+    <string name="stg_sch_stgname">關卡名稱</string>
+    <string name="sch_abi_impoi">Imu.Poison</string>
 </resources>

@@ -67,6 +67,7 @@ object SoundHandler {
     }
 
     @JvmStatic
+    @Synchronized
     fun getMP(ind: Int): SoundPlayer {
         if (!SE[ind].isEmpty()) {
             val mp = SE[ind].pollFirst()
@@ -85,12 +86,14 @@ object SoundHandler {
     }
 
     @JvmStatic
+    @Synchronized
     fun returnBack(mp: SoundPlayer, ind: Int) {
         available++
         SE[ind].add(mp)
     }
 
     @JvmStatic
+    @Synchronized
     fun releaseAll() {
         for (d in SE) {
             for (mp in d) {

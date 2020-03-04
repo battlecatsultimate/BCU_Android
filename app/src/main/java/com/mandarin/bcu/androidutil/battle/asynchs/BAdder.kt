@@ -94,7 +94,11 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                     battleView.painter.bf.update()
                     battleView.invalidate()
                 }
-                actionButton.isExpanded = false
+                try {
+                    actionButton.isExpanded = false
+                } catch(e: Exception) {
+                    activity.finish()
+                }
                 actionButton.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         actionButton.isExpanded = true
@@ -197,12 +201,14 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                                     SoundHandler.MUSIC.release()
                                 }
                             }
+                            battleView.unload()
                             activity.finish()
                         }
                         dialog.show()
                     } else {
                         P.stack.clear()
                         clear()
+                        battleView.unload()
                         resetHandler()
                         if (SoundHandler.MUSIC.isInitialized) {
                             if (SoundHandler.MUSIC.isRunning) {
@@ -244,6 +250,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                         exit.setOnClickListener {
                             battleView.retry()
                             P.stack.clear()
+                            battleView.unload()
                             clear()
                             dialog.dismiss()
                         }

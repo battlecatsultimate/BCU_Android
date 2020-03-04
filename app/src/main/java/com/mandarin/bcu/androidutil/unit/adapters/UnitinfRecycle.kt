@@ -591,7 +591,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         for (i in viewHolder.pcoins.indices) {
             viewHolder.pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    pcoins[+1] = viewHolder.pcoins[i]!!.selectedItem as Int
+                    pcoins[i+1] = viewHolder.pcoins[i]!!.selectedItem as Int
                     validate(viewHolder, f, t)
                 }
 

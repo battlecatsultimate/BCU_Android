@@ -18,7 +18,8 @@
         <item>챌린지 배틀</item>
         <item>신 레전드 스토리</item>
         <item>드링크 스테이지</item>
-        <item>RA</item>
+        <item>거대 레오파드 강습</item>
+        <item>H</item>
     </string-array>
     <string name="sch_bla">검은적</string>
     <string name="sch_fl">떠있는적</string>
@@ -567,4 +568,10 @@
     <string name="stg_sch_star3">3 성</string>
     <string name="stg_sch_star4">4 성</string>
     <string name="gif_exit">나가기</string>
+    <string name="filter_nores">결과 없음</string>
+    <string name="err_file_not_exist">_ 파일이 존재하지 않습니다. 추가데이터 재다운로드를 권장드립니다.</string>
+    <string name="stg_sch_name">이름</string>
+    <string name="stg_sch_stgname">스테이지 이름</string>
+    <string name="err_lusave_fail">라인업 데이터 저장 실패</string>
+    <string name="sch_abi_impoi">독 데미지 무효</string>
 </resources>

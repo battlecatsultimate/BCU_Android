@@ -28,31 +28,37 @@ class MapDefiner {
             if (StaticStore.map == null) {
                 try {
                     if(!StaticStore.mapread) {
+                        println("Map read")
                         MapColc.read()
                         StaticStore.mapread = true
                     }
 
                     if(!StaticStore.chararead) {
+                        println("Chara read")
                         CharaGroup.read()
                         StaticStore.chararead = true
                     }
 
                     if(!StaticStore.limitread) {
+                        println("Limit read")
                         Limit.read()
                         StaticStore.limitread = true
                     }
 
                     if(!StaticStore.nycread) {
+                        println("Nyc Read")
                         NyCastle.read()
                         StaticStore.nycread = true
                     }
 
                     if(!StaticStore.musicread) {
+                        println("Music Read")
                         SoundHandler.read()
                         StaticStore.musicread = true
                     }
 
                     if(StaticStore.bgread == 0) {
+                        println("BG Read")
                         Background.read()
                         StaticStore.bgread = 1
                     }
@@ -67,32 +73,40 @@ class MapDefiner {
                     DefineItf().init()
                     StaticStore.root = 1
 
+                    println("You Fucked Up")
+
                     if(!StaticStore.mapread) {
+                        println("Map read")
                         MapColc.read()
                         StaticStore.mapread = true
                     }
 
                     if(!StaticStore.chararead) {
+                        println("Chara read")
                         CharaGroup.read()
                         StaticStore.chararead = true
                     }
 
                     if(!StaticStore.limitread) {
+                        println("Limit read")
                         Limit.read()
                         StaticStore.limitread = true
                     }
 
                     if(!StaticStore.nycread) {
+                        println("Nyc Read")
                         NyCastle.read()
                         StaticStore.nycread = true
                     }
 
                     if(!StaticStore.musicread) {
+                        println("Music Read")
                         SoundHandler.read()
                         StaticStore.musicread = true
                     }
 
                     if(StaticStore.bgread == 0) {
+                        println("BG Read")
                         Background.read()
                         StaticStore.bgread = 1
                     }

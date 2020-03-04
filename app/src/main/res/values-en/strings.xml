@@ -18,7 +18,8 @@
         <item>Challenge Battle</item>
         <item>Uncanny Legends</item>
         <item>Night Stages</item>
-        <item>RA</item>
+        <item>Baron Seal Strike</item>
+        <item>H</item>
     </string-array>
     <string name="sch_bla">Black</string>
     <string name="sch_fl">Float</string>
@@ -464,7 +465,7 @@
     <string name="combo_using">Using</string>
     <string name="lineup_lu_copied">Lineup Copied</string>
     <string name="lineup_set_copied">Set Copied</string>
-    <string name="lineup_pasting_lu">Pating Lineup</string>
+    <string name="lineup_pasting_lu">Pasting Lineup</string>
     <string name="lineup_pasting_set">Pasting Set</string>
     <string name="lineup_paste_set_msg">Are you sure you want to paste set? This cannot be undone</string>
     <string name="lineup_paste_lu_msg">Are you sure you want to paste lineup? This cannot be undone</string>
@@ -567,4 +568,10 @@
     <string name="stg_sch_star3">3 Stars</string>
     <string name="stg_sch_star4">4 Stars</string>
     <string name="gif_exit">Exit</string>
+    <string name="filter_nores">No Results</string>
+    <string name="err_file_not_exist">File _ doesn\'t exist. Try to redownload additional data</string>
+    <string name="stg_sch_stgname">Stage Name</string>
+    <string name="stg_sch_name">Name</string>
+    <string name="err_lusave_fail">Failed to save lineup data</string>
+    <string name="sch_abi_impoi">Imu.Poison</string>
 </resources>

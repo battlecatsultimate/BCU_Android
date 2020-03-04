@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder
 import java.util.*
@@ -66,7 +67,13 @@ class LineUpScreen : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        StaticStore.SaveLineUp()
+        try {
+            StaticStore.SaveLineUp()
+        } catch(e: Exception) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload)
+            StaticStore.showShortMessage(this, R.string.err_lusave_fail)
+        }
+
         StaticStore.updateList = false
         StaticStore.filterReset()
         StaticStore.set = null

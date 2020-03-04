@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Environment
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -509,7 +510,13 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 val adapter23 = ArrayAdapter(activity, R.layout.spinneradapter, setname2)
                                 setspin.adapter = adapter23
                                 if (pos >= BasisSet.list.size) setspin.setSelection(BasisSet.list.size - 1) else setspin.setSelection(pos)
-                                StaticStore.SaveLineUp()
+
+                                try {
+                                    StaticStore.SaveLineUp()
+                                } catch(e: Exception) {
+                                    ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                    StaticStore.showShortMessage(activity, R.string.err_lusave_fail)
+                                }
                             }
                             builder.setNegativeButton(R.string.main_file_cancel) { _: DialogInterface?, _: Int -> }
                             builder.show()
@@ -531,7 +538,13 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 val adapter12 = ArrayAdapter(activity, R.layout.spinneradapter, luname2)
                                 luspin.adapter = adapter12
                                 if (pos >= BasisSet.current.lb.size) luspin.setSelection(BasisSet.current.lb.size - 1) else luspin.setSelection(pos)
-                                StaticStore.SaveLineUp()
+
+                                try {
+                                    StaticStore.SaveLineUp()
+                                } catch(e: Exception) {
+                                    ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                    StaticStore.showShortMessage(activity, R.string.err_lusave_fail)
+                                }
                             }
                             builder.setNegativeButton(R.string.main_file_cancel) { _: DialogInterface?, _: Int -> }
                             builder.show()
@@ -634,6 +647,10 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
         override fun getPageTitle(position: Int): CharSequence? {
             return names[position]
+        }
+
+        override fun saveState(): Parcelable? {
+            return null
         }
 
     }

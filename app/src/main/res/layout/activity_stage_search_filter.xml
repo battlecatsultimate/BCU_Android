@@ -83,16 +83,76 @@
             android:focusableInTouchMode="true">
 
             <TextView
-                android:id="@+id/enemytext"
+                android:id="@+id/stgname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="@string/stg_sch_enem"
+                android:text="@string/stg_sch_stgname"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/stgnameedit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="?attr/TextPrimary"
+                android:ems="10"
+                android:hint="@string/stg_sch_name"
+                android:imeOptions="actionDone|flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:textColor="?attr/TextPrimary"
+                android:textColorHint="?attr/HintPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stgname" />
+
+            <TextView
+                android:id="@+id/enemytext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/stg_sch_enem"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stgnameedit" />
+
+            <HorizontalScrollView
+                android:id="@+id/schenemscroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup3">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fadeScrollbars="true"
+                    android:orientation="vertical"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/enemygroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:animateLayoutChanges="true"
+                        app:singleLine="true">
+
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addenemy"
@@ -178,21 +238,6 @@
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/enemygroup"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:animateLayoutChanges="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup3"
-                app:singleLine="true">
-
-            </com.google.android.material.chip.ChipGroup>
-
             <TextView
                 android:id="@+id/musictext"
                 android:layout_width="wrap_content"
@@ -210,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:minWidth="72dp"
+                android:minWidth="96dp"
                 android:popupBackground="?attr/backgroundPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/musictext"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -235,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:minWidth="72dp"
+                android:minWidth="96dp"
                 android:popupBackground="?attr/backgroundPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/bgtext"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -260,7 +305,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:minWidth="72dp"
+                android:minWidth="96dp"
                 android:popupBackground="?attr/backgroundPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/startext"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -340,7 +385,7 @@
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/startext"
-                app:layout_constraintTop_toBottomOf="@+id/enemygroup" />
+                app:layout_constraintTop_toBottomOf="@+id/schenemscroll" />
 
             <Spinner
                 android:id="@+id/continspinner"
@@ -348,7 +393,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:minWidth="72dp"
+                android:minWidth="96dp"
                 android:popupBackground="?attr/backgroundPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/contintext"
                 app:layout_constraintEnd_toEndOf="parent"

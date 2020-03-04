@@ -54,6 +54,8 @@ public class Interpret extends Data {
      */
     public static String[] EABI;
 
+    public static final int RESNUM = 7;
+
     public static String[] SABIS;
     public static String[] PROC;
     public static String[] SPROC;
@@ -89,7 +91,7 @@ public class Interpret extends Data {
             {0, -1, 3, 1}, {0, -1}, {0, -1, 1, 4}, {0, -1, 1}, {5, -1, 6}, {0, -1}, {-1, 7, 4},
             {-1, 7, 9, 10}, {-1, 14}, {-1, 13}, {-1, 13}, {-1, 15}, {-1, 13}, {-1, 16}, {-1, 13}, {0, -1},
             {0, -1, 1}, {0, -1, 1}, {0, -1, 4}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
-            {0, -1, 1}, {0, -1, 18}, {0, -1, 1, 19, 20}};
+            {0, -1, 1}, {0, -1, 18}, {0, -1, 1, 19, 20}, {-1}};
 
     /**
      * proc data locator
@@ -98,7 +100,7 @@ public class Interpret extends Data {
             {0, -1, 2, 1}, {0, -1}, {0, -1, 1, 2}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {-1, 0, 1},
             {-1, 0, 1, 2}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {0, -1},
             {0, -1, 1}, {0, -1, 1}, {0, -1, 2}, {0, -1, 3}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 1},
-            {0, -1, 1}, {0, -1, 1}, {0, -1, 3, 1, 2}};
+            {0, -1, 1}, {0, -1, 1}, {0, -1, 3, 1, 2}, {-1}};
 
     /**
      * proc data formatter for KR,JP
@@ -107,7 +109,7 @@ public class Interpret extends Data {
             {0, 3, 1, -1}, {0, -1}, {0, 1, 4, -1}, {0, 1, -1}, {5, 6, -1}, {0, -1}, {4, 7, -1},
             {9, 10, 7, -1}, {-1, 14}, {-1, 13}, {-1, 13}, {-1, 15}, {-1, 13}, {-1, 16}, {-1, 13}, {0, -1},
             {0, 1, -1}, {0, 1, -1}, {0, 4, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
-            {0, 1, -1}, {0, -1, 18}, {0, 1, -1, 19, 20}};
+            {0, 1, -1}, {0, -1, 18}, {0, 1, -1, 19, 20}, {-1}};
 
     /**
      * proc data locator for KR,JP
@@ -116,7 +118,7 @@ public class Interpret extends Data {
             {0, 2, 1, -1}, {0, -1}, {0, 1, 2, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {1, 0, -1},
             {1, 2, 0, -1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {0, -1},
             {0, 1, -1}, {0, 1, -1}, {0, 2, -1}, {0, 3, -1}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 1},
-            {0, 1, -1}, {0, -1, 1}, {0, 3, -1, 1, 2}};
+            {0, 1, -1}, {0, -1, 1}, {0, 3, -1, 1, 2}, {-1}};
 
     /**
      * combo string component
@@ -185,7 +187,7 @@ public class Interpret extends Data {
         List<Integer> l = new ArrayList<>();
         MaskAtk ma = du.getRepAtk();
 
-        for (int i = 0; i < PROC.length; i++) {
+        for (int i = 0; i < PROC.length - RESNUM; i++) {
             if (ma.getProc(i)[0] == 0)
                 continue;
 
@@ -208,7 +210,7 @@ public class Interpret extends Data {
         List<Integer> l = new ArrayList<>();
         MaskAtk ma = du.getRepAtk();
 
-        for (int i = 0; i < PROC.length; i++) {
+        for (int i = 0; i < PROC.length - RESNUM; i++) {
             if (ma.getProc(i)[0] == 0)
                 continue;
 
@@ -232,7 +234,7 @@ public class Interpret extends Data {
         MaskAtk ma = du.getRepAtk();
         String lang = Locale.getDefault().getLanguage();
         if (cmp == 0) {
-            for (int i = 0; i < PROC.length; i++) {
+            for (int i = 0; i < PROC.length-RESNUM; i++) {
                 if (ma.getProc(i)[0] == 0)
                     continue;
                 StringBuilder ans = new StringBuilder();
@@ -279,7 +281,7 @@ public class Interpret extends Data {
                 l.add(ans.toString());
             }
         } else {
-            for (int i = 0; i < PROC.length; i++) {
+            for (int i = 0; i < PROC.length-RESNUM; i++) {
                 if (ma.getProc(i)[0] == 0)
                     continue;
                 StringBuilder ans = new StringBuilder();
@@ -330,7 +332,7 @@ public class Interpret extends Data {
         MaskAtk ma = du.getRepAtk();
         String lang = Locale.getDefault().getLanguage();
         if (cmp == 0) {
-            for (int i = 0; i < PROC.length; i++) {
+            for (int i = 0; i < PROC.length-RESNUM; i++) {
                 if (ma.getProc(i)[0] == 0)
                     continue;
                 StringBuilder ans = new StringBuilder();
@@ -416,7 +418,7 @@ public class Interpret extends Data {
                 l.add(ans.toString());
             }
         } else {
-            for (int i = 0; i < PROC.length; i++) {
+            for (int i = 0; i < PROC.length - RESNUM; i++) {
                 if (ma.getProc(i)[0] == 0)
                     continue;
                 StringBuilder ans = new StringBuilder();

@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="?attr/ButtonPrimary"
+        android:backgroundTint="?attr/ButtonPrimary"
         android:text="@string/down_redown"
         android:textAllCaps="false"
         android:textColor="?attr/TextPrimary" />

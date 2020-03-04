@@ -25,8 +25,10 @@ class EnemyInfo : AppCompatActivity() {
     var treasure: FloatingActionButton? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -39,22 +41,40 @@ class EnemyInfo : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        if (shared.getInt("Orientation", 0) == 1)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        else if (shared.getInt("Orientation", 0) == 2)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+        else if (shared.getInt("Orientation", 0) == 0)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
         setContentView(R.layout.activity_enemy_info)
+
         treasure = findViewById(R.id.enemtreasure)
+
         val scrollView = findViewById<ScrollView>(R.id.eneminfscroll)
+
         scrollView.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         scrollView.isFocusable = true
         scrollView.isFocusableInTouchMode = true
         scrollView.visibility = View.GONE
+
         val title = findViewById<TextView>(R.id.eneminftitle)
+
         val result = intent
+
         val extra = result.extras
+
         if (extra != null) {
+
             val id = extra.getInt("ID")
             val multi = extra.getInt("Multiply")
+
             title.text = MultiLangCont.ENAME.getCont(StaticStore.enemies[id])
+
             val eanim = findViewById<Button>(R.id.eanimanim)
+
             eanim.setOnClickListener(object : SingleClick() {
                 override fun onSingleClick(v: View?) {
                     val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
@@ -63,7 +83,11 @@ class EnemyInfo : AppCompatActivity() {
                     startActivity(intent)
                 }
             })
-            if (multi != 0) EInfoLoader(this, id, multi).execute() else EInfoLoader(this, id).execute()
+
+            if (multi != 0)
+                EInfoLoader(this, id, multi).execute()
+            else
+                EInfoLoader(this, id).execute()
         }
     }
 

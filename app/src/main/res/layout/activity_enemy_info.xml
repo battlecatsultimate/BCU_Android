@@ -198,12 +198,11 @@
                         android:layout_marginStart="24dp"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
-                        android:foregroundTint="?attr/TextPrimary"
                         android:hint="@string/treasure_ac_lev"
+                        android:foregroundTint="?attr/TextPrimary"
                         android:textColorHint="?attr/TextPrimary"
                         app:boxStrokeColor="?attr/colorAccent"
                         app:boxStrokeErrorColor="?attr/ErrorPrimary"
-
                         app:counterOverflowTextColor="?attr/ErrorPrimary"
                         app:counterTextAppearance="@style/CounterStyle"
                         app:counterTextColor="?attr/TextPrimary"
@@ -214,11 +213,11 @@
                         app:helperTextEnabled="true"
                         app:helperTextTextColor="?attr/TextPrimary"
                         app:hintTextColor="?attr/TextPrimary"
+                        app:suffixTextColor="?attr/HintPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/etrelev"
-                        app:suffixText="@string/def_treasure_lv"
-                        app:suffixTextColor="?attr/HintPrimary">
+                        app:suffixText="@string/def_treasure_lv">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/aclevt"

@@ -22,6 +22,7 @@ import com.mandarin.bcu.androidutil.StaticStore.filter
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.io.LangLoader
 import com.mandarin.bcu.androidutil.stage.MapDefiner
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
 import com.mandarin.bcu.androidutil.unit.Definer
@@ -107,8 +108,18 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
 
                     val positions = ArrayList<Int>()
 
-                    for (i in StaticStore.mapnames[stageset.selectedItemPosition].indices) {
-                        positions.add(i)
+                    if(StaticStore.mapnames != null) {
+                        for (i in StaticStore.mapnames[stageset.selectedItemPosition].indices) {
+                            positions.add(i)
+                        }
+                    } else {
+                        LangLoader.readStageLang()
+
+                        LangLoader.readMapLang()
+
+                        for (i in StaticStore.mapnames[stageset.selectedItemPosition].indices) {
+                            positions.add(i)
+                        }
                     }
 
                     val mapListAdapter = MapListAdapter(activity, StaticStore.mapnames[stageset.selectedItemPosition], StaticStore.MAPCODE[stageset.selectedItemPosition], positions)

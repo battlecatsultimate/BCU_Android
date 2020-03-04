@@ -26,13 +26,13 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
     override fun onPreExecute() {
         val ac = weak.get() ?: return
 
-        val list: ListView = ac.findViewById(R.id.mulist)
+        val list = ac.findViewById<ListView>(R.id.mulist)
 
         setDisappear(list)
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
-        val ac = weak.get() ?: return null
+        weak.get() ?: return null
 
         if(!StaticStore.musicread) {
             SoundHandler.read()

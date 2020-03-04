@@ -18,6 +18,7 @@ import com.mandarin.bcu.androidutil.adapters.MediaPrepare
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.util.page.BBCtrl
 import com.mandarin.bcu.util.page.BattleBox
 import com.mandarin.bcu.util.page.BattleBox.BBPainter
@@ -64,6 +65,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                         val cut = ImgCut.newIns("./org/data/uni.imgcut")
                         f.anim.uni.setCut(cut)
                         f.anim.uni.setImg(f.anim.uni.img)
+                        f.anim.check()
+                    } else {
                         f.anim.check()
                     }
                 }
@@ -148,8 +151,13 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                             SoundHandler.MUSIC.prepareAsync()
                             SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
                                 override fun prepare(mp: MediaPlayer?) {
-                                    if(SoundHandler.musicPlay)
-                                        SoundHandler.MUSIC.start()
+                                    if(SoundHandler.musicPlay) {
+                                        try {
+                                            SoundHandler.MUSIC.start()
+                                        } catch(e: NullPointerException) {
+                                            ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                        }
+                                    }
                                 }
                             })
                         } catch (e: IOException) {
@@ -310,5 +318,17 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         SoundHandler.resetHandler()
         activity.startActivity(intent)
         activity.finish()
+    }
+
+    fun unload() {
+        initialized = false
+
+        for (fs in painter.bf.sb.b.lu.fs) {
+            for (f in fs) {
+                f?.anim?.unload()
+            }
+        }
+
+        for (e in painter.bf.sb.st.data.allEnemy) e?.anim?.unload()
     }
 }

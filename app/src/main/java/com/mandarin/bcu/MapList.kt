@@ -80,7 +80,7 @@ class MapList : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            filter = FilterStage.setFilter(StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss)
+            filter = FilterStage.setFilter(StaticStore.stgschname, StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss)
 
             val stageset = findViewById<Spinner>(R.id.stgspin)
             val maplist = findViewById<ListView>(R.id.maplist)

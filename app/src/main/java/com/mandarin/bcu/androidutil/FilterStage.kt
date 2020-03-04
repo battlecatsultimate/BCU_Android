@@ -3,13 +3,16 @@ package com.mandarin.bcu.androidutil
 import android.util.SparseArray
 import androidx.core.util.isNotEmpty
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import common.system.MultiLangCont
 import common.util.stage.MapColc
 import common.util.stage.SCDef
 import common.util.stage.Stage
 import common.util.unit.Enemy
+import java.util.*
+import kotlin.collections.ArrayList
 
 object FilterStage {
-    fun setFilter(enemies: List<Int>, enemorand: Boolean, music: Int, bg: Int, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int) : SparseArray<SparseArray<ArrayList<Int>>> {
+    fun setFilter(name: String, enemies: List<Int>, enemorand: Boolean, music: Int, bg: Int, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int) : SparseArray<SparseArray<ArrayList<Int>>> {
         val result = SparseArray<SparseArray<ArrayList<Int>>>()
 
         val mc = MapColc.MAPS ?: return result
@@ -26,6 +29,12 @@ object FilterStage {
 
                 for(k in 0 until stm.list.size) {
                     val s = stm.list[k] ?: continue
+
+                    val nam = if(name != "") {
+                        MultiLangCont.STNAME.getCont(s)?.toLowerCase(Locale.ROOT)?.contains(name.toLowerCase(Locale.ROOT)) ?: false
+                    } else {
+                        true
+                    }
 
                     val enem = containEnemy(enemies, s.data.allEnemy, enemorand)
 
@@ -61,7 +70,7 @@ object FilterStage {
                         else -> false
                     }
 
-                    if(enem && mus && backg && stars && baseh && cont && bos)
+                    if(nam && enem && mus && backg && stars && baseh && cont && bos)
                         sresult.add(k)
                 }
 

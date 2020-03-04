@@ -79,6 +79,9 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                 connection.requestMethod = "GET"
                 connection.connect()
                 size = connection.contentLength
+
+                publishProgress(-1,size)
+
                 connection.responseCode
                 output = File(path, purifyneed[i] + ".zip")
                 val pathes = File(path)
@@ -95,7 +98,7 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                 total = 0
                 while (`is`.read(buffer).also { len1 = it } != -1) {
                     total += abs(len1).toLong()
-                    val progress = (total * 100 / size).toInt()
+                    val progress = total.toInt()
                     publishProgress(progress, i)
                     fos.write(buffer, 0, len1)
                 }
@@ -124,6 +127,9 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                         connection.connect()
                         connection.responseCode
                         size = connection.contentLength
+
+                        publishProgress(-1,size)
+
                         output = File(mpath, mfile)
                         val mf = output!!.parentFile
                         if (!mf.exists()) {
@@ -140,7 +146,7 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                         while (`is`.read(buffer).also { len1 = it } != -1) {
                             total += len1.toLong()
                             var progress = 0
-                            if (size != 0) progress = (total * 100 / size).toInt()
+                            if (size != 0) progress = total.toInt()
                             publishProgress(progress, 50, i)
                             fos.write(buffer, 0, len1)
                         }
@@ -245,6 +251,12 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
         if (prog.isIndeterminate) {
             prog.isIndeterminate = false
         }
+
+        if(values[0] == -1) {
+            prog.max = values[1] ?: 100
+            return
+        }
+
         prog.progress = values[0] ?: 0
         if (values[1] != 100 && values[1] != 50) {
             val t = downloading + purifyneed[values[1] ?: 0]

@@ -76,6 +76,10 @@ class StageSearchFilter : AppCompatActivity() {
         val bhedit = findViewById<EditText>(R.id.bhedit)
         val continspin = findViewById<Spinner>(R.id.continspinner)
         val reset = findViewById<FloatingActionButton>(R.id.stgfilterreset)
+        val scroll = findViewById<HorizontalScrollView>(R.id.schenemscroll)
+        val name = findViewById<EditText>(R.id.stgnameedit)
+
+        scroll.isHorizontalScrollBarEnabled = false
 
         for (id in StaticStore.stgenem) {
             val chip = Chip(this)
@@ -200,7 +204,7 @@ class StageSearchFilter : AppCompatActivity() {
             starspin.setSelection(StaticStore.stgstar, false)
         }
 
-        val contins = arrayOf<String>(getString(R.string.combo_all), getString(R.string.unit_info_true), getString(R.string.unit_info_false))
+        val contins = arrayOf<String>(getString(R.string.combo_all), getString(R.string.stg_info_poss), getString(R.string.stg_info_impo))
 
         val continadapter = ArrayAdapter<String>(this, R.layout.spinneradapter, contins)
 
@@ -294,6 +298,7 @@ class StageSearchFilter : AppCompatActivity() {
         }
 
         reset.setOnClickListener {
+            name.setText("")
             orand[0].isChecked = true
             bhopgroup.clearCheck()
             bosses[0].isChecked = true
@@ -305,6 +310,41 @@ class StageSearchFilter : AppCompatActivity() {
             continspin.setSelection(0)
 
             StaticStore.stgFilterReset()
+        }
+
+        if(StaticStore.stgschname != "") {
+            name.setText(StaticStore.stgschname)
+        }
+
+        name.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if(s != null) {
+                    StaticStore.stgschname = s.toString()
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        })
+
+        name.setOnEditorActionListener { _: TextView?, id: Int, e: KeyEvent? ->
+            if(id == EditorInfo.IME_ACTION_DONE || e?.action == KeyEvent.KEYCODE_BACK) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(bhedit.windowToken, 0)
+                name.post {
+                    name.clearFocus()
+                }
+
+                return@setOnEditorActionListener true
+            }
+
+            return@setOnEditorActionListener false
         }
     }
 

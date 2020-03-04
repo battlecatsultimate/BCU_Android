@@ -179,12 +179,18 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
         }
         val treasuretab: ConstraintLayout = activity.findViewById(R.id.treasurelayout)
         treasuretab.visibility = View.VISIBLE
+
+        if(StaticStore.UisOpen) {
+            treasuretab.translationX = treasuretab.width.toFloat()
+            treasuretab.requestLayout()
+        }
+
         val prog = activity.findViewById<ProgressBar>(R.id.unitinfprog)
         prog.visibility = View.GONE
         val anim = activity.findViewById<Button>(R.id.animanim)
         anim.visibility = View.VISIBLE
         val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
-        Objects.requireNonNull(tabs.getTabAt(StaticStore.unittabposition))!!.select()
+        tabs.getTabAt(StaticStore.unittabposition)?.select()
     }
 
     private inner class ExplanationTab internal constructor(fm: FragmentManager?, var number: Int, var id: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -283,6 +289,6 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
     }
 
     init {
-        for (i in nformid.indices) nform[i] = weakActivity.get()!!.getString(nformid[i])
+        for (i in nformid.indices) nform[i] = weakActivity.get()?.getString(nformid[i]) ?: ""
     }
 }

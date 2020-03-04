@@ -12,15 +12,27 @@ class FIBM internal constructor(read: Bitmap) : FakeImage {
     }
 
     override fun getHeight(): Int {
-        return bit.height
+        return try {
+            bit.height
+        } catch(e: Exception) {
+            0
+        }
     }
 
     override fun getWidth(): Int {
-        return bit.width
+        return try {
+            bit.width
+        } catch(e: Exception) {
+            0
+        }
     }
 
     override fun getRGB(i: Int, j: Int): Int {
-        return bit.getPixel(i, j)
+        return try {
+            bit.getPixel(i, j)
+        } catch (e: Exception) {
+            0
+        }
     }
 
     override fun getSubimage(i: Int, j: Int, k: Int, l: Int): FIBM? {
@@ -37,7 +49,15 @@ class FIBM internal constructor(read: Bitmap) : FakeImage {
     }
 
     override fun setRGB(i: Int, j: Int, p: Int) {
-        bit.setPixel(i, j, p)
+        try {
+            bit.setPixel(i, j, p)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun unload() {
+        bit.recycle()
     }
 
     companion object {

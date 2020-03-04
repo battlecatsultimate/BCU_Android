@@ -92,6 +92,7 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
                     }
                 }
             }
+
             val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
             if ((!shared.getBoolean("Skip_Text", false) || config) && !lang) {
                 val url = "https://raw.githubusercontent.com/battlecatsultimate/bcu-resources/master/resources/lang"
@@ -208,7 +209,7 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
         try {
             val libmap = ArrayList<String>()
             if (asset == null) return
-            val ja = asset.getJSONArray("android")
+            val ja = asset.getJSONArray("new_android")
             val mus = asset.getInt("music")
             val musicPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/data/com.mandarin.bcu/music/"
             val musics = ArrayList<String>()
@@ -225,7 +226,15 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
             }
             println(musics)
             for (i in 0 until ja.length()) {
-                libmap.add(ja.getString(i))
+                val versions = ja.getJSONArray(i)
+                val lib = versions.getString(0)
+                val version = versions.getString(1)
+
+                val thisver = version.split(".").toTypedArray()
+                val thatver = StaticStore.VER.split(".").toTypedArray()
+
+                if(check(thisver, thatver))
+                    libmap.add(lib)
             }
             println(libmap.toString())
             val donloader = AlertDialog.Builder(activity)
@@ -317,5 +326,21 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
                 n.toString()
             }
         }
+    }
+
+    private fun check(thisnum: Array<String>, thatnum: Array<String>): Boolean {
+        var update = true
+
+        val these = intArrayOf(thisnum[0].toInt(), thisnum[1].toInt(), thisnum[2].toInt())
+        val those = intArrayOf(thatnum[0].toInt(), thatnum[1].toInt(), thatnum[2].toInt())
+
+        if (these[0] < those[0])
+            update = false
+        else if (these[0] == those[0] && these[1] < those[1])
+            update = false
+        else if (these[0] == those[0] && these[1] == those[1] && these[2] < those[2])
+            update = false
+
+        return update
     }
 }
