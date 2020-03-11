@@ -209,7 +209,7 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
         try {
             val libmap = ArrayList<String>()
             if (asset == null) return
-            val ja = asset.getJSONArray("new_android")
+            val ja = asset.getJSONArray("android_asset")
             val mus = asset.getInt("music")
             val musicPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/data/com.mandarin.bcu/music/"
             val musics = ArrayList<String>()

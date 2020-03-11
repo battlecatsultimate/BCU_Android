@@ -550,7 +550,7 @@
     <string name="battle_won">You won the battle</string>
     <string name="battle_lost_boss">You lost the battle\nBoss health : _%</string>
     <string name="battle_retry">Retry</string>
-    <string name="battle_sure_retry">Are you sure you want to retyr battle?</string>
+    <string name="battle_sure_retry">Are you sure you want to retry battle?</string>
     <string name="sch_abi_surge">Surge Attack</string>
     <string name="unit_info_text19">" (Created randomly between _"</string>
     <string name="unit_info_text20">" ~ _ )"</string>

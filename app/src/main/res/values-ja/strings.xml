@@ -572,5 +572,5 @@
     <string name="err_file_not_exist">ファイル _ は存在\しません。 追加データの再ダウンロードをお試し下さい。</string>
     <string name="stg_sch_name">名前</string>
     <string name="stg_sch_stgname">ステージの名前</string>
-    <string name="sch_abi_impoi">Imu.Poison</string>
+    <string name="sch_abi_impoi">毒撃無効</string>
 </resources>

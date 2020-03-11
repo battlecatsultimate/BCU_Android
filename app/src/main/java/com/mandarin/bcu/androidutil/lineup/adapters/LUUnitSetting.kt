@@ -329,7 +329,7 @@ class LUUnitSetting : Fragment() {
             chform.setOnClickListener {
                 fid++
 
-                if (StaticStore.position[0] != 100)
+                if (StaticStore.position[0] != 100 || StaticStore.position[0] != -1 || StaticStore.position[1] != -1)
                     BasisSet.current.sele.lu.fs[StaticStore.position[0]][StaticStore.position[1]] = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
                 else
                     line?.repform = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))

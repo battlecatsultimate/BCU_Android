@@ -573,5 +573,5 @@
     <string name="err_lusave_fail">隊伍編成儲存失敗</string>
     <string name="stg_sch_name">名稱</string>
     <string name="stg_sch_stgname">關卡名稱</string>
-    <string name="sch_abi_impoi">Imu.Poison</string>
+    <string name="sch_abi_impoi">劇毒無效</string>
 </resources>

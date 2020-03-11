@@ -30,17 +30,18 @@ open class EnemySearchFilter : AppCompatActivity() {
     private val colors = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "0", "10", "9", "")
     private val atkid = intArrayOf(R.id.eschchld, R.id.eschchom, R.id.eschchmu)
     private val atks = arrayOf("2", "4", "3")
-    private val abid = intArrayOf(R.id.eschchabwe, R.id.eschchabfr, R.id.eschchabsl, R.id.eschchabkb, R.id.eschchabwp, R.id.eschchabstr, R.id.eschchabsu, R.id.eschchabcd, R.id.eschchabcr, R.id.eschchabwv, R.id.eschchabsur,
-            R.id.eschchabimwe, R.id.eschchabimfr, R.id.eschchabimsl, R.id.eschchabimkb, R.id.eschchabimwv, R.id.eschchabcu, R.id.eschchabbu, R.id.eschchabrev, R.id.eschchabsb, R.id.eschchabpo)
+    private val abid = intArrayOf(R.id.eschchabwe, R.id.eschchabfr, R.id.eschchabsl, R.id.eschchabkb, R.id.eschchabwp, R.id.eschchabiv, R.id.eschchabstr, R.id.eschchabsu, R.id.eschchabcd, R.id.eschchabcr, R.id.eschchabwv,
+            R.id.eschchabsur, R.id.eschchabimwe, R.id.eschchabimfr, R.id.eschchabimsl, R.id.eschchabimkb, R.id.eschchabimwv, R.id.eschchabcu, R.id.eschchabbu, R.id.eschchabrev, R.id.eschchabsb, R.id.eschchabpo)
     private val abilities = arrayOfNulls<CheckBox>(abid.size)
-    private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr,
+    private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr,
             R.string.sch_abi_wv, R.string.sch_abi_surge, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.abi_cu, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_sb, R.string.sch_abi_poi)
     private val trtool = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_wh)
-    private val abils = arrayOf(intArrayOf(1, Data.P_WEAK), intArrayOf(1, Data.P_STOP), intArrayOf(1, Data.P_SLOW), intArrayOf(1, Data.P_KB), intArrayOf(1, Data.P_WARP), intArrayOf(1, Data.P_STRONG), intArrayOf(1, Data.P_LETHAL), intArrayOf(0, Data.AB_BASE), intArrayOf(1, Data.P_CRIT), intArrayOf(1, Data.P_WAVE), intArrayOf(1, Data.P_VOLC), intArrayOf(1, Data.P_IMUWEAK), intArrayOf(1, Data.P_IMUSTOP), intArrayOf(1, Data.P_IMUSLOW), intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_CURSE), intArrayOf(1, Data.P_BURROW), intArrayOf(1, Data.P_REVIVE), intArrayOf(1, Data.P_SATK), intArrayOf(1, Data.P_POIATK))
+    private val abils = arrayOf(intArrayOf(1, Data.P_WEAK), intArrayOf(1, Data.P_STOP), intArrayOf(1, Data.P_SLOW), intArrayOf(1, Data.P_KB), intArrayOf(1, Data.P_WARP), intArrayOf(1, Data.P_IMUATK), intArrayOf(1, Data.P_STRONG), intArrayOf(1, Data.P_LETHAL), intArrayOf(0, Data.AB_BASE), intArrayOf(1, Data.P_CRIT), intArrayOf(1, Data.P_WAVE), intArrayOf(1, Data.P_VOLC), intArrayOf(1, Data.P_IMUWEAK), intArrayOf(1, Data.P_IMUSTOP), intArrayOf(1, Data.P_IMUSLOW), intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_CURSE), intArrayOf(1, Data.P_BURROW), intArrayOf(1, Data.P_REVIVE), intArrayOf(1, Data.P_SATK), intArrayOf(1, Data.P_POIATK))
     private val atkdraw = intArrayOf(212, 112)
     private val trdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 226, 227, -1, -1, -1)
-    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 196, 199, 200, 201, 208, 239, 213, 214, 215, 216, 210, -1, -1, -1, 229, -1)
-    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Curse.png", "Burrow.png", "Revive.png", "", "BCPoison.png")
+    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 231, 196, 199, 200, 201, 208, 239, 213, 214, 215, 216, 210, -1, -1, -1, 229, -1)
+    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Curse.png", "Burrow.png", "Revive.png", "", "BCPoison.png")
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)

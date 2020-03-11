@@ -250,7 +250,6 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                         exit.setOnClickListener {
                             battleView.retry()
                             P.stack.clear()
-                            battleView.unload()
                             clear()
                             dialog.dismiss()
                         }
