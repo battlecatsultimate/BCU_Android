@@ -19,7 +19,8 @@
         <item>Uncanny Legends</item>
         <item>Night Stages</item>
         <item>Baron Seal Strike</item>
-        <item>H</item>
+        <item>Enigma Stages</item>
+        <item>CA</item>
     </string-array>
     <string name="sch_bla">Black</string>
     <string name="sch_fl">Float</string>
@@ -246,7 +247,7 @@
     <string name="enemy_info_multi">Multiply</string>
     <string name="main_enemy_info">Enemy Info</string>
     <string name="enemy_info_trait">Trait</string>
-    <string name="abi_cu">Curse</string>
+    <string name="sch_abi_cu">Curse</string>
     <string name="infinity">Infinite</string>
     <string name="esch_eva">Eva</string>
     <string name="esch_witch">Witch</string>
@@ -574,4 +575,47 @@
     <string name="stg_sch_name">Name</string>
     <string name="err_lusave_fail">Failed to save lineup data</string>
     <string name="sch_abi_impoi">Imu.Poison</string>
+    <string name="main_pack_img">"Extracting Pack Image… : "</string>
+    <string name="main_announce">Announcement to users</string>
+    <string name="main_announce_0130">To make app compatible with Android 11 (Android R), there was data structure change. So you may have to re-download some additional data. Don\'t worry, it will automatically handle abandoned files.\n\n App will leave old BCU (/storage/emulated/0/BCU/) folder where user data is stored (ex. Images). You can use them or it\'s fine to remove them if you don\'t matter.\n\n Thanks for using BCU Android.</string>
+    <string name="main_confirm">Confirm</string>
+    <string name="main_pack">Reading Pack…</string>
+    <string name="main_pack_music">"Extracting Pack Music… : "</string>
+    <string name="main_pack_bg">"Extracting Pack BG… : "</string>
+    <string name="map_name">Map Name</string>
+    <string name="main_pack_ext">"Extracting Pack… : "</string>
+    <string name="pack_invalid">Invalid Pack Name</string>
+    <string name="pack_invalid_content">Pack _ is not allowed because it can affect app</string>
+    <string name="pack_invalid_remove">Remove this pack file</string>
+    <string name="unit_info_text21">" every _f"</string>
+    <string name="unit_info_text22">" (Moves with _ speed"</string>
+    <string name="unit_info_text23">" and _ width,"</string>
+    <string name="unit_info_text24">" spawned at _ distance)"</string>
+    <string name="unit_info_text25">" (Type _ :"</string>
+    <string name="unit_info_text26">" Attacks _ damage"</string>
+    <string name="unit_info_text27">" Attacks _ % of target's max HP"</string>
+    <string name="unit_info_text28">" Attacks _ % of target's current HP"</string>
+    <string name="unit_info_text29">" Attacks _ % of target's reduced HP"</string>
+    <string name="unit_info_text30">" every _f)"</string>
+    <string name="unit_info_text31">" _"</string>
+    <string name="unit_info_text32">" at _ distance"</string>
+    <string name="unit_info_text33">Normally summoned)</string>
+    <string name="unit_info_text34">" Summoned with warp animation)"</string>
+    <string name="unit_info_text35">" Summoned with burrow up animation)"</string>
+    <string name="unit_info_text36">" Summoned with burrow up animation and won't burrow)"</string>
+    <string name="unit_info_text37">" Summoned regardless of limitation of stage)"</string>
+    <string name="unit_info_text38">" Summoned with fixed buff)"</string>
+    <string name="unit_info_text39">" Invalid type)"</string>
+    <string name="unit_info_text40">" Summoned with same HP of summoner)"</string>
+    <string name="unit_info_text41">" Summoned in random layer)"</string>
+    <string name="unit_info_text42">" Summoned on every hit in front of target"</string>
+    <string name="unit_info_text43">" Summoned on every kill in front of target"</string>
+    <string name="unit_info_text44">" at _ distance)"</string>
+    <string name="unit_info_text45">" with _% buffed stats"</string>
+    <string name="unit_info_text46">"_ "</string>
+    <string name="def_hundred">100</string>
+    <string name="sch_abi_imsu">Imu.Surge Attack</string>
+    <string name="talen_poi">Res.Poison</string>
+    <string name="talen_sur">Res.Surge Attack</string>
+    <string name="lineup_const_curse">Curse Cannon Level</string>
 </resources>

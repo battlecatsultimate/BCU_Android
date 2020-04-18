@@ -1,15 +1,15 @@
 package com.mandarin.bcu.decode;
 
-import android.os.Environment;
+import android.util.Log;
 
 import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.io.File;
 import java.io.IOException;
 
-import main.Opts;
 import common.system.files.AssetData;
 import common.system.files.VFile;
+import main.Opts;
 
 public class ZipLib {
 
@@ -23,38 +23,38 @@ public class ZipLib {
         for (String req : LIBREQS)
             if (info == null || !info.merge.set.contains(req)) {
                 Opts.loadErr("this version requires lib " + req);
-                // Writer.logClose(false);
-                System.exit(0);
             }
     }
 
-    public static void init() {
+    public static void init(String path) {
+        File f = new File(path);
 
-        File f = new File(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/");
         if (!f.exists())
             return;
-        info = new LibInfo(Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files");// TODO
+        info = new LibInfo(path);
     }
 
     public static void merge(File f) {
         try {
 
-            LibInfo nlib = new LibInfo("");// TODO
+            LibInfo nlib = new LibInfo("");
             info.merge(nlib);
-            f.delete();
+
+            if(!f.delete()) {
+                Log.e("ZipLib", "Failed to delete file "+f.getAbsolutePath());
+            }
+
         } catch (IOException e) {
             Opts.loadErr("failed to merge lib");
             e.printStackTrace();
         }
     }
 
-    public static void read() {
-        String prev = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files";// TODO
+    public static void read(String prev) {
         for (PathInfo pi : info.merge.paths.values()) {
             if (pi.type != 0)
                 continue;
-            VFile.root.build(pi.path, AssetData.getAsset(new File(prev + pi.path.substring(1))));
-            // LoadPage.prog("reading assets " + i++ + "/" + tot);
+            VFile.root.build(pi.path, AssetData.getAsset(new File(prev + pi.path.substring(2))));
         }
 
         VFile.root.sort();

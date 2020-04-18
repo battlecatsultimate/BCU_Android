@@ -71,17 +71,13 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         Definer().define(activity)
-        if (StaticStore.names == null) {
-            StaticStore.names = arrayOfNulls(StaticStore.unitnumber)
-            for (i in StaticStore.names.indices) {
-                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
-            }
-        }
+
         publishProgress(0)
         if (!StaticStore.LUread) {
-            val path = Environment.getExternalStorageDirectory().path + "/BCU/user/basis.v"
+
+            val path = StaticStore.getExternalPath(activity)+"user/basis.v"
             val f = File(path)
-            val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
             if (f.exists()) {
                 if (f.length() != 0L) {
                     val buff = ByteArray(f.length().toInt())
@@ -96,10 +92,10 @@ open class BPAdder : AsyncTask<Void?, Int?, Void?> {
                             publishProgress(R.string.lineup_file_err)
                             BasisSet.list.clear()
                             BasisSet()
-                            ErrorLogWriter.writeLog(e, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true))
+                            ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                         }
                     } catch (e: Exception) {
-                        ErrorLogWriter.writeLog(e, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true))
+                        ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                     }
                 }
             }

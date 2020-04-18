@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.os.Environment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
@@ -19,9 +18,11 @@ import common.battle.data.PCoin
 import common.system.MultiLangCont
 import common.system.fake.ImageBuilder
 import common.system.files.AssetData
+import common.system.files.VFile
 import common.util.pack.Pack
 import common.util.unit.Combo
 import common.util.unit.Unit
+import common.util.unit.UnitLevel
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -43,9 +44,9 @@ class Definer {
         try {
             if (StaticStore.units == null) {
                 try {
-                    StaticStore.getUnitnumber()
+                    StaticStore.getUnitnumber(context)
                     ImageBuilder.builder = BMBuilder()
-                    DefineItf().init()
+                    DefineItf().init(context)
                     Unit.readData()
                     PCoin.read()
                     Combo.readFile()
@@ -53,11 +54,11 @@ class Definer {
                     StaticStore.clear()
                     val shared2 = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                     StaticStore.getLang(shared2.getInt("Language", 0))
-                    ZipLib.init()
-                    ZipLib.read()
+                    ZipLib.init(StaticStore.getExternalPath(context))
+                    ZipLib.read(StaticStore.getExternalPath(context))
                     ImageBuilder.builder = BMBuilder()
-                    StaticStore.getUnitnumber()
-                    DefineItf().init()
+                    StaticStore.getUnitnumber(context)
+                    DefineItf().init(context)
                     Unit.readData()
                     PCoin.read()
                     Combo.readFile()
@@ -65,31 +66,45 @@ class Definer {
                     println(StaticStore.unitnumber)
                 }
                 StaticStore.units = Pack.def.us.ulist.list
+
                 if (StaticStore.img15 == null) {
-                    StaticStore.readImg()
+                    StaticStore.readImg(context)
                 }
+
                 for (i in colorid.indices) {
                     colorstring[i] = context.getString(colorid[i])
                 }
+
                 starstring[0] = ""
-                for (i in starid.indices) starstring[i + 1] = context.getString(starid[i])
-                for (i in procid.indices) proc[i] = context.getString(procid[i])
-                for (i in abiid.indices) abi[i] = context.getString(abiid[i])
-                for (i in textid.indices) textstring[i] = context.getString(textid[i])
+
+                for (i in starid.indices)
+                    starstring[i + 1] = context.getString(starid[i])
+
+                for (i in procid.indices)
+                    proc[i] = context.getString(procid[i])
+
+                for (i in abiid.indices)
+                    abi[i] = context.getString(abiid[i])
+
+                for (i in textid.indices)
+                    textstring[i] = context.getString(textid[i])
+
                 Interpret.TRAIT = colorstring
                 Interpret.STAR = starstring
                 Interpret.PROC = proc
                 Interpret.ABIS = abi
                 Interpret.TEXT = textstring
             }
+
             if (StaticStore.unitlang == 1) {
                 MultiLangCont.FNAME.clear()
                 MultiLangCont.FEXP.clear()
                 MultiLangCont.CFEXP.clear()
                 MultiLangCont.COMNAME.clear()
+
                 for (l in lan) {
                     for (n in files) {
-                        val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + n
+                        val path = StaticStore.getExternalPath(context)+"lang" + l + n
                         val f = File(path)
                         if (f.exists()) {
                             val qs = AssetData.getAsset(f).readLine()
@@ -98,7 +113,7 @@ class Definer {
                                     val size = qs.size
                                     var j = 0
                                     while (j < size) {
-                                        val strs = Objects.requireNonNull(qs.poll()).trim { it <= ' ' }.split("\t").toTypedArray()
+                                        val strs = qs.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: return
                                         val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
                                         if (u == null) {
                                             j++
@@ -116,7 +131,7 @@ class Definer {
                                     val size = qs.size
                                     var j = 0
                                     while (j < size) {
-                                        val strs = Objects.requireNonNull(qs.poll()).trim { it <= ' ' }.split("\t").toTypedArray()
+                                        val strs = qs.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: return
                                         val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
                                         if (u == null) {
                                             j++
@@ -156,16 +171,21 @@ class Definer {
                 }
                 StaticStore.unitlang = 0
             }
+
             if (StaticStore.t == null) {
                 Combo.readFile()
                 StaticStore.t = BasisSet.current.t()
             }
+
             if (StaticStore.fruit == null) {
-                val path1 = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/catfruit/"
+                val path1 = StaticStore.getExternalPath(context)+"org/page/catfruit/"
                 val f = File(path1)
-                StaticStore.fruit = arrayOfNulls(f.listFiles().size)
+
                 val names = arrayOf("gatyaitemD_30_f.png", "gatyaitemD_31_f.png", "gatyaitemD_32_f.png", "gatyaitemD_33_f.png", "gatyaitemD_34_f.png", "gatyaitemD_35_f.png", "gatyaitemD_36_f.png"
                         , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "xp.png")
+
+                StaticStore.fruit = arrayOfNulls(f.listFiles()?.size ?: names.size)
+
                 for (i in names.indices) {
                     StaticStore.fruit[i] = BitmapFactory.decodeFile(path1 + names[i])
                 }
@@ -174,7 +194,7 @@ class Definer {
                 val number = StaticStore.anumber
                 StaticStore.icons = arrayOfNulls(number.size)
                 for (i in number.indices) StaticStore.icons[i] = StaticStore.img15[number[i]].bimg() as Bitmap
-                val iconpath = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/icons/"
+                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
                 val files = StaticStore.afiles
                 for (i in files.indices) {
                     if (files[i] == "") continue
@@ -185,7 +205,7 @@ class Definer {
                 val number = StaticStore.pnumber
                 StaticStore.picons = arrayOfNulls(number.size)
                 for (i in number.indices) StaticStore.picons[i] = StaticStore.img15[number[i]].bimg() as Bitmap
-                val iconpath = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/icons/"
+                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
                 val files = StaticStore.pfiles
                 for (i in files.indices) {
                     if (files[i] == "") continue

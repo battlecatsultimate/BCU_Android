@@ -10,7 +10,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.AsyncTask
-import android.os.Environment
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -31,16 +30,15 @@ import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.unit.Definer
 import common.system.MultiLangCont
+import common.util.Data
 import common.util.pack.Pack
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class UAnimationLoader(activity: Activity, private val id: Int, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
+open class UAnimationLoader(activity: Activity, private val pid: Int, private val id: Int, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
     override fun onPreExecute() {
@@ -63,13 +61,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         Definer().define(activity)
-        publishProgress(0)
-        if (StaticStore.names == null) {
-            StaticStore.names = arrayOfNulls(StaticStore.unitnumber)
-            for (i in StaticStore.names.indices) {
-                StaticStore.names[i] = withID(i, MultiLangCont.FNAME.getCont(Pack.def.us.ulist[i].forms[0]) ?: "")
-            }
-        }
+
         publishProgress(2)
         return null
     }
@@ -92,7 +84,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                 val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
                 val option: FloatingActionButton = activity.findViewById(R.id.imgvieweroption)
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-                val cView = AnimationCView(activity, id, StaticStore.formposition, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
+                val cView = AnimationCView(activity, pid, id, StaticStore.formposition, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
                 cView.size = StaticStore.dptopx(1f, activity).toFloat() / 1.25f
                 val detector = ScaleGestureDetector(activity, ScaleListener(cView))
                 cView.setOnTouchListener(object : OnTouchListener {
@@ -122,18 +114,19 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                 cView.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 cViewlayout.addView(cView)
                 forms.setSelection(form)
+                val pack = Pack.map[pid] ?: Pack.def
                 val name: MutableList<String?> = ArrayList()
                 run {
                     var i = 0
-                    while (i < StaticStore.units[id].forms[0].anim.anims.size) {
+                    while (i < pack.us.ulist[id].forms[0].anim.anims.size) {
                         name.add(activity.getString(animS[i]))
                         i++
                     }
                 }
                 val ids: MutableList<String> = ArrayList()
                 var i = 0
-                while (i < StaticStore.units[id].forms.size) {
-                    ids.add("$id-$i")
+                while (i < pack.us.ulist[id].forms.size) {
+                    ids.add(Data.hex(pid)+"-$id-$i")
                     i++
                 }
                 val adapter1 = ArrayAdapter(activity, R.layout.spinneradapter, ids)
@@ -144,8 +137,11 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, ids: Long) {
                         if (StaticStore.formposition != position) {
                             StaticStore.formposition = position
-                            cView.anim = StaticStore.units[id].forms[position].getEAnim(anims.selectedItemPosition)
-                            controller.max = cView.anim?.len() ?: 1
+                            cView.anim = pack.us.ulist[id].forms[position].getEAnim(anims.selectedItemPosition)
+
+                            val max = cView.anim?.len() ?: 2
+
+                            controller.max = max - 1
                             controller.progress = 0
                             StaticStore.frame = 0
                         }
@@ -153,12 +149,16 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
+
                 anims.onItemSelectedListener = object : OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
                             cView.anim!!.changeAnim(position)
-                            controller.max = cView.anim!!.len()
+
+                            val max = cView.anim?.len() ?: 2
+
+                            controller.max = max -1
                             controller.progress = 0
                             StaticStore.frame = 0
                         }
@@ -166,6 +166,7 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
+
                 buttons[0].setOnClickListener {
                     if (StaticStore.frame > 0) {
                         StaticStore.frame--
@@ -209,7 +210,10 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
                 cView.anim!!.changeAnim(StaticStore.animposition)
                 cView.anim!!.setTime(StaticStore.frame)
-                controller.max = cView.anim!!.len()
+
+                val max = cView.anim?.len() ?: 2
+
+                controller.max = max - 1
                 val popup = PopupMenu(activity, option)
                 val menu = popup.menu
                 popup.menuInflater.inflate(R.menu.animation_menu, menu)
@@ -229,20 +233,19 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                             if (!shared.getBoolean("theme", false)) p.color = Color.argb(255, 54, 54, 54) else p.color = Color.argb(255, 255, 255, 255)
                             c.drawRect(0f, 0f, b.width.toFloat(), b.height.toFloat(), p)
                             cView.draw(c)
-                            val path = Environment.getExternalStorageDirectory().path + "/BCU/img/"
-                            val g = File(path)
-                            if (!g.exists()) g.mkdirs()
+
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = dateFormat.format(date) + "-U-" + id + "-" + form + ".png"
-                            val f = File(path, name2)
+                            val name2 = dateFormat.format(date) + "-U-" + Data.hex(pid) + "-" + id + "-" + form
+
                             try {
-                                if (!f.exists()) f.createNewFile()
-                                val fos = FileOutputStream(f)
-                                b.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                                fos.close()
-                                MediaScanner.scan(activity,f)
-                                StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/$name2"))
+                                val path = MediaScanner.putImage(activity, b, name2)
+
+                                if(path == MediaScanner.ERRR_WRONG_SDK) {
+                                    StaticStore.showShortMessage(activity, R.string.anim_png_fail)
+                                } else {
+                                    StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", path))
+                                }
                             } catch (e: IOException) {
                                 e.printStackTrace()
                                 StaticStore.showShortMessage(activity, R.string.anim_png_fail)
@@ -257,20 +260,19 @@ open class UAnimationLoader(activity: Activity, private val id: Int, private val
                             cView.trans = true
                             cView.draw(c)
                             cView.trans = false
-                            val path = Environment.getExternalStorageDirectory().path + "/BCU/img/"
-                            val g = File(path)
-                            if (!g.exists()) g.mkdirs()
+
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name1 = dateFormat.format(date) + "-U-Trans-" + id + "-" + form + ".png"
-                            val f = File(path, name1)
+                            val name1 = dateFormat.format(date) + "-U-Trans-" + Data.hex(pid) + "-" + id + "-" + form
+
                             try {
-                                if (!f.exists()) f.createNewFile()
-                                val fos = FileOutputStream(f)
-                                b.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                                fos.close()
-                                MediaScanner.scan(activity,f)
-                                StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/$name1"))
+                                val path = MediaScanner.putImage(activity, b, name1)
+
+                                if(path == MediaScanner.ERRR_WRONG_SDK) {
+                                    StaticStore.showShortMessage(activity, R.string.anim_png_fail)
+                                } else {
+                                    StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", path))
+                                }
                             } catch (e: IOException) {
                                 e.printStackTrace()
                                 StaticStore.showShortMessage(activity, R.string.anim_png_fail)

@@ -10,7 +10,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.AsyncTask
-import android.os.Environment
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -32,8 +31,6 @@ import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import common.system.MultiLangCont
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
@@ -205,20 +202,19 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
                             if (!shared.getBoolean("theme", false)) p.color = Color.argb(255, 54, 54, 54) else p.color = Color.argb(255, 255, 255, 255)
                             c.drawRect(0f, 0f, b.width.toFloat(), b.height.toFloat(), p)
                             cView.draw(c)
-                            val path = Environment.getExternalStorageDirectory().path + "/BCU/img/"
-                            val g = File(path)
-                            if (!g.exists()) g.mkdirs()
+
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = dateFormat.format(date) + "-E-" + id + ".png"
-                            val f = File(path, name2)
+                            val name2 = dateFormat.format(date) + "-E-" + id
+
                             try {
-                                if (!f.exists()) f.createNewFile()
-                                val fos = FileOutputStream(f)
-                                b.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                                fos.close()
-                                MediaScanner.scan(activity,f)
-                                StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/$name2"))
+                                val path = MediaScanner.putImage(activity, b, name2)
+
+                                if(path == MediaScanner.ERRR_WRONG_SDK) {
+                                    StaticStore.showShortMessage(activity, R.string.anim_png_fail)
+                                } else {
+                                    StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", path))
+                                }
                             } catch (e: IOException) {
                                 e.printStackTrace()
                                 StaticStore.showShortMessage(activity, R.string.anim_png_fail)
@@ -233,20 +229,19 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
                             cView.trans = true
                             cView.draw(c)
                             cView.trans = false
-                            val path = Environment.getExternalStorageDirectory().path + "/BCU/img/"
-                            val g = File(path)
-                            if (!g.exists()) g.mkdirs()
+
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name3 = dateFormat.format(date) + "-E-Trans-" + id + ".png"
-                            val f = File(path, name3)
+                            val name3 = dateFormat.format(date) + "-E-Trans-" + id
+
                             try {
-                                if (!f.exists()) f.createNewFile()
-                                val fos = FileOutputStream(f)
-                                b.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                                fos.close()
-                                MediaScanner.scan(activity,f)
-                                StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", "/BCU/img/$name3"))
+                                val path = MediaScanner.putImage(activity, b, name3)
+
+                                if(path == MediaScanner.ERRR_WRONG_SDK) {
+                                    StaticStore.showShortMessage(activity, R.string.anim_png_fail)
+                                } else {
+                                    StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", path))
+                                }
                             } catch (e: IOException) {
                                 e.printStackTrace()
                                 StaticStore.showShortMessage(activity, R.string.anim_png_fail)
@@ -359,11 +354,7 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
     }
 
     private fun withID(id: Int, name: String): String {
-        return if (name == "") {
-            number(id)
-        } else {
-            number(id) + " - " + name
-        }
+        return number(id) + "/" + name
     }
 
     private fun setDisappear(vararg views: View) {

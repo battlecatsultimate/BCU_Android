@@ -12,10 +12,11 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import common.system.P
 import common.util.anim.EAnimU
+import common.util.pack.Pack
 import java.io.ByteArrayOutputStream
 import java.lang.ref.WeakReference
 
-class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val id: Int, private val unit: Boolean) : AsyncTask<Void?, Void?, Void?>() {
+class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val pid: Int, private val id: Int, private val unit: Boolean) : AsyncTask<Void?, Void?, Void?>() {
     companion object {
         var frame = 0
         var bos = ByteArrayOutputStream()
@@ -40,7 +41,8 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
             StaticStore.gifisSaving = false
             return null
         }
-        val b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444)
+
+        val b = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565)
         val c = Canvas(b)
         val p1 = Paint()
         val bp = Paint()
@@ -58,21 +60,24 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
 
         P.delete(p)
 
+        return null
+    }
+
+    override fun onPostExecute(result: Void?) {
         if(frame == StaticStore.gifFrame) {
             encoder.finish()
             if(unit) {
-                GIFAsync(this.c.get(),id,StaticStore.formposition).execute()
+                GIFAsync(this.c.get(),pid, id,StaticStore.formposition).execute()
             } else {
                 GIFAsync(this.c.get(),id).execute()
             }
         }
-
-        return null
     }
 
     init {
         if (unit) {
-            this.animU = StaticStore.units[id].forms[StaticStore.formposition].getEAnim(StaticStore.animposition)
+            val pack = Pack.map[pid] ?: Pack.def
+            this.animU = pack.us.ulist[id].forms[StaticStore.formposition].getEAnim(StaticStore.animposition)
             this.animU?.setTime(StaticStore.frame)
         } else {
             this.animU = StaticStore.enemies[id].getEAnim(StaticStore.animposition)

@@ -1,5 +1,6 @@
 package com.mandarin.bcu.androidutil.battle
 
+import android.content.Context
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler.read
 import common.util.Res
@@ -9,7 +10,7 @@ import common.util.pack.NyCastle
 import common.util.pack.Soul
 
 class BDefinder {
-    fun define() {
+    fun define(c: Context) {
         if (!StaticStore.effread) {
             EffAnim.read()
             StaticStore.effread = true
@@ -31,7 +32,7 @@ class BDefinder {
             StaticStore.resread = true
         }
         if (!StaticStore.musicread) {
-            read()
+            read(c)
             StaticStore.musicread = true
         }
     }

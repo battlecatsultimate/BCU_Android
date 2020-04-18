@@ -37,6 +37,7 @@
                     android:id="@+id/lineuplevspin"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
                     android:backgroundTint="?attr/TextPrimary"
                     android:popupBackground="?attr/backgroundPrimary" />
@@ -54,6 +55,7 @@
                     android:id="@+id/lineuplevpspin"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:layout_weight="0.5"
                     android:backgroundTint="?attr/TextPrimary"
@@ -155,7 +157,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="0.25"
                             android:background="@drawable/cell_shape"
                             android:gravity="center"
@@ -185,7 +187,7 @@
                         <TextView
                             android:id="@+id/textView23"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="0.25"
                             android:background="@drawable/cell_shape"
                             android:gravity="center"

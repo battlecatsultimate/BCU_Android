@@ -21,6 +21,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="TILtheme">@style/AppTheme.designDay</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
     <style name="AppTheme.night" parent="Theme.AppCompat.Light.NoActionBar">
@@ -43,6 +46,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="TILtheme">@style/AppTheme.designNight</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
     <style name="AppTheme.designNight" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -65,6 +71,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="TILtheme">@style/AppTheme.designNight</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
     <style name="AppTheme.day" parent="Theme.AppCompat.Light.NoActionBar">
@@ -87,6 +96,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="TILtheme">@style/AppTheme.designDay</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
     <style name="AppTheme.designDay" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -109,6 +121,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="TILtheme">@style/AppTheme.designDay</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

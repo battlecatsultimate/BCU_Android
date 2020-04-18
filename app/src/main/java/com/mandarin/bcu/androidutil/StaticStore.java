@@ -1,6 +1,8 @@
 package com.mandarin.bcu.androidutil;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -24,13 +27,26 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mandarin.bcu.R;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import common.CommonStatic;
 import common.battle.BasisLU;
@@ -50,25 +66,23 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.12.8";
+    public static final String VER = "0.13.2";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
     public static final String[] LIBREQ = {"000001", "000002", "000003", "080602", "080603", "080604", "080605", "080700", "080705", "080706", "080800", "080801", "080802",
             "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104", "090200", "090201",
-            "090300", "090301", "090400", "090401", "090402", "090403"};
+            "090300", "090301", "090400", "090401", "090402", "090403", "090405", "090500", "090502"};
     /**Optional libraries list**/
-    public static final String[] OPTREQS = {"080504"};
+    public static final String[] OPTREQS = {"080504", "090404", "090406", "090501"};
     /**Locale codes list**/
     public static final String[] lang = {"", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es"};
     /**List of language files**/
     public static final String[] langfile = {"EnemyName.txt", "StageName.txt", "UnitName.txt", "UnitExplanation.txt", "EnemyExplanation.txt", "CatFruitExplanation.txt", "RewardName.txt", "ComboName.txt", "MedalName.txt", "MedalExplanation.txt"};
-    /**Error log path**/
-    public static final String LOGPATH = Environment.getExternalStorageDirectory().getPath() + "/BCU/logs/";
-    /**Data path**/
-    public static final String DATAPATH = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/";
     /**Shared preferences name**/
     public static final String CONFIG = "configuration";
+    /**Shared preferences name for language**/
+    public static final String LANG = "language";
     /**
      * This value prevents button is performed less than every 1 sec<br>
      * Used when preventing activity is opened double
@@ -120,6 +134,9 @@ public class StaticStore {
     /** Value which tells if file paths are added to memory **/
     public static int root = 0;
 
+    /** Initial vector used when encrypt/decrypt images **/
+    public static String IV = "1234567812345678";
+
      //Image/Text variables
 
     /** Treasure which is from Pack.def **/
@@ -136,32 +153,44 @@ public class StaticStore {
     public static String[] addition = null;
     /** Imgcut index list of ablities **/
     public static int[] anumber = {203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114};
-    public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 227, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 49, 45, 47, 51, 43, 53, 109};
+    /** Imgcut index list of procs **/
+    public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 289, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 243, 49, 45, 47, 51, 43, 53, 109};
+    /** File index list of abilities **/
     public static String[] afiles = {"", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "", "ThemeX.png",
             "", "SealX.png", "BossWaveX.png", "", ""};
-    public static String[] pfiles = {"", "", "", "", "", "", "", "", "Curse.png", "", "", "Burrow.png", "Revive.png", "", "", "", "", "", "", "", "Snipe.png", "Time.png", "Seal.png"
-            , "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "CritX.png", "", "", "BCPoison.png"};
-
+    /** File index list of procs **/
+    public static String[] pfiles = {"", "", "", "", "", "", "", "", "", "", "", "Burrow.png", "Revive.png", "", "", "", "", "", "", "", "Snipe.png", "Time.png", "Seal.png"
+            , "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "CritX.png", "", "", "BCPoison.png", ""};
+    /** String ID list of traits **/
     public static int[] colorid = {R.string.sch_wh, R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.esch_eva, R.string.esch_witch};
+    /** String ID list of star and mask treasure **/
     public static int[] starid = {R.string.unit_info_starred, R.string.unit_info_god1, R.string.unit_info_god2, R.string.unit_info_god3};
-    public static int[] procid = {R.string.sch_abi_kb, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_cr, R.string.sch_abi_wv, R.string.sch_abi_we, R.string.sch_abi_bb, R.string.sch_abi_wa, R.string.abi_cu,
+    /** String ID list of procs **/
+    public static int[] procid = {R.string.sch_abi_kb, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_cr, R.string.sch_abi_wv, R.string.sch_abi_we, R.string.sch_abi_bb, R.string.sch_abi_wa, R.string.sch_abi_cu,
             R.string.sch_abi_str, R.string.sch_abi_su, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_ik, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_iwv, R.string.sch_abi_iw, R.string.sch_abi_iwa,
             R.string.sch_abi_ic, R.string.abi_snk, R.string.abi_stt, R.string.abi_seal, R.string.abi_sum, R.string.abi_mvatk, R.string.abi_thch, R.string.abi_poi, R.string.abi_boswv
-            , R.string.abi_imcri, R.string.sch_abi_sb, R.string.sch_abi_iv, R.string.sch_abi_poi, R.string.sch_abi_surge, R.string.sch_abi_impoi, R.string.talen_kb, R.string.talen_fr,
-            R.string.talen_sl, R.string.talen_wv, R.string.talen_we, R.string.talen_warp, R.string.talen_cu};
+            , R.string.abi_imcri, R.string.sch_abi_sb, R.string.sch_abi_iv, R.string.sch_abi_poi, R.string.sch_abi_surge, R.string.sch_abi_impoi, R.string.sch_abi_imsu, R.string.talen_kb, R.string.talen_fr,
+            R.string.talen_sl, R.string.talen_wv, R.string.talen_we, R.string.talen_warp, R.string.talen_cu, R.string.talen_poi, R.string.talen_sur};
+    /** String ID list of abilities **/
     public static int[] abiid = {R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.abi_imvatk, R.string.sch_abi_ws,
             R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.abi_ipoi, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva,
             R.string.abi_iseal, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id};
+    /** String ID list of additional explanations **/
     public static int[] textid = {R.string.unit_info_text0, R.string.unit_info_text1, R.string.unit_info_text2, R.string.unit_info_text3, R.string.unit_info_text4, R.string.unit_info_text5, R.string.unit_info_text6, R.string.unit_info_text7,
             R.string.def_unit_info_text8, R.string.unit_info_text9, R.string.unit_info_text10, R.string.def_unit_info_text11, R.string.def_unit_info_text12, R.string.unit_info_text13,
-            R.string.unit_info_text14, R.string.unit_info_text15, R.string.unit_info_text16, R.string.unit_info_text17, R.string.unit_info_text18, R.string.unit_info_text19, R.string.unit_info_text20};
+            R.string.unit_info_text14, R.string.unit_info_text15, R.string.unit_info_text16, R.string.unit_info_text17, R.string.unit_info_text18, R.string.unit_info_text19, R.string.unit_info_text20,
+            R.string.unit_info_text21, R.string.unit_info_text22, R.string.unit_info_text23, R.string.unit_info_text24, R.string.unit_info_text25, R.string.unit_info_text26,
+            R.string.unit_info_text27, R.string.unit_info_text28, R.string.unit_info_text29, R.string.unit_info_text30, R.string.unit_info_text31, R.string.unit_info_text32
+            , R.string.unit_info_text33, R.string.unit_info_text33, R.string.unit_info_text34, R.string.unit_info_text35, R.string.unit_info_text36, R.string.unit_info_text37
+            , R.string.unit_info_text38, R.string.unit_info_text39, R.string.unit_info_text40, R.string.unit_info_text41, R.string.unit_info_text42, R.string.unit_info_text43
+            , R.string.unit_info_text44, R.string.unit_info_text45, R.string.unit_info_text46};
 
-    /**
-     * Variables for Unit
-     **/
+    //Variables for Unit
+
+    /** List data of units **/
     public static List<Unit> units = null;
+    /** Number of units **/
     public static int unitnumber;
-    public static String[] names = null;
     public static long unitinflistClick = SystemClock.elapsedRealtime();
     public static boolean UisOpen = false;
 
@@ -182,7 +211,7 @@ public class StaticStore {
      **/
     public static Map<Integer, MapColc> map = null;
     public static String[][] mapnames = null;
-    public static final int[] MAPCODE = {0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24, 25};
+    public static final int[] MAPCODE = {0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24, 25, 27};
     public static Bitmap[] eicons = null;
     public static long maplistClick = SystemClock.elapsedRealtime();
     public static long stglistClick = SystemClock.elapsedRealtime();
@@ -232,6 +261,8 @@ public class StaticStore {
     /**
      * Variables for LineUp
      **/
+    public static ArrayList<String> lunames = new ArrayList<>();
+    public static ArrayList<String> ludata = new ArrayList<>();
     public static List<BasisSet> sets = null;
     public static boolean LULoading = false;
     public static boolean LUread = false;
@@ -246,7 +277,6 @@ public class StaticStore {
     public static boolean updateCastle = false;
     public static BasisSet set = null;
     public static BasisLU lu = null;
-    public static String lineunitname = null;
 
     /**
      * Search Filter Variables
@@ -263,11 +293,15 @@ public class StaticStore {
     public static boolean empty = true;
     public static boolean talents = false;
     public static boolean starred = false;
+    public static String entityname = "";
     public static String stgschname = "";
+    public static String stmschname = "";
+
+    public static boolean[] filterUnitList = new boolean[1];
 
     /**
-     * Resets all values stored in StaticStore.
-     * It will also reset whole data of BCU.
+     * Resets all values stored in StaticStore<br>
+     * It will also reset whole data of BCU
      */
     public static void clear() {
         bgread = 0;
@@ -298,7 +332,6 @@ public class StaticStore {
 
         units = null;
         unitnumber = 0;
-        names = null;
         unitinflistClick = SystemClock.elapsedRealtime();
         UisOpen = false;
 
@@ -339,7 +372,10 @@ public class StaticStore {
         stgcontin = -1;
         stgboss = -1;
         stgschname = "";
+        stmschname = "";
 
+        lunames = new ArrayList<>();
+        ludata = new ArrayList<>();
         sets = null;
         LULoading = false;
         LUread = false;
@@ -351,7 +387,6 @@ public class StaticStore {
         updateList = false;
         set = null;
         lu = null;
-        lineunitname = null;
 
         play = true;
         frame = 0;
@@ -366,21 +401,35 @@ public class StaticStore {
     /**
      * Gets number of units from file
      */
-    public static void getUnitnumber() {
-        String unitpath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/unit/";
+    public static void getUnitnumber(Context c) {
+        String unitpath = StaticStore.getExternalPath(c)+"org/unit/";
 
         File f = new File(unitpath);
-        unitnumber = f.listFiles().length;
+
+        File[] fs = f.listFiles();
+
+        if(fs != null) {
+            unitnumber = fs.length;
+        } else {
+            unitnumber = 0;
+        }
     }
 
     /**
      * Gets number of enemies from file
      */
-    public static void getEnemynumber() {
-        String empath = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/enemy/";
+    public static void getEnemynumber(Context c) {
+        String empath = StaticStore.getExternalPath(c)+"org/enemy/";
 
         File f = new File(empath);
-        emnumber = f.listFiles().length;
+
+        File [] fs = f.listFiles();
+
+        if(fs != null) {
+            emnumber = fs.length;
+        } else {
+            emnumber = 0;
+        }
     }
 
     public static Bitmap getResize(Drawable drawable, Context context, float dp) {
@@ -501,8 +550,8 @@ public class StaticStore {
     /**
      * Saves img15 as cut state by img015.imgcut.
      */
-    public static void readImg() {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/page/img015.png";
+    public static void readImg(Context c) {
+        String path = StaticStore.getExternalPath(c)+"org/page/img015.png";
         String imgcut = "./org/page/img015.imgcut";
         File f = new File(path);
         ImgCut img = ImgCut.newIns(imgcut);
@@ -518,8 +567,8 @@ public class StaticStore {
     /**
      * Reads Treasure Radar icon.
      */
-    public static void readTreasureIcon() {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.mandarin.BCU/files/org/page/img002.png";
+    public static void readTreasureIcon(Context c) {
+        String path = StaticStore.getExternalPath(c)+"org/page/img002.png";
         String imgcut = "./org/page/img002.imgcut";
         File f = new File(path);
         ImgCut img = ImgCut.newIns(imgcut);
@@ -557,7 +606,7 @@ public class StaticStore {
     }
 
     /**
-     * Resets entity filter data.
+     * Resets entity filter data<br>
      * Must be called when exiting Entity list.
      */
     public static void filterReset() {
@@ -572,6 +621,7 @@ public class StaticStore {
         empty = true;
         talents = false;
         starred = false;
+        entityname = "";
     }
 
     /**
@@ -588,6 +638,7 @@ public class StaticStore {
         stgcontin = -1;
         stgboss = -1;
         stgschname = "";
+        stmschname = "";
         filter = null;
     }
 
@@ -669,9 +720,11 @@ public class StaticStore {
      * If not, it will return icon which has same width and height.
      */
     public static Bitmap MakeIcon(Context context, Bitmap b, float wh) {
-        if (b == null) return empty(context, 24f, 24f);
+        if (b == null || b.isRecycled())
+            return empty(context, 24f, 24f);
 
-        if (b.getHeight() == b.getWidth()) return getResizeb(b, context, wh);
+        if (b.getHeight() == b.getWidth())
+            return getResizeb(b, context, wh);
 
         Bitmap before = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(before);
@@ -712,19 +765,23 @@ public class StaticStore {
     /**
      * Saves lineup file.
      */
-    public static void SaveLineUp() throws Exception {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/basis.v";
-        String direct = Environment.getExternalStorageDirectory().getPath() + "/BCU/user/";
+    public static void SaveLineUp(Context c) throws Exception {
+        String path = getExternalPath(c)+"user/basis.v";
+        String direct = getExternalPath(c)+"user/";
 
         File g = new File(direct);
 
         if (!g.exists())
-            g.mkdirs();
+            if(!g.mkdirs()) {
+                Log.e("SaveLineUp","Failed to create directory "+g.getAbsolutePath());
+            }
 
         File f = new File(path);
 
         if (!f.exists())
-            f.createNewFile();
+            if(!f.createNewFile()) {
+                Log.e("SaveLineUp","Failed to create file "+f.getAbsolutePath());
+            }
 
         OutputStream os = new FileOutputStream(f);
 
@@ -768,14 +825,14 @@ public class StaticStore {
      * @param context This parameter is used for Toast.makeText()
      * @param msg String message
      */
+    @SuppressLint("ShowToast")
     public static void showShortMessage(Context context, String msg) {
         if (toast == null) {
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-            toast.show();
         } else {
             toast.setText(msg);
-            toast.show();
         }
+        toast.show();
     }
 
     /**
@@ -783,16 +840,17 @@ public class StaticStore {
      * @param context Used when Toast.makeText() and getting String from resource ID
      * @param resid Resource ID of String
      */
+    @SuppressLint("ShowToast")
     public static void showShortMessage(Context context, int resid) {
         String msg = context.getString(resid);
 
         if (toast == null) {
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-            toast.show();
         } else {
             toast.setText(msg);
-            toast.show();
         }
+
+        toast.show();
     }
 
     /**
@@ -804,6 +862,13 @@ public class StaticStore {
         Snackbar.make(view,resid, BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
+    /**
+     * Show Snackbar message with specified length using resource ID
+     *
+     * @param view Targeted view which snackbar will be shown
+     * @param resid Resource ID of String
+     * @param length Length which snackbar will be shown
+     */
     public static void showShortSnack(View view, int resid, int length) {
         Snackbar snack = Snackbar.make(view,resid,length);
         View v = snack.getView();
@@ -813,10 +878,23 @@ public class StaticStore {
         snack.show();
     }
 
+    /**
+     * Show Snackbar message with specified String
+     *
+     * @param view Targeted view which snackbar will be shown
+     * @param msg Message as String format
+     */
     public static void showShortSnack(View view, String msg) {
         Snackbar.make(view,msg,BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
+    /**
+     * Show Snackbar message with specified String and length
+     *
+     * @param view Targeted view which snackbar will be shown
+     * @param msg Message as String format
+     * @param length Length which snackbar will be shown
+     */
     public static void showShortSnack(View view, String msg, int length) {
         Snackbar snack = Snackbar.make(view,msg,length);
         View v = snack.getView();
@@ -824,5 +902,247 @@ public class StaticStore {
         params.gravity = Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM;
         v.setLayoutParams(params);
         snack.show();
+    }
+
+    public static String getExternalPath(Context c) {
+        if(c == null) {
+            return "";
+        }
+
+        File d = c.getExternalFilesDir(null);
+
+        if(d != null) {
+            return d.getAbsolutePath()+"/";
+        } else {
+            return "";
+        }
+    }
+
+    public static String getExternalPack(Context c) {
+        return getExternalPath(c)+"pack/";
+    }
+
+    public static String getExternalLog(Context c) {
+        return getExternalPath(c)+"logs/";
+    }
+
+    public static String getExternalRes(Context c) {
+        return getExternalPath(c)+"res/";
+    }
+
+    public static String getDataPath() {
+        return Environment.getDataDirectory().getAbsolutePath()+"/data/com.mandarin.bcu/";
+    }
+
+    public static void checkFolders(String... pathes) {
+        for(String path : pathes) {
+            File f = new File(path);
+
+            if(!f.exists()) {
+                if(!f.mkdirs()) {
+                    Log.e("checkFolders","Failed to create directory "+f.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    /**
+     * Encrypts png file to bcuimg files with specified password and initial vector
+     * @param path Path of source file
+     * @param key Password
+     * @param iv Initial Vector
+     * @param delete If this boolean is true, source file will be deleted
+     *
+     */
+    public static void encryptPNG(String path, String key, String iv, boolean delete) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        FileInputStream fis = new FileInputStream(path);
+
+        String enc_path = path.replace(".png",".bcuimg");
+
+        File f = new File(enc_path);
+
+        if(!f.exists()) {
+            if (!f.createNewFile()) {
+                Log.e("PngEncrypter", "Failed to create file " + enc_path);
+            }
+        }
+
+        FileOutputStream fos = new FileOutputStream(f);
+
+        byte [] k = Arrays.copyOf(key.getBytes(), 16);
+        byte [] v = iv.getBytes();
+
+        SecretKeySpec sks = new SecretKeySpec(k, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        IvParameterSpec parameter = new IvParameterSpec(v);
+
+        cipher.init(Cipher.ENCRYPT_MODE, sks, parameter);
+
+        byte [] input = new byte[64];
+        int i;
+
+        while((i = fis.read(input)) != -1) {
+            byte [] output = cipher.update(input, 0, i);
+
+            if(output != null) {
+                fos.write(output);
+            }
+        }
+
+        byte [] output = cipher.doFinal();
+
+        if(output != null)
+            fos.write(output);
+
+        if(delete) {
+            File g = new File(path);
+
+            if(!g.delete()) {
+                Log.e("PngEncrypter","Failed to delete source image "+path);
+            }
+        }
+
+        fis.close();
+        fos.close();
+    }
+
+    /**
+     * Decrypts bcuimg file to png file<br>Must be temporary for security
+     * @param path Path of encrypted file
+     * @param key Password
+     * @param iv Initial Vector
+     *
+     */
+    public static String decryptPNG(String path, String key, String iv) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        String[] dirs = path.split("/");
+        String name = dirs[dirs.length-1].replace(".bcuimg",".png");
+
+        String temp = Environment.getDataDirectory().getAbsolutePath() + "/data/com.mandarin.bcu/temp/";
+
+        File g = new File(temp);
+
+        if(!g.exists()) {
+            if(!g.mkdirs()) {
+                Log.e("PngDecrypter","Failed to create directory "+temp);
+            }
+        }
+
+        File h = new File(temp, name);
+
+        if(!h.exists()) {
+            if(!h.createNewFile()) {
+                Log.e("PngDecrypter", "Failed to create file "+h.getAbsolutePath());
+            }
+        }
+
+        FileInputStream fis = new FileInputStream(path);
+        FileOutputStream fos = new FileOutputStream(h);
+
+        byte[] k = Arrays.copyOf(key.getBytes(), 16);
+        byte[] v = iv.getBytes();
+
+        SecretKeySpec sks = new SecretKeySpec(k, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        IvParameterSpec parameter = new IvParameterSpec(v);
+
+        cipher.init(Cipher.DECRYPT_MODE, sks, parameter);
+
+        byte[] input = new byte[64];
+        int i;
+
+        while((i = fis.read(input)) != -1) {
+            byte[] output = cipher.update(input, 0 , i);
+
+            if(output != null) {
+                fos.write(output);
+            }
+        }
+
+        byte[] output = cipher.doFinal();
+
+        if(output != null) {
+            fos.write(output);
+        }
+
+        fis.close();
+        fos.close();
+
+        return h.getAbsolutePath();
+    }
+
+    /**
+     * Converts file contents to MD5 code
+     *
+     * @param f File which will be converted to MD5
+     * @return If file doesn't exist it will return empty String<br>If there were no problems, it will return converted MD5 code
+     */
+    public static String fileToMD5(File f) throws IOException, NoSuchAlgorithmException {
+        if(f == null || !f.exists())
+            return "";
+
+        FileInputStream fis = new FileInputStream(f);
+        byte[] buffer = new byte[1024];
+
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+
+        int n;
+
+        while((n = fis.read(buffer)) != -1) {
+            md5.update(buffer, 0, n);
+        }
+
+        byte[] msg = md5.digest();
+
+        BigInteger i = new BigInteger(1, msg);
+        String str = i.toString(16);
+
+        return String.format("%32s", str).replace(' ', '0');
+    }
+
+    public static void removeAllFiles(File f) {
+        if(f.isFile()) {
+            if(!f.delete()) {
+                Log.e("StaticStore.removeFiles","Failed to remove file "+f.getAbsolutePath());
+            }
+        } else if(f.isDirectory()) {
+            File[] lit = f.listFiles();
+
+            if(lit == null)
+                return;
+
+            for(File fs : lit) {
+                if(fs.isDirectory()) {
+                    removeAllFiles(fs);
+
+                    if(!fs.delete()) {
+                        Log.e("StaticStore.removeFiles", "Failed to remove directory "+fs.getAbsolutePath());
+                    }
+                } else if(fs.isFile()) {
+                    if(!fs.delete()) {
+                        Log.e("StaticStore.removeFiles", "Failed to remove file "+fs.getAbsolutePath());
+                    }
+                }
+            }
+
+            if(!f.delete()) {
+                Log.e("StaticStore.removeFiles","Failed to remove direcotry "+f.getAbsolutePath());
+            }
+        }
+    }
+
+    public static String getPassword(String name, String ref, Context c) {
+        SharedPreferences shared = c.getSharedPreferences(name, Context.MODE_PRIVATE);
+
+        return shared.getString(ref, "");
+    }
+
+    public static int getID(int fullID) {
+        if(fullID < 1000) {
+            return fullID;
+        }
+
+        String id = Integer.toString(fullID);
+
+        return Integer.parseInt(id.substring(id.length()-3));
     }
 }

@@ -19,14 +19,22 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 internal class Unzipper(private val path: String, private val fileneed: ArrayList<String>, private val extracting: String, context: Activity, private val upload: Boolean) : AsyncTask<Void?, Int?, Void?>() {
-    private val destin: String = path + "files/"
     private var contin = true
     private val weakReference: WeakReference<Activity> = WeakReference(context)
+
     override fun doInBackground(vararg voids: Void?): Void? {
-        val j: Int = if (fileneed.contains("Language")) fileneed.size - 1 else fileneed.size
+        val ac = weakReference.get() ?: return null
+
+        val j: Int = if (fileneed.contains("Language"))
+            fileneed.size - 1
+        else
+            fileneed.size
+
         for (i in 0 until j) {
             try {
                 val source = path + fileneed[i] + ".zip"
+                println("Source : $source")
+                println("FileNEED : $fileneed")
                 val `is`: InputStream = FileInputStream(source)
                 val zis = ZipInputStream(BufferedInputStream(`is`))
                 var ze: ZipEntry?
@@ -36,14 +44,19 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
                     ze = zis.nextEntry
                     if(ze == null) break
                     val filenam = ze.name
-                    val f = File(destin + filenam)
+                    val f = File(path + filenam)
                     if (ze.isDirectory) {
                         if (!f.exists()) f.mkdirs()
                         continue
                     }
-                    val dir = File(f.parent)
-                    if (!dir.exists()) dir.mkdirs()
-                    if (!f.exists()) f.createNewFile()
+                    val dir = File(f.parent ?: "")
+
+                    if (!dir.exists())
+                        dir.mkdirs()
+
+                    if (!f.exists())
+                        f.createNewFile()
+
                     val fout = FileOutputStream(f)
                     while (zis.read(buffer).also { count = it } != -1) {
                         publishProgress(i)
@@ -54,7 +67,7 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
                 }
                 zis.close()
             } catch (e: IOException) {
-                ErrorLogWriter.writeLog(e, upload)
+                ErrorLogWriter.writeLog(e, upload, ac)
                 contin = false
             }
         }
@@ -101,9 +114,9 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
     }
 
     private fun infowirter() {
-        val pathes = path + "files/info/"
+        val pathes = StaticStore.getExternalPath(weakReference.get()) + "info/"
         val filename = "info_android.ini"
-        val f = File(pathes, filename)
+        val f = File(pathes,filename)
         try {
             val libs = infolibbuild()
             val fos = FileOutputStream(f, false)
@@ -117,7 +130,7 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
     }
 
     private fun infolibbuild(): String {
-        val pathes = path + "files/info/"
+        val pathes = path + "info/"
         val filename = "info_android.ini"
         var original: MutableSet<String?>?
         val result = StringBuilder()

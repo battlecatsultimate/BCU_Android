@@ -1,13 +1,11 @@
 package com.mandarin.bcu.io;
 
-import static java.lang.Character.isDigit;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,9 +13,10 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.io.DataIO;
 import main.Opts;
 
-import common.io.DataIO;
+import static java.lang.Character.isDigit;
 
 public class Reader extends DataIO {
 
@@ -96,12 +95,14 @@ public class Reader extends DataIO {
 	public static Queue<String> readLines(String path) {
 		File file = new File(path);
 		Queue<String> ans = new ArrayDeque<>();
-		BufferedReader reader = null;
+		BufferedReader reader;
+
 		try {
 			FileInputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+			InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
 			reader = new BufferedReader(isr);
-			String temp = null;
+			String temp;
+
 			while ((temp = reader.readLine()) != null)
 				ans.add(temp);
 			reader.close();
@@ -115,12 +116,11 @@ public class Reader extends DataIO {
 	public static Set<String> getInfo(String path) {
 		String infopath;
 		if(path.endsWith("/"))
-			infopath = path + "files/info";
+			infopath = path + "info";
 		else
-			infopath = path + "/files/info";
+			infopath = path + "/info";
 
 		String filename = "info_android.ini";
-
 
 		File f = new File(infopath, filename);
 
@@ -136,12 +136,7 @@ public class Reader extends DataIO {
 				lines.add(line);
 			}
 
-			Set<String> libs = new TreeSet<>(Arrays.asList(lines.get(2).split("=")[1].split(",")));
-
-			return libs;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return new TreeSet<>();
+			return new TreeSet<>(Arrays.asList(lines.get(2).split("=")[1].split(",")));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new TreeSet<>();

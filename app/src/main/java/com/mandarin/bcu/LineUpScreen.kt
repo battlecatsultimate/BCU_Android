@@ -8,22 +8,29 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class LineUpScreen : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -36,18 +43,42 @@ class LineUpScreen : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_line_up_screen)
+
         val line = LineUpView(this)
+
         line.id = R.id.lineupView
+
         val layout = findViewById<LinearLayout>(R.id.lineuplayout)
         val display = windowManager.defaultDisplay
         val size = Point()
+
         display.getSize(size)
+
         val w = size.x.toFloat()
         val h = w / 5.0f * 3
+
         line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
+
         layout.addView(line)
+
         LUAdder(this, supportFragmentManager).execute()
     }
 
@@ -63,14 +94,15 @@ class LineUpScreen : AppCompatActivity() {
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
+
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     override fun onBackPressed() {
         try {
-            StaticStore.SaveLineUp()
+            StaticStore.SaveLineUp(this)
         } catch(e: Exception) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload)
+            ErrorLogWriter.writeLog(e, StaticStore.upload, this)
             StaticStore.showShortMessage(this, R.string.err_lusave_fail)
         }
 
@@ -78,20 +110,21 @@ class LineUpScreen : AppCompatActivity() {
         StaticStore.filterReset()
         StaticStore.set = null
         StaticStore.lu = null
-        StaticStore.combos.clear()
-        StaticStore.lineunitname = null
+
+        if(StaticStore.combos != null)
+            StaticStore.combos.clear()
+        else
+            StaticStore.combos = ArrayList()
+
         super.onBackPressed()
     }
 
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
     }
 
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+
     }
 }

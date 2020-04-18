@@ -30,13 +30,13 @@ class MedalAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        MDefiner().define()
+        MDefiner().define(activity)
         publishProgress(0)
         if (StaticStore.medals == null) {
             StaticStore.medals = ArrayList()
             val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
             for (i in 0 until StaticStore.medalnumber) {
-                val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/medal/"
+                val path = StaticStore.getExternalPath(activity)+"org/page/medal/"
                 val name = "medal_" + number(i) + ".png"
                 val f = File(path, name)
                 if (!f.exists()) {
@@ -46,7 +46,7 @@ class MedalAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
                     val b = BitmapFactory.decodeFile(path + name)
                     StaticStore.medals.add(b)
                 } catch (e: Exception) {
-                    ErrorLogWriter.writeLog(e, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true))
+                    ErrorLogWriter.writeLog(e, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true), activity)
                 }
             }
         }

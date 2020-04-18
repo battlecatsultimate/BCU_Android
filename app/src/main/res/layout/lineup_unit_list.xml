@@ -6,5 +6,6 @@
     <ListView
         android:id="@+id/lineupunitlist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:fastScrollEnabled="true" />
 </androidx.constraintlayout.widget.ConstraintLayout>

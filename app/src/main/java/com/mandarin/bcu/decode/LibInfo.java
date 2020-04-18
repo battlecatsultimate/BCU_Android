@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -27,18 +28,26 @@ public class LibInfo {
 
     protected LibInfo(String sys) {
         fs = sys;
-        Queue<String> qs = Reader.readLines(fs + "/info/info_android.ini");
+        Queue<String> qs = Reader.readLines(fs + "info/info_android.ini");
         ver = Reader.parseIntN(qs.poll());
         int n = Reader.parseIntN(qs.poll());
 
-        String[] libs = qs.poll().split("=")[1].split(",");
+        String data = qs.poll();
 
-        for (int i = 0; i < libs.length; i++) {
-            qs.add(libs[i]);
-        }
+        if(data == null)
+            data = "";
+
+        String[] libs = data.split("=")[1].split(",");
+
+        Collections.addAll(qs, libs);
 
         for (int i = 0; i < n; i++) {
-            String v = qs.poll().trim();
+            String d = qs.poll();
+
+            if(d == null)
+                continue;
+
+            String v = d.trim();
             VerInfo vi = new VerInfo(fs, v);
             libver.put(v, vi);
             merge.add(vi);

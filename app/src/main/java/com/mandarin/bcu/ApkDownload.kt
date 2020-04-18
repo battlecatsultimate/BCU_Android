@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -18,11 +17,15 @@ import androidx.core.content.ContextCompat
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.asynchs.DownloadApk
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class ApkDownload : AppCompatActivity() {
-    private val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/apk/"
+    private var path = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
@@ -46,12 +49,26 @@ class ApkDownload : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_apk_download)
+
+        path = StaticStore.getExternalPath(this)+"apk/"
+
         requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 786)
+
         if (ContextCompat.checkSelfPermission(this@ApkDownload, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             val result = intent
             if (result.getStringExtra("ver") != null) {
-                val ver = result.getStringExtra("ver")
+                val ver = result.getStringExtra("ver") ?: StaticStore.VER
                 val filestart = "BCU_Android_"
                 val apk = ".apk"
                 val realpath = path + filestart + ver + apk
@@ -94,12 +111,5 @@ class ApkDownload : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

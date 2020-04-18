@@ -5,25 +5,30 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.asynchs.CheckApk
 import common.system.fake.ImageBuilder
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.io.*
 import java.util.*
 
 open class CheckUpdateScreen : AppCompatActivity() {
-    private val LIB_REQUIRED = StaticStore.LIBREQ
-    private val PATH = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/apk/"
     private var path: String? = null
     private var config = false
 
@@ -32,6 +37,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed = shared.edit()
+
         if (!shared.contains("initial")) {
             ed.putBoolean("initial", true)
             ed.putBoolean("theme", true)
@@ -131,23 +137,37 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if (!shared.contains("Announce_0.13.0")) {
+            ed.putBoolean("Announce_0.13.0", false)
+            ed.apply()
+        }
+
         when {
             shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
-        val preferences = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
 
-        Thread.setDefaultUncaughtExceptionHandler(ErrorLogWriter(StaticStore.LOGPATH, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true)))
+        DefineItf.check(this)
+
+        Thread.setDefaultUncaughtExceptionHandler(ErrorLogWriter(StaticStore.getExternalLog(this), shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)))
 
         setContentView(R.layout.activity_check_update_screen)
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (MainActivity.isRunning) finish()
+        if (MainActivity.isRunning)
+            finish()
 
-        deleter(File(PATH))
+        deleter(File(StaticStore.getExternalPath(this)+"apk/"))
 
         val result = intent
 
@@ -157,42 +177,101 @@ open class CheckUpdateScreen : AppCompatActivity() {
             config = extra!!.getBoolean("Config")
         }
 
-        val checkstate = findViewById<TextView>(R.id.mainstup)
         val mainprog = findViewById<ProgressBar>(R.id.mainprogup)
         val retry = findViewById<Button>(R.id.checkupretry)
 
         retry.visibility = View.GONE
 
-        path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU"
+        path = StaticStore.getExternalPath(this)
 
         ImageBuilder.builder = BMBuilder()
 
+        StaticStore.checkFolders(StaticStore.getExternalPath(this), StaticStore.getExternalLog(this), StaticStore.getExternalPack(this), StaticStore.getExternalRes(this))
+
         retry.setOnClickListener {
-            if (connectivityManager.activeNetworkInfo != null) {
+            if (connectivityManager.activeNetwork != null) {
                 retry.visibility = View.GONE
                 mainprog.visibility = View.VISIBLE
                 val lang = false
-                val checkApk = CheckApk(path ?: Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU", lang, this@CheckUpdateScreen, cando())
+                val checkApk = CheckApk(path ?: StaticStore.getExternalPath(this), lang, this@CheckUpdateScreen, cando())
                 checkApk.execute()
             } else {
                 StaticStore.showShortMessage(this@CheckUpdateScreen, R.string.needconnect)
             }
         }
 
-        if (connectivityManager.activeNetworkInfo != null) {
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            if(checkOldFiles() && !shared.getBoolean("Announce_0.13.0",false)) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+
+                val builder = AlertDialog.Builder(this)
+                val inflater = LayoutInflater.from(this)
+                val v = inflater.inflate(R.layout.announce_dialog, null)
+
+                builder.setView(v)
+
+                val confirm = v.findViewById<Button>(R.id.anncomfirm)
+
+                val dialog = builder.create()
+
+                dialog.setCancelable(false)
+
+                dialog.show()
+
+                v.post {
+                    val w = (resources.displayMetrics.widthPixels*0.75).toInt()
+
+                    dialog.window?.setLayout(w, ViewGroup.LayoutParams.WRAP_CONTENT)
+                }
+
+                dialog.setOnDismissListener {
+                    when {
+                        shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                        shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                        shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                    }
+                }
+
+                confirm.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        ed.putBoolean("Announce_0.13.0",true)
+                        ed.apply()
+
+                        startCheckUpdates()
+
+                        dialog.dismiss()
+                    }
+
+                })
+            } else {
+                startCheckUpdates()
+            }
+        } else {
+            startCheckUpdates()
+        }
+    }
+
+    private fun startCheckUpdates() {
+        val checkstate = findViewById<TextView>(R.id.mainstup)
+        val mainprog = findViewById<ProgressBar>(R.id.mainprogup)
+        val retry = findViewById<Button>(R.id.checkupretry)
+
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (connectivityManager.activeNetwork != null) {
             if (!config) {
                 val lang = false
-                val checkApk = CheckApk(path ?: Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU", lang, this, cando())
+                val checkApk = CheckApk(path ?: StaticStore.getExternalPath(this), lang, this, cando())
                 checkApk.execute()
             } else {
                 val lang = false
-                val checkApk = CheckApk(path ?: Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU", lang, this, cando(), config)
+                val checkApk = CheckApk(path ?: StaticStore.getExternalPath(this), lang, this, cando(), config)
                 checkApk.execute()
             }
         } else {
             if (cando()) {
                 val lang = false
-                CheckApk(path ?: Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU", lang, this, cando(), config).execute()
+                CheckApk(path ?: StaticStore.getExternalPath(this), lang, this, cando(), config).execute()
 
             } else {
                 mainprog.visibility = View.GONE
@@ -204,7 +283,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
     }
 
     private fun cando(): Boolean {
-        val infopath = path!! + "/files/info/"
+        val infopath = path!! + "info/"
         val filename = "info_android.ini"
 
         val f = File(infopath, filename)
@@ -230,7 +309,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
                 try {
                     val libs = TreeSet(listOf(*lines[2].split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
 
-                    for (s in LIB_REQUIRED)
+                    for (s in StaticStore.LIBREQ)
                         if (!libs.contains(s))
                             return false
 
@@ -254,10 +333,14 @@ open class CheckUpdateScreen : AppCompatActivity() {
     }
 
     private fun deleter(f: File) {
-        if (f.isDirectory)
-            for (g in f.listFiles())
+        if (f.isDirectory) {
+            val lit = f.listFiles() ?: return
+
+            for (g in lit)
                 deleter(g)
-        else
+
+            f.delete()
+        } else
             f.delete()
     }
 
@@ -282,12 +365,29 @@ open class CheckUpdateScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
     }
 
-    fun mustDie(`object`: Any) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
+    private fun checkOldFiles() : Boolean {
+        val names:List<String> = listOf("apk","lang","music")
+
+        var result = false
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val datapath = StaticStore.getExternalPath(this).replace("files/","")
+
+            val f = File(datapath)
+
+            val lit = f.listFiles() ?: return result
+
+            for(fs in lit) {
+                if(fs.name != "files" && names.contains(fs.name)) {
+                    result = true
+
+                    deleter(fs)
+                }
+            }
         }
+
+        return result
     }
 }

@@ -131,13 +131,16 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                         publishProgress(-1,size)
 
                         output = File(mpath, mfile)
-                        val mf = output!!.parentFile
+                        val mf = output!!.parentFile ?: return null
+
                         if (!mf.exists()) {
                             mf.mkdirs()
                         }
+
                         if (!output!!.exists()) {
                             output!!.createNewFile()
                         }
+
                         val fos = FileOutputStream(output)
                         val `is` = connection.inputStream
                         val buffer = ByteArray(1024)
@@ -171,7 +174,7 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                 connection.connect()
                 connection.responseCode
                 output = File("$source/", difffile)
-                val dpath = output!!.parentFile
+                val dpath = output!!.parentFile ?: return null
                 if (!dpath.exists()) {
                     dpath.mkdirs()
                 }
@@ -193,6 +196,7 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                 connection.disconnect()
                 dis.close()
                 dfos.close()
+
                 for (s1 in lan) {
                     for (s in StaticStore.langfile) {
                         val langurl = lurl + s1 + s + raw

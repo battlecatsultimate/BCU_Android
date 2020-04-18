@@ -12,17 +12,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.stage.asynchs.StageAdder
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class StageInfo : AppCompatActivity() {
     private var mapcode = 0
     private var stid = 0
     private var posit = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -35,9 +41,27 @@ class StageInfo : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_stage_info)
+
         val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
+
         bck.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 StaticStore.infoOpened = null
@@ -45,13 +69,16 @@ class StageInfo : AppCompatActivity() {
                 finish()
             }
         })
+
         val result = intent
         val extra = result.extras
+
         if (extra != null) {
             mapcode = extra.getInt("mapcode")
             stid = extra.getInt("stid")
             posit = extra.getInt("posit")
         }
+
         StageAdder(this, mapcode, stid, posit).execute()
     }
 
@@ -67,23 +94,19 @@ class StageInfo : AppCompatActivity() {
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
+
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     override fun onBackPressed() {
         val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
+
         bck.performClick()
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        StaticStore.toast = null
-        mustDie(this)
-    }
 
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
+        StaticStore.toast = null
     }
 }

@@ -33,7 +33,6 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.system.MultiLangCont
 import common.util.unit.Enemy
-import java.util.*
 
 class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private val id: Int
@@ -135,11 +134,10 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         }
         val proc: List<String>
         proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(em.de, 1, fs, activity)
+            Interpret.getProc(activity, em.de, 1, fs)
         } else {
-            Interpret.getProc(em.de, 0, fs, activity)
+            Interpret.getProc(activity, em.de, 0, fs)
         }
-        val procicon = Interpret.getProcid(em.de)
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(em.de)
         if (ability.size > 0 || proc.isNotEmpty()) {
@@ -147,7 +145,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             val linearLayoutManager = LinearLayoutManager(activity)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
             viewHolder.emabil.layoutManager = linearLayoutManager
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, activity!!)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
             viewHolder.emabil.adapter = adapterAbil
             ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false)
         } else {
@@ -179,7 +177,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             if (activity == null) return@OnLongClickListener false
             val clipboardManager = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, viewHolder.name.text)
-            clipboardManager.primaryClip = data
+            clipboardManager.setPrimaryClip(data)
             StaticStore.showShortMessage(activity, R.string.enem_info_copied)
             true
         })
@@ -222,11 +220,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enematktimeb.setOnClickListener { if (viewHolder.enematktime.text.toString().endsWith("f")) viewHolder.enematktime.text = s.getAtkTime(em, 1) else viewHolder.enematktime.text = s.getAtkTime(em, 0) }
         viewHolder.enempostb.setOnClickListener { if (viewHolder.enempost.text.toString().endsWith("f")) viewHolder.enempost.text = s.getPost(em, 1) else viewHolder.enempost.text = s.getPost(em, 0) }
         viewHolder.enemtbab.setOnClickListener { if (viewHolder.enemtba.text.toString().endsWith("f")) viewHolder.enemtba.text = s.getTBA(em, 1) else viewHolder.enemtba.text = s.getTBA(em, 0) }
-        aclevt.setSelection(Objects.requireNonNull(aclevt.text)!!.length)
-        actreat.setSelection(Objects.requireNonNull(actreat.text)!!.length)
-        itfcryt.setSelection(Objects.requireNonNull(itfcryt.text)!!.length)
-        cotccryt.setSelection(Objects.requireNonNull(cotccryt.text)!!.length)
-        for (tiet in godmaskt) tiet.setSelection(Objects.requireNonNull(tiet.text)!!.length)
+        aclevt.setSelection(aclevt.text?.length ?: 0)
+        actreat.setSelection(actreat.text?.length ?: 0)
+        itfcryt.setSelection(itfcryt.text?.length ?: 0)
+        cotccryt.setSelection(cotccryt.text?.length ?: 0)
+        for (tiet in godmaskt) tiet.setSelection(tiet.text?.length ?: 0)
         aclevt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -543,19 +541,21 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         }
         val proc: List<String>
         proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(em.de, 1, fs, activity)
+            Interpret.getProc(activity, em.de, 1, fs)
         } else {
-            Interpret.getProc(em.de, 0, fs, activity)
+            Interpret.getProc(activity, em.de, 0, fs)
         }
-        val procicon = Interpret.getProcid(em.de)
+
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
+
         val abilityicon = Interpret.getAbiid(em.de)
+
         if (ability.size > 0 || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(activity)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
             viewHolder.emabil.layoutManager = linearLayoutManager
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, activity!!)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
             viewHolder.emabil.adapter = adapterAbil
             ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false)
         }

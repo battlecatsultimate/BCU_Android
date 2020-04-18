@@ -29,8 +29,14 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".StageSearchFilter" />
-        <activity android:name=".MusicPlayer" />
-        <activity android:name=".MusicList" />
+
+        <activity android:name=".MusicPlayer"
+            android:configChanges="locale"
+            android:screenOrientation="locked"/>
+
+        <activity android:name=".MusicList"
+            android:configChanges="locale"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".BattlePrepare"
             android:configChanges="locale"

@@ -13,13 +13,18 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.asynchs.BAdder
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.DefineItf
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class BattleSimulation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences("configuration", Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -32,17 +37,33 @@ class BattleSimulation : AppCompatActivity() {
                 setTheme(R.style.AppTheme_designDay)
             }
         }
+
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_battle_simulation)
+
         SoundHandler.inBattle = true
+
         val intent = intent
         val bundle = intent.extras
+
         if (bundle != null) {
             val mapcode = bundle.getInt("mapcode")
             val stid = bundle.getInt("stid")
             val posit = bundle.getInt("stage")
             val star = bundle.getInt("star")
             val item = bundle.getInt("item")
+
             BAdder(this, mapcode, stid, posit, star, item).execute()
         }
     }
@@ -81,7 +102,6 @@ class BattleSimulation : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
     }
 
     public override fun onPause() {
@@ -99,12 +119,6 @@ class BattleSimulation : AppCompatActivity() {
             if ((!SoundHandler.MUSIC.isRunning || !SoundHandler.MUSIC.isPlaying) && SoundHandler.musicPlay) {
                 SoundHandler.MUSIC.start()
             }
-        }
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
         }
     }
 }

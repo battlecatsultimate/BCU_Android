@@ -109,13 +109,18 @@ class CheckApk : AsyncTask<Void?, String?, Void?> {
     override fun onPostExecute(results: Void?) {
         val activity = weakReference.get() ?: return
         if (!contin) {
-            if (cando) if (!config) CheckUpdates(path, lang, fileneed, filenum, activity, true).execute() else CheckUpdates(path, lang, fileneed, filenum, activity, true, true).execute() else {
+            if (cando)
+                if (!config)
+                    CheckUpdates(path, lang, fileneed, filenum, activity, true).execute()
+                else
+                    CheckUpdates(path, lang, fileneed, filenum, activity, cando = true, config = true).execute()
+            else {
                 val connectivityManager = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                if (connectivityManager.activeNetworkInfo == null) {
+                if (connectivityManager.activeNetwork == null) {
                     val checkup = activity.findViewById<Button>(R.id.checkupretry)
                     val prog = activity.findViewById<ProgressBar>(R.id.mainprogup)
                     val mainstup = activity.findViewById<TextView>(R.id.mainstup)
-                    checkup.setOnClickListener { if (connectivityManager.activeNetworkInfo != null) CheckApk(path, lang, weakReference.get(), cando).execute() else StaticStore.showShortMessage(activity, R.string.needconnect) }
+                    checkup.setOnClickListener { if (connectivityManager.activeNetwork != null) CheckApk(path, lang, weakReference.get(), cando).execute() else StaticStore.showShortMessage(activity, R.string.needconnect) }
                     prog.visibility = View.GONE
                     mainstup.setText(R.string.main_internet_no)
                 } else {

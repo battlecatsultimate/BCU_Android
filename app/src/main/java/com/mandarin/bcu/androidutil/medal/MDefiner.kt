@@ -1,5 +1,6 @@
 package com.mandarin.bcu.androidutil.medal
 
+import android.content.Context
 import android.os.Environment
 import com.mandarin.bcu.androidutil.StaticStore
 import common.system.files.AssetData
@@ -9,19 +10,19 @@ class MDefiner {
     private val filen = "MedalName.txt"
     private val filed = "MedalExplanation.txt"
     private val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
-    fun define() {
+    fun define(c: Context) {
         if (StaticStore.medalnumber == 0) {
-            val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/medal/"
+            val path = StaticStore.getExternalPath(c)+"org/page/medal/"
             val f = File(path)
             if (f.exists()) {
-                StaticStore.medalnumber = f.list().size
+                StaticStore.medalnumber = f.list()?.size ?: 0
             }
         }
         if (StaticStore.medallang == 1) {
             StaticStore.MEDNAME.clear()
             StaticStore.MEDEXP.clear()
             for (l in lan) {
-                var path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + filen
+                var path = StaticStore.getExternalPath(c)+"lang" + l + filen
                 var f = File(path)
                 if (f.exists()) {
                     val qs = AssetData.getAsset(f).readLine()
@@ -37,7 +38,7 @@ class MDefiner {
                         }
                     }
                 }
-                path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + filed
+                path = StaticStore.getExternalPath(c)+"lang" + l + filed
                 f = File(path)
                 if (f.exists()) {
                     val qs = AssetData.getAsset(f).readLine()

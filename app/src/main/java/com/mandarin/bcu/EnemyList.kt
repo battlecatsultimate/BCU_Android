@@ -26,16 +26,22 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
+import com.mandarin.bcu.androidutil.io.DefineItf
 import common.system.fake.ImageBuilder
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 open class EnemyList : AppCompatActivity() {
     private var numbers = ArrayList<Int>()
     private var mode = EAdder.MODE_INFO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -48,7 +54,23 @@ open class EnemyList : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_enemy_list)
 
         ImageBuilder.builder = BMBuilder()
@@ -61,16 +83,20 @@ open class EnemyList : AppCompatActivity() {
 
         val back = findViewById<FloatingActionButton>(R.id.enlistbck)
         val search = findViewById<FloatingActionButton>(R.id.enlistsch)
+
         back.setOnClickListener {
             StaticStore.filterReset()
             finish()
         }
+
         search.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 gotoFilter()
             }
         })
-        StaticStore.getEnemynumber()
+
+        StaticStore.getEnemynumber(this)
+
         EAdder(this, StaticStore.emnumber,mode).execute()
     }
 
@@ -195,12 +221,5 @@ open class EnemyList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

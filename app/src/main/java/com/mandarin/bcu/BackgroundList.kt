@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Environment
 import android.os.SystemClock
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
@@ -17,6 +16,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.DefineItf
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.io.File
 import java.util.*
 
@@ -49,14 +51,24 @@ class BackgroundList : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_background_list)
 
         val listView = findViewById<ListView>(R.id.bglist)
 
         if (StaticStore.bgnumber == 0) {
-            val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/img/bg/"
+            val path = StaticStore.getExternalPath(this)+"org/img/bg/"
             val f = File(path)
-            StaticStore.bgnumber = f.list().size - 1
+            StaticStore.bgnumber = (f.list()?.size ?: 1) - 1
         }
 
         val names = arrayOfNulls<String>(StaticStore.bgnumber)
@@ -72,7 +84,7 @@ class BackgroundList : AppCompatActivity() {
             if (SystemClock.elapsedRealtime() - StaticStore.bglistClick < StaticStore.INTERVAL) return@OnItemClickListener
             StaticStore.bglistClick = SystemClock.elapsedRealtime()
             val intent = Intent(this@BackgroundList, ImageViewer::class.java)
-            intent.putExtra("Path", Environment.getExternalStorageDirectory().absolutePath + "/Android/data/com.mandarin.BCU/files/org/img/bg/bg" + number(position) + ".png")
+            intent.putExtra("Path", StaticStore.getExternalPath(this@BackgroundList)+"org/img/bg/bg" + number(position) + ".png")
             intent.putExtra("Img", 0)
             intent.putExtra("BGNum", position)
             startActivity(intent)
@@ -118,12 +130,5 @@ class BackgroundList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

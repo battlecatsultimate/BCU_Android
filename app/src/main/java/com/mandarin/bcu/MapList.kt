@@ -20,9 +20,12 @@ import com.mandarin.bcu.androidutil.FilterStage
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.filter
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
 import com.mandarin.bcu.androidutil.stage.asynchs.MapAdder
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -33,8 +36,10 @@ class MapList : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -47,32 +52,59 @@ class MapList : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_map_list)
+
         val back = findViewById<FloatingActionButton>(R.id.stgbck)
+
         back.setOnClickListener {
             StaticStore.stgFilterReset()
             finish()
         }
+
         val stageset = findViewById<Spinner>(R.id.stgspin)
         val setstg = resources.getStringArray(R.array.set_stg)
+
         val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this, R.layout.spinneradapter, setstg) {
             override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
                 val v = super.getView(position, converView, parent)
+
                 (v as TextView).setTextColor(ContextCompat.getColor(this@MapList, R.color.TextPrimary))
+
                 val eight = StaticStore.dptopx(8f, this@MapList)
+
                 v.setPadding(eight, eight, eight, eight)
                 return v
             }
 
             override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val v = super.getDropDownView(position, convertView, parent)
+
                 (v as TextView).setTextColor(ContextCompat.getColor(this@MapList, R.color.TextPrimary))
                 return v
             }
         }
+
         stageset.adapter = adapter
+
         val mapAdder = MapAdder(this)
+
         mapAdder.execute()
     }
 
@@ -80,7 +112,7 @@ class MapList : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            filter = FilterStage.setFilter(StaticStore.stgschname, StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss)
+            filter = FilterStage.setFilter(StaticStore.stgschname, StaticStore.stmschname, StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss, this)
 
             val stageset = findViewById<Spinner>(R.id.stgspin)
             val maplist = findViewById<ListView>(R.id.maplist)
@@ -113,15 +145,21 @@ class MapList : AppCompatActivity() {
                 val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this, R.layout.spinneradapter, resmc) {
                     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
                         val v = super.getView(position, converView, parent)
+
                         (v as TextView).setTextColor(ContextCompat.getColor(this@MapList, R.color.TextPrimary))
+
                         val eight = StaticStore.dptopx(8f, this@MapList)
+
                         v.setPadding(eight, eight, eight, eight)
+
                         return v
                     }
 
                     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                         val v = super.getDropDownView(position, convertView, parent)
+
                         (v as TextView).setTextColor(ContextCompat.getColor(this@MapList, R.color.TextPrimary))
+
                         return v
                     }
                 }
@@ -149,11 +187,12 @@ class MapList : AppCompatActivity() {
                             }
 
                             val mapListAdapter = MapListAdapter(this@MapList, resmapname.toTypedArray(), filter.keyAt(position), resposition)
+
                             maplist.adapter = mapListAdapter
                         } catch (e: NullPointerException) {
-                            ErrorLogWriter.writeLog(e, StaticStore.upload)
+                            ErrorLogWriter.writeLog(e, StaticStore.upload, this@MapList)
                         } catch (e: IndexOutOfBoundsException) {
-                            ErrorLogWriter.writeLog(e, StaticStore.upload)
+                            ErrorLogWriter.writeLog(e, StaticStore.upload, this@MapList)
                         }
                     }
 
@@ -176,15 +215,20 @@ class MapList : AppCompatActivity() {
                 }
 
                 val mapListAdapter = MapListAdapter(this, resmapname.toTypedArray(), filter.keyAt(stageset.selectedItemPosition),resposition)
+
                 maplist.adapter = mapListAdapter
 
                 maplist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                    if (SystemClock.elapsedRealtime() - StaticStore.maplistClick < StaticStore.INTERVAL) return@OnItemClickListener
+                    if (SystemClock.elapsedRealtime() - StaticStore.maplistClick < StaticStore.INTERVAL)
+                        return@OnItemClickListener
+
                     StaticStore.maplistClick = SystemClock.elapsedRealtime()
+
                     val intent = Intent(this@MapList, StageList::class.java)
 
                     intent.putExtra("mapcode", filter.keyAt(stageset.selectedItemPosition))
                     intent.putExtra("stid", resposition[position])
+
                     startActivity(intent)
                 }
             }
@@ -214,12 +258,5 @@ class MapList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

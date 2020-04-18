@@ -1,8 +1,9 @@
 package com.mandarin.bcu.util;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.StaticStore;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -16,11 +17,13 @@ import common.battle.Treasure;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
+import common.system.MultiLangCont;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
+import common.util.unit.Unit;
 
 public class Interpret extends Data {
 
@@ -90,8 +93,8 @@ public class Interpret extends Data {
     private static final int[][] CMP = {{0, -1}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {0, 2, -1},
             {0, -1, 3, 1}, {0, -1}, {0, -1, 1, 4}, {0, -1, 1}, {5, -1, 6}, {0, -1}, {-1, 7, 4},
             {-1, 7, 9, 10}, {-1, 14}, {-1, 13}, {-1, 13}, {-1, 15}, {-1, 13}, {-1, 16}, {-1, 13}, {0, -1},
-            {0, -1, 1}, {0, -1, 1}, {0, -1, 4}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
-            {0, -1, 1}, {0, -1, 18}, {0, -1, 1, 19, 20}, {-1}};
+            {0, -1, 1}, {0, -1, 1}, {0, -1, 4}, {0, -1, 21, 1, 22, 23, 24}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
+            {0, -1, 1}, {0, -1, 18}, {0, -1, 1, 19, 20}, {-1}, {-1}};
 
     /**
      * proc data locator
@@ -99,8 +102,13 @@ public class Interpret extends Data {
     private static final int[][] LOC = {{0, -1}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {0, 1, -1},
             {0, -1, 2, 1}, {0, -1}, {0, -1, 1, 2}, {0, -1, 1}, {0, -1, 1}, {0, -1}, {-1, 0, 1},
             {-1, 0, 1, 2}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {0, -1},
-            {0, -1, 1}, {0, -1, 1}, {0, -1, 2}, {0, -1, 3}, {0, -1, 1}, {0, -1}, {0, -1}, {-1}, {0, -1, 1},
-            {0, -1, 1}, {0, -1, 1}, {0, -1, 3, 1, 2}, {-1}};
+            {0, -1, 1}, {0, -1, 1}, {0, -1, 2}, {0, -1, 5, 3, 1, 2, 4}, {0, -1, 1}, {0, -1, 1, 4, 2, 3}, {0, -1}, {-1}, {0, -1, 1},
+            {0, -1, 1}, {0, -1, 1}, {0, -1, 3, 1, 2}, {-1}, {-1}};
+
+    private static final int[][] VENOM_CMP = {{0, -1, 1, 25, 26, 30}, {0, -1, 1, 25, 27, 30}, {0, -1, 1, 25, 28, 30}, {0, -1, 1, 25, 29 ,30}};
+
+    private static final int[][] SUMMON_CMP_U = {{0, -1, 31, 32, 9, 25}, {0, -1, 31, 9, 25, 45}};
+    private static final int[][] SUMMON_LOC_U = {{0, -1, 1, 2, 5, 4}, {0, -1, 1, 5, 4, 2}};
 
     /**
      * proc data formatter for KR,JP
@@ -108,8 +116,8 @@ public class Interpret extends Data {
     private static final int[][] CMP2 = {{0, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {0, 2, -1},
             {0, 3, 1, -1}, {0, -1}, {0, 1, 4, -1}, {0, 1, -1}, {5, 6, -1}, {0, -1}, {4, 7, -1},
             {9, 10, 7, -1}, {-1, 14}, {-1, 13}, {-1, 13}, {-1, 15}, {-1, 13}, {-1, 16}, {-1, 13}, {0, -1},
-            {0, 1, -1}, {0, 1, -1}, {0, 4, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
-            {0, 1, -1}, {0, -1, 18}, {0, 1, -1, 19, 20}, {-1}};
+            {0, 1, -1}, {0, 1, -1}, {0, 4, -1}, {0, 21, 1, -1, 24, 23, 22}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 17},
+            {0, 1, -1}, {0, -1, 18}, {0, 1, -1, 19, 20}, {-1}, {-1}};
 
     /**
      * proc data locator for KR,JP
@@ -117,8 +125,13 @@ public class Interpret extends Data {
     private static final int[][] LOC2 = {{0, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {0, 1, -1},
             {0, 2, 1, -1}, {0, -1}, {0, 1, 2, -1}, {0, 1, -1}, {0, 1, -1}, {0, -1}, {1, 0, -1},
             {1, 2, 0, -1}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {0, -1},
-            {0, 1, -1}, {0, 1, -1}, {0, 2, -1}, {0, 3, -1}, {0, 1, -1}, {0, -1}, {0, -1}, {-1}, {0, -1, 1},
-            {0, 1, -1}, {0, -1, 1}, {0, 3, -1, 1, 2}, {-1}};
+            {0, 1, -1}, {0, 1, -1}, {0, 2, -1}, {0, 5, 3, -1, 4, 2, 1}, {0, 1, -1}, {0, 1, -1, 4, 3, 2}, {0, -1}, {-1}, {0, -1, 1},
+            {0, 1, -1}, {0, -1, 1}, {0, 3, -1, 1, 2}, {-1}, {-1}};
+
+    private static final int[][] VENOM_CMP2 = {{0, 1, -1, 25, 30, 26}, {0, 1, -1, 25, 30, 27}, {0, 1, -1, 25, 30, 28}, {0, 1, -1, 25, 30, 29}};
+
+    private static final int[][] SUMMON_CMP2_U = {{0, 9, 32, 31, -1, 25}, {0, 9, 31, -1, 25, 45}};
+    private static final int[][] SUMMON_LOC2_U = {{0, 5, 2, 1, -1, 4}, {0, 5, 1, -1, 4, 2}};
 
     /**
      * combo string component
@@ -182,285 +195,471 @@ public class Interpret extends Data {
         return ans.toString();
     }
 
-    public static List<Integer> getProcid(MaskUnit du) {
-        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
-        List<Integer> l = new ArrayList<>();
-        MaskAtk ma = du.getRepAtk();
+    public static List<String> getProc(Context ac, MaskUnit du, int cmp, int frse) {
+        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19, 33, 34);
+        List<Integer> res = new ArrayList<>();
 
-        for (int i = 0; i < PROC.length - RESNUM; i++) {
-            if (ma.getProc(i)[0] == 0)
-                continue;
-
-            if (immune.contains(i)) {
-                int pro = ma.getProc(i)[0];
-
-                if (pro != 100)
-                    l.add(PROC.length + i - 20);
-                else
-                    l.add(i);
-            } else
-                l.add(i);
+        for(int i = immune.size()-1; i >= 0; i--) {
+            res.add(PROC.length-i);
         }
 
-        return l;
-    }
-
-    public static List<Integer> getProcid(MaskEnemy du) {
-        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
-        List<Integer> l = new ArrayList<>();
-        MaskAtk ma = du.getRepAtk();
-
-        for (int i = 0; i < PROC.length - RESNUM; i++) {
-            if (ma.getProc(i)[0] == 0)
-                continue;
-
-            if (immune.contains(i)) {
-                int pro = ma.getProc(i)[0];
-
-                if (pro != 100)
-                    l.add(PROC.length + i - 20);
-                else
-                    l.add(i);
-            } else
-                l.add(i);
-        }
-
-        return l;
-    }
-
-    public static List<String> getProc(MaskUnit du, int cmp, int frse) {
-        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
         List<String> l = new ArrayList<>();
-        MaskAtk ma = du.getRepAtk();
+        List<Integer> id = new ArrayList<>();
+
+        MaskAtk mr = du.getRepAtk();
+
         String lang = Locale.getDefault().getLanguage();
+
         if (cmp == 0) {
             for (int i = 0; i < PROC.length-RESNUM; i++) {
-                if (ma.getProc(i)[0] == 0)
+                if (mr.getProc(i)[0] == 0)
                     continue;
-                StringBuilder ans = new StringBuilder();
-                for (int j = 0; j < CMP[i].length; j++) {
-                    if (CMP[i][j] == -1)
-                        if (immune.contains(i) && lang.equals("en")) {
-                            int pro = ma.getProc(i)[0];
-                            if (pro != 100)
-                                ans.append(TEXT[12]).append(PROC[i].substring(4));
-                            else
-                                ans.append(TEXT[11]).append(PROC[i].substring(4));
-                        } else {
-                            int pro = ma.getProc(i)[0];
 
-                            if (immune.contains(i) && pro != 100)
-                                ans.append(PROC[PROC.length + i - 20]);
-                            else
-                                ans.append(PROC[i]);
-                        }
-                    else {
-                        if (frse == 0) {
-                            int pro = ma.getProc(i)[LOC[i][j]];
-                            String rep = pro == -1 ? "infinity" : "" + pro;
-                            if (immune.contains(i) && pro != 100)
-                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                            else if (!immune.contains(i))
-                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
+                int [] c;
+
+                if(i == P_POISON) {
+                    c = VENOM_CMP[getVenomType(mr.getProc(i)[4])];
+                } else if (i == P_SUMMON) {
+                    c = SUMMON_CMP_U[getSummonType(mr.getProc(i)[4])];
+                } else {
+                    c = CMP[i];
+                }
+
+                int [] loc;
+
+                if(i == P_SUMMON) {
+                    loc = SUMMON_LOC_U[getSummonType(mr.getProc(i)[4])];
+                } else{
+                    loc = LOC[i];
+                }
+
+                StringBuilder ans = getProcNameEN(ac, i, mr, c, loc, immune, res, lang, frse);
+
+                if(!l.contains(ans.toString())) {
+                    if(id.contains(i)) {
+                        if(lang.equals("en")) {
+                            ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
                         } else {
-                            if (TEXT[CMP[i][j]].contains("_f")) {
-                                int pro = ma.getProc(i)[LOC[i][j]];
-                                String rep = pro == -1 ? "infinity" : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP[i][j]].replace("_f", "_s").replace("_", rep));
-                            } else {
-                                int pro = ma.getProc(i)[LOC[i][j]];
-                                String rep = pro == -1 ? "infinity" : "" + pro;
-                                if (immune.contains(i) && pro != 100)
-                                    ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                else if (!immune.contains(i))
-                                    ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                            }
+                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
                         }
                     }
+
+                    l.add(ans.toString());
+                    id.add(i);
                 }
-                l.add(ans.toString());
             }
         } else {
             for (int i = 0; i < PROC.length-RESNUM; i++) {
-                if (ma.getProc(i)[0] == 0)
+                if (mr.getProc(i)[0] == 0)
                     continue;
-                StringBuilder ans = new StringBuilder();
-                for (int j = 0; j < CMP2[i].length; j++) {
-                    if (CMP2[i][j] == -1) {
-                        if (immune.contains(i)) {
-                            int pro = ma.getProc(i)[0];
 
-                            if (pro != 100)
-                                ans.append(PROC[PROC.length + i - 20]);
-                            else
-                                ans.append(PROC[i]);
-                        } else
-                            ans.append(PROC[i]);
-                    } else {
-                        if (frse == 0) {
-                            int pro = ma.getProc(i)[LOC2[i][j]];
-                            String rep = pro == -1 ? "infinity" : "" + pro;
-                            if (immune.contains(i) && pro != 100)
-                                ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                            else if (!immune.contains(i))
-                                ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                        } else {
-                            if (TEXT[CMP2[i][j]].contains("_f")) {
-                                int pro = ma.getProc(i)[LOC2[i][j]];
-                                String rep = pro == -1 ? "infinity" : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP2[i][j]].replace("_f", "_s").replace("_", rep));
-                            } else {
-                                int pro = ma.getProc(i)[LOC2[i][j]];
-                                String rep = pro == -1 ? "infinity" : "" + pro;
-                                if (immune.contains(i) && pro != 100)
-                                    ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                                else if (!immune.contains(i))
-                                    ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                            }
-                        }
-                    }
+                int[] c2;
+
+                if(i == P_POISON) {
+                    c2 = VENOM_CMP2[getVenomType(mr.getProc(i)[4])];
+                } else if(i == P_SUMMON) {
+                    c2 = SUMMON_CMP2_U[getSummonType(mr.getProc(i)[4])];
+                } else {
+                    c2 = CMP2[i];
                 }
-                l.add(ans.toString());
+
+                int[] loc2;
+
+                if(i == P_SUMMON) {
+                    loc2 = SUMMON_LOC2_U[getSummonType(mr.getProc(i)[4])];
+                } else {
+                    loc2 = LOC2[i];
+                }
+
+                StringBuilder ans = getProcNameKR(ac, i, mr, c2, loc2, immune, res, frse);
+
+                if(!l.contains(ans.toString())) {
+                    if(id.contains(i)) {
+                        ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
+                    }
+
+                    l.add(ans.toString());
+                    id.add(i);
+                }
             }
         }
+
+        for(int k = 0; k < du.getAtkCount(); k++) {
+            MaskAtk ma = du.getAtkModel(k);
+
+            if (cmp == 0) {
+                for (int i = 0; i < PROC.length-RESNUM; i++) {
+                    if (ma.getProc(i)[0] == 0)
+                        continue;
+
+                    int [] c;
+
+                    if(i == P_POISON) {
+                        c = VENOM_CMP[getVenomType(ma.getProc(i)[4])];
+                    } else if (i == P_SUMMON) {
+                        c = SUMMON_CMP_U[getSummonType(ma.getProc(i)[4])];
+                    } else {
+                        c = CMP[i];
+                    }
+
+                    int [] loc;
+
+                    if(i == P_SUMMON) {
+                        loc = SUMMON_LOC_U[getSummonType(ma.getProc(i)[4])];
+                    } else{
+                        loc = LOC[i];
+                    }
+
+                    StringBuilder ans = getProcNameEN(ac, i, ma, c, loc, immune, res, lang, frse);
+
+                    if(!l.contains(ans.toString())) {
+                        if(id.contains(i)) {
+                            if(lang.equals("en")) {
+                                ans.append(" [").append(numberWithExtension(k + 1)).append(" Attack").append("]");
+                            } else {
+                                ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                            }
+                        }
+
+                        l.add(ans.toString());
+                        id.add(i);
+                    }
+                }
+            } else {
+                for (int i = 0; i < PROC.length-RESNUM; i++) {
+                    if (ma.getProc(i)[0] == 0)
+                        continue;
+
+                    int[] c2;
+
+                    if(i == P_POISON) {
+                        c2 = VENOM_CMP2[getVenomType(ma.getProc(i)[4])];
+                    } else if(i == P_SUMMON) {
+                        c2 = SUMMON_CMP2_U[getSummonType(ma.getProc(i)[4])];
+                    } else {
+                        c2 = CMP2[i];
+                    }
+
+                    int[] loc2;
+
+                    if(i == P_SUMMON) {
+                        loc2 = SUMMON_LOC2_U[getSummonType(ma.getProc(i)[4])];
+                    } else {
+                        loc2 = LOC2[i];
+                    }
+
+                    StringBuilder ans = getProcNameKR(ac, i, ma, c2, loc2, immune, res, frse);
+
+                    if(!l.contains(ans.toString())) {
+                        if(id.contains(i)) {
+                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                        }
+
+                        l.add(ans.toString());
+                        id.add(i);
+                    }
+                }
+            }
+        }
+
         return l;
     }
 
-    public static List<String> getProc(MaskEnemy du, int cmp, int frse, Activity activity) {
-        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19);
+    public static List<String> getProc(Context activity, MaskEnemy du, int cmp, int frse) {
+        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19, 33);
+        List<Integer> res = new ArrayList<>();
+
+        for(int i = immune.size()-1; i >= 0; i--) {
+            res.add(PROC.length-i);
+        }
+
         List<String> l = new ArrayList<>();
-        MaskAtk ma = du.getRepAtk();
+        List<Integer> id = new ArrayList<>();
+
+        MaskAtk mr = du.getRepAtk();
+
         String lang = Locale.getDefault().getLanguage();
+
         if (cmp == 0) {
             for (int i = 0; i < PROC.length-RESNUM; i++) {
-                if (ma.getProc(i)[0] == 0)
+                if (mr.getProc(i)[0] == 0)
                     continue;
-                StringBuilder ans = new StringBuilder();
-                for (int j = 0; j < CMP[i].length; j++) {
-                    if (CMP[i][j] == -1)
-                        if (immune.contains(i) && lang.equals("en")) {
-                            int pro = ma.getProc(i)[0];
-                            if (pro != 100)
-                                ans.append(TEXT[12]).append(PROC[i].substring(4));
-                            else
-                                ans.append(TEXT[11]).append(PROC[i].substring(4));
-                        } else {
-                            int pro = ma.getProc(i)[0];
 
-                            if (immune.contains(i) && pro != 100)
-                                ans.append(PROC[PROC.length + i - 20]);
-                            else
-                                ans.append(PROC[i]);
-                        }
-                    else {
-                        if (frse == 0) {
-                            int pro = ma.getProc(i)[LOC[i][j]];
-                            String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
-                            if (immune.contains(i) && pro != 100)
-                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                            else if (!immune.contains(i)) {
-                                switch (i) {
-                                    case 11:
-                                    case 12:
-                                        if (lang.equals("en")) {
-                                            if (pro == 1 && CMP[i][j] == 7)
-                                                ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
-                                            else if (pro == 2 && CMP[i][j] == 7)
-                                                ans.append(TEXT[CMP[i][j]].replace("_", "Twice"));
-                                            else if (CMP[i][j] == 7)
-                                                ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
-                                            else
-                                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                        } else
-                                            ans.append(TEXT[CMP[i][j]].replace("_", rep));
+                int [] c;
 
-                                        break;
-                                    default:
-                                        ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                        break;
-                                }
-                            }
-                        } else {
-                            if (TEXT[CMP[i][j]].contains("_f")) {
-                                int pro = ma.getProc(i)[LOC[i][j]];
-                                String rep = pro == -1 ? activity.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP[i][j]].replace("_f", "_s").replace("_", rep));
-                            } else {
-                                int pro = ma.getProc(i)[LOC[i][j]];
-                                String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
-                                if (immune.contains(i) && pro != 100)
-                                    ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                else if (!immune.contains(i))
-                                    switch (i) {
-                                        case 11:
-                                        case 12:
-                                            if (lang.equals("en")) {
-                                                if (pro == 1 && CMP[i][j] == 7)
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", "Once"));
-                                                else if (pro == 2 && CMP[i][j] == 7)
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", "Twice"));
-                                                else if (CMP[i][j] == 7)
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", rep)).append(" times");
-                                                else
-                                                    ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                            } else
-                                                ans.append(TEXT[CMP[i][j]].replace("_", rep));
-
-                                            break;
-                                        default:
-                                            ans.append(TEXT[CMP[i][j]].replace("_", rep));
-                                            break;
-                                    }
-                            }
-                        }
-                    }
+                if(i == P_POISON) {
+                    c = VENOM_CMP[getVenomType(mr.getProc(i)[4])];
+                } else {
+                    c = CMP[i];
                 }
-                l.add(ans.toString());
+
+                StringBuilder ans = getProcNameEN(activity, i, mr, c, LOC[i], immune, res, lang, frse);
+
+                if(!l.contains(ans.toString())) {
+                    if(id.contains(i)) {
+                        ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
+                    }
+
+                    l.add(ans.toString());
+                    id.add(i);
+                }
             }
         } else {
             for (int i = 0; i < PROC.length - RESNUM; i++) {
-                if (ma.getProc(i)[0] == 0)
-                    continue;
-                StringBuilder ans = new StringBuilder();
-                for (int j = 0; j < CMP2[i].length; j++) {
-                    if (CMP2[i][j] == -1) {
-                        if (immune.contains(i)) {
-                            int pro = ma.getProc(i)[0];
+                int [] c2;
 
-                            if (pro != 100)
-                                ans.append(PROC[PROC.length + i - 20]);
-                            else
-                                ans.append(PROC[i]);
-                        } else
-                            ans.append(PROC[i]);
+                if(i == P_POISON) {
+                    c2 = VENOM_CMP2[getVenomType(mr.getProc(i)[4])];
+                } else {
+                    c2 = CMP2[i];
+                }
+
+                if (mr.getProc(i)[0] == 0)
+                    continue;
+
+                StringBuilder ans = getProcNameKR(activity, i, mr, c2, LOC[i], immune, res, frse);
+
+                if(!l.contains(ans.toString())) {
+                    if(id.contains(i)) {
+                        ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
+                    }
+
+                    l.add(ans.toString());
+                    id.add(i);
+                }
+            }
+        }
+
+        for(int k = 0; k < du.getAtkCount(); k++) {
+            MaskAtk ma = du.getAtkModel(k);
+
+            if (cmp == 0) {
+                for (int i = 0; i < PROC.length-RESNUM; i++) {
+                    if (ma.getProc(i)[0] == 0)
+                        continue;
+
+                    int [] c;
+
+                    if(i == P_POISON) {
+                        c = VENOM_CMP[getVenomType(ma.getProc(i)[4])];
                     } else {
-                        if (frse == 0) {
-                            int pro = ma.getProc(i)[LOC2[i][j]];
-                            String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
-                            if (immune.contains(i) && pro != 100)
-                                ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                            else if (!immune.contains(i))
-                                ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                        } else {
-                            if (TEXT[CMP2[i][j]].contains("_f")) {
-                                int pro = ma.getProc(i)[LOC2[i][j]];
-                                String rep = pro == -1 ? activity.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
-                                ans.append(TEXT[CMP2[i][j]].replace("_f", "_s").replace("_", rep));
-                            } else {
-                                int pro = ma.getProc(i)[LOC2[i][j]];
-                                String rep = pro == -1 ? activity.getString(R.string.infinity) : "" + pro;
-                                if (immune.contains(i) && pro != 100)
-                                    ans.append(TEXT[CMP2[i][j]].replace("_", rep));
-                                else if (!immune.contains(i))
-                                    ans.append(TEXT[CMP2[i][j]].replace("_", rep));
+                        c = CMP[i];
+                    }
+
+                    StringBuilder ans = getProcNameEN(activity, i, ma, c, LOC[i], immune, res, lang, frse);
+
+                    if(!l.contains(ans.toString())) {
+                        if(id.contains(i)) {
+                            ans.append(" [").append(numberWithExtension(k+1)).append(" Attack").append("]");
+                        }
+
+                        l.add(ans.toString());
+                        id.add(i);
+                    }
+                }
+            } else {
+                for (int i = 0; i < PROC.length - RESNUM; i++) {
+                    int [] c2;
+
+                    if(i == P_POISON) {
+                        c2 = VENOM_CMP2[getVenomType(ma.getProc(i)[4])];
+                    } else {
+                        c2 = CMP2[i];
+                    }
+
+                    if (ma.getProc(i)[0] == 0)
+                        continue;
+
+                    StringBuilder ans = getProcNameKR(activity, i, ma, c2, LOC2[i], immune, res, frse);
+
+                    if(!l.contains(ans.toString())) {
+                        if(id.contains(i)) {
+                            ans.append(" [").append(numberWithExtension(k+1)).append(" Attack").append("]");
+                        }
+
+                        l.add(ans.toString());
+                        id.add(i);
+                    }
+                }
+            }
+        }
+
+        return l;
+    }
+
+    private static StringBuilder getProcNameEN(Context ac, int i, MaskAtk ma, int [] c, int [] loc, List<Integer> immune, List<Integer> res, String lang, int frse) {
+        StringBuilder ans = new StringBuilder();
+
+        ans.append(i).append("\\");
+
+        for (int j = 0; j < c.length; j++) {
+            if (c[j] == -1)
+                if (immune.contains(i) && lang.equals("en")) {
+                    int pro = ma.getProc(i)[0];
+                    if (pro != 100)
+                        ans.append(TEXT[12]).append(PROC[i].substring(4));
+                    else
+                        ans.append(TEXT[11]).append(PROC[i].substring(4));
+                } else {
+                    int pro = ma.getProc(i)[0];
+
+                    if (immune.contains(i) && pro != 100)
+                        ans.append(PROC[res.get(immune.indexOf(i))]);
+                    else
+                        ans.append(PROC[i]);
+                }
+            else {
+                if (frse == 0) {
+                    int pro = ma.getProc(i)[loc[j]];
+
+                    String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
+
+                    if (immune.contains(i) && pro != 100)
+                        ans.append(TEXT[c[j]].replace("_", rep));
+                    else if (!immune.contains(i)) {
+                        switch (i) {
+                            case P_BURROW:
+                            case P_REVIVE:
+                                if (lang.equals("en")) {
+                                    if (pro == 1 && c[j] == 7)
+                                        ans.append(TEXT[c[j]].replace("_", "Once"));
+                                    else if (pro == 2 && c[j] == 7)
+                                        ans.append(TEXT[c[j]].replace("_", "Twice"));
+                                    else if (c[j] == 7)
+                                        ans.append(TEXT[c[j]].replace("_", rep)).append(" times");
+                                    else
+                                        ans.append(TEXT[c[j]].replace("_", rep));
+                                } else
+                                    ans.append(TEXT[c[j]].replace("_", rep));
+
+                                break;
+                            case P_SUMMON:
+                                if(c[j] == 25) {
+                                    ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                                } else if(c[j] == 31) {
+                                    ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                } else {
+                                    ans.append(TEXT[c[j]].replace("_", rep));
+                                }
+                                break;
+                            default:
+                                ans.append(TEXT[c[j]].replace("_", rep));
+                                break;
+                        }
+                    }
+                } else {
+                    if (TEXT[c[j]].contains("_f")) {
+                        int pro = ma.getProc(i)[loc[j]];
+
+                        String rep = pro == -1 ? ac.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
+
+                        ans.append(TEXT[c[j]].replace("_f", "_s").replace("_", rep));
+                    } else {
+                        int pro = ma.getProc(i)[loc[j]];
+
+                        String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
+
+                        if (immune.contains(i) && pro != 100) {
+                            ans.append(TEXT[c[j]].replace("_", rep));
+                        } else if (!immune.contains(i)) {
+                            switch (i) {
+                                case P_BURROW:
+                                case P_REVIVE:
+                                    if (lang.equals("en")) {
+                                        if (pro == 1 && c[j] == 7)
+                                            ans.append(TEXT[c[j]].replace("_", "Once"));
+                                        else if (pro == 2 && c[j] == 7)
+                                            ans.append(TEXT[c[j]].replace("_", "Twice"));
+                                        else if (c[j] == 7)
+                                            ans.append(TEXT[c[j]].replace("_", rep)).append(" times");
+                                        else
+                                            ans.append(TEXT[c[j]].replace("_", rep));
+                                    } else
+                                        ans.append(TEXT[c[j]].replace("_", rep));
+
+                                    break;
+                                case P_SUMMON:
+                                    if(c[j] == 25) {
+                                        ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                                    } else if(c[j] == 31) {
+                                        ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                    } else {
+                                        ans.append(TEXT[c[j]].replace("_", rep));
+                                    }
+                                    break;
+                                default:
+                                    ans.append(TEXT[c[j]].replace("_", rep));
+                                    break;
                             }
                         }
                     }
                 }
-                l.add(ans.toString());
             }
         }
-        return l;
+
+        return ans;
+    }
+
+    private static StringBuilder getProcNameKR(Context ac, int i, MaskAtk ma, int[] c, int[] l, List<Integer> immune, List<Integer> res, int frse) {
+        StringBuilder ans = new StringBuilder();
+
+        ans.append(i).append("\\");
+
+        for (int j = 0; j < c.length; j++) {
+            if (c[j] == -1) {
+                if (immune.contains(i)) {
+                    int pro = ma.getProc(i)[0];
+
+                    if (pro != 100)
+                        ans.append(PROC[res.get(immune.indexOf(i))]);
+                    else
+                        ans.append(PROC[i]);
+                } else
+                    ans.append(PROC[i]);
+            } else {
+                if (frse == 0) {
+                    int pro = ma.getProc(i)[l[j]];
+
+                    String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
+
+                    if (immune.contains(i) && pro != 100)
+                        ans.append(TEXT[c[j]].replace("_", rep));
+                    else if (!immune.contains(i))
+                        if(i == P_SUMMON && c[j] == 25) {
+                            ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                        } else if(i == P_SUMMON && c[j] == 31) {
+                            ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                        } else {
+                            ans.append(TEXT[c[j]].replace("_", rep));
+                        }
+                } else {
+                    if (TEXT[c[j]].contains("_f")) {
+                        int pro = ma.getProc(i)[l[j]];
+
+                        String rep = pro == -1 ? ac.getString(R.string.infinity) : new DecimalFormat("#.##").format((double) pro / 30);
+
+                        ans.append(TEXT[c[j]].replace("_f", "_s").replace("_", rep));
+                    } else {
+                        int pro = ma.getProc(i)[l[j]];
+
+                        String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
+
+                        if (immune.contains(i) && pro != 100)
+                            ans.append(TEXT[c[j]].replace("_", rep));
+                        else if (!immune.contains(i))
+                            if(i == P_SUMMON && c[j] == 25) {
+                                ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                            } else if(i == P_SUMMON && c[j] == 31) {
+                                ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                            } else {
+                                ans.append(TEXT[c[j]].replace("_", rep));
+                            }
+                    }
+                }
+            }
+        }
+
+        return ans;
     }
 
     public static List<Integer> getAbiid(MaskUnit me) {
@@ -486,13 +685,14 @@ public class Interpret extends Data {
 
     public static List<String> getAbi(MaskUnit me, String[][] frag, String[] addition, int lang) {
         List<String> l = new ArrayList<>();
-        StringBuilder imu = new StringBuilder(frag[lang][0]);
 
-        for (int i = 0; i < ABIS.length; i++)
-            if (((me.getAbi() >> i) & 1) > 0)
-                if (ABIS[i].startsWith("Imu."))
+        for (int i = 0; i < ABIS.length; i++) {
+            StringBuilder imu = new StringBuilder(frag[lang][0]);
+
+            if (((me.getAbi() >> i) & 1) > 0) {
+                if (ABIS[i].startsWith("Imu.")) {
                     imu.append(ABIS[i].substring(4));
-                else {
+                } else {
                     if (i == 0)
                         l.add(ABIS[i] + addition[0]);
                     else if (i == 1)
@@ -514,9 +714,13 @@ public class Interpret extends Data {
                     else
                         l.add(ABIS[i]);
                 }
+            }
 
-        if (imu.length() > 10)
-            l.add(imu.toString());
+            if (!imu.toString().isEmpty() && !imu.toString().equals(frag[lang][0]))
+                l.add(imu.toString());
+        }
+
+        System.out.println(l);
 
         return l;
     }
@@ -786,9 +990,112 @@ public class Interpret extends Data {
             t.bslv[BASE_WATER] = v;
         else if (ind == 34)
             t.bslv[BASE_GROUND] = v;
-        else if (ind == 35)
+        else
             t.bslv[BASE_BARRIER] = v;
-
     }
 
+    private static int getVenomType(int type) {
+        if(type == 0) {
+            return 0;
+        } else if(type == 1) {
+            return 1;
+        } else if(type == 2) {
+            return 2;
+        } else if(type == 3) {
+            return 3;
+        } else {
+            return 3;
+        }
+    }
+
+    private static String numberWithExtension(int n) {
+        int f = n % 10;
+
+        switch (f) {
+            case 1:
+                return n +"st";
+            case 2:
+                return n + "nd";
+            case 3:
+                return n + "rd";
+            default:
+                return n + "th";
+        }
+    }
+
+    private static String getSummonTypeText(int type, boolean unit) {
+        if(type == 0) {
+            return TEXT[34];
+        } else if(type == 1) {
+            return TEXT[35];
+        } else if(type == 2) {
+            return TEXT[36];
+        } else if(type == 3) {
+            return TEXT[37];
+        } else if (type >= 4 && type <= 7){
+            return TEXT[38];
+        } else if(type >= 8 && type <= 15) {
+            if(unit) {
+                return TEXT[40];
+            } else {
+                return TEXT[39];
+            }
+        } else if(type >= 16 && type <= 31) {
+            return TEXT[41];
+        } else if(type >= 32 && type <= 63) {
+            return TEXT[42];
+        } else if(type >= 64 && type <= 127) {
+            return TEXT[43];
+        } else {
+            return TEXT[44];
+        }
+    }
+
+    private static int getSummonType(int type) {
+        if(type <= 64) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    private static String getUnit(int id) {
+        if(id < 1000) {
+            String name = MultiLangCont.FNAME.getCont(Pack.def.us.ulist.getList().get(id).forms[0]);
+
+            if(name != null) {
+                return name;
+            } else {
+                return Data.hex(0)+" - "+Data.trio(id);
+            }
+        } else {
+            int uid = StaticStore.getID(id);
+
+            int pid = Integer.parseInt(Integer.toString(id).replace(Data.trio(uid),""));
+
+            Pack p = Pack.map.get(pid);
+
+            if(p == null) {
+                return Data.hex(pid)+" - "+Data.trio(id);
+            } else {
+                Unit u = p.us.ulist.get(uid);
+
+                if(u == null) {
+                    return Data.hex(pid)+" - "+Data.trio(id);
+                } else {
+                    String name = MultiLangCont.FNAME.getCont(u.forms[0]);
+
+                    if(name == null) {
+                        name = u.forms[0].name;
+                    }
+
+                    if(name == null) {
+                        return Data.hex(pid)+" - "+Data.trio(id);
+                    } else {
+                        return name;
+                    }
+                }
+            }
+        }
+    }
 }

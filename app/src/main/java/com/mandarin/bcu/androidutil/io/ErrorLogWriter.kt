@@ -1,25 +1,31 @@
 package com.mandarin.bcu.androidutil.io
 
+import android.content.Context
 import android.os.Build
 import android.os.Environment
 import com.mandarin.bcu.androidutil.StaticStore
 import java.io.*
+import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ErrorLogWriter(private val path: String?, private val upload: Boolean) : Thread.UncaughtExceptionHandler {
-    private val errors: Thread.UncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+    private val errors: Thread.UncaughtExceptionHandler? = Thread.getDefaultUncaughtExceptionHandler()
+
     override fun uncaughtException(t: Thread, e: Throwable) {
         if (path != null) {
             writeToFile(e)
         }
-        errors.uncaughtException(t, e)
+        errors?.uncaughtException(t, e)
     }
 
     private fun writeToFile(e: Throwable) {
         try {
+            if(path == null)
+                return
+
             val f = File(path)
             if (!f.exists()) {
                 f.mkdirs()
@@ -40,6 +46,7 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
                 val dfileWriter = FileWriter(df)
                 dfileWriter.append("VERSION : ").append(StaticStore.VER).append("\r\n")
                 dfileWriter.append("MODEL : ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL.toString()).append("\r\n")
+                dfileWriter.append("ID : ").append()
                 dfileWriter.append("IS EMULATOR : ").append((Build.MODEL.contains("Emulator") || Build.MODEL.contains("Android SDK")).toString()).append("\r\n")
                 dfileWriter.append("ANDROID_VER : ").append("API ").append(Build.VERSION.SDK_INT.toString()).append(" (").append(Build.VERSION.RELEASE).append(")").append("\r\n").append("\r\n")
                 dfileWriter.append(current)
@@ -59,9 +66,27 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
     }
 
     companion object {
-        fun writeLog(error: Exception, upload: Boolean) {
+        fun generateMessage(msg: String, obj: Any?) : String {
+            val result = StringBuilder(msg)
+
+            when (obj) {
+                is Array<*> -> {
+                    result.append(obj.contentDeepToString())
+                }
+                is IntArray -> {
+                    result.append(obj.contentToString())
+                }
+                null -> {
+                    result.append("null")
+                }
+            }
+
+            return result.toString()
+        }
+
+        fun writeLog(error: Exception, upload: Boolean, c: Context) {
             try {
-                val path = Environment.getExternalStorageDirectory().path + "/BCU/logs/"
+                val path = StaticStore.getExternalPath(c)+"logs/"
                 val f = File(path)
                 if (!f.exists()) {
                     f.mkdirs()
@@ -90,6 +115,48 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
                     dfileWriter.close()
                 }
                 val fileWriter = FileWriter(file)
+                fileWriter.append(stringbuff.toString())
+                fileWriter.flush()
+                fileWriter.close()
+                printWriter.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        fun writeLog(error: Exception, msg: String, upload: Boolean, c: Context) {
+            try {
+                val path = StaticStore.getExternalLog(c)+"logs/"
+                val f = File(path)
+                if (!f.exists()) {
+                    f.mkdirs()
+                }
+                val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
+                val date = Date()
+                val name = dateFormat.format(date) + ".txt"
+                var file = File(path, name)
+                val stringbuff: Writer = StringWriter()
+                val printWriter = PrintWriter(stringbuff)
+                error.printStackTrace(printWriter)
+                if (!file.exists()) file.createNewFile() else {
+                    file = File(path, getExistingFileName(path, name))
+                    file.createNewFile()
+                }
+                if (upload) {
+                    val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", name)
+                    if (!df.exists()) df.createNewFile()
+                    val dfileWriter = FileWriter(df)
+                    dfileWriter.append("VERSION : ").append(StaticStore.VER).append("\r\n")
+                    dfileWriter.append("MODEL : ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL.toString()).append("\r\n")
+                    dfileWriter.append("IS EMULATOR : ").append((Build.MODEL.contains("Emulator") || Build.MODEL.contains("Android SDK")).toString()).append("\r\n")
+                    dfileWriter.append("ANDROID_VER : ").append("API ").append(Build.VERSION.SDK_INT.toString()).append(" (").append(Build.VERSION.RELEASE).append(")").append("\r\n").append("\r\n")
+                    dfileWriter.append("Message : ").append(msg).append("\r\n\r\n")
+                    dfileWriter.append(stringbuff.toString())
+                    dfileWriter.flush()
+                    dfileWriter.close()
+                }
+                val fileWriter = FileWriter(file)
+                fileWriter.append("Message : ").append(msg).append("\r\n\r\n")
                 fileWriter.append(stringbuff.toString())
                 fileWriter.flush()
                 fileWriter.close()

@@ -1,5 +1,6 @@
 package com.mandarin.bcu.androidutil.io
 
+import android.content.Context
 import android.os.Environment
 import com.mandarin.bcu.androidutil.StaticStore
 import common.CommonStatic
@@ -10,7 +11,7 @@ import java.io.File
 import java.util.*
 
 object LangLoader {
-    fun readUnitLang() {
+    private fun readUnitLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
         val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
 
@@ -20,7 +21,7 @@ object LangLoader {
         MultiLangCont.COMNAME.clear()
         for (l in lan) {
             for (n in files) {
-                val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + n
+                val path = StaticStore.getExternalPath(c)+"lang" + l + n
                 val f = File(path)
                 if (f.exists()) {
                     val qs = AssetData.getAsset(f).readLine()
@@ -29,8 +30,10 @@ object LangLoader {
                             val size = qs.size
                             var j = 0
                             while (j < size) {
-                                val strs = Objects.requireNonNull(qs.poll()).trim { it <= ' ' }.split("\t").toTypedArray()
+                                val strs = qs?.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: break
+
                                 val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
+
                                 if (u == null) {
                                     j++
                                     continue
@@ -47,8 +50,10 @@ object LangLoader {
                             val size = qs.size
                             var j = 0
                             while (j < size) {
-                                val strs = Objects.requireNonNull(qs.poll()).trim { it <= ' ' }.split("\t").toTypedArray()
+                                val strs = qs?.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: return
+
                                 val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
+
                                 if (u == null) {
                                     j++
                                     continue
@@ -88,7 +93,7 @@ object LangLoader {
         StaticStore.unitlang = 0
     }
 
-    fun readEnemyLang() {
+    private fun readEnemyLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
         val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
 
@@ -96,7 +101,7 @@ object LangLoader {
         MultiLangCont.EEXP.clear()
         for (l in lan) {
             for (n in files) {
-                val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + n
+                val path = StaticStore.getExternalPath(c)+"lang" + l + n
                 val f = File(path)
                 if (f.exists()) {
                     val qs = AssetData.getAsset(f).readLine()
@@ -123,7 +128,7 @@ object LangLoader {
         StaticStore.enemeylang = 0
     }
 
-    fun readStageLang() {
+    fun readStageLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
         val file = "StageName.txt"
         val diff = "Difficulty.txt"
@@ -133,7 +138,7 @@ object LangLoader {
         MultiLangCont.STNAME.clear()
         MultiLangCont.RWNAME.clear()
         for (l in lan) {
-            val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + file
+            val path = StaticStore.getExternalPath(c)+"lang" + l + file
             val f = File(path)
             if (f.exists()) {
                 val qs = AssetData.getAsset(f).readLine()
@@ -167,7 +172,7 @@ object LangLoader {
             }
         }
         for (l in lan) {
-            val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + rewa
+            val path = StaticStore.getExternalPath(c)+"lang" + l + rewa
             val f = File(path)
             if (f.exists()) {
                 val qs = AssetData.getAsset(f).readLine()
@@ -182,7 +187,7 @@ object LangLoader {
                 }
             }
         }
-        val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang/"
+        val path = StaticStore.getExternalPath(c)+"lang/"
         val f = File(path, diff)
         if (f.exists()) {
             val qs = AssetData.getAsset(f).readLine()
@@ -220,10 +225,10 @@ object LangLoader {
         StaticStore.maplang = 0
     }
 
-    fun readALL() {
-        readUnitLang()
-        readEnemyLang()
-        readStageLang()
+    fun readALL(c: Context) {
+        readUnitLang(c)
+        readEnemyLang(c)
+        readStageLang(c)
         readMapLang()
     }
 }

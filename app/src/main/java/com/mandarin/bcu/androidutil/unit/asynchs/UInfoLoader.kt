@@ -35,10 +35,11 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import common.system.MultiLangCont
+import common.util.pack.Pack
 import java.lang.ref.WeakReference
 import java.util.*
 
-class UInfoLoader(private val id: Int, activity: Activity, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
+class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
     private val weakActivity: WeakReference<Activity> = WeakReference(activity)
     private val names = ArrayList<String>()
     private val nformid = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
@@ -46,12 +47,17 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
     private var table: TableTab? = null
     private var explain: ExplanationTab? = null
     private var unitinfRecycle: UnitinfRecycle? = null
+
     override fun onPreExecute() {
         val activity = weakActivity.get() ?: return
+
+        val p = Pack.map[pid] ?: return
+
         val fruittext = activity.findViewById<TextView>(R.id.cfinftext)
         val fruitpage: ViewPager = activity.findViewById(R.id.catfruitpager)
         val anim = activity.findViewById<Button>(R.id.animanim)
-        if (StaticStore.units[id].info.evo == null) {
+
+        if (p.us.ulist[id].info == null || p.us.ulist[id].info.evo == null) {
             fruitpage.visibility = View.GONE
             fruittext.visibility = View.GONE
             anim.visibility = View.GONE
@@ -61,22 +67,30 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
     @SuppressLint("ClickableViewAccessibility")
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakActivity.get() ?: return null
+
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        for (i in StaticStore.units[id].forms.indices) {
-            var name = MultiLangCont.FNAME.getCont(StaticStore.units[id].forms[i])
-            if (name == null) name = ""
+
+        val p = Pack.map[pid] ?: return null
+
+        for (i in p.us.ulist[id].forms.indices) {
+            var name = MultiLangCont.FNAME.getCont(p.us.ulist[id].forms[i]) ?: p.us.ulist[id].forms[i].name
+
+            if (name == null)
+                name = ""
+
             names.add(name)
         }
+
         val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
-        for (i in StaticStore.units[id].forms.indices) {
-            tabs.addTab(tabs.newTab().setText(nform[i]))
-        }
+
+        publishProgress(1)
+
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
                 table = TableTab(fm, tabs.tabCount, id, nform)
                 explain = ExplanationTab(fm, tabs.tabCount, id, nform)
             } else {
-                unitinfRecycle = UnitinfRecycle(activity, names, StaticStore.units[id].forms, id)
+                unitinfRecycle = UnitinfRecycle(activity, names, p.us.ulist[id].forms, pid, id)
                 explain = ExplanationTab(fm, tabs.tabCount, id, nform)
             }
         } else {
@@ -84,7 +98,7 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
                 table = TableTab(fm, tabs.tabCount, id, nform)
                 explain = ExplanationTab(fm, tabs.tabCount, id, nform)
             } else {
-                unitinfRecycle = UnitinfRecycle(activity, names, StaticStore.units[id].forms, id)
+                unitinfRecycle = UnitinfRecycle(activity, names, p.us.ulist[id].forms, pid, id)
                 explain = ExplanationTab(fm, tabs.tabCount, id, nform)
             }
         }
@@ -129,7 +143,7 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
             true
         }
         val fruitpage: ViewPager = activity.findViewById(R.id.catfruitpager)
-        if (StaticStore.units[id].info.evo != null) {
+        if (p.us.ulist[id].info.evo != null) {
             fruitpage.adapter = DynamicFruit(activity, id)
             fruitpage.offscreenPageLimit = 1
         }
@@ -138,21 +152,36 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
 
     override fun onProgressUpdate(vararg results: Int?) {
         val activity = weakActivity.get() ?: return
-        val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
-        val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (shared.getBoolean("Lay_Land", false)) {
-                setUinfo(activity, tabs)
-            } else {
-                setUinfoR(activity, tabs)
+
+        when(results[0]) {
+            0 -> {
+                val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
+                val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+                if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    if (shared.getBoolean("Lay_Land", false)) {
+                        setUinfo(activity, tabs)
+                    } else {
+                        setUinfoR(activity, tabs)
+                    }
+                } else {
+                    if (shared.getBoolean("Lay_Port", true)) {
+                        setUinfo(activity, tabs)
+                    } else {
+                        setUinfoR(activity, tabs)
+                    }
+                }
             }
-        } else {
-            if (shared.getBoolean("Lay_Port", true)) {
-                setUinfo(activity, tabs)
-            } else {
-                setUinfoR(activity, tabs)
+
+            1 -> {
+                val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
+                val p = Pack.map[pid] ?: return
+
+                for (i in p.us.ulist[id].forms.indices) {
+                    tabs.addTab(tabs.newTab().setText(nform[i]))
+                }
             }
         }
+
     }
 
     override fun onPostExecute(result: Void?) {
@@ -177,6 +206,7 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
                 scrollView.postDelayed({ scrollView.scrollTo(0, 0) }, 0)
             }
         }
+
         val treasuretab: ConstraintLayout = activity.findViewById(R.id.treasurelayout)
         treasuretab.visibility = View.VISIBLE
 
@@ -191,6 +221,61 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
         anim.visibility = View.VISIBLE
         val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
         tabs.getTabAt(StaticStore.unittabposition)?.select()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUinfo(activity: Activity, tabs: TabLayout) {
+        val p = Pack.map[pid] ?: return
+
+        val tablePager: ViewPager = activity.findViewById(R.id.unitinftable)
+
+        tablePager.adapter = table
+        tablePager.offscreenPageLimit = p.us.ulist[id].forms.size
+        tablePager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
+        tabs.setupWithViewPager(tablePager)
+
+        val viewPager: ViewPager = activity.findViewById(R.id.unitinfpager)
+        viewPager.adapter = explain
+        viewPager.offscreenPageLimit = p.us.ulist[id].forms.size
+        viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
+        tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewPager.currentItem = tab.position
+                tablePager.currentItem = tab.position
+                StaticStore.unittabposition = tab.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        if (p.us.ulist[id].info.evo == null)
+            viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
+
+        val view = activity.findViewById<View>(R.id.view)
+        val view2 = activity.findViewById<View>(R.id.view2)
+        val exp = activity.findViewById<TextView>(R.id.unitinfexp)
+        if (MultiLangCont.FEXP.getCont(p.us.ulist[id].forms[0]) == null) {
+            viewPager.visibility = View.GONE
+            view.visibility = View.GONE
+            view2.visibility = View.GONE
+            exp.visibility = View.GONE
+        }
+    }
+
+    private inner class TableTab internal constructor(fm: FragmentManager?, var form: Int, var id: Int, var names: Array<String?>) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getItem(i: Int): Fragment {
+            return UnitinfPager.newInstance(i, pid, id, names)
+        }
+
+        override fun getCount(): Int {
+            return form
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return names[position]
+        }
+
     }
 
     private inner class ExplanationTab internal constructor(fm: FragmentManager?, var number: Int, var id: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -208,56 +293,9 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
 
     }
 
-    private inner class TableTab internal constructor(fm: FragmentManager?, var form: Int, var id: Int, var names: Array<String?>) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getItem(i: Int): Fragment {
-            return UnitinfPager.newInstance(i, id, names)
-        }
-
-        override fun getCount(): Int {
-            return form
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return names[position]
-        }
-
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setUinfo(activity: Activity, tabs: TabLayout) {
-        val tablePager: ViewPager = activity.findViewById(R.id.unitinftable)
-        tablePager.adapter = table
-        tablePager.offscreenPageLimit = 2
-        tablePager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
-        tabs.setupWithViewPager(tablePager)
-
-        val viewPager: ViewPager = activity.findViewById(R.id.unitinfpager)
-        viewPager.adapter = explain
-        viewPager.offscreenPageLimit = 2
-        viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
-        tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                viewPager.currentItem = tab.position
-                tablePager.currentItem = tab.position
-                StaticStore.unittabposition = tab.position
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
-        if (StaticStore.units[id].info.evo == null) viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
-        val view = activity.findViewById<View>(R.id.view)
-        val view2 = activity.findViewById<View>(R.id.view2)
-        val exp = activity.findViewById<TextView>(R.id.unitinfexp)
-        if (MultiLangCont.FEXP.getCont(StaticStore.units[id].forms[0]) == null) {
-            viewPager.visibility = View.GONE
-            view.visibility = View.GONE
-            view2.visibility = View.GONE
-            exp.visibility = View.GONE
-        }
-    }
-
     private fun setUinfoR(activity: Activity, tabs: TabLayout) {
+        val p = Pack.map[pid] ?: return
+
         val recyclerView: RecyclerView = activity.findViewById(R.id.unitinfrec)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = unitinfRecycle
@@ -266,11 +304,14 @@ class UInfoLoader(private val id: Int, activity: Activity, private val fm: Fragm
         viewPager.offscreenPageLimit = 1
         viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
         tabs.setupWithViewPager(viewPager)
-        if (StaticStore.units[id].info.evo == null) viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
+
+        if (p.us.ulist[id].info.evo == null)
+            viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
+
         val view = activity.findViewById<View>(R.id.view)
         val view2 = activity.findViewById<View>(R.id.view2)
         val exp = activity.findViewById<TextView>(R.id.unitinfexp)
-        if (MultiLangCont.FEXP.getCont(StaticStore.units[id].forms[0]) == null) {
+        if (MultiLangCont.FEXP.getCont(p.us.ulist[id].forms[0]) == null) {
             viewPager.visibility = View.GONE
             view.visibility = View.GONE
             view2.visibility = View.GONE

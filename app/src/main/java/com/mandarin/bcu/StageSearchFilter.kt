@@ -1,5 +1,6 @@
 package com.mandarin.bcu
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -23,25 +24,31 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.system.MultiLangCont
 import common.util.pack.Pack
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
+import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
 
 class StageSearchFilter : AppCompatActivity() {
     companion object {
         const val REQUEST_CODE = 200
-        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104)
+        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120)
     }
 
     private val radioid = intArrayOf(R.id.lessthan, R.id.same, R.id.greaterthan)
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: SharedPreferences.Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -61,6 +68,16 @@ class StageSearchFilter : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_stage_search_filter)
 
         val bck = findViewById<FloatingActionButton>(R.id.stgfilterbck)
@@ -78,6 +95,7 @@ class StageSearchFilter : AppCompatActivity() {
         val reset = findViewById<FloatingActionButton>(R.id.stgfilterreset)
         val scroll = findViewById<HorizontalScrollView>(R.id.schenemscroll)
         val name = findViewById<EditText>(R.id.stgnameedit)
+        val stmname = findViewById<EditText>(R.id.stmnameedit)
 
         scroll.isHorizontalScrollBarEnabled = false
 
@@ -136,7 +154,7 @@ class StageSearchFilter : AppCompatActivity() {
             musics.add(number(i))
         }
 
-        val musicadapter = ArrayAdapter<String>(this, R.layout.spinneradapter, musics)
+        val musicadapter = ArrayAdapter(this, R.layout.spinneradapter, musics)
 
         musicspin.adapter = musicadapter
 
@@ -164,7 +182,7 @@ class StageSearchFilter : AppCompatActivity() {
             backgrounds.add(number(i))
         }
 
-        val bgadpater = ArrayAdapter<String>(this, R.layout.spinneradapter, backgrounds)
+        val bgadpater = ArrayAdapter(this, R.layout.spinneradapter, backgrounds)
 
         bgspin.adapter = bgadpater
 
@@ -183,9 +201,9 @@ class StageSearchFilter : AppCompatActivity() {
             bgspin.setSelection(StaticStore.stgbg+1, false)
         }
 
-        val stars = arrayOf<String>(getString(R.string.stg_sch_star1),getString(R.string.stg_sch_star2),getString(R.string.stg_sch_star3),getString(R.string.stg_sch_star4))
+        val stars = arrayOf(getString(R.string.stg_sch_star1),getString(R.string.stg_sch_star2),getString(R.string.stg_sch_star3),getString(R.string.stg_sch_star4))
 
-        val staradapter = ArrayAdapter<String>(this, R.layout.spinneradapter, stars)
+        val staradapter = ArrayAdapter(this, R.layout.spinneradapter, stars)
 
         starspin.adapter = staradapter
 
@@ -204,9 +222,9 @@ class StageSearchFilter : AppCompatActivity() {
             starspin.setSelection(StaticStore.stgstar, false)
         }
 
-        val contins = arrayOf<String>(getString(R.string.combo_all), getString(R.string.stg_info_poss), getString(R.string.stg_info_impo))
+        val contins = arrayOf(getString(R.string.combo_all), getString(R.string.stg_info_poss), getString(R.string.stg_info_impo))
 
-        val continadapter = ArrayAdapter<String>(this, R.layout.spinneradapter, contins)
+        val continadapter = ArrayAdapter(this, R.layout.spinneradapter, contins)
 
         continspin.adapter = continadapter
 
@@ -260,7 +278,13 @@ class StageSearchFilter : AppCompatActivity() {
                         StaticStore.bhop = 1
                     }
 
-                    StaticStore.stgbh = s.toString().toInt()
+                    try {
+                        StaticStore.stgbh = s.toString().toInt()
+                    } catch (e : NumberFormatException) {
+                        StaticStore.stgbh = Int.MAX_VALUE
+                        bhedit.setText(Int.MAX_VALUE.toString())
+                        bhedit.setSelection(bhedit.text.toString().length)
+                    }
                 }
             }
 
@@ -308,6 +332,7 @@ class StageSearchFilter : AppCompatActivity() {
             starspin.setSelection(0)
             bhedit.setText("")
             continspin.setSelection(0)
+            stmname.setText("")
 
             StaticStore.stgFilterReset()
         }
@@ -334,6 +359,41 @@ class StageSearchFilter : AppCompatActivity() {
         })
 
         name.setOnEditorActionListener { _: TextView?, id: Int, e: KeyEvent? ->
+            if(id == EditorInfo.IME_ACTION_DONE || e?.action == KeyEvent.KEYCODE_BACK) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(bhedit.windowToken, 0)
+                name.post {
+                    name.clearFocus()
+                }
+
+                return@setOnEditorActionListener true
+            }
+
+            return@setOnEditorActionListener false
+        }
+
+        if(StaticStore.stmschname != "") {
+            stmname.setText(StaticStore.stmschname)
+        }
+
+        stmname.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if(s != null) {
+                    StaticStore.stmschname = s.toString()
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        })
+
+        stmname.setOnEditorActionListener { _: TextView?, id: Int, e: KeyEvent? ->
             if(id == EditorInfo.IME_ACTION_DONE || e?.action == KeyEvent.KEYCODE_BACK) {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(bhedit.windowToken, 0)
@@ -399,13 +459,6 @@ class StageSearchFilter : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 
     private fun getEnemyName(id: Int): String {
@@ -418,7 +471,7 @@ class StageSearchFilter : AppCompatActivity() {
 
             return name
         } catch (e: Exception) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload)
+            ErrorLogWriter.writeLog(e, StaticStore.upload, this)
             return getString(R.string.stg_sch_enemy) + number(id)
         }
     }

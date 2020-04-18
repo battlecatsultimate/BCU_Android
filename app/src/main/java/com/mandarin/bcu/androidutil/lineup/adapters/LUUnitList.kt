@@ -14,13 +14,14 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter
 import common.battle.BasisSet
+import common.util.pack.Pack
 import common.util.unit.Form
 import java.util.*
 
 class LUUnitList : Fragment() {
     private var line: LineUpView? = null
     private val handler = Handler()
-    private var runnable: Runnable? = null
+    private var runnable: Runnable = Runnable {  }
 
     private var destroyed = false
     private var numbers = ArrayList<Int>()
@@ -33,17 +34,18 @@ class LUUnitList : Fragment() {
                 line = activity!!.findViewById(R.id.lineupView)
         }
 
-        if (arguments == null) return view
+        if (arguments == null)
+            return view
 
-        val entity = FilterEntity(StaticStore.unitnumber)
-        numbers = entity.setFilter()
+        numbers = FilterEntity.setLuFilter()
+
         val names = ArrayList<String>()
 
         for (i in numbers) {
-            names.add(StaticStore.names[i])
+            names.add(StaticStore.lunames[i])
         }
 
-        val adapter = UnitListAdapter(activity!!, names.toTypedArray(), numbers)
+        val adapter = LUUnitListAdapter(activity!!, names, numbers)
 
         val ulist = view.findViewById<ListView>(R.id.lineupunitlist)
 
@@ -52,16 +54,16 @@ class LUUnitList : Fragment() {
         runnable = object : Runnable {
             override fun run() {
                 if (StaticStore.updateList) {
-                    val entity1 = FilterEntity(StaticStore.unitnumber)
                     numbers.clear()
-                    numbers = entity1.setFilter()
+                    numbers = FilterEntity.setLuFilter()
+
                     val names1 = ArrayList<String>()
 
                     for (i in numbers) {
-                        names1.add(StaticStore.names[i])
+                        names1.add(StaticStore.lunames[i])
                     }
 
-                    val adapter1 = UnitListAdapter(activity!!, names1.toTypedArray(), numbers)
+                    val adapter1 = LUUnitListAdapter(activity!!, names1, numbers)
 
                     ulist.adapter = adapter1
 
@@ -76,9 +78,28 @@ class LUUnitList : Fragment() {
         handler.postDelayed(runnable, 50)
 
         ulist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val f = StaticStore.units[numbers[position]].forms[StaticStore.units[numbers[position]].forms.size - 1]
+            if(position < 0 || position >= numbers.size)
+                return@OnItemClickListener
 
-            if (alreadyExist(f)) return@OnItemClickListener
+            if(numbers[position] < 0 || numbers[position] >= StaticStore.ludata.size)
+                return@OnItemClickListener
+
+            val data = StaticStore.ludata[numbers[position]].split("-")
+
+            if(data.size < 2)
+                return@OnItemClickListener
+
+            val p = Pack.map[data[0].toInt()] ?: return@OnItemClickListener
+
+            val id = data[1].toInt()
+
+            if(id < 0 || id >= p.us.ulist.list.size)
+                return@OnItemClickListener
+
+            val f = p.us.ulist.list[id].forms[p.us.ulist.list[id].forms.size - 1]
+
+            if (alreadyExist(f))
+                return@OnItemClickListener
 
             val posit = StaticStore.getPossiblePosition(BasisSet.current.sele.lu.fs)
 
@@ -100,8 +121,12 @@ class LUUnitList : Fragment() {
 
         for (i in BasisSet.current.sele.lu.fs.indices) {
             for (j in BasisSet.current.sele.lu.fs[i].indices) {
+
                 if (BasisSet.current.sele.lu.fs[i][j] == null) {
-                    return if (line!!.repform == null) false else u == line!!.repform!!.unit
+                    return if (line!!.repform == null)
+                        false
+                    else
+                        u == line!!.repform!!.unit
 
                 }
 
@@ -127,10 +152,10 @@ class LUUnitList : Fragment() {
 
     companion object {
 
-        fun newInstance(names: Array<String>, line: LineUpView): LUUnitList {
+        fun newInstance(names: ArrayList<String>, line: LineUpView): LUUnitList {
             val ulist = LUUnitList()
             val bundle = Bundle()
-            bundle.putStringArray("Names", names)
+            bundle.putStringArrayList("Names", names)
             ulist.arguments = bundle
             ulist.setLineUp(line)
 

@@ -33,7 +33,7 @@ public class BBCtrl extends BattleBox.BBPainter {
             for (int i = 0; i < 10; i++) {
                 Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
 
-                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
+                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
 
                 int iw = (int) (hr * img.getWidth());
                 int ih = (int) (hr * img.getHeight());
@@ -78,7 +78,7 @@ public class BBCtrl extends BattleBox.BBPainter {
             for (int i = 0; i < 10; i++) {
                 Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
 
-                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
+                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
 
                 int iw = (int) (hr * img.getWidth());
                 int ih = (int) (hr * img.getHeight());

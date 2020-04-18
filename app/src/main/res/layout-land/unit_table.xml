@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="32dp"
-        android:text="Name"
+        android:text="@null"
         android:textColor="?attr/TextPrimary"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +100,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_ID"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TableRow
@@ -138,7 +138,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_HP"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -161,7 +161,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_HB"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -244,7 +244,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Atk"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -273,7 +273,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Atktime"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -297,7 +297,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Abil_TF"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -326,7 +326,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Pre"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <Button
@@ -348,7 +348,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Post"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <Button
@@ -369,7 +369,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_TBA"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -401,7 +401,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Trait"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -424,7 +424,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Simu"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -447,7 +447,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Cost"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -479,7 +479,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Range"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <Button
@@ -503,7 +503,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_CD"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -528,7 +528,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Unit_Spd"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>

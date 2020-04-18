@@ -1,5 +1,6 @@
 package com.mandarin.bcu.androidutil
 
+import android.content.Context
 import android.util.SparseArray
 import androidx.core.util.isNotEmpty
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
@@ -12,7 +13,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 object FilterStage {
-    fun setFilter(name: String, enemies: List<Int>, enemorand: Boolean, music: Int, bg: Int, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int) : SparseArray<SparseArray<ArrayList<Int>>> {
+    fun setFilter(name: String, stmname: String, enemies: List<Int>, enemorand: Boolean, music: Int, bg: Int, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : SparseArray<SparseArray<ArrayList<Int>>> {
         val result = SparseArray<SparseArray<ArrayList<Int>>>()
 
         val mc = MapColc.MAPS ?: return result
@@ -30,10 +31,17 @@ object FilterStage {
                 for(k in 0 until stm.list.size) {
                     val s = stm.list[k] ?: continue
 
-                    val nam = if(name != "") {
-                        MultiLangCont.STNAME.getCont(s)?.toLowerCase(Locale.ROOT)?.contains(name.toLowerCase(Locale.ROOT)) ?: false
+                    val nam = if(stmname != "") {
+                        if(name != "") {
+                            val stmnam = MultiLangCont.SMNAME.getCont(stm)?.toLowerCase(Locale.ROOT)?.contains(stmname.toLowerCase(Locale.ROOT)) ?: false
+                            val stnam = MultiLangCont.STNAME.getCont(s)?.toLowerCase(Locale.ROOT)?.contains(name.toLowerCase(Locale.ROOT)) ?: false
+
+                            stmnam && stnam
+                        } else {
+                            MultiLangCont.SMNAME.getCont(stm)?.toLowerCase(Locale.ROOT)?.contains(stmname.toLowerCase(Locale.ROOT)) ?: false
+                        }
                     } else {
-                        true
+                        MultiLangCont.STNAME.getCont(s)?.toLowerCase(Locale.ROOT)?.contains(name.toLowerCase(Locale.ROOT)) ?: false
                     }
 
                     val enem = containEnemy(enemies, s.data.allEnemy, enemorand)
@@ -65,8 +73,8 @@ object FilterStage {
 
                     val bos = when(boss) {
                         -1 -> true
-                        0 -> hasBoss(s)
-                        1 -> !hasBoss(s)
+                        0 -> hasBoss(s, c)
+                        1 -> !hasBoss(s, c)
                         else -> false
                     }
 
@@ -112,7 +120,7 @@ object FilterStage {
         }
     }
 
-    private fun hasBoss(st: Stage) : Boolean {
+    private fun hasBoss(st: Stage, c: Context) : Boolean {
         try {
             val def = st.data ?: return false
 
@@ -121,7 +129,7 @@ object FilterStage {
                     return true
             }
         } catch(e: Exception) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload)
+            ErrorLogWriter.writeLog(e, StaticStore.upload, c)
             return false
         }
 

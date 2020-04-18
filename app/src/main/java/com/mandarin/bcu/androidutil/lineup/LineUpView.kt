@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.lineup
 
 import android.content.Context
 import android.graphics.*
-import android.os.Environment
 import android.view.View
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
@@ -14,6 +13,8 @@ import java.io.File
 import java.util.*
 
 class LineUpView(context: Context?) : View(context) {
+    val position_REPLACE = 600
+
     /**
      * Bitmap list of unit icons
      */
@@ -216,30 +217,76 @@ class LineUpView(context: Context?) : View(context) {
         var f2: Form? = null
         var b: Bitmap? = null
         var b2: Bitmap? = null
+
+        //mode makes app able to distinguish if source is in replacing place or not
+
         var mode = true
-        if (from == 600 && (to < 0 || to >= units.size)) return
-        if (to == 600 && (from < 0 || from >= units.size)) return
-        if (from == 600) {
-            if (repform != null) b = repform!!.anim.uni.img.bimg() as Bitmap
+
+        //if target's position is empty then return
+
+        if (from == position_REPLACE && (to < 0 || to >= units.size))
+            return
+
+        //if source's position is empty then return
+
+        if (to == position_REPLACE && (from < 0 || from >= units.size))
+            return
+
+        if (from == position_REPLACE) {
+            if (repform != null) {
+                val icon = repform?.anim?.uni?.img?.bimg()
+
+                b = if(icon == null) {
+                    StaticStore.MakeIcon(context, null, 48f)
+                } else {
+                    StaticStore.MakeIcon(context, icon as Bitmap, 48f)
+                }
+            }
+
             b2 = units[to]
+
             f = repform
-            if (b2 != empty) f2 = StaticStore.currentForms[to]
+
+            if (b2 != empty)
+                f2 = StaticStore.currentForms[to]
+
             mode = false
         } else {
             b = units[from]
-            if (repform != null) b2 = repform!!.anim.uni.img.bimg() as Bitmap
-            if (b != empty) f = StaticStore.currentForms[from]
+
+            if (repform != null) {
+                val icon = repform?.anim?.uni?.img?.bimg()
+
+                b2 = if(icon == null) {
+                    StaticStore.MakeIcon(context, null, 48f)
+                } else {
+                    StaticStore.MakeIcon(context, icon as Bitmap, 48f)
+                }
+            }
+
+            if (b != empty)
+                f = StaticStore.currentForms[from]
+
             f2 = repform
         }
+
         if (b != null) {
-            if (b.height != b.height) b = StaticStore.MakeIcon(context, b, 48f)
+            if (b.height != b.height)
+                b = StaticStore.MakeIcon(context, b, 48f)
         }
+
         if (b2 != null) {
-            if (b2.height != b2.width) b2 = StaticStore.MakeIcon(context, b2, 48f)
+            if (b2.height != b2.width)
+                b2 = StaticStore.MakeIcon(context, b2, 48f)
         }
-        if (f == null && f2 == null) return
+
+        if (f == null && f2 == null)
+            return
+
         repform = if (mode) {
-            if (f == null) return
+            if (f == null)
+                return
+
             if (f2 == null) {
                 units.removeAt(from)
                 units.add(empty)
@@ -255,7 +302,8 @@ class LineUpView(context: Context?) : View(context) {
                 f
             }
         } else {
-            if (f == null) return
+            if (f == null)
+                return
             if (f2 == null) {
                 units.removeAt(to)
                 units.add(lastPosit, b)
@@ -289,9 +337,9 @@ class LineUpView(context: Context?) : View(context) {
         BasisSet.current.sele.lu.renew()
 
         try {
-            StaticStore.SaveLineUp()
+            StaticStore.SaveLineUp(context)
         } catch(e: Exception) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload)
+            ErrorLogWriter.writeLog(e, StaticStore.upload, context)
             StaticStore.showShortMessage(context, R.string.err_lusave_fail)
         }
     }
@@ -397,7 +445,7 @@ class LineUpView(context: Context?) : View(context) {
     }
 
     init {
-        val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/uni.png"
+        val path = StaticStore.getExternalPath(context)+"org/page/uni.png"
         val f = File(path)
         empty = if (!f.exists()) {
             StaticStore.empty(context, 10f, 10f)

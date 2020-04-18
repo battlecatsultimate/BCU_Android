@@ -11,14 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader
 import common.system.MultiLangCont
 import common.util.stage.MapColc
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class StageList : AppCompatActivity() {
     private var mapcode = 0
     private var stid = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,6 +47,16 @@ class StageList : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
 
         setContentView(R.layout.activity_stage_list)
 
@@ -82,24 +96,20 @@ class StageList : AppCompatActivity() {
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
+
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     override fun onBackPressed() {
         val bck = findViewById<FloatingActionButton>(R.id.stglistbck)
+
         bck.performClick()
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        StaticStore.toast = null
-        mustDie(this)
-    }
 
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
+        StaticStore.toast = null
     }
 
     private fun number(num: Int): String {

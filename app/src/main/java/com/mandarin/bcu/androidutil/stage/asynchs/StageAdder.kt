@@ -19,6 +19,7 @@ import common.system.MultiLangCont
 import common.util.pack.Background
 import common.util.stage.MapColc
 import java.lang.ref.WeakReference
+import kotlin.math.acos
 
 open class StageAdder(activity: Activity, private val mapcode: Int, private val stid: Int, private val posit: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
@@ -29,13 +30,20 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
     }
 
     override fun doInBackground(vararg voids: Void?): Void? {
-        if (StaticStore.treasure == null) StaticStore.readTreasureIcon()
+        val ac = weakReference.get() ?: return null
+
+        if (StaticStore.treasure == null)
+            StaticStore.readTreasureIcon(ac)
+
         publishProgress(0)
+
         if (StaticStore.bgread == 0) {
             Background.read()
             StaticStore.bgread = 1
         }
+
         publishProgress(1)
+
         return null
     }
 

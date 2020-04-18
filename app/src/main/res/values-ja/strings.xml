@@ -17,7 +17,8 @@
         <item>真レジェンドステージ</item>
         <item>ネコビタンステージ</item>
         <item>強襲ステージ</item>
-        <item>H</item>
+        <item>発掘ステージ</item>
+        <item>CA</item>
     </string-array>
     <string name="def_stgbck">メインページへ戻る</string>
     <string name="sch_nm">絞り込み検索</string>
@@ -85,7 +86,7 @@
     <string name="down_wait">接続を待っています…</string>
     <string name="down_state_ok">ダウンロードが完了しました！</string>
     <string name="down_state_no">ダウンロードに失敗しました…</string>
-    <string name="down_state_doing">ファイルをダウンロードしているのでしばらくお待ち下さい… : </string>
+    <string name="down_state_doing">"ファイルをダウンロードしています… : "</string>
     <string name="down_state_rea">準備完了</string>
     <string name="down_redown">再試行</string>
     <string name="down_zip_ex">"抽出しています… : "</string>
@@ -128,10 +129,10 @@
     <string name="unit_info_atkt">攻撃の種類</string>
     <string name="def_info_back_cont">にゃんこ情報へ戻る</string>
     <string name="unit_info_abil">能力</string>
-    <string name="unit_info_tba">攻撃頻度</string>
+    <string name="unit_info_tba">攻撃間隔</string>
     <string name="sch_np">本能込みで検索</string>
     <string name="unit_info_pre">攻撃発生</string>
-    <string name="unit_info_post">攻撃間隔</string>
+    <string name="unit_info_post">攻撃頻度</string>
     <string name="unit_info_atktime">攻撃時間</string>
     <string name="unit_info_abilT">能力を使用するか</string>
     <string name="unit_info_true">はい</string>
@@ -165,7 +166,7 @@
     <string name="unit_info_wkill">" (受けるダメージを0.1割に減らし/5倍のダメージを与える)"</string>
     <string name="unit_info_evakill">" (受けるダメージを0.2割に減らし/5倍のダメージを与える)"</string>
     <string name="unit_info_text0">_% の確率で</string>
-    <string name="unit_info_text1">"_f"</string>
+    <string name="unit_info_text1">"_fの間"</string>
     <string name="unit_info_text2">"Lv._ の"</string>
     <string name="unit_info_text3">ターゲットを _% に</string>
     <string name="unit_info_text4">距離 _ ほど</string>
@@ -245,7 +246,7 @@
     <string name="enemy_info_multi">倍率</string>
     <string name="main_enemy_info">敵情報</string>
     <string name="enemy_info_trait">属性</string>
-    <string name="abi_cu">古代の呪い</string>
+    <string name="sch_abi_cu">古代の呪い</string>
     <string name="infinity">無制限</string>
     <string name="esch_witch">魔女</string>
     <string name="esch_eva">使徒</string>
@@ -573,4 +574,47 @@
     <string name="stg_sch_name">名前</string>
     <string name="stg_sch_stgname">ステージの名前</string>
     <string name="sch_abi_impoi">毒撃無効</string>
+    <string name="main_pack_img">"パックの画像を解凍しています… : "</string>
+    <string name="main_announce">通知</string>
+    <string name="main_announce_0130">Android11(アンドロイドR)対応アプリにするため、データ構造を変更しました。そのため、追加データの再ダウンロードが必要になる場合があります。 ご心配なさらず, アプリケーションは、ユーザデータが保存されている古いBCU(/storage/emulated/0/BCU/)フォルダを残します(例。画像等)、使用することも出来ますが不要な場合は削除することもできます。\n\n いつもBCU Androidをご利用いただきありがとうございます</string>
+    <string name="main_confirm">確認</string>
+    <string name="main_pack">パックを読み込んでいます…</string>
+    <string name="main_pack_music">"パックの音楽を解凍しています… : "</string>
+    <string name="main_pack_bg">"パックの背景を解凍しています… : "</string>
+    <string name="map_name">マップの名前</string>
+    <string name="main_pack_ext">"パックを解凍しています… : "</string>
+    <string name="pack_invalid">無効なパックネームです</string>
+    <string name="pack_invalid_content">パック _ はアプリに影響する可能性があるため、許可されていません。</string>
+    <string name="pack_invalid_remove">このパックファイルを削除</string>
+    <string name="unit_info_text21">"毎_fごとに"</string>
+    <string name="unit_info_text22">"_の速度で移動する)"</string>
+    <string name="unit_info_text23">"_の幅で"</string>
+    <string name="unit_info_text24">"(_の距離で発生し,"</string>
+    <string name="unit_info_text25">"(タイプ _:"</string>
+    <string name="unit_info_text26">"_ダメージを与える"</string>
+    <string name="unit_info_text27">"ターゲットの最大HPの_%のダメージを与える)"</string>
+    <string name="unit_info_text28">"ターゲットの現在HPの_%のダメージを与える)"</string>
+    <string name="unit_info_text29">"ターゲットの削減されたHPの_%のダメージを与える)"</string>
+    <string name="unit_info_text30">"毎_fごとに"</string>
+    <string name="unit_info_text31">"_"</string>
+    <string name="unit_info_text32">"_の距離で"</string>
+    <string name="unit_info_text33">通常召喚)</string>
+    <string name="unit_info_text34">"ワープアニメーションで召喚)"</string>
+    <string name="unit_info_text35">"掘り起こしアニメーションで召喚)"</string>
+    <string name="unit_info_text36">"掘り起こしアニメーションで召喚され穴を掘らない)"</string>
+    <string name="unit_info_text37">"ステージの制限に関係なく召喚)"</string>
+    <string name="unit_info_text38">"修正された倍率で召喚)"</string>
+    <string name="unit_info_text39">"無効なタイプ)"</string>
+    <string name="unit_info_text40">"召喚主と同じ現在HPで召喚)"</string>
+    <string name="unit_info_text41">"ランダムレイヤーで召喚)"</string>
+    <string name="unit_info_text42">"相手に攻撃を当てるたびに"</string>
+    <string name="unit_info_text43">"相手を倒すたびに"</string>
+    <string name="unit_info_text44">"_の距離で召喚)"</string>
+    <string name="unit_info_text45">"_%のバフされた統計で"</string>
+    <string name="unit_info_text46">"_回目の攻撃"</string>
+    <string name="def_hundred">100</string>
+    <string name="sch_abi_imsu">Imu.Surge Attack</string>
+    <string name="talen_poi">Res.Poison</string>
+    <string name="talen_sur">Res.Surge Attack</string>
+    <string name="lineup_const_curse">Curse Cannon Level</string>
 </resources>

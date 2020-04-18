@@ -38,23 +38,23 @@ class EDefiner {
         try {
             if (StaticStore.enemies == null) {
                 try {
-                    StaticStore.getEnemynumber()
+                    StaticStore.getEnemynumber(context)
                     Enemy.readData()
                 } catch (e: NullPointerException) {
                     StaticStore.clear()
                     val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                     StaticStore.getLang(shared.getInt("Language", 0))
-                    ZipLib.init()
-                    ZipLib.read()
+                    ZipLib.init(StaticStore.getExternalPath(context))
+                    ZipLib.read(StaticStore.getExternalPath(context))
                     ImageBuilder.builder = BMBuilder()
-                    StaticStore.getEnemynumber()
-                    DefineItf().init()
+                    StaticStore.getEnemynumber(context)
+                    DefineItf().init(context)
                     Enemy.readData()
                     StaticStore.root = 1
                 }
                 StaticStore.enemies = Pack.def.es.list
                 if (StaticStore.img15 == null) {
-                    StaticStore.readImg()
+                    StaticStore.readImg(context)
                 }
                 if (StaticStore.t == null) {
                     Combo.readFile()
@@ -64,7 +64,7 @@ class EDefiner {
                     val number = StaticStore.anumber
                     StaticStore.icons = arrayOfNulls(number.size)
                     for (i in number.indices) StaticStore.icons[i] = StaticStore.img15[number[i]].bimg() as Bitmap
-                    val iconpath = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/icons/"
+                    val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
                     val files = StaticStore.afiles
                     for (i in files.indices) {
                         if (files[i] == "") continue
@@ -75,17 +75,20 @@ class EDefiner {
                     val number = StaticStore.pnumber
                     StaticStore.picons = arrayOfNulls(number.size)
                     for (i in number.indices) StaticStore.picons[i] = StaticStore.img15[number[i]].bimg() as Bitmap
-                    val iconpath = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/page/icons/"
+                    val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
                     val files = StaticStore.pfiles
                     for (i in files.indices) {
                         if (files[i] == "") continue
                         StaticStore.picons[i] = BitmapFactory.decodeFile(iconpath + files[i])
                     }
                 }
+
                 for (i in colorid.indices) {
                     colorstring[i] = context.getString(colorid[i])
                 }
+
                 starstring[0] = ""
+
                 for (i in starid.indices) starstring[i + 1] = context.getString(starid[i])
                 for (i in procid.indices) proc[i] = context.getString(procid[i])
                 for (i in abiid.indices) abi[i] = context.getString(abiid[i])
@@ -101,7 +104,7 @@ class EDefiner {
                 MultiLangCont.EEXP.clear()
                 for (l in lan) {
                     for (n in files) {
-                        val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + n
+                        val path = StaticStore.getExternalPath(context)+"lang" + l + n
                         val f = File(path)
                         if (f.exists()) {
                             val qs = AssetData.getAsset(f).readLine()

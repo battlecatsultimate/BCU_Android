@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.music.asynchs.MusicAdder
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class MusicList : AppCompatActivity() {
@@ -40,6 +43,16 @@ class MusicList : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_music_list)
 
         val bck: FloatingActionButton = findViewById(R.id.mulistbck)
@@ -63,6 +76,12 @@ class MusicList : AppCompatActivity() {
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
+
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        StaticStore.toast = null
     }
 }

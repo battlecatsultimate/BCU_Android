@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="32dp"
-        android:text="Name"
+        android:text="@null"
         android:textColor="?attr/TextPrimary"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +63,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_ID"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TableRow
@@ -79,7 +78,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp" />
+                    android:paddingBottom="12dp"
+                    android:contentDescription="@null" />
             </TableRow>
 
         </TableRow>
@@ -108,7 +108,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_HP"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -131,7 +131,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_HB"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 
@@ -166,12 +166,14 @@
                     android:layout_weight="0.8"
                     android:backgroundTint="?attr/TextPrimary"
                     android:ems="5"
+                    android:hint="@string/def_hundred"
                     android:gravity="center"
                     android:imeOptions="actionDone|flagNoExtractUi"
                     android:inputType="number"
                     android:maxLength="10"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:importantForAutofill="no" />
 
                 <TextView
                     android:id="@+id/eneminfpercent"
@@ -181,7 +183,7 @@
                     android:gravity="center"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:text="%"
+                    android:text="@string/def_treasure_perc"
                     android:textColor="?attr/TextPrimary" />
 
             </TableRow>
@@ -211,7 +213,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Attack"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 
@@ -238,7 +240,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_AtkTime"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -268,7 +270,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_AbilT"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 
@@ -295,7 +297,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Pre"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -322,7 +324,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_post"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <Button
@@ -343,7 +345,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_TBA"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 
@@ -372,7 +374,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Trait"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -401,7 +403,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_AtkT"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -424,7 +426,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Drop"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 
@@ -453,7 +455,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Range"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -482,7 +484,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Barrier"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -505,7 +507,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="Enemy_Spd"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 

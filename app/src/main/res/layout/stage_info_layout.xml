@@ -287,15 +287,16 @@
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
 
-            <TextView
+            <Button
                 android:id="@+id/stginfomusicr"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cell_shape"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/def_stage_music"
+                android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -310,15 +311,16 @@
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
 
-            <TextView
+            <Button
                 android:id="@+id/stginfomusic2r"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cell_shape"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/def_stage_music2"
+                android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 

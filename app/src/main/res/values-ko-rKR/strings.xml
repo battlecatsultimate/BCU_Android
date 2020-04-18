@@ -19,7 +19,8 @@
         <item>신 레전드 스토리</item>
         <item>드링크 스테이지</item>
         <item>거대 레오파드 강습</item>
-        <item>H</item>
+        <item>발굴 스테이지</item>
+        <item>CA</item>
     </string-array>
     <string name="sch_bla">검은적</string>
     <string name="sch_fl">떠있는적</string>
@@ -246,7 +247,7 @@
     <string name="enemy_info_multi">배율</string>
     <string name="main_enemy_info">적 정보</string>
     <string name="enemy_info_trait">속성</string>
-    <string name="abi_cu">저주</string>
+    <string name="sch_abi_cu">저주</string>
     <string name="infinity">무한</string>
     <string name="esch_eva">사도</string>
     <string name="esch_witch">마녀</string>
@@ -574,4 +575,47 @@
     <string name="stg_sch_stgname">스테이지 이름</string>
     <string name="err_lusave_fail">라인업 데이터 저장 실패</string>
     <string name="sch_abi_impoi">독 데미지 무효</string>
+    <string name="main_pack_img">"팩 이미지 추출중… : "</string>
+    <string name="main_announce">유저들에게 알림</string>
+    <string name="main_announce_0130">어플리케이션을 안드로이드 11 (R 버전) 과 호환되도록 하기 위하여, 약간의 파일 구조 변경이 있었습니다. 따라서 일부 추가 파일들을 다시 다운받아야 되실 수 있습니다. 안쓰이는 파일들은 어플이 알아서 처리할 것이니 걱정하지 마세요.\n\n 전에 사용되었던 BCU 폴더 (/storage/emulated/0/BCU/) 는 그대로 남겨지지만 이 버전 이후부터는 사용되지 않습니다. 다른 곳에 사용하셔도 되고 상관없으시다면 삭제하셔도 됩니다.\n\n 어플을 테스트해 주셔서 감사합니다.</string>
+    <string name="main_confirm">확인</string>
+    <string name="main_pack">팩 파일 읽는중…</string>
+    <string name="main_pack_music">"팩 음악 추출중… : "</string>
+    <string name="main_pack_bg">"팩 배경 추출중… : "</string>
+    <string name="map_name">맵 이름</string>
+    <string name="main_pack_ext">"팩 추출중… : "</string>
+    <string name="pack_invalid">유효하지 않은 팩</string>
+    <string name="pack_invalid_content">팩 _ 파일은 앱에 영향을 줄 수 있어 허용되지 않습니다</string>
+    <string name="pack_invalid_remove">해당 팩 파일 제거</string>
+    <string name="unit_info_text21">" 매 _f 마다 "</string>
+    <string name="unit_info_text22">" _ 의 속도로 이동)"</string>
+    <string name="unit_info_text23">" _ 의 넓이와"</string>
+    <string name="unit_info_text24">" (거리 _ 에서 생성되며"</string>
+    <string name="unit_info_text25">" (타입 _ :"</string>
+    <string name="unit_info_text26">" _ 데미지 만큼 공격)"</string>
+    <string name="unit_info_text27">타겟의 최대 체력의 _ % 만큼 공격)</string>
+    <string name="unit_info_text28">타겟의 현재 체력의 _ % 만큼 공격)</string>
+    <string name="unit_info_text29">타겟의 감소된 체력의 _ % 만큼 공격)</string>
+    <string name="unit_info_text30">" 매 _f 마다 "</string>
+    <string name="unit_info_text31">" _ "</string>
+    <string name="unit_info_text32">" 거리 _ 에서"</string>
+    <string name="unit_info_text33">일반적으로 소환)</string>
+    <string name="unit_info_text34">" 워프 애니메이션과 함께 소환)"</string>
+    <string name="unit_info_text35">" 버로우 업 애니메이션과 함께 소환)"</string>
+    <string name="unit_info_text36">" 버로우 업 애니메이션과 함께 소환되고 버로우 무효화)"</string>
+    <string name="unit_info_text37">" 스테이지 제한에 상관없이 강제 소환)"</string>
+    <string name="unit_info_text38">" 고정된 버프로 소환)"</string>
+    <string name="unit_info_text39">" 유효하지 않은 타입)"</string>
+    <string name="unit_info_text40">" 소환하는 개체와 동일한 체력으로 소환)"</string>
+    <string name="unit_info_text41">" 랜덤한 레이어에서 소환)"</string>
+    <string name="unit_info_text42">" 각 공격마다"</string>
+    <string name="unit_info_text43">" 각 킬마다"</string>
+    <string name="unit_info_text44">" 상대의 거리 _ 앞에서 소환)"</string>
+    <string name="unit_info_text45">" _% 버프로"</string>
+    <string name="unit_info_text46">_번째 공격</string>
+    <string name="def_hundred">100</string>
+    <string name="sch_abi_imsu">열파 공격 무효</string>
+    <string name="talen_poi">독 데미지 내성</string>
+    <string name="talen_sur">열파 공격 내성</string>
+    <string name="lineup_const_curse">저주 대포 레벨</string>
 </resources>

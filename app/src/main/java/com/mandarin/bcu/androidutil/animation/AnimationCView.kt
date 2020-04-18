@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.animation
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -13,11 +14,22 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.asynchs.AddGIF
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
+import com.mandarin.bcu.androidutil.fakeandroid.FIBM
+import com.mandarin.bcu.androidutil.io.AImageReader
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.system.P
 import common.util.ImgCore
+import common.util.anim.AnimU
 import common.util.anim.EAnimU
+import common.util.pack.Pack
+import common.util.unit.Unit
+import java.lang.Exception
 
+@SuppressLint("ViewConstructor")
 class AnimationCView : View {
+    private var pid: Int = 0
+    private var eid: Int
+
     @JvmField
     var anim: EAnimU? = null
     val activity: Activity?
@@ -47,12 +59,16 @@ class AnimationCView : View {
     var sleeptime: Long = 0
     var started = false
 
-    constructor(context: Activity?, id: Int, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, pid: Int, id: Int, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
         activity = context
         renderer = Renderer()
-        this.id = id
+        this.pid = pid
+        this.eid = id
         this.form = form
-        anim = StaticStore.units[id].forms[form].getEAnim(mode)
+
+        val pack = Pack.map[pid] ?: Pack.def
+
+        anim = pack.us.ulist[eid].forms[form].getEAnim(mode)
         anim?.setTime(StaticStore.frame)
         this.textView = textView
         this.seekBar = seekBar
@@ -75,9 +91,9 @@ class AnimationCView : View {
     }
 
     constructor(context: Activity?, id: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
-        this.id = id
+        this.eid = id
         activity = context
-        anim = StaticStore.enemies[id].getEAnim(mode)
+        anim = StaticStore.enemies[eid].getEAnim(mode)
         anim?.setTime(StaticStore.frame)
         this.textView = textView
         this.seekBar = seekBar
@@ -110,7 +126,7 @@ class AnimationCView : View {
         }
         if (StaticStore.enableGIF) {
             animP = P.newP((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
-            AddGIF(activity, width, height, animP, size, night, id, form != -1).execute()
+            AddGIF(activity, width, height, animP, size, night, pid, eid, form != -1).execute()
             StaticStore.gifFrame++
         }
         if (StaticStore.play) {
@@ -151,7 +167,13 @@ class AnimationCView : View {
             invalidate()
             textView!!.text = context.getText(R.string.anim_frame).toString().replace("-", "" + StaticStore.frame)
             fpsind!!.text = context.getText(R.string.def_fps).toString().replace("-", "" + fps)
-            seekBar!!.progress = StaticStore.frame
+            seekBar!!.progress = if(StaticStore.frame >= seekBar!!.max && StaticStore.play) {
+                StaticStore.frame = 0
+                0
+            } else {
+                StaticStore.frame
+            }
+
             if(StaticStore.enableGIF || StaticStore.gifisSaving) {
                 val giftext = if (StaticStore.gifFrame != 0)
                     context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame) + " (" + (AddGIF.frame.toFloat() / StaticStore.gifFrame.toFloat() * 100f).toInt() + "%)"

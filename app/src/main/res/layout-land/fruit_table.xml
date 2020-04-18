@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cfinf1" />
@@ -47,7 +46,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +78,8 @@
                 android:background="@drawable/cell_shape"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                app:srcCompat="@drawable/ic_castle" />
+                app:srcCompat="@drawable/ic_castle"
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/fruit2"
@@ -90,7 +90,8 @@
                 android:background="@drawable/cell_shape"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                app:srcCompat="@drawable/ic_castle" />
+                app:srcCompat="@drawable/ic_castle"
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/fruit3"
@@ -101,7 +102,8 @@
                 android:background="@drawable/cell_shape"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                app:srcCompat="@drawable/ic_castle" />
+                app:srcCompat="@drawable/ic_castle"
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/fruit4"
@@ -112,7 +114,8 @@
                 android:background="@drawable/cell_shape"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                app:srcCompat="@drawable/ic_castle" />
+                app:srcCompat="@drawable/ic_castle"
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/fruit5"
@@ -123,7 +126,8 @@
                 android:background="@drawable/cell_shape"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                app:srcCompat="@drawable/ic_castle" />
+                app:srcCompat="@drawable/ic_castle"
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/xp"
@@ -134,7 +138,8 @@
                 android:background="@drawable/cell_shape"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                app:srcCompat="@drawable/ic_castle" />
+                app:srcCompat="@drawable/ic_castle"
+                android:contentDescription="@null" />
         </TableRow>
 
         <TableRow
@@ -151,7 +156,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="12sp" />
 
@@ -164,7 +169,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -176,7 +181,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -188,7 +193,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -200,7 +205,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
 
             <TextView
@@ -212,7 +217,7 @@
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="TextView"
+                android:text="@null"
                 android:textColor="?attr/TextPrimary" />
         </TableRow>
 

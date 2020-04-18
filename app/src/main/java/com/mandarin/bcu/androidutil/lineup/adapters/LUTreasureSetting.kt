@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.os.SystemClock
 import android.text.Editable
@@ -389,8 +388,8 @@ class LUTreasureSetting : Fragment() {
     }
 
     private fun save() {
-        val path = Environment.getExternalStorageDirectory().path + "/BCU/user/basis.v"
-        val direct = Environment.getExternalStorageDirectory().path + "/BCU/user/"
+        val path = StaticStore.getExternalPath(context)+"user/basis.v"
+        val direct = StaticStore.getExternalPath(context)+"user/"
 
         val g = File(direct)
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,9 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.battle.BasisSet
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import common.util.Data
 
 class LUConstruction : Fragment() {
 
@@ -29,16 +26,16 @@ class LUConstruction : Fragment() {
     private var editable = true
     private var destroyed = false
 
-    private val layoutid = intArrayOf(R.id.castlelev, R.id.slowlev, R.id.walllev, R.id.stoplev, R.id.waterlev, R.id.zombielev, R.id.breakerlev)
+    private val layoutid = intArrayOf(R.id.castlelev, R.id.slowlev, R.id.walllev, R.id.stoplev, R.id.waterlev, R.id.zombielev, R.id.breakerlev, R.id.curselev)
 
-    private val textid = intArrayOf(R.id.castlelevt, R.id.slowlevt, R.id.walllevt, R.id.stoplevt, R.id.waterlevt, R.id.zombielevt, R.id.breakerlevt)
+    private val textid = intArrayOf(R.id.castlelevt, R.id.slowlevt, R.id.walllevt, R.id.stoplevt, R.id.waterlevt, R.id.zombielevt, R.id.breakerlevt, R.id.curselevt)
 
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
 
     private var color: IntArray? = null
 
     private val handler = Handler()
-    private var runnable: Runnable? = null
+    private var runnable = Runnable { }
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_construction, group, false)
@@ -54,7 +51,7 @@ class LUConstruction : Fragment() {
                 if (StaticStore.updateConst) {
                     initialized = false
 
-                    val texts = arrayOfNulls<TextInputEditText>(7)
+                    val texts = arrayOfNulls<TextInputEditText>(Data.BASE_TOT)
 
                     val text = view.findViewById<TextInputEditText>(R.id.constlevt)
 
@@ -90,10 +87,10 @@ class LUConstruction : Fragment() {
     }
 
     private fun listeners(view: View) {
-        val constructions = arrayOfNulls<TextInputLayout>(7)
+        val constructions = arrayOfNulls<TextInputLayout>(Data.BASE_TOT)
         val construction = view.findViewById<TextInputLayout>(R.id.constlev)
         val text = view.findViewById<TextInputEditText>(R.id.constlevt)
-        val texts = arrayOfNulls<TextInputEditText>(7)
+        val texts = arrayOfNulls<TextInputEditText>(Data.BASE_TOT)
 
         for (i in layoutid.indices) {
             constructions[i] = view.findViewById(layoutid[i])
@@ -235,39 +232,11 @@ class LUConstruction : Fragment() {
                             construction.helperText = "1~20 Lv."
                         }
 
-                        save()
+                        StaticStore.SaveLineUp(context)
                     }
                 }
             })
         }
-    }
-
-    private fun save() {
-        val path = Environment.getExternalStorageDirectory().path + "/BCU/user/basis.v"
-        val direct = Environment.getExternalStorageDirectory().path + "/BCU/user/"
-
-        val g = File(direct)
-
-        if (!g.exists())
-            g.mkdirs()
-
-        val f = File(path)
-
-        try {
-            if (!f.exists())
-                f.createNewFile()
-
-            val os = FileOutputStream(f)
-
-            val out = BasisSet.writeAll()
-
-            out.flush(os)
-
-            os.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
     }
 
     private fun valuesAllSame(): Boolean {

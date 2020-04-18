@@ -53,7 +53,7 @@ class MapDefiner {
 
                     if(!StaticStore.musicread) {
                         println("Music Read")
-                        SoundHandler.read()
+                        SoundHandler.read(context)
                         StaticStore.musicread = true
                     }
 
@@ -66,14 +66,14 @@ class MapDefiner {
                     StaticStore.clear()
                     val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                     StaticStore.getLang(shared.getInt("Language", 0))
-                    ZipLib.init()
-                    ZipLib.read()
-                    StaticStore.getEnemynumber()
+                    ZipLib.init(StaticStore.getExternalPath(context))
+                    ZipLib.read(StaticStore.getExternalPath(context))
+                    StaticStore.getEnemynumber(context)
                     ImageBuilder.builder = BMBuilder()
-                    DefineItf().init()
+                    DefineItf().init(context)
                     StaticStore.root = 1
 
-                    println("You Fucked Up")
+                    println("Data loss detected")
 
                     if(!StaticStore.mapread) {
                         println("Map read")
@@ -101,7 +101,7 @@ class MapDefiner {
 
                     if(!StaticStore.musicread) {
                         println("Music Read")
-                        SoundHandler.read()
+                        SoundHandler.read(context)
                         StaticStore.musicread = true
                     }
 
@@ -118,7 +118,7 @@ class MapDefiner {
                 MultiLangCont.STNAME.clear()
                 MultiLangCont.RWNAME.clear()
                 for (l in lan) {
-                    val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + file
+                    val path = StaticStore.getExternalPath(context)+"lang" + l + file
                     val f = File(path)
                     if (f.exists()) {
                         val qs = AssetData.getAsset(f).readLine()
@@ -152,7 +152,7 @@ class MapDefiner {
                     }
                 }
                 for (l in lan) {
-                    val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang" + l + rewa
+                    val path = StaticStore.getExternalPath(context)+"lang" + l + rewa
                     val f = File(path)
                     if (f.exists()) {
                         val qs = AssetData.getAsset(f).readLine()
@@ -167,7 +167,7 @@ class MapDefiner {
                         }
                     }
                 }
-                val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/lang/"
+                val path = StaticStore.getExternalPath(context)+"lang/"
                 val f = File(path, diff)
                 if (f.exists()) {
                     val qs = AssetData.getAsset(f).readLine()
@@ -193,7 +193,7 @@ class MapDefiner {
                 StaticStore.stagelang = 0
             }
             if (StaticStore.maplang == 1) {
-                StaticStore.mapnames = arrayOfNulls(StaticStore.map.size)
+                StaticStore.mapnames = arrayOfNulls(StaticStore.MAPCODE.size)
                 for (i in StaticStore.mapnames.indices) {
                     val mc = StaticStore.map[StaticStore.MAPCODE[i]] ?: continue
                     StaticStore.mapnames[i] = arrayOfNulls(mc.maps.size)

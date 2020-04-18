@@ -3,16 +3,214 @@ package com.mandarin.bcu.androidutil
 import android.annotation.SuppressLint
 import com.mandarin.bcu.util.Interpret
 import common.system.MultiLangCont
+import common.util.Data
 import common.util.pack.Pack
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FilterEntity {
+    companion object {
+        fun setLuFilter() : ArrayList<Int> {
+            val b0 = ArrayList<Boolean>()
+            val b1 = ArrayList<Boolean>()
+            val b2 = ArrayList<Boolean>()
+            val b3 = ArrayList<Boolean>()
+            val b4 = ArrayList<Boolean>()
+
+            if(StaticStore.rare.isEmpty()) {
+                for(i in 0 until StaticStore.ludata.size)
+                    b0.add(true)
+            }
+
+            if(StaticStore.empty) {
+                for(i in 0 until StaticStore.ludata.size)
+                    b1.add(true)
+            }
+
+            if(StaticStore.attack.isEmpty()) {
+                for(i in 0 until StaticStore.ludata.size)
+                    b2.add(true)
+            }
+
+            if(StaticStore.tg.isEmpty()) {
+                for(i in 0 until StaticStore.ludata.size)
+                    b3.add(true)
+            }
+
+            if(StaticStore.ability.isEmpty()) {
+                for(i in 0 until StaticStore.ludata.size)
+                    b4.add(true)
+            }
+
+            for(info in StaticStore.ludata) {
+                val data = info.split("-")
+
+                if(data.size < 2) {
+                    b0.add(false)
+                    b1.add(false)
+                    b2.add(false)
+                    b3.add(false)
+                    b4.add(false)
+                    continue
+                }
+
+                val pid = data[0].toInt()
+
+                val p = Pack.map[pid]
+
+                if(p == null) {
+                    b0.add(false)
+                    b1.add(false)
+                    b2.add(false)
+                    b3.add(false)
+                    b4.add(false)
+                    continue
+                }
+
+                val id = data[1].toInt()
+
+                if(id >= p.us.ulist.list.size) {
+                    b0.add(false)
+                    b1.add(false)
+                    b2.add(false)
+                    b3.add(false)
+                    b4.add(false)
+                    continue
+                }
+
+                val u = p.us.ulist.list[id]
+
+                b0.add(StaticStore.rare.contains(u.rarity.toString()))
+
+                val b10 = ArrayList<Boolean>()
+                val b20 = ArrayList<Boolean>()
+                val b30 = ArrayList<Boolean>()
+                val b40 = ArrayList<Boolean>()
+
+                for(f in u.forms) {
+                    val du = if(StaticStore.talents)
+                        f.maxu()
+                    else
+                        f.du
+
+                    val t = du.type
+                    val a = du.abi
+
+                    if(!StaticStore.empty) {
+                        if(StaticStore.atksimu) {
+                            b10.add(Interpret.isType(du, 1))
+                        } else {
+                            b10.add(Interpret.isType(du, 0))
+                        }
+                    }
+
+                    var b21 = !StaticStore.atkorand
+
+                    for(k in StaticStore.attack.indices) {
+                        b21 = if(StaticStore.atkorand) {
+                            b21 or Interpret.isType(du, StaticStore.attack[k].toInt())
+                        } else {
+                            b21 and Interpret.isType(du, StaticStore.attack[k].toInt())
+                        }
+                    }
+
+                    var b31 = !StaticStore.tgorand
+
+                    for(k in StaticStore.tg.indices) {
+                        b31 = if(StaticStore.tgorand) {
+                            b31 or ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                        } else {
+                            b31 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                        }
+                    }
+
+                    var b41 = !StaticStore.aborand
+
+                    for(k in StaticStore.ability.indices) {
+                        val vect = StaticStore.ability[k]
+
+                        if(vect[0] == 0) {
+                            val bind = a and vect[1] != 0
+                            b41 = if(StaticStore.aborand) {
+                                b41 or bind
+                            } else {
+                                b41 and bind
+                            }
+                        } else if (vect[0] == 1) {
+                            b41 = if(StaticStore.aborand) {
+                                b41 or (du.getProc(vect[1])[0] > 0)
+                            } else {
+                                b41 and (du.getProc(vect[1])[0] > 0)
+                            }
+                        }
+                    }
+
+                    b20.add(b21)
+                    b30.add(b31)
+                    b40.add(b41)
+                }
+
+                b1.add(!StaticStore.empty && b10.contains(true))
+                b2.add(b20.contains(true))
+                b3.add(b30.contains(true))
+                b4.add(b40.contains(true))
+            }
+
+            val result = ArrayList<Int>()
+
+            for(i in StaticStore.ludata.indices) {
+                if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
+                    if(StaticStore.entityname.isNotEmpty()) {
+                        val info = StaticStore.ludata[i].split("-")
+
+                        if(info.size < 2)
+                            continue
+
+                        val pid = info[0].toInt()
+                        val id = info[1].toInt()
+
+                        val p = Pack.map[pid] ?: continue
+
+                        if(id >= p.us.ulist.list.size)
+                            continue
+
+                        val u = p.us.ulist.list[id]
+
+                        var added = false
+
+                        for(j  in u.forms.indices) {
+                            if(added)
+                                continue
+
+                            var name = MultiLangCont.FNAME.getCont(u.forms[j]) ?: u.forms[j].name
+
+                            if(name == null)
+                                name = ""
+
+                            name = Data.trio(j) + "-" + name.toLowerCase(Locale.ROOT)
+
+                            if(name.contains(StaticStore.entityname))
+                                added = true
+                        }
+
+                        if(added)
+                            result.add(i)
+                    } else {
+                        result.add(i)
+                    }
+                }
+            }
+
+            return result
+        }
+    }
+
     private var entitynumber: Int
     private var entityname = ""
+    private var pid: Int = 0
 
     constructor(entitynumber: Int) {
         this.entitynumber = entitynumber
-        if (StaticStore.lineunitname != null) if (StaticStore.lineunitname.isNotEmpty()) entityname = StaticStore.lineunitname
     }
 
     constructor(entitynumber: Int, entityname: String) {
@@ -20,30 +218,50 @@ class FilterEntity {
         this.entityname = entityname
     }
 
+    constructor(entitynumber: Int, entityname: String, pid: Int) {
+        this.entitynumber = entitynumber
+        this.entityname = entityname
+        this.pid = pid
+    }
+
+    constructor(entitynumber: Int, pid: Int) {
+        this.entitynumber = entitynumber
+        this.pid = pid
+    }
+
     @SuppressLint("DefaultLocale")
     fun setFilter(): ArrayList<Int> {
+        val p = Pack.map[pid] ?: return ArrayList<Int>()
+
         val b0 = ArrayList<Boolean>()
         val b1 = ArrayList<Boolean>()
         val b2 = ArrayList<Boolean>()
         val b3 = ArrayList<Boolean>()
         val b4 = ArrayList<Boolean>()
+
         if (StaticStore.rare.isEmpty()) {
-            for (i in 0 until entitynumber) b0.add(true)
+            for (i in 0 until entitynumber)
+                b0.add(true)
         }
         if (StaticStore.empty) {
-            for (i in 0 until entitynumber) b1.add(true)
+            for (i in 0 until entitynumber)
+                b1.add(true)
         }
         if (StaticStore.attack.isEmpty()) {
-            for (i in 0 until entitynumber) b2.add(true)
+            for (i in 0 until entitynumber)
+                b2.add(true)
         }
         if (StaticStore.tg.isEmpty()) {
-            for (i in 0 until entitynumber) b3.add(true)
+            for (i in 0 until entitynumber)
+                b3.add(true)
         }
         if (StaticStore.ability.isEmpty()) {
-            for (i in 0 until entitynumber) b4.add(true)
+            for (i in 0 until entitynumber)
+                b4.add(true)
         }
-        for (u in Pack.def.us.ulist.list) {
+        for (u in p.us.ulist.list) {
             b0.add(StaticStore.rare.contains(u.rarity.toString()))
+
             val b10 = ArrayList<Boolean>()
             val b20 = ArrayList<Boolean>()
             val b30 = ArrayList<Boolean>()
@@ -52,7 +270,11 @@ class FilterEntity {
                 val du = if (StaticStore.talents) f.maxu() else f.du
                 val t = du.type
                 val a = du.abi
-                if (!StaticStore.empty) if (StaticStore.atksimu) b10.add(Interpret.isType(du, 1)) else b10.add(Interpret.isType(du, 0))
+                if (!StaticStore.empty)
+                    if (StaticStore.atksimu)
+                        b10.add(Interpret.isType(du, 1))
+                    else
+                        b10.add(Interpret.isType(du, 0))
                 var b21 = !StaticStore.atkorand
                 for (k in StaticStore.attack.indices) {
                     b21 = if (StaticStore.atkorand) b21 or Interpret.isType(du, StaticStore.attack[k].toInt()) else b21 and Interpret.isType(du, StaticStore.attack[k].toInt())
@@ -83,16 +305,27 @@ class FilterEntity {
         val result = ArrayList<Int>()
         for (i in 0 until entitynumber) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
             if (entityname.isNotEmpty()) {
-                val u = StaticStore.units[i]
+                val u = p.us.ulist.list[i]
+
                 var added = false
+
                 for (j in u.forms.indices) {
-                    if (added) continue
-                    var name = MultiLangCont.FNAME.getCont(u.forms[j])
-                    if (name == null) name = number(i)
+                    if (added)
+                        continue
+
+                    var name = MultiLangCont.FNAME.getCont(u.forms[j]) ?: u.forms[j].name
+
+                    if (name == null)
+                        name = ""
+
                     name = number(i) + " - " + name.toLowerCase()
-                    if (name.contains(entityname.toLowerCase())) added = true
+
+                    if (name.contains(entityname.toLowerCase()))
+                        added = true
                 }
-                if (added) result.add(i)
+
+                if (added)
+                    result.add(i)
             } else {
                 result.add(i)
             }

@@ -6,7 +6,7 @@ import androidx.viewpager.widget.ViewPager
 
 class MeasureViewPager : ViewPager {
     constructor(context: Context) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {}
+    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs)
 
     override fun onMeasure(width: Int, height: Int) {
         var h = height

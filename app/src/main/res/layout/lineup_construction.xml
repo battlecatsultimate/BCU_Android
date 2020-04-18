@@ -297,6 +297,44 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
+                android:foregroundTint="?attr/TextPrimary"
+                android:textColorHint="?attr/TextPrimary"
+                app:boxStrokeColor="?attr/colorAccent"
+                app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                app:counterOverflowTextColor="?attr/ErrorPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:counterTextColor="?attr/TextPrimary"
+                app:errorEnabled="true"
+                app:errorIconTint="?attr/ErrorPrimary"
+                app:errorTextColor="?attr/ErrorPrimary"
+                app:helperText="1~20 Lv."
+                app:helperTextTextColor="?attr/TextPrimary"
+                app:hintTextColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/zombielev">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/breakerlevt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:hint="@string/lineup_const_breaker"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/curselev"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginBottom="24dp"
                 android:foregroundTint="?attr/TextPrimary"
                 android:textColorHint="?attr/TextPrimary"
@@ -314,14 +352,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/zombielev">
+                app:layout_constraintTop_toBottomOf="@+id/breakerlev">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/breakerlevt"
+                    android:id="@+id/curselevt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/TextPrimary"
-                    android:hint="@string/lineup_const_breaker"
+                    android:hint="@string/lineup_const_curse"
                     android:imeOptions="flagNoExtractUi"
                     android:inputType="number"
                     android:maxLength="3"

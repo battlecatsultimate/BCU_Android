@@ -1,5 +1,6 @@
 package main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -11,12 +12,13 @@ import java.util.Date;
 
 public class MainBCU {
 
-	public static final int ver = 5000;
+	public static final int ver = 40908;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = false, loaded = false, USE_JOGL = false;
 
+	@SuppressLint("SimpleDateFormat")
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 	}

@@ -69,8 +69,8 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
                 }
             }
         } catch (e: NullPointerException) {
-            val preferences = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-            ErrorLogWriter.writeLog(e, preferences.getBoolean("upload", false) || preferences.getBoolean("ask_upload", true))
+            ErrorLogWriter.writeLog(e, StaticStore.upload, context)
+
             return row
         } catch (e: IndexOutOfBoundsException) {
             return row

@@ -92,14 +92,19 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
                             try {
                                 val positions = ArrayList<Int>()
 
-                                for (i in StaticStore.mapnames[position].indices) {
-                                    positions.add(i)
+                                try {
+                                    for (i in StaticStore.mapnames[position].indices) {
+                                        positions.add(i)
+                                    }
+                                } catch (e : java.lang.IndexOutOfBoundsException) {
+                                    ErrorLogWriter.writeLog(e, ErrorLogWriter.generateMessage("error from StaticStore.mapnames - ", StaticStore.mapnames), StaticStore.upload, activity)
+                                    return
                                 }
 
                                 val mapListAdapter = MapListAdapter(activity, StaticStore.mapnames[position], StaticStore.MAPCODE[position], positions)
                                 maplist.adapter = mapListAdapter
                             } catch (e: NullPointerException) {
-                                ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                             }
                         }
 
@@ -113,7 +118,7 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
                             positions.add(i)
                         }
                     } else {
-                        LangLoader.readStageLang()
+                        LangLoader.readStageLang(activity)
 
                         LangLoader.readMapLang()
 
@@ -194,9 +199,9 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
                                     val mapListAdapter = MapListAdapter(activity, resmapname.toTypedArray(), filter.keyAt(position), resposition)
                                     maplist.adapter = mapListAdapter
                                 } catch (e: NullPointerException) {
-                                    ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                    ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                                 } catch (e: IndexOutOfBoundsException) {
-                                    ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                    ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                                 }
                             }
 
@@ -256,15 +261,16 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
     }
 
     private fun number(num: Int): String {
-        return if (num in 0..9) "00$num" else if (num in 10..99) "0$num" else "" + num
+        return if (num in 0..9)
+            "00$num"
+        else if (num in 10..99)
+            "0$num"
+        else
+            "" + num
     }
 
     private fun withID(id: Int, name: String): String {
-        return if (name == "") {
-            number(id)
-        } else {
-            number(id) + " - " + name
-        }
+        return number(id) + "/" + name
     }
 
 }

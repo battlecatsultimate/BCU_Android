@@ -83,16 +83,47 @@
             android:focusableInTouchMode="true">
 
             <TextView
-                android:id="@+id/stgname"
+                android:id="@+id/stmname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="@string/stg_sch_stgname"
+                android:text="@string/map_name"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/stmnameedit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="?attr/TextPrimary"
+                android:ems="10"
+                android:hint="@string/stg_sch_name"
+                android:imeOptions="actionDone|flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:textColor="?attr/TextPrimary"
+                android:textColorHint="?attr/HintPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stmname" />
+
+            <TextView
+                android:id="@+id/stgname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/stg_sch_stgname"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stmnameedit" />
 
             <EditText
                 android:id="@+id/stgnameedit"

@@ -38,11 +38,49 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
 import common.system.MultiLangCont
+import common.util.Data
+import common.util.pack.Pack
 import common.util.unit.Form
 import java.util.*
 
 class UnitinfPager : Fragment() {
+    companion object {
+        @JvmStatic
+        fun newInstance(form: Int, pid:Int, id: Int, names: Array<String?>?): UnitinfPager {
+            val pager = UnitinfPager()
+
+            val bundle = Bundle()
+
+            bundle.putInt("Form", form)
+            bundle.putInt("PID",pid)
+            bundle.putInt("ID", id)
+            bundle.putStringArray("Names", names)
+
+            pager.arguments = bundle
+
+            return pager
+        }
+
+        private fun getAttributeColor(context: Context?, attributeId: Int): Int {
+            val typedValue = TypedValue()
+
+            context!!.theme.resolveAttribute(attributeId, typedValue, true)
+
+            val colorRes = typedValue.resourceId
+            var color = -1
+
+            try {
+                color = ContextCompat.getColor(context, colorRes)
+            } catch (e: NotFoundException) {
+                e.printStackTrace()
+            }
+
+            return color
+        }
+    }
+
     private var form = 0
+    private var pid = 0
     private var uid = 0
     private var fs = 0
     private var s: GetStrings? = null
@@ -52,6 +90,7 @@ class UnitinfPager : Fragment() {
     private var talents = false
     private var pcoinlev: IntArray = intArrayOf(0,0,0,0,0)
     private val ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.unit_table, container, false)
         val frse = view.findViewById<Button>(R.id.unitinffrse)
@@ -78,23 +117,35 @@ class UnitinfPager : Fragment() {
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
         val pcoins = arrayOfNulls<Spinner>(ids.size)
-        for (i in ids.indices) pcoins[i] = view.findViewById(ids[i])
+
+        for (i in ids.indices)
+            pcoins[i] = view.findViewById(ids[i])
+
         val activity: Activity = activity!!
+
         s = GetStrings(activity)
+
         s!!.talList
+
         color = intArrayOf(
                 getAttributeColor(activity, R.attr.TextPrimary)
         )
-        assert(arguments != null)
+
+        arguments ?: return view
+
         form = arguments!!.getInt("Form")
         uid = arguments!!.getInt("ID")
+        pid = arguments!!.getInt("PID")
+
         unitabil.isFocusableInTouchMode = false
         unitabil.isFocusable = false
         unitabil.isNestedScrollingEnabled = false
+
         val cdlev: TextInputLayout = activity.findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = activity.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = activity.findViewById(R.id.atktrea)
         val healtrea: TextInputLayout = activity.findViewById(R.id.healtrea)
+
         cdlev.isCounterEnabled = true
         cdlev.counterMaxLength = 2
         cdtrea.isCounterEnabled = true
@@ -103,11 +154,14 @@ class UnitinfPager : Fragment() {
         atktrea.counterMaxLength = 3
         healtrea.isCounterEnabled = true
         healtrea.counterMaxLength = 3
+
         cdlev.setHelperTextColor(ColorStateList(states, color))
         cdtrea.setHelperTextColor(ColorStateList(states, color))
         atktrea.setHelperTextColor(ColorStateList(states, color))
         healtrea.setHelperTextColor(ColorStateList(states, color))
+
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
         if (shared.getBoolean("frame", true)) {
             fs = 0
             frse.text = activity.getString(R.string.unit_info_fr)
@@ -115,54 +169,90 @@ class UnitinfPager : Fragment() {
             fs = 1
             frse.text = activity.getString(R.string.unit_info_sec)
         }
+
         val t = BasisSet.current.t()
-        val f = StaticStore.units[uid].forms[form]
+
+        val p = Pack.map[pid] ?: return view
+
+        val f = p.us.ulist[uid].forms[form]
+
         if (f.pCoin == null) {
             unittalen.visibility = View.GONE
             npreset.visibility = View.GONE
             nprow.visibility = View.GONE
+
             pcoinlev = intArrayOf(0,0,0,0,0)
         } else {
             val max = f.pCoin.max
+
             pcoinlev = IntArray(max.size)
+
             pcoinlev[0] = 0
+
             for (j in pcoins.indices) {
                 val plev: MutableList<Int> = ArrayList()
-                for (k in 0 until max[j + 1] + 1) plev.add(k)
+
+                for (k in 0 until max[j + 1] + 1)
+                    plev.add(k)
+
                 val adapter = ArrayAdapter(activity, R.layout.spinneradapter, plev)
+
                 pcoins[j]!!.adapter = adapter
                 pcoins[j]!!.setSelection(getIndex(pcoins[j], max[j + 1]))
+
                 pcoinlev[j + 1] = max[j + 1]
             }
         }
+
         val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(f.du)
         val cdlevt: TextInputEditText = activity.findViewById(R.id.cdlevt)
         val cdtreat: TextInputEditText = activity.findViewById(R.id.cdtreat)
         val atktreat: TextInputEditText = activity.findViewById(R.id.atktreat)
         val healtreat: TextInputEditText = activity.findViewById(R.id.healtreat)
+
         cdlevt.setText(t.tech[0].toString())
         cdtreat.setText(t.trea[2].toString())
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
+
         var language = StaticStore.lang[shared.getInt("Language", 0)]
+
         if (language == "") {
             language = Resources.getSystem().configuration.locales[0].language
         }
+
         val proc: List<String>
+
         proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(f.du, 1, fs)
+            Interpret.getProc(activity, f.du, 1, fs)
         } else {
-            Interpret.getProc(f.du, 0, fs)
+            Interpret.getProc(activity, f.du, 0, fs)
         }
-        val procicon = Interpret.getProcid(f.du)
-        var name = MultiLangCont.FNAME.getCont(f)
-        if (name == null) name = ""
-        var icon = f.anim.uni.img.bimg() as Bitmap
-        icon = if (icon.height != icon.width) StaticStore.MakeIcon(activity, icon, 48f) else StaticStore.getResizeb(icon, activity, 48f)
+
+        var name = MultiLangCont.FNAME.getCont(f) ?: f.name
+
+        if (name == null)
+            name = ""
+
+        val uni = f.anim.uni
+
+        var icon = if(uni != null) {
+            f.anim.uni.img.bimg() as Bitmap
+        } else {
+            StaticStore.empty(StaticStore.dptopx(48f, activity),StaticStore.dptopx(48f, activity))
+        }
+
+        icon = if (icon.height != icon.width)
+            StaticStore.MakeIcon(activity, icon, 48f)
+        else
+            StaticStore.getResizeb(icon, activity, 48f)
+
         uniticon.setImageBitmap(icon)
+
         unitname.text = name
-        unitid.text = s!!.getID(form, number(uid))
+
+        unitid.text = s!!.getID(form, Data.hex(pid), number(uid))
         unithp.text = s!!.getHP(f, t, f.unit.prefLv, false, pcoinlev)
         unithb.text = s!!.getHB(f, false, pcoinlev)
         unitatk.text = s!!.getTotAtk(f, t, f.unit.prefLv, false, pcoinlev)
@@ -177,18 +267,21 @@ class UnitinfPager : Fragment() {
         unittba.text = s!!.getTBA(f, fs)
         unitatkt.text = s!!.getAtkTime(f, fs)
         unitabilt.text = s!!.getAbilT(f)
+
         if (ability.size > 0 || proc.isNotEmpty()) {
             none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(activity)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
             unitabil.layoutManager = linearLayoutManager
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, activity)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity)
             unitabil.adapter = adapterAbil
             ViewCompat.setNestedScrollingEnabled(unitabil, true)
         } else {
             unitabil.visibility = View.GONE
         }
+
         listeners(view)
+
         return view
     }
 
@@ -229,10 +322,18 @@ class UnitinfPager : Fragment() {
         val npresetrow = view.findViewById<TableRow>(R.id.talresetrow)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
         val pcoins = arrayOfNulls<Spinner>(ids.size)
-        for (i in ids.indices) pcoins[i] = view.findViewById(ids[i])
+
+        for (i in ids.indices)
+            pcoins[i] = view.findViewById(ids[i])
+
         val t = BasisSet.current.t()
-        val f = StaticStore.units[uid].forms[form]
+
+        val p = Pack.map[pid] ?: return
+
+        val f = p.us.ulist[uid].forms[form]
+
         val levels: MutableList<Int> = ArrayList()
+
         for (j in 1 until f.unit.max + 1) levels.add(j)
         val levelsp = ArrayList<Int>()
         for (j in 0 until f.unit.maxp + 1) levelsp.add(j)
@@ -242,7 +343,7 @@ class UnitinfPager : Fragment() {
             if (getActivity() == null) return@OnLongClickListener false
             val clipboardManager = getActivity()!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, unitname.text)
-            clipboardManager.primaryClip = data
+            clipboardManager.setPrimaryClip(data)
             StaticStore.showShortMessage(activity, R.string.unit_info_copied)
             true
         })
@@ -264,61 +365,136 @@ class UnitinfPager : Fragment() {
         frse.setOnClickListener {
             if (fs == 0) {
                 fs = 1
+
                 unitcd.text = s!!.getCD(f, t, fs, talents, pcoinlev)
+
                 unitpreatk.text = s!!.getPre(f, fs)
+
                 unitpost.text = s!!.getPost(f, fs)
+
                 unittba.text = s!!.getTBA(f, fs)
+
                 unitatkt.text = s!!.getAtkTime(f, fs)
+
                 frse.text = activity.getString(R.string.unit_info_sec)
+
                 if (unitabil.visibility != View.GONE) {
                     var du = f.du
-                    if (f.pCoin != null) du = if (talents) f.pCoin.improve(pcoinlev) else f.du
+
+                    if (f.pCoin != null)
+                        du = if (talents)
+                            f.pCoin.improve(pcoinlev)
+                        else
+                            f.du
+
                     val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+
                     val abilityicon = Interpret.getAbiid(du)
+
                     val language = Locale.getDefault().language
+
                     val proc: List<String>
-                    proc = if (language == "ko" || language == "ja") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
-                    val procicon = Interpret.getProcid(du)
+
+                    proc = if (language == "ko" || language == "ja")
+                        Interpret.getProc(activity, du, 1, fs)
+                    else
+                        Interpret.getProc(activity, du, 0, fs)
+
                     val linearLayoutManager = LinearLayoutManager(activity)
+
                     linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
                     unitabil.layoutManager = linearLayoutManager
-                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, activity)
+
+                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity)
+
                     unitabil.adapter = adapterAbil
+
                     ViewCompat.setNestedScrollingEnabled(unitabil, false)
                 }
             } else {
                 fs = 0
+
                 unitcd.text = s!!.getCD(f, t, fs, talents, pcoinlev)
+
                 unitpreatk.text = s!!.getPre(f, fs)
+
                 unitpost.text = s!!.getPost(f, fs)
+
                 unittba.text = s!!.getTBA(f, fs)
+
                 unitatkt.text = s!!.getAtkTime(f, fs)
+
                 frse.text = activity.getString(R.string.unit_info_fr)
+
                 if (unitabil.visibility != View.GONE) {
                     var du = f.du
-                    if (f.pCoin != null) du = if (talents) f.pCoin.improve(pcoinlev) else f.du
+
+                    if (f.pCoin != null)
+                        du = if (talents)
+                            f.pCoin.improve(pcoinlev)
+                        else
+                            f.du
+
                     val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+
                     val abilityicon = Interpret.getAbiid(du)
+
                     val language = Locale.getDefault().language
+
                     val proc: List<String>
-                    proc = if (language == "ko" || language == "ja") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
-                    val procicon = Interpret.getProcid(du)
+
+                    proc = if (language == "ko" || language == "ja")
+                        Interpret.getProc(activity, du, 1, fs)
+                    else
+                        Interpret.getProc(activity, du, 0, fs)
+
                     val linearLayoutManager = LinearLayoutManager(activity)
+
                     linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
                     unitabil.layoutManager = linearLayoutManager
-                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, activity)
+
+                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity)
+
                     unitabil.adapter = adapterAbil
+
                     ViewCompat.setNestedScrollingEnabled(unitabil, false)
                 }
             }
         }
-        unitcdb.setOnClickListener { if (unitcd.text.toString().endsWith("f")) unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev) else unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev) }
-        unitpreatkb.setOnClickListener { if (unitpreatk.text.toString().endsWith("f")) unitpreatk.text = s!!.getPre(f, 1) else unitpreatk.text = s!!.getPre(f, 0) }
-        unitpostb.setOnClickListener { if (unitpost.text.toString().endsWith("f")) unitpost.text = s!!.getPost(f, 1) else unitpost.text = s!!.getPost(f, 0) }
-        unittbab.setOnClickListener { if (unittba.text.toString().endsWith("f")) unittba.text = s!!.getTBA(f, 1) else unittba.text = s!!.getTBA(f, 0) }
+        unitcdb.setOnClickListener {
+            if (unitcd.text.toString().endsWith("f"))
+                unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+            else
+                unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+        }
+
+        unitpreatkb.setOnClickListener {
+            if (unitpreatk.text.toString().endsWith("f"))
+                unitpreatk.text = s!!.getPre(f, 1)
+            else
+                unitpreatk.text = s!!.getPre(f, 0)
+        }
+
+        unitpostb.setOnClickListener {
+            if (unitpost.text.toString().endsWith("f"))
+                unitpost.text = s!!.getPost(f, 1)
+            else
+                unitpost.text = s!!.getPost(f, 0)
+        }
+
+        unittbab.setOnClickListener {
+            if (unittba.text.toString().endsWith("f"))
+                unittba.text = s!!.getTBA(f, 1)
+            else
+                unittba.text = s!!.getTBA(f, 0)
+        }
+
         unitatkb.setOnClickListener {
             val level = unitlevel.selectedItem as Int
             val levelp = unitlevelp.selectedItem as Int
+
             if (unitatkb.text == activity.getString(R.string.unit_info_atk)) {
                 unitatkb.text = activity.getString(R.string.unit_info_dps)
                 unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
@@ -327,39 +503,64 @@ class UnitinfPager : Fragment() {
                 unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
             }
         }
-        unitatktb.setOnClickListener { if (unitatkt.text.toString().endsWith("f")) unitatkt.text = s!!.getAtkTime(f, 1) else unitatkt.text = s!!.getAtkTime(f, 0) }
+        unitatktb.setOnClickListener {
+            if (unitatkt.text.toString().endsWith("f"))
+                unitatkt.text = s!!.getAtkTime(f, 1)
+            else
+                unitatkt.text = s!!.getAtkTime(f, 0)
+        }
+
         unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
+
                 unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+
                 if (f.du.rawAtkData().size > 1) {
-                    if (unitatkb.text == activity.getString(R.string.unit_info_atk)) unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev) else unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                    if (unitatkb.text == activity.getString(R.string.unit_info_atk))
+                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                    else
+                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
                 } else {
-                    if (unitatkb.text == activity.getString(R.string.unit_info_atk)) unitatk.text = s!!.getTotAtk(f, t, level + levelp, talents, pcoinlev) else unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                    if (unitatkb.text == activity.getString(R.string.unit_info_atk))
+                        unitatk.text = s!!.getTotAtk(f, t, level + levelp, talents, pcoinlev)
+                    else
+                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
         unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
+
                 unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+
                 if (f.du.rawAtkData().size > 1) {
-                    if (unitatkb.text == activity.getString(R.string.unit_info_atk)) unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev) else unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                    if (unitatkb.text == activity.getString(R.string.unit_info_atk))
+                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                    else
+                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
                 } else {
-                    if (unitatkb.text == activity.getString(R.string.unit_info_atk)) unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev) else unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                    if (unitatkb.text == activity.getString(R.string.unit_info_atk))
+                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                    else
+                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        cdlevt.setSelection(Objects.requireNonNull(cdlevt.text)!!.length)
-        cdtreat.setSelection(Objects.requireNonNull(cdtreat.text)!!.length)
-        atktreat.setSelection(Objects.requireNonNull(atktreat.text)!!.length)
-        healtreat.setSelection(Objects.requireNonNull(healtreat.text)!!.length)
+
+        cdlevt.setSelection(cdlevt.text?.length ?: 0)
+        cdtreat.setSelection(cdtreat.text?.length ?: 0)
+        atktreat.setSelection(atktreat.text?.length ?: 0)
+        healtreat.setSelection(healtreat.text?.length ?: 0)
+
         cdlevt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -394,7 +595,9 @@ class UnitinfPager : Fragment() {
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() in 1..30) {
                         val lev = text.toString().toInt()
+
                         t.tech[0] = lev
+
                         if (unitcd.text.toString().endsWith("s")) {
                             unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
                         } else {
@@ -403,6 +606,7 @@ class UnitinfPager : Fragment() {
                     }
                 } else {
                     t.tech[0] = 1
+
                     if (unitcd.text.toString().endsWith("s")) {
                         unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
                     } else {
@@ -641,28 +845,36 @@ class UnitinfPager : Fragment() {
                 anim2.duration = 300
                 anim2.interpolator = DecelerateInterpolator()
                 anim2.start()
+
                 val anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f, activity), 0)
+
                 anim3.addUpdateListener { animation ->
                     val params = nprow.layoutParams as ConstraintLayout.LayoutParams
+
                     params.topMargin = animation.animatedValue as Int
                     nprow.layoutParams = params
                 }
+
                 anim3.duration = 300
                 anim3.interpolator = DecelerateInterpolator()
                 anim3.start()
             }
         }
+
         for (i in pcoins.indices) {
             pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
                     pcoinlev[i+1] = pcoins[i]!!.selectedItem as Int
+
                     validate(view, f, t)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+
             pcoins[i]!!.setOnLongClickListener {
                 pcoins[i]!!.isClickable = false
+
                 StaticStore.showShortMessage(activity, s!!.getTalentName(i, f))
                 true
             }
@@ -670,14 +882,17 @@ class UnitinfPager : Fragment() {
         npreset.setOnClickListener {
             for (i in pcoins.indices) {
                 pcoins[i]!!.setSelection(getIndex(pcoins[i], f.pCoin.max[i + 1]))
+
                 pcoinlev[i + 1] = f.pCoin.max[i + 1]
             }
+
             validate(view, f, t)
         }
     }
 
     private fun validate(view: View, f: Form, t: Treasure) {
         val activity = activity ?: return
+
         val unithb = view.findViewById<TextView>(R.id.unitinfhbr)
         val unithp = view.findViewById<TextView>(R.id.unitinfhpr)
         val unitlevel = view.findViewById<Spinner>(R.id.unitinflevr)
@@ -690,37 +905,63 @@ class UnitinfPager : Fragment() {
         val unitcd = view.findViewById<TextView>(R.id.unitinfcdr)
         val none = view.findViewById<TextView>(R.id.unitabilnone)
         val unitabil: RecyclerView = view.findViewById(R.id.unitinfabilr)
+
         val level = unitlevel.selectedItem as Int
         val levelp = unitlevelp.selectedItem as Int
+
         unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
         unithb.text = s!!.getHB(f, talents, pcoinlev)
-        if (unitatkb.text.toString() == "DPS") unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev) else unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+
+        if (unitatkb.text.toString() == "DPS")
+            unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+        else
+            unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+
         unitcost.text = s!!.getCost(f, talents, pcoinlev)
-        if (unitcd.text.toString().endsWith("s")) unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev) else unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+
+        if (unitcd.text.toString().endsWith("s"))
+            unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+        else
+            unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+
         unittrait.text = s!!.getTrait(f, talents, pcoinlev)
         unitspd.text = s!!.getSpd(f, talents, pcoinlev)
+
         val du: MaskUnit = if (f.pCoin != null) if (talents) f.pCoin.improve(pcoinlev) else f.du else f.du
+
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
         var language = StaticStore.lang[shared.getInt("Language", 0)]
+
         if (language == "") {
             language = Resources.getSystem().configuration.locales[0].language
         }
+
         val proc: List<String>
+
         proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(du, 1, fs)
+            Interpret.getProc(activity, du, 1, fs)
         } else {
-            Interpret.getProc(du, 0, fs)
+            Interpret.getProc(activity, du, 0, fs)
         }
+
         val abilityicon = Interpret.getAbiid(du)
-        val procicon = Interpret.getProcid(du)
+
         if (abil.size > 0 || proc.isNotEmpty()) {
             none.visibility = View.GONE
+
             val linearLayoutManager = LinearLayoutManager(activity)
+
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
             unitabil.layoutManager = linearLayoutManager
-            val adapterAbil = AdapterAbil(abil, proc, abilityicon, procicon, activity)
+
+            val adapterAbil = AdapterAbil(abil, proc, abilityicon, activity)
+
             unitabil.adapter = adapterAbil
+
             ViewCompat.setNestedScrollingEnabled(unitabil, false)
         } else {
             unitabil.visibility = View.GONE
@@ -743,33 +984,8 @@ class UnitinfPager : Fragment() {
 
     private fun getIndex(spinner: Spinner?, lev: Int): Int {
         var index = 0
-        for (i in 0 until spinner!!.count) if (lev == spinner.getItemAtPosition(i) as Int) index = i
+        for (i in 0 until spinner!!.count)
+            if (lev == spinner.getItemAtPosition(i) as Int) index = i
         return index
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(form: Int, id: Int, names: Array<String?>?): UnitinfPager {
-            val pager = UnitinfPager()
-            val bundle = Bundle()
-            bundle.putInt("Form", form)
-            bundle.putInt("ID", id)
-            bundle.putStringArray("Names", names)
-            pager.arguments = bundle
-            return pager
-        }
-
-        private fun getAttributeColor(context: Context?, attributeId: Int): Int {
-            val typedValue = TypedValue()
-            context!!.theme.resolveAttribute(attributeId, typedValue, true)
-            val colorRes = typedValue.resourceId
-            var color = -1
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: NotFoundException) {
-                e.printStackTrace()
-            }
-            return color
-        }
     }
 }

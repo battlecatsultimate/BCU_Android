@@ -110,7 +110,8 @@
                     android:backgroundTint="?attr/ButtonPrimary"
                     android:text="@string/battle_exit"
                     android:textAllCaps="false"
-                    android:textColor="?attr/TextPrimary" />
+                    android:textColor="?attr/TextPrimary"
+                    tools:ignore="ButtonStyle" />
 
                 <Button
                     android:id="@+id/battleretry"
@@ -121,7 +122,8 @@
                     android:backgroundTint="?attr/ButtonPrimary"
                     android:text="@string/battle_retry"
                     android:textAllCaps="false"
-                    android:textColor="?attr/TextPrimary" />
+                    android:textColor="?attr/TextPrimary"
+                    tools:ignore="ButtonStyle" />
             </TableRow>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -270,6 +272,6 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/battlecoordinate"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

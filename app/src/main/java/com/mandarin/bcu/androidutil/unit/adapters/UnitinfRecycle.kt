@@ -35,13 +35,15 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
+import common.util.Data
 import common.util.unit.Form
 import java.util.*
 
-class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, id: Int) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
+class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, pid: Int, id: Int) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
     private val context: Activity?
     private val names: ArrayList<String>
     private val forms: Array<Form>
+    private val pid: Int
     private val id: Int
     private var fs = 0
     private val s: GetStrings
@@ -50,6 +52,23 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     private val color: IntArray
     private var talents = false
     private var pcoins = intArrayOf(0,0,0,0,0)
+
+    init {
+        this.context = context
+        this.names = names
+        this.forms = forms
+        this.id = id
+        this.pid = pid
+
+        s = GetStrings(this.context)
+
+        s.talList
+
+        color = intArrayOf(
+                getAttributeColor(context, R.attr.TextPrimary)
+        )
+    }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val row = LayoutInflater.from(context).inflate(R.layout.unit_table, viewGroup, false)
         return ViewHolder(row)
@@ -116,14 +135,21 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
         val proc: List<String>
         proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(f.du, 1, fs)
+            Interpret.getProc(context, f.du, 1, fs)
         } else {
-            Interpret.getProc(f.du, 0, fs)
+            Interpret.getProc(context, f.du, 0, fs)
         }
-        val procicon = Interpret.getProcid(f.du)
-        viewHolder.uniticon.setImageBitmap(StaticStore.getResizeb(f.anim.uni.img.bimg() as Bitmap, context, 48f))
+
+        val icon = f.anim?.uni?.img?.bimg()
+
+        if(icon == null) {
+            viewHolder.uniticon.setImageBitmap(StaticStore.MakeIcon(context, null, 48f))
+        } else {
+            viewHolder.uniticon.setImageBitmap(StaticStore.MakeIcon(context, icon as Bitmap, 48f))
+        }
+
         viewHolder.unitname.text = names[i]
-        viewHolder.unitid.text = s.getID(viewHolder, number(id))
+        viewHolder.unitid.text = s.getID(viewHolder, Data.hex(pid)+"-"+number(id))
         viewHolder.unithp.text = s.getHP(f, t, f.unit.prefLv, false, pcoins)
         viewHolder.unithb.text = s.getHB(f, false, pcoins)
         viewHolder.unitatk.text = s.getTotAtk(f, t, f.unit.prefLv, false, pcoins)
@@ -143,7 +169,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             val linearLayoutManager = LinearLayoutManager(context)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
             viewHolder.unitabil.layoutManager = linearLayoutManager
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, context)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, context)
             viewHolder.unitabil.adapter = adapterAbil
             ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false)
         } else {
@@ -166,7 +192,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         viewHolder.unitname.setOnLongClickListener {
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, viewHolder.unitname.text)
-            clipboardManager.primaryClip = data
+            clipboardManager.setPrimaryClip(data)
             StaticStore.showShortMessage(context, R.string.unit_info_copied)
             true
         }
@@ -196,104 +222,198 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         viewHolder.frse.setOnClickListener {
             if (fs == 0) {
                 fs = 1
+
                 viewHolder.unitcd.text = s.getCD(f, t, fs, talents, pcoins)
                 viewHolder.unitpreatk.text = s.getPre(f, fs)
                 viewHolder.unitpost.text = s.getPost(f, fs)
                 viewHolder.unittba.text = s.getTBA(f, fs)
                 viewHolder.unitatkt.text = s.getAtkTime(f, fs)
                 viewHolder.frse.text = context.getString(R.string.unit_info_sec)
+
                 if (viewHolder.unitabil.visibility != View.GONE) {
                     var du = f.du
-                    if (f.pCoin != null) du = if (talents) f.pCoin.improve(pcoins) else f.du
+
+                    if (f.pCoin != null)
+                        du = if (talents)
+                            f.pCoin.improve(pcoins)
+                        else
+                            f.du
+
                     val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+
                     val abilityicon = Interpret.getAbiid(du)
+
                     val language = Locale.getDefault().language
+
                     val proc: List<String>
-                    proc = if (language == "ko" || language == "ja") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
-                    val procicon = Interpret.getProcid(du)
+
+                    proc = if (language == "ko" || language == "ja")
+                        Interpret.getProc(context, du, 1, fs)
+                    else
+                        Interpret.getProc(context, du, 0, fs)
+
                     val linearLayoutManager = LinearLayoutManager(context)
+
                     linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
                     viewHolder.unitabil.layoutManager = linearLayoutManager
-                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, context)
+
+                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, context)
+
                     viewHolder.unitabil.adapter = adapterAbil
+
                     ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false)
                 }
             } else {
                 fs = 0
+
                 viewHolder.unitcd.text = s.getCD(f, t, fs, talents, pcoins)
                 viewHolder.unitpreatk.text = s.getPre(f, fs)
                 viewHolder.unitpost.text = s.getPost(f, fs)
                 viewHolder.unittba.text = s.getTBA(f, fs)
                 viewHolder.unitatkt.text = s.getAtkTime(f, fs)
                 viewHolder.frse.text = context.getString(R.string.unit_info_fr)
+
                 if (viewHolder.unitabil.visibility != View.GONE) {
                     var du = f.du
-                    if (f.pCoin != null) du = if (talents) f.pCoin.improve(pcoins) else f.du
+
+                    if (f.pCoin != null)
+                        du = if (talents)
+                            f.pCoin.improve(pcoins)
+                        else
+                            f.du
+
                     val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+
                     val abilityicon = Interpret.getAbiid(du)
+
                     val language = Locale.getDefault().language
+
                     val proc: List<String>
-                    proc = if (language == "ko" || language == "ja") Interpret.getProc(du, 1, fs) else Interpret.getProc(du, 0, fs)
-                    val procicon = Interpret.getProcid(du)
+
+                    proc = if (language == "ko" || language == "ja")
+                        Interpret.getProc(context, du, 1, fs)
+                    else
+                        Interpret.getProc(context, du, 0, fs)
+
                     val linearLayoutManager = LinearLayoutManager(context)
+
                     linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
                     viewHolder.unitabil.layoutManager = linearLayoutManager
-                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, procicon, context)
+
+                    val adapterAbil = AdapterAbil(ability, proc, abilityicon, context)
+
                     viewHolder.unitabil.adapter = adapterAbil
+
                     ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false)
                 }
             }
         }
-        viewHolder.unitcdb.setOnClickListener { if (viewHolder.unitcd.text.toString().endsWith("f")) viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins) else viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins) }
-        viewHolder.unitpreatkb.setOnClickListener { if (viewHolder.unitpreatk.text.toString().endsWith("f")) viewHolder.unitpreatk.text = s.getPre(f, 1) else viewHolder.unitpreatk.text = s.getPre(f, 0) }
-        viewHolder.unitpostb.setOnClickListener { if (viewHolder.unitpost.text.toString().endsWith("f")) viewHolder.unitpost.text = s.getPost(f, 1) else viewHolder.unitpost.text = s.getPost(f, 0) }
-        viewHolder.unittbab.setOnClickListener { if (viewHolder.unittba.text.toString().endsWith("f")) viewHolder.unittba.text = s.getTBA(f, 1) else viewHolder.unittba.text = s.getTBA(f, 0) }
+
+        viewHolder.unitcdb.setOnClickListener {
+            if (viewHolder.unitcd.text.toString().endsWith("f"))
+                viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+            else
+                viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+        }
+
+        viewHolder.unitpreatkb.setOnClickListener {
+            if (viewHolder.unitpreatk.text.toString().endsWith("f"))
+                viewHolder.unitpreatk.text = s.getPre(f, 1)
+            else
+                viewHolder.unitpreatk.text = s.getPre(f, 0)
+        }
+
+        viewHolder.unitpostb.setOnClickListener {
+            if (viewHolder.unitpost.text.toString().endsWith("f"))
+                viewHolder.unitpost.text = s.getPost(f, 1)
+            else
+                viewHolder.unitpost.text = s.getPost(f, 0)
+        }
+
+        viewHolder.unittbab.setOnClickListener {
+            if (viewHolder.unittba.text.toString().endsWith("f"))
+                viewHolder.unittba.text = s.getTBA(f, 1)
+            else
+                viewHolder.unittba.text = s.getTBA(f, 0)
+        }
+
         viewHolder.unitatkb.setOnClickListener {
             val level = viewHolder.unitlevel.selectedItem as Int
             val levelp = viewHolder.unitlevelp.selectedItem as Int
+
             if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) {
                 viewHolder.unitatkb.text = context.getString(R.string.unit_info_dps)
+
                 viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
             } else {
                 viewHolder.unitatkb.text = context.getString(R.string.unit_info_atk)
+
                 viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
             }
         }
-        viewHolder.unitatktb.setOnClickListener { if (viewHolder.unitatkt.text.toString().endsWith("f")) viewHolder.unitatkt.text = s.getAtkTime(f, 1) else viewHolder.unitatkt.text = s.getAtkTime(f, 0) }
+
+        viewHolder.unitatktb.setOnClickListener {
+            if (viewHolder.unitatkt.text.toString().endsWith("f"))
+                viewHolder.unitatkt.text = s.getAtkTime(f, 1)
+            else
+                viewHolder.unitatkt.text = s.getAtkTime(f, 0)
+        }
+
         viewHolder.unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
+
                 viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+
                 if (f.du.rawAtkData().size > 1) {
-                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins) else viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
+                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                    else
+                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
                 } else {
-                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) viewHolder.unitatk.text = s.getTotAtk(f, t, level + levelp, talents, pcoins) else viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
+                        viewHolder.unitatk.text = s.getTotAtk(f, t, level + levelp, talents, pcoins)
+                    else
+                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
         viewHolder.unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
+
                 viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
                 if (f.du.rawAtkData().size > 1) {
-                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins) else viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
+                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                    else
+                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
                 } else {
-                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins) else viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                    if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
+                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                    else
+                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        cdlevt.setSelection(Objects.requireNonNull(cdlevt.text)!!.length)
-        cdtreat.setSelection(Objects.requireNonNull(cdtreat.text)!!.length)
-        atktreat.setSelection(Objects.requireNonNull(atktreat.text)!!.length)
-        healtreat.setSelection(Objects.requireNonNull(healtreat.text)!!.length)
+
+        cdlevt.setSelection(cdlevt.text?.length ?: 0)
+        cdtreat.setSelection(cdtreat.text?.length ?: 0)
+        atktreat.setSelection(atktreat.text?.length ?: 0)
+        healtreat.setSelection(healtreat.text?.length ?: 0)
+
         cdlevt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 30 || s.toString().toInt() <= 0) {
@@ -326,7 +446,9 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() in 1..30) {
                         val lev = text.toString().toInt()
+
                         t.tech[0] = lev
+
                         if (viewHolder.unitcd.text.toString().endsWith("s")) {
                             viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
                         } else {
@@ -335,6 +457,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                     }
                 } else {
                     t.tech[0] = 1
+
                     if (viewHolder.unitcd.text.toString().endsWith("s")) {
                         viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
                     } else {
@@ -345,6 +468,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         })
         cdtreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 300) {
@@ -377,7 +501,9 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 300) {
                         val trea = text.toString().toInt()
+
                         t.trea[2] = trea
+
                         if (viewHolder.unitcd.text.toString().endsWith("s")) {
                             viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
                         } else {
@@ -386,6 +512,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                     }
                 } else {
                     t.trea[2] = 0
+
                     if (viewHolder.unitcd.text.toString().endsWith("s")) {
                         viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
                     } else {
@@ -396,6 +523,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         })
         atktreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 300) {
@@ -428,9 +556,12 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 300) {
                         val trea = text.toString().toInt()
+
                         t.trea[0] = trea
+
                         val level = viewHolder.unitlevel.selectedItem as Int
                         val levelp = viewHolder.unitlevelp.selectedItem as Int
+
                         if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
                             viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
                         } else {
@@ -439,8 +570,10 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                     }
                 } else {
                     t.trea[0] = 0
+
                     val level = viewHolder.unitlevel.selectedItem as Int
                     val levelp = viewHolder.unitlevelp.selectedItem as Int
+
                     if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
                         viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
                     } else {
@@ -451,6 +584,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         })
         healtreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 300) {
@@ -483,56 +617,74 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 300) {
                         val trea = text.toString().toInt()
+
                         t.trea[1] = trea
+
                         val level = viewHolder.unitlevel.selectedItem as Int
                         val levelp = viewHolder.unitlevelp.selectedItem as Int
+
                         viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
                     }
                 } else {
                     t.trea[1] = 0
+
                     val level = viewHolder.unitlevel.selectedItem as Int
                     val levelp = viewHolder.unitlevelp.selectedItem as Int
+
                     viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
                 }
             }
         })
+
         reset.setOnClickListener {
             t.tech[0] = 30
             t.trea[0] = 300
             t.trea[1] = 300
             t.trea[2] = 300
+
             cdlevt.setText(t.tech[0].toString())
             cdtreat.setText(t.trea[0].toString())
             atktreat.setText(t.trea[1].toString())
             healtreat.setText(t.trea[2].toString())
+
             val level = viewHolder.unitlevel.selectedItem as Int
             val levelp = viewHolder.unitlevelp.selectedItem as Int
+
             if (viewHolder.unitcd.text.toString().endsWith("s")) {
                 viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
             } else {
                 viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
             }
+
             if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
                 viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
             } else {
                 viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
             }
+
             viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
         }
+
         viewHolder.unittalen.setOnCheckedChangeListener { _, isChecked ->
             talents = true
+
             validate(viewHolder, f, t)
+
             if (isChecked) {
                 val anim = ValueAnimator.ofInt(0, StaticStore.dptopx(100f, context))
+
                 anim.addUpdateListener { animation ->
                     val `val` = animation.animatedValue as Int
                     val layout = viewHolder.npresetrow.layoutParams
                     layout.width = `val`
                     viewHolder.npresetrow.layoutParams = layout
                 }
+
                 anim.duration = 300
                 anim.interpolator = DecelerateInterpolator()
+
                 anim.start()
+
                 val anim2: ValueAnimator = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     ValueAnimator.ofInt(0, StaticStore.dptopx(48f, context))
                 } else {
@@ -540,54 +692,80 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 }
                 anim2.addUpdateListener { animation ->
                     val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
+
                     params.height = animation.animatedValue as Int
+
                     viewHolder.nprow.layoutParams = params
                 }
+
                 anim2.duration = 300
                 anim2.interpolator = DecelerateInterpolator()
+
                 anim2.start()
+
                 val anim3 = ValueAnimator.ofInt(0, StaticStore.dptopx(16f, context))
+
                 anim3.addUpdateListener { animation ->
                     val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
                     params.topMargin = animation.animatedValue as Int
                     viewHolder.nprow.layoutParams = params
                 }
+
                 anim3.duration = 300
                 anim3.interpolator = DecelerateInterpolator()
+
                 anim3.start()
             } else {
                 talents = false
+
                 validate(viewHolder, f, t)
+
+
                 val anim = ValueAnimator.ofInt(StaticStore.dptopx(100f, context), 0)
+
                 anim.addUpdateListener { animation ->
                     val `val` = animation.animatedValue as Int
                     val layout = viewHolder.npresetrow.layoutParams
                     layout.width = `val`
                     viewHolder.npresetrow.layoutParams = layout
                 }
+
                 anim.duration = 300
                 anim.interpolator = DecelerateInterpolator()
+
                 anim.start()
-                val anim2: ValueAnimator = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) ValueAnimator.ofInt(StaticStore.dptopx(48f, context), 0) else ValueAnimator.ofInt(StaticStore.dptopx(56f, context), 0)
+
+                val anim2: ValueAnimator = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    ValueAnimator.ofInt(StaticStore.dptopx(48f, context), 0)
+                else
+                    ValueAnimator.ofInt(StaticStore.dptopx(56f, context), 0)
+
                 anim2.addUpdateListener { animation ->
                     val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
                     params.height = animation.animatedValue as Int
                     viewHolder.nprow.layoutParams = params
                 }
+
                 anim2.duration = 300
                 anim2.interpolator = DecelerateInterpolator()
+
                 anim2.start()
+
                 val anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f, context), 0)
+
                 anim3.addUpdateListener { animation ->
                     val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
                     params.topMargin = animation.animatedValue as Int
                     viewHolder.nprow.layoutParams = params
                 }
+
                 anim3.duration = 300
                 anim3.interpolator = DecelerateInterpolator()
+
                 anim3.start()
             }
         }
+
         for (i in viewHolder.pcoins.indices) {
             viewHolder.pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -597,15 +775,20 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+
             viewHolder.pcoins[i]!!.setOnLongClickListener {
                 viewHolder.pcoins[i]!!.isClickable = false
+
                 StaticStore.showShortMessage(context, s.getTalentName(i, f))
+
                 true
             }
         }
+
         viewHolder.npreset.setOnClickListener {
             for (i in viewHolder.pcoins.indices) {
                 viewHolder.pcoins[i]!!.setSelection(getIndex(viewHolder.pcoins[i], f.pCoin.max[i + 1]))
+
                 pcoins[i + 1] = f.pCoin.max[i + 1]
             }
             validate(viewHolder, f, t)
@@ -614,7 +797,11 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
     private fun getIndex(spinner: Spinner?, lev: Int): Int {
         var index = 0
-        for (i in 0 until spinner!!.count) if (lev == spinner.getItemAtPosition(i) as Int) index = i
+
+        for (i in 0 until spinner!!.count)
+            if (lev == spinner.getItemAtPosition(i) as Int)
+                index = i
+
         return index
     }
 
@@ -656,7 +843,9 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         var npresetrow: TableRow = itemView.findViewById(R.id.talresetrow)
         var npreset: Button = itemView.findViewById(R.id.unitinftalreset)
         var nprow: TableRow = itemView.findViewById(R.id.talenrow)
+
         private var ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
+
         var pcoins = arrayOfNulls<Spinner>(ids.size)
 
         init {
@@ -682,35 +871,65 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     private fun validate(viewHolder: ViewHolder, f: Form, t: Treasure) {
         val level = viewHolder.unitlevel.selectedItem as Int
         val levelp = viewHolder.unitlevelp.selectedItem as Int
+
         viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+
         viewHolder.unithb.text = s.getHB(f, talents, pcoins)
-        if (viewHolder.unitatkb.text.toString() == "DPS") viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins) else viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+
+        if (viewHolder.unitatkb.text.toString() == "DPS")
+            viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+        else
+            viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+
         viewHolder.unitcost.text = s.getCost(f, talents, pcoins)
-        if (viewHolder.unitcd.text.toString().endsWith("s")) viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins) else viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+
+        if (viewHolder.unitcd.text.toString().endsWith("s"))
+            viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+        else
+            viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+
         viewHolder.unittrait.text = s.getTrait(f, talents, pcoins)
+
         viewHolder.unitspd.text = s.getSpd(f, talents, pcoins)
-        val du: MaskUnit = if (f.pCoin != null) if (talents) f.pCoin.improve(pcoins) else f.du else f.du
+
+        val du: MaskUnit = if (f.pCoin != null && talents)
+            f.pCoin.improve(pcoins)
+        else
+            f.du
+
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+
         val shared = context!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
         var language = StaticStore.lang[shared.getInt("Language", 0)]
+
         if (language == "") {
             language = Resources.getSystem().configuration.locales[0].language
         }
+
         val proc: List<String>
+
         proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(du, 1, fs)
+            Interpret.getProc(context, du, 1, fs)
         } else {
-            Interpret.getProc(du, 0, fs)
+            Interpret.getProc(context, du, 0, fs)
         }
+
         val abilityicon = Interpret.getAbiid(du)
-        val procicon = Interpret.getProcid(du)
+
         if (abil.size > 0 || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
+
             val linearLayoutManager = LinearLayoutManager(context)
+
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
             viewHolder.unitabil.layoutManager = linearLayoutManager
-            val adapterAbil = AdapterAbil(abil, proc, abilityicon, procicon, context)
+
+            val adapterAbil = AdapterAbil(abil, proc, abilityicon, context)
+
             viewHolder.unitabil.adapter = adapterAbil
+
             ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false)
         } else {
             viewHolder.unitabil.visibility = View.GONE
@@ -720,9 +939,13 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     companion object {
         private fun getAttributeColor(context: Context, attributeId: Int): Int {
             val typedValue = TypedValue()
+
             context.theme.resolveAttribute(attributeId, typedValue, true)
+
             val colorRes = typedValue.resourceId
+
             var color = -1
+
             try {
                 color = ContextCompat.getColor(context, colorRes)
             } catch (e: NotFoundException) {
@@ -730,17 +953,5 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             }
             return color
         }
-    }
-
-    init {
-        this.context = context
-        this.names = names
-        this.forms = forms
-        this.id = id
-        s = GetStrings(this.context)
-        s.talList
-        color = intArrayOf(
-                getAttributeColor(context, R.attr.TextPrimary)
-        )
     }
 }

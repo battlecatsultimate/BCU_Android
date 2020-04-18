@@ -22,8 +22,8 @@ class GetStrings(private val c: Context) {
             , R.string.talen_wv, R.string.unit_info_cost, R.string.unit_info_cd, R.string.unit_info_spd, R.string.sch_abi_ic, R.string.talen_cu,
             R.string.unit_info_atk, R.string.unit_info_hp, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_abi_iv)
     private val talTool = arrayOfNulls<String>(talID.size)
-    private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA")
-    private val mapcodes = listOf("0", "1", "2", "3", "4", "6", "7", "11", "12", "13", "14", "24")
+    private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
+    private val mapcodes = listOf("0", "1", "2", "3", "4", "6", "7", "11", "12", "13", "14", "24", "25", "27")
     private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
     val talList: Unit
         get() {
@@ -31,10 +31,16 @@ class GetStrings(private val c: Context) {
         }
 
     fun getTitle(f: Form?): String {
-        if (f == null) return ""
+        if (f == null)
+            return ""
+
         val result = StringBuilder()
-        var name = MultiLangCont.FNAME.getCont(f)
-        if (name == null) name = ""
+
+        var name = MultiLangCont.FNAME.getCont(f) ?: f.name
+
+        if (name == null)
+            name = ""
+
         val rarity: String = when (f.unit.rarity) {
             0 -> c.getString(R.string.sch_rare_ba)
             1 -> c.getString(R.string.sch_rare_ex)
@@ -153,8 +159,8 @@ class GetStrings(private val c: Context) {
         return if (viewHolder == null) "" else id + "-" + viewHolder.adapterPosition
     }
 
-    fun getID(form: Int, id: String): String {
-        return "$id-$form"
+    fun getID(form: Int, pid:String, id: String): String {
+        return "$pid-$id-$form"
     }
 
     fun getRange(f: Form?): String {

@@ -28,7 +28,7 @@ class CVGraphics : FakeGraphics {
         this.bp.isFilterBitmap = true
         this.bp.isAntiAlias = true
         gp.style = Paint.Style.FILL
-        gp.alpha = Color.argb(255, 255, 255, 255)
+        gp.alpha = 255
     }
 
     constructor(c: Canvas, cp: Paint, bp: Paint, gp: Paint, night: Boolean) {
@@ -41,7 +41,7 @@ class CVGraphics : FakeGraphics {
         this.bp.isFilterBitmap = true
         this.bp.isAntiAlias = true
         this.gp.style = Paint.Style.FILL
-        this.gp.alpha = Color.argb(255, 255, 255, 255)
+        this.gp.alpha = 255
     }
 
     fun setCanvas(c: Canvas) {
@@ -56,7 +56,7 @@ class CVGraphics : FakeGraphics {
     override fun drawImage(bimg: FakeImage, x: Double, y: Double, d: Double, e: Double) {
         val b = bimg.bimg() as Bitmap
         m2.reset()
-        c.matrix = m2
+        c.setMatrix(m2)
         val w = b.width.toFloat()
         val h = b.height.toFloat()
         val wr = d.toFloat() / w
@@ -93,12 +93,14 @@ class CVGraphics : FakeGraphics {
 
     @Synchronized
     override fun getTransform(): FakeTransform {
-        if(independent) return FTMT(m)
+        if(independent)
+            return FTMT(m)
 
         if (!ftmt.isEmpty()) {
-            val f = ftmt.pollFirst()
+            val f = ftmt.pollFirst() ?: return FTMT(m)
 
             f.updateMatrix(m)
+
             return f
         }
         return FTMT(m)
@@ -106,18 +108,20 @@ class CVGraphics : FakeGraphics {
 
     override fun gradRect(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, c: IntArray, d: Int, e: Int, f: IntArray) {
         val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (x + h).toFloat(), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
+
         gp.shader = s
+
         this.c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), gp)
     }
 
     override fun rotate(d: Double) {
         m.preRotate(Math.toDegrees(d).toFloat())
-        c.matrix = m
+        c.setMatrix(m)
     }
 
     override fun scale(hf: Int, vf: Int) {
         m.preScale(hf.toFloat(), vf.toFloat())
-        c.matrix = m
+        c.setMatrix(m)
     }
 
     override fun setColor(c: Int) {
@@ -184,12 +188,12 @@ class CVGraphics : FakeGraphics {
     override fun setRenderingHint(key: Int, `object`: Int) {}
     override fun setTransform(at: FakeTransform) {
         (at as FTMT).setMatrix(m)
-        c.matrix = m
+        c.setMatrix(m)
     }
 
     override fun translate(x: Double, y: Double) {
         m.preTranslate(x.toFloat(), y.toFloat())
-        c.matrix = m
+        c.setMatrix(m)
     }
 
     override fun colRect(x: Int, y: Int, w: Int, h: Int, r: Int, g: Int, b: Int, a: Int) {
@@ -207,40 +211,6 @@ class CVGraphics : FakeGraphics {
         if(independent) return
 
         ftmt.add(at as FTMT)
-    }
-
-    private fun Ctranslate(x: Float, y: Float) {
-        m.preTranslate(x, y)
-        c.matrix = m
-    }
-
-    private fun CsetTransform(at: FakeTransform) {
-        m.set(at.at as Matrix)
-        c.matrix = m
-    }
-
-    private fun CScale(hf: Int, vf: Int) {
-        m.preScale(hf.toFloat(), vf.toFloat())
-        c.matrix = m
-    }
-
-    private fun Crotate(d: Double) {
-        m.preRotate(Math.toDegrees(d).toFloat())
-        c.matrix = m
-    }
-
-    private fun CdrawImage(bimg: FakeImage, x: Double, y: Double, d: Double, e: Double) {
-        val b = bimg.bimg() as Bitmap
-        m2.reset()
-        c.matrix = m2
-        val w = b.width.toFloat()
-        val h = b.height.toFloat()
-        val wr = d.toFloat() / w
-        val hr = e.toFloat() / h
-        m2.set(m)
-        m2.preTranslate(x.toFloat(), y.toFloat())
-        m2.preScale(wr, hr)
-        c.drawBitmap(b, m2, bp)
     }
 
     companion object {

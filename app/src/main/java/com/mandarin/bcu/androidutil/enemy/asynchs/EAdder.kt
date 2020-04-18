@@ -136,7 +136,9 @@ class EAdder(activity: Activity, private val enemnumber: Int, private val mode: 
                         }
 
                         val names1 = ArrayList<String>()
-                        for (i in numbers) names1.add(StaticStore.enames[i])
+
+                        for (i in numbers)
+                            names1.add(StaticStore.enames[i])
                         val enemy1 = EnemyListAdapter(activity, names1.toTypedArray(), numbers)
                         list.adapter = enemy1
                         if (s.toString().isEmpty()) {
@@ -180,11 +182,7 @@ class EAdder(activity: Activity, private val enemnumber: Int, private val mode: 
     }
 
     private fun withID(id: Int, name: String): String {
-        return if (name == "") {
-            number(id)
-        } else {
-            number(id) + " - " + name
-        }
+        return number(id) + "/" + name
     }
 
 }

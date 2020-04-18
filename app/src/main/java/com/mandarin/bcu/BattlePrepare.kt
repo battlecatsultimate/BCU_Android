@@ -16,8 +16,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.asynchs.BPAdder
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import common.battle.BasisSet
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class BattlePrepare : AppCompatActivity() {
@@ -29,8 +32,10 @@ class BattlePrepare : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -50,24 +55,50 @@ class BattlePrepare : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_battle_prepare)
+
         val line = LineUpView(this)
+
         line.id = R.id.lineupView
+
         val layout = findViewById<LinearLayout>(R.id.preparelineup)
+
         val display = windowManager.defaultDisplay
         val size = Point()
+
         display.getSize(size)
+
         val w: Float
-        w = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) size.x / 2.0f else size.x.toFloat()
+
+        w = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            size.x / 2.0f
+        else
+            size.x.toFloat()
+
         val h = w / 5.0f * 3
+
         line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
+
         layout.addView(line)
+
         val intent = intent
         val result = intent.extras
+
         if (result != null) {
             val mapcode = result.getInt("mapcode")
             val stid = result.getInt("stid")
             val posit = result.getInt("stage")
+
             if (result.containsKey("selection")) {
                 BPAdder(this, mapcode, stid, posit, result.getInt("selection")).execute()
             } else {
@@ -105,12 +136,5 @@ class BattlePrepare : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

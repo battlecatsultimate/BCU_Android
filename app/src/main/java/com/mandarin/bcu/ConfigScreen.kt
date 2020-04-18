@@ -22,7 +22,10 @@ import com.mandarin.bcu.androidutil.Revalidater
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.DefineItf
 import common.CommonStatic
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 open class ConfigScreen : AppCompatActivity() {
@@ -30,11 +33,14 @@ open class ConfigScreen : AppCompatActivity() {
     private val locales = StaticStore.lang
     private var started = false
     private var changed = false
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -54,16 +60,29 @@ open class ConfigScreen : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         setContentView(R.layout.activity_config_screen)
 
         val back = findViewById<ImageButton>(R.id.configback)
 
-        back.setOnClickListener {
-            val intent = Intent(this@ConfigScreen, MainActivity::class.java)
-            intent.putExtra("Config", true)
-            startActivity(intent)
-            finish()
-        }
+        back.setOnClickListener (object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@ConfigScreen, MainActivity::class.java)
+                intent.putExtra("Config", true)
+                startActivity(intent)
+                finish()
+            }
+
+        })
 
         val day = findViewById<RadioButton>(R.id.themeday)
         val night = findViewById<RadioButton>(R.id.themenight)
@@ -187,12 +206,19 @@ open class ConfigScreen : AppCompatActivity() {
 
                 if (started) {
                     changed = true
+
                     val ed1 = shared.edit()
+
                     ed1.putInt("Language", position)
                     ed1.apply()
+
                     var lang1 = locales[position]
+
                     if (lang1 == "") lang1 = Resources.getSystem().configuration.locales[0].language
-                    if (StaticStore.units != null || StaticStore.enemies != null) Revalidater.validate(lang1, this@ConfigScreen) else {
+
+                    if (StaticStore.units != null || StaticStore.enemies != null)
+                        Revalidater.validate(lang1, this@ConfigScreen)
+                    else {
                         StaticStore.getLang(position)
                     }
 
@@ -350,6 +376,7 @@ open class ConfigScreen : AppCompatActivity() {
                 val editor = shared.edit()
                 editor.putBoolean("SE", false)
                 editor.apply()
+                SoundHandler.sePlay = false
                 SoundHandler.se_vol = 0f
                 sevol.isEnabled = false
             }
@@ -367,6 +394,7 @@ open class ConfigScreen : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
@@ -381,22 +409,32 @@ open class ConfigScreen : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this@ConfigScreen)
                 val inflater = LayoutInflater.from(this@ConfigScreen)
                 val view = inflater.inflate(R.layout.dev_mode_password, null)
+
                 builder.setView(view)
+
                 val active = view.findViewById<Button>(R.id.devpassactive)
                 val password = view.findViewById<EditText>(R.id.devpassedit)
+
                 val dialog = builder.create()
+
                 dialog.setCancelable(true)
                 dialog.show()
+
                 active.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val pass = password.text.toString()
+
                         if (pass.isNotEmpty()) {
                             if (pass == BuildConfig.YOU_CANT_FIND_PASSWORD) {
                                 val editor = shared.edit()
+
                                 editor.putBoolean("DEV_MODE", true)
                                 editor.apply()
+
                                 val text1 = getString(R.string.config_build_ver).replace("-", BuildConfig.VERSION_NAME + "_DEV_MODE")
+
                                 build.text = text1
+
                                 StaticStore.showShortMessage(this@ConfigScreen, R.string.dev_pass_activated)
                             } else {
                                 StaticStore.showShortMessage(this@ConfigScreen, R.string.dev_pass_wrong)
@@ -404,6 +442,7 @@ open class ConfigScreen : AppCompatActivity() {
                         } else {
                             StaticStore.showShortMessage(this@ConfigScreen, R.string.dev_pass_wrong)
                         }
+
                         dialog.dismiss()
                     }
                 })
@@ -455,12 +494,5 @@ open class ConfigScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

@@ -21,9 +21,11 @@ class UploadLogs(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
         val path = Environment.getDataDirectory().absolutePath + "/data/com.mandarin.bcu/upload/"
         val upload = File(path)
         val files = upload.listFiles()
-        total = upload.listFiles().size
+        total = upload.listFiles()?.size ?: 0
+
         for (i in 0 until total) {
-            val f = files[i]
+            val f = files?.get(i) ?: return null
+
             publishProgress(0, i + 1)
             try {
                 if (safeCheck(f)) {

@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference
 import kotlin.math.round
 
 class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
-    private val weak = WeakReference<Activity>(activity)
+    private val weak = WeakReference(activity)
 
     override fun onPreExecute() {
         val ac = weak.get() ?: return
@@ -32,10 +32,10 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
-        weak.get() ?: return null
+        val ac = weak.get() ?: return null
 
         if(!StaticStore.musicread) {
-            SoundHandler.read()
+            SoundHandler.read(ac)
             StaticStore.musicread = true
         }
 

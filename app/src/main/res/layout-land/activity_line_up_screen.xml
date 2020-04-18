@@ -145,7 +145,7 @@
             android:id="@+id/setspin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:layout_weight="0.45"
             android:backgroundTint="?attr/TextPrimary"
             android:popupBackground="?attr/backgroundPrimary"
@@ -165,7 +165,7 @@
             android:id="@+id/luspin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:layout_weight="0.45"
             android:backgroundTint="?attr/TextPrimary"
             android:popupBackground="?attr/backgroundPrimary"
@@ -174,7 +174,7 @@
 
     <TableRow
         android:id="@+id/tableRow7"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

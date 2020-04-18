@@ -1,12 +1,29 @@
 package com.mandarin.bcu.androidutil.fakeandroid
 
 import android.graphics.Bitmap
+import com.mandarin.bcu.androidutil.StaticStore
 import common.system.fake.FakeImage
 import common.system.fake.ImageBuilder
 import java.io.IOException
 
-class FIBM internal constructor(read: Bitmap) : FakeImage {
-    private val bit: Bitmap = read.copy(Bitmap.Config.ARGB_8888, true)
+class FIBM : FakeImage {
+    private val bit: Bitmap
+
+    @JvmField
+    var reference: String = ""
+    @JvmField
+    var password: String = ""
+
+    constructor(read: Bitmap) {
+        bit = read.copy(Bitmap.Config.ARGB_8888, true)
+    }
+
+    constructor(ref: String) {
+        bit = StaticStore.empty(1,1)
+        bit.recycle()
+        reference = ref
+    }
+
     override fun bimg(): Bitmap {
         return bit
     }
@@ -61,7 +78,9 @@ class FIBM internal constructor(read: Bitmap) : FakeImage {
     }
 
     companion object {
+        @JvmField
         val builder: ImageBuilder = BMBuilder()
+
         fun build(bimg2: Bitmap?): FakeImage? {
             return try {
                 builder.build(bimg2)

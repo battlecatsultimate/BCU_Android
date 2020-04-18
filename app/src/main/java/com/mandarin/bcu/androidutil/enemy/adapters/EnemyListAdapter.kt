@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil.enemy.adapters
 
 import android.app.Activity
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +16,9 @@ import java.util.*
 class EnemyListAdapter(activity: Activity, private val name: Array<String>, private val location: ArrayList<Int>) : ArrayAdapter<String?>(activity, R.layout.listlayout, name) {
 
     private class ViewHolder constructor(row: View) {
-        var title: TextView = row.findViewById(R.id.unitname)
-        var img: ImageView = row.findViewById(R.id.uniticon)
+        val id: TextView = row.findViewById(R.id.unitID)
+        val title: TextView = row.findViewById(R.id.unitname)
+        val img: ImageView = row.findViewById(R.id.uniticon)
 
     }
 
@@ -34,8 +36,18 @@ class EnemyListAdapter(activity: Activity, private val name: Array<String>, priv
             holder = row.tag as ViewHolder
         }
 
-        holder.title.text = name[position]
-        if (StaticStore.enemies[location[position]].anim.edi.img != null)
+        val info = name[position].split("/")
+
+        if(info.size != 2) {
+            Log.w("EnemyListAdapter","Invalid format : "+name[position])
+
+            holder.title.text = name[position]
+        } else {
+            holder.id.text = info[0]
+            holder.title.text = info[1]
+        }
+
+        if (StaticStore.enemies[location[position]].anim?.edi?.img != null)
             holder.img.setImageBitmap(StaticStore.getResizeb(StaticStore.enemies[location[position]].anim.edi.img.bimg() as Bitmap, context, 85f, 32f))
         else
             holder.img.setImageBitmap(StaticStore.empty(context, 85f, 32f))

@@ -22,17 +22,25 @@ import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader
+import common.util.pack.Pack
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import java.util.*
 
 class UnitInfo : AppCompatActivity() {
     private var treasure: FloatingActionButton? = null
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor
+
         if (!shared.contains("initial")) {
             ed = shared.edit()
             ed.putBoolean("initial", true)
@@ -45,7 +53,23 @@ class UnitInfo : AppCompatActivity() {
                 setTheme(R.style.AppTheme_day)
             }
         }
-        if (shared.getInt("Orientation", 0) == 1) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else if (shared.getInt("Orientation", 0) == 2) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT else if (shared.getInt("Orientation", 0) == 0) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        when {
+            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        if (!shared.getBoolean("DEV_MODE", false)) {
+            AppWatcher.config = AppWatcher.config.copy(enabled = false)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
+        } else {
+            AppWatcher.config = AppWatcher.config.copy(enabled = true)
+            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        DefineItf.check(this)
+
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
                 setContentView(R.layout.activity_unit_info)
@@ -59,65 +83,97 @@ class UnitInfo : AppCompatActivity() {
                 setContentView(R.layout.activity_unit_infor)
             }
         }
+
         if (StaticStore.unitinfreset) {
             StaticStore.unittabposition = 0
             StaticStore.unitinfreset = false
         }
+
         val treasuretab = findViewById<ConstraintLayout>(R.id.treasurelayout)
+
         treasuretab.visibility = View.GONE
+
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
                 val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
+
                 scrollView.visibility = View.GONE
+
                 val unittable = findViewById<ViewPager>(R.id.unitinftable)
+
                 unittable.isFocusable = false
                 unittable.requestFocusFromTouch()
             } else {
                 val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
+
                 scrollView.visibility = View.GONE
+
                 val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
+
                 recyclerView.requestFocusFromTouch()
             }
         } else {
             if (shared.getBoolean("Lay_Port", false)) {
                 val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
+
                 scrollView.visibility = View.GONE
+
                 val unittable = findViewById<ViewPager>(R.id.unitinftable)
+
                 unittable.isFocusable = false
                 unittable.requestFocusFromTouch()
             } else {
                 val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
+
                 scrollView.visibility = View.GONE
+
                 val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
+
                 recyclerView.requestFocusFromTouch()
             }
         }
+
         val unittitle = findViewById<TextView>(R.id.unitinfrarname)
         val back = findViewById<FloatingActionButton>(R.id.unitinfback)
+
         treasure = findViewById(R.id.treabutton)
+
         back.setOnClickListener {
             StaticStore.unitinfreset = true
             StaticStore.UisOpen = false
             finish()
         }
+
         val result = intent
         val extra = result.extras
+
         if (extra != null) {
+            val pid = extra.getInt("PID")
             val id = extra.getInt("ID")
             val s = GetStrings(this)
-            unittitle.text = s.getTitle(StaticStore.units[id].forms[0])
+
+            val p = Pack.map[pid] ?: return
+
+            unittitle.text = s.getTitle(p.us.ulist[id].forms[0])
+
             val anim = findViewById<Button>(R.id.animanim)
+
             anim.setOnClickListener(object : SingleClick() {
                 override fun onSingleClick(v: View?) {
                     val intent = Intent(this@UnitInfo, ImageViewer::class.java)
+
                     StaticStore.formposition = StaticStore.unittabposition
+
                     intent.putExtra("Img", 2)
+                    intent.putExtra("PID",pid)
                     intent.putExtra("ID", id)
                     intent.putExtra("Form", StaticStore.formposition)
+
                     startActivity(intent)
                 }
             })
-            UInfoLoader(id, this, supportFragmentManager).execute()
+
+            UInfoLoader(pid, id,this, supportFragmentManager).execute()
         }
     }
 
@@ -126,6 +182,7 @@ class UnitInfo : AppCompatActivity() {
             treasure!!.performClick()
         } else {
             super.onBackPressed()
+
             StaticStore.unitinfreset = true
         }
     }
@@ -142,18 +199,12 @@ class UnitInfo : AppCompatActivity() {
 
         config.setLocale(Locale(language))
         applyOverrideConfiguration(config)
+
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        mustDie(this)
-    }
-
-    fun mustDie(`object`: Any?) {
-        if (MainActivity.watcher != null) {
-            MainActivity.watcher!!.watch(`object`)
-        }
     }
 }

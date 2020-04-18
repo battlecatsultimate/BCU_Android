@@ -21,6 +21,15 @@ import common.util.unit.Form
 import java.util.*
 
 class LUUnitSetting : Fragment() {
+    companion object {
+        fun newInstance(line: LineUpView): LUUnitSetting {
+            val unitSetting = LUUnitSetting()
+            unitSetting.setVariable(line)
+
+            return unitSetting
+        }
+    }
+
     private var line: LineUpView? = null
     private var pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
     private val zeros = intArrayOf(0, 0, 0, 0, 0, 0)
@@ -39,6 +48,8 @@ class LUUnitSetting : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val v = inflater.inflate(R.layout.lineup_unit_set, group, false)
+
+        update(v)
 
         val runnable = object : Runnable {
             override fun run() {
@@ -69,11 +80,11 @@ class LUUnitSetting : Fragment() {
         val levt = v.findViewById<TextView>(R.id.lineupunitlevt)
 
         if (line == null) {
-            if (activity == null) return
+            if (activity == null)
+                return
 
             line = activity?.findViewById(R.id.lineupView)
         }
-
 
         f = if (StaticStore.position[0] == -1)
             null
@@ -89,7 +100,8 @@ class LUUnitSetting : Fragment() {
         if (f == null) {
             setDisappear(spinners[0], spinners[1], plus, row, t, tal, chform, levt)
         } else {
-            if (context == null) return
+            if (context == null)
+                return
 
             setAppear(spinners[0], spinners[1], plus, row, t, tal, chform, levt)
 
@@ -257,7 +269,18 @@ class LUUnitSetting : Fragment() {
                 info.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(context, UnitInfo::class.java)
-                        intent.putExtra("ID", f?.unit?.id ?: 0)
+
+                        val pid = f?.unit?.pack?.id ?: 0
+
+                        intent.putExtra("PID", pid)
+
+                        val ids = if(pid != 0) {
+                            StaticStore.getID(f?.unit?.id ?: 0)
+                        } else {
+                            f?.unit?.id ?: 0
+                        }
+
+                        intent.putExtra("ID", ids)
                         context?.startActivity(intent)
                     }
                 })
@@ -329,7 +352,7 @@ class LUUnitSetting : Fragment() {
             chform.setOnClickListener {
                 fid++
 
-                if (StaticStore.position[0] != 100 || StaticStore.position[0] != -1 || StaticStore.position[1] != -1)
+                if (StaticStore.position[0] != 100 && StaticStore.position[1] != 100 && StaticStore.position[0] != -1 && StaticStore.position[1] != -1)
                     BasisSet.current.sele.lu.fs[StaticStore.position[0]][StaticStore.position[1]] = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
                 else
                     line?.repform = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
@@ -414,15 +437,5 @@ class LUUnitSetting : Fragment() {
                 index = i
 
         return index
-    }
-
-    companion object {
-
-        fun newInstance(line: LineUpView): LUUnitSetting {
-            val unitSetting = LUUnitSetting()
-            unitSetting.setVariable(line)
-
-            return unitSetting
-        }
     }
 }

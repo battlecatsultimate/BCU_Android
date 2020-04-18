@@ -59,7 +59,7 @@ class LUCastleSetting : Fragment() {
     private fun setNyb(index: Int, img: ImageView) {
         if (index >= 3) return
 
-        if (BasisSet.current.sele.nyc[index] == 6)
+        if (BasisSet.current.sele.nyc[index] == 7)
             BasisSet.current.sele.nyc[index] = 0
         else
             BasisSet.current.sele.nyc[index]++
@@ -75,7 +75,7 @@ class LUCastleSetting : Fragment() {
 
         val result = Bitmap.createBitmap(128, 256, Bitmap.Config.ARGB_8888)
 
-        val path = Environment.getExternalStorageDirectory().path + "/Android/data/com.mandarin.BCU/files/org/castle/"
+        val path = StaticStore.getExternalPath(context)+"org/castle/"
 
         val cannon = path + "000/nyankoCastle_000_0" + data[0] + ".png"
         val label = path + "002/nyankoCastle_002_0" + data[1] + ".png"
@@ -87,6 +87,10 @@ class LUCastleSetting : Fragment() {
 
         val c = Canvas(result)
         val p = Paint()
+
+        if(cb == null || lb == null || bb == null) {
+            return
+        }
 
         c.drawBitmap(bb, 0f, 125f, p)
         c.drawBitmap(cb, 0f, 0f, p)

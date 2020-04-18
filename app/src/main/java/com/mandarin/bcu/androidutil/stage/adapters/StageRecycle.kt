@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.stage.adapters
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.ImageViewer
+import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
@@ -37,9 +37,9 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         var continueable: TextView = itemView.findViewById(R.id.stginfocontinr)
         var length: TextView = itemView.findViewById(R.id.stginfolenr)
         var maxenemy: TextView = itemView.findViewById(R.id.stginfomaxenr)
-        var music: TextView = itemView.findViewById(R.id.stginfomusicr)
+        var music: Button = itemView.findViewById(R.id.stginfomusicr)
         var castleperc: TextView = itemView.findViewById(R.id.stginfomusic2)
-        var music2: TextView = itemView.findViewById(R.id.stginfomusic2r)
+        var music2: Button = itemView.findViewById(R.id.stginfomusic2r)
         var background: Button = itemView.findViewById(R.id.stginfobgr)
         var castle: Button = itemView.findViewById(R.id.stginfoctr)
         var droptitle: TextView = itemView.findViewById(R.id.stginfodrop)
@@ -118,13 +118,35 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         viewHolder.length.text = st.len.toString()
         viewHolder.maxenemy.text = st.max.toString()
         viewHolder.music.text = st.mus0.toString()
+
+        viewHolder.music.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(activity, MusicPlayer::class.java)
+                intent.putExtra("Music", st.mus0)
+
+                activity.startActivity(intent)
+            }
+
+        })
+
         viewHolder.castleperc.text = viewHolder.castleperc.text.toString().replace("??", st.mush.toString())
         viewHolder.music2.text = st.mus1.toString()
+
+        viewHolder.music2.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(activity, MusicPlayer::class.java)
+                intent.putExtra("Music", st.mus1)
+
+                activity.startActivity(intent)
+            }
+
+        })
+
         viewHolder.background.text = st.bg.toString()
         viewHolder.background.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, ImageViewer::class.java)
-                intent.putExtra("Path", Environment.getExternalStorageDirectory().absolutePath + "/Android/data/com.mandarin.BCU/files/org/img/bg/bg" + number(st.bg) + ".png")
+                intent.putExtra("Path", StaticStore.getExternalPath(activity)+"org/img/bg/bg" + number(st.bg) + ".png")
                 intent.putExtra("Img", 0)
                 intent.putExtra("BGNum", st.bg)
                 activity.startActivity(intent)

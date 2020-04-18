@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.SoundPool
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -55,9 +58,19 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         painter.dpi = StaticStore.dptopx(32f, context)
         ImgCore.ref = axis
         updater = Updater()
-        for (i in SoundHandler.SE.indices) {
-            SoundHandler.SE[i].clear()
-        }
+
+        val aa = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_GAME).build()
+
+        SoundHandler.SE = SoundPool.Builder().setMaxStreams(50).setAudioAttributes(aa).build()
+        SoundHandler.ATK = SoundPool.Builder().setAudioAttributes(aa).build()
+        SoundHandler.BASE = SoundPool.Builder().setAudioAttributes(aa).build()
+
+        //Preparing ferequntly used SE
+
+        loadSE(SoundHandler.SE_SE, 25, 26)
+        loadSE(SoundHandler.SE_ATK, 20, 21)
+        loadSE(SoundHandler.SE_BASE, 22)
+
         for (fs in painter.bf.sb.b.lu.fs) {
             for (f in fs) {
                 if (f != null) {
@@ -100,7 +113,27 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     public override fun onDraw(c: Canvas) {
         if (initialized) {
             cv.setCanvas(c)
-            painter.draw(cv)
+            try {
+                painter.draw(cv)
+            } catch(e: Exception) {
+                for (fs in painter.bf.sb.b.lu.fs) {
+                    for (f in fs) {
+                        if (f != null) {
+                            if (f.anim.uni.img.height == f.anim.uni.img.width) {
+                                val cut = ImgCut.newIns("./org/data/uni.imgcut")
+                                f.anim.uni.setCut(cut)
+                                f.anim.uni.setImg(f.anim.uni.img)
+                                f.anim.check()
+                            } else {
+                                f.anim.check()
+                            }
+                        }
+                    }
+                }
+
+                for (es in painter.bf.sb.st.data.allEnemy)
+                    es.anim.check()
+            }
             if (!paused) {
                 if (spd > 0) {
                     var i = 0
@@ -155,7 +188,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                                         try {
                                             SoundHandler.MUSIC.start()
                                         } catch(e: NullPointerException) {
-                                            ErrorLogWriter.writeLog(e, StaticStore.upload)
+                                            ErrorLogWriter.writeLog(e, StaticStore.upload, context)
                                         }
                                     }
                                 }
@@ -187,7 +220,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     }
 
     private fun resetSE() {
-        for (i in SoundHandler.play!!.indices) SoundHandler.play!![i] = false
+        for (i in SoundHandler.play.indices)
+            SoundHandler.play[i] = false
     }
 
     private fun checkWin() {
@@ -330,5 +364,15 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
 
         for (e in painter.bf.sb.st.data.allEnemy) e?.anim?.unload()
+    }
+
+    private fun loadSE(type: Int, vararg ind: Int) {
+        for(i in ind) {
+            val result = SoundHandler.load(type, i, play = false)
+
+            if(result != -1) {
+                SoundHandler.map[i] = result
+            }
+        }
     }
 }
