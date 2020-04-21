@@ -613,8 +613,8 @@
     <string name="unit_info_text45">"_%のバフされた統計で"</string>
     <string name="unit_info_text46">"_回目の攻撃"</string>
     <string name="def_hundred">100</string>
-    <string name="sch_abi_imsu">Imu.Surge Attack</string>
-    <string name="talen_poi">Res.Poison</string>
-    <string name="talen_sur">Res.Surge Attack</string>
-    <string name="lineup_const_curse">Curse Cannon Level</string>
+    <string name="sch_abi_imsu">烈波ダメージ無効</string>
+    <string name="talen_poi">毒撃耐性</string>
+    <string name="talen_sur">烈波ダメージ耐性</string>
+    <string name="lineup_const_curse">呪い砲レベル</string>
 </resources>

@@ -90,10 +90,14 @@ class AnimationCView : View {
         StaticStore.keepDoing = true
     }
 
-    constructor(context: Activity?, id: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, pid: Int, id: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+        this.pid = pid
+        val pack = Pack.map[pid] ?: Pack.def
+
         this.eid = id
+
         activity = context
-        anim = StaticStore.enemies[eid].getEAnim(mode)
+        anim = pack.es[eid].getEAnim(mode)
         anim?.setTime(StaticStore.frame)
         this.textView = textView
         this.seekBar = seekBar

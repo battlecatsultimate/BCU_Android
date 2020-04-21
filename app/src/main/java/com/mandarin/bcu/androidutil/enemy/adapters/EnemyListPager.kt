@@ -1,38 +1,44 @@
-package com.mandarin.bcu.androidutil.unit.adapters
+package com.mandarin.bcu.androidutil.enemy.adapters
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
-import com.mandarin.bcu.UnitInfo
 import com.mandarin.bcu.androidutil.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
 import common.system.MultiLangCont
 import common.util.Data
 import common.util.pack.Pack
-import kotlin.collections.ArrayList
 
-class UnitListPager : Fragment() {
+class EnemyListPager : Fragment() {
+
     private var pid = 0
     private var position = 0
+    private var mode = EAdder.MODE_INFO
 
     companion object {
-        fun newInstance(pid: Int, position: Int) : UnitListPager {
-            val ulp = UnitListPager()
+        fun newInstance(pid: Int, position: Int, mode: Int) : EnemyListPager {
+            val elp = EnemyListPager()
             val bundle = Bundle()
 
             bundle.putInt("pid", pid)
             bundle.putInt("position", position)
+            bundle.putInt("mode", mode)
 
-            ulp.arguments = bundle
+            elp.arguments = bundle
 
-            return ulp
+            return elp
         }
     }
 
@@ -43,6 +49,7 @@ class UnitListPager : Fragment() {
 
         pid = arguments?.getInt("pid") ?: 0
         position = arguments?.getInt("position") ?: 0
+        mode = arguments?.getInt("mode") ?: EAdder.MODE_INFO
 
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
@@ -76,9 +83,9 @@ class UnitListPager : Fragment() {
     private fun validate(nores: TextView, list: ListView) {
         val p = Pack.map[pid] ?: return
 
-        val filterEntity = FilterEntity(p.us.ulist.size(), StaticStore.entityname, pid)
+        val filterEntity = FilterEntity(p.es.size(), StaticStore.entityname, pid)
 
-        val numbers = filterEntity.setFilter()
+        val numbers = filterEntity.eSetFilter()
 
         if(numbers.isNotEmpty()) {
             nores.visibility = View.GONE
@@ -87,17 +94,17 @@ class UnitListPager : Fragment() {
             val names = ArrayList<String>()
 
             for(i in numbers) {
-                if(p.us.ulist.list[i] == null)
+                if(p.es.list[i] == null)
                     continue
 
                 val name = if(pid == 0) {
-                    MultiLangCont.FNAME.getCont(p.us.ulist.list[i].forms[0]) ?: ""
+                    MultiLangCont.ENAME.getCont(p.es.list[i]) ?: ""
                 } else {
-                    p.us.ulist.list[i]?.forms?.get(0)?.name ?: ""
+                    p.es.list[i]?.name ?: ""
                 }
 
                 val id = if(pid != 0) {
-                    StaticStore.getID(p.us.ulist.list[i].id)
+                    StaticStore.getID(p.es.list[i].id)
                 } else {
                     i
                 }
@@ -107,27 +114,42 @@ class UnitListPager : Fragment() {
 
             val cont = context ?: return
 
-            val adapter = UnitListAdapter(cont, names, numbers, pid)
+            val adapter = EnemyListAdapter(cont, names, numbers, pid)
 
             list.adapter = adapter
 
-            list.setOnItemClickListener { _, _, position, _ ->
-                val intent = Intent(activity, UnitInfo::class.java)
+            val ac = activity ?: return
 
-                if(position < 0 || position >= numbers.size)
-                    return@setOnItemClickListener
-
-                intent.putExtra("PID",pid)
-
-                val id = if(pid != 0) {
-                    StaticStore.getID(p.us.ulist.list[numbers[position]].id)
-                } else {
-                    numbers[position]
+            when(mode) {
+                EAdder.MODE_INFO -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
+                        StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
+                        val result = Intent(ac, EnemyInfo::class.java)
+                        result.putExtra("ID", StaticStore.getID(p.es.list[numbers[position]].id))
+                        result.putExtra("PID", pid)
+                        ac.startActivity(result)
+                    }
                 }
-
-                intent.putExtra("ID",id)
-
-                activity?.startActivity(intent)
+                EAdder.MODE_SELECTION -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        val intent = Intent()
+                        intent.putExtra("id", numbers[position])
+                        intent.putExtra("pid",pid)
+                        ac.setResult(Activity.RESULT_OK, intent)
+                        ac.finish()
+                    }
+                }
+                else -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
+                        StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
+                        val result = Intent(ac, EnemyInfo::class.java)
+                        result.putExtra("ID", StaticStore.getID(p.es.list[numbers[position]].id))
+                        result.putExtra("PID",pid)
+                        ac.startActivity(result)
+                    }
+                }
             }
         } else {
             nores.visibility = View.VISIBLE

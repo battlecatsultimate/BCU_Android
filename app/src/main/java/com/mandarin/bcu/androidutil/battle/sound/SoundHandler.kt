@@ -183,6 +183,7 @@ object SoundHandler {
     @JvmStatic
     @Synchronized
     fun releaseAll() {
+        map.clear()
         SE?.release()
         SE = null
         ATK?.release()
@@ -231,7 +232,9 @@ object SoundHandler {
             SE_SE -> {
                 SE?.setOnLoadCompleteListener {
                     s, i, _ ->
-                    if(play) {
+                    val id = map[ind] ?: return@setOnLoadCompleteListener
+
+                    if(play && id == i) {
                         s.play(i, se_vol, se_vol, 0, 0, 1f)
                     }
                 }
@@ -242,7 +245,9 @@ object SoundHandler {
             SE_ATK -> {
                 ATK?.setOnLoadCompleteListener {
                     s, i, _ ->
-                    if(play) {
+                    val id = map[ind] ?: return@setOnLoadCompleteListener
+
+                    if(play && id == i) {
                         s.play(i, se_vol, se_vol, 0, 0, 1f)
                     }
                 }
@@ -253,7 +258,9 @@ object SoundHandler {
             SE_BASE -> {
                 BASE?.setOnLoadCompleteListener {
                     s, i, _ ->
-                    if(play) {
+                    val id = map[ind] ?: return@setOnLoadCompleteListener
+
+                    if(play && id == i) {
                         s.play(i, se_vol, se_vol, 0, 0, 1f)
                     }
                 }

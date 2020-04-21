@@ -231,7 +231,7 @@ class FilterEntity {
 
     @SuppressLint("DefaultLocale")
     fun setFilter(): ArrayList<Int> {
-        val p = Pack.map[pid] ?: return ArrayList<Int>()
+        val p = Pack.map[pid] ?: return ArrayList()
 
         val b0 = ArrayList<Boolean>()
         val b1 = ArrayList<Boolean>()
@@ -334,63 +334,124 @@ class FilterEntity {
         return result
     }
 
-    @SuppressLint("DefaultLocale")
     fun eSetFilter(): ArrayList<Int> {
+        val p = Pack.map[pid] ?: return ArrayList()
+
         val b0 = ArrayList<Boolean>()
         val b1 = ArrayList<Boolean>()
         val b2 = ArrayList<Boolean>()
         val b3 = ArrayList<Boolean>()
+
         if (StaticStore.empty) {
-            for (i in 0 until entitynumber) b0.add(true)
+            for (i in 0 until entitynumber)
+                b0.add(true)
         }
-        if (StaticStore.attack.isEmpty()) for (i in 0 until entitynumber) b1.add(true)
-        if (StaticStore.tg.isEmpty() && !StaticStore.starred) for (i in 0 until entitynumber) b2.add(true)
-        if (StaticStore.ability.isEmpty()) for (i in 0 until entitynumber) b3.add(true)
-        for (e in Pack.def.es.list) {
+
+        if (StaticStore.attack.isEmpty())
+            for (i in 0 until entitynumber)
+                b1.add(true)
+
+        if (StaticStore.tg.isEmpty() && !StaticStore.starred)
+            for (i in 0 until entitynumber)
+                b2.add(true)
+
+        if (StaticStore.ability.isEmpty())
+            for (i in 0 until entitynumber)
+                b3.add(true)
+
+        for (e in p.es.list) {
             var b10: Boolean
             var b20: Boolean
             var b30: Boolean
+
             val de = e.de
             val t = de.type
             val a = de.abi
-            if (!StaticStore.empty) if (StaticStore.atksimu) b0.add(Interpret.isType(de, 1)) else b0.add(Interpret.isType(de, 0))
+
+            if (!StaticStore.empty)
+                if (StaticStore.atksimu)
+                    b0.add(Interpret.isType(de, 1))
+                else
+                    b0.add(Interpret.isType(de, 0))
+
             b10 = !StaticStore.atkorand
+
             for (k in StaticStore.attack.indices) {
-                b10 = if (StaticStore.atkorand) b10 or Interpret.isType(de, StaticStore.attack[k].toInt()) else b10 and Interpret.isType(de, StaticStore.attack[k].toInt())
+                b10 = if (StaticStore.atkorand)
+                    b10 or Interpret.isType(de, StaticStore.attack[k].toInt())
+                else
+                    b10 and Interpret.isType(de, StaticStore.attack[k].toInt())
             }
-            if (StaticStore.tg.isEmpty()) b20 = true else {
+
+            if (StaticStore.tg.isEmpty())
+                b20 = true
+            else {
                 b20 = !StaticStore.tgorand
                 for (k in StaticStore.tg.indices) {
-                    b20 = if (StaticStore.tgorand) if (StaticStore.tg[k] == "") t == 0 else b20 or ((t shr StaticStore.tg[k].toInt() and 1) == 1) else if (StaticStore.tg[k] == "") t == 0 else b20 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                    b20 = if (StaticStore.tgorand)
+                        if (StaticStore.tg[k] == "")
+                            t == 0
+                        else
+                            b20 or ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                    else if (StaticStore.tg[k] == "")
+                        t == 0
+                    else
+                        b20 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
                 }
             }
+
             val b21 = de.star == 1
+
             b30 = !StaticStore.aborand
+
             for (k in StaticStore.ability.indices) {
                 val vect = StaticStore.ability[k]
+
                 if (vect[0] == 0) {
                     val bind = a and vect[1] != 0
-                    b30 = if (StaticStore.aborand) b30 or bind else b30 and bind
+                    b30 = if (StaticStore.aborand)
+                        b30 or bind
+                    else
+                        b30 and bind
                 } else if (vect[0] == 1) {
-                    b30 = if (StaticStore.aborand) b30 or (de.getProc(vect[1])[0] != 0) else b30 and (de.getProc(vect[1])[0] != 0)
+                    b30 = if (StaticStore.aborand)
+                        b30 or (de.getProc(vect[1])[0] != 0)
+                    else
+                        b30 and (de.getProc(vect[1])[0] != 0)
                 }
             }
+
             b1.add(b10)
-            if (StaticStore.starred) b2.add(b20 && b21) else b2.add(b20)
+
+            if (StaticStore.starred)
+                b2.add(b20 && b21)
+            else
+                b2.add(b20)
+
             b3.add(b30)
         }
+
         val result = ArrayList<Int>()
-        for (i in 0 until entitynumber) if (b0[i] && b1[i] && b2[i] && b3[i]) {
-            if (entityname.isNotEmpty()) {
-                val e = StaticStore.enemies[i]
-                var name = MultiLangCont.ENAME.getCont(e)
-                if (name == null) name = number(i)
-                name = number(i) + " - " + name.toLowerCase()
-                if (name.contains(entityname.toLowerCase())) result.add(i)
-            } else {
-                result.add(i)
+
+        for (i in 0 until entitynumber)
+            if (b0[i] && b1[i] && b2[i] && b3[i]) {
+                if (entityname.isNotEmpty()) {
+                    val e = p.es.list[i]
+
+                    var name = MultiLangCont.ENAME.getCont(e) ?: e.name
+
+                    if (name == null)
+                        name = ""
+
+                    name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
+
+                    if (name.contains(entityname.toLowerCase(Locale.ROOT)))
+                        result.add(i)
+                } else {
+                    result.add(i)
+                }
             }
-        }
+
         return result
     }
 

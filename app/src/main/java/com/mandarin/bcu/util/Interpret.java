@@ -57,7 +57,7 @@ public class Interpret extends Data {
      */
     public static String[] EABI;
 
-    public static final int RESNUM = 7;
+    public static final int RESNUM = 9;
 
     public static String[] SABIS;
     public static String[] PROC;
@@ -211,6 +211,8 @@ public class Interpret extends Data {
         String lang = Locale.getDefault().getLanguage();
 
         if (cmp == 0) {
+            //EN Handling
+
             for (int i = 0; i < PROC.length-RESNUM; i++) {
                 if (mr.getProc(i)[0] == 0)
                     continue;
@@ -249,6 +251,8 @@ public class Interpret extends Data {
                 }
             }
         } else {
+            // KR/JP Handling
+
             for (int i = 0; i < PROC.length-RESNUM; i++) {
                 if (mr.getProc(i)[0] == 0)
                     continue;
@@ -288,6 +292,8 @@ public class Interpret extends Data {
             MaskAtk ma = du.getAtkModel(k);
 
             if (cmp == 0) {
+                //EN Handling
+
                 for (int i = 0; i < PROC.length-RESNUM; i++) {
                     if (ma.getProc(i)[0] == 0)
                         continue;
@@ -326,6 +332,8 @@ public class Interpret extends Data {
                     }
                 }
             } else {
+                // KR/JP Handling
+
                 for (int i = 0; i < PROC.length-RESNUM; i++) {
                     if (ma.getProc(i)[0] == 0)
                         continue;
@@ -381,6 +389,8 @@ public class Interpret extends Data {
         String lang = Locale.getDefault().getLanguage();
 
         if (cmp == 0) {
+            // EN Handling
+
             for (int i = 0; i < PROC.length-RESNUM; i++) {
                 if (mr.getProc(i)[0] == 0)
                     continue;
@@ -397,7 +407,11 @@ public class Interpret extends Data {
 
                 if(!l.contains(ans.toString())) {
                     if(id.contains(i)) {
-                        ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
+                        if(lang.equals("en")) {
+                            ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
+                        } else {
+                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
+                        }
                     }
 
                     l.add(ans.toString());
@@ -405,6 +419,8 @@ public class Interpret extends Data {
                 }
             }
         } else {
+            // KR/JP Handling
+
             for (int i = 0; i < PROC.length - RESNUM; i++) {
                 int [] c2;
 
@@ -417,11 +433,11 @@ public class Interpret extends Data {
                 if (mr.getProc(i)[0] == 0)
                     continue;
 
-                StringBuilder ans = getProcNameKR(activity, i, mr, c2, LOC[i], immune, res, frse);
+                StringBuilder ans = getProcNameKR(activity, i, mr, c2, LOC2[i], immune, res, frse);
 
                 if(!l.contains(ans.toString())) {
                     if(id.contains(i)) {
-                        ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
+                        ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
                     }
 
                     l.add(ans.toString());
@@ -434,6 +450,8 @@ public class Interpret extends Data {
             MaskAtk ma = du.getAtkModel(k);
 
             if (cmp == 0) {
+                // EN Handling
+
                 for (int i = 0; i < PROC.length-RESNUM; i++) {
                     if (ma.getProc(i)[0] == 0)
                         continue;
@@ -450,7 +468,11 @@ public class Interpret extends Data {
 
                     if(!l.contains(ans.toString())) {
                         if(id.contains(i)) {
-                            ans.append(" [").append(numberWithExtension(k+1)).append(" Attack").append("]");
+                            if(lang.equals("en")) {
+                                ans.append(" [").append(numberWithExtension(k + 1)).append(" Attack").append("]");
+                            } else {
+                                ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                            }
                         }
 
                         l.add(ans.toString());
@@ -458,6 +480,8 @@ public class Interpret extends Data {
                     }
                 }
             } else {
+                // KR/JP Handling
+
                 for (int i = 0; i < PROC.length - RESNUM; i++) {
                     int [] c2;
 
@@ -474,7 +498,7 @@ public class Interpret extends Data {
 
                     if(!l.contains(ans.toString())) {
                         if(id.contains(i)) {
-                            ans.append(" [").append(numberWithExtension(k+1)).append(" Attack").append("]");
+                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
                         }
 
                         l.add(ans.toString());
@@ -720,16 +744,15 @@ public class Interpret extends Data {
                 l.add(imu.toString());
         }
 
-        System.out.println(l);
-
         return l;
     }
 
     public static List<String> getAbi(MaskEnemy me, String[][] frag, String[] addition, int lang) {
         List<String> l = new ArrayList<>();
-        StringBuilder imu = new StringBuilder(frag[lang][0]);
 
-        for (int i = 0; i < ABIS.length; i++)
+        for (int i = 0; i < ABIS.length; i++) {
+            StringBuilder imu = new StringBuilder(frag[lang][0]);
+
             if (((me.getAbi() >> i) & 1) > 0)
                 if (ABIS[i].startsWith("Imu."))
                     imu.append(ABIS[i].substring(4));
@@ -756,8 +779,9 @@ public class Interpret extends Data {
                         l.add(ABIS[i]);
                 }
 
-        if (imu.length() > 10)
-            l.add(imu.toString());
+            if (!imu.toString().isEmpty() && !imu.toString().equals(frag[lang][0]))
+                l.add(imu.toString());
+        }
 
         return l;
     }
@@ -1061,6 +1085,10 @@ public class Interpret extends Data {
 
     private static String getUnit(int id) {
         if(id < 1000) {
+            if(id >= StaticStore.unitnumber) {
+                return Data.hex(0)+" - "+Data.trio(id);
+            }
+
             String name = MultiLangCont.FNAME.getCont(Pack.def.us.ulist.getList().get(id).forms[0]);
 
             if(name != null) {
@@ -1078,6 +1106,10 @@ public class Interpret extends Data {
             if(p == null) {
                 return Data.hex(pid)+" - "+Data.trio(id);
             } else {
+                if(uid >= p.us.ulist.size()) {
+                    return Data.hex(pid)+" - "+Data.trio(id);
+                }
+
                 Unit u = p.us.ulist.get(uid);
 
                 if(u == null) {

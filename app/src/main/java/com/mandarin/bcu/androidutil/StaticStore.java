@@ -66,7 +66,7 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.13.2";
+    public static final String VER = "0.13.6";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
@@ -121,6 +121,8 @@ public class StaticStore {
     public static boolean musicread = false;
     /** Boolean which tells if Limit data is loaded **/
     public static boolean limitread = false;
+    /** Boolean which tells if pack data is loaded **/
+    public static boolean packread = false;
     /** Boolean which tells if error log dialog is already opened once **/
     public static boolean dialogisShowed = false;
     /** Boolean which tells if user allowed auto error log uploading **/
@@ -156,7 +158,7 @@ public class StaticStore {
     /** Imgcut index list of procs **/
     public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 289, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 243, 49, 45, 47, 51, 43, 53, 109};
     /** File index list of abilities **/
-    public static String[] afiles = {"", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "", "ThemeX.png",
+    public static String[] afiles = {"", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "Suicide.png", "ThemeX.png",
             "", "SealX.png", "BossWaveX.png", "", ""};
     /** File index list of procs **/
     public static String[] pfiles = {"", "", "", "", "", "", "", "", "", "", "", "Burrow.png", "Revive.png", "", "", "", "", "", "", "", "Snipe.png", "Time.png", "Seal.png"
@@ -201,7 +203,6 @@ public class StaticStore {
      * Variables for Enemy
      **/
     public static List<Enemy> enemies = null;
-    public static String[] enames = null;
     public static int emnumber;
     public static long enemyinflistClick = SystemClock.elapsedRealtime();
     public static boolean EisOpen = false;
@@ -297,7 +298,7 @@ public class StaticStore {
     public static String stgschname = "";
     public static String stmschname = "";
 
-    public static boolean[] filterUnitList = new boolean[1];
+    public static boolean[] filterEntityList = new boolean[1];
 
     /**
      * Resets all values stored in StaticStore<br>
@@ -339,7 +340,6 @@ public class StaticStore {
         unitinfreset = false;
 
         enemies = null;
-        enames = null;
         emnumber = 0;
         enemyinflistClick = SystemClock.elapsedRealtime();
         EisOpen = false;

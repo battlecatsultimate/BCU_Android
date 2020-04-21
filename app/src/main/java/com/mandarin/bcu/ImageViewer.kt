@@ -247,7 +247,7 @@ class ImageViewer : AppCompatActivity() {
             }
 
             animu -> UAnimationLoader(this, pid, id, form).execute()
-            anime -> EAnimationLoader(this, id).execute()
+            anime -> EAnimationLoader(this, pid, id).execute()
         }
     }
 

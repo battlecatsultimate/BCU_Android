@@ -47,13 +47,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
         MapDefiner().define(activity)
         publishProgress(1)
         EDefiner().define(activity)
-        publishProgress(3)
-        if (StaticStore.enames == null) {
-            StaticStore.enames = arrayOfNulls(StaticStore.emnumber)
-            for (i in 0 until StaticStore.emnumber) {
-                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(StaticStore.enemies[i]) ?: "")
-            }
-        }
         publishProgress(4)
         if (StaticStore.eicons == null) {
             StaticStore.eicons = arrayOfNulls(StaticStore.emnumber)
@@ -267,10 +260,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
             "0$num"
         else
             "" + num
-    }
-
-    private fun withID(id: Int, name: String): String {
-        return number(id) + "/" + name
     }
 
 }

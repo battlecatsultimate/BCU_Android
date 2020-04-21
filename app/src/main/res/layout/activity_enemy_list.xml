@@ -66,17 +66,6 @@
             android:textColorHint="?attr/HintPrimary" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ListView
-        android:id="@+id/enlist"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enemlisttool">
-
-    </ListView>
-
     <ProgressBar
         android:id="@+id/enlistprog"
         style="?android:attr/progressBarStyle"
@@ -86,6 +75,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enemlisttool" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/enlisttab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enemlisttool"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
+        app:tabMode="auto"
+        app:tabSelectedTextColor="?attr/TextPrimary"
+        app:tabTextAppearance="@style/CounterStyle" />
+
+    <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+        android:id="@+id/enlistpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enlisttab" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/enlistsch"

@@ -26,27 +26,37 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.enemy.adapters.DynamicEmExplanation
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyRecycle
 import common.system.MultiLangCont
+import common.util.pack.Pack
 import java.lang.ref.WeakReference
 
 class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
     private val weakReference: WeakReference<Activity>
     private val id: Int
+    private val pid: Int
     private var multi = -1
 
-    constructor(activity: Activity, id: Int) {
+    constructor(activity: Activity, id: Int, pid: Int) {
         weakReference = WeakReference(activity)
+        this.pid = pid
         this.id = id
+
+        println(id)
     }
 
-    constructor(activity: Activity, id: Int, multi: Int) {
+    constructor(activity: Activity, id: Int, multi: Int, pid: Int) {
         weakReference = WeakReference(activity)
+        this.pid = pid
         this.id = id
         this.multi = multi
     }
 
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
-        if (MultiLangCont.EEXP.getCont(StaticStore.enemies[id]) == null) {
+
+        val p = Pack.map[pid] ?: return
+        val e = p.es[id]
+
+        if (MultiLangCont.EEXP.getCont(e) == null) {
             val view1 = activity.findViewById<View>(R.id.enemviewtop)
             val view2 = activity.findViewById<View>(R.id.enemviewbot)
             val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
@@ -65,22 +75,37 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
     @SuppressLint("ClickableViewAccessibility")
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
+
         val recyclerView: RecyclerView = activity.findViewById(R.id.eneminftable)
         val enemyRecycle: EnemyRecycle
-        enemyRecycle = if (multi != -1) EnemyRecycle(activity, id, multi) else EnemyRecycle(activity, id)
+
+        enemyRecycle = if (multi != -1)
+            EnemyRecycle(activity, id, multi, pid)
+        else
+            EnemyRecycle(activity, id, pid)
+
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = enemyRecycle
+
         ViewCompat.setNestedScrollingEnabled(recyclerView, false)
-        val explain = DynamicEmExplanation(activity, id)
+
+        val explain = DynamicEmExplanation(activity, pid, id)
+
         val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
+
         viewPager.adapter = explain
         viewPager.offscreenPageLimit = 1
+
         val treasure: FloatingActionButton = activity.findViewById(R.id.enemtreasure)
         val main: ConstraintLayout = activity.findViewById(R.id.enemmainlayout)
         val treasurelay: ConstraintLayout = activity.findViewById(R.id.enemtreasuretab)
+
         val displayMetrics = DisplayMetrics()
+
         activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
         val set = AnimatorSet()
+
         treasure.setOnClickListener {
             if (!StaticStore.EisOpen) {
                 val slider = ValueAnimator.ofInt(0, treasurelay.width).setDuration(300)

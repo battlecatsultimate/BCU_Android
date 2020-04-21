@@ -2,42 +2,43 @@ package com.mandarin.bcu.androidutil.enemy.asynchs
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.AsyncTask
-import android.os.SystemClock
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.EDefiner
-import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter
-import common.system.MultiLangCont
+import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListPager
+import common.util.pack.Pack
 import java.lang.ref.WeakReference
-import java.util.*
 
-class EAdder(activity: Activity, private val enemnumber: Int, private val mode: Int) : AsyncTask<Void?, Int?, Void?>() {
+class EAdder(activity: Activity, private val mode: Int, private val fm: FragmentManager?) : AsyncTask<Void?, Int?, Void?>() {
     companion object {
         const val MODE_INFO = 0
         const val MODE_SELECTION = 1
     }
 
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
-    private var numbers = ArrayList<Int>()
+
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
-        val listView = activity.findViewById<ListView>(R.id.enlist)
-        listView.visibility = View.GONE
+        val tab = activity.findViewById<TabLayout>(R.id.enlisttab)
+        tab.visibility = View.GONE
+        val pager = activity.findViewById<MeasureViewPager>(R.id.enlistpager)
+        pager.visibility = View.GONE
         val search: FloatingActionButton = activity.findViewById(R.id.enlistsch)
         search.hide()
         val schname: TextInputEditText = activity.findViewById(R.id.enemlistschname)
@@ -56,13 +57,6 @@ class EAdder(activity: Activity, private val enemnumber: Int, private val mode: 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         EDefiner().define(activity)
-        publishProgress(0)
-        if (StaticStore.enames == null) {
-            StaticStore.enames = arrayOfNulls(StaticStore.emnumber)
-            for (i in 0 until StaticStore.emnumber) {
-                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(StaticStore.enemies[i]) ?: "")
-            }
-        }
         publishProgress(2)
         return null
     }
@@ -75,79 +69,34 @@ class EAdder(activity: Activity, private val enemnumber: Int, private val mode: 
             0 -> enlistst.setText(R.string.stg_info_enemname)
             1 -> enlistst.setText(R.string.stg_info_enemimg)
             2 -> {
-                val list = activity.findViewById<ListView>(R.id.enlist)
-                val filterEntity: FilterEntity
+                val tab = activity.findViewById<TabLayout>(R.id.enlisttab)
+                val pager = activity.findViewById<MeasureViewPager>(R.id.enlistpager)
                 val schname: TextInputEditText = activity.findViewById(R.id.enemlistschname)
-                filterEntity = if (Objects.requireNonNull(schname.text).toString().isEmpty()) FilterEntity(enemnumber) else FilterEntity(enemnumber, schname.text.toString())
-                numbers = filterEntity.eSetFilter()
 
-                if(numbers.isEmpty()) {
-                    enlistst.visibility = View.VISIBLE
-                    enlistst.setText(R.string.filter_nores)
-                } else {
-                    enlistst.visibility = View.GONE
-                }
-
-                val names = ArrayList<String>()
-                for (i in numbers) names.add(StaticStore.enames[i])
-                val enemy = EnemyListAdapter(activity, names.toTypedArray(), numbers)
-                list.adapter = enemy
-                when(mode) {
-                    MODE_INFO -> {
-                        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-                            if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
-                            StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
-                            val result = Intent(activity, EnemyInfo::class.java)
-                            result.putExtra("ID", numbers[position])
-                            activity.startActivity(result)
-                        }
-                    }
-                    MODE_SELECTION -> {
-                        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-                            val intent = Intent()
-                            intent.putExtra("id", numbers[position])
-                            activity.setResult(Activity.RESULT_OK, intent)
-                            activity.finish()
-                        }
-                    }
-                    else -> {
-                        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-                            if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
-                            StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
-                            val result = Intent(activity, EnemyInfo::class.java)
-                            result.putExtra("ID", numbers[position])
-                            activity.startActivity(result)
-                        }
-                    }
+                if(StaticStore.entityname != "") {
+                    schname.setText(StaticStore.entityname)
                 }
 
                 schname.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
                     override fun afterTextChanged(s: Editable) {
-                        val filterEntity1 = FilterEntity(enemnumber, s.toString())
-                        numbers = filterEntity1.eSetFilter()
+                        StaticStore.entityname = s.toString()
 
-                        if(numbers.isEmpty()) {
-                            enlistst.visibility = View.VISIBLE
-                            enlistst.setText(R.string.filter_nores)
-                        } else {
-                            enlistst.visibility = View.GONE
-                        }
-
-                        val names1 = ArrayList<String>()
-
-                        for (i in numbers)
-                            names1.add(StaticStore.enames[i])
-                        val enemy1 = EnemyListAdapter(activity, names1.toTypedArray(), numbers)
-                        list.adapter = enemy1
-                        if (s.toString().isEmpty()) {
-                            schname.setCompoundDrawablesWithIntrinsicBounds(null, null, activity.getDrawable(R.drawable.search), null)
-                        } else {
-                            schname.setCompoundDrawablesWithIntrinsicBounds(null, null, activity.getDrawable(R.drawable.ic_close_black_24dp), null)
+                        for(i in StaticStore.filterEntityList.indices) {
+                            StaticStore.filterEntityList[i] = true
                         }
                     }
                 })
+
+                fm ?: return
+
+                pager.removeAllViewsInLayout()
+                pager.adapter = EnemyListTab(fm)
+                pager.offscreenPageLimit = Pack.map.size
+                pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
+
+                tab.setupWithViewPager(pager)
             }
         }
     }
@@ -155,8 +104,12 @@ class EAdder(activity: Activity, private val enemnumber: Int, private val mode: 
     override fun onPostExecute(result: Void?) {
         val activity = weakReference.get() ?: return
         super.onPostExecute(result)
-        val list = activity.findViewById<ListView>(R.id.enlist)
-        list.visibility = View.VISIBLE
+        if(Pack.map.size != 1) {
+            val tab = activity.findViewById<TabLayout>(R.id.enlisttab)
+            tab.visibility = View.VISIBLE
+        }
+        val pager = activity.findViewById<MeasureViewPager>(R.id.enlistpager)
+        pager.visibility = View.VISIBLE
         val prog = activity.findViewById<ProgressBar>(R.id.enlistprog)
         prog.visibility = View.GONE
         val search: FloatingActionButton = activity.findViewById(R.id.enlistsch)
@@ -165,24 +118,55 @@ class EAdder(activity: Activity, private val enemnumber: Int, private val mode: 
         schname.visibility = View.VISIBLE
         val schnamel: TextInputLayout = activity.findViewById(R.id.enemlistschnamel)
         schnamel.visibility = View.VISIBLE
+        val enlistst: TextView = activity.findViewById(R.id.enlistst)
+        enlistst.visibility = View.GONE
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
+    inner class EnemyListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        init {
+            val lit = fm.fragments
+            val trans = fm.beginTransaction()
+
+            for(f in lit) {
+                trans.remove(f)
             }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                "" + num
+
+            trans.commitAllowingStateLoss()
+        }
+
+        private val keys = Pack.map.keys.toMutableList()
+
+        override fun getItem(position: Int): Fragment {
+            return EnemyListPager.newInstance(keys[position], position, mode)
+        }
+
+        override fun getCount(): Int {
+            return Pack.map.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return if(position == 0) {
+                "Default"
+            } else {
+                val pack = Pack.map[keys[position]]
+
+                if(pack == null) {
+                    keys[position].toString()
+                }
+
+                val name = pack?.name ?: ""
+
+                if(name.isEmpty()) {
+                    keys[position].toString()
+                } else {
+                    name
+                }
             }
         }
-    }
 
-    private fun withID(id: Int, name: String): String {
-        return number(id) + "/" + name
+        override fun saveState(): Parcelable? {
+            return null
+        }
     }
 
 }

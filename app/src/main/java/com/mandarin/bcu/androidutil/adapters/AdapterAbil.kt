@@ -23,16 +23,13 @@ class AdapterAbil(private val ability: List<String>, private val procs: List<Str
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         if (viewHolder.adapterPosition < abilicon.size) {
             viewHolder.abiltext.text = ability[viewHolder.adapterPosition]
-            if (abilicon[viewHolder.adapterPosition] != 15 && abilicon[viewHolder.adapterPosition] != 19) {
-                val resized: Bitmap = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    StaticStore.getResizeb(StaticStore.icons[abilicon[viewHolder.adapterPosition]], context, 28f)
-                } else {
-                    StaticStore.getResizeb(StaticStore.icons[abilicon[viewHolder.adapterPosition]], context, 24f)
-                }
-                viewHolder.abilicon.setImageBitmap(resized)
+
+            val resized: Bitmap = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                StaticStore.getResizeb(StaticStore.icons[abilicon[viewHolder.adapterPosition]], context, 28f)
             } else {
-                viewHolder.abilicon.setImageBitmap(empty())
+                StaticStore.getResizeb(StaticStore.icons[abilicon[viewHolder.adapterPosition]], context, 24f)
             }
+            viewHolder.abilicon.setImageBitmap(resized)
         } else {
             val location = viewHolder.adapterPosition - abilicon.size
 
@@ -65,7 +62,6 @@ class AdapterAbil(private val ability: List<String>, private val procs: List<Str
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var abilicon: ImageView = itemView.findViewById(R.id.abilicon)
         var abiltext: TextView = itemView.findViewById(R.id.ability)
-
     }
 
     private fun empty(): Bitmap {

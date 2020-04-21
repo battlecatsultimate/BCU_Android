@@ -1,7 +1,6 @@
 package com.mandarin.bcu
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
@@ -9,21 +8,15 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
-import com.mandarin.bcu.androidutil.FilterEntity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListAdapter
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.DefineItf
@@ -97,7 +90,7 @@ open class EnemyList : AppCompatActivity() {
 
         StaticStore.getEnemynumber(this)
 
-        EAdder(this, StaticStore.emnumber,mode).execute()
+        EAdder(this,mode,supportFragmentManager).execute()
     }
 
     protected fun gotoFilter() {
@@ -109,93 +102,23 @@ open class EnemyList : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK) {
-            val schname = findViewById<TextInputEditText>(R.id.enemlistschname)
-            val list = findViewById<ListView>(R.id.enlist)
+        val schname: TextInputEditText = findViewById(R.id.enemlistschname)
 
-            val filterEntity: FilterEntity
-
-            filterEntity = if (Objects.requireNonNull(schname.text).toString().isNotEmpty()) FilterEntity(StaticStore.emnumber, schname.text.toString()) else FilterEntity(StaticStore.emnumber)
-
-            numbers = filterEntity.eSetFilter()
-
-            val loadt = findViewById<TextView>(R.id.enlistst)
-
-            if(numbers.isEmpty()) {
-                loadt.visibility = View.VISIBLE
-                loadt.setText(R.string.filter_nores)
-            } else {
-                loadt.visibility = View.GONE
-            }
-
-            val newName = ArrayList<String>()
-
-            for (i in numbers)
-                newName.add(StaticStore.enames[i])
-
-            val enemyListAdapter = EnemyListAdapter(this, newName.toTypedArray(), numbers)
-
-            list.adapter = enemyListAdapter
-
-            when(mode) {
-                EAdder.MODE_INFO -> {
-                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
-                            return@OnItemClickListener
-
-                        val result = Intent(this@EnemyList, EnemyInfo::class.java)
-
-                        result.putExtra("ID", numbers[position])
-
-                        startActivity(result)
-
-                        StaticStore.unitinflistClick = SystemClock.elapsedRealtime()
-                    }
-                }
-                EAdder.MODE_SELECTION -> {
-                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                        val intent = Intent()
-                        intent.putExtra("id", numbers[position])
-                        setResult(Activity.RESULT_OK, intent)
-                        finish()
-                    }
-                }
-                else -> {
-                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL)
-                            return@OnItemClickListener
-
-                        val result = Intent(this@EnemyList, EnemyInfo::class.java)
-
-                        result.putExtra("ID", numbers[position])
-
-                        startActivity(result)
-
-                        StaticStore.unitinflistClick = SystemClock.elapsedRealtime()
-                    }
-                }
-            }
-
-            schname.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: Editable) {
-                    val filterEntity1 = FilterEntity(StaticStore.emnumber, s.toString())
-                    numbers = filterEntity1.eSetFilter()
-                    val names = ArrayList<String>()
-                    for (i in numbers) {
-                        names.add(StaticStore.enames[i])
-                    }
-                    val adap = EnemyListAdapter(this@EnemyList, names.toTypedArray(), numbers)
-                    list!!.adapter = adap
-                    if (s.toString().isEmpty()) {
-                        schname.setCompoundDrawablesWithIntrinsicBounds(null, null, getDrawable(R.drawable.search), null)
-                    } else {
-                        schname.setCompoundDrawablesWithIntrinsicBounds(null, null, getDrawable(R.drawable.ic_close_black_24dp), null)
-                    }
-                }
-            })
+        for(i in StaticStore.filterEntityList.indices) {
+            StaticStore.filterEntityList[i] = true
         }
+
+        schname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                StaticStore.entityname = s.toString()
+
+                for(i in StaticStore.filterEntityList.indices) {
+                    StaticStore.filterEntityList[i] = true
+                }
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {

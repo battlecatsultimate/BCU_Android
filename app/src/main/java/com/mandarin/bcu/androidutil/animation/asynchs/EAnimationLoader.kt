@@ -29,14 +29,14 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import common.system.MultiLangCont
+import common.util.pack.Pack
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void?, Int?, Void?>() {
+class EAnimationLoader(activity: Activity, private val pid: Int, private val id: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
     override fun onPreExecute() {
@@ -59,13 +59,6 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         EDefiner().define(activity)
-        publishProgress(0)
-        if (StaticStore.enames == null) {
-            StaticStore.enames = arrayOfNulls(StaticStore.emnumber)
-            for (i in 0 until StaticStore.emnumber) {
-                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(StaticStore.enemies[i]))
-            }
-        }
         publishProgress(2)
         return null
     }
@@ -87,7 +80,7 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
                 val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
                 val option: FloatingActionButton = activity.findViewById(R.id.imgvieweroption)
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-                val cView = AnimationCView(activity, id, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
+                val cView = AnimationCView(activity, pid, id, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
                 cView.size = StaticStore.dptopx(1f, activity).toFloat() / 1.25f
                 val detector = ScaleGestureDetector(activity, ScaleListener(cView))
                 cView.setOnTouchListener(object : OnTouchListener {
@@ -116,7 +109,11 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
                 })
                 val name: MutableList<String?> = ArrayList()
                 var i = 0
-                while (i < StaticStore.enemies[id].anim.anims.size) {
+
+                val pack = Pack.map[pid] ?: return
+                val e = pack.es[id]
+
+                while (i < e.anim.anims.size) {
                     name.add(activity.getString(animS[i]))
                     i++
                 }
@@ -337,24 +334,6 @@ class EAnimationLoader(activity: Activity, private val id: Int) : AsyncTask<Void
             buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_pause_black_24dp))
         }
         if (!shared.getBoolean("FPS", true)) fps.visibility = View.GONE
-    }
-
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                "" + num
-            }
-        }
-    }
-
-    private fun withID(id: Int, name: String): String {
-        return number(id) + "/" + name
     }
 
     private fun setDisappear(vararg views: View) {

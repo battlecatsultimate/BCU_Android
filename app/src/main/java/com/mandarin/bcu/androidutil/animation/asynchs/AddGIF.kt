@@ -80,7 +80,8 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
             this.animU = pack.us.ulist[id].forms[StaticStore.formposition].getEAnim(StaticStore.animposition)
             this.animU?.setTime(StaticStore.frame)
         } else {
-            this.animU = StaticStore.enemies[id].getEAnim(StaticStore.animposition)
+            val pack = Pack.map[pid] ?: Pack.def
+            this.animU = pack.es[id].getEAnim(StaticStore.animposition)
             this.animU?.setTime(StaticStore.frame)
         }
         this.w = w

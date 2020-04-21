@@ -10,7 +10,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
@@ -21,7 +20,6 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.unit.Definer
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListPager
-import common.system.MultiLangCont
 import common.util.pack.Pack
 import java.lang.ref.WeakReference
 
@@ -70,8 +68,8 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
                     override fun afterTextChanged(s: Editable) {
                         StaticStore.entityname = s.toString()
 
-                        for(i in StaticStore.filterUnitList.indices) {
-                            StaticStore.filterUnitList[i] = true
+                        for(i in StaticStore.filterEntityList.indices) {
+                            StaticStore.filterEntityList[i] = true
                         }
                     }
                 })
@@ -100,7 +98,9 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         val loadt = activity.findViewById<TextView>(R.id.unitinfst)
         loadt.visibility = View.GONE
-        tab.visibility = View.VISIBLE
+        if(Pack.map.size != 1) {
+            tab.visibility = View.VISIBLE
+        }
         pager.visibility = View.VISIBLE
         prog.visibility = View.GONE
         search.show()

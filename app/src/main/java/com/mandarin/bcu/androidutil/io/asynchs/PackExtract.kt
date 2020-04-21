@@ -56,7 +56,10 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
             }
 
             try {
-                Pack.read()
+                if(!StaticStore.packread && Pack.map.size == 1) {
+                    Pack.read()
+                    StaticStore.packread = true
+                }
                 DefferedLoader.clearPending("Context", ac)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -201,7 +204,7 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
     override fun onPostExecute(result: Void?) {
         val activity = a.get() ?: return
 
-        StaticStore.filterUnitList = BooleanArray(Pack.map.size)
+        StaticStore.filterEntityList = BooleanArray(Pack.map.size)
 
         if (!MainActivity.isRunning && !destroy) {
             val intent = Intent(activity, MainActivity::class.java)

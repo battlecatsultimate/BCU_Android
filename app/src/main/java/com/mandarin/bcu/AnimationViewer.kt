@@ -18,12 +18,10 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.unit.adapters.UnitListPager
 import com.mandarin.bcu.androidutil.unit.asynchs.Adder
 import common.system.fake.ImageBuilder
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
-import java.lang.Exception
 import java.util.*
 
 class AnimationViewer : AppCompatActivity() {
@@ -95,8 +93,8 @@ class AnimationViewer : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        for(i in StaticStore.filterUnitList.indices) {
-            StaticStore.filterUnitList[i] = true
+        for(i in StaticStore.filterEntityList.indices) {
+            StaticStore.filterEntityList[i] = true
         }
 
         val schname = findViewById<EditText>(R.id.animschname)
@@ -107,8 +105,8 @@ class AnimationViewer : AppCompatActivity() {
             override fun afterTextChanged(s: Editable) {
                 StaticStore.entityname = s.toString()
 
-                for(i in StaticStore.filterUnitList.indices) {
-                    StaticStore.filterUnitList[i] = true
+                for(i in StaticStore.filterEntityList.indices) {
+                    StaticStore.filterEntityList[i] = true
                 }
             }
         })

@@ -371,6 +371,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             val result = SoundHandler.load(type, i, play = false)
 
             if(result != -1) {
+                println("ID : $i\nRESULT : $result")
                 SoundHandler.map[i] = result
             }
         }

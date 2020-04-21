@@ -20,6 +20,7 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
 import common.system.MultiLangCont
+import common.util.pack.Pack
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -81,9 +82,12 @@ class EnemyInfo : AppCompatActivity() {
         if (extra != null) {
 
             val id = extra.getInt("ID")
+            val pid = extra.getInt("PID")
             val multi = extra.getInt("Multiply")
 
-            title.text = MultiLangCont.ENAME.getCont(StaticStore.enemies[id])
+            val p = Pack.map[pid] ?: return
+
+            title.text = MultiLangCont.ENAME.getCont(p.es[id]) ?: p.es[id]?.name
 
             val eanim = findViewById<Button>(R.id.eanimanim)
 
@@ -91,15 +95,16 @@ class EnemyInfo : AppCompatActivity() {
                 override fun onSingleClick(v: View?) {
                     val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
                     intent.putExtra("Img", 3)
+                    intent.putExtra("PID", pid)
                     intent.putExtra("ID", id)
                     startActivity(intent)
                 }
             })
 
             if (multi != 0)
-                EInfoLoader(this, id, multi).execute()
+                EInfoLoader(this, id, multi, pid).execute()
             else
-                EInfoLoader(this, id).execute()
+                EInfoLoader(this, id, pid).execute()
         }
     }
 

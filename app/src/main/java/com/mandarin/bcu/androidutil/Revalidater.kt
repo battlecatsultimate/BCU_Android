@@ -12,13 +12,6 @@ object Revalidater {
     fun validate(lang: String, context: Context) {
         Definer().redefine(context, lang)
 
-        if (StaticStore.enames != null) {
-            StaticStore.enames = arrayOfNulls(StaticStore.emnumber)
-            for (i in 0 until StaticStore.emnumber) {
-                StaticStore.enames[i] = withID(i, MultiLangCont.ENAME.getCont(Pack.def.es[i]))
-            }
-        }
-
         if (StaticStore.mapnames != null) {
             for (i in StaticStore.MAPCODE.indices) {
                 val mc = MapColc.MAPS[StaticStore.MAPCODE[i]] ?: continue

@@ -48,6 +48,9 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
     private var explain: ExplanationTab? = null
     private var unitinfRecycle: UnitinfRecycle? = null
 
+    private var added = false
+    private var stopper = Object()
+
     override fun onPreExecute() {
         val activity = weakActivity.get() ?: return
 
@@ -81,9 +84,20 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
             names.add(name)
         }
 
-        val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
-
         publishProgress(1)
+
+        synchronized(stopper) {
+            while(!added) {
+                try {
+                    stopper.wait()
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                    break
+                }
+            }
+        }
+
+        val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
@@ -178,6 +192,11 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
                 for (i in p.us.ulist[id].forms.indices) {
                     tabs.addTab(tabs.newTab().setText(nform[i]))
+                }
+
+                synchronized(stopper) {
+                    added = true
+                    stopper.notifyAll()
                 }
             }
         }
@@ -280,7 +299,7 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
     private inner class ExplanationTab internal constructor(fm: FragmentManager?, var number: Int, var id: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(i: Int): Fragment {
-            return DynamicExplanation.newInstance(i, id, title)
+            return DynamicExplanation.newInstance(i, id, pid, title)
         }
 
         override fun getCount(): Int {

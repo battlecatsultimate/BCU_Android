@@ -139,7 +139,7 @@
     <string name="unit_info_false">거짓</string>
     <string name="sch_abi_bb">베리어를 부순다</string>
     <string name="abi_rev">부활</string>
-    <string name="abi_stt">시간 멈춤</string>
+    <string name="abi_stt">시간 정지</string>
     <string name="abi_snk">스나이퍼 넉백</string>
     <string name="abi_seal">봉인</string>
     <string name="abi_sum">소환</string>
@@ -596,7 +596,7 @@
     <string name="unit_info_text27">타겟의 최대 체력의 _ % 만큼 공격)</string>
     <string name="unit_info_text28">타겟의 현재 체력의 _ % 만큼 공격)</string>
     <string name="unit_info_text29">타겟의 감소된 체력의 _ % 만큼 공격)</string>
-    <string name="unit_info_text30">" 매 _f 마다 "</string>
+    <string name="unit_info_text30">" 매 _f 마다"</string>
     <string name="unit_info_text31">" _ "</string>
     <string name="unit_info_text32">" 거리 _ 에서"</string>
     <string name="unit_info_text33">일반적으로 소환)</string>
