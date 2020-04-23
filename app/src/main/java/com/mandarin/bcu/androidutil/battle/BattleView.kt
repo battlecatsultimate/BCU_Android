@@ -38,7 +38,7 @@ import kotlin.math.pow
 import kotlin.math.round
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity) : View(context), BattleBox, OuterBox {
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, private val stid: Int) : View(context), BattleBox, OuterBox {
     @JvmField
     var painter: BBPainter = if (type == 0) BBPainter(this, field, this) else BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat())
 
@@ -86,27 +86,52 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             }
         }
         SoundHandler.MUSIC = SoundPlayer()
+
         val preferences = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
         val musvol = (1 - ln(100 - preferences.getInt("mus_vol", 99).toDouble()) / ln(100.0)).toFloat()
+
         SoundHandler.MUSIC.setVolume(musvol, musvol)
-        val f = Pack.def.ms[painter.bf.sb.st.mus0]
+
         SoundHandler.twoMusic = painter.bf.sb.st.mush != 0 && painter.bf.sb.st.mush != 100 && painter.bf.sb.st.mus0 != painter.bf.sb.st.mus1
-        if (SoundHandler.twoMusic) SoundHandler.mu1 = painter.bf.sb.st.mus1
-        if (f != null) {
-            if (f.exists()) {
-                try {
-                    SoundHandler.MUSIC.isLooping = true
-                    SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                } catch (e: IOException) {
-                    e.printStackTrace()
+
+        if (SoundHandler.twoMusic)
+            SoundHandler.mu1 = painter.bf.sb.st.mus1
+
+        if(painter.bf.sb.st.mus0 >= 0) {
+            val f = if(painter.bf.sb.st.mus0 < 1000) {
+                Pack.def.ms[painter.bf.sb.st.mus0]
+            } else {
+                val mp = Pack.map[StaticStore.getPID(painter.bf.sb.st.mus0)]
+
+                if(mp != null) {
+                    mp.ms.list[StaticStore.getMusicIndex(painter.bf.sb.st.mus0)]
+                } else {
+                    Pack.def.ms[3]
+                }
+            }
+
+            if (f != null) {
+                if (f.exists()) {
+                    try {
+                        SoundHandler.MUSIC.isLooping = true
+                        SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
                 }
             }
         }
-        for (e in painter.bf.sb.st.data.allEnemy) e.anim.check()
+
+        for (e in painter.bf.sb.st.data.allEnemy)
+            e.anim.check()
+
         updater.run()
+
         val cp = Paint()
         val bp = Paint()
         val gp = Paint()
+
         cv = CVGraphics(Canvas(), cp, bp, gp, true)
     }
 
@@ -333,11 +358,13 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
     fun retry() {
         val intent = Intent(activity,BattleSimulation::class.java)
+
         intent.putExtra("mapcode",painter.bf.sb.st.map.mc.id)
-        intent.putExtra("stid",painter.bf.sb.st.map.id)
+        intent.putExtra("stid", stid)
         intent.putExtra("stage",painter.bf.sb.st.id())
         intent.putExtra("star",painter.bf.sb.est.star)
         intent.putExtra("item",painter.bf.sb.conf[0])
+
         if(SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
             if(SoundHandler.MUSIC.isRunning || SoundHandler.MUSIC.isPlaying) {
                 SoundHandler.MUSIC.pause()

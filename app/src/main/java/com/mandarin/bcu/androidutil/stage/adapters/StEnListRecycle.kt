@@ -16,10 +16,11 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import common.util.pack.Pack
 import common.util.stage.SCDef
 import common.util.stage.Stage
 
-class StEnListRecycle(private val activity: Activity, private val st: Stage, private var multi: Int, private var frse: Boolean) : RecyclerView.Adapter<StEnListRecycle.ViewHolder>() {
+class StEnListRecycle(private val activity: Activity, private val st: Stage, private var multi: Int, private var frse: Boolean, private val mapcode: Int, private val custom: Boolean) : RecyclerView.Adapter<StEnListRecycle.ViewHolder>() {
 
     init {
         if (StaticStore.infoOpened == null) {
@@ -88,16 +89,30 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp))
         }
 
-        viewHolder.icon.setImageBitmap(StaticStore.getResizeb(StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0].anim.edi.img.bimg() as Bitmap,activity, 85f, 32f))
+        val id = data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0
+
+        val em = if(id < StaticStore.enemies.size) {
+            StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0]
+        } else {
+            Pack.map[mapcode]?.es?.get(StaticStore.getID(data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0)) ?: return
+        }
+
+        val icon = em.anim?.edi?.img?.bimg()
+
+        if(icon == null) {
+            viewHolder.icon.setImageBitmap(StaticStore.empty(activity, 85f, 32f))
+        } else {
+            viewHolder.icon.setImageBitmap(StaticStore.getResizeb(icon as Bitmap,activity, 85f, 32f))
+        }
 
         viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
 
 
         viewHolder.info.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                val en = StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0]
                 val intent = Intent(activity, EnemyInfo::class.java)
-                intent.putExtra("ID", en.id)
+                intent.putExtra("PID",em.pac.id)
+                intent.putExtra("ID", StaticStore.getID(em.id))
                 intent.putExtra("Multiply", (data[viewHolder.adapterPosition]?.get(SCDef.M)?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
                 activity.startActivity(intent)
             }

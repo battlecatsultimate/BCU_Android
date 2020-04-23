@@ -27,7 +27,9 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import common.system.fake.FakeImage
 import common.system.files.VFile
+import common.util.Data
 import common.util.anim.ImgCut
+import common.util.pack.Pack
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.File
@@ -143,16 +145,50 @@ class ImageViewer : AppCompatActivity() {
                 val canvas = Canvas(b)
 
                 if (imgcut == 1 || imgcut == 8) {
-                    val b1 = getImg(b.height, 2f)
-                    val b2 = getImg2(b.height, 2f)
-                    val h = b1.height
-                    val w = b1.width
-                    var i = 0
+                    if(pid == 0) {
+                        val b1 = getImg(b.height, 2f)
+                        val b2 = getImg2(b.height, 2f)
+                        val h = b1.height
+                        val w = b1.width
+                        var i = 0
 
-                    while (i < 1 + width / w) {
-                        canvas.drawBitmap(b2, w * i.toFloat(), height - 2 * h.toFloat(), paint)
-                        canvas.drawBitmap(b1, w * i.toFloat(), height - h.toFloat(), paint)
-                        i++
+                        while (i < 1 + width / w) {
+                            canvas.drawBitmap(b2, w * i.toFloat(), height - 2 * h.toFloat(), paint)
+                            canvas.drawBitmap(b1, w * i.toFloat(), height - h.toFloat(), paint)
+                            i++
+                        }
+                    } else {
+                        val p = Pack.map[pid] ?: return
+                        val bg = p.bg[bgnum]
+
+                        if(bg.top) {
+                            val b1 = getImg(b.height, 2f)
+                            val b2 = getImg2(b.height, 2f)
+                            val h = b1.height
+                            val w = b1.width
+                            var i = 0
+
+                            while (i < 1 + width / w) {
+                                canvas.drawBitmap(b2, w * i.toFloat(), height - 2 * h.toFloat(), paint)
+                                canvas.drawBitmap(b1, w * i.toFloat(), height - h.toFloat(), paint)
+                                i++
+                            }
+                        } else {
+                            val b1 = getImg(b.height, 2f)
+                            val h = b1.height
+                            val w = b1.width
+                            var i = 0
+
+                            while (i < 1 + width / w) {
+                                canvas.drawBitmap(b1, w * i.toFloat(), height - h.toFloat(), paint)
+                                i++
+                            }
+
+                            val shader: Shader = LinearGradient(0f, 0f, 0f, height.toFloat() - h.toFloat(), skyUpper, skyBelow, Shader.TileMode.CLAMP)
+
+                            paint.shader = shader
+                            canvas.drawRect(RectF(0f, 0f, width.toFloat(), (height - h).toFloat()), paint)
+                        }
                     }
                 } else {
                     val b1 = getImg(b.height, 2f)
@@ -184,7 +220,11 @@ class ImageViewer : AppCompatActivity() {
                     if (item.itemId == R.id.anim_option_png) {
                         val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                         val date = Date()
-                        val name = dateFormat.format(date) + "-BG-" + bgnum
+                        val name = if(pid == 0) {
+                            dateFormat.format(date) + "-BG-" + bgnum
+                        } else {
+                            dateFormat.format(date) + "-BG-"+ Data.hex(pid)+"-"+bgnum
+                        }
 
                         try {
                             val pngpath = MediaScanner.putImage(this@ImageViewer, b, name)
@@ -220,7 +260,16 @@ class ImageViewer : AppCompatActivity() {
                 gif.visibility = View.GONE
                 prog.visibility = View.GONE
 
-                val b2 = Objects.requireNonNull(VFile.getFile(path)).data.img.bimg() as Bitmap
+                val b2 = if(path != null) {
+                    Objects.requireNonNull(VFile.getFile(path)).data.img.bimg() as Bitmap
+                } else {
+                    val p = Pack.map[pid] ?: return
+
+                    val cs = p.cs[bgnum]?.bimg?.bimg() ?: return
+
+                    cs as Bitmap
+                }
+
                 val bd = BitmapDrawable(resources, b2)
 
                 bd.isFilterBitmap = true
@@ -254,6 +303,9 @@ class ImageViewer : AppCompatActivity() {
     private val data: Array<String>?
         get() {
             try {
+                if(pid != 0)
+                    return null
+
                 val datapath = "./org/battle/bg/bg.csv"
                 val qs = VFile.getFile(datapath).data.readLine()
 
@@ -276,19 +328,39 @@ class ImageViewer : AppCompatActivity() {
         }
 
     private fun getImg(height: Int, param: Float): Bitmap {
-        val data = data ?: return StaticStore.empty(this, 100f, 100f)
+        val data = data
+
+        if(data == null && pid == 0) {
+            return StaticStore.empty(this, 100f, 100f)
+        }
+
         val imgPath: String
 
-        imgPath = if (data[13].toInt() == 8)
+        imgPath = if(data != null) {
+            if (data[13].toInt() == 8)
+                "./org/battle/bg/bg0" + 1 + ".imgcut"
+            else
+                "./org/battle/bg/bg0" + data[13] + ".imgcut"
+        } else {
             "./org/battle/bg/bg0" + 1 + ".imgcut"
-        else
-            "./org/battle/bg/bg0" + data[13] + ".imgcut"
+        }
 
         val img = ImgCut.newIns(imgPath)
         val f = File(path ?: "")
 
         return try {
-            val png = FakeImage.read(f)
+            val png = if(f.absolutePath == "/") {
+                val p = Pack.map[pid]
+
+                if(p != null) {
+                    p.bg[bgnum].img.bimg
+                } else {
+                    return StaticStore.empty(this, 100f, 100f)
+                }
+            } else {
+                FakeImage.read(f)
+            }
+
             val imgs = img.cut(png)
             val b = imgs[0].bimg() as Bitmap
             val ratio = height / param / b.height
@@ -301,20 +373,39 @@ class ImageViewer : AppCompatActivity() {
     }
 
     private fun getImg2(height: Int, param: Float): Bitmap {
-        val data = data ?: return StaticStore.empty(this, 100f, 100f)
+        val data = data
         val imgPath: String
 
-        imgPath = if (data[13].toInt() == 8)
+        if(data == null && pid == 0) {
+            return StaticStore.empty(this, 100f, 100f)
+        }
+
+        imgPath = if(data != null) {
+            if (data[13].toInt() == 8)
+                "./org/battle/bg/bg0" + 1 + ".imgcut"
+            else
+                "./org/battle/bg/bg0" + data[13] + ".imgcut"
+        } else {
             "./org/battle/bg/bg0" + 1 + ".imgcut"
-        else
-            "./org/battle/bg/bg0" + data[13] + ".imgcut"
+        }
 
         val img = ImgCut.newIns(imgPath)
 
         val f = File(path ?: "")
 
         return try {
-            val png = FakeImage.read(f)
+            val png = if(f.absolutePath != "/") {
+                FakeImage.read(f)
+            } else {
+                val p = Pack.map[pid]
+
+                if(p != null) {
+                    p.bg[bgnum].img.bimg
+                } else {
+                    return StaticStore.empty(this, 100f, 100f)
+                }
+            }
+
             val imgs = img.cut(png)
             val b = imgs[20].bimg() as Bitmap
             val ratio = height / param / b.height
@@ -328,29 +419,63 @@ class ImageViewer : AppCompatActivity() {
 
     private val imgcut: Int
         get() {
-            val data = data ?: return -1
+            if(pid == 0) {
+                val data = data ?: return -1
 
-            return data[13].toInt()
+                return data[13].toInt()
+            } else {
+                return 1
+            }
         }
 
     private val skyUpper: Int
         get() {
-            val data = data ?: return 0
-            val r = data[1].toInt()
-            val g = data[2].toInt()
-            val b = data[3].toInt()
+            val data = data
 
-            return Color.rgb(r, g, b)
+            if(data != null) {
+                val r = data[1].toInt()
+                val g = data[2].toInt()
+                val b = data[3].toInt()
+
+                return Color.rgb(r, g, b)
+            } else {
+                val p = Pack.map[pid]
+
+                return if(p == null) {
+                    0
+                } else {
+                    val bg = p.bg[bgnum]
+
+                    val rgb = bg.cs[0]
+
+                    Color.rgb(rgb[0], rgb[1], rgb[2])
+                }
+            }
         }
 
     private val skyBelow: Int
         get() {
-            val data = data ?: return 0
-            val r = data[4].toInt()
-            val g = data[5].toInt()
-            val b = data[6].toInt()
+            val data = data
 
-            return Color.rgb(r, g, b)
+            if(data != null) {
+                val r = data[4].toInt()
+                val g = data[5].toInt()
+                val b = data[6].toInt()
+
+                return Color.rgb(r, g, b)
+            } else {
+                val p = Pack.map[pid]
+
+                return if(p == null) {
+                    0
+                } else {
+                    val bg = p.bg[bgnum]
+
+                    val rgb = bg.cs[1]
+
+                    Color.rgb(rgb[0], rgb[1], rgb[2])
+                }
+            }
         }
 
     private val groundUpper: Int

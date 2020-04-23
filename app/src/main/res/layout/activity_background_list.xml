@@ -35,12 +35,26 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar9"
         app:srcCompat="@drawable/back_button" />
 
-    <ListView
-        android:id="@+id/bglist"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/bglisttab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar9"
+        app:tabMaxWidth="0dp"
+        app:tabMode="auto"
+        app:tabTextAppearance="@style/CounterStyle"
+        app:tabTextColor="?attr/TextPrimary" />
+
+    <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+        android:id="@+id/bglistpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar9" />
+        app:layout_constraintTop_toBottomOf="@+id/bglisttab" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

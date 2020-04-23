@@ -5,21 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.TextView
-import com.google.android.flexbox.FlexboxLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.util.pack.Pack
 import common.util.stage.SCDef
+import java.util.*
+import kotlin.collections.ArrayList
 
-class StageListAdapter(private val activity: Activity, private val stages: Array<String?>, private val mapcode: Int, private val stid: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.stage_list_layout, stages) {
+class CStageListAdapter(private val activity: Activity, private val stages: Array<String?>, private val mapcode: Int, private val stid: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.stage_list_layout, stages) {
 
     private class ViewHolder constructor(row: View) {
-        var name: TextView = row.findViewById(R.id.stagename)
-        var icons: FlexboxLayout = row.findViewById(R.id.enemicon)
-        var images: MutableList<ImageView?> = ArrayList()
-
+        var name: TextView = row.findViewById(R.id.map_list_name)
+        var enemy: TextView = row.findViewById(R.id.map_list_coutns)
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -28,7 +26,7 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
 
         if(view == null) {
             val inf = LayoutInflater.from(context)
-            row = inf.inflate(R.layout.stage_list_layout,parent,false)
+            row = inf.inflate(R.layout.map_list_layout,parent,false)
             holder = ViewHolder(row)
             row.tag = holder
         } else {
@@ -37,8 +35,6 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
         }
 
         holder.name.text = stages[position] ?: getStageName(position)
-        holder.images.clear()
-        holder.icons.removeAllViews()
 
         val mc = if(custom) {
             Pack.map[mapcode]?.mc ?: return row
@@ -52,20 +48,19 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
 
         val ids = getid(st.data)
 
-        val icons = arrayOfNulls<ImageView>(ids.size)
+        val lang = Locale.getDefault().language
 
-        for (i in ids.indices) {
-            icons[i] = ImageView(activity)
-            icons[i]?.layoutParams = FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            if(ids[i] < StaticStore.eicons.size) {
-                icons[i]?.setImageBitmap(StaticStore.eicons[ids[i]])
+        val enemies = if(lang == "en") {
+            if(ids.size > 1) {
+                ids.size.toString()+" Enemies"
             } else {
-                icons[i]?.setImageBitmap(StaticStore.empty(context, 18f, 18f))
+                ids.size.toString()+" Enemy"
             }
-            icons[i]?.setPadding(StaticStore.dptopx(12f, activity), StaticStore.dptopx(4f, activity), 0, StaticStore.dptopx(4f, activity))
-            holder.icons.addView(icons[i])
-            holder.images.add(icons[i])
+        } else {
+            context.getString(R.string.stg_enem_num).replace("_", ids.size.toString())
         }
+
+        holder.enemy.text = enemies
 
         return row
     }

@@ -11,7 +11,7 @@ import common.system.fake.FakeImage;
 public class AImageWriter implements CommonStatic.ImgWriter {
     @Override
     public String saveFile(File f) {
-        return null;
+        return f.getAbsolutePath();
     }
 
     @Override

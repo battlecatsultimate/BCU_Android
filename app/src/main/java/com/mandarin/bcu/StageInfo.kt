@@ -22,6 +22,7 @@ class StageInfo : AppCompatActivity() {
     private var mapcode = 0
     private var stid = 0
     private var posit = 0
+    private var custom = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,9 +78,10 @@ class StageInfo : AppCompatActivity() {
             mapcode = extra.getInt("mapcode")
             stid = extra.getInt("stid")
             posit = extra.getInt("posit")
+            custom = extra.getBoolean("custom")
         }
 
-        StageAdder(this, mapcode, stid, posit).execute()
+        StageAdder(this, mapcode, stid, posit, custom).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {

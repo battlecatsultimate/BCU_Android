@@ -1,25 +1,27 @@
 package com.mandarin.bcu
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.SystemClock
+import android.os.Parcelable
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.mandarin.bcu.androidutil.BGListPager
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.util.pack.Pack
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
-import java.io.File
 import java.util.*
 
 class BackgroundList : AppCompatActivity() {
@@ -63,32 +65,15 @@ class BackgroundList : AppCompatActivity() {
 
         setContentView(R.layout.activity_background_list)
 
-        val listView = findViewById<ListView>(R.id.bglist)
+        val tab = findViewById<TabLayout>(R.id.bglisttab)
+        val pager = findViewById<MeasureViewPager>(R.id.bglistpager)
 
-        if (StaticStore.bgnumber == 0) {
-            val path = StaticStore.getExternalPath(this)+"org/img/bg/"
-            val f = File(path)
-            StaticStore.bgnumber = (f.list()?.size ?: 1) - 1
-        }
+        pager.removeAllViewsInLayout()
+        pager.adapter = BGListTab(supportFragmentManager)
+        pager.offscreenPageLimit = Pack.map.keys.size
+        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-        val names = arrayOfNulls<String>(StaticStore.bgnumber)
-
-        for (i in names.indices) {
-            names[i] = getString(R.string.bg_names).replace("_", number(i))
-        }
-
-        val adapter = ArrayAdapter(this, R.layout.list_layout_text, names)
-
-        listView.adapter = adapter
-        listView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-            if (SystemClock.elapsedRealtime() - StaticStore.bglistClick < StaticStore.INTERVAL) return@OnItemClickListener
-            StaticStore.bglistClick = SystemClock.elapsedRealtime()
-            val intent = Intent(this@BackgroundList, ImageViewer::class.java)
-            intent.putExtra("Path", StaticStore.getExternalPath(this@BackgroundList)+"org/img/bg/bg" + number(position) + ".png")
-            intent.putExtra("Img", 0)
-            intent.putExtra("BGNum", position)
-            startActivity(intent)
-        }
+        tab.setupWithViewPager(pager)
 
         val bck = findViewById<FloatingActionButton>(R.id.bgbck)
 
@@ -113,22 +98,57 @@ class BackgroundList : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    private fun number(n: Int): String {
-        return when (n) {
-            in 0..9 -> {
-                "00$n"
-            }
-            in 10..99 -> {
-                "0$n"
-            }
-            else -> {
-                n.toString()
-            }
-        }
-    }
-
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        init {
+            val lit = fm.fragments
+            val trans = fm.beginTransaction()
+
+            for (f in lit) {
+                trans.remove(f)
+            }
+
+            trans.commitAllowingStateLoss()
+        }
+
+        private val keys = Pack.map.keys.toMutableList()
+
+        override fun getItem(position: Int): Fragment {
+            return BGListPager.newInstance(keys[position])
+        }
+
+        override fun getCount(): Int {
+            return Pack.map.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            val keys = Pack.map.keys.toMutableList()
+
+            return if (position == 0) {
+                "Default"
+            } else {
+                val pack = Pack.map[keys[position]]
+
+                if (pack == null) {
+                    keys[position].toString()
+                }
+
+                val name = pack?.name ?: ""
+
+                if (name.isEmpty()) {
+                    keys[position].toString()
+                } else {
+                    name
+                }
+            }
+        }
+
+        override fun saveState(): Parcelable? {
+            return null
+        }
     }
 }

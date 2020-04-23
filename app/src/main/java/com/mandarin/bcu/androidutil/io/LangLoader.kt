@@ -213,22 +213,9 @@ object LangLoader {
         StaticStore.stagelang = 0
     }
 
-    fun readMapLang() {
-        StaticStore.mapnames = arrayOfNulls(StaticStore.map.size)
-        for (i in StaticStore.mapnames.indices) {
-            val mc = StaticStore.map[StaticStore.MAPCODE[i]] ?: continue
-            StaticStore.mapnames[i] = arrayOfNulls(mc.maps.size)
-            for (k in mc.maps.indices) {
-                StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k]) ?: ""
-            }
-        }
-        StaticStore.maplang = 0
-    }
-
     fun readALL(c: Context) {
         readUnitLang(c)
         readEnemyLang(c)
         readStageLang(c)
-        readMapLang()
     }
 }

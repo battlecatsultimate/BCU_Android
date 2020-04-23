@@ -26,7 +26,7 @@ public class AMusicLoader implements CommonStatic.ImgReader {
     public File readFile(InStream is) {
         byte[] bs = is.subStream().nextBytesI();
 
-        String path = "./pack/music/"+ Data.hex(pid)+"/";
+        String path = "./res/music/"+ Data.hex(pid)+"/";
         String name = Data.trio(mid)+".ogg";
 
         File f = CommonStatic.def.route(path);

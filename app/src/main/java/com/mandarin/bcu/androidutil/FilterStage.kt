@@ -5,6 +5,7 @@ import android.util.SparseArray
 import androidx.core.util.isNotEmpty
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.system.MultiLangCont
+import common.util.pack.Pack
 import common.util.stage.MapColc
 import common.util.stage.SCDef
 import common.util.stage.Stage
@@ -18,8 +19,14 @@ object FilterStage {
 
         val mc = MapColc.MAPS ?: return result
 
-        for(i in StaticStore.MAPCODE) {
-            val m = mc[i] ?: continue
+        for(i in StaticStore.mapcode) {
+            val m = if(i < StaticStore.BCmaps) {
+                mc[i] ?: continue
+            } else {
+                val p = Pack.map[i] ?: continue
+
+                p.mc ?: continue
+            }
 
             val stresult = SparseArray<ArrayList<Int>>()
 
@@ -33,15 +40,15 @@ object FilterStage {
 
                     val nam = if(stmname != "") {
                         if(name != "") {
-                            val stmnam = MultiLangCont.SMNAME.getCont(stm)?.toLowerCase(Locale.ROOT)?.contains(stmname.toLowerCase(Locale.ROOT)) ?: false
-                            val stnam = MultiLangCont.STNAME.getCont(s)?.toLowerCase(Locale.ROOT)?.contains(name.toLowerCase(Locale.ROOT)) ?: false
+                            val stmnam = (MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "").toLowerCase(Locale.ROOT).contains(stmname.toLowerCase(Locale.ROOT))
+                            val stnam = (MultiLangCont.STNAME.getCont(s) ?: s.name ?: "").toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))
 
                             stmnam && stnam
                         } else {
-                            MultiLangCont.SMNAME.getCont(stm)?.toLowerCase(Locale.ROOT)?.contains(stmname.toLowerCase(Locale.ROOT)) ?: false
+                            (MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "").toLowerCase(Locale.ROOT).contains(stmname.toLowerCase(Locale.ROOT))
                         }
                     } else {
-                        MultiLangCont.STNAME.getCont(s)?.toLowerCase(Locale.ROOT)?.contains(name.toLowerCase(Locale.ROOT)) ?: false
+                        (MultiLangCont.STNAME.getCont(s) ?: s.name ?: "").toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))
                     }
 
                     val enem = containEnemy(enemies, s.data.allEnemy, enemorand)

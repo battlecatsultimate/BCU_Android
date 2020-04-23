@@ -19,6 +19,7 @@ class MusicPlayer : AppCompatActivity() {
     companion object {
         var sound = SoundPlayer()
         var posit = 0
+        var pid = 0
         var next = false
         var looping = false
         var completed = false
@@ -28,6 +29,7 @@ class MusicPlayer : AppCompatActivity() {
         var opened = false
 
         fun reset() {
+            pid = 0
             posit = 0
             next = false
             looping = false
@@ -40,6 +42,7 @@ class MusicPlayer : AppCompatActivity() {
     }
 
     private var musicreceive = MusicReceiver(this)
+    private var musicasync: MusicLoader? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,10 +89,13 @@ class MusicPlayer : AppCompatActivity() {
             if (bundle != null) {
                 if (!opened) {
                     posit = bundle.getInt("Music")
+                    pid = bundle.getInt("PID")
                     opened = true
                 }
 
-                MusicLoader(this).execute()
+                musicasync = MusicLoader(this)
+
+                musicasync?.execute()
             } else {
                 return
             }
@@ -108,6 +114,8 @@ class MusicPlayer : AppCompatActivity() {
 
     override fun onDestroy() {
         musicreceive.unregister()
+        musicasync?.destroyed = true
+        musicasync = null
         unregisterReceiver(musicreceive)
         StaticStore.toast = null
         super.onDestroy()

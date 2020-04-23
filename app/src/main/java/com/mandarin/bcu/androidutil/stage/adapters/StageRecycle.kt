@@ -17,10 +17,11 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import common.util.pack.Pack
 import common.util.stage.Limit
 import java.util.*
 
-class StageRecycle(private val activity: Activity, private val mapcode: Int, private val stid: Int, private val posit: Int) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
+class StageRecycle(private val activity: Activity, private val mapcode: Int, private val stid: Int, private val posit: Int, private val custom: Boolean) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
     private val s: GetStrings = GetStrings(activity)
     private val castles = intArrayOf(45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 32, 31, 30, 29, 28, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 46, 47, 45, 47, 47, 45, 45)
     private val wc = listOf(3, 4, 5, 10, 12)
@@ -80,7 +81,7 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
                 val enrec: RecyclerView = activity.findViewById(R.id.stginfoenrec)
                 enrec.layoutManager = LinearLayoutManager(activity)
                 ViewCompat.setNestedScrollingEnabled(enrec, false)
-                val listRecycle = EnemyListRecycle(activity, st, stm.stars[position])
+                val listRecycle = EnemyListRecycle(activity, st, stm.stars[position], mapcode, custom)
                 enrec.adapter = listRecycle
                 StaticStore.stageSpinner = position
                 val l = st.getLim(position)
@@ -121,8 +122,17 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
 
         viewHolder.music.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
+                if(st.mus0 < 0)
+                    return
+
                 val intent = Intent(activity, MusicPlayer::class.java)
-                intent.putExtra("Music", st.mus0)
+
+                if(st.mus0 >= 1000) {
+                    intent.putExtra("PID", StaticStore.getPID(st.mus0))
+                    intent.putExtra("Music", StaticStore.getMusicIndex(st.mus0))
+                } else {
+                    intent.putExtra("Music", st.mus0)
+                }
 
                 activity.startActivity(intent)
             }
@@ -134,8 +144,19 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
 
         viewHolder.music2.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
+                if(st.mus1 < 0)
+                    return
+
                 val intent = Intent(activity, MusicPlayer::class.java)
-                intent.putExtra("Music", st.mus1)
+
+                if(st.mus1 >= 1000) {
+                    println(StaticStore.getMusicIndex(st.mus1))
+
+                    intent.putExtra("PID", StaticStore.getPID(st.mus1))
+                    intent.putExtra("Music", StaticStore.getMusicIndex(st.mus1))
+                } else {
+                    intent.putExtra("Music", st.mus1)
+                }
 
                 activity.startActivity(intent)
             }
@@ -146,9 +167,21 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         viewHolder.background.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, ImageViewer::class.java)
-                intent.putExtra("Path", StaticStore.getExternalPath(activity)+"org/img/bg/bg" + number(st.bg) + ".png")
-                intent.putExtra("Img", 0)
-                intent.putExtra("BGNum", st.bg)
+
+                if(st.bg < 1000) {
+                    intent.putExtra("Path", StaticStore.getExternalPath(activity)+"org/img/bg/bg" + number(st.bg) + ".png")
+                    intent.putExtra("Img", 0)
+                    intent.putExtra("BGNum", st.bg)
+                } else {
+                    val pid = StaticStore.getPID(st.bg)
+                    val p = Pack.map[pid]
+
+                    if(p != null) {
+                        intent.putExtra("PID", pid)
+                        intent.putExtra("Img", 0)
+                        intent.putExtra("BGNum", StaticStore.getID(st.bg))
+                    }
+                }
                 activity.startActivity(intent)
             }
         })
@@ -181,10 +214,19 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
                         }
                     }
                 } else {
-                    val path = "./org/img/rc/rc" + number(st.castle) + ".png"
                     val intent = Intent(activity, ImageViewer::class.java)
-                    intent.putExtra("Path", path)
-                    intent.putExtra("Img", 1)
+
+                    if(st.castle < 1000) {
+                        val path = "./org/img/rc/rc" + number(st.castle) + ".png"
+
+                        intent.putExtra("Path", path)
+                        intent.putExtra("Img", 1)
+                    } else {
+                        intent.putExtra("Img",1)
+                        intent.putExtra("PID",StaticStore.getPID(st.castle))
+                        intent.putExtra("BGNum", StaticStore.getID(st.castle))
+                    }
+
                     activity.startActivity(intent)
                 }
             }

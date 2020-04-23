@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+        deleter(File(Environment.getDataDirectory().absolutePath+"/data/com.mandarin.bcu/temp/"))
 
         Thread.setDefaultUncaughtExceptionHandler(ErrorLogWriter(StaticStore.getExternalLog(this), shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)))
 

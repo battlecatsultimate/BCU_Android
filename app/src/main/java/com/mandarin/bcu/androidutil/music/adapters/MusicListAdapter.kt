@@ -1,8 +1,7 @@
 package com.mandarin.bcu.androidutil.music.adapters
 
 import android.content.Context
-import android.media.MediaMetadataRetriever
-import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.util.pack.Pack
 
-class MusicListAdapter(context: Context, private val name: Array<String?>, private val locate: ArrayList<Int>) : ArrayAdapter<String?>(context, R.layout.map_list_layout, name) {
+class MusicListAdapter(context: Context, private val name: ArrayList<String>, private val pid: Int, private val player: Boolean) : ArrayAdapter<String?>(context, R.layout.map_list_layout, name.toTypedArray()) {
     private class ViewHolder constructor(row: View) {
         val title: TextView = row.findViewById(R.id.map_list_name)
         val duration: TextView = row.findViewById(R.id.map_list_coutns)
@@ -33,44 +31,44 @@ class MusicListAdapter(context: Context, private val name: Array<String?>, priva
         }
 
         holder.title.text = name[position]
-        holder.duration.text =
-                if(position >= StaticStore.musicnames.size)
-                    getDuration(locate[position])
+
+        holder.duration.text = if(player) {
+            if(position >= StaticStore.musicData.size) {
+                ""
+            } else {
+                val info = StaticStore.musicData[position].split("\\")
+
+                if(info.size != 2) {
+                    Log.e("MusicListAdapter", "Invalid String Format : "+StaticStore.musicData[position])
+                    ""
+                } else {
+                    val p = StaticStore.musicnames[info[0].toInt()]
+
+                    if(p == null) {
+                        ""
+                    } else {
+                        if(info[1].toInt() >= p.size) {
+                            ""
+                        } else {
+                            p[info[1].toInt()]
+                        }
+                    }
+                }
+            }
+        } else {
+            val ms = StaticStore.musicnames[pid]
+
+            if(ms == null)
+                ""
+            else {
+                if(position >= ms.size)
+                    ""
                 else
-                    StaticStore.musicnames[position]
-
-        return row
-    }
-
-    private fun getDuration(posit: Int) : String {
-        var duration = ""
-
-        val f = Pack.def.ms.get(posit)
-
-        if(f != null) {
-            val uri  = Uri.parse(f.absolutePath)
-            val mmr = MediaMetadataRetriever()
-            mmr.setDataSource(context,uri)
-
-            var time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toFloat()/1000f
-
-            val min = (time/60f).toInt()
-
-            time -= min.toFloat()*60f
-
-            val sec = time.toInt()
-
-            val mins = if(min < 10) "0$min"
-                else min.toString()
-
-            val secs = if(sec < 10) "0$sec"
-                else sec.toString()
-
-            duration = "$mins:$secs"
-
-            StaticStore.musicnames.add(duration)
+                    ms[position] ?: "00:00"
+            }
         }
 
-        return duration
+
+        return row
     }
 }

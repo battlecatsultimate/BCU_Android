@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,20 +15,26 @@ import android.widget.TextView
 import com.mandarin.bcu.MainActivity
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.fakeandroid.FIBM
 import com.mandarin.bcu.androidutil.io.AImageWriter
 import com.mandarin.bcu.androidutil.io.DefferedLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import common.system.fake.FakeImage
+import common.util.Data
 import common.util.pack.Pack
 import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 import java.lang.ref.WeakReference
+import java.security.NoSuchAlgorithmException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, String, Void>() {
     private val pack = "1"
     private val image = "2"
-    private val music = "3"
+    private val castle = "3"
     private val bg = "4"
     private val packext = "5"
 
@@ -73,6 +80,8 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
 
                 if(fname.endsWith(".bcupack")) {
                     if(!checkPack(f)) {
+                        val p = findPack(f)
+
                         val name = f.name.replace(".bcupack", "")
 
                         val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
@@ -101,11 +110,83 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
                                 ed.apply()                            }
                         }
 
+                        p ?: continue
+
+                        val bpathList = ArrayList<String>()
+
+                        for(i in p.bg.list) {
+                            val img = i.img?.bimg ?: continue
+
+                            val bpath = StaticStore.getExternalRes(ac) + "img/$name/"
+                            val bname = findBgName(bpath)
+
+                            val info = extractImage(ac, img, bpath, bname, false)
+
+                            if(info.size != 2)
+                                continue
+
+                            val result = info[0]+"\\"+info[1]
+
+                            (i.img.bimg as FIBM).reference = result
+
+                            bpathList.add(result)
+                        }
+
+                        for(i in bpathList) {
+                            val info = i.split("\\")
+
+                            val bf = File(info[0].replace(".bcuimg", ".png"))
+
+                            if(!bf.exists())
+                                continue
+
+                            publishProgress(bg, bf.name.replace(".png", ""))
+
+                            if(info.size != 2)
+                                continue
+
+                            StaticStore.encryptPNG(info[0].replace(".bcuimg",".png"), info[1], StaticStore.IV, true)
+                        }
+
+                        val cpathList = ArrayList<String>()
+
+                        for(i in p.cs.list) {
+                            val img = i.img ?: continue
+
+                            val cpath = StaticStore.getExternalRes(ac) + "img/$name/"
+                            val cname = findCsName(cpath)
+
+                            val info = extractImage(ac, img, cpath, cname, false)
+
+                            if(info.size != 2)
+                                continue
+
+                            val result = info[0] + "\\" + info[1]
+
+                            (i.img as FIBM).reference = result
+
+                            cpathList.add(result)
+                        }
+
+                        for(i in cpathList) {
+                            val info = i.split("\\")
+
+                            val cf = File(info[0].replace(".bcuimg",".png"))
+
+                            if(!cf.exists())
+                                continue
+
+                            publishProgress(castle, cf.name.replace(".png", ""))
+
+                            if(info.size != 2)
+                                continue
+
+                            StaticStore.encryptPNG(info[0].replace(".bcuimg",".png"), info[1], StaticStore.IV, true)
+                        }
+
                         publishProgress(packext, f.name.replace(".bcupack",""))
 
-                        val p = findPack(f)
-
-                        p?.packData(AImageWriter())
+                        p.packData(AImageWriter())
                     }
                 }
             }
@@ -128,6 +209,18 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
 
             image -> {
                 val name = ac.getString(R.string.main_pack_img)+ (values[1] ?: "")
+
+                text.text = name
+            }
+
+            bg -> {
+                val name = ac.getString(R.string.main_pack_bg) + (values[1] ?: "")
+
+                text.text = name
+            }
+
+            castle -> {
+                val name = ac.getString(R.string.main_pack_castle) + (values[1] ?: "")
 
                 text.text = name
             }
@@ -214,6 +307,39 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
         }
     }
 
+    private fun findBgName(path: String) : String {
+        var i = 0
+
+        while(true) {
+            val name = "bg-"+ Data.trio(i)+".png"
+
+            val f = File(path, name)
+
+            if(f.exists()) {
+                i++
+            } else {
+                println(name)
+                return name
+            }
+        }
+    }
+
+    private fun findCsName(path: String) : String {
+        var i = 0
+
+        while(true) {
+            val name = "castle-"+ Data.trio(i)+".png"
+
+            val f = File(path, name)
+
+            if(f.exists()) {
+                i++
+            } else {
+                return name
+            }
+        }
+    }
+
     private fun checkPack(f: File) : Boolean {
         val ac = a.get() ?: return false
 
@@ -253,10 +379,6 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
                 val omd5 = shared.getString(name, "")
 
                 val cmd5 = StaticStore.fileToMD5(f)
-
-                println("*****$name*****")
-                println(omd5)
-                println(cmd5)
 
                 if (omd5 != cmd5) {
                     val g = File(StaticStore.getExternalRes(ac) + "data/" + f.name.replace(".bcupack", ".bcudata"))
@@ -382,6 +504,42 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
                 paused = true
                 publishProgress(errInvlaid, fs.name, fs.absolutePath)
             }
+        }
+    }
+
+    private fun extractImage(c: Context, img: FakeImage, path: String, name: String, unload: Boolean) : Array<String> {
+        val f = File(path)
+        val result = arrayOf("", "")
+
+        if(!f.exists()) {
+            if(!f.mkdirs()) {
+                Log.e("PackExtract", "Failed to create directory "+f.absolutePath)
+                return result
+            }
+        }
+
+        val g = File(path, name)
+
+        if(!g.exists()) {
+            if(!g.createNewFile()) {
+                Log.e("PackExtract", "Failed to create file "+g.absolutePath)
+                return result
+            }
+        }
+
+        img.bimg() ?: return result
+
+        (img.bimg() as Bitmap).compress(Bitmap.CompressFormat.PNG, 0, FileOutputStream(g))
+
+        if(unload) {
+            img.unload()
+        }
+
+        return try {
+            arrayOf(g.absolutePath.replace(".png",".bcuimg"), StaticStore.fileToMD5(g))
+        } catch (e: NoSuchAlgorithmException) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload, c)
+            arrayOf(g.absolutePath.replace(".png", ".bcuimg"),"")
         }
     }
 }

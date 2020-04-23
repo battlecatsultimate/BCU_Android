@@ -12,16 +12,6 @@ object Revalidater {
     fun validate(lang: String, context: Context) {
         Definer().redefine(context, lang)
 
-        if (StaticStore.mapnames != null) {
-            for (i in StaticStore.MAPCODE.indices) {
-                val mc = MapColc.MAPS[StaticStore.MAPCODE[i]] ?: continue
-
-                for (k in mc.maps.indices) {
-                    StaticStore.mapnames[i][k] = MultiLangCont.SMNAME.getCont(mc.maps[k])
-                }
-            }
-        }
-
         if (StaticStore.lunames.isNotEmpty() || StaticStore.ludata.isNotEmpty()) {
             StaticStore.lunames.clear()
             StaticStore.ludata.clear()
@@ -53,15 +43,31 @@ object Revalidater {
                 }
             }
         }
-    }
 
-    private fun withID(id: Int, name: String?): String {
-        var names = name
+        if(StaticStore.mapcolcname.isNotEmpty()) {
+            StaticStore.mapcolcname.clear()
 
-        if (name == null)
-            names = ""
+            for(i in StaticStore.bcMapNames) {
+                StaticStore.mapcolcname.add(context.getString(i))
+            }
 
-        return number(id) + "/" + names
+            for(i in Pack.map) {
+                val v= i.value
+
+                if(v.id == 0)
+                    continue
+                else {
+                    val k = Data.hex(i.key)
+
+                    val name = v.name ?: ""
+
+                    if(name == "")
+                        StaticStore.mapcolcname.add(k)
+                    else
+                        StaticStore.mapcolcname.add(k + " - " + v.name)
+                }
+            }
+        }
     }
 
     private fun number(num: Int): String {

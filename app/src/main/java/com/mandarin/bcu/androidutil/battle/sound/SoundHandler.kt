@@ -113,7 +113,19 @@ object SoundHandler {
                     MUSIC.setOnCompletionListener {
                         MUSIC.reset()
 
-                        val h = Pack.def.ms[mu1] ?: return@setOnCompletionListener
+                        val h = if(mu1 < 1000) {
+                            Pack.def.ms[mu1]
+                        } else {
+                            val p = Pack.map[StaticStore.getPID(mu1)]
+
+                            if(p == null) {
+                                Pack.def.ms[3]
+                            } else {
+                                p.ms.list[StaticStore.getMusicIndex(mu1)]
+                            }
+                        }
+
+                        h ?: return@setOnCompletionListener
 
                         MUSIC.isLooping = true
 

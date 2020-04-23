@@ -29,6 +29,10 @@ import leakcanary.LeakCanary
 import java.util.*
 
 open class ConfigScreen : AppCompatActivity() {
+    companion object {
+        var revalidate: Boolean = false
+    }
+
     private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja)
     private val locales = StaticStore.lang
     private var started = false
@@ -71,6 +75,11 @@ open class ConfigScreen : AppCompatActivity() {
         DefineItf.check(this)
 
         setContentView(R.layout.activity_config_screen)
+
+        if(revalidate) {
+            val l = Locale.getDefault().language
+            Revalidater.validate(l, this)
+        }
 
         val back = findViewById<ImageButton>(R.id.configback)
 
@@ -212,12 +221,8 @@ open class ConfigScreen : AppCompatActivity() {
                     ed1.putInt("Language", position)
                     ed1.apply()
 
-                    var lang1 = locales[position]
-
-                    if (lang1 == "") lang1 = Resources.getSystem().configuration.locales[0].language
-
                     if (StaticStore.units != null || StaticStore.enemies != null)
-                        Revalidater.validate(lang1, this@ConfigScreen)
+                        revalidate = true
                     else {
                         StaticStore.getLang(position)
                     }

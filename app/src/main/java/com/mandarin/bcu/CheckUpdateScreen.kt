@@ -142,6 +142,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if (!shared.contains("PackReset0137")) {
+            ed.putBoolean("PackReset0137", false)
+            ed.apply()
+        }
+
         when {
             shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
@@ -154,6 +159,13 @@ open class CheckUpdateScreen : AppCompatActivity() {
         } else {
             AppWatcher.config = AppWatcher.config.copy(enabled = true)
             LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+        }
+
+        if(!shared.getBoolean("PackReset0137", false)) {
+            ed.putBoolean("PackReset0137", true)
+            ed.apply()
+
+            deleter(File(StaticStore.getExternalRes(this)))
         }
 
         DefineItf.check(this)

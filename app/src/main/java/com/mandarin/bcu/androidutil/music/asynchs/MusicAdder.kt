@@ -1,34 +1,35 @@
 package com.mandarin.bcu.androidutil.music.asynchs
 
 import android.app.Activity
-import android.content.Intent
 import android.os.AsyncTask
+import android.os.Parcelable
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.mandarin.bcu.MusicPlayer
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import com.google.android.material.tabs.TabLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
-import com.mandarin.bcu.androidutil.music.adapters.MusicListAdapter
-import common.CommonStatic
+import com.mandarin.bcu.androidutil.music.adapters.MusicListPager
 import common.util.pack.Pack
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.round
 
-class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
+class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTask<Void, Int, Void>() {
     private val weak = WeakReference(activity)
 
     override fun onPreExecute() {
         val ac = weak.get() ?: return
 
-        val list = ac.findViewById<ListView>(R.id.mulist)
+        val tab: TabLayout = ac.findViewById(R.id.mulisttab)
+        val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
 
-        setDisappear(list)
+        setDisappear(tab, pager)
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
@@ -39,37 +40,49 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
             StaticStore.musicread = true
         }
 
-        if(StaticStore.musicnames.size != Pack.def.ms.size())
-            for(i in Pack.def.ms.list.indices) {
-                val f = Pack.def.ms[i]
+        if(StaticStore.musicnames.size != Pack.map.size || StaticStore.musicData.isEmpty()) {
+            StaticStore.musicnames.clear()
+            StaticStore.musicData.clear()
 
-                val sp = SoundPlayer()
-                sp.setDataSource(f.toString())
-                sp.prepare()
-                StaticStore.durations.add(sp.duration)
+            for (i in Pack.map) {
+                val names = ArrayList<String>()
 
-                var time = sp.duration.toFloat()/1000f
+                for (j in i.value.ms.list.indices) {
+                    val f = i.value.ms.list[j]
 
-                sp.release()
+                    val sp = SoundPlayer()
+                    sp.setDataSource(f.toString())
+                    sp.prepare()
+                    StaticStore.durations.add(sp.duration)
 
-                var min = (time/60f).toInt()
+                    var time = sp.duration.toFloat() / 1000f
 
-                time -= min.toFloat()*60f
+                    sp.release()
 
-                var sec = round(time).toInt()
+                    var min = (time / 60f).toInt()
 
-                if(sec == 60) {
-                    min += 1
-                    sec = 0
-                }
+                    time -= min.toFloat() * 60f
 
-                val mins = min.toString()
+                    var sec = round(time).toInt()
 
-                val secs = if(sec < 10) "0$sec"
+                    if (sec == 60) {
+                        min += 1
+                        sec = 0
+                    }
+
+                    val mins = min.toString()
+
+                    val secs = if (sec < 10) "0$sec"
                     else sec.toString()
 
-                StaticStore.musicnames.add("$mins:$secs")
+                    names.add("$mins:$secs")
+
+                    StaticStore.musicData.add(i.key.toString() + "\\" + j)
+                }
+
+                StaticStore.musicnames[i.key] = names
             }
+        }
 
         publishProgress(0)
 
@@ -80,26 +93,19 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
         val ac = weak.get() ?: return
 
         val loadt: TextView = ac.findViewById(R.id.mulistloadt)
-        val list: ListView = ac.findViewById(R.id.mulist)
+        val tab: TabLayout = ac.findViewById(R.id.mulisttab)
+        val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
 
         loadt.text = ac.getString(R.string.medal_loading_data)
 
-        val loc = ArrayList<Int>()
-        val name = arrayOfNulls<String>(Pack.def.ms.size())
+        fm ?: return
 
-        for(i in Pack.def.ms.list.indices) {
-            loc.add(getFileLoc(Pack.def.ms.list[i]))
-            name[i] = Pack.def.ms.list[i].name
-        }
+        pager.removeAllViewsInLayout()
+        pager.adapter = MusicListTab(fm)
+        pager.offscreenPageLimit = Pack.map.keys.size
+        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-        val adapter = MusicListAdapter(ac,name,loc)
-        list.adapter = adapter
-
-        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
-            val intent = Intent(ac, MusicPlayer::class.java)
-            intent.putExtra("Music",position)
-            ac.startActivity(intent)
-        }
+        tab.setupWithViewPager(pager)
     }
 
     override fun onPostExecute(result: Void?) {
@@ -107,9 +113,10 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
         val loadt: TextView = ac.findViewById(R.id.mulistloadt)
         val prog: ProgressBar = ac.findViewById(R.id.mulistprog)
-        val list: ListView = ac.findViewById(R.id.mulist)
+        val tab: TabLayout = ac.findViewById(R.id.mulisttab)
+        val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
 
-        setAppear(list)
+        setAppear(tab, pager)
         setDisappear(loadt, prog)
     }
 
@@ -125,13 +132,52 @@ class MusicAdder(activity: Activity) : AsyncTask<Void, Int, Void>() {
         }
     }
 
-    private fun getFileLoc(f: File): Int {
-        var name = f.name
+    inner class MusicListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        init {
+            val lit = fm.fragments
+            val trans = fm.beginTransaction()
 
-        if(!name.endsWith(".ogg")) return 0
+            for(f in lit) {
+                trans.remove(f)
+            }
 
-        name = name.replace(".ogg","")
+            trans.commitAllowingStateLoss()
+        }
 
-        return CommonStatic.parseIntN(name)
+        private val keys = Pack.map.keys.toMutableList()
+
+        override fun getItem(position: Int): Fragment {
+            return MusicListPager.newIntance(keys[position])
+        }
+
+        override fun getCount(): Int {
+            return Pack.map.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            val keys = Pack.map.keys.toMutableList()
+
+            return if(position == 0) {
+                "Default"
+            } else {
+                val pack = Pack.map[keys[position]]
+
+                if(pack == null) {
+                    keys[position].toString()
+                }
+
+                val name = pack?.name ?: ""
+
+                if(name.isEmpty()) {
+                    keys[position].toString()
+                } else {
+                    name
+                }
+            }
+        }
+
+        override fun saveState(): Parcelable? {
+            return null
+        }
     }
 }

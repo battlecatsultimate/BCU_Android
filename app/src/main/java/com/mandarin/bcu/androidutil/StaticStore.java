@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,9 @@ import common.battle.Treasure;
 import common.io.OutStream;
 import common.system.MultiLangCont;
 import common.system.fake.FakeImage;
+import common.util.Data;
 import common.util.anim.ImgCut;
+import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
@@ -66,7 +69,7 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.13.6";
+    public static final String VER = "0.13.8";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
@@ -210,9 +213,11 @@ public class StaticStore {
     /**
      * Variables for Map/Stage
      **/
+    public static int[] bcMapNames = {R.string.stage_sol, R.string.stage_event, R.string.stage_collabo, R.string.stage_eoc, R.string.stage_ex, R.string.stage_dojo, R.string.stage_heavenly, R.string.stage_ranking, R.string.stage_challenge, R.string.stage_uncanny, R.string.stage_night, R.string.stage_baron, R.string.stage_enigma, R.string.stage_CA};
+    public static List<String> mapcolcname = new ArrayList<>();
     public static Map<Integer, MapColc> map = null;
-    public static String[][] mapnames = null;
-    public static final int[] MAPCODE = {0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24, 25, 27};
+    public static List<Integer> mapcode = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24, 25, 27));
+    public static int BCmaps = mapcode.size();
     public static Bitmap[] eicons = null;
     public static long maplistClick = SystemClock.elapsedRealtime();
     public static long stglistClick = SystemClock.elapsedRealtime();
@@ -244,7 +249,8 @@ public class StaticStore {
     /**
      * Variables for Music
      */
-    public static List<String> musicnames = new ArrayList<>();
+    public static Map<Integer, ArrayList<String>> musicnames = new HashMap<>();
+    public static List<String> musicData = new ArrayList<>();
     public static List<Integer> durations = new ArrayList<>();
 
     /**
@@ -319,6 +325,7 @@ public class StaticStore {
         resread = false;
         musicread = false;
         limitread = false;
+        packread = false;
 
         toast = null;
 
@@ -350,9 +357,11 @@ public class StaticStore {
         MEDEXP.clear();
 
         musicnames.clear();
+        musicData.clear();
+        durations.clear();
 
+        mapcolcname = new ArrayList<>();
         map = null;
-        mapnames = null;
         eicons = null;
         maplistClick = SystemClock.elapsedRealtime();
         stglistClick = SystemClock.elapsedRealtime();
@@ -374,6 +383,8 @@ public class StaticStore {
         stgschname = "";
         stmschname = "";
 
+        filterEntityList = new boolean[1];
+
         lunames = new ArrayList<>();
         ludata = new ArrayList<>();
         sets = null;
@@ -392,6 +403,10 @@ public class StaticStore {
         frame = 0;
         formposition = 0;
         animposition = 0;
+        gifFrame = 0;
+        gifisSaving = false;
+        enableGIF = false;
+        keepDoing = true;
 
         CommonStatic.clearData();
         filterReset();
@@ -1141,8 +1156,42 @@ public class StaticStore {
             return fullID;
         }
 
-        String id = Integer.toString(fullID);
+        return fullID % 1000;
+    }
 
-        return Integer.parseInt(id.substring(id.length()-3));
+    public static int getPID(int fullID) {
+        if(fullID < 1000) {
+            return 0;
+        }
+
+        return fullID / 1000;
+    }
+
+    public static int getMusicIndex(int fullID) {
+        int pID = getPID(fullID);
+        int mID = getID(fullID);
+
+        Pack p = Pack.map.get(pID);
+
+        if(p == null)
+            return 0;
+
+        for(int i = 0; i < p.ms.getList().size(); i++) {
+            File f = p.ms.getList().get(i);
+
+            String name = f.getName();
+
+            if(name.endsWith(".ogg")) {
+                name = name.replace(".ogg", "");
+
+                if(name.equals(Data.trio(mID))) {
+                    return i;
+                }
+            } else {
+                return 0;
+            }
+        }
+
+        return 0;
     }
 }

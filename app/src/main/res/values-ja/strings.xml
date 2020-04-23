@@ -4,22 +4,6 @@
     <string name="stg_inf">ステージ情報</string>
     <string name="def_animsch">フィルタ画面を開く</string>
     <string name="def_animbck">メインページへ戻る</string>
-    <string-array name="set_stg">
-        <item>レジェンドストーリー</item>
-        <item>イベントステージ</item>
-        <item>コラボステージ</item>
-        <item>日本編</item>
-        <item>EXステージ</item>
-        <item>ネコ道場</item>
-        <item>風雲にゃんこ塔</item>
-        <item>ネコ道場ランキング</item>
-        <item>チャレンジバトル</item>
-        <item>真レジェンドステージ</item>
-        <item>ネコビタンステージ</item>
-        <item>強襲ステージ</item>
-        <item>発掘ステージ</item>
-        <item>CA</item>
-    </string-array>
     <string name="def_stgbck">メインページへ戻る</string>
     <string name="sch_nm">絞り込み検索</string>
     <string name="def_schbck">アニメーションビューアへ戻る</string>
@@ -579,7 +563,6 @@
     <string name="main_announce_0130">Android11(アンドロイドR)対応アプリにするため、データ構造を変更しました。そのため、追加データの再ダウンロードが必要になる場合があります。 ご心配なさらず, アプリケーションは、ユーザデータが保存されている古いBCU(/storage/emulated/0/BCU/)フォルダを残します(例。画像等)、使用することも出来ますが不要な場合は削除することもできます。\n\n いつもBCU Androidをご利用いただきありがとうございます</string>
     <string name="main_confirm">確認</string>
     <string name="main_pack">パックを読み込んでいます…</string>
-    <string name="main_pack_music">"パックの音楽を解凍しています… : "</string>
     <string name="main_pack_bg">"パックの背景を解凍しています… : "</string>
     <string name="map_name">マップの名前</string>
     <string name="main_pack_ext">"パックを解凍しています… : "</string>
@@ -617,4 +600,20 @@
     <string name="talen_poi">毒撃耐性</string>
     <string name="talen_sur">烈波ダメージ耐性</string>
     <string name="lineup_const_curse">呪い砲レベル</string>
+    <string name="stage_sol">レジェンドストーリー</string>
+    <string name="stage_event">イベントステージ</string>
+    <string name="stage_collabo">コラボステージ</string>
+    <string name="stage_eoc">日本編</string>
+    <string name="stage_ex">EXステージ</string>
+    <string name="stage_dojo">ネコ道場</string>
+    <string name="stage_heavenly">風雲にゃんこ塔</string>
+    <string name="stage_ranking">ネコ道場ランキング</string>
+    <string name="stage_challenge">チャレンジバトル</string>
+    <string name="stage_uncanny">真レジェンドステージ</string>
+    <string name="stage_night">ネコビタンステージ</string>
+    <string name="stage_baron">強襲ステージ</string>
+    <string name="stage_enigma">発掘ステージ</string>
+    <string name="stage_CA">CA</string>
+    <string name="stg_enem_num">_ Enemies</string>
+    <string name="main_pack_castle">"Extracting Castle… : "</string>
 </resources>

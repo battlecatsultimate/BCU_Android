@@ -59,17 +59,13 @@
         android:id="@+id/stgspin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@color/stageSelect"
-        android:dropDownWidth="match_parent"
-        android:entries="@array/set_stg"
+        android:maxWidth="225dp"
         android:minWidth="144dp"
         android:popupBackground="?attr/stageSelect"
         app:layout_constraintBottom_toBottomOf="@+id/stgtool"
         app:layout_constraintEnd_toStartOf="@+id/stgfilter"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toEndOf="@+id/stgbck"
         app:layout_constraintTop_toTopOf="@+id/stgtool" />
 
     <ProgressBar

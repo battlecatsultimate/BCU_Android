@@ -32,7 +32,14 @@ public class AImageReader implements CommonStatic.ImgReader {
 
     @Override
     public File readFile(InStream is) {
-        return null;
+        String path = is.nextString();
+
+        System.out.println(path);
+
+        if(path.equals(""))
+            return null;
+
+        return new File(path);
     }
 
     /**

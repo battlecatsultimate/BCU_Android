@@ -7,19 +7,18 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.mandarin.bcu.R
+import common.util.pack.Pack
 import common.util.stage.MapColc
 
-class MapListAdapter(private val activity: Activity, private val maps: Array<String>, private val mapcode: Int, private val positions: ArrayList<Int>) : ArrayAdapter<String?>(activity, R.layout.map_list_layout, maps) {
+class MapListAdapter(private val activity: Activity, private val maps: ArrayList<String>, private val mapcode: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.map_list_layout, maps.toTypedArray()) {
 
     private class ViewHolder constructor(row: View) {
         var name: TextView = row.findViewById(R.id.map_list_name)
         var count: TextView = row.findViewById(R.id.map_list_coutns)
-
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
         val holder: ViewHolder
-        val mc = MapColc.MAPS[mapcode]
         val row: View
 
         if(view == null) {
@@ -32,7 +31,16 @@ class MapListAdapter(private val activity: Activity, private val maps: Array<Str
             holder = row.tag as ViewHolder
         }
 
+        val mc = if(custom) {
+            val p = Pack.map[mapcode] ?: return row
+
+            p.mc
+        } else {
+            MapColc.MAPS[mapcode]
+        }
+
         holder.name.text = withID(positions[position], maps[position])
+
         val numbers: String
         numbers =
                 if (mc != null)

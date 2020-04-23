@@ -35,9 +35,10 @@ class SoundPlayer : MediaPlayer() {
      * Improved MediaPlayer by releasing itself when it has to be finalized.
      */
     override fun finalize() {
-        super.finalize()
         isReleased = true
         release()
+
+        super.finalize()
     }
 
     override fun isPlaying(): Boolean {

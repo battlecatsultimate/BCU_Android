@@ -6,22 +6,6 @@
     <string name="def_animbck">Back to main page</string>
     <string name="def_animsch">Open Filter screens</string>
     <string name="def_stgbck">Back to main page</string>
-    <string-array name="set_stg">
-        <item>傳奇關卡</item>
-        <item>特別關卡</item>
-        <item>期間限定合作關卡</item>
-        <item>世界篇</item>
-        <item>EX關卡</item>
-        <item>貓咪道場關卡</item>
-        <item>風雲貓咪塔</item>
-        <item>排行關卡</item>
-        <item>挑戰賽</item>
-        <item>真傳奇關卡</item>
-        <item>喵力達專用關卡</item>
-        <item>巨大生物強襲</item>
-        <item>發掘關卡</item>
-        <item>CA</item>
-    </string-array>
     <string name="sch_bla">黑色敵人</string>
     <string name="sch_fl">飄浮敵人</string>
     <string name="sch_me">鋼鐵敵人</string>
@@ -580,7 +564,6 @@
     <string name="main_announce_0130">因應安卓11(安卓R)的資料建構改變,或許需要重新下載一些附加檔案,多餘的舊附加檔案會自動刪除(不包含使用者資料).\n\n 可將舊的使用者資料[/storage/emulated/0/BCU/](例如影像,隊伍編成)移入新位置[/storage/emulated/0/Android/data/com.mandarin.BCU/files/].\n\n 感謝使用 BCU Android.</string>
     <string name="main_confirm">確認</string>
     <string name="main_pack">讀取檔案…</string>
-    <string name="main_pack_music">"提取音樂檔案… : "</string>
     <string name="main_pack_bg">"提取場景檔案… : "</string>
     <string name="map_name">地圖名稱</string>
     <string name="main_pack_ext">"提取檔案… : "</string>
@@ -618,4 +601,20 @@
     <string name="talen_poi">Res.Poison</string>
     <string name="talen_sur">Res.Surge Attack</string>
     <string name="lineup_const_curse">Curse Cannon Level</string>
+    <string name="stage_sol">傳奇關卡</string>
+    <string name="stage_event">特別關卡</string>
+    <string name="stage_collabo">期間限定合作關卡</string>
+    <string name="stage_eoc">世界篇</string>
+    <string name="stage_ex">EX關卡</string>
+    <string name="stage_dojo">貓咪道場關卡</string>
+    <string name="stage_heavenly">風雲貓咪塔</string>
+    <string name="stage_ranking">排行關卡</string>
+    <string name="stage_challenge">挑戰賽</string>
+    <string name="stage_uncanny">真傳奇關卡</string>
+    <string name="stage_night">喵力達專用關卡</string>
+    <string name="stage_baron">巨大生物強襲</string>
+    <string name="stage_enigma">發掘關卡</string>
+    <string name="stage_CA">CA</string>
+    <string name="stg_enem_num">_ Enemies</string>
+    <string name="main_pack_castle">"Extracting Castle… : "</string>
 </resources>

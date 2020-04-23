@@ -169,10 +169,11 @@ public class AACLoader implements AnimCI.AnimLoader {
     public String getName() {
         return name;
     }
-
     @Override
-    public FakeImage getNum() {
-        check();
+    public FakeImage getNum(boolean load) {
+        if(load) {
+            check();
+        }
 
         return num;
     }

@@ -35,17 +35,6 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar11"
         app:srcCompat="@drawable/back_button" />
 
-    <ListView
-        android:id="@+id/mulist"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar11">
-
-    </ListView>
-
     <ProgressBar
         android:id="@+id/mulistprog"
         style="?android:attr/progressBarStyle"
@@ -66,5 +55,29 @@
         app:layout_constraintEnd_toEndOf="@+id/mulistprog"
         app:layout_constraintStart_toStartOf="@+id/mulistprog"
         app:layout_constraintTop_toBottomOf="@+id/mulistprog" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/mulisttab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar11"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
+        app:tabMode="auto"
+        app:tabTextAppearance="@style/CounterStyle"
+        app:tabTextColor="?attr/TextPrimary" />
+
+    <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+        android:id="@+id/mulistpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mulisttab">
+
+    </com.mandarin.bcu.androidutil.adapters.MeasureViewPager>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

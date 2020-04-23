@@ -61,7 +61,7 @@ class MusicList : AppCompatActivity() {
             finish()
         }
 
-        MusicAdder(this).execute()
+        MusicAdder(this, supportFragmentManager).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {

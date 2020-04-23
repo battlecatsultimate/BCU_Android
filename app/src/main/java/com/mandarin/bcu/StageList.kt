@@ -14,6 +14,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader
 import common.system.MultiLangCont
+import common.util.pack.Pack
 import common.util.stage.MapColc
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -22,6 +23,7 @@ import java.util.*
 class StageList : AppCompatActivity() {
     private var mapcode = 0
     private var stid = 0
+    private var custom = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,20 +68,30 @@ class StageList : AppCompatActivity() {
         if (extra != null) {
             mapcode = extra.getInt("mapcode")
             stid = extra.getInt("stid")
+            custom = extra.getBoolean("custom")
         }
 
         val name = findViewById<TextView>(R.id.stglistname)
 
-        val mc = MapColc.MAPS[mapcode]
+        val index = StaticStore.mapcode.indexOf(mapcode)
+
+        val mc = if(index < StaticStore.BCmaps) {
+            MapColc.MAPS[mapcode]
+        } else {
+            val p = Pack.map[mapcode] ?: return
+
+            p.mc
+        }
 
         if (mc != null) {
             val stm = mc.maps[stid]
-            var stname = MultiLangCont.SMNAME.getCont(stm)
-            if (stname == null) stname = number(stid)
+            var stname = MultiLangCont.SMNAME.getCont(stm) ?: stm.name
+            if (stname == null)
+                stname = number(stid)
             name.text = stname
         }
 
-        val stageLoader = StageLoader(this, mapcode, stid)
+        val stageLoader = StageLoader(this, mapcode, stid, custom)
 
         stageLoader.execute()
     }

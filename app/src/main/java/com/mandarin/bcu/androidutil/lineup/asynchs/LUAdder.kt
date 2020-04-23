@@ -6,23 +6,22 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.AsyncTask
-import android.os.Environment
 import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.PagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -33,6 +32,10 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.SearchFilter
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+import com.mandarin.bcu.androidutil.fakeandroid.FIBM
+import com.mandarin.bcu.androidutil.io.AImageWriter
+import com.mandarin.bcu.androidutil.io.DefferedLoader
+import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.adapters.*
@@ -41,19 +44,33 @@ import com.mandarin.bcu.androidutil.unit.Definer
 import common.battle.BasisSet
 import common.io.InStream
 import common.system.MultiLangCont
+import common.system.fake.FakeImage
 import common.util.Data
 import common.util.pack.Pack
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.lang.ref.WeakReference
+import java.security.NoSuchAlgorithmException
 import java.util.*
 
-class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
+class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncTask<Void?, String?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var prePosit = 0
     private var initialized = false
     private var tab: LUTab? = null
     private val ids = intArrayOf(R.string.lineup_list, R.string.lineup_unit, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_combo)
     private val names = arrayOfNulls<String>(ids.size)
+    
+    private val lu = "0"
+    private val done = "1"
+    private val pack = "2"
+    private val image = "3"
+    private val castle = "4"
+    private val bg = "5"
+    private val packext = "6"
+    
     override fun onPreExecute() {
         StaticStore.LULoading = true
         val activity = weakReference.get() ?: return
@@ -71,6 +88,146 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         Definer().define(activity)
+
+        publishProgress(pack)
+
+        checkValidPack()
+        handlePack()
+        removeIfDifferent()
+
+        try {
+            if(!StaticStore.packread && Pack.map.size == 1) {
+                Pack.read()
+                StaticStore.packread = true
+            }
+            DefferedLoader.clearPending("Context", activity)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
+        }
+
+        for(path in DefineItf.packPath) {
+            val f = File(path)
+
+            val fname = f.name
+
+            if (fname.endsWith(".bcupack")) {
+                if (!checkPack(f)) {
+                    val p = findPack(f)
+
+                    val name = f.name.replace(".bcupack", "")
+
+                    val shared = activity.getSharedPreferences(name, Context.MODE_PRIVATE)
+                    val ed = shared.edit()
+
+                    ed.putString(name, StaticStore.fileToMD5(f))
+                    ed.apply()
+
+                    val resimg = StaticStore.getExternalRes(activity) + "img/$name/"
+
+                    val g = File(resimg)
+
+                    val glit = g.listFiles() ?: continue
+
+                    for (gs in glit) {
+                        val pngname = gs.name
+
+                        publishProgress(image, pngname.replace(".png", ""))
+
+                        if (pngname.endsWith(".png")) {
+                            val md5 = StaticStore.fileToMD5(gs)
+
+                            StaticStore.encryptPNG(gs.absolutePath, md5, StaticStore.IV, true)
+
+                            ed.putString(gs.absolutePath.replace(".png", ".bcuimg"), md5)
+                            ed.apply()
+                        }
+                    }
+
+                    p ?: continue
+
+                    val bpathList = ArrayList<String>()
+
+                    for (i in p.bg.list) {
+                        val img = i.img?.bimg ?: continue
+
+                        val bpath = StaticStore.getExternalRes(activity) + "img/$name/"
+                        val bname = findBgName(bpath)
+
+                        val info = extractImage(activity, img, bpath, bname, false)
+
+                        if (info.size != 2)
+                            continue
+
+                        val result = info[0] + "\\" + info[1]
+
+                        (i.img.bimg as FIBM).reference = result
+
+                        bpathList.add(result)
+                    }
+
+                    for (i in bpathList) {
+                        val info = i.split("\\")
+
+                        val bf = File(info[0].replace(".bcuimg", ".png"))
+
+                        if (!bf.exists())
+                            continue
+
+                        publishProgress(bg, bf.name.replace(".png", ""))
+
+                        if (info.size != 2)
+                            continue
+
+                        StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
+                    }
+
+                    val cpathList = ArrayList<String>()
+
+                    for (i in p.cs.list) {
+                        val img = i.img ?: continue
+
+                        val cpath = StaticStore.getExternalRes(activity) + "img/$name/"
+                        val cname = findCsName(cpath)
+
+                        val info = extractImage(activity, img, cpath, cname, false)
+
+                        if (info.size != 2)
+                            continue
+
+                        val result = info[0] + "\\" + info[1]
+
+                        (i.img as FIBM).reference = result
+
+                        cpathList.add(result)
+                    }
+
+                    for (i in cpathList) {
+                        val info = i.split("\\")
+
+                        val cf = File(info[0].replace(".bcuimg", ".png"))
+
+                        if (!cf.exists())
+                            continue
+
+                        publishProgress(castle, cf.name.replace(".png", ""))
+
+                        if (info.size != 2)
+                            continue
+
+                        StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
+                    }
+
+                    publishProgress(packext, f.name.replace(".bcupack", ""))
+
+                    p.packData(AImageWriter())
+                }
+            }
+        }
+
+        DefineItf.packPath.clear()
+
+        StaticStore.filterEntityList = BooleanArray(Pack.map.size)
 
         if (StaticStore.lunames.isEmpty() || StaticStore.ludata.isEmpty()) {
             StaticStore.lunames.clear()
@@ -104,7 +261,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
             }
         }
 
-        publishProgress(0)
+        publishProgress(lu)
         if (!StaticStore.LUread) {
             val path = StaticStore.getExternalPath(activity)+"user/basis.v"
             val f = File(path)
@@ -120,14 +277,14 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         try {
                             BasisSet.read(`is`)
                         } catch (e: Exception) {
-                            publishProgress(R.string.lineup_file_err)
+                            publishProgress(activity.getString(R.string.lineup_file_err))
                             val def = BasisSet.list[0]
                             BasisSet.list.clear()
                             BasisSet.list.add(def)
                             ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                         }
                     } catch (e: Exception) {
-                        publishProgress(R.string.lineup_file_err)
+                        publishProgress(activity.getString(R.string.lineup_file_err))
                         val def = BasisSet.list[0]
                         BasisSet.list.clear()
                         BasisSet.list.add(def)
@@ -138,20 +295,47 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
             StaticStore.LUread = true
         }
         StaticStore.sets = BasisSet.list
-        publishProgress(1)
+        publishProgress(done)
         return null
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg result: Int?) {
+    override fun onProgressUpdate(vararg results: String?) {
         val activity = weakReference.get() ?: return
-        when {
-            result[0] == 1 -> {
+        val st = activity.findViewById<TextView>(R.id.lineupst)
+        when(results[0]) {
+            pack -> {
+                st.setText(R.string.main_pack)
+            }
+
+            image -> {
+                val name = activity.getString(R.string.main_pack_img)+ (results[1] ?: "")
+
+                st.text = name
+            }
+
+            bg -> {
+                val name = activity.getString(R.string.main_pack_bg) + (results[1] ?: "")
+
+                st.text = name
+            }
+
+            castle -> {
+                val name = activity.getString(R.string.main_pack_castle) + (results[1] ?: "")
+
+                st.text = name
+            }
+
+            packext -> {
+                val name = activity.getString(R.string.main_pack_ext)+ (results[1] ?: "")
+
+                st.text = name
+            }
+            done -> {
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                 var setn = shared.getInt("equip_set", 0)
                 var lun = shared.getInt("equip_lu", 0)
                 val prog = activity.findViewById<ProgressBar>(R.id.lineupprog)
-                val st = activity.findViewById<TextView>(R.id.lineupst)
                 val pager: MeasureViewPager = activity.findViewById(R.id.lineuppager)
                 val tabs: TabLayout = activity.findViewById(R.id.lineuptab)
                 val bck: FloatingActionButton = activity.findViewById(R.id.lineupbck)
@@ -720,8 +904,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 setspin.setSelection(setn)
                 luspin.setSelection(lun)
             }
-            result[0] == 0 -> {
-                val st = activity.findViewById<TextView>(R.id.lineupst)
+            lu -> {
                 st.setText(R.string.lineup_reading)
             }
             else -> {
@@ -764,14 +947,6 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
         }
     }
 
-    private fun withID(id: Int, name: String): String {
-        return if (name == "") {
-            number(id)
-        } else {
-            number(id) + " - " + name
-        }
-    }
-
     private inner class LUTab internal constructor(fm: FragmentManager?, private val lineup: LineUpView) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         init {
             val lit = fm?.fragments
@@ -809,6 +984,243 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
         override fun saveState(): Parcelable? {
             return null
+        }
+    }
+
+    private fun checkPack(f: File) : Boolean {
+        val ac = weakReference.get() ?: return false
+
+        val name = f.name.replace(".bcupack","").replace(".bcudata","")
+
+        val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
+
+        return if(shared.contains(name)) {
+            val md5 = shared.getString(name, "")
+
+            val fmd5 = StaticStore.fileToMD5(f)
+
+            val g = File(StaticStore.getExternalRes(ac)+"data/"+f.name.replace(".bcupack",".bcudata"))
+
+            md5 == fmd5 && g.exists()
+        } else {
+            false
+        }
+    }
+
+    private fun findBgName(path: String) : String {
+        var i = 0
+
+        while(true) {
+            val name = "bg-"+ Data.trio(i)+".png"
+
+            val f = File(path, name)
+
+            if(f.exists()) {
+                i++
+            } else {
+                println(name)
+                return name
+            }
+        }
+    }
+
+    private fun findCsName(path: String) : String {
+        var i = 0
+
+        while(true) {
+            val name = "castle-"+ Data.trio(i)+".png"
+
+            val f = File(path, name)
+
+            if(f.exists()) {
+                i++
+            } else {
+                return name
+            }
+        }
+    }
+
+    private fun findPack(f: File) : Pack? {
+        val path = f.absolutePath
+
+        for(p in Pack.map) {
+            if(p.value.id == 0)
+                continue
+
+            val ppath = p.value.file?.absolutePath ?: ""
+
+            if(ppath == path)
+                return p.value
+        }
+
+        return null
+    }
+
+    private fun extractImage(c: Context, img: FakeImage, path: String, name: String, unload: Boolean) : Array<String> {
+        val f = File(path)
+        val result = arrayOf("", "")
+
+        if(!f.exists()) {
+            if(!f.mkdirs()) {
+                Log.e("PackExtract", "Failed to create directory "+f.absolutePath)
+                return result
+            }
+        }
+
+        val g = File(path, name)
+
+        if(!g.exists()) {
+            if(!g.createNewFile()) {
+                Log.e("PackExtract", "Failed to create file "+g.absolutePath)
+                return result
+            }
+        }
+
+        img.bimg() ?: return result
+
+        (img.bimg() as Bitmap).compress(Bitmap.CompressFormat.PNG, 0, FileOutputStream(g))
+
+        if(unload) {
+            img.unload()
+        }
+
+        return try {
+            arrayOf(g.absolutePath.replace(".png",".bcuimg"), StaticStore.fileToMD5(g))
+        } catch (e: NoSuchAlgorithmException) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload, c)
+            arrayOf(g.absolutePath.replace(".png", ".bcuimg"),"")
+        }
+    }
+
+    private fun removeIfDifferent() {
+        val ac = weakReference.get() ?: return
+
+        val path = File(StaticStore.getExternalPack(ac))
+
+        val lit = path.listFiles() ?: return
+
+        for(f in lit) {
+            if(!f.name.endsWith(".bcupack"))
+                continue
+
+            val name = f.name.replace(".bcupack", "").replace(".bcuata", "")
+
+            val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
+
+            if (shared.contains(name)) {
+                val omd5 = shared.getString(name, "")
+
+                val cmd5 = StaticStore.fileToMD5(f)
+
+                if (omd5 != cmd5) {
+                    val g = File(StaticStore.getExternalRes(ac) + "data/" + f.name.replace(".bcupack", ".bcudata"))
+
+                    if (g.exists()) {
+                        if (!g.delete()) {
+                            Log.e("PackExtract", "Failed to remove file " + g.absolutePath)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Compare bcupack files with shared preferences data, and remove other pack data automatically
+     */
+    private fun handlePack() {
+        val ac = weakReference.get() ?: return
+
+        val sharedDir = StaticStore.getDataPath()+"shared_prefs/"
+
+        val f = File(sharedDir)
+
+        if(!f.exists())
+            return
+
+        val lit = f.listFiles() ?: return
+
+        val handler = listOf<String>().toMutableList()
+
+        for(fs in lit) {
+            if(fs.name == "configuration.xml")
+                continue
+
+            val name = fs.name.replace(".xml",".bcupack")
+
+            val g = File(StaticStore.getExternalPack(ac), name)
+
+            if(!g.exists()) {
+                handler.add(name.replace(".bcupack",""))
+            }
+        }
+
+        for(name in handler) {
+            removeRelatedPackData(name)
+        }
+    }
+
+    /**
+     * Remove all pack data with specified name
+     *
+     * @param name Name of pack file, must not contain extension
+     */
+    private fun removeRelatedPackData(name: String) {
+        val ac = weakReference.get() ?: return
+
+        if(name == "configuration")
+            return
+
+        val sharedPath = StaticStore.getDataPath()+"shared_prefs/$name.xml"
+
+        var f = File(sharedPath)
+
+        if(f.exists()) {
+            if(!f.delete()) {
+                Log.e("PackExtract","Failed to remove file "+f.absolutePath)
+            }
+        }
+
+        val resDataPath = StaticStore.getExternalRes(ac)+"data/$name.bcudata"
+
+        f = File(resDataPath)
+
+        if(f.exists()) {
+            if(!f.delete()) {
+                Log.e("PackExtract", "Failed to remove file "+f.absolutePath)
+            }
+        }
+
+        val resImgPath = StaticStore.getExternalRes(ac)+"img/$name/"
+
+        f = File(resImgPath)
+
+        StaticStore.removeAllFiles(f)
+    }
+
+    /**
+     * Check if there are invalid bcupack files, so it won't affect application data shared preferences
+     */
+    private fun checkValidPack() {
+        val ac = weakReference.get() ?: return
+
+        val invalid = listOf("configuration")
+
+        val packDir = StaticStore.getExternalPack(ac)
+
+        val f = File(packDir)
+
+        if(!f.exists())
+            return
+
+        val lit = f.listFiles() ?: return
+
+        for(fs in lit) {
+            if(invalid.contains(fs.name.replace(".bcupack","").replace(".bcudata","").toLowerCase(Locale.ROOT))) {
+                if(!fs.delete()) {
+                    Log.e("Adder", "Failed to delete file "+ f.absolutePath)
+                }
+            }
         }
     }
 }
