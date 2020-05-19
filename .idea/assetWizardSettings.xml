@@ -192,8 +192,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
-                            <entry key="outputName" value="ic_scrollbar_no_selected" />
-                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\scrollbar.svg" />
+                            <entry key="outputName" value="ic_approve" />
+                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\approve.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -92,9 +92,10 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
         val id = data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0
 
         val em = if(id < StaticStore.enemies.size) {
-            StaticStore.enemies[data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0]
+            StaticStore.enemies[id]
         } else {
-            Pack.map[mapcode]?.es?.get(StaticStore.getID(data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0)) ?: return
+            val epid = StaticStore.getPID(id)
+            Pack.map[epid]?.es?.get(StaticStore.getID(id)) ?: return
         }
 
         val icon = em.anim?.edi?.img?.bimg()

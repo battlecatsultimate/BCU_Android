@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.io;
+package com.mandarin.bcu.androidutil.pack;
 
 import android.util.Log;
 
@@ -25,7 +25,7 @@ public class AImageReader implements CommonStatic.ImgReader {
 
     private boolean isNull;
 
-    AImageReader(String n, boolean isNull) {
+    public AImageReader(String n, boolean isNull) {
         name = n;
         this.isNull = isNull;
     }

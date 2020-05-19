@@ -16,4 +16,7 @@
     <color name="ErrorPrimary">#f44336</color>
     <color name="SemiBackgroundPrimary">#7DFFFFFF</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/UnitinfoName</color>
+    <color name="status_notsolved">#d85252</color>
+    <color name="status_warning">#ffc400</color>
+    <color name="status_approve">#4caf50</color>
 </resources>

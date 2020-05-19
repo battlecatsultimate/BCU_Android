@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.io;
+package com.mandarin.bcu.androidutil.pack;
 
 import android.util.Log;
 

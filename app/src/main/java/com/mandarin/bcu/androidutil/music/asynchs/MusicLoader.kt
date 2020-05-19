@@ -594,24 +594,24 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     }
 
                     if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.DECELERATE, ah, 0)
+                        val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.ACCELDECEL, ah, 0)
                         aanim.start()
 
-                        val aalanim = AlphaAnimator(album, 200, AnimatorConst.DECELERATE, 1f, 0f)
+                        val aalanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
                         aalanim.start()
 
                         mulist.postDelayed({
-                            val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.DECELERATE, 0, ch)
+                            val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, 0, ch)
                             mulanim.start()
 
-                            val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.DECELERATE, 0f, 1f)
+                            val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
                             mulalanim.start()
                         }, 200)
                     } else {
-                        val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.DECELERATE, ch, StaticStore.dptopx(254f, ac))
+                        val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, ch, StaticStore.dptopx(254f, ac))
                         canim.start()
 
-                        val aanim = AlphaAnimator(album, 200, AnimatorConst.DECELERATE, 1f, 0f)
+                        val aanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
                         aanim.start()
                     }
                 }
@@ -624,24 +624,24 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     close.hide()
 
                     if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.DECELERATE, ch, 0)
+                        val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, ch, 0)
                         mulanim.start()
 
-                        val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.DECELERATE, 1f, 0f)
+                        val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
                         mulalanim.start()
 
                         mulist.postDelayed({
-                            val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.DECELERATE, 0, ah)
+                            val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.ACCELDECEL, 0, ah)
                             aanim.start()
 
-                            val aalanim = AlphaAnimator(album, 200, AnimatorConst.DECELERATE, 0f, 1f)
+                            val aalanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
                             aalanim.start()
                         }, 200)
                     } else {
-                        val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.DECELERATE, StaticStore.dptopx(254f, ac), ch)
+                        val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, StaticStore.dptopx(254f, ac), ch)
                         canim.start()
 
-                        val aanim = AlphaAnimator(album, 200, AnimatorConst.DECELERATE, 0f, 1f)
+                        val aanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
                         aanim.start()
                     }
                 }

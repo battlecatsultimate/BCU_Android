@@ -1,10 +1,11 @@
-package com.mandarin.bcu.androidutil.io;
+package com.mandarin.bcu.androidutil.pack;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM;
+import com.mandarin.bcu.androidutil.io.DefferedLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;

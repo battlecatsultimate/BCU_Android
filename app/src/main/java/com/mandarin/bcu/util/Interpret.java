@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import common.battle.BasisLU;
 import common.battle.BasisSet;
@@ -107,8 +106,11 @@ public class Interpret extends Data {
 
     private static final int[][] VENOM_CMP = {{0, -1, 1, 25, 26, 30}, {0, -1, 1, 25, 27, 30}, {0, -1, 1, 25, 28, 30}, {0, -1, 1, 25, 29 ,30}};
 
-    private static final int[][] SUMMON_CMP_U = {{0, -1, 31, 32, 9, 25}, {0, -1, 31, 9, 25, 45}};
+    private static final int[][] SUMMON_CMP_U = {{0, -1, 31, 32, 9, 25}, {0, -1, 31, 9, 25, 44}};
     private static final int[][] SUMMON_LOC_U = {{0, -1, 1, 2, 5, 4}, {0, -1, 1, 5, 4, 2}};
+
+    private static final int[][] SUMMON_CMP_E = {{0, -1, 31, 32, 45, 9, 25}, {0, -1, 31, 45, 9, 25, 44}};
+    private static final int[][] SUMMON_LOC_E = {{0, -1, 1, 2, 3, 5, 4}, {0, -1, 1, 3, 5, 4, 2}};
 
     /**
      * proc data formatter for KR,JP
@@ -130,8 +132,11 @@ public class Interpret extends Data {
 
     private static final int[][] VENOM_CMP2 = {{0, 1, -1, 25, 30, 26}, {0, 1, -1, 25, 30, 27}, {0, 1, -1, 25, 30, 28}, {0, 1, -1, 25, 30, 29}};
 
-    private static final int[][] SUMMON_CMP2_U = {{0, 9, 32, 31, -1, 25}, {0, 9, 31, -1, 25, 45}};
+    private static final int[][] SUMMON_CMP2_U = {{0, 9, 32, 31, -1, 25}, {0, 9, 31, -1, 25, 44}};
     private static final int[][] SUMMON_LOC2_U = {{0, 5, 2, 1, -1, 4}, {0, 5, 1, -1, 4, 2}};
+
+    private static final int[][] SUMMON_CMP2_E = {{0, 9, 32, 45, 31, -1 ,25}, {0, 9, 45, 31, -1, 25, 44}};
+    private static final int[][] SUMMON_LOC2_E = {{0, 5, 2, 3, 1, -1, 4}, {0, 5, 3, 1, -1, 4, 2}};
 
     /**
      * combo string component
@@ -144,6 +149,8 @@ public class Interpret extends Data {
     private static final int[][] CDC = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 3}, {1, 0}, {1, 1}, {2, 2},
             {}, {1, 1}, {1, 1}, {2, 2}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1},
             {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
+
+    private static final List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19, 33, 34);
 
     public static final int[] EABIIND = {5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119};
     public static final int[] ABIIND = {113, 114, 115, 116, 117, 118, 119};
@@ -196,7 +203,6 @@ public class Interpret extends Data {
     }
 
     public static List<String> getProc(Context ac, MaskUnit du, int cmp, int frse) {
-        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19, 33, 34);
         List<Integer> res = new ArrayList<>();
 
         for(int i = immune.size()-1; i >= 0; i--) {
@@ -207,8 +213,6 @@ public class Interpret extends Data {
         List<Integer> id = new ArrayList<>();
 
         MaskAtk mr = du.getRepAtk();
-
-        String lang = Locale.getDefault().getLanguage();
 
         if (cmp == 0) {
             //EN Handling
@@ -235,14 +239,14 @@ public class Interpret extends Data {
                     loc = LOC[i];
                 }
 
-                StringBuilder ans = getProcNameEN(ac, i, mr, c, loc, immune, res, lang, frse);
+                StringBuilder ans = getProcNameEN(ac, i, mr, c, loc, res, frse,true);
 
                 if(!l.contains(ans.toString())) {
                     if(id.contains(i)) {
-                        if(lang.equals("en")) {
+                        if(StaticStore.isEnglish()) {
                             ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
                         } else {
-                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
+                            ans.append(" [").append(TEXT[46].replace("_", Integer.toString(1))).append("]");
                         }
                     }
 
@@ -275,11 +279,11 @@ public class Interpret extends Data {
                     loc2 = LOC2[i];
                 }
 
-                StringBuilder ans = getProcNameKR(ac, i, mr, c2, loc2, immune, res, frse);
+                StringBuilder ans = getProcNameKR(ac, i, mr, c2, loc2, res, frse, true);
 
                 if(!l.contains(ans.toString())) {
                     if(id.contains(i)) {
-                        ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
+                        ans.append(" [").append(TEXT[46].replace("_", Integer.toString(1))).append("]");
                     }
 
                     l.add(ans.toString());
@@ -316,14 +320,14 @@ public class Interpret extends Data {
                         loc = LOC[i];
                     }
 
-                    StringBuilder ans = getProcNameEN(ac, i, ma, c, loc, immune, res, lang, frse);
+                    StringBuilder ans = getProcNameEN(ac, i, ma, c, loc, res, frse, true);
 
                     if(!l.contains(ans.toString())) {
                         if(id.contains(i)) {
-                            if(lang.equals("en")) {
+                            if(StaticStore.isEnglish()) {
                                 ans.append(" [").append(numberWithExtension(k + 1)).append(" Attack").append("]");
                             } else {
-                                ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                                ans.append(" [").append(TEXT[46].replace("_", Integer.toString(k+1))).append("]");
                             }
                         }
 
@@ -356,11 +360,11 @@ public class Interpret extends Data {
                         loc2 = LOC2[i];
                     }
 
-                    StringBuilder ans = getProcNameKR(ac, i, ma, c2, loc2, immune, res, frse);
+                    StringBuilder ans = getProcNameKR(ac, i, ma, c2, loc2, res, frse, true);
 
                     if(!l.contains(ans.toString())) {
                         if(id.contains(i)) {
-                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                            ans.append(" [").append(TEXT[46].replace("_", Integer.toString(k+1))).append("]");
                         }
 
                         l.add(ans.toString());
@@ -374,7 +378,6 @@ public class Interpret extends Data {
     }
 
     public static List<String> getProc(Context activity, MaskEnemy du, int cmp, int frse) {
-        List<Integer> immune = Arrays.asList(13, 14, 15, 16, 17, 18, 19, 33);
         List<Integer> res = new ArrayList<>();
 
         for(int i = immune.size()-1; i >= 0; i--) {
@@ -385,8 +388,6 @@ public class Interpret extends Data {
         List<Integer> id = new ArrayList<>();
 
         MaskAtk mr = du.getRepAtk();
-
-        String lang = Locale.getDefault().getLanguage();
 
         if (cmp == 0) {
             // EN Handling
@@ -399,18 +400,28 @@ public class Interpret extends Data {
 
                 if(i == P_POISON) {
                     c = VENOM_CMP[getVenomType(mr.getProc(i)[4])];
+                } else if(i == P_SUMMON) {
+                    c = SUMMON_CMP_E[getSummonType(mr.getProc(i)[4])];
                 } else {
                     c = CMP[i];
                 }
 
-                StringBuilder ans = getProcNameEN(activity, i, mr, c, LOC[i], immune, res, lang, frse);
+                int [] loc;
+
+                if(i == P_SUMMON) {
+                    loc = SUMMON_LOC_E[getSummonType(mr.getProc(i)[4])];
+                } else {
+                    loc = LOC[i];
+                }
+
+                StringBuilder ans = getProcNameEN(activity, i, mr, c, loc, res, frse, false);
 
                 if(!l.contains(ans.toString())) {
                     if(id.contains(i)) {
-                        if(lang.equals("en")) {
+                        if(StaticStore.isEnglish()) {
                             ans.append(" [").append(numberWithExtension(1)).append(" Attack").append("]");
                         } else {
-                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
+                            ans.append(" [").append(TEXT[46].replace("_", Integer.toString(1))).append("]");
                         }
                     }
 
@@ -426,18 +437,28 @@ public class Interpret extends Data {
 
                 if(i == P_POISON) {
                     c2 = VENOM_CMP2[getVenomType(mr.getProc(i)[4])];
+                } else if(i == P_SUMMON) {
+                    c2 = SUMMON_CMP2_E[getSummonType(mr.getProc(i)[4])];
                 } else {
                     c2 = CMP2[i];
+                }
+
+                int [] loc2;
+
+                if(i == P_SUMMON) {
+                    loc2 = SUMMON_LOC2_E[getSummonType(mr.getProc(i)[4])];
+                } else {
+                    loc2 = LOC2[i];
                 }
 
                 if (mr.getProc(i)[0] == 0)
                     continue;
 
-                StringBuilder ans = getProcNameKR(activity, i, mr, c2, LOC2[i], immune, res, frse);
+                StringBuilder ans = getProcNameKR(activity, i, mr, c2, loc2, res, frse, false);
 
                 if(!l.contains(ans.toString())) {
                     if(id.contains(i)) {
-                        ans.append(" [").append(TEXT[47].replace("_", Integer.toString(1))).append("]");
+                        ans.append(" [").append(TEXT[46].replace("_", Integer.toString(1))).append("]");
                     }
 
                     l.add(ans.toString());
@@ -460,18 +481,28 @@ public class Interpret extends Data {
 
                     if(i == P_POISON) {
                         c = VENOM_CMP[getVenomType(ma.getProc(i)[4])];
+                    } else if(i == P_SUMMON) {
+                        c = SUMMON_CMP_E[getSummonType(ma.getProc(i)[4])];
                     } else {
                         c = CMP[i];
                     }
 
-                    StringBuilder ans = getProcNameEN(activity, i, ma, c, LOC[i], immune, res, lang, frse);
+                    int [] loc;
+
+                    if(i == P_SUMMON) {
+                        loc = SUMMON_LOC_E[getSummonType(ma.getProc(i)[4])];
+                    } else {
+                        loc = LOC[i];
+                    }
+
+                    StringBuilder ans = getProcNameEN(activity, i, ma, c, loc, res, frse, false);
 
                     if(!l.contains(ans.toString())) {
                         if(id.contains(i)) {
-                            if(lang.equals("en")) {
+                            if(StaticStore.isEnglish()) {
                                 ans.append(" [").append(numberWithExtension(k + 1)).append(" Attack").append("]");
                             } else {
-                                ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                                ans.append(" [").append(TEXT[46].replace("_", Integer.toString(k+1))).append("]");
                             }
                         }
 
@@ -487,18 +518,28 @@ public class Interpret extends Data {
 
                     if(i == P_POISON) {
                         c2 = VENOM_CMP2[getVenomType(ma.getProc(i)[4])];
+                    } else if(i == P_SUMMON) {
+                        c2 = SUMMON_CMP2_E[getSummonType(ma.getProc(i)[4])];
                     } else {
                         c2 = CMP2[i];
+                    }
+
+                    int [] loc2;
+
+                    if(i == P_SUMMON) {
+                        loc2 = SUMMON_LOC2_E[getSummonType(ma.getProc(i)[4])];
+                    } else {
+                        loc2 = LOC2[i];
                     }
 
                     if (ma.getProc(i)[0] == 0)
                         continue;
 
-                    StringBuilder ans = getProcNameKR(activity, i, ma, c2, LOC2[i], immune, res, frse);
+                    StringBuilder ans = getProcNameKR(activity, i, ma, c2, loc2, res, frse, false);
 
                     if(!l.contains(ans.toString())) {
                         if(id.contains(i)) {
-                            ans.append(" [").append(TEXT[47].replace("_", Integer.toString(k+1))).append("]");
+                            ans.append(" [").append(TEXT[46].replace("_", Integer.toString(k+1))).append("]");
                         }
 
                         l.add(ans.toString());
@@ -511,14 +552,14 @@ public class Interpret extends Data {
         return l;
     }
 
-    private static StringBuilder getProcNameEN(Context ac, int i, MaskAtk ma, int [] c, int [] loc, List<Integer> immune, List<Integer> res, String lang, int frse) {
+    private static StringBuilder getProcNameEN(Context ac, int i, MaskAtk ma, int[] c, int[] loc, List<Integer> res, int frse, boolean unit) {
         StringBuilder ans = new StringBuilder();
 
         ans.append(i).append("\\");
 
         for (int j = 0; j < c.length; j++) {
             if (c[j] == -1)
-                if (immune.contains(i) && lang.equals("en")) {
+                if (Interpret.immune.contains(i) && StaticStore.isEnglish()) {
                     int pro = ma.getProc(i)[0];
                     if (pro != 100)
                         ans.append(TEXT[12]).append(PROC[i].substring(4));
@@ -527,8 +568,8 @@ public class Interpret extends Data {
                 } else {
                     int pro = ma.getProc(i)[0];
 
-                    if (immune.contains(i) && pro != 100)
-                        ans.append(PROC[res.get(immune.indexOf(i))]);
+                    if (Interpret.immune.contains(i) && pro != 100)
+                        ans.append(PROC[res.get(Interpret.immune.indexOf(i))]);
                     else
                         ans.append(PROC[i]);
                 }
@@ -538,13 +579,13 @@ public class Interpret extends Data {
 
                     String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
 
-                    if (immune.contains(i) && pro != 100)
+                    if (Interpret.immune.contains(i) && pro != 100)
                         ans.append(TEXT[c[j]].replace("_", rep));
-                    else if (!immune.contains(i)) {
+                    else if (!Interpret.immune.contains(i)) {
                         switch (i) {
                             case P_BURROW:
                             case P_REVIVE:
-                                if (lang.equals("en")) {
+                                if (StaticStore.isEnglish()) {
                                     if (pro == 1 && c[j] == 7)
                                         ans.append(TEXT[c[j]].replace("_", "Once"));
                                     else if (pro == 2 && c[j] == 7)
@@ -559,9 +600,13 @@ public class Interpret extends Data {
                                 break;
                             case P_SUMMON:
                                 if(c[j] == 25) {
-                                    ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                                    ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], unit));
                                 } else if(c[j] == 31) {
-                                    ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                    if(unit) {
+                                        ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                    } else {
+                                        ans.append(TEXT[c[j]].replace("_", getEnemy(Integer.parseInt(rep))));
+                                    }
                                 } else {
                                     ans.append(TEXT[c[j]].replace("_", rep));
                                 }
@@ -583,13 +628,13 @@ public class Interpret extends Data {
 
                         String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
 
-                        if (immune.contains(i) && pro != 100) {
+                        if (Interpret.immune.contains(i) && pro != 100) {
                             ans.append(TEXT[c[j]].replace("_", rep));
-                        } else if (!immune.contains(i)) {
+                        } else if (!Interpret.immune.contains(i)) {
                             switch (i) {
                                 case P_BURROW:
                                 case P_REVIVE:
-                                    if (lang.equals("en")) {
+                                    if (StaticStore.isEnglish()) {
                                         if (pro == 1 && c[j] == 7)
                                             ans.append(TEXT[c[j]].replace("_", "Once"));
                                         else if (pro == 2 && c[j] == 7)
@@ -604,9 +649,13 @@ public class Interpret extends Data {
                                     break;
                                 case P_SUMMON:
                                     if(c[j] == 25) {
-                                        ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                                        ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], unit));
                                     } else if(c[j] == 31) {
-                                        ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                        if(unit) {
+                                            ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                        } else {
+                                            ans.append(TEXT[c[j]].replace("_", getEnemy(Integer.parseInt(rep))));
+                                        }
                                     } else {
                                         ans.append(TEXT[c[j]].replace("_", rep));
                                     }
@@ -624,18 +673,18 @@ public class Interpret extends Data {
         return ans;
     }
 
-    private static StringBuilder getProcNameKR(Context ac, int i, MaskAtk ma, int[] c, int[] l, List<Integer> immune, List<Integer> res, int frse) {
+    private static StringBuilder getProcNameKR(Context ac, int i, MaskAtk ma, int[] c, int[] l, List<Integer> res, int frse, boolean unit) {
         StringBuilder ans = new StringBuilder();
 
         ans.append(i).append("\\");
 
         for (int j = 0; j < c.length; j++) {
             if (c[j] == -1) {
-                if (immune.contains(i)) {
+                if (Interpret.immune.contains(i)) {
                     int pro = ma.getProc(i)[0];
 
                     if (pro != 100)
-                        ans.append(PROC[res.get(immune.indexOf(i))]);
+                        ans.append(PROC[res.get(Interpret.immune.indexOf(i))]);
                     else
                         ans.append(PROC[i]);
                 } else
@@ -646,13 +695,17 @@ public class Interpret extends Data {
 
                     String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
 
-                    if (immune.contains(i) && pro != 100)
+                    if (Interpret.immune.contains(i) && pro != 100)
                         ans.append(TEXT[c[j]].replace("_", rep));
-                    else if (!immune.contains(i))
+                    else if (!Interpret.immune.contains(i))
                         if(i == P_SUMMON && c[j] == 25) {
-                            ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                            ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], unit));
                         } else if(i == P_SUMMON && c[j] == 31) {
-                            ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                            if(unit) {
+                                ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                            } else {
+                                ans.append(TEXT[c[j]].replace("_", getEnemy(Integer.parseInt(rep))));
+                            }
                         } else {
                             ans.append(TEXT[c[j]].replace("_", rep));
                         }
@@ -668,13 +721,17 @@ public class Interpret extends Data {
 
                         String rep = pro == -1 ? ac.getString(R.string.infinity) : "" + pro;
 
-                        if (immune.contains(i) && pro != 100)
+                        if (Interpret.immune.contains(i) && pro != 100)
                             ans.append(TEXT[c[j]].replace("_", rep));
-                        else if (!immune.contains(i))
+                        else if (!Interpret.immune.contains(i))
                             if(i == P_SUMMON && c[j] == 25) {
-                                ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], true));
+                                ans.append(TEXT[c[j]].replace("_", rep)).append(getSummonTypeText(ma.getProc(i)[4], unit));
                             } else if(i == P_SUMMON && c[j] == 31) {
-                                ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                if(unit) {
+                                    ans.append(TEXT[c[j]].replace("_", getUnit(Integer.parseInt(rep))));
+                                } else {
+                                    ans.append(TEXT[c[j]].replace("_", getEnemy(Integer.parseInt(rep))));
+                                }
                             } else {
                                 ans.append(TEXT[c[j]].replace("_", rep));
                             }
@@ -1032,7 +1089,7 @@ public class Interpret extends Data {
         }
     }
 
-    private static String numberWithExtension(int n) {
+    public static String numberWithExtension(int n) {
         int f = n % 10;
 
         switch (f) {
@@ -1049,29 +1106,29 @@ public class Interpret extends Data {
 
     private static String getSummonTypeText(int type, boolean unit) {
         if(type == 0) {
-            return TEXT[34];
+            return TEXT[33];
         } else if(type == 1) {
-            return TEXT[35];
+            return TEXT[34];
         } else if(type == 2) {
-            return TEXT[36];
+            return TEXT[35];
         } else if(type == 3) {
-            return TEXT[37];
+            return TEXT[36];
         } else if (type >= 4 && type <= 7){
-            return TEXT[38];
+            return TEXT[37];
         } else if(type >= 8 && type <= 15) {
             if(unit) {
-                return TEXT[40];
-            } else {
                 return TEXT[39];
+            } else {
+                return TEXT[38];
             }
         } else if(type >= 16 && type <= 31) {
-            return TEXT[41];
+            return TEXT[40];
         } else if(type >= 32 && type <= 63) {
-            return TEXT[42];
+            return TEXT[41];
         } else if(type >= 64 && type <= 127) {
-            return TEXT[43];
+            return TEXT[42];
         } else {
-            return TEXT[44];
+            return TEXT[43];
         }
     }
 
@@ -1123,6 +1180,54 @@ public class Interpret extends Data {
 
                     if(name == null) {
                         return Data.hex(pid)+" - "+Data.trio(id);
+                    } else {
+                        return name;
+                    }
+                }
+            }
+        }
+    }
+
+    private static String getEnemy(int id) {
+        if (id < 1000) {
+            if (id >= StaticStore.emnumber) {
+                return Data.hex(0) + " - " + Data.trio(id);
+            }
+
+            String name = MultiLangCont.ENAME.getCont(Pack.def.es.getList().get(id));
+
+            if (name != null) {
+                return name;
+            } else {
+                return Data.hex(0) + " - " + Data.trio(id);
+            }
+        } else {
+            int eid = StaticStore.getID(id);
+
+            int pid = StaticStore.getPID(id);
+
+            Pack p = Pack.map.get(pid);
+
+            if (p == null) {
+                return Data.hex(pid) + " - " + Data.trio(eid);
+            } else {
+                if (eid >= p.us.ulist.size()) {
+                    return Data.hex(pid) + " - " + Data.trio(eid);
+                }
+
+                Enemy e = p.es.get(eid);
+
+                if (e == null) {
+                    return Data.hex(pid) + " - " + Data.trio(eid);
+                } else {
+                    String name = MultiLangCont.ENAME.getCont(e);
+
+                    if (name == null) {
+                        name = e.name;
+                    }
+
+                    if (name == null) {
+                        return Data.hex(pid) + " - " + Data.trio(eid);
                     } else {
                         return name;
                     }

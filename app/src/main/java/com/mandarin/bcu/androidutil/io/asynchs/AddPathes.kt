@@ -8,10 +8,10 @@ import com.mandarin.bcu.MainActivity
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.pack.asynchs.PackExtract
 import com.mandarin.bcu.androidutil.unit.Definer
 import com.mandarin.bcu.decode.ZipLib
 import common.util.pack.Background
-import common.util.unit.Unit
 import java.lang.ref.WeakReference
 
 class AddPathes internal constructor(activity: Activity, private val config: Boolean) : AsyncTask<Void?, Int?, Void?>() {
@@ -58,7 +58,7 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
         val activity = weakReference.get() ?: return
 
         if(!MainActivity.isRunning) {
-            PackExtract(activity,config).execute()
+            PackExtract(activity, config).execute()
         }
     }
 

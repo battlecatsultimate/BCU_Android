@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
@@ -69,7 +70,7 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.13.8";
+    public static final String VER = "0.14.1";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
@@ -186,7 +187,7 @@ public class StaticStore {
             R.string.unit_info_text14, R.string.unit_info_text15, R.string.unit_info_text16, R.string.unit_info_text17, R.string.unit_info_text18, R.string.unit_info_text19, R.string.unit_info_text20,
             R.string.unit_info_text21, R.string.unit_info_text22, R.string.unit_info_text23, R.string.unit_info_text24, R.string.unit_info_text25, R.string.unit_info_text26,
             R.string.unit_info_text27, R.string.unit_info_text28, R.string.unit_info_text29, R.string.unit_info_text30, R.string.unit_info_text31, R.string.unit_info_text32
-            , R.string.unit_info_text33, R.string.unit_info_text33, R.string.unit_info_text34, R.string.unit_info_text35, R.string.unit_info_text36, R.string.unit_info_text37
+            , R.string.unit_info_text33, R.string.unit_info_text34, R.string.unit_info_text35, R.string.unit_info_text36, R.string.unit_info_text37
             , R.string.unit_info_text38, R.string.unit_info_text39, R.string.unit_info_text40, R.string.unit_info_text41, R.string.unit_info_text42, R.string.unit_info_text43
             , R.string.unit_info_text44, R.string.unit_info_text45, R.string.unit_info_text46};
 
@@ -1114,6 +1115,7 @@ public class StaticStore {
         return String.format("%32s", str).replace(' ', '0');
     }
 
+    /** Remove whole files in specified path<br>It will delete itself too**/
     public static void removeAllFiles(File f) {
         if(f.isFile()) {
             if(!f.delete()) {
@@ -1145,12 +1147,24 @@ public class StaticStore {
         }
     }
 
+    /**
+     * Get password from specified shared preference with specified reference
+     * @param name Name of shared preferences
+     * @param ref Reference of password
+     * @param c Context
+     * @return It will return password as String if it worked properly
+     */
     public static String getPassword(String name, String ref, Context c) {
         SharedPreferences shared = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 
         return shared.getString(ref, "");
     }
 
+    /**
+     * Get ID from specified full ID
+     * @param fullID Full ID of data
+     * @return It will filter Pack ID from it and return only ID
+     */
     public static int getID(int fullID) {
         if(fullID < 1000) {
             return fullID;
@@ -1193,5 +1207,11 @@ public class StaticStore {
         }
 
         return 0;
+    }
+
+    public static boolean isEnglish() {
+        String lang = Locale.getDefault().getLanguage();
+
+        return !lang.equals("zh") && !lang.equals("ko") && !lang.equals("ja");
     }
 }

@@ -699,23 +699,20 @@ class GetStrings(private val c: Context) {
             limits.add(result)
         }
 
-        if (l.group != null) {
+        if (l.group != null && l.group.set.size != 0) {
             val units = StringBuilder()
             val u: List<common.util.unit.Unit> = ArrayList(l.group.set)
 
             for (i in u.indices) {
-                if (i == l.group.set.size - 1) {
-                    var f = MultiLangCont.FNAME.getCont(u[i].forms[0])
+                if(u[i].forms == null || u[i].forms.isEmpty())
+                    continue
 
-                    if (f == null)
-                        f = ""
+                if (i == l.group.set.size - 1) {
+                    val f = MultiLangCont.FNAME.getCont(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id
 
                     units.append(f)
                 } else {
-                    var f = MultiLangCont.FNAME.getCont(u[i].forms[0])
-
-                    if (f == null)
-                        f = ""
+                    val f = MultiLangCont.FNAME.getCont(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id
 
                     units.append(f).append(", ")
                 }

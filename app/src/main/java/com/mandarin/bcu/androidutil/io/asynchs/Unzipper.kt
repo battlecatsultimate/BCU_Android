@@ -67,6 +67,7 @@ internal class Unzipper(private val path: String, private val fileneed: ArrayLis
                 }
                 zis.close()
             } catch (e: IOException) {
+                e.printStackTrace()
                 ErrorLogWriter.writeLog(e, upload, ac)
                 contin = false
             }

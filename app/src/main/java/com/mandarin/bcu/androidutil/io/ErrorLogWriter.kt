@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.io
 import android.content.Context
 import android.os.Build
 import android.os.Environment
+import android.util.Log
 import com.mandarin.bcu.androidutil.StaticStore
 import java.io.*
 import java.lang.StringBuilder
@@ -82,6 +83,42 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
             }
 
             return result.toString()
+        }
+
+        fun writeDriveLog(e: Exception) {
+            try {
+                val path = File(Environment.getDataDirectory().absolutePath+"/data/com.mandarin.bcu/upload")
+
+                if(!path.exists()) {
+                    if(!path.mkdirs()) {
+                        Log.e("ErrorLogWriter", "Failed to create folder "+path.absolutePath)
+                        return
+                    }
+                }
+
+                val stringbuff: Writer = StringWriter()
+                val printWriter = PrintWriter(stringbuff)
+
+                e.printStackTrace(printWriter)
+
+                val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
+                val date = Date()
+                val name = dateFormat.format(date) + ".txt"
+
+                val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", name)
+                if (!df.exists()) df.createNewFile()
+                val dfileWriter = FileWriter(df)
+                dfileWriter.append("VERSION : ").append(StaticStore.VER).append("\r\n")
+                dfileWriter.append("MODEL : ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL.toString()).append("\r\n")
+                dfileWriter.append("IS EMULATOR : ").append((Build.MODEL.contains("Emulator") || Build.MODEL.contains("Android SDK")).toString()).append("\r\n")
+                dfileWriter.append("ANDROID_VER : ").append("API ").append(Build.VERSION.SDK_INT.toString()).append(" (").append(Build.VERSION.RELEASE).append(")").append("\r\n").append("\r\n")
+                dfileWriter.append(stringbuff.toString())
+                dfileWriter.flush()
+                dfileWriter.close()
+                printWriter.close()
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
         }
 
         fun writeLog(error: Exception, upload: Boolean, c: Context) {

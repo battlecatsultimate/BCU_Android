@@ -2,8 +2,6 @@ package com.mandarin.bcu.androidutil.animation
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -14,16 +12,10 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.asynchs.AddGIF
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
-import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.io.AImageReader
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.system.P
 import common.util.ImgCore
-import common.util.anim.AnimU
 import common.util.anim.EAnimU
 import common.util.pack.Pack
-import common.util.unit.Unit
-import java.lang.Exception
 
 @SuppressLint("ViewConstructor")
 class AnimationCView : View {

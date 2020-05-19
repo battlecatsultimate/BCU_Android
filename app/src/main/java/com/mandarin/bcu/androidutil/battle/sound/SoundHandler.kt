@@ -130,6 +130,7 @@ object SoundHandler {
                         MUSIC.isLooping = true
 
                         try {
+                            MUSIC.setVolume(mu_vol, mu_vol)
                             MUSIC.setDataSource(h.absolutePath)
                             MUSIC.prepareAsync()
                             MUSIC.setOnPreparedListener(object : MediaPrepare() {

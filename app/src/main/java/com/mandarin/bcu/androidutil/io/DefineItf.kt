@@ -1,13 +1,13 @@
 package com.mandarin.bcu.androidutil.io
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.google.api.client.util.IOUtils
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
-import com.mandarin.bcu.androidutil.io.asynchs.PackExtract
+import com.mandarin.bcu.androidutil.pack.AACLoader
+import com.mandarin.bcu.androidutil.pack.AImageReader
+import com.mandarin.bcu.androidutil.pack.AMusicLoader
 import common.CommonStatic
 import common.CommonStatic.Itf
 import common.io.InStream
@@ -129,11 +129,13 @@ class DefineItf : Itf {
 
             path.endsWith(".bcupack") -> {
                 packPath.add(f?.absolutePath ?: "")
-                AImageReader(f?.name?.replace(".bcupack","")?.replace(".bcudata","") ?: "", true)
+                AImageReader(f?.name?.replace(".bcupack", "")?.replace(".bcudata", "")
+                        ?: "", true)
             }
 
             path.endsWith(".bcudata") -> {
-                AImageReader(f?.name?.replace(".bcupack","")?.replace(".bcudata","") ?: "", false)
+                AImageReader(f?.name?.replace(".bcupack", "")?.replace(".bcudata", "")
+                        ?: "", false)
             }
             else -> {
                 null

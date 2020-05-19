@@ -176,8 +176,6 @@ class UnitinfPager : Fragment() {
 
         val f = p.us.ulist[uid].forms[form]
 
-        println(f.du.touchBase())
-
         if (f.pCoin == null) {
             unittalen.visibility = View.GONE
             npreset.visibility = View.GONE

@@ -33,7 +33,7 @@ import com.mandarin.bcu.SearchFilter
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.io.AImageWriter
+import com.mandarin.bcu.androidutil.pack.AImageWriter
 import com.mandarin.bcu.androidutil.io.DefferedLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
@@ -91,143 +91,144 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
         publishProgress(pack)
 
-        checkValidPack()
-        handlePack()
-        removeIfDifferent()
+        if(!StaticStore.packread && Pack.map.size == 1) {
+            checkValidPack()
+            handlePack()
+            removeIfDifferent()
 
-        try {
-            if(!StaticStore.packread && Pack.map.size == 1) {
+            try {
+
                 Pack.read()
                 StaticStore.packread = true
+                DefferedLoader.clearPending("Context", activity)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
             }
-            DefferedLoader.clearPending("Context", activity)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-            ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
-        }
 
-        for(path in DefineItf.packPath) {
-            val f = File(path)
+            for (path in DefineItf.packPath) {
+                val f = File(path)
 
-            val fname = f.name
+                val fname = f.name
 
-            if (fname.endsWith(".bcupack")) {
-                if (!checkPack(f)) {
-                    val p = findPack(f)
+                if (fname.endsWith(".bcupack")) {
+                    if (!checkPack(f)) {
+                        val p = findPack(f)
 
-                    val name = f.name.replace(".bcupack", "")
+                        val name = f.name.replace(".bcupack", "")
 
-                    val shared = activity.getSharedPreferences(name, Context.MODE_PRIVATE)
-                    val ed = shared.edit()
+                        val shared = activity.getSharedPreferences(name, Context.MODE_PRIVATE)
+                        val ed = shared.edit()
 
-                    ed.putString(name, StaticStore.fileToMD5(f))
-                    ed.apply()
+                        ed.putString(name, StaticStore.fileToMD5(f))
+                        ed.apply()
 
-                    val resimg = StaticStore.getExternalRes(activity) + "img/$name/"
+                        val resimg = StaticStore.getExternalRes(activity) + "img/$name/"
 
-                    val g = File(resimg)
+                        val g = File(resimg)
 
-                    val glit = g.listFiles() ?: continue
+                        val glit = g.listFiles() ?: continue
 
-                    for (gs in glit) {
-                        val pngname = gs.name
+                        for (gs in glit) {
+                            val pngname = gs.name
 
-                        publishProgress(image, pngname.replace(".png", ""))
+                            publishProgress(image, pngname.replace(".png", ""))
 
-                        if (pngname.endsWith(".png")) {
-                            val md5 = StaticStore.fileToMD5(gs)
+                            if (pngname.endsWith(".png")) {
+                                val md5 = StaticStore.fileToMD5(gs)
 
-                            StaticStore.encryptPNG(gs.absolutePath, md5, StaticStore.IV, true)
+                                StaticStore.encryptPNG(gs.absolutePath, md5, StaticStore.IV, true)
 
-                            ed.putString(gs.absolutePath.replace(".png", ".bcuimg"), md5)
-                            ed.apply()
+                                ed.putString(gs.absolutePath.replace(".png", ".bcuimg"), md5)
+                                ed.apply()
+                            }
                         }
+
+                        p ?: continue
+
+                        val bpathList = ArrayList<String>()
+
+                        for (i in p.bg.list) {
+                            val img = i.img?.bimg ?: continue
+
+                            val bpath = StaticStore.getExternalRes(activity) + "img/$name/"
+                            val bname = findBgName(bpath)
+
+                            val info = extractImage(activity, img, bpath, bname, false)
+
+                            if (info.size != 2)
+                                continue
+
+                            val result = info[0] + "\\" + info[1]
+
+                            (i.img.bimg as FIBM).reference = result
+
+                            bpathList.add(result)
+                        }
+
+                        for (i in bpathList) {
+                            val info = i.split("\\")
+
+                            val bf = File(info[0].replace(".bcuimg", ".png"))
+
+                            if (!bf.exists())
+                                continue
+
+                            publishProgress(bg, bf.name.replace(".png", ""))
+
+                            if (info.size != 2)
+                                continue
+
+                            StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
+                        }
+
+                        val cpathList = ArrayList<String>()
+
+                        for (i in p.cs.list) {
+                            val img = i.img ?: continue
+
+                            val cpath = StaticStore.getExternalRes(activity) + "img/$name/"
+                            val cname = findCsName(cpath)
+
+                            val info = extractImage(activity, img, cpath, cname, false)
+
+                            if (info.size != 2)
+                                continue
+
+                            val result = info[0] + "\\" + info[1]
+
+                            (i.img as FIBM).reference = result
+
+                            cpathList.add(result)
+                        }
+
+                        for (i in cpathList) {
+                            val info = i.split("\\")
+
+                            val cf = File(info[0].replace(".bcuimg", ".png"))
+
+                            if (!cf.exists())
+                                continue
+
+                            publishProgress(castle, cf.name.replace(".png", ""))
+
+                            if (info.size != 2)
+                                continue
+
+                            StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
+                        }
+
+                        publishProgress(packext, f.name.replace(".bcupack", ""))
+
+                        p.packData(AImageWriter())
                     }
-
-                    p ?: continue
-
-                    val bpathList = ArrayList<String>()
-
-                    for (i in p.bg.list) {
-                        val img = i.img?.bimg ?: continue
-
-                        val bpath = StaticStore.getExternalRes(activity) + "img/$name/"
-                        val bname = findBgName(bpath)
-
-                        val info = extractImage(activity, img, bpath, bname, false)
-
-                        if (info.size != 2)
-                            continue
-
-                        val result = info[0] + "\\" + info[1]
-
-                        (i.img.bimg as FIBM).reference = result
-
-                        bpathList.add(result)
-                    }
-
-                    for (i in bpathList) {
-                        val info = i.split("\\")
-
-                        val bf = File(info[0].replace(".bcuimg", ".png"))
-
-                        if (!bf.exists())
-                            continue
-
-                        publishProgress(bg, bf.name.replace(".png", ""))
-
-                        if (info.size != 2)
-                            continue
-
-                        StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
-                    }
-
-                    val cpathList = ArrayList<String>()
-
-                    for (i in p.cs.list) {
-                        val img = i.img ?: continue
-
-                        val cpath = StaticStore.getExternalRes(activity) + "img/$name/"
-                        val cname = findCsName(cpath)
-
-                        val info = extractImage(activity, img, cpath, cname, false)
-
-                        if (info.size != 2)
-                            continue
-
-                        val result = info[0] + "\\" + info[1]
-
-                        (i.img as FIBM).reference = result
-
-                        cpathList.add(result)
-                    }
-
-                    for (i in cpathList) {
-                        val info = i.split("\\")
-
-                        val cf = File(info[0].replace(".bcuimg", ".png"))
-
-                        if (!cf.exists())
-                            continue
-
-                        publishProgress(castle, cf.name.replace(".png", ""))
-
-                        if (info.size != 2)
-                            continue
-
-                        StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
-                    }
-
-                    publishProgress(packext, f.name.replace(".bcupack", ""))
-
-                    p.packData(AImageWriter())
                 }
             }
+
+            DefineItf.packPath.clear()
+
+            StaticStore.filterEntityList = BooleanArray(Pack.map.size)
         }
-
-        DefineItf.packPath.clear()
-
-        StaticStore.filterEntityList = BooleanArray(Pack.map.size)
 
         if (StaticStore.lunames.isEmpty() || StaticStore.ludata.isEmpty()) {
             StaticStore.lunames.clear()

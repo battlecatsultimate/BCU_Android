@@ -347,11 +347,22 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             }
         }
 
-        if(bosses.isEmpty()) return res
+        if(bosses.isEmpty())
+            return res
 
-        val boss = bosses[0]
+        var boss: EEnemy = bosses[0]
 
-        res = round(boss.health.toDouble()/boss.maxH*100).toInt()
+        for(b in bosses) {
+            if(b.health > 0) {
+                boss = b
+                break
+            }
+        }
+
+        res = if(boss.health <= 0)
+            -1
+        else
+            round(boss.health.toDouble()/boss.maxH*100).toInt()
 
         return res
     }

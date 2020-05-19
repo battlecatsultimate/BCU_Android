@@ -73,6 +73,10 @@ class FIBM : FakeImage {
         }
     }
 
+    override fun isValid(): Boolean {
+        return !bit.isRecycled
+    }
+
     override fun unload() {
         bit.recycle()
     }

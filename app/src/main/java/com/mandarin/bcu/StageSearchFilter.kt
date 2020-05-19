@@ -38,7 +38,7 @@ import kotlin.collections.ArrayList
 class StageSearchFilter : AppCompatActivity() {
     companion object {
         const val REQUEST_CODE = 200
-        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120)
+        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120,122,123)
     }
 
     private val radioid = intArrayOf(R.id.lessthan, R.id.same, R.id.greaterthan)

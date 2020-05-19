@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.io.asynchs
+package com.mandarin.bcu.androidutil.pack.asynchs
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -13,13 +13,15 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.TextView
 import com.mandarin.bcu.MainActivity
+import com.mandarin.bcu.PackConflictSolve
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.io.AImageWriter
+import com.mandarin.bcu.androidutil.pack.AImageWriter
 import com.mandarin.bcu.androidutil.io.DefferedLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.pack.PackConflict
 import common.system.fake.FakeImage
 import common.util.Data
 import common.util.pack.Pack
@@ -43,6 +45,8 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
     private var paused = false
     private var destroy = false
 
+    private var stopper = Object()
+
     val a = WeakReference(ac)
 
     override fun doInBackground(vararg params: Void?): Void? {
@@ -55,10 +59,14 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
             handlePack()
             removeIfDifferent()
 
-            while(paused) {
-                println("Paused")
-                if(destroy) {
-                    return null
+            synchronized(stopper) {
+                while(paused) {
+                    try {
+                        stopper.wait()
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                        break
+                    }
                 }
             }
 
@@ -282,7 +290,11 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
                             }
                         }
 
-                        paused = false
+                        synchronized(stopper) {
+                            paused = false
+                            stopper.notifyAll()
+                        }
+
                         dialog.dismiss()
                     } else {
                         dialog.dismiss()
@@ -299,9 +311,15 @@ class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, S
 
         StaticStore.filterEntityList = BooleanArray(Pack.map.size)
 
-        if (!MainActivity.isRunning && !destroy) {
-            val intent = Intent(activity, MainActivity::class.java)
-            intent.putExtra("config", config)
+        if(PackConflict.conflicts.isEmpty()) {
+            if (!MainActivity.isRunning && !destroy) {
+                val intent = Intent(activity, MainActivity::class.java)
+                intent.putExtra("config", config)
+                activity.startActivity(intent)
+                activity.finish()
+            }
+        } else {
+            val intent = Intent(activity, PackConflictSolve::class.java)
             activity.startActivity(intent)
             activity.finish()
         }

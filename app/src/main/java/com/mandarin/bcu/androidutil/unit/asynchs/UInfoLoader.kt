@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.AsyncTask
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -34,6 +35,7 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
+import com.mandarin.bcu.util.Interpret
 import common.system.MultiLangCont
 import common.util.pack.Pack
 import java.lang.ref.WeakReference
@@ -43,13 +45,35 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
     private val weakActivity: WeakReference<Activity> = WeakReference(activity)
     private val names = ArrayList<String>()
     private val nformid = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
-    private val nform = arrayOfNulls<String>(nformid.size)
+    private val nform = ArrayList<String>()
     private var table: TableTab? = null
     private var explain: ExplanationTab? = null
     private var unitinfRecycle: UnitinfRecycle? = null
 
     private var added = false
     private var stopper = Object()
+
+    init {
+        val p = Pack.map[pid]
+        val ac = weakActivity.get()
+
+        if(p != null && ac != null) {
+            val fs = p.us.ulist[id].forms
+
+            if(fs != null) {
+                for(n in fs.indices) {
+                    if(n in 0..2) {
+                        nform.add(ac.getString(nformid[n]))
+                    } else {
+                        if(Locale.getDefault().language == "en")
+                            nform.add(Interpret.numberWithExtension(n+1))
+                        else
+                            nform.add(ac.getString(R.string.unit_info_forms).replace("_", (n+1).toString()))
+                    }
+                }
+            }
+        }
+    }
 
     override fun onPreExecute() {
         val activity = weakActivity.get() ?: return
@@ -101,19 +125,19 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
-                table = TableTab(fm, tabs.tabCount, id, nform)
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform)
+                table = TableTab(fm, tabs.tabCount, id, nform.toTypedArray())
+                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
             } else {
                 unitinfRecycle = UnitinfRecycle(activity, names, p.us.ulist[id].forms, pid, id)
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform)
+                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
             }
         } else {
             if (shared.getBoolean("Lay_Port", true)) {
-                table = TableTab(fm, tabs.tabCount, id, nform)
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform)
+                table = TableTab(fm, tabs.tabCount, id, nform.toTypedArray())
+                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
             } else {
                 unitinfRecycle = UnitinfRecycle(activity, names, p.us.ulist[id].forms, pid, id)
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform)
+                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
             }
         }
         publishProgress(0)
@@ -346,9 +370,5 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-    }
-
-    init {
-        for (i in nformid.indices) nform[i] = weakActivity.get()?.getString(nformid[i]) ?: ""
     }
 }

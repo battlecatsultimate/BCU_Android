@@ -114,6 +114,7 @@
                     app:tabMaxWidth="0dp"
                     app:tabPaddingEnd="24dp"
                     app:tabPaddingStart="24dp"
+                    app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                     app:tabTextColor="?attr/TextPrimary" />
 
                 <TextView

@@ -19,6 +19,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.util.pack.Background
 import common.util.pack.Pack
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -64,6 +65,9 @@ class BackgroundList : AppCompatActivity() {
         DefineItf.check(this)
 
         setContentView(R.layout.activity_background_list)
+
+        if(StaticStore.bgread == 0)
+            Background.read()
 
         val tab = findViewById<TabLayout>(R.id.bglisttab)
         val pager = findViewById<MeasureViewPager>(R.id.bglistpager)
