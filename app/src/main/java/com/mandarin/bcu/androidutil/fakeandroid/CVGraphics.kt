@@ -7,15 +7,33 @@ import common.system.fake.FakeTransform
 import java.util.*
 
 class CVGraphics : FakeGraphics {
+    companion object {
+        private val ftmt: Deque<FTMT> = ArrayDeque()
+        @JvmStatic
+        fun clear() {
+            ftmt.clear()
+        }
+
+        private val negate = floatArrayOf(-1f, 0f, 0f, 0f, 255f,
+                0f, -1f, 0f, 0f ,255f,
+                0f, 0f, -1f, 0f, 255f,
+                0f, 0f, 0f, 1f, 0f)
+
+        const val POSITIVE = 100
+    }
+
     private var c: Canvas
     private val cp: Paint
     private val bp: Paint
     private val gp: Paint
     private val src = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
     private val add = PorterDuffXfermode(PorterDuff.Mode.ADD)
+    private val negative = ColorMatrixColorFilter(negate)
     private val m = Matrix()
     private val m2 = Matrix()
     private var color = 0
+    @JvmField
+    var neg = false
     var independent = false
 
     constructor(c: Canvas, cp: Paint, bp: Paint, night: Boolean) {
@@ -182,6 +200,19 @@ class CVGraphics : FakeGraphics {
                     }
                 }
             }
+            FakeGraphics.GRAY -> {
+                bp.colorFilter = negative
+                gp.colorFilter = negative
+                neg = true
+            }
+            POSITIVE -> {
+                bp.colorFilter = null
+                gp.colorFilter = null
+
+                if(p0 == 1) {
+                    neg = false
+                }
+            }
         }
     }
 
@@ -211,13 +242,5 @@ class CVGraphics : FakeGraphics {
         if(independent) return
 
         ftmt.add(at as FTMT)
-    }
-
-    companion object {
-        private val ftmt: Deque<FTMT> = ArrayDeque()
-        @JvmStatic
-        fun clear() {
-            ftmt.clear()
-        }
     }
 }

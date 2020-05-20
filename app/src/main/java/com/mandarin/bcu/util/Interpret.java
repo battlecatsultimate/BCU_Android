@@ -916,6 +916,8 @@ public class Interpret extends Data {
             return t.bslv[BASE_GROUND];
         else if (ind == 35)
             return t.bslv[BASE_BARRIER];
+        else if (ind == 36)
+            return t.bslv[BASE_CURSE];
         return -1;
     }
 
@@ -1071,8 +1073,10 @@ public class Interpret extends Data {
             t.bslv[BASE_WATER] = v;
         else if (ind == 34)
             t.bslv[BASE_GROUND] = v;
-        else
+        else if (ind == 35)
             t.bslv[BASE_BARRIER] = v;
+        else
+            t.bslv[BASE_CURSE] = v;
     }
 
     private static int getVenomType(int type) {

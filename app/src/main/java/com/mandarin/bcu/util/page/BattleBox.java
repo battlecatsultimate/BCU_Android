@@ -2,6 +2,7 @@ package com.mandarin.bcu.util.page;
 
 import android.graphics.Point;
 
+import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
 import com.mandarin.bcu.util.PP;
 
 import common.CommonStatic.BattleConst;
@@ -97,6 +98,11 @@ public interface BattleBox {
             }
             regulate();
 
+            if(sb.s_stop == 0 && ((CVGraphics)g).neg) {
+                //Set p0 to 1 to change negative effect
+                g.setComposite(CVGraphics.POSITIVE, 1, 0);
+            }
+
             ImgCore.set(g);
             setP(box.getWidth(), box.getHeight());
             sb.bg.draw(g, p, pos, midh, siz);
@@ -180,6 +186,7 @@ public interface BattleBox {
         }
 
         private void drawBtm(FakeGraphics g) {
+            g.setComposite(CVGraphics.POSITIVE, 0, 0);
             int w = box.getWidth();
             int h = box.getHeight();
             int cw = 0;
@@ -258,6 +265,10 @@ public interface BattleBox {
                 }
             }
             unir = hr;
+
+            if(((CVGraphics)g).neg) {
+                g.setComposite(FakeGraphics.GRAY, 0, 0);
+            }
         }
 
         private void drawCastle(FakeGraphics gra) {
@@ -348,11 +359,13 @@ public interface BattleBox {
 
             if (sb.s_stop > 0) {
                 gra.setComposite(FakeGraphics.GRAY, 0, 0);
-                gra.fillRect(0, 0, w, h);
                 for (int i = 0; i < 10; i++) {
                     int dep = i * DEP;
                     for (int j = 0; j < sb.le.size(); j++) {
                         if (sb.le.get(j).layer == i && (sb.le.get(j).getAbi() & Data.AB_TIMEI) > 0) {
+                            if(((CVGraphics)gra).neg) {
+                                gra.setComposite(CVGraphics.POSITIVE, 0, 0);
+                            }
                             gra.setTransform(at);
                             double p = getX(sb.le.get(j).pos);
                             double y = midh - (road_h - dep) * siz;
@@ -361,6 +374,9 @@ public interface BattleBox {
                             gra.setTransform(at);
                             setP(p, y);
                             sb.le.get(j).anim.drawEff(gra, this.p, siz);
+                            if(((CVGraphics)gra).neg) {
+                                gra.setComposite(FakeGraphics.GRAY, 0, 0);
+                            }
                         }
                     }
                 }
@@ -371,6 +387,7 @@ public interface BattleBox {
         }
 
         private void drawTop(FakeGraphics g) {
+            g.setComposite(CVGraphics.POSITIVE, 0, 0);
             int w = box.getWidth();
             float ratio = dpi/42f;
             setSym(g, ratio, w, 0, 1);
@@ -392,6 +409,10 @@ public interface BattleBox {
             bimg = Res.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
             for (int i = 0; i < Math.abs(page.getSpeed()); i++)
                 g.drawImage(bimg, w - cw * (i + 1 + n), ih,dpi,dpi);
+
+            if(((CVGraphics)g).neg) {
+                g.setComposite(FakeGraphics.GRAY, 0, 0);
+            }
         }
 
         private synchronized void press(Point p) {

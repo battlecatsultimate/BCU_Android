@@ -159,7 +159,7 @@ class ImageViewer : AppCompatActivity() {
                         }
                     } else {
                         val p = Pack.map[pid] ?: return
-                        val bg = p.bg[bgnum]
+                        val bg = p.bg[bgnum] ?: return
 
                         if(bg.top) {
                             val b1 = getImg(b.height, 2f)
