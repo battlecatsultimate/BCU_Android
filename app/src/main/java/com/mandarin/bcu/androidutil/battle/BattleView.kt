@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.view.View

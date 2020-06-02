@@ -25,15 +25,17 @@
 
         <TextView
             android:id="@+id/unitinfrarname"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
-            android:gravity="center_horizontal|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
             android:text="Unit_Rairty_Name"
             android:textColor="?attr/UnitinfoName"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
+            app:layout_constraintEnd_toStartOf="@+id/treabutton"
             app:layout_constraintStart_toEndOf="@+id/unitinfback"
             app:layout_constraintTop_toTopOf="@+id/toolbar2" />
 

@@ -146,10 +146,6 @@ class MapList : AppCompatActivity() {
 
                         v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-                        val layout = v.layoutParams
-                        layout.width = v.measuredWidth
-                        v.layoutParams = layout
-
                         return v
                     }
                 }

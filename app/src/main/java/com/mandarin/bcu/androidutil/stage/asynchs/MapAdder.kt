@@ -231,7 +231,9 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
                 }
             }
         }
+
         publishProgress(done)
+
         return null
     }
 

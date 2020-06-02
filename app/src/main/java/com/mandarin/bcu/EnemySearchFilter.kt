@@ -52,7 +52,7 @@ open class EnemySearchFilter : AppCompatActivity() {
     private val atkdraw = intArrayOf(212, 112)
     private val trdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 226, 227, -1, -1, -1)
     private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 208, 239, 213, 214, 215, 216, 210, 243, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Suicide", "Burrow", "Revive", "", "BCPoison", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
+    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
     private var adapter: SearchAbilityAdapter? = null
 
     @SuppressLint("SourceLockedOrientationActivity")

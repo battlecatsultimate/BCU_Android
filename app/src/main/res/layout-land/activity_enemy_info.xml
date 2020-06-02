@@ -55,15 +55,17 @@
 
         <TextView
             android:id="@+id/eneminftitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
-            android:gravity="center"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
             android:text="Enemy_Name"
             android:textColor="?attr/UnitinfoName"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar4"
+            app:layout_constraintEnd_toStartOf="@+id/enemtreasure"
             app:layout_constraintStart_toEndOf="@+id/eneminfbck"
             app:layout_constraintTop_toTopOf="@+id/toolbar4" />
 

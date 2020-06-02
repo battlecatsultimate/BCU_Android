@@ -128,7 +128,7 @@ class LUTreasureSetting : Fragment() {
         val runnable = object : Runnable {
             override fun run() {
                 if (StaticStore.updateTreasure) {
-                    val t = BasisSet.current.t()
+                    val t = BasisSet.current.sele.t()
 
                     initialized = false
 
@@ -194,7 +194,7 @@ class LUTreasureSetting : Fragment() {
     }
 
     private fun listeners(view: View) {
-        val t = BasisSet.current.t()
+        val t = BasisSet.current.sele.t()
 
         val tech = view.findViewById<TextInputLayout>(R.id.techlev)
         val teche = view.findViewById<TextInputEditText>(R.id.techlevt)
@@ -418,48 +418,48 @@ class LUTreasureSetting : Fragment() {
     private fun valuesAllSame(mode: Int): Boolean {
         when (mode) {
             0 -> {
-                val value = BasisSet.current.t().tech[0]
+                val value = BasisSet.current.sele.t().tech[0]
 
                 for (i in 1..5) {
-                    if (value != BasisSet.current.t().tech[i])
+                    if (value != BasisSet.current.sele.t().tech[i])
                         return false
                 }
 
                 return true
             }
             1 -> {
-                val value = BasisSet.current.t().trea[0]
+                val value = BasisSet.current.sele.t().trea[0]
 
                 for (i in 1..5) {
-                    if (value != BasisSet.current.t().trea[i])
+                    if (value != BasisSet.current.sele.t().trea[i])
                         return false
                 }
 
                 return true
             }
             2 -> {
-                val value = BasisSet.current.t().trea[6]
+                val value = BasisSet.current.sele.t().trea[6]
 
                 for (i in 7..8)
-                    if (value != BasisSet.current.t().trea[i])
+                    if (value != BasisSet.current.sele.t().trea[i])
                         return false
 
                 return true
             }
             3 -> {
-                val value = BasisSet.current.t().fruit[0]
+                val value = BasisSet.current.sele.t().fruit[0]
 
                 for (i in 1..3)
-                    if (value != BasisSet.current.t().fruit[i])
+                    if (value != BasisSet.current.sele.t().fruit[i])
                         return false
 
                 return true
             }
             4 -> {
-                val value = BasisSet.current.t().fruit[4]
+                val value = BasisSet.current.sele.t().fruit[4]
 
-                for (i in 5 until BasisSet.current.t().fruit.size)
-                    if (value != BasisSet.current.t().fruit[i])
+                for (i in 5 until BasisSet.current.sele.t().fruit.size)
+                    if (value != BasisSet.current.sele.t().fruit[i])
                         return false
 
                 return true
@@ -560,7 +560,7 @@ class LUTreasureSetting : Fragment() {
                         return
 
                     if (s.toString().isNotEmpty()) {
-                        val t = BasisSet.current.t()
+                        val t = BasisSet.current.sele.t()
 
                         canbeEdited = false
 
@@ -691,7 +691,7 @@ class LUTreasureSetting : Fragment() {
 
                     override fun afterTextChanged(s: Editable) {
                         if (s.toString().isNotEmpty()) {
-                            val t = BasisSet.current.t()
+                            val t = BasisSet.current.sele.t()
 
                             if (canbeEdited && Integer.parseInt(s.toString()) <= limitvalss[i] && Integer.parseInt(s.toString()) >= limitminss[i]) {
                                 val `val` = Integer.parseInt(s.toString())
@@ -732,7 +732,9 @@ class LUTreasureSetting : Fragment() {
                                         cotc.isHelperTextEnabled = true
                                         cotc.helperText = helperss[i]
                                     }
-                                    5 -> t.gods[j] = `val`
+                                    5 -> {
+                                        t.gods[j] = `val`
+                                    }
                                 }
                             }
 
