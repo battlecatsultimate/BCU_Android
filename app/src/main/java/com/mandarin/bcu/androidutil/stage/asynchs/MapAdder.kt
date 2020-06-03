@@ -293,12 +293,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
 
                             v.setPadding(eight, eight, eight, eight)
 
-                            v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-                            if(maxWidth < v.measuredWidth) {
-                                maxWidth = v.measuredWidth
-                            }
-
                             return v
                         }
 
@@ -307,17 +301,25 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
 
                             (v as TextView).setTextColor(ContextCompat.getColor(activity, R.color.TextPrimary))
 
+                            v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+                            if(maxWidth < v.measuredWidth) {
+                                println(maxWidth)
+
+                                maxWidth = v.measuredWidth
+
+                                val layout = stageset.layoutParams
+
+                                layout.width = maxWidth
+
+                                stageset.layoutParams = layout
+                            }
+
                             return v
                         }
                     }
 
                     stageset.adapter = adapter
-
-                    val layout = stageset.layoutParams
-
-                    layout.width = maxWidth
-
-                    stageset.layoutParams = layout
 
                     stageset.onItemSelectedListener = object : OnItemSelectedListener {
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -421,12 +423,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
 
                                 v.setPadding(eight, eight, eight, eight)
 
-                                v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-                                if(maxWidth < v.measuredWidth) {
-                                    maxWidth = v.measuredWidth
-                                }
-
                                 return v
                             }
 
@@ -434,6 +430,20 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
                                 val v = super.getDropDownView(position, convertView, parent)
 
                                 (v as TextView).setTextColor(ContextCompat.getColor(activity, R.color.TextPrimary))
+
+                                v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+                                if(maxWidth < v.measuredWidth) {
+                                    println(maxWidth)
+
+                                    maxWidth = v.measuredWidth
+
+                                    val layout = stageset.layoutParams
+
+                                    layout.width = maxWidth
+
+                                    stageset.layoutParams = layout
+                                }
 
                                 return v
                             }

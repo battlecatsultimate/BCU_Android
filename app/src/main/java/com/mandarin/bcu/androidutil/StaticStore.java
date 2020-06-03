@@ -70,13 +70,13 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.14.6";
+    public static final String VER = "0.14.7";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
     public static final String[] LIBREQ = {"000001", "000002", "000003", "080602", "080603", "080604", "080605", "080700", "080705", "080706", "080800", "080801", "080802",
             "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104", "090200", "090201",
-            "090300", "090301", "090400", "090401", "090402", "090403", "090405", "090500", "090502", "090600", "090601"};
+            "090300", "090301", "090400", "090401", "090402", "090403", "090405", "090500", "090502", "090600", "090601", "090602"};
     /**Optional libraries list**/
     public static final String[] OPTREQS = {"080504", "090404", "090406", "090501"};
     /**Locale codes list**/
