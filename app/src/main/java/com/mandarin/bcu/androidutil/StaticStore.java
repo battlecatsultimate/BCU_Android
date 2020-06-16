@@ -70,13 +70,13 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.14.7";
+    public static final String VER = "0.14.9";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/
     public static final String[] LIBREQ = {"000001", "000002", "000003", "080602", "080603", "080604", "080605", "080700", "080705", "080706", "080800", "080801", "080802",
             "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104", "090200", "090201",
-            "090300", "090301", "090400", "090401", "090402", "090403", "090405", "090500", "090502", "090600", "090601", "090602"};
+            "090300", "090301", "090400", "090401", "090402", "090403", "090405", "090500", "090502", "090600", "090601", "090602", "090603"};
     /**Optional libraries list**/
     public static final String[] OPTREQS = {"080504", "090404", "090406", "090501"};
     /**Locale codes list**/
@@ -158,13 +158,13 @@ public class StaticStore {
     /** Imgcut index list of ablities **/
     public static int[] anumber = {203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114};
     /** Imgcut index list of procs **/
-    public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 289, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 243, 49, 45, 47, 51, 43, 53, 109};
+    public static int[] pnumber = {207, 197, 198, 201, 208, 195, 264, 266, 289, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 243, 227, 227, 49, 45, 47, 51, 43, 53, 109};
     /** File index list of abilities **/
     public static String[] afiles = {"", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "Suicide.png", "ThemeX.png",
             "", "SealX.png", "BossWaveX.png", "", ""};
     /** File index list of procs **/
     public static String[] pfiles = {"", "", "", "", "", "", "", "", "", "", "", "Burrow.png", "Revive.png", "", "", "", "", "", "", "", "Snipe.png", "Time.png", "Seal.png"
-            , "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "CritX.png", "", "", "BCPoison.png", ""};
+            , "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "CritX.png", "", "", "BCPoison.png", "", "", "", "ArmorBreak.png", "Speed.png"};
     /** String ID list of traits **/
     public static int[] colorid = {R.string.sch_wh, R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.esch_eva, R.string.esch_witch};
     /** String ID list of star and mask treasure **/
@@ -173,7 +173,7 @@ public class StaticStore {
     public static int[] procid = {R.string.sch_abi_kb, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_cr, R.string.sch_abi_wv, R.string.sch_abi_we, R.string.sch_abi_bb, R.string.sch_abi_wa, R.string.sch_abi_cu,
             R.string.sch_abi_str, R.string.sch_abi_su, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_ik, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_iwv, R.string.sch_abi_iw, R.string.sch_abi_iwa,
             R.string.sch_abi_ic, R.string.abi_snk, R.string.abi_stt, R.string.abi_seal, R.string.abi_sum, R.string.abi_mvatk, R.string.abi_thch, R.string.abi_poi, R.string.abi_boswv
-            , R.string.abi_imcri, R.string.sch_abi_sb, R.string.sch_abi_iv, R.string.sch_abi_poi, R.string.sch_abi_surge, R.string.sch_abi_impoi, R.string.sch_abi_imsu, R.string.talen_kb, R.string.talen_fr,
+            , R.string.abi_imcri, R.string.sch_abi_sb, R.string.sch_abi_iv, R.string.sch_abi_poi, R.string.sch_abi_surge, R.string.sch_abi_impoi, R.string.sch_abi_imsu, R.string.abi_armbr, R.string.abi_hast, R.string.talen_kb, R.string.talen_fr,
             R.string.talen_sl, R.string.talen_wv, R.string.talen_we, R.string.talen_warp, R.string.talen_cu, R.string.talen_poi, R.string.talen_sur};
     /** String ID list of abilities **/
     public static int[] abiid = {R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.abi_imvatk, R.string.sch_abi_ws,
@@ -187,7 +187,7 @@ public class StaticStore {
             R.string.unit_info_text27, R.string.unit_info_text28, R.string.unit_info_text29, R.string.unit_info_text30, R.string.unit_info_text31, R.string.unit_info_text32
             , R.string.unit_info_text33, R.string.unit_info_text34, R.string.unit_info_text35, R.string.unit_info_text36, R.string.unit_info_text37
             , R.string.unit_info_text38, R.string.unit_info_text39, R.string.unit_info_text40, R.string.unit_info_text41, R.string.unit_info_text42, R.string.unit_info_text43
-            , R.string.unit_info_text44, R.string.unit_info_text45, R.string.unit_info_text46};
+            , R.string.unit_info_text44, R.string.unit_info_text45, R.string.unit_info_text46, R.string.unit_info_text47, R.string.unit_info_text48, R.string.unit_info_text49, R.string.unit_info_text50};
 
     //Variables for Unit
 

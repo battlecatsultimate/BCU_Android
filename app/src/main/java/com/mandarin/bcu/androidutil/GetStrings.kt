@@ -6,6 +6,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
+import common.battle.data.CustomEntity
 import common.battle.data.MaskUnit
 import common.system.MultiLangCont
 import common.util.stage.Limit
@@ -200,7 +201,21 @@ class GetStrings(private val c: Context) {
 
         val tb = f.du.range
 
-        val ma = f.du.repAtk
+        val du = if(f.unit.pack.id != 0) {
+            f.du as CustomEntity
+        } else {
+            f.du
+        }
+
+        val ma = if(du.atkCount == 1) {
+            du.getAtkModel(0)
+        } else {
+            if(du is CustomEntity && allRangeSame(du)) {
+                du.getAtkModel(0)
+            } else {
+                du.repAtk
+            }
+        }
 
         val lds = ma.shortPoint
 
@@ -209,7 +224,7 @@ class GetStrings(private val c: Context) {
         val start = lds.coerceAtMost(lds + ldr)
         val end = lds.coerceAtLeast(lds + ldr)
 
-        return if (lds > 0)
+        return if (du.isLD || du.isOmni)
             "$tb / $start ~ $end"
         else
             tb.toString()
@@ -221,7 +236,21 @@ class GetStrings(private val c: Context) {
 
         val tb = em.de.range
 
-        val ma = em.de.repAtk
+        val de = if(em.pac.id != 0) {
+            em.de as CustomEntity
+        } else {
+            em.de
+        }
+
+        val ma = if(de.atkCount == 1) {
+            de.getAtkModel(0)
+        } else {
+            if(de is CustomEntity && allRangeSame(de)) {
+                de.getAtkModel(0)
+            } else {
+                de.repAtk
+            }
+        }
 
         val lds = ma.shortPoint
 
@@ -230,10 +259,38 @@ class GetStrings(private val c: Context) {
         val start = lds.coerceAtMost(lds + ldr)
         val end = lds.coerceAtLeast(lds + ldr)
 
-        return if (lds > 0)
+        return if (de.isLD || de.isOmni)
             "$tb / $start ~ $end"
         else
             tb.toString()
+    }
+
+    private fun allRangeSame(de: CustomEntity) : Boolean {
+        val near = ArrayList<Int>()
+        val far = ArrayList<Int>()
+
+        for(atk in de.atks) {
+            near.add(atk.shortPoint)
+            far.add(atk.longPoint)
+        }
+
+        if(near.isEmpty() && far.isEmpty()) {
+            return true
+        }
+
+        for(n in near) {
+            if(n != near[0]) {
+                return false
+            }
+        }
+
+        for(f in far) {
+            if(f != far[0]) {
+                return false
+            }
+        }
+
+        return true
     }
 
     fun getCD(f: Form?, t: Treasure?, frse: Int, talent: Boolean, lvs: IntArray?): String {

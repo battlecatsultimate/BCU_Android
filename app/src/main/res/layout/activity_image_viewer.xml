@@ -56,9 +56,11 @@
 
     <Spinner
         android:id="@+id/animselect"
+        style="@style/Platform.Widget.AppCompat.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/UnitinfoName"
         android:popupBackground="?attr/backgroundPrimary"
         app:layout_constraintBottom_toTopOf="@+id/imgviewerln"
         app:layout_constraintEnd_toStartOf="@+id/imgvieweroption"
@@ -66,12 +68,17 @@
 
     <Spinner
         android:id="@+id/formselect"
+        style="@style/Platform.Widget.AppCompat.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/UnitinfoName"
         android:popupBackground="?attr/backgroundPrimary"
         app:layout_constraintBottom_toTopOf="@+id/imgviewerln"
         app:layout_constraintEnd_toStartOf="@+id/animselect"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@+id/imgviewerbck"
         app:layout_constraintTop_toTopOf="@+id/toolbar7" />
 
     <LinearLayout

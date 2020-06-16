@@ -33,8 +33,7 @@ open class ConfigScreen : AppCompatActivity() {
         var revalidate: Boolean = false
     }
 
-    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja)
-    private val locales = StaticStore.lang
+    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru)
     private var started = false
     private var changed = false
 

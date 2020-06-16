@@ -3,9 +3,12 @@ package com.mandarin.bcu
 import android.app.Activity
 import android.content.*
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.io.DefineItf
@@ -14,6 +17,7 @@ import com.mandarin.bcu.androidutil.music.asynchs.MusicLoader
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.lang.ref.WeakReference
+import java.util.*
 
 class MusicPlayer : AppCompatActivity() {
     companion object {
@@ -119,6 +123,22 @@ class MusicPlayer : AppCompatActivity() {
         unregisterReceiver(musicreceive)
         StaticStore.toast = null
         super.onDestroy()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val lang = shared?.getInt("Language",0) ?: 0
+
+        val config = Configuration()
+        var language = StaticStore.lang[lang]
+
+        if(language == "")
+            language = Resources.getSystem().configuration.locales.get(0).language
+
+        config.setLocale(Locale(language))
+        applyOverrideConfiguration(config)
+
+        super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     class MusicReceiver : BroadcastReceiver {

@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.AsyncTask
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -36,6 +35,7 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import com.mandarin.bcu.util.Interpret
+import common.CommonStatic
 import common.system.MultiLangCont
 import common.util.pack.Pack
 import java.lang.ref.WeakReference
@@ -66,7 +66,7 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
                         nform.add(ac.getString(nformid[n]))
                     } else {
                         if(Locale.getDefault().language == "en")
-                            nform.add(Interpret.numberWithExtension(n+1))
+                            nform.add(Interpret.numberWithExtension(n+1, Locale.getDefault().language))
                         else
                             nform.add(ac.getString(R.string.unit_info_forms).replace("_", (n+1).toString()))
                     }

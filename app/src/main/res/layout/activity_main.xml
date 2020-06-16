@@ -64,7 +64,7 @@
                         android:text="@string/main_unitinfo"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
                 <TableRow
@@ -81,7 +81,7 @@
                         android:text="@string/main_enemy_info"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
                 <TableRow
@@ -99,7 +99,7 @@
                         android:text="@string/stg_inf"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
                 <TableRow
@@ -117,7 +117,7 @@
                         android:text="@string/main_medal"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
                 <TableRow
@@ -135,7 +135,7 @@
                         android:text="@string/main_equip"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
                 <TableRow
@@ -153,7 +153,7 @@
                         android:text="@string/main_bg"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
                 <TableRow
@@ -171,7 +171,7 @@
                         android:text="@string/main_music"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="24sp" />
                 </TableRow>
 
             </TableLayout>

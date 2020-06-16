@@ -226,7 +226,7 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                             cView.size = StaticStore.dptopx(1f, activity) / 1.25f
                             return@OnMenuItemClickListener true
                         }
-                        R.id.anim_option_png -> {
+                        R.id.anim_png_normal -> {
                             val b = Bitmap.createBitmap(cView.width, cView.height, Bitmap.Config.ARGB_8888)
                             val c = Canvas(b)
                             val p = Paint()
@@ -252,7 +252,7 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                             }
                             return@OnMenuItemClickListener true
                         }
-                        R.id.anim_option_pngtr -> {
+                        R.id.anim_png_transp -> {
                             val b = Bitmap.createBitmap(cView.width, cView.height, Bitmap.Config.ARGB_8888)
                             val c = Canvas(b)
                             val p = Paint()

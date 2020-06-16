@@ -24,6 +24,7 @@
         <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
+        <item name="actionOverflowMenuStyle">@style/OptionMenu</item>
     </style>
 
     <style name="AppTheme.night" parent="Theme.AppCompat.Light.NoActionBar">
@@ -49,6 +50,7 @@
         <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
+        <item name="actionOverflowMenuStyle">@style/OptionMenuN</item>
     </style>
 
     <style name="AppTheme.designNight" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -74,6 +76,7 @@
         <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
+        <item name="actionOverflowMenuStyle">@style/OptionMenuN</item>
     </style>
 
     <style name="AppTheme.day" parent="Theme.AppCompat.Light.NoActionBar">
@@ -99,6 +102,7 @@
         <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
+        <item name="actionOverflowMenuStyle">@style/OptionMenu</item>
     </style>
 
     <style name="AppTheme.designDay" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -124,6 +128,7 @@
         <item name="android:fastScrollThumbDrawable">@drawable/scroll_selector</item>
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
+        <item name="actionOverflowMenuStyle">@style/OptionMenu</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -144,5 +149,15 @@
         <item name = "android:textColorPrimary">?attr/TextPrimary</item>
         <item name = "android:background">?attr/backgroundPrimary</item>
         <item name = "android:colorPrimary">?attr/backgroundPrimary</item>
+    </style>
+
+    <style name="OptionMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name = "android:popupBackground">@color/backgroundPrimary</item>
+        <item name="android:actionMenuTextColor">@color/TextPrimary</item>
+    </style>
+
+    <style name="OptionMenuN" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name = "android:popupBackground">@color/backgroundPrimaryN</item>
+        <item name="android:actionMenuTextColor">@color/TextPrimaryN</item>
     </style>
 </resources>

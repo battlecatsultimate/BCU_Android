@@ -11,13 +11,15 @@
         android:id="@+id/anim_option_png"
         android:icon="@drawable/ic_more_horiz_black_24dp"
         android:title="@string/export_png"
-        app:showAsAction="never" />
+        app:showAsAction="never" >
+        <menu>
+            <item android:id="@+id/anim_png_normal"
+                android:title="@string/png_normal"/>
 
-    <item
-        android:id="@+id/anim_option_pngtr"
-        android:icon="@drawable/ic_more_horiz_black_24dp"
-        android:title="@string/export_png_tr"
-        app:showAsAction="never" />
+            <item android:id="@+id/anim_png_transp"
+                android:title="@string/png_transp"/>
+        </menu>
+    </item>
 
     <item
         android:id="@+id/anim_option_gif"

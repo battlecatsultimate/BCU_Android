@@ -355,7 +355,6 @@
     <string name="anim_png_success">Exported at -</string>
     <string name="anim_png_fail">Exporting failed…</string>
     <string name="def_fps">FPS : -</string>
-    <string name="export_png_tr">Export png with transparent BG</string>
     <string name="anim_gif_frame">GIF Frame : -</string>
     <string name="anim_option_gifstart">Start recording gif</string>
     <string name="anim_option_gifstop">Stop recording gif</string>
@@ -646,4 +645,13 @@
     <string name="pack_conf_desc_cantsolve">This conflict cannot be solved because app couldn\'t get proper information</string>
     <string name="pack_conf_guide_cantsolve">App couldn\'t get information from pack file. You have to manually remove them with external file browser.</string>
     <string name="pack_conf_solve_solve">You didn\'t solve _</string>
+    <string name="abi_hast">Haste</string>
+    <string name="abi_armbr">Armor Break</string>
+    <string name="unit_info_text47">" Give target _ speed more)"</string>
+    <string name="unit_info_text48">" Make target move _% faster)"</string>
+    <string name="unit_info_text49">" Make target have _ speed)"</string>
+    <string name="unit_info_text50">" (Make target receive damage _% more)"</string>
+    <string name="def_lang_ru">Русский</string>
+    <string name="png_normal">Normal</string>
+    <string name="png_transp">Transparent BG</string>
 </resources>

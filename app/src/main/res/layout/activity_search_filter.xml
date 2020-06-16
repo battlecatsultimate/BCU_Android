@@ -90,7 +90,7 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/sch_rare_ba"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schnp" />
 
@@ -102,7 +102,7 @@
 
                 android:text="@string/sch_rare_ex"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/schchr"
                 app:layout_constraintStart_toEndOf="@+id/schchba"
                 app:layout_constraintTop_toTopOf="@+id/schchba" />
@@ -115,7 +115,7 @@
 
                 android:text="@string/sch_rare_ra"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/schchba" />
 
@@ -129,7 +129,7 @@
                 android:layout_weight="0.2"
                 android:text="@string/sch_rare_sr"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schchba" />
 
@@ -141,7 +141,7 @@
 
                 android:text="@string/sch_rare_ur"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/schchlr"
                 app:layout_constraintStart_toEndOf="@+id/schchsr"
                 app:layout_constraintTop_toTopOf="@+id/schchlr" />
@@ -156,7 +156,7 @@
                 android:layout_weight="0.2"
                 android:text="@string/sch_rare_lr"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schchr" />
 
@@ -485,6 +485,7 @@
                 android:layout_marginStart="32dp"
                 android:text="@string/sch_np"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/schrare"
                 app:layout_constraintStart_toEndOf="@+id/schrare"
                 app:layout_constraintTop_toTopOf="@+id/schrare" />

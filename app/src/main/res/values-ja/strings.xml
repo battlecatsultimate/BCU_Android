@@ -354,7 +354,6 @@
     <string name="anim_png_success">-にエクスポートされました</string>
     <string name="anim_png_fail">エクスポートに失敗しました…</string>
     <string name="def_fps">FPS : -</string>
-    <string name="export_png_tr">背景を透過してpngをエクスポート</string>
     <string name="anim_option_gifstart">gifを録画開始</string>
     <string name="anim_option_gifstop">gifを録画停止</string>
     <string name="anim_gif_frame">GIFフレーム: -</string>
@@ -573,7 +572,7 @@
     <string name="unit_info_text22">"_の速度で移動する)"</string>
     <string name="unit_info_text23">"_の幅で"</string>
     <string name="unit_info_text24">"(距離_の位置で発生し,"</string>
-    <string name="unit_info_text25">"(タイプ _:"</string>
+    <string name="unit_info_text25">(タイプ _:</string>
     <string name="unit_info_text26">"_ダメージを与える"</string>
     <string name="unit_info_text27">"ターゲットの最大HPの_%のダメージを与える)"</string>
     <string name="unit_info_text28">"ターゲットの現在HPの_%のダメージを与える)"</string>
@@ -645,4 +644,13 @@
     <string name="pack_conf_desc_cantsolve">アプリが適切な情報を取得できなかったため、この競合を解決できません。</string>
     <string name="pack_conf_guide_cantsolve">パックから情報を取得できませんでした。外部ファイルエクスプローラーで手動で削除する必要があります。</string>
     <string name="pack_conf_solve_solve">まだ_個の競合を解決していません。</string>
+    <string name="abi_hast">軽率</string>
+    <string name="abi_armbr">アーマーブレイク</string>
+    <string name="unit_info_text47">" ターゲットの移動速度を_倍にする)"</string>
+    <string name="unit_info_text48">" ターゲットの移動速度を_%早くする)"</string>
+    <string name="unit_info_text49">" ターゲットの移動速度を_にする)"</string>
+    <string name="unit_info_text50">" (ターゲットが受けるダメージを_%増やす)"</string>
+    <string name="def_lang_ru">Русский</string>
+    <string name="png_normal">Normal</string>
+    <string name="png_transp">Transparent BG</string>
 </resources>

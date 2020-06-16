@@ -355,7 +355,6 @@
     <string name="anim_png_success">추출 성공 : -</string>
     <string name="anim_png_fail">추출 실패…</string>
     <string name="def_fps">FPS : -</string>
-    <string name="export_png_tr">투명 배경으로 png 추출</string>
     <string name="anim_gif_frame">GIF 프레임 : -</string>
     <string name="anim_option_gifstart">gif 기록 시작</string>
     <string name="anim_option_gifstop">gif 기록 멈추기</string>
@@ -402,7 +401,7 @@
     <string name="trea_zombiefr">명계의 과실</string>
     <string name="trea_alienfr">외계의 과실</string>
     <string name="sch_abi_poi">독 데미지</string>
-    <string name="unit_info_text18">" (상대 체력의 _% 만큼 공격)"</string>
+    <string name="unit_info_text18">" (타겟 체력의 _% 만큼 공격)"</string>
     <string name="lineup_const">오토토 레벨</string>
     <string name="lineup_const_breaker">캐논포 레벨</string>
     <string name="lineup_const_castle">냥코 성 레벨</string>
@@ -574,7 +573,7 @@
     <string name="unit_info_text22">" _ 의 속도로 이동)"</string>
     <string name="unit_info_text23">" _ 의 넓이와"</string>
     <string name="unit_info_text24">" (거리 _ 에서 생성되며"</string>
-    <string name="unit_info_text25">" (타입 _ :"</string>
+    <string name="unit_info_text25">" (타입 _ : "</string>
     <string name="unit_info_text26">" _ 데미지 만큼 공격)"</string>
     <string name="unit_info_text27">타겟의 최대 체력의 _ % 만큼 공격)</string>
     <string name="unit_info_text28">타겟의 현재 체력의 _ % 만큼 공격)</string>
@@ -593,7 +592,7 @@
     <string name="unit_info_text41">" 랜덤한 레이어에서 소환)"</string>
     <string name="unit_info_text42">" 각 공격마다"</string>
     <string name="unit_info_text43">" 각 킬마다"</string>
-    <string name="unit_info_text44">" 상대의 거리 _ 앞에서 소환)"</string>
+    <string name="unit_info_text44">" 타겟의 거리 _ 앞에서 소환)"</string>
     <string name="unit_info_text45">" _% 버프로"</string>
     <string name="unit_info_text46">_번째 공격</string>
     <string name="def_hundred">100</string>
@@ -646,4 +645,13 @@
     <string name="pack_conf_desc_cantsolve">해당 충돌은 앱이 정보를 불러올 수 없어 해결할 수 없습니다</string>
     <string name="pack_conf_guide_cantsolve">앱이 해당 팩 파일로부터 정보를 불러올 수 없었습니다. 직접 해당 팩을 외부 파일 관리자 어플로 제거해야 합니다.</string>
     <string name="pack_conf_solve_solve">_ 개의 충돌이 아직 해결되지 않았습니다</string>
+    <string name="abi_hast">속도 증가</string>
+    <string name="abi_armbr">방어력 감소</string>
+    <string name="unit_info_text47">" 타겟에게 _ 속도 부여)"</string>
+    <string name="unit_info_text48">타겟이 _% 만큼 더 빠르게 이동)</string>
+    <string name="unit_info_text49">타겟의 속도를 _ 속도로 변경)</string>
+    <string name="unit_info_text50">" (타겟이 데미지를 _% 만큼 더 받음)"</string>
+    <string name="def_lang_ru">Русский</string>
+    <string name="png_normal">일반</string>
+    <string name="png_transp">투명 배경</string>
 </resources>

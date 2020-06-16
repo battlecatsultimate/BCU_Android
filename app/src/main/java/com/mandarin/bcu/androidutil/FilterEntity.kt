@@ -1,6 +1,5 @@
 package com.mandarin.bcu.androidutil
 
-import android.annotation.SuppressLint
 import com.mandarin.bcu.util.Interpret
 import common.system.MultiLangCont
 import common.util.Data
@@ -8,7 +7,7 @@ import common.util.pack.Pack
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FilterEntity {
+class FilterEntity(private var entitynumber: Int, private var entityname: String, private var pid: Int) {
     companion object {
         fun setLuFilter() : ArrayList<Int> {
             val b0 = ArrayList<Boolean>()
@@ -205,31 +204,6 @@ class FilterEntity {
         }
     }
 
-    private var entitynumber: Int
-    private var entityname = ""
-    private var pid: Int = 0
-
-    constructor(entitynumber: Int) {
-        this.entitynumber = entitynumber
-    }
-
-    constructor(entitynumber: Int, entityname: String) {
-        this.entitynumber = entitynumber
-        this.entityname = entityname
-    }
-
-    constructor(entitynumber: Int, entityname: String, pid: Int) {
-        this.entitynumber = entitynumber
-        this.entityname = entityname
-        this.pid = pid
-    }
-
-    constructor(entitynumber: Int, pid: Int) {
-        this.entitynumber = entitynumber
-        this.pid = pid
-    }
-
-    @SuppressLint("DefaultLocale")
     fun setFilter(): ArrayList<Int> {
         val p = Pack.map[pid] ?: return ArrayList()
 
@@ -318,9 +292,9 @@ class FilterEntity {
                     if (name == null)
                         name = ""
 
-                    name = number(i) + " - " + name.toLowerCase()
+                    name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
 
-                    if (name.contains(entityname.toLowerCase()))
+                    if (name.contains(entityname.toLowerCase(Locale.ROOT)))
                         added = true
                 }
 

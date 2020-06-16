@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundPrimary"
+    android:backgroundTint="?attr/backgroundPrimary"
+    android:theme="?attr/TILtheme"
+    tools:context=".BattleSimulation">
+
+    <ProgressBar
+        android:id="@+id/battleprog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/battlelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="?attr/backgroundPrimary"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/battleloadt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/unit_list_unitload"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintEnd_toEndOf="@+id/battleprog"
+        app:layout_constraintStart_toStartOf="@+id/battleprog"
+        app:layout_constraintTop_toBottomOf="@+id/battleprog" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/battleslow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/colorAccent"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_fast_rewind_black_24dp"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/iconPrimaryN" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/battlefast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="@color/colorAccent"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_fast_forward_black_24dp"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toEndOf="@+id/battleslow"
+        app:layout_constraintTop_toTopOf="@+id/battleslow"
+        app:tint="@color/iconPrimaryN" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.circularreveal.CircularRevealRelativeLayout
+            android:id="@+id/battleconfiglayout"
+            android:layout_width="270dp"
+            android:layout_height="match_parent"
+            android:background="?attr/SemiBackgroundPrimary"
+            android:theme="@style/AppTheme.designDay"
+            android:visibility="invisible"
+            app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/battleexit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="?attr/ButtonPrimary"
+                    android:text="@string/battle_exit"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="14sp"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/battleretry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="?attr/ButtonPrimary"
+                    android:text="@string/battle_retry"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="14sp"
+                    tools:ignore="ButtonStyle" />
+            </TableRow>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/battleplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:clickable="true"
+                android:focusable="true"
+                app:backgroundTint="@color/colorAccent"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+                app:tint="@color/iconPrimaryN" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/battlenextframe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_toEndOf="@+id/battleplay"
+                android:backgroundTint="@color/colorAccent"
+                android:clickable="true"
+                android:focusable="true"
+                app:backgroundTint="@color/colorAccent"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_skip_next_black_24dp"
+                app:tint="@color/iconPrimaryN" />
+
+            <Switch
+                android:id="@+id/showunit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/battleplay"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/battle_show_unit"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <Switch
+                android:id="@+id/showenemy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/showunit"
+                android:layout_alignStart="@+id/showunit"
+                android:layout_alignEnd="@+id/showunit"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="0dp"
+                android:text="@string/battle_show_enem"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <Switch
+                android:id="@+id/switchmus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/showenemy"
+                android:layout_alignStart="@+id/showenemy"
+                android:layout_alignEnd="@+id/showenemy"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="0dp"
+                android:text="@string/config_music"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <SeekBar
+                android:id="@+id/seekmus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switchmus"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp" />
+
+            <Switch
+                android:id="@+id/switchse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seekmus"
+                android:layout_alignStart="@+id/switchmus"
+                android:layout_alignEnd="@+id/switchmus"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="0dp"
+                android:text="@string/config_se"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <SeekBar
+                android:id="@+id/seekse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switchse"
+                android:layout_alignStart="@+id/seekmus"
+                android:layout_alignEnd="@+id/seekmus"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="0dp" />
+
+        </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/battlepause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorAccent"
+            android:clickable="true"
+            android:focusable="true"
+            app:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_pause_black_24dp"
+            app:tint="@color/iconPrimaryN" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <LinearLayout
+        android:id="@+id/liveinfolayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/battlecoordinate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

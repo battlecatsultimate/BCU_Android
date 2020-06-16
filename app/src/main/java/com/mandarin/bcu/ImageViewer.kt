@@ -116,6 +116,7 @@ class ImageViewer : AppCompatActivity() {
         }
 
         val anims = findViewById<Spinner>(R.id.animselect)
+        val forms = findViewById<Spinner>(R.id.formselect)
         val option = findViewById<FloatingActionButton>(R.id.imgvieweroption)
 
         when (img) {
@@ -127,6 +128,7 @@ class ImageViewer : AppCompatActivity() {
                 fpsind.visibility = View.GONE
                 gif.visibility = View.GONE
                 prog.visibility = View.GONE
+                forms.visibility = View.GONE
 
                 val display = windowManager.defaultDisplay
                 val size = Point()
@@ -259,6 +261,7 @@ class ImageViewer : AppCompatActivity() {
                 fpsind.visibility = View.GONE
                 gif.visibility = View.GONE
                 prog.visibility = View.GONE
+                forms.visibility = View.GONE
 
                 val b2 = if(path != null) {
                     Objects.requireNonNull(VFile.getFile(path)).data.img.bimg() as Bitmap

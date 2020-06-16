@@ -355,7 +355,6 @@
     <string name="anim_png_success">轉存在 -</string>
     <string name="anim_png_fail">轉存失敗…</string>
     <string name="def_fps">FPS : -</string>
-    <string name="export_png_tr">轉存png(透明背景)</string>
     <string name="anim_gif_frame">GIF幀數 : -</string>
     <string name="anim_option_gifstart">開始錄製gif</string>
     <string name="anim_option_gifstop">停止錄製gif</string>
@@ -646,4 +645,13 @@
     <string name="pack_conf_desc_cantsolve">因為app無法獲取正確的資料 這個衝突無法被解決</string>
     <string name="pack_conf_guide_cantsolve">App無法從包裹檔案中讀取資料 你必須手動用外部檔案總管刪除檔案</string>
     <string name="pack_conf_solve_solve">你尚未解決 _ 衝突</string>
+    <string name="abi_hast">催促</string>
+    <string name="abi_armbr">脆弱</string>
+    <string name="unit_info_text47">" 使目標移動加快 _ 速度)"</string>
+    <string name="unit_info_text48">" 使目標移動加快 _%)"</string>
+    <string name="unit_info_text49">" 使目標移動保持 _ 速度)"</string>
+    <string name="unit_info_text50">" (使目標受到額外 _% 傷害)"</string>
+    <string name="def_lang_ru">Русский</string>
+    <string name="png_normal">Normal</string>
+    <string name="png_transp">Transparent BG</string>
 </resources>

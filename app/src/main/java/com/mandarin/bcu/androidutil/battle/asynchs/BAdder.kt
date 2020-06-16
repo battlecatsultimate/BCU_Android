@@ -74,6 +74,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
+
         Definer().define(activity)
 
         publishProgress(enemy)
@@ -569,7 +570,9 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                             val log1 = (1 - ln(100 - progress.toDouble()) / ln(100.0)).toFloat()
 
-                            SoundHandler.MUSIC.setVolume(log1, log1)
+                            if(!battleView.battleEnd) {
+                                SoundHandler.MUSIC.setVolume(log1, log1)
+                            }
                         }
                     }
 

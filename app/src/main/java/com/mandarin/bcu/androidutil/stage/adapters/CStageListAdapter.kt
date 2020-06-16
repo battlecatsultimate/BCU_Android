@@ -8,12 +8,14 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.util.Interpret
+import common.CommonStatic
 import common.util.pack.Pack
 import common.util.stage.SCDef
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CStageListAdapter(private val activity: Activity, private val stages: Array<String?>, private val mapcode: Int, private val stid: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.stage_list_layout, stages) {
+class CStageListAdapter(activity: Activity, private val stages: Array<String?>, private val mapcode: Int, private val stid: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.stage_list_layout, stages) {
 
     private class ViewHolder constructor(row: View) {
         var name: TextView = row.findViewById(R.id.map_list_name)
@@ -50,12 +52,8 @@ class CStageListAdapter(private val activity: Activity, private val stages: Arra
 
         val lang = Locale.getDefault().language
 
-        val enemies = if(lang == "en") {
-            if(ids.size > 1) {
-                ids.size.toString()+" Enemies"
-            } else {
-                ids.size.toString()+" Enemy"
-            }
+        val enemies = if(lang == "en" || lang == "ru") {
+            getEnemyText(ids.size, lang)
         } else {
             context.getString(R.string.stg_enem_num).replace("_", ids.size.toString())
         }
@@ -109,4 +107,23 @@ class CStageListAdapter(private val activity: Activity, private val stages: Arra
         return if (num in 0..9) "00$num" else if (num in 10..99) "0$num" else "" + num
     }
 
+    private fun getEnemyText(num: Int, lang: String) : String {
+        return when(lang) {
+            "en" -> {
+                when(num) {
+                    1 -> "$num Enemy"
+                    else -> "$num Enemies"
+                }
+            }
+            "ru" -> {
+                when(num) {
+                    1 -> "$num враг"
+                    else -> "$num враги"
+                }
+            }
+            else -> {
+                "$num"
+            }
+        }
+    }
 }
