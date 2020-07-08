@@ -67,7 +67,8 @@
             android:imeOptions="actionDone|flagNoExtractUi"
             android:singleLine="true"
             android:textColor="?attr/TextPrimary"
-            android:textColorHint="?attr/HintPrimary" />
+            android:textColorHint="?attr/HintPrimary"
+            android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

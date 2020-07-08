@@ -11,6 +11,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.view.View
 import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -21,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SearchAbilityAdapter
+import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.DefineItf
 import common.util.Data
 import leakcanary.AppWatcher
@@ -186,6 +188,7 @@ class SearchFilter : AppCompatActivity() {
         val atkgroupor = findViewById<RadioGroup>(R.id.schrgatkor)
         val abgroup = findViewById<RadioGroup>(R.id.schrgab)
         val atkmu = findViewById<RadioButton>(R.id.schrdatkmu)
+        val stat = findViewById<FloatingActionButton>(R.id.eschstat)
 
         back.setOnClickListener { returner() }
 
@@ -259,6 +262,15 @@ class SearchFilter : AppCompatActivity() {
         chnp.setOnCheckedChangeListener { _, isChecked ->
             StaticStore.talents = isChecked
         }
+
+        stat.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@SearchFilter, StatSearchFilter::class.java)
+                intent.putExtra("unit", true)
+
+                startActivity(intent)
+            }
+        })
     }
 
     private fun returner() {
@@ -325,18 +337,26 @@ class SearchFilter : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         val shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        val lang = shared?.getInt("Language", 0) ?: 0
+        val lang = shared?.getInt("Language",0) ?: 0
 
         val config = Configuration()
         var language = StaticStore.lang[lang]
+        var country = ""
 
-        if (language == "")
+        if(language == "") {
             language = Resources.getSystem().configuration.locales.get(0).language
+            country = Resources.getSystem().configuration.locales.get(0).country
+        }
 
-        config.setLocale(Locale(language))
+        val loc = if(country.isNotEmpty()) {
+            Locale(language, country)
+        } else {
+            Locale(language)
+        }
+
+        config.setLocale(loc)
         applyOverrideConfiguration(config)
-        super.attachBaseContext(LocaleManager.langChange(newBase, shared?.getInt("Language", 0)
-                ?: 0))
+        super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     public override fun onDestroy() {

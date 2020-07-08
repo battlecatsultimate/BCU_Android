@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/stgfilterbck"
+        android:id="@+id/statschbck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -58,14 +58,14 @@
         android:id="@+id/stgfiltername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:text="@string/sch_nm"
         android:textColor="?attr/UnitinfoName"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/stgfilterbck"
-        app:layout_constraintStart_toEndOf="@+id/stgfilterbck"
-        app:layout_constraintTop_toTopOf="@+id/stgfilterbck" />
+        app:layout_constraintBottom_toBottomOf="@+id/statschbck"
+        app:layout_constraintStart_toEndOf="@+id/statschbck"
+        app:layout_constraintTop_toTopOf="@+id/statschbck" />
 
     <ScrollView
         android:id="@+id/scrollView3"

@@ -180,7 +180,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_add_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/select_all/baseline_select_all_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -190,9 +190,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
-                            <entry key="outputName" value="ic_approve" />
+                            <entry key="outputName" value="ic_baseline_select_all_24" />
                             <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\approve.svg" />
                           </map>
                         </option>

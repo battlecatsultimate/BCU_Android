@@ -116,8 +116,12 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
         val tab: TabLayout = ac.findViewById(R.id.mulisttab)
         val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
 
-        setAppear(tab, pager)
+        setAppear(pager)
         setDisappear(loadt, prog)
+
+        if(Pack.map.size > 1) {
+            setAppear(tab)
+        }
     }
 
     private fun setAppear(vararg view: View) {
@@ -133,6 +137,8 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
     }
 
     inner class MusicListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val keys: ArrayList<Int>
+
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
@@ -142,16 +148,16 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
             }
 
             trans.commitAllowingStateLoss()
-        }
 
-        private val keys = Pack.map.keys.toMutableList()
+            keys = getExistingPack()
+        }
 
         override fun getItem(position: Int): Fragment {
             return MusicListPager.newIntance(keys[position])
         }
 
         override fun getCount(): Int {
-            return Pack.map.size
+            return keys.size
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
@@ -178,6 +184,21 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
 
         override fun saveState(): Parcelable? {
             return null
+        }
+
+        private fun getExistingPack() : ArrayList<Int> {
+            val keys = Pack.map.keys.toMutableList()
+            val res = ArrayList<Int>()
+
+            for(k in keys) {
+                val p = Pack.map[k] ?: continue
+
+                if(p.ms.list.isNotEmpty()) {
+                    res.add(k)
+                }
+            }
+
+            return res
         }
     }
 }

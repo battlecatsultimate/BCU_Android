@@ -132,6 +132,7 @@
                 android:layout_marginBottom="24dp"
                 android:backgroundTint="?attr/ButtonPrimary"
                 android:text="@string/battle_start"
+                android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

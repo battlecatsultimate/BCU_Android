@@ -33,7 +33,8 @@ open class ConfigScreen : AppCompatActivity() {
         var revalidate: Boolean = false
     }
 
-    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru)
+    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr)
+    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr")
     private var started = false
     private var changed = false
 
@@ -205,8 +206,14 @@ open class ConfigScreen : AppCompatActivity() {
 
         val adapter = ArrayAdapter(this, R.layout.spinneradapter, lang)
 
+        var realSelection = langCode.asList().indexOf(StaticStore.lang[shared.getInt("Language", 0)])
+
+        if(realSelection == -1) {
+            realSelection = 0
+        }
+
         language.adapter = adapter
-        language.setSelection(shared.getInt("Language", 0), false)
+        language.setSelection(realSelection, false)
 
         language.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -217,13 +224,19 @@ open class ConfigScreen : AppCompatActivity() {
 
                     val ed1 = shared.edit()
 
-                    ed1.putInt("Language", position)
+                    var l = StaticStore.lang.asList().indexOf(langCode[position])
+
+                    if(l == -1) {
+                        l = 0
+                    }
+
+                    ed1.putInt("Language", l)
                     ed1.apply()
 
                     if (StaticStore.units != null || StaticStore.enemies != null)
                         revalidate = true
                     else {
-                        StaticStore.getLang(position)
+                        StaticStore.getLang(l)
                     }
 
                     restart()
@@ -337,12 +350,14 @@ open class ConfigScreen : AppCompatActivity() {
                 editor.putBoolean("music", true)
                 editor.apply()
                 SoundHandler.musicPlay = true
+                SoundHandler.mu_vol = StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
                 musvol.isEnabled = true
             } else {
                 val editor = shared.edit()
                 editor.putBoolean("music", false)
                 editor.apply()
                 SoundHandler.musicPlay = false
+                SoundHandler.mu_vol = 0f
                 musvol.isEnabled = false
             }
         }
@@ -374,6 +389,7 @@ open class ConfigScreen : AppCompatActivity() {
                 val editor = shared.edit()
                 editor.putBoolean("SE", true)
                 editor.apply()
+                SoundHandler.sePlay = true
                 SoundHandler.se_vol = StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
                 sevol.isEnabled = true
             } else {
@@ -472,22 +488,26 @@ open class ConfigScreen : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         val shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        val lang = shared?.getInt("Language", 0) ?: 0
-
-        println("Lang : $lang")
+        val lang = shared?.getInt("Language",0) ?: 0
 
         val config = Configuration()
-
         var language = StaticStore.lang[lang]
+        var country = ""
 
-        if (language == "")
+        if(language == "") {
             language = Resources.getSystem().configuration.locales.get(0).language
+            country = Resources.getSystem().configuration.locales.get(0).country
+        }
 
-        config.setLocale(Locale(language))
+        val loc = if(country.isNotEmpty()) {
+            Locale(language, country)
+        } else {
+            Locale(language)
+        }
 
+        config.setLocale(loc)
         applyOverrideConfiguration(config)
-
-        super.attachBaseContext(LocaleManager.langChange(newBase, shared?.getInt("Language", 0) ?: 0))
+        super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
     override fun onBackPressed() {

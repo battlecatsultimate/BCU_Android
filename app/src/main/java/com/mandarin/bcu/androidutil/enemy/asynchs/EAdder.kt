@@ -40,6 +40,7 @@ import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.security.NoSuchAlgorithmException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class EAdder(activity: Activity, private val mode: Int, private val fm: FragmentManager?) : AsyncTask<Void?, String?, Void?>() {
     companion object {
@@ -328,6 +329,8 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
     }
 
     inner class EnemyListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val keys: ArrayList<Int>
+
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
@@ -337,16 +340,16 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
             }
 
             trans.commitAllowingStateLoss()
-        }
 
-        private val keys = Pack.map.keys.toMutableList()
+            keys = getExistingPack()
+        }
 
         override fun getItem(position: Int): Fragment {
             return EnemyListPager.newInstance(keys[position], position, mode)
         }
 
         override fun getCount(): Int {
-            return Pack.map.size
+            return keys.size
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
@@ -371,6 +374,21 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
 
         override fun saveState(): Parcelable? {
             return null
+        }
+
+        private fun getExistingPack() : ArrayList<Int> {
+            val keys = Pack.map.keys.toMutableList()
+            val res = ArrayList<Int>()
+
+            for(k in keys) {
+                val p = Pack.map[k] ?: continue
+
+                if(p.es.list.isNotEmpty()) {
+                    res.add(k)
+                }
+            }
+
+            return res
         }
     }
 

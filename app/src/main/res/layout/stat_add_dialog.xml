@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundPrimary">
+
+    <TextView
+        android:id="@+id/statschtype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/stat_sch_type"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/statschtypespin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:popupBackground="?attr/backgroundPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/statschtype"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/statschopt"
+        app:layout_constraintTop_toTopOf="@+id/statschtype" />
+
+    <TextView
+        android:id="@+id/statschopt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/stat_sch_option"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statschtypespin" />
+
+    <Spinner
+        android:id="@+id/statschoptspin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:popupBackground="?attr/backgroundPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/statschopt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/statschopt"
+        app:layout_constraintTop_toTopOf="@+id/statschopt" />
+
+    <TextView
+        android:id="@+id/statschlev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/stat_sch_lev"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintStart_toStartOf="@+id/statschopt"
+        app:layout_constraintTop_toBottomOf="@+id/statschoptspin" />
+
+    <Spinner
+        android:id="@+id/statschlevspin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:popupBackground="?attr/backgroundPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/statschlev"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/statschoptspin"
+        app:layout_constraintTop_toTopOf="@+id/statschlev" />
+
+    <Button
+        android:id="@+id/statschaddb"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/stat_sch_add"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statschlevspin" />
+
+    <Button
+        android:id="@+id/statschcancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/main_file_cancel"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/statschaddb"
+        app:layout_constraintEnd_toStartOf="@+id/statschaddb"
+        app:layout_constraintTop_toTopOf="@+id/statschaddb" />
+</androidx.constraintlayout.widget.ConstraintLayout>

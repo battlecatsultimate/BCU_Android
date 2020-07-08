@@ -103,7 +103,7 @@
     <string name="unit_info_t_none">なし</string>
     <string name="unit_info_cost">コスト</string>
     <string name="unit_info_t_allc">全属性</string>
-    <string name="unit_info_t_allt">全属性</string>
+    <string name="unit_info_t_allt">全ての敵</string>
     <string name="unit_info_spd">移動速度</string>
     <string name="unit_info_dps">DPS</string>
     <string name="unit_info_cd">再生産速度</string>
@@ -651,6 +651,21 @@
     <string name="unit_info_text49">" ターゲットの移動速度を_にする)"</string>
     <string name="unit_info_text50">" (ターゲットが受けるダメージを_%増やす)"</string>
     <string name="def_lang_ru">Русский</string>
-    <string name="png_normal">Normal</string>
-    <string name="png_transp">Transparent BG</string>
+    <string name="png_normal">通常png</string>
+    <string name="png_transp">透過png</string>
+    <string name="def_lang_fr">Français</string>
+    <string name="stat_sch_type">"Type : "</string>
+    <string name="stat_sch_option">"Option : "</string>
+    <string name="stat_sch_add">Add</string>
+    <string name="stat_sch_hp">Health</string>
+    <string name="stat_sch_hb">Hit back</string>
+    <string name="stat_sch_atk">Attack damage</string>
+    <string name="stat_sch_atktime">Attack duration</string>
+    <string name="stat_sch_cd">Cool down</string>
+    <string name="stat_sch_atkcount">Number of attacks</string>
+    <string name="stat_sch_lev">"Level : "</string>
+    <string name="stat_sch_title">Search by Stats</string>
+    <string name="stat_sch_multi">Multiplication</string>
+    <string name="sch_stat_empty">This field cannot be empty</string>
+    <string name="sch_stat_exist">This multiplication already exists</string>
 </resources>

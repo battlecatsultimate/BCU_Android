@@ -28,7 +28,9 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PackConflictDetail"></activity>
+        <activity android:name=".StatSearchFilter"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".PackConflictDetail" />
         <activity android:name=".PackConflictSolve" />
         <activity android:name=".StageSearchFilter" />
         <activity

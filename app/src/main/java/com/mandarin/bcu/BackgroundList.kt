@@ -24,6 +24,7 @@ import common.util.pack.Pack
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
+import kotlin.collections.ArrayList
 
 class BackgroundList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,13 +92,23 @@ class BackgroundList : AppCompatActivity() {
     override fun attachBaseContext(newBase: Context) {
         val shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val lang = shared?.getInt("Language",0) ?: 0
+
         val config = Configuration()
         var language = StaticStore.lang[lang]
+        var country = ""
 
-        if(language == "")
+        if(language == "") {
             language = Resources.getSystem().configuration.locales.get(0).language
+            country = Resources.getSystem().configuration.locales.get(0).country
+        }
 
-        config.setLocale(Locale(language))
+        val loc = if(country.isNotEmpty()) {
+            Locale(language, country)
+        } else {
+            Locale(language)
+        }
+
+        config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
@@ -108,6 +119,8 @@ class BackgroundList : AppCompatActivity() {
     }
 
     inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val keys: ArrayList<Int>
+
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
@@ -117,16 +130,16 @@ class BackgroundList : AppCompatActivity() {
             }
 
             trans.commitAllowingStateLoss()
-        }
 
-        private val keys = Pack.map.keys.toMutableList()
+            keys = getExistingPack()
+        }
 
         override fun getItem(position: Int): Fragment {
             return BGListPager.newInstance(keys[position])
         }
 
         override fun getCount(): Int {
-            return Pack.map.size
+            return keys.size
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
@@ -153,6 +166,21 @@ class BackgroundList : AppCompatActivity() {
 
         override fun saveState(): Parcelable? {
             return null
+        }
+
+        private fun getExistingPack(): ArrayList<Int> {
+            val keys = Pack.map.keys.toMutableList()
+            val res = ArrayList<Int>()
+
+            for(k in keys) {
+                val p = Pack.map[k] ?: continue
+
+                if(p.bg.list.isNotEmpty()) {
+                    res.add(k)
+                }
+            }
+
+            return res
         }
     }
 }

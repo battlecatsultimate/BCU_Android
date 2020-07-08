@@ -63,14 +63,4 @@ class AdapterAbil(private val ability: List<String>, private val procs: List<Str
         var abilicon: ImageView = itemView.findViewById(R.id.abilicon)
         var abiltext: TextView = itemView.findViewById(R.id.ability)
     }
-
-    private fun empty(): Bitmap {
-        var dp = 28f
-        if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) dp = 24f
-        val r = context.resources
-        val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.displayMetrics)
-        val conf = Bitmap.Config.ARGB_8888
-        return Bitmap.createBitmap(px.toInt(), px.toInt(), conf)
-    }
-
 }

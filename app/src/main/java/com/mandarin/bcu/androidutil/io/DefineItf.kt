@@ -111,6 +111,10 @@ class DefineItf : Itf {
         return func.apply(ArrayDeque())
     }
 
+    override fun writeErrorLog(e: java.lang.Exception) {
+        ErrorLogWriter.writeDriveLog(e)
+    }
+
     override fun redefine(class1: Class<*>?) {}
     override fun setSE(ind: Int) {
         SoundHandler.setSE(ind)

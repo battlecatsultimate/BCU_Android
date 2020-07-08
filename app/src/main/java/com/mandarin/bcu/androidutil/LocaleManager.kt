@@ -17,13 +17,21 @@ object LocaleManager {
         else
             StaticStore.lang[0]
 
-        if(lang == "")
+        var country = ""
+
+        if(lang == "") {
             lang = Resources.getSystem().configuration.locales.get(0).language
+            country = Resources.getSystem().configuration.locales.get(0).country
+        }
 
         val config = context.resources.configuration
 
         if(lang != "") {
-            val loc = Locale(lang)
+            val loc = if(country.isNotEmpty()) {
+                Locale(lang, country)
+            } else {
+                Locale(lang)
+            }
 
             Locale.setDefault(loc)
             config.setLocale(loc)

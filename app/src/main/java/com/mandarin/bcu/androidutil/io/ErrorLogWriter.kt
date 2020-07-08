@@ -103,7 +103,7 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
 
                 val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                 val date = Date()
-                val name = dateFormat.format(date) + ".txt"
+                val name = dateFormat.format(date) + "_" + Build.MODEL + ".txt"
 
                 val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", name)
                 if (!df.exists()) df.createNewFile()
@@ -140,7 +140,8 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
                     file.createNewFile()
                 }
                 if (upload) {
-                    val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", name)
+                    val dname = dateFormat.format(date) + "_" + Build.MODEL + ".txt"
+                    val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", dname)
                     if (!df.exists()) df.createNewFile()
                     val dfileWriter = FileWriter(df)
                     dfileWriter.append("VERSION : ").append(StaticStore.VER).append("\r\n")
@@ -175,12 +176,15 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
                 val stringbuff: Writer = StringWriter()
                 val printWriter = PrintWriter(stringbuff)
                 error.printStackTrace(printWriter)
-                if (!file.exists()) file.createNewFile() else {
+                if (!file.exists())
+                    file.createNewFile()
+                else {
                     file = File(path, getExistingFileName(path, name))
                     file.createNewFile()
                 }
                 if (upload) {
-                    val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", name)
+                    val dname = dateFormat.format(date) + "_" + Build.MODEL + ".txt"
+                    val df = File(Environment.getDataDirectory().toString() + "/data/com.mandarin.bcu/upload/", dname)
                     if (!df.exists()) df.createNewFile()
                     val dfileWriter = FileWriter(df)
                     dfileWriter.append("VERSION : ").append(StaticStore.VER).append("\r\n")

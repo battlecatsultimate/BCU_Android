@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="?attr/TILtheme"
+    android:background="?attr/backgroundPrimary">
+
+    <TextView
+        android:id="@+id/statschtype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/stat_sch_type"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/statschtypespin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:popupBackground="?attr/backgroundPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/statschtype"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/statschopt"
+        app:layout_constraintTop_toTopOf="@+id/statschtype" />
+
+    <TextView
+        android:id="@+id/statschopt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/stat_sch_option"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statschtypespin" />
+
+    <Spinner
+        android:id="@+id/statschoptspin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:popupBackground="?attr/backgroundPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/statschopt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/statschopt"
+        app:layout_constraintTop_toTopOf="@+id/statschopt" />
+
+    <Button
+        android:id="@+id/statschaddb"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/stat_sch_add"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statschmulti" />
+
+    <Button
+        android:id="@+id/statschcancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/main_file_cancel"
+        android:textAllCaps="false"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/statschaddb"
+        app:layout_constraintEnd_toStartOf="@+id/statschaddb"
+        app:layout_constraintTop_toTopOf="@+id/statschaddb" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/statschmulti"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:foregroundTint="?attr/TextPrimary"
+        android:hint="@string/stat_sch_multi"
+        android:textColorHint="?attr/TextPrimary"
+        app:boxStrokeColor="?attr/colorAccent"
+        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+        app:counterOverflowTextColor="?attr/ErrorPrimary"
+        app:counterTextAppearance="@style/CounterStyle"
+        app:counterTextColor="?attr/TextPrimary"
+        app:errorEnabled="true"
+        app:errorIconTint="?attr/ErrorPrimary"
+        app:errorTextColor="?attr/ErrorPrimary"
+        app:helperTextEnabled="false"
+        app:helperTextTextColor="?attr/TextPrimary"
+        app:hintTextColor="?attr/TextPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statschoptspin"
+        app:prefixTextColor="?attr/HintPrimary"
+        app:suffixText="%"
+        app:suffixTextColor="?attr/HintPrimary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/statschmultiedit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/TextPrimary"
+            android:foregroundTint="?attr/TextPrimary"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="number"
+            android:textColor="?attr/TextPrimary"
+            android:textColorHint="?attr/HintPrimary"
+            android:textSize="14sp"
+            app:boxStrokeColor="?attr/colorAccent"
+            app:boxStrokeErrorColor="?attr/ErrorPrimary"
+            app:counterOverflowTextColor="?attr/ErrorPrimary"
+            app:counterTextColor="?attr/TextPrimary"
+            app:errorIconTint="?attr/ErrorPrimary"
+            app:errorTextColor="?attr/ErrorPrimary"
+            app:helperTextTextColor="?attr/TextPrimary"
+            app:hintTextColor="?attr/HintPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

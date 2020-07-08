@@ -112,12 +112,14 @@ class SoundPlayer : MediaPlayer() {
     }
 
     fun start(se: Boolean) {
-        if(!safeCheck()) return
+        if(!safeCheck())
+            return
 
         if (se) {
             setVolume(SoundHandler.se_vol, SoundHandler.se_vol)
             start()
         } else {
+            setVolume(SoundHandler.mu_vol, SoundHandler.mu_vol)
             start()
         }
     }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundPrimary"
+    android:theme="?attr/TILtheme">
+
+    <CheckBox
+        android:id="@+id/statschdelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/statschmulti" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/statschmulti"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:foregroundTint="?attr/TextPrimary"
+        android:textColorHint="?attr/TextPrimary"
+        app:boxStrokeColor="?attr/colorAccent"
+        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+        app:counterOverflowTextColor="?attr/ErrorPrimary"
+        app:counterTextAppearance="@style/CounterStyle"
+        app:counterTextColor="?attr/TextPrimary"
+        app:errorEnabled="false"
+        app:errorIconTint="?attr/ErrorPrimary"
+        app:errorTextColor="?attr/ErrorPrimary"
+        app:helperTextEnabled="false"
+        app:helperTextTextColor="?attr/TextPrimary"
+        app:hintTextColor="?attr/TextPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/statschdelete"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:prefixTextColor="?attr/HintPrimary"
+        app:suffixTextColor="?attr/HintPrimary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/statschmultiedit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="?attr/TextPrimary"
+            android:foregroundTint="?attr/TextPrimary"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="number"
+            android:textColor="?attr/TextPrimary"
+            android:textColorHint="?attr/TextPrimary"
+            android:textSize="14sp"
+            app:boxStrokeColor="?attr/colorAccent"
+            app:boxStrokeErrorColor="?attr/ErrorPrimary"
+            app:counterOverflowTextColor="?attr/ErrorPrimary"
+            app:counterTextColor="?attr/TextPrimary"
+            app:errorIconTint="?attr/ErrorPrimary"
+            app:errorTextColor="?attr/ErrorPrimary"
+            app:helperTextTextColor="?attr/TextPrimary"
+            app:hintTextColor="?attr/TextPrimary" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

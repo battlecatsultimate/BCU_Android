@@ -469,52 +469,54 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                 }
                 val retry = activity.findViewById<Button>(R.id.battleretry)
 
-                retry.setOnClickListener {
-                    if (battleView.painter.bf.sb.ebase.health > 0 && battleView.painter.bf.sb.ubase.health > 0 && shared.getBoolean("retry_show", true)) {
-                        val alert = AlertDialog.Builder(activity, R.style.AlertDialog)
+                retry.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        if (battleView.painter.bf.sb.ebase.health > 0 && battleView.painter.bf.sb.ubase.health > 0 && shared.getBoolean("retry_show", true)) {
+                            val alert = AlertDialog.Builder(activity, R.style.AlertDialog)
 
-                        val inflater = LayoutInflater.from(activity)
+                            val inflater = LayoutInflater.from(activity)
 
-                        val layouts = inflater.inflate(R.layout.do_not_show_dialog, null)
+                            val layouts = inflater.inflate(R.layout.do_not_show_dialog, null)
 
-                        val donotshow = layouts.findViewById<CheckBox>(R.id.donotshowcheck)
-                        val content = layouts.findViewById<TextView>(R.id.donotshowcontent)
-                        val cancel = layouts.findViewById<Button>(R.id.battlecancel)
-                        val exit = layouts.findViewById<Button>(R.id.battledexit)
+                            val donotshow = layouts.findViewById<CheckBox>(R.id.donotshowcheck)
+                            val content = layouts.findViewById<TextView>(R.id.donotshowcontent)
+                            val cancel = layouts.findViewById<Button>(R.id.battlecancel)
+                            val exit = layouts.findViewById<Button>(R.id.battledexit)
 
-                        exit.text = activity.getString(R.string.battle_retry)
+                            exit.text = activity.getString(R.string.battle_retry)
 
-                        content.text = activity.getString(R.string.battle_sure_retry)
+                            content.text = activity.getString(R.string.battle_sure_retry)
 
-                        alert.setView(layouts)
+                            alert.setView(layouts)
 
-                        donotshow.setOnCheckedChangeListener { _, isChecked ->
-                            if (isChecked) {
-                                val editor = shared.edit()
+                            donotshow.setOnCheckedChangeListener { _, isChecked ->
+                                if (isChecked) {
+                                    val editor = shared.edit()
 
-                                editor.putBoolean("retry_show", false)
-                                editor.apply()
-                            } else {
-                                val editor = shared.edit()
+                                    editor.putBoolean("retry_show", false)
+                                    editor.apply()
+                                } else {
+                                    val editor = shared.edit()
 
-                                editor.putBoolean("retry_show", true)
-                                editor.apply()
+                                    editor.putBoolean("retry_show", true)
+                                    editor.apply()
+                                }
                             }
-                        }
-                        val dialog = alert.create()
-                        cancel.setOnClickListener { dialog.cancel() }
-                        exit.setOnClickListener {
+                            val dialog = alert.create()
+                            cancel.setOnClickListener { dialog.cancel() }
+                            exit.setOnClickListener {
+                                battleView.retry()
+                                P.stack.clear()
+                                clear()
+                                dialog.dismiss()
+                            }
+                            dialog.show()
+                        } else {
                             battleView.retry()
-                            P.stack.clear()
-                            clear()
-                            dialog.dismiss()
                         }
-                        dialog.show()
-                    } else {
-                        battleView.retry()
                     }
-                }
 
+                })
                 val mus = activity.findViewById<Switch>(R.id.switchmus)
                 val musvol = activity.findViewById<SeekBar>(R.id.seekmus)
 
@@ -567,6 +569,8 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                             editor.putInt("mus_vol", progress)
                             editor.apply()
+
+                            SoundHandler.mu_vol = StaticStore.getVolumScaler(progress)
 
                             val log1 = (1 - ln(100 - progress.toDouble()) / ln(100.0)).toFloat()
 

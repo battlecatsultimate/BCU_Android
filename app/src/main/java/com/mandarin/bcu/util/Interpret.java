@@ -28,9 +28,9 @@ import common.util.unit.Unit;
 public class Interpret extends Data {
     
     public static final String EN = "en";
-    public static final int ZH = 2;
-    public static final int JA = 3;
-    public static final int KO = 4;
+    public static final String ZH = "zh";
+    public static final String JA = "ja";
+    public static final String KO = "ko";
     public static final String RU = "ru";
     public static final String FR = "fr";
 
@@ -1317,7 +1317,11 @@ public class Interpret extends Data {
                         return " " + n;
                 }
             case FR:
-                return " " + n + " Fois";
+                if(n == -1) {
+                    return " Temps Infini";
+                } else {
+                    return " " + n + " Fois";
+                }
             case RU:
                 if(n % 10 == 1) {
                     return " "+n + " раза";

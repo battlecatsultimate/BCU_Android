@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.pack.conflict.adapters.asynchs
+package com.mandarin.bcu.androidutil.pack.conflict.asynchs
 
 import android.app.Activity
 import android.content.Intent

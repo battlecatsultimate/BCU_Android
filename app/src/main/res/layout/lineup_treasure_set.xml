@@ -17,7 +17,7 @@
             android:theme="?attr/TILtheme">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/techlev"
+                android:id="@+id/statschmulti"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/techlevt"
+                    android:id="@+id/statschmultiedit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="?attr/TextPrimary"
@@ -80,9 +80,9 @@
                 app:borderWidth="0dp"
                 app:elevation="0dp"
                 app:fabSize="mini"
-                app:layout_constraintBottom_toBottomOf="@+id/techlev"
+                app:layout_constraintBottom_toBottomOf="@+id/statschmulti"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/techlev"
+                app:layout_constraintTop_toTopOf="@+id/statschmulti"
                 app:srcCompat="@drawable/ic_expand_less_black_24dp" />
 
             <LinearLayout
@@ -90,9 +90,9 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="@+id/techlev"
-                app:layout_constraintStart_toStartOf="@+id/techlev"
-                app:layout_constraintTop_toBottomOf="@+id/techlev">
+                app:layout_constraintEnd_toEndOf="@+id/statschmulti"
+                app:layout_constraintStart_toStartOf="@+id/statschmulti"
+                app:layout_constraintTop_toBottomOf="@+id/statschmulti">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cdlev"
@@ -460,8 +460,8 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="@+id/techlev"
-                app:layout_constraintStart_toStartOf="@+id/techlev"
+                app:layout_constraintEnd_toEndOf="@+id/statschmulti"
+                app:layout_constraintStart_toStartOf="@+id/statschmulti"
                 app:layout_constraintTop_toBottomOf="@+id/eoctrea">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -732,8 +732,8 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="@+id/techlev"
-                app:layout_constraintStart_toStartOf="@+id/techlev"
+                app:layout_constraintEnd_toEndOf="@+id/statschmulti"
+                app:layout_constraintStart_toStartOf="@+id/statschmulti"
                 app:layout_constraintTop_toBottomOf="@+id/eocitftrea">
 
                 <com.google.android.material.textfield.TextInputLayout

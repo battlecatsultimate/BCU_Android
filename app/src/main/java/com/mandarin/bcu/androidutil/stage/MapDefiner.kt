@@ -201,7 +201,11 @@ class MapDefiner {
                 if(i.value.id == 0)
                     continue
 
-                StaticStore.mapcode.add(i.key)
+                val p = i.value ?: continue
+
+                if(p.mc.maps.isNotEmpty()) {
+                    StaticStore.mapcode.add(i.key)
+                }
             }
 
             if(StaticStore.mapcolcname.isEmpty()) {
@@ -210,19 +214,21 @@ class MapDefiner {
                 }
 
                 for(i in Pack.map) {
-                    val v= i.value
+                    val v= i.value ?: continue
 
                     if(v.id == 0)
                         continue
                     else {
-                        val k = Data.hex(i.key)
+                        if(v.mc.maps.isNotEmpty()) {
+                            val k = Data.hex(i.key)
 
-                        val name = v.name ?: ""
+                            val name = v.name ?: ""
 
-                        if(name == "")
-                            StaticStore.mapcolcname.add(k)
-                        else
-                            StaticStore.mapcolcname.add(k + " - " + v.name)
+                            if(name == "")
+                                StaticStore.mapcolcname.add(k)
+                            else
+                                StaticStore.mapcolcname.add(k + " - " + v.name)
+                        }
                     }
                 }
             }

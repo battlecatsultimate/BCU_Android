@@ -212,6 +212,7 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
         val b2 = ArrayList<Boolean>()
         val b3 = ArrayList<Boolean>()
         val b4 = ArrayList<Boolean>()
+        val b5 = ArrayList<Boolean>()
 
         if (StaticStore.rare.isEmpty()) {
             for (i in 0 until entitynumber)
@@ -233,13 +234,19 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
             for (i in 0 until entitynumber)
                 b4.add(true)
         }
+        if (StatFilterElement.statFilter.isEmpty()) {
+            for(i in 0 until entitynumber) {
+                b5.add(true)
+            }
+        }
         for (u in p.us.ulist.list) {
-            b0.add(StaticStore.rare.contains(u.rarity.toString()))
+            if(StaticStore.rare.isNotEmpty()) b0.add(StaticStore.rare.contains(u.rarity.toString()))
 
             val b10 = ArrayList<Boolean>()
             val b20 = ArrayList<Boolean>()
             val b30 = ArrayList<Boolean>()
             val b40 = ArrayList<Boolean>()
+            val b50 = ArrayList<Boolean>()
             for (f in u.forms) {
                 val du = if (StaticStore.talents) f.maxu() else f.du
                 val t = du.type
@@ -270,14 +277,16 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                 b20.add(b21)
                 b30.add(b31)
                 b40.add(b41)
+                b50.add(StatFilterElement.performFilter(f, StatFilterElement.orand))
             }
             if (!StaticStore.empty) if (b10.contains(true)) b1.add(true) else b1.add(false)
-            if (b20.contains(true)) b2.add(true) else b2.add(false)
-            if (b30.contains(true)) b3.add(true) else b3.add(false)
-            if (b40.contains(true)) b4.add(true) else b4.add(false)
+            if (StaticStore.attack.isNotEmpty()) if (b20.contains(true)) b2.add(true) else b2.add(false)
+            if (StaticStore.tg.isNotEmpty()) if (b30.contains(true)) b3.add(true) else b3.add(false)
+            if (StaticStore.ability.isNotEmpty()) if (b40.contains(true)) b4.add(true) else b4.add(false)
+            if (StatFilterElement.statFilter.isNotEmpty()) if (b50.contains(true)) b5.add(true) else b5.add(false)
         }
         val result = ArrayList<Int>()
-        for (i in 0 until entitynumber) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
+        for (i in 0 until entitynumber) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
             if (entityname.isNotEmpty()) {
                 val u = p.us.ulist.list[i]
 
@@ -315,6 +324,7 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
         val b1 = ArrayList<Boolean>()
         val b2 = ArrayList<Boolean>()
         val b3 = ArrayList<Boolean>()
+        val b4 = ArrayList<Boolean>()
 
         if (StaticStore.empty) {
             for (i in 0 until entitynumber)
@@ -332,6 +342,10 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
         if (StaticStore.ability.isEmpty())
             for (i in 0 until entitynumber)
                 b3.add(true)
+
+        if (StatFilterElement.statFilter.isEmpty())
+            for(i in 0 until entitynumber)
+                b4.add(true)
 
         for (e in p.es.list) {
             var b10: Boolean
@@ -403,12 +417,16 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                 b2.add(b20)
 
             b3.add(b30)
+
+            if(StatFilterElement.statFilter.isNotEmpty()) {
+                b4.add(StatFilterElement.performFilter(e, StatFilterElement.orand))
+            }
         }
 
         val result = ArrayList<Int>()
 
         for (i in 0 until entitynumber)
-            if (b0[i] && b1[i] && b2[i] && b3[i]) {
+            if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
                 if (entityname.isNotEmpty()) {
                     val e = p.es.list[i]
 

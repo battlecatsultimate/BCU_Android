@@ -298,6 +298,8 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
     }
 
     inner class UnitListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val keys: ArrayList<Int>
+
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
@@ -307,21 +309,19 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
             }
 
             trans.commitAllowingStateLoss()
-        }
 
-        private val keys = Pack.map.keys.toMutableList()
+            keys = getExistingPack()
+        }
 
         override fun getItem(position: Int): Fragment {
             return UnitListPager.newInstance(keys[position], position)
         }
 
         override fun getCount(): Int {
-            return Pack.map.size
+            return keys.size
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            val keys = Pack.map.keys.toMutableList()
-
             return if(position == 0) {
                 "Default"
             } else {
@@ -343,6 +343,21 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
 
         override fun saveState(): Parcelable? {
             return null
+        }
+
+        private fun getExistingPack() : ArrayList<Int> {
+            val key = Pack.map.keys.toMutableList()
+            val res = ArrayList<Int>()
+
+            for(k in key) {
+                val p = Pack.map[k] ?: continue
+
+                if(p.us.ulist.list.isNotEmpty()) {
+                    res.add(k)
+                }
+            }
+
+            return res
         }
     }
 

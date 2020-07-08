@@ -653,4 +653,19 @@
     <string name="png_normal">Нормальн.</string>
     <string name="png_transp">Прозрачн. Фон</string>
     <string name="main_file_up">Вам нужно загрузить новые файлы. Загрузить их?</string>
+    <string name="def_lang_fr">Français</string>
+    <string name="stat_sch_type">"Type : "</string>
+    <string name="stat_sch_option">"Option : "</string>
+    <string name="stat_sch_add">Add</string>
+    <string name="stat_sch_hp">Health</string>
+    <string name="stat_sch_hb">Hit back</string>
+    <string name="stat_sch_atk">Attack damage</string>
+    <string name="stat_sch_atktime">Attack duration</string>
+    <string name="stat_sch_cd">Cool down</string>
+    <string name="stat_sch_atkcount">Number of attacks</string>
+    <string name="stat_sch_lev">"Level : "</string>
+    <string name="stat_sch_title">Search by Stats</string>
+    <string name="stat_sch_multi">Multiplication</string>
+    <string name="sch_stat_empty">This field cannot be empty</string>
+    <string name="sch_stat_exist">This multiplication already exists</string>
 </resources>

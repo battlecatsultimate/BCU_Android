@@ -21,7 +21,7 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.conflict.adapters.PackConfListAdapter
-import com.mandarin.bcu.androidutil.pack.conflict.adapters.asynchs.PackConfSolver
+import com.mandarin.bcu.androidutil.pack.conflict.asynchs.PackConfSolver
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -121,11 +121,20 @@ class PackConflictSolve : AppCompatActivity() {
 
         val config = Configuration()
         var language = StaticStore.lang[lang]
+        var country = ""
 
-        if(language == "")
+        if(language == "") {
             language = Resources.getSystem().configuration.locales.get(0).language
+            country = Resources.getSystem().configuration.locales.get(0).country
+        }
 
-        config.setLocale(Locale(language))
+        val loc = if(country.isNotEmpty()) {
+            Locale(language, country)
+        } else {
+            Locale(language)
+        }
+
+        config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }

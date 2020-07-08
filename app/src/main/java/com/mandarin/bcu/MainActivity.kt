@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         SoundHandler.musicPlay = shared.getBoolean("music", true)
-        SoundHandler.mu_vol = StaticStore.getVolumScaler(shared.getInt("mu_vol", 99))
+        SoundHandler.mu_vol = StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
         SoundHandler.sePlay = shared.getBoolean("SE", true)
         SoundHandler.se_vol = StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
         StaticStore.upload = shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)
@@ -323,13 +323,21 @@ class MainActivity : AppCompatActivity() {
 
         val config = Configuration()
         var language = StaticStore.lang[lang]
+        var country = ""
 
-        if(language == "")
+        if(language == "") {
             language = Resources.getSystem().configuration.locales.get(0).language
+            country = Resources.getSystem().configuration.locales.get(0).country
+        }
 
-        config.setLocale(Locale(language))
+        val loc = if(country.isNotEmpty()) {
+            Locale(language, country)
+        } else {
+            Locale(language)
+        }
+
+        config.setLocale(loc)
         applyOverrideConfiguration(config)
-
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 

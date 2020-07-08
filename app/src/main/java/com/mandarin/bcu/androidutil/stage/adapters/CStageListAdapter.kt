@@ -8,8 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.util.Interpret
-import common.CommonStatic
 import common.util.pack.Pack
 import common.util.stage.SCDef
 import java.util.*
@@ -52,7 +50,7 @@ class CStageListAdapter(activity: Activity, private val stages: Array<String?>, 
 
         val lang = Locale.getDefault().language
 
-        val enemies = if(lang == "en" || lang == "ru") {
+        val enemies = if(lang == "en" || lang == "ru" || lang == "fr") {
             getEnemyText(ids.size, lang)
         } else {
             context.getString(R.string.stg_enem_num).replace("_", ids.size.toString())
@@ -119,6 +117,12 @@ class CStageListAdapter(activity: Activity, private val stages: Array<String?>, 
                 when(num) {
                     1 -> "$num враг"
                     else -> "$num враги"
+                }
+            }
+            "fr" -> {
+                when(num) {
+                    1 -> "$num Enemmi"
+                    else -> "$num Ennemis"
                 }
             }
             else -> {

@@ -3,19 +3,16 @@ package com.mandarin.bcu.androidutil.lineup.adapters
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -61,7 +58,7 @@ class LUTreasureSetting : Fragment() {
 
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
 
-    private val tilid = intArrayOf(R.id.techlev, R.id.canatklev, R.id.canrangelev, R.id.eoctrea, R.id.eocitftrea, R.id.itffruittrea, R.id.cotctrea, R.id.itfcrytrea, R.id.cotccrytrea)
+    private val tilid = intArrayOf(R.id.statschmulti, R.id.canatklev, R.id.canrangelev, R.id.eoctrea, R.id.eocitftrea, R.id.itffruittrea, R.id.cotctrea, R.id.itfcrytrea, R.id.cotccrytrea)
     private val tilsid = arrayOf(techid, eocid, eocitfid, itfid, cotcid, maskid)
 
     private val handler = Handler()
@@ -71,11 +68,11 @@ class LUTreasureSetting : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_treasure_set, group, false)
 
-        color = intArrayOf(getAttributeColor(Objects.requireNonNull<Context>(context), R.attr.TextPrimary))
+        color = intArrayOf(StaticStore.getAttributeColor(Objects.requireNonNull<Context>(context), R.attr.TextPrimary))
 
         listeners(view)
 
-        val teche = view.findViewById<TextInputEditText>(R.id.techlevt)
+        val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
         val canatke = view.findViewById<TextInputEditText>(R.id.canatklevt)
         val canrangee = view.findViewById<TextInputEditText>(R.id.canrangelevt)
         val eoce = view.findViewById<TextInputEditText>(R.id.eoctreat)
@@ -196,8 +193,8 @@ class LUTreasureSetting : Fragment() {
     private fun listeners(view: View) {
         val t = BasisSet.current.sele.t()
 
-        val tech = view.findViewById<TextInputLayout>(R.id.techlev)
-        val teche = view.findViewById<TextInputEditText>(R.id.techlevt)
+        val tech = view.findViewById<TextInputLayout>(R.id.statschmulti)
+        val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
 
         val techs = arrayOfNulls<TextInputLayout>(6)
         val teches = arrayOfNulls<TextInputEditText>(6)
@@ -622,6 +619,8 @@ class LUTreasureSetting : Fragment() {
                             }
                         }
 
+                        StaticStore.updateForm = true
+
                         canbeEdited = true
                         save()
                     }
@@ -633,8 +632,8 @@ class LUTreasureSetting : Fragment() {
     private fun setListenerforTextInptEditTexts(view: View, vararg texts: Array<TextInputEditText?>) {
         if (context == null) return
 
-        val tech = view.findViewById<TextInputLayout>(R.id.techlev)
-        val teche = view.findViewById<TextInputEditText>(R.id.techlevt)
+        val tech = view.findViewById<TextInputLayout>(R.id.statschmulti)
+        val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
 
         val eoc = view.findViewById<TextInputLayout>(R.id.eoctrea)
         val eoce = view.findViewById<TextInputEditText>(R.id.eoctreat)
@@ -738,6 +737,8 @@ class LUTreasureSetting : Fragment() {
                                 }
                             }
 
+                            StaticStore.updateForm = true
+
                             save()
                         }
                     }
@@ -755,20 +756,6 @@ class LUTreasureSetting : Fragment() {
 
         fun newInstance(): LUTreasureSetting {
             return LUTreasureSetting()
-        }
-
-        private fun getAttributeColor(context: Context, attributeId: Int): Int {
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(attributeId, typedValue, true)
-            val colorRes = typedValue.resourceId
-            var color = -1
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: Resources.NotFoundException) {
-                e.printStackTrace()
-            }
-
-            return color
         }
     }
 }

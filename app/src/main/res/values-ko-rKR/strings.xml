@@ -654,4 +654,19 @@
     <string name="def_lang_ru">Русский</string>
     <string name="png_normal">일반</string>
     <string name="png_transp">투명 배경</string>
+    <string name="def_lang_fr">Français</string>
+    <string name="stat_sch_type">"종류 : "</string>
+    <string name="stat_sch_option">"옵션 : "</string>
+    <string name="stat_sch_add">추가</string>
+    <string name="stat_sch_hp">체력</string>
+    <string name="stat_sch_hb">히트백</string>
+    <string name="stat_sch_atk">공격력</string>
+    <string name="stat_sch_atktime">공격 시간</string>
+    <string name="stat_sch_cd">쿨다운</string>
+    <string name="stat_sch_atkcount">공격 횟수</string>
+    <string name="stat_sch_lev">"레벨 : "</string>
+    <string name="stat_sch_title">스탯으로 검색</string>
+    <string name="stat_sch_multi">배율</string>
+    <string name="sch_stat_empty">입력란을 비워둘 수 없습니다</string>
+    <string name="sch_stat_exist">해당 배율은 이미 리스트에 존재합니다</string>
 </resources>

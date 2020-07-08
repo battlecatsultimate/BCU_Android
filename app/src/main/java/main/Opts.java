@@ -102,6 +102,14 @@ public class Opts {
 		} if (id == REQITN) {
 			Log.e("Opts", "failed to connect to internet while download is necessary");
 			pop("failed to connect to internet while download is necessary", "download error");
+		} else {
+			StringBuilder msg = new StringBuilder();
+
+			for(String s : is) {
+				msg.append(s);
+			}
+
+			Log.e("Opts",msg.toString());
 		}
 	}
 
