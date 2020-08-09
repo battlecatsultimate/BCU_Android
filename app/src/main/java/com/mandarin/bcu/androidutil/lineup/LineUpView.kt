@@ -337,7 +337,7 @@ class LineUpView(context: Context?) : View(context) {
         BasisSet.current.sele.lu.renew()
 
         try {
-            StaticStore.SaveLineUp(context)
+            StaticStore.saveLineUp(context)
         } catch(e: Exception) {
             ErrorLogWriter.writeLog(e, StaticStore.upload, context)
             StaticStore.showShortMessage(context, R.string.err_lusave_fail)
@@ -422,6 +422,7 @@ class LineUpView(context: Context?) : View(context) {
                             repform = null
                             StaticStore.position = intArrayOf(-1, -1)
                             StaticStore.updateForm = true
+                            StaticStore.updateOrb = true
                         }
                     }
                     var b = f.anim.uni.img.bimg() as Bitmap

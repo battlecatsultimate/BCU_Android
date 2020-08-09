@@ -120,6 +120,8 @@ class BattleSimulation : AppCompatActivity() {
                 SoundHandler.MUSIC.pause()
             }
         }
+
+        SoundHandler.timer?.pause()
     }
 
     public override fun onResume() {
@@ -128,6 +130,8 @@ class BattleSimulation : AppCompatActivity() {
             if ((!SoundHandler.MUSIC.isRunning || !SoundHandler.MUSIC.isPlaying) && SoundHandler.musicPlay) {
                 SoundHandler.MUSIC.start()
             }
+
+            SoundHandler.timer?.resume()
         }
     }
 }

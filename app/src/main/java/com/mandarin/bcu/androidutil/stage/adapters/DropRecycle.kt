@@ -11,14 +11,19 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.system.MultiLangCont
 import common.util.stage.Stage
+import java.text.DecimalFormat
 
 class DropRecycle(private val st: Stage, private val activity: Activity) : RecyclerView.Adapter<DropRecycle.ViewHolder>() {
+    private val dropData: List<String>
+
+    init {
+        dropData = handleDrops()
+    }
 
     inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         var chance: TextView = row.findViewById(R.id.dropchance)
         var item: TextView = row.findViewById(R.id.dropitem)
         var amount: TextView = row.findViewById(R.id.dropamount)
-
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -27,9 +32,20 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+        val c = when {
+            dropData.isEmpty() -> {
+                (i+1).toString()
+            }
+            i >= dropData.size -> {
+                st.info.drop[i][0].toString() + "%"
+            }
+            else -> {
+                dropData[i] + "%"
+            }
+        }
+
         val data = st.info.drop[i]
-        val chance = data[0].toString() + " %"
-        viewHolder.chance.text = chance
+        viewHolder.chance.text = c
         var reward = MultiLangCont.RWNAME.getCont(data[1])
         if (reward == null) reward = data[1].toString()
         if (i == 0) {
@@ -53,6 +69,46 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
 
     override fun getItemCount(): Int {
         return st.info.drop.size
+    }
+
+    private fun handleDrops() : List<String> {
+        println(st.info.rand)
+
+        val res = ArrayList<String>()
+
+        val data = st.info.drop
+
+        var sum = 0
+
+        for(i in data) {
+            sum += i[0]
+        }
+
+        val df = DecimalFormat("#.##")
+
+        if(sum == 1000) {
+            for(i in data)
+                res.add(df.format(i[0].toDouble()/10))
+        } else if((sum == data.size && sum != 1) || st.info.rand == -3) {
+            return res
+        } else if(sum == 100) {
+            for(i in data)
+                res.add(i[0].toString())
+        } else if(sum > 100 && st.info.rand == 0) {
+            var rest = 100.0
+
+            for(i in data) {
+                val filter = rest * i[0].toDouble() / 100.0
+                rest -= filter
+
+                res.add(df.format(filter))
+            }
+        } else {
+            for(i in data)
+                res.add(i[0].toString())
+        }
+
+        return res
     }
 
 }

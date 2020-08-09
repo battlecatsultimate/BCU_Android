@@ -60,7 +60,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
     private var prePosit = 0
     private var initialized = false
     private var tab: LUTab? = null
-    private val ids = intArrayOf(R.string.lineup_list, R.string.lineup_unit, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_combo)
+    private val ids = intArrayOf(R.string.lineup_list, R.string.lineup_unit, R.string.lineup_orb, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_combo)
     private val names = arrayOfNulls<String>(ids.size)
     
     private val lu = "0"
@@ -352,7 +352,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 setDisappear(prog, st)
 
                 bck.setOnClickListener {
-                    StaticStore.SaveLineUp(activity)
+                    StaticStore.saveLineUp(activity)
                     StaticStore.filterReset()
 
                     StaticStore.set = null
@@ -406,9 +406,11 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 if (deleted[0] == -100) {
                                     StaticStore.position = intArrayOf(-1, -1)
                                     StaticStore.updateForm = true
+                                    StaticStore.updateOrb = true
                                 } else {
                                     StaticStore.position = deleted
                                     StaticStore.updateForm = true
+                                    StaticStore.updateOrb = true
                                 }
                             }
 
@@ -464,6 +466,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         StaticStore.updateTreasure = true
                         StaticStore.updateConst = true
                         StaticStore.updateCastle = true
+                        StaticStore.updateOrb = true
 
                         if (position == 0) {
                             menu.getItem(5).subMenu.getItem(0).isEnabled = false
@@ -511,6 +514,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         line.changeFroms(BasisSet.current.sele.lu)
 
                         StaticStore.updateForm = true
+                        StaticStore.updateOrb = true
 
                         menu.getItem(5).subMenu.getItem(1).isEnabled = BasisSet.current.lb.size != 1
                         menu.getItem(5).isEnabled = !(!menu.getItem(5).subMenu.getItem(0).isEnabled && !menu.getItem(5).subMenu.getItem(1).isEnabled)
@@ -582,8 +586,9 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 StaticStore.updateTreasure = true
                                 StaticStore.updateConst = true
                                 StaticStore.updateCastle = true
+                                StaticStore.updateOrb = true
 
-                                StaticStore.SaveLineUp(activity)
+                                StaticStore.saveLineUp(activity)
 
                                 dialog.dismiss()
                             }
@@ -632,7 +637,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 luspin.setSelection(luspin.count - 1)
 
                                 StaticStore.updateForm = true
-                                StaticStore.SaveLineUp(activity)
+                                StaticStore.updateOrb = true
+                                StaticStore.saveLineUp(activity)
 
                                 dialog.dismiss()
                             }
@@ -702,7 +708,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                                 luspin.adapter = adapter11
                                 StaticStore.showShortMessage(activity, R.string.lineup_paste_set_done)
-                                StaticStore.SaveLineUp(activity)
+                                StaticStore.saveLineUp(activity)
                             }
                             builder.setNegativeButton(R.string.main_file_cancel) { _: DialogInterface?, _: Int -> }
                             builder.show()
@@ -721,7 +727,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 line.updateLineUp()
                                 line.invalidate()
                                 StaticStore.showShortMessage(activity, R.string.lineup_paste_lu_done)
-                                StaticStore.SaveLineUp(activity)
+                                StaticStore.saveLineUp(activity)
                             }
                             builder.setNegativeButton(R.string.main_file_cancel) { _: DialogInterface?, _: Int -> }
                             builder.show()
@@ -751,7 +757,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                     val pos = setspin.selectedItemPosition
                                     setspin.adapter = adapter22
                                     setspin.setSelection(pos)
-                                    StaticStore.SaveLineUp(activity)
+                                    StaticStore.saveLineUp(activity)
                                 }
                                 dialog.dismiss()
                             }
@@ -782,7 +788,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                     val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                                     luspin.adapter = adapter11
                                     luspin.setSelection(BasisSet.current.lb.size - 1)
-                                    StaticStore.SaveLineUp(activity)
+                                    StaticStore.saveLineUp(activity)
                                 }
                                 dialog.dismiss()
                             }
@@ -803,7 +809,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             val adapter22 = ArrayAdapter(activity, R.layout.spinneradapter, setname1)
                             setspin.adapter = adapter22
                             setspin.setSelection(BasisSet.list.size - 1)
-                            StaticStore.SaveLineUp(activity)
+                            StaticStore.saveLineUp(activity)
                             StaticStore.showShortMessage(activity, R.string.lineup_cloned_set)
                             return@setOnMenuItemClickListener true
                         }
@@ -820,7 +826,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                             luspin.adapter = adapter11
                             luspin.setSelection(BasisSet.current.lb.size - 1)
-                            StaticStore.SaveLineUp(activity)
+                            StaticStore.saveLineUp(activity)
                             StaticStore.showShortMessage(activity, R.string.lineup_cloned_lineup)
                             return@setOnMenuItemClickListener true
                         }
@@ -842,7 +848,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 if (pos >= BasisSet.list.size) setspin.setSelection(BasisSet.list.size - 1) else setspin.setSelection(pos)
 
                                 try {
-                                    StaticStore.SaveLineUp(activity)
+                                    StaticStore.saveLineUp(activity)
                                 } catch(e: Exception) {
                                     ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                                     StaticStore.showShortMessage(activity, R.string.err_lusave_fail)
@@ -870,7 +876,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 if (pos >= BasisSet.current.lb.size) luspin.setSelection(BasisSet.current.lb.size - 1) else luspin.setSelection(pos)
 
                                 try {
-                                    StaticStore.SaveLineUp(activity)
+                                    StaticStore.saveLineUp(activity)
                                 } catch(e: Exception) {
                                     ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                                     StaticStore.showShortMessage(activity, R.string.err_lusave_fail)
@@ -966,17 +972,18 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
             when (i) {
                 0 -> return LUUnitList.newInstance(StaticStore.lunames, lineup)
                 1 -> return LUUnitSetting.newInstance(lineup)
-                2 -> return LUCastleSetting.newInstance()
-                3 -> return LUTreasureSetting.newInstance()
-                4 -> return LUConstruction.newInstance()
-                5 -> return newInstance(lineup)
+                2 -> return LUOrbSetting.newInstance(lineup)
+                3 -> return LUCastleSetting.newInstance()
+                4 -> return LUTreasureSetting.newInstance()
+                5 -> return LUConstruction.newInstance()
+                6 -> return newInstance(lineup)
             }
 
             return LUUnitList.newInstance(StaticStore.lunames, lineup)
         }
 
         override fun getCount(): Int {
-            return 6
+            return 7
         }
 
         override fun getPageTitle(position: Int): CharSequence? {

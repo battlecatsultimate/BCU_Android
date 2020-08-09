@@ -115,6 +115,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
                 intent.putExtra("PID",em.pac.id)
                 intent.putExtra("ID", StaticStore.getID(em.id))
                 intent.putExtra("Multiply", (data[viewHolder.adapterPosition]?.get(SCDef.M)?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("AMultiply", (data[viewHolder.adapterPosition]?.get(SCDef.M1)?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
                 activity.startActivity(intent)
             }
         })

@@ -62,6 +62,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_id"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -107,6 +108,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_hp"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -130,6 +132,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/hb"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -159,6 +162,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/enemy_info_multi"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TableRow
@@ -171,8 +175,7 @@
                     android:id="@+id/eneminfmultir"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_span="2"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.45"
                     android:backgroundTint="?attr/TextPrimary"
                     android:ems="5"
                     android:gravity="center"
@@ -182,18 +185,34 @@
                     android:inputType="number"
                     android:maxLength="10"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/eneminfpercent"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.1"
                     android:gravity="center"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:text="@string/def_treasure_perc"
+                    android:text="@string/def_divider"
                     android:textColor="?attr/TextPrimary" />
+
+                <EditText
+                    android:id="@+id/eneminfamultir"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.45"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:ems="5"
+                    android:gravity="center"
+                    android:hint="@string/def_hundred"
+                    android:imeOptions="actionDone|flagNoExtractUi"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
 
             </TableRow>
 
@@ -211,6 +230,7 @@
                 android:text="@string/unit_info_atk"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -238,6 +258,7 @@
                 android:text="@string/unit_info_atktime"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -268,6 +289,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_abilT"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -295,6 +317,7 @@
                 android:text="@string/unit_info_pre"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -323,6 +346,7 @@
                 android:text="@string/unit_info_post"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -344,6 +368,7 @@
                 android:text="@string/unit_info_tba"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -372,6 +397,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/enemy_info_trait"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -402,6 +428,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_atkt"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -425,6 +452,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/enem_info_drop"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -453,6 +481,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_rang"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -483,6 +512,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/enem_info_barrier"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -506,6 +536,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_spd"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -534,6 +565,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_abil"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TableRow

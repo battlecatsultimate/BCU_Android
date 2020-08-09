@@ -22,6 +22,7 @@ import com.nhaarman.supertooltips.ToolTipRelativeLayout
 import common.util.Data
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
+import main.MainBCU
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -393,6 +394,169 @@ class PackConflictDetail : AppCompatActivity() {
                             }
                         }
                     }
+
+                    PackConflict.ID_UNSUPPORTED_BCU -> {
+                        desc.text = getVersions(pc)
+
+                        path.text = getFilePath(pc.confPack[0])
+
+                        var d = getString(R.string.pack_conf_guide_unsupp)
+
+                        d = if(pc.confPack.size != 2) {
+                            d.replace("-", Data.revVer(MainBCU.ver)).replace("_", "Unknown")
+                        } else {
+                            d.replace("-", Data.revVer(MainBCU.ver)).replace("_", pc.confPack[1])
+                        }
+
+                        detail.text = d
+
+                        ac.setText(R.string.pack_conf_guide_del)
+                        acdesc.setText(R.string.pack_conf_guide_deldesc)
+                        ac2.setText(R.string.pack_conf_guide_ign)
+                        acdesc2.setText(R.string.pack_conf_guide_igndesc)
+
+                        val name = ArrayList<String>()
+
+                        name.add(getString(R.string.pack_conf_select))
+                        name.add(getString(R.string.pack_conf_guide_del))
+                        name.add(getString(R.string.pack_conf_guide_ign))
+
+                        when(pc.action) {
+                            PackConflict.ACTION_NONE -> {
+                                setAnimationDrawable(sticon, R.drawable.notsolve_solve, false)
+                                sticon.tag = PackConfListAdapter.NOTSOLVED
+                                status.setText(R.string.pack_conf_nosolv)
+                            }
+                            PackConflict.ACTION_DELETE -> {
+                                setAnimationDrawable(sticon, R.drawable.solve_notsolve, false)
+                                sticon.tag = PackConfListAdapter.SOLVED
+                                status.setText(R.string.pack_conf_solved)
+                            }
+                            PackConflict.ACTION_IGNORE -> {
+                                setAnimationDrawable(sticon, R.drawable.warning_notsolve, false)
+                                sticon.tag = PackConfListAdapter.CAUTION
+                                status.setText(R.string.pack_conf_warn)
+                            }
+                        }
+
+                        val adapter = object : ArrayAdapter<String>(this, R.layout.spinneradapter, name.toTypedArray()) {
+                            override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
+                                val v = super.getView(position, converView, parent)
+
+                                (v as TextView).setTextColor(StaticStore.getAttributeColor(context,R.attr.TextPrimary))
+
+                                val eight = StaticStore.dptopx(8f, context)
+
+                                v.setPadding(eight, eight, eight, eight)
+
+                                return v
+                            }
+
+                            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                val v = super.getDropDownView(position, convertView, parent)
+
+                                if(isValid(position, pc)) {
+                                    (v as TextView).setTextColor(StaticStore.getAttributeColor(context,R.attr.TextPrimary))
+                                } else {
+                                    (v as TextView).setTextColor(StaticStore.getAttributeColor(context, R.attr.HintPrimary))
+                                }
+
+                                return v
+                            }
+
+                            override fun isEnabled(position: Int): Boolean {
+                                return isValid(position, pc)
+                            }
+                        }
+
+                        action.adapter = adapter
+
+                        when(pc.action) {
+                            PackConflict.ACTION_NONE -> action.setSelection(0, false)
+                            PackConflict.ACTION_DELETE -> action.setSelection(1, false)
+                            PackConflict.ACTION_IGNORE -> action.setSelection(2, false)
+                        }
+
+                        action.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                                val t = sticon.tag
+
+                                when(position) {
+                                    0 -> {
+                                        if(t != null) {
+                                            when(t) {
+                                                PackConfListAdapter.SOLVED -> setAnimationDrawable(sticon, R.drawable.solve_notsolve, true)
+                                                PackConfListAdapter.CAUTION -> setAnimationDrawable(sticon, R.drawable.warning_notsolve, true)
+                                            }
+                                        } else {
+                                            setAnimationDrawable(sticon, R.drawable.notsolve_solve, false)
+                                        }
+
+                                        sticon.tag = PackConfListAdapter.NOTSOLVED
+
+                                        pc.action = PackConflict.ACTION_NONE
+
+                                        status.setText(R.string.pack_conf_nosolv)
+                                    }
+
+                                    1 -> {
+                                        if(t != null) {
+                                            when(t) {
+                                                PackConfListAdapter.NOTSOLVED -> setAnimationDrawable(sticon, R.drawable.notsolve_solve, true)
+                                                PackConfListAdapter.CAUTION -> setAnimationDrawable(sticon, R.drawable.warning_solve, true)
+                                            }
+                                        } else {
+                                            setAnimationDrawable(sticon, R.drawable.solve_notsolve, false)
+                                        }
+
+                                        sticon.tag = PackConfListAdapter.SOLVED
+
+                                        pc.action = PackConflict.ACTION_DELETE
+
+                                        status.setText(R.string.pack_conf_solved)
+                                    }
+
+                                    2 -> {
+                                        if(t != null) {
+                                            when(t) {
+                                                PackConfListAdapter.NOTSOLVED -> setAnimationDrawable(sticon, R.drawable.notsolve_warning, true)
+                                                PackConfListAdapter.SOLVED -> setAnimationDrawable(sticon, R.drawable.solve_warning, true)
+                                            }
+                                        } else {
+                                            setAnimationDrawable(sticon, R.drawable.warning_notsolve, false)
+                                        }
+
+                                        sticon.tag = PackConfListAdapter.CAUTION
+
+                                        val tool = ToolTip()
+                                                .withText(R.string.pack_conf_warning)
+                                                .withTextColor(StaticStore.getAttributeColor(this@PackConflictDetail, R.attr.TextPrimary))
+                                                .withColor(StaticStore.getAttributeColor(this@PackConflictDetail, R.attr.ButtonPrimary))
+                                                .withShadow()
+                                                .withAnimationType(ToolTip.AnimationType.FROM_TOP)
+
+                                        val toolv = findViewById<ToolTipRelativeLayout>(R.id.packconftooltip)
+
+                                        val too = toolv.showToolTipForView(tool, sticon)
+
+                                        too.setOnToolTipViewClickedListener {
+                                            too.remove()
+                                        }
+
+                                        too.postDelayed({
+                                            too.remove()
+                                        }, 3000)
+
+                                        status.setText(R.string.pack_conf_warn)
+
+                                        pc.action = PackConflict.ACTION_IGNORE
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 action.visibility = View.GONE
@@ -466,6 +630,14 @@ class PackConflictDetail : AppCompatActivity() {
         }
 
         return getString(R.string.pack_conf_desc_parent).replace("_", pc.confPack[1])
+    }
+
+    private fun getVersions(pc: PackConflict) : String {
+        return if(pc.confPack.size != 2) {
+            getString(R.string.pack_desc_unsupported).replace("-", Data.revVer(MainBCU.ver)).replace("_", "Unknown")
+        } else {
+            getString(R.string.pack_desc_unsupported).replace("-", Data.revVer(MainBCU.ver)).replace("_", pc.confPack[1])
+        }
     }
 
     private fun isValid(position: Int, pc: PackConflict) : Boolean {

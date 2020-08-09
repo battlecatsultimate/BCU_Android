@@ -77,13 +77,25 @@ class SoundPlayer : MediaPlayer() {
         isPrepared = false
     }
 
+    fun seekTo(millisec: Int, start: Boolean) {
+        seekTo(millisec)
+
+        if(!isPlaying) {
+            start()
+        }
+    }
+
     /**
      * Improved start() method by checking SoundPlayer is prepared.
      */
     override fun start() {
-        if(!safeCheck()) return
+        if(!safeCheck()) {
+            Log.e("SoundPlayerIllegal", "Music isn't initialized")
+            return
+        }
 
         if (!isInitialized) {
+            Log.w("SoundPlayerIllegal", "Music isn't initialized")
             isRunning = false
             if (isPlaying) {
                 stop()
@@ -91,10 +103,13 @@ class SoundPlayer : MediaPlayer() {
             isPrepared = false
             reset()
             return
-        } else if (isRunning || isPlaying) return
+        } else if (isPlaying) {
+            return
+        }
 
         if (!isPrepared) {
             try {
+                Log.w("SoundPlayerIllegal", "Music isn't prepared, try to manually override")
                 prepareAsync()
                 setOnPreparedListener(object : MediaPrepare() {
                     override fun prepare(mp: MediaPlayer?) {
@@ -103,7 +118,7 @@ class SoundPlayer : MediaPlayer() {
                 })
             } catch (e: IllegalStateException) {
                 e.printStackTrace()
-                Log.e("SoundPlayerIllegal", "Something went wrong while calling SoundPlayer line 47")
+                Log.e("SoundPlayerIllegal", "Something went wrong while calling SoundPlayer line 111")
             }
         } else {
             super.start()
@@ -134,6 +149,8 @@ class SoundPlayer : MediaPlayer() {
     override fun pause() {
         if(!safeCheck()) return
 
+
+
         super.pause()
         isRunning = false
     }
@@ -145,7 +162,8 @@ class SoundPlayer : MediaPlayer() {
         }
 
         if(!isInitialized) {
-            Log.e("SoundPlayerIlegal","This SoundPlayer isn't initialized yet")
+            println(Thread.currentThread().stackTrace.contentDeepToString())
+            Log.e("SoundPlayerIllegal","This SoundPlayer isn't initialized yet")
             return false
         }
 

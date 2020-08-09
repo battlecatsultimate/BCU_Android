@@ -14,6 +14,7 @@ import com.mandarin.bcu.decode.ZipLib
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
 import common.battle.BasisSet
+import common.battle.data.Orb
 import common.battle.data.PCoin
 import common.system.MultiLangCont
 import common.system.fake.ImageBuilder
@@ -50,6 +51,7 @@ class Definer {
                     Unit.readData()
                     PCoin.read()
                     Combo.readFile()
+                    Orb.read()
                 } catch (e: Exception) {
                     StaticStore.clear()
                     val shared2 = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
@@ -62,6 +64,7 @@ class Definer {
                     Unit.readData()
                     PCoin.read()
                     Combo.readFile()
+                    Orb.read()
                     StaticStore.root = 1
                     println(StaticStore.unitnumber)
                 }

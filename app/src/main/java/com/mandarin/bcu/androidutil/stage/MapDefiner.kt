@@ -25,6 +25,7 @@ class MapDefiner {
     private val diff = "Difficulty.txt"
     private val rewa = "RewardName.txt"
     private val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
+
     fun define(context: Context) {
         try {
             if (StaticStore.map == null) {
@@ -171,6 +172,7 @@ class MapDefiner {
                         }
                     }
                 }
+
                 val path = StaticStore.getExternalPath(context)+"lang/"
                 val f = File(path, diff)
                 if (f.exists()) {

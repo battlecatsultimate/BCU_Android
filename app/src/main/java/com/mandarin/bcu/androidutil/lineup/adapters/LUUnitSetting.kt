@@ -121,7 +121,7 @@ class LUUnitSetting : Fragment() {
             }
 
             if (f?.pCoin != null) {
-                pcoin = BasisSet.current.sele.lu.getLv(f?.unit)
+                pcoin = BasisSet.current.sele.lu.getLv(f?.unit)?.lvs ?: return
 
                 val max = f?.pCoin?.max
 
@@ -166,7 +166,7 @@ class LUUnitSetting : Fragment() {
             spinners[0].adapter = adapter
             spinners[1].adapter = adapter1
 
-            var loadlev = BasisSet.current.sele.lu.getLv(f?.unit)[0]
+            var loadlev = BasisSet.current.sele.lu.getLv(f?.unit)?.lvs?.get(0) ?: return
 
             var loadlevp = 0
 
@@ -374,7 +374,7 @@ class LUUnitSetting : Fragment() {
                 } else {
                     setAppear(t, tal)
 
-                    pcoin = BasisSet.current.sele.lu.getLv(f?.unit)
+                    pcoin = BasisSet.current.sele.lu.getLv(f?.unit)?.lvs ?: return@setOnClickListener
 
                     val max = f?.pCoin?.max ?: intArrayOf(0)
 
@@ -411,6 +411,8 @@ class LUUnitSetting : Fragment() {
                 }
 
                 line?.invalidate()
+
+                StaticStore.updateOrb = true
             }
         }
     }

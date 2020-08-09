@@ -1,0 +1,19 @@
+# ninja log v5
+0	366	600608867	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+367	515	600608867	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	128	600609075	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+128	245	600609075	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	224	600610418	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+224	419	600610418	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	130	600610480	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+131	230	600610480	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	140	600610749	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+140	252	600610749	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+2	139	600611301	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+140	234	600611301	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	129	600611769	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+130	224	600611769	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	120	600612470	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+120	211	600612470	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950
+1	195	600614556	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	43c75ec6e39711d4
+195	357	600614556	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/x86/libmatrix-calc.so	68f6cf13edd49950

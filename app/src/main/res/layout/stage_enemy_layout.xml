@@ -43,26 +43,28 @@
             android:id="@+id/textView13"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.175"
+            android:layout_weight="0.2"
             android:background="@drawable/cell_shape"
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@string/stg_info_expand"
             android:textColor="?attr/TextPrimary"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView14"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.175"
             android:background="@drawable/cell_shape"
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@string/stg_info_icon"
             android:textColor="?attr/TextPrimary"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -76,6 +78,7 @@
             android:paddingBottom="8dp"
             android:text="@string/enemy_info_multi"
             android:textColor="?attr/TextPrimary"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -89,6 +92,7 @@
             android:paddingBottom="8dp"
             android:text="@string/stg_enem_list_num"
             android:textColor="?attr/TextPrimary"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -102,6 +106,7 @@
             android:paddingBottom="8dp"
             android:text="@string/stg_info_info"
             android:textColor="?attr/TextPrimary"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
     </TableRow>

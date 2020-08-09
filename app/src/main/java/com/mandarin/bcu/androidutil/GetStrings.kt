@@ -698,7 +698,11 @@ class GetStrings(private val c: Context) {
     }
 
     fun getMultiply(data: IntArray, multi: Int): String {
-        return (data[SCDef.M].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
+        return if(data[SCDef.M] == data[SCDef.M1]) {
+            (data[SCDef.M].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
+        } else {
+            (data[SCDef.M].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + " / " + (data[SCDef.M1].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
+        }
     }
 
     fun getNumber(data: IntArray): String {

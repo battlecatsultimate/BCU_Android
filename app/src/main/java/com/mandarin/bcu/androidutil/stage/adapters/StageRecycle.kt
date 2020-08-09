@@ -19,6 +19,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import common.util.pack.Pack
 import common.util.stage.Limit
+import java.text.DecimalFormat
 import java.util.*
 
 class StageRecycle(private val activity: Activity, private val mapcode: Int, private val stid: Int, private val posit: Int, private val custom: Boolean) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
@@ -29,30 +30,33 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
     private val sc = listOf(6, 7, 8)
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var id: TextView = itemView.findViewById(R.id.stginfoidr)
-        var star: Spinner = itemView.findViewById(R.id.stginfostarr)
-        var energy: TextView = itemView.findViewById(R.id.stginfoengr)
-        var xp: TextView = itemView.findViewById(R.id.stginfoxpr)
-        var health: TextView = itemView.findViewById(R.id.stginfobhr)
-        var difficulty: TextView = itemView.findViewById(R.id.stginfodifr)
-        var continueable: TextView = itemView.findViewById(R.id.stginfocontinr)
-        var length: TextView = itemView.findViewById(R.id.stginfolenr)
-        var maxenemy: TextView = itemView.findViewById(R.id.stginfomaxenr)
-        var music: Button = itemView.findViewById(R.id.stginfomusicr)
-        var castleperc: TextView = itemView.findViewById(R.id.stginfomusic2)
-        var music2: Button = itemView.findViewById(R.id.stginfomusic2r)
-        var background: Button = itemView.findViewById(R.id.stginfobgr)
-        var castle: Button = itemView.findViewById(R.id.stginfoctr)
-        var droptitle: TextView = itemView.findViewById(R.id.stginfodrop)
-        var drop: RecyclerView = itemView.findViewById(R.id.droprec)
-        var droprow: TableRow = itemView.findViewById(R.id.drop)
-        var dropscroll: NestedScrollView = itemView.findViewById(R.id.dropscroll)
-        var score: RecyclerView = itemView.findViewById(R.id.scorerec)
-        var scorerow: TableRow = itemView.findViewById(R.id.score)
-        var scorescroll: NestedScrollView = itemView.findViewById(R.id.scorescroll)
-        var limitNone: TextView = itemView.findViewById(R.id.stginfononer)
-        var limitrec: RecyclerView = itemView.findViewById(R.id.stginfolimitrec)
-        var limitscroll: NestedScrollView = itemView.findViewById(R.id.limitscroll)
+        val id: TextView = itemView.findViewById(R.id.stginfoidr)
+        val star: Spinner = itemView.findViewById(R.id.stginfostarr)
+        val energy: TextView = itemView.findViewById(R.id.stginfoengr)
+        val xp: TextView = itemView.findViewById(R.id.stginfoxpr)
+        val health: TextView = itemView.findViewById(R.id.stginfobhr)
+        val difficulty: TextView = itemView.findViewById(R.id.stginfodifr)
+        val continueable: TextView = itemView.findViewById(R.id.stginfocontinr)
+        val length: TextView = itemView.findViewById(R.id.stginfolenr)
+        val maxenemy: TextView = itemView.findViewById(R.id.stginfomaxenr)
+        val music: Button = itemView.findViewById(R.id.stginfomusicr)
+        val castleperc: TextView = itemView.findViewById(R.id.stginfomusic2)
+        val music2: Button = itemView.findViewById(R.id.stginfomusic2r)
+        val background: Button = itemView.findViewById(R.id.stginfobgr)
+        val castle: Button = itemView.findViewById(R.id.stginfoctr)
+        val droptitle: TextView = itemView.findViewById(R.id.stginfodrop)
+        val drop: RecyclerView = itemView.findViewById(R.id.droprec)
+        val droprow: TableRow = itemView.findViewById(R.id.drop)
+        val dropscroll: NestedScrollView = itemView.findViewById(R.id.dropscroll)
+        val score: RecyclerView = itemView.findViewById(R.id.scorerec)
+        val scorerow: TableRow = itemView.findViewById(R.id.score)
+        val scorescroll: NestedScrollView = itemView.findViewById(R.id.scorescroll)
+        val limitNone: TextView = itemView.findViewById(R.id.stginfononer)
+        val limitrec: RecyclerView = itemView.findViewById(R.id.stginfolimitrec)
+        val limitscroll: NestedScrollView = itemView.findViewById(R.id.limitscroll)
+        val chanceText: TextView = itemView.findViewById(R.id.stfinfochance)
+        val loop: TextView = itemView.findViewById(R.id.stginfoloopt)
+        val loop1: TextView = itemView.findViewById(R.id.stginfoloop1t)
 
     }
 
@@ -74,6 +78,23 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
             val s: String = (k + 1).toString() + " (" + stm.stars[k] + " %)"
             stars.add(s)
         }
+
+        if(st.info != null && st.info.drop != null) {
+            if(st.info.drop.size >= 2 || st.info.rand == -3) {
+                var same = true
+                val d = st.info.drop[0][0]
+
+                for(data in st.info.drop) {
+                    if(d != data[0])
+                        same = false
+                }
+
+                if(same) {
+                    viewHolder.chanceText.text = activity.getText(R.string.stg_enem_list_num)
+                }
+            }
+        }
+
         val arrayAdapter = ArrayAdapter(activity, R.layout.spinneradapter, stars)
         viewHolder.star.adapter = arrayAdapter
         viewHolder.star.onItemSelectedListener = object : OnItemSelectedListener {
@@ -162,6 +183,10 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
             }
 
         })
+
+        viewHolder.loop.text = convertTime(st.loop0)
+
+        viewHolder.loop1.text = convertTime(st.loop1)
 
         viewHolder.background.text = st.bg.toString()
         viewHolder.background.setOnClickListener(object : SingleClick() {
@@ -311,4 +336,24 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         return b0 && b1 && b2 && b3 && b4 && b5
     }
 
+    private fun convertTime(t: Long) : String {
+        var min = t / 1000 / 60
+
+        var time = (t.toDouble() - min * 60.0 * 1000.0) / 1000.0
+
+        val df = DecimalFormat("#.###")
+
+        time = df.format(time).toDouble()
+
+        if(time >= 60) {
+            time -= 60
+            min += 1
+        }
+
+        return if(time < 10) {
+            "$min:0${df.format(time)}"
+        } else {
+            "$min:${df.format(time)}"
+        }
+    }
 }

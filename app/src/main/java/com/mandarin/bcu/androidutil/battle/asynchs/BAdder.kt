@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.media.MediaPlayer
 import android.os.AsyncTask
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.*
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
@@ -21,8 +22,10 @@ import com.mandarin.bcu.androidutil.adapters.MediaPrepare
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.battle.BDefinder
 import com.mandarin.bcu.androidutil.battle.BattleView
+import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler.resetHandler
+import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics.Companion.clear
@@ -40,8 +43,7 @@ import common.system.P
 import common.system.fake.FakeImage
 import common.util.Data
 import common.util.pack.Pack
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.lang.ref.WeakReference
 import java.security.NoSuchAlgorithmException
 import java.util.*
@@ -441,6 +443,11 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                                 }
                             }
 
+                            if(SoundHandler.timer != null) {
+                                SoundHandler.timer?.cancel()
+                                SoundHandler.timer = null
+                            }
+
                             battleView.unload()
 
                             activity.finish()
@@ -451,6 +458,9 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                         P.stack.clear()
 
                         clear()
+
+                        SoundHandler.timer?.cancel()
+                        SoundHandler.timer = null
 
                         battleView.unload()
 
@@ -540,6 +550,46 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                         if (!SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.isInitialized) {
                             SoundHandler.MUSIC.start()
                         }
+
+                        if(SoundHandler.timer == null && (battleView.painter.bf.sb.st.loop0 > 0 || battleView.painter.bf.sb.st.loop1 > 0)) {
+                            val lop = if(SoundHandler.twoMusic && SoundHandler.Changed) {
+                                SoundHandler.lop1
+                            } else {
+                                SoundHandler.lop
+                            }
+
+                            if(lop != 0L) {
+                                println((SoundHandler.MUSIC.duration - 1).toLong())
+                                SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration - 1).toLong(), (SoundHandler.MUSIC.duration - 1).toLong(), true) {
+                                    override fun onFinish() {
+                                        SoundHandler.MUSIC.seekTo(lop.toInt(), true)
+
+                                        println((SoundHandler.MUSIC.duration - 1).toLong() - lop)
+
+                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration - 1).toLong() - lop, (SoundHandler.MUSIC.duration - 1).toLong() - lop, true) {
+                                            override fun onFinish() {
+
+                                                SoundHandler.MUSIC.seekTo(lop.toInt(), true)
+
+                                                SoundHandler.timer?.create()
+                                            }
+
+                                            override fun onTick(millisUntilFinished: Long) {
+                                            }
+                                        }
+
+                                        SoundHandler.timer?.create()
+                                    }
+
+                                    override fun onTick(millisUntilFinished: Long) {
+                                    }
+                                }
+
+                                SoundHandler.timer?.create()
+                            }
+                        } else if(SoundHandler.timer != null) {
+                            SoundHandler.timer?.resume()
+                        }
                     } else {
                         val editor = shared.edit()
 
@@ -554,6 +604,8 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                             if (SoundHandler.MUSIC.isPlaying)
                                 SoundHandler.MUSIC.pause()
                         }
+
+                        SoundHandler.timer?.pause()
                     }
                 }
 
@@ -639,6 +691,88 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
+
+                SoundHandler.MUSIC = SoundPlayer()
+
+                val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+                val muvol = (1 - ln(100 - preferences.getInt("mus_vol", 99).toDouble()) / ln(100.0)).toFloat()
+
+                SoundHandler.MUSIC.setVolume(muvol, muvol)
+
+                SoundHandler.twoMusic = battleView.painter.bf.sb.st.mush != 0 && battleView.painter.bf.sb.st.mush != 100 && battleView.painter.bf.sb.st.mus0 != battleView.painter.bf.sb.st.mus1
+
+                SoundHandler.lop = battleView.painter.bf.sb.st.loop0
+
+                if (SoundHandler.twoMusic) {
+                    SoundHandler.lop1 = battleView.painter.bf.sb.st.loop1
+                    SoundHandler.mu1 = battleView.painter.bf.sb.st.mus1
+                }
+
+                if(battleView.painter.bf.sb.st.mus0 >= 0) {
+                    val f = if(battleView.painter.bf.sb.st.mus0 < 1000) {
+                        Pack.def.ms[battleView.painter.bf.sb.st.mus0]
+                    } else {
+                        val mp = Pack.map[StaticStore.getPID(battleView.painter.bf.sb.st.mus0)]
+
+                        if(mp != null) {
+                            mp.ms.list[StaticStore.getMusicIndex(battleView.painter.bf.sb.st.mus0)]
+                        } else {
+                            Pack.def.ms[3]
+                        }
+                    }
+
+                    if (f != null) {
+                        if (f.exists()) {
+                            try {
+                                SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+
+                    SoundHandler.MUSIC.prepareAsync()
+
+                    SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                        override fun prepare(mp: MediaPlayer?) {
+                            if (SoundHandler.musicPlay) {
+                                if(battleView.painter.bf.sb.st.loop0 > 0) {
+                                    if(battleView.painter.bf.sb.st.loop0 < SoundHandler.MUSIC.duration) {
+                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
+                                            override fun onFinish() {
+                                                SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
+
+                                                SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, (SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, true) {
+                                                    override fun onFinish() {
+                                                        SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
+
+                                                        SoundHandler.timer?.create()
+                                                    }
+
+                                                    override fun onTick(millisUntilFinished: Long) {}
+
+                                                }
+
+                                                SoundHandler.timer?.create()
+                                            }
+
+                                            override fun onTick(millisUntilFinished: Long) {}
+
+                                        }
+
+                                        SoundHandler.timer?.create()
+                                    }
+                                } else {
+                                    SoundHandler.timer = null
+                                    SoundHandler.MUSIC.isLooping = true
+                                }
+
+                                SoundHandler.MUSIC.start()
+                            }
+                        }
+                    })
+                }
             }
         }
     }
@@ -666,17 +800,6 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
         (loadt.parent as ViewManager).removeView(loadt)
 
         battleView.initialized = true
-
-        if (SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isRunning) {
-            SoundHandler.MUSIC.prepareAsync()
-
-            SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                override fun prepare(mp: MediaPlayer?) {
-                    if (SoundHandler.musicPlay)
-                        SoundHandler.MUSIC.start()
-                }
-            })
-        }
     }
 
     private fun setAppear(vararg views: View) {

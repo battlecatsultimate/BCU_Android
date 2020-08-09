@@ -232,7 +232,7 @@ class LUConstruction : Fragment() {
                             construction.helperText = "1~20 Lv."
                         }
 
-                        StaticStore.SaveLineUp(context)
+                        StaticStore.saveLineUp(context)
                     }
                 }
             })

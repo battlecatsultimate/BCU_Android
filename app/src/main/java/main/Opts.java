@@ -135,9 +135,17 @@ public class Opts {
 		return warning(s + " update available. do you want to update? " + p, "update check");
 	}
 
-	public static void verErr(String o, String v) {
-		pop(o + " version is too old, use BCU " + v + " or " + (o.equals("BCU") ? "newer" : "older")
+	public static void verErr(String o, String v, String p) {
+		pop(o + " version is too old" + (p.isEmpty() ? "" : " for " + p) + ", use BCU " + v + " or " + (o.equals("BCU") ? "newer" : "older")
 				+ " version to open it", "version error");
+
+		Log.e("Opts", "UNSUPP | CONFLIST : "+p+", "+v);
+
+		List<String> confs = new ArrayList<>();
+		confs.add(p.replace(".bcudata",".bcupack"));
+		confs.add(v);
+
+		new PackConflict(PackConflict.ID_UNSUPPORTED_BCU, confs, true);
 	}
 
 	public static boolean writeErr0(String f) {

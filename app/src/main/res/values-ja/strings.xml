@@ -227,7 +227,7 @@
     <string name="enem_info_drop">ドロップ金</string>
     <string name="enem_info_barrier">バリア</string>
     <string name="enem_info_exp">敵キャラ解説</string>
-    <string name="enemy_info_multi">倍率</string>
+    <string name="enemy_info_multi">HP / Atk</string>
     <string name="main_enemy_info">敵情報</string>
     <string name="enemy_info_trait">属性</string>
     <string name="sch_abi_cu">古代の呪い</string>
@@ -612,7 +612,7 @@
     <string name="stage_night">ネコビタンステージ</string>
     <string name="stage_baron">強襲ステージ</string>
     <string name="stage_enigma">発掘ステージ</string>
-    <string name="stage_CA">コラボ強襲</string>
+    <string name="stage_CA">コラボ強襲ステージ</string>
     <string name="stg_enem_num">_種類の敵が出現</string>
     <string name="main_pack_castle">"城画像を解凍しています… : "</string>
     <string name="pack_conf">パックの競合</string>
@@ -668,4 +668,16 @@
     <string name="stat_sch_multi">Multiplication</string>
     <string name="sch_stat_empty">This field cannot be empty</string>
     <string name="sch_stat_exist">This multiplication already exists</string>
+    <string name="orb_atk">Attack</string>
+    <string name="orb_res">Resistant</string>
+    <string name="orb_atk_desc">Gives _% more damage with base atk</string>
+    <string name="orb_res_desc">Takes _% less damage from target</string>
+    <string name="lineup_orb">Orb</string>
+    <string name="stg_info_loop">Loop</string>
+    <string name="stg_info_loop1">Loop1</string>
+    <string name="def_zero_time">0:00.000</string>
+    <string name="pack_conf_guide_unsupp">App can\'t handle this pack because it has unsupported version (_) from currently available version (-). App might success to read it, but you have to select action above.</string>
+    <string name="pack_conf_unsupported">Pack has unsupported version</string>
+    <string name="pack_desc_unsupported">Unsupported pack version _ (Currently supporting version : -)</string>
+    <string name="def_divider">/</string>
 </resources>

@@ -19,8 +19,9 @@ object FilterStage {
 
         val mc = MapColc.MAPS ?: return result
 
-        for(i in StaticStore.mapcode) {
-            val m = if(i < StaticStore.BCmaps) {
+        for(n in 0 until StaticStore.mapcode.size) {
+            val i = StaticStore.mapcode[n]
+            val m = if(n < StaticStore.BCmaps) {
                 mc[i] ?: continue
             } else {
                 val p = Pack.map[i] ?: continue

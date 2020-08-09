@@ -278,6 +278,7 @@ public class StaticStore {
     public static List<Combo> combos = new ArrayList<>();
     public static boolean updateList = false;
     public static boolean updateForm = true;
+    public static boolean updateOrb = true;
     public static boolean updateTreasure = false;
     public static boolean updateConst = false;
     public static boolean updateCastle = false;
@@ -392,6 +393,7 @@ public class StaticStore {
         LUtabPosition = 0;
         currentForms = null;
         updateForm = true;
+        updateOrb = true;
         position = new int[]{-1, -1};
         combos = null;
         updateList = false;
@@ -780,7 +782,7 @@ public class StaticStore {
     /**
      * Saves lineup file.
      */
-    public static void SaveLineUp(Context c) throws Exception {
+    public static void saveLineUp(Context c) throws Exception {
         String path = getExternalPath(c)+"user/basis.v";
         String direct = getExternalPath(c)+"user/";
 

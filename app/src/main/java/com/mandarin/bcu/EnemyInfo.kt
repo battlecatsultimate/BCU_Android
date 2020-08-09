@@ -84,6 +84,7 @@ class EnemyInfo : AppCompatActivity() {
             val id = extra.getInt("ID")
             val pid = extra.getInt("PID")
             val multi = extra.getInt("Multiply")
+            val amulti = extra.getInt("AMultiply")
 
             val p = Pack.map[pid] ?: return
 
@@ -102,7 +103,7 @@ class EnemyInfo : AppCompatActivity() {
             })
 
             if (multi != 0)
-                EInfoLoader(this, id, multi, pid).execute()
+                EInfoLoader(this, id, multi, amulti, pid).execute()
             else
                 EInfoLoader(this, id, pid).execute()
         }

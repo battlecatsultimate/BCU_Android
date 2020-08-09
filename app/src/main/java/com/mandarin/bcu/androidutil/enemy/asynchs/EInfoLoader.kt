@@ -34,6 +34,7 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
     private val id: Int
     private val pid: Int
     private var multi = -1
+    private var amulti = -1
 
     constructor(activity: Activity, id: Int, pid: Int) {
         weakReference = WeakReference(activity)
@@ -43,11 +44,12 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
         println(id)
     }
 
-    constructor(activity: Activity, id: Int, multi: Int, pid: Int) {
+    constructor(activity: Activity, id: Int, multi: Int, amulti: Int, pid: Int) {
         weakReference = WeakReference(activity)
         this.pid = pid
         this.id = id
         this.multi = multi
+        this.amulti = amulti
     }
 
     override fun onPreExecute() {
@@ -79,8 +81,8 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
         val recyclerView: RecyclerView = activity.findViewById(R.id.eneminftable)
         val enemyRecycle: EnemyRecycle
 
-        enemyRecycle = if (multi != -1)
-            EnemyRecycle(activity, id, multi, pid)
+        enemyRecycle = if (multi != -1 && amulti != -1)
+            EnemyRecycle(activity, id, multi, amulti, pid)
         else
             EnemyRecycle(activity, id, pid)
 

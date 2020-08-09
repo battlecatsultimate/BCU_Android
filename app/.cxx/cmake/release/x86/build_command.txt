@@ -1,0 +1,21 @@
+Executable : C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
+arguments : 
+-HC:\Users\user\AndroidStudioProjects\BCU_Android\app\src\main\jni
+-DCMAKE_FIND_ROOT_PATH=C:\Users\user\AndroidStudioProjects\BCU_Android\app\.cxx\cmake\release\prefab\x86\prefab
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_TOOLCHAIN_FILE=C:\Users\user\AppData\Local\Android\Sdk\ndk-bundle\build\cmake\android.toolchain.cmake
+-DANDROID_ABI=x86
+-DANDROID_NDK=C:\Users\user\AppData\Local\Android\Sdk\ndk-bundle
+-DANDROID_PLATFORM=android-24
+-DCMAKE_ANDROID_ARCH_ABI=x86
+-DCMAKE_ANDROID_NDK=C:\Users\user\AppData\Local\Android\Sdk\ndk-bundle
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\Users\user\AndroidStudioProjects\BCU_Android\app\build\intermediates\cmake\release\obj\x86
+-DCMAKE_MAKE_PROGRAM=C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_SYSTEM_VERSION=24
+-BC:\Users\user\AndroidStudioProjects\BCU_Android\app\.cxx\cmake\release\x86
+-GNinja
+jvmArgs : 
+
+Build command args:

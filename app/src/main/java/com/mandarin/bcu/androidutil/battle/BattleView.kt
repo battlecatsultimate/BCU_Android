@@ -9,6 +9,8 @@ import android.graphics.Paint
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -17,6 +19,7 @@ import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MediaPrepare
+import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
@@ -84,42 +87,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 }
             }
         }
-        SoundHandler.MUSIC = SoundPlayer()
 
-        val preferences = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-
-        val musvol = (1 - ln(100 - preferences.getInt("mus_vol", 99).toDouble()) / ln(100.0)).toFloat()
-
-        SoundHandler.MUSIC.setVolume(musvol, musvol)
-
-        SoundHandler.twoMusic = painter.bf.sb.st.mush != 0 && painter.bf.sb.st.mush != 100 && painter.bf.sb.st.mus0 != painter.bf.sb.st.mus1
-
-        if (SoundHandler.twoMusic)
-            SoundHandler.mu1 = painter.bf.sb.st.mus1
-
-        if(painter.bf.sb.st.mus0 >= 0) {
-            val f = if(painter.bf.sb.st.mus0 < 1000) {
-                Pack.def.ms[painter.bf.sb.st.mus0]
-            } else {
-                val mp = Pack.map[StaticStore.getPID(painter.bf.sb.st.mus0)]
-
-                if(mp != null) {
-                    mp.ms.list[StaticStore.getMusicIndex(painter.bf.sb.st.mus0)]
-                } else {
-                    Pack.def.ms[3]
-                }
-            }
-
-            if (f != null) {
-                if (f.exists()) {
-                    try {
-                        SoundHandler.MUSIC.isLooping = true
-                        SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-                }
-            }
+        if(painter.bf.sb.st.mus0 > 0) {
+            SoundHandler.lop = painter.bf.sb.st.loop0
         }
 
         for (e in painter.bf.sb.st.data.allEnemy)
@@ -200,8 +170,18 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     SoundHandler.haveToChange = true
                     SoundHandler.MUSIC.stop()
                     SoundHandler.MUSIC.reset()
-                    SoundHandler.MUSIC.isLooping = true
-                    val f = Pack.def.ms[painter.bf.sb.st.mus1]
+                    val f = if(painter.bf.sb.st.mus0 < 1000) {
+                        Pack.def.ms[painter.bf.sb.st.mus1]
+                    } else {
+                        val mp = Pack.map[StaticStore.getPID(painter.bf.sb.st.mus1)]
+
+                        if(mp != null) {
+                            mp.ms.list[StaticStore.getMusicIndex(painter.bf.sb.st.mus1)]
+                        } else {
+                            Pack.def.ms[3]
+                        }
+                    }
+
                     if (f != null) {
                         try {
                             SoundHandler.MUSIC.setDataSource(f.absolutePath)
@@ -210,6 +190,38 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                                 override fun prepare(mp: MediaPlayer?) {
                                     if(SoundHandler.musicPlay) {
                                         try {
+                                            if(SoundHandler.timer != null && SoundHandler.timer?.isRunning == true) {
+                                                SoundHandler.timer?.cancel()
+                                            }
+
+                                            if(painter.bf.sb.st.loop1 > 0 && painter.bf.sb.st.loop1 < SoundHandler.MUSIC.duration) {
+                                                SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
+                                                    override fun onFinish() {
+                                                        SoundHandler.MUSIC.seekTo(painter.bf.sb.st.loop1.toInt(), true)
+
+                                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-painter.bf.sb.st.loop1, (SoundHandler.MUSIC.duration-1).toLong()-painter.bf.sb.st.loop1, true) {
+                                                            override fun onFinish() {
+                                                                SoundHandler.MUSIC.seekTo(painter.bf.sb.st.loop1.toInt(), true)
+
+                                                                SoundHandler.timer?.create()
+                                                            }
+
+                                                            override fun onTick(millisUntilFinished: Long) {}
+
+                                                        }
+
+                                                        SoundHandler.timer?.create()
+                                                    }
+
+                                                    override fun onTick(millisUntilFinished: Long) {}
+                                                }
+
+                                                SoundHandler.timer?.create()
+                                            } else {
+                                                SoundHandler.timer = null
+                                                SoundHandler.MUSIC.isLooping = true
+                                            }
+
                                             SoundHandler.MUSIC.start()
                                         } catch(e: NullPointerException) {
                                             ErrorLogWriter.writeLog(e, StaticStore.upload, context)

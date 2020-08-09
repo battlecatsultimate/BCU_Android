@@ -6,11 +6,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
-import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -19,7 +17,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +40,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private var activity: Activity?
     private var fs = 0
     private var multi = 100
+    private var amulti = 100
     private var s: GetStrings
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray
@@ -53,18 +51,19 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         this.pid = pid
         s = GetStrings(activity)
         color = intArrayOf(
-                getAttributeColor(activity, R.attr.TextPrimary)
+                StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
     }
 
-    constructor(activity: Activity, id: Int, multi: Int, pid: Int) {
+    constructor(activity: Activity, id: Int, multi: Int, amulti: Int, pid: Int) {
         this.activity = activity
         this.id = id
         this.pid = pid
         this.multi = multi
+        this.amulti = amulti
         s = GetStrings(activity)
         color = intArrayOf(
-                getAttributeColor(activity, R.attr.TextPrimary)
+                StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
     }
 
@@ -124,7 +123,8 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enemhp.text = s.getHP(em, multi)
         viewHolder.enemhb.text = s.getHB(em)
         viewHolder.enemmulti.setText(multi.toString())
-        viewHolder.enematk.text = s.getAtk(em, multi)
+        viewHolder.enemamulti.setText(amulti.toString())
+        viewHolder.enematk.text = s.getAtk(em, amulti)
         viewHolder.enematktime.text = s.getAtkTime(em, fs)
         viewHolder.enemabilt.text = s.getAbilT(em)
         viewHolder.enempre.text = s.getPre(em, fs)
@@ -208,6 +208,20 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
             override fun afterTextChanged(s: Editable) {}
         })
+        viewHolder.enemamulti.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (viewHolder.enemamulti.text.toString() == "") {
+                    amulti = 100
+                    multiply(viewHolder, em)
+                } else {
+                    amulti = if (viewHolder.enemmulti.text.toString().toDouble() > Int.MAX_VALUE) Int.MAX_VALUE else Integer.valueOf(viewHolder.enemamulti.text.toString())
+                    multiply(viewHolder, em)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
         viewHolder.frse.setOnClickListener {
             if (fs == 0) {
                 fs = 1
@@ -220,11 +234,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             }
         }
         viewHolder.enematkb.setOnClickListener {
-            if (viewHolder.enematk.text.toString() == s.getAtk(em, multi)) {
-                viewHolder.enematk.text = s.getDPS(em, multi)
+            if (viewHolder.enematkb.text == activity!!.getString(R.string.unit_info_atk)) {
+                viewHolder.enematk.text = s.getDPS(em, amulti)
                 viewHolder.enematkb.text = activity!!.getString(R.string.unit_info_dps)
             } else {
-                viewHolder.enematk.text = s.getAtk(em, multi)
+                viewHolder.enematk.text = s.getAtk(em, amulti)
                 viewHolder.enematkb.text = activity!!.getString(R.string.unit_info_atk)
             }
         }
@@ -359,18 +373,18 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                         t.alien = text.toString().toInt()
                         viewHolder.enemhp.text = s.getHP(em, multi)
                         if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                            viewHolder.enematk.text = s.getDPS(em, multi)
+                            viewHolder.enematk.text = s.getDPS(em, amulti)
                         } else {
-                            viewHolder.enematk.text = s.getAtk(em, multi)
+                            viewHolder.enematk.text = s.getAtk(em, amulti)
                         }
                     }
                 } else {
                     t.alien = 0
                     viewHolder.enemhp.text = s.getHP(em, multi)
                     if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                        viewHolder.enematk.text = s.getDPS(em, multi)
+                        viewHolder.enematk.text = s.getDPS(em, amulti)
                     } else {
-                        viewHolder.enematk.text = s.getAtk(em, multi)
+                        viewHolder.enematk.text = s.getAtk(em, amulti)
                     }
                 }
             }
@@ -411,18 +425,18 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                         t.star = text.toString().toInt()
                         viewHolder.enemhp.text = s.getHP(em, multi)
                         if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                            viewHolder.enematk.text = s.getDPS(em, multi)
+                            viewHolder.enematk.text = s.getDPS(em, amulti)
                         } else {
-                            viewHolder.enematk.text = s.getAtk(em, multi)
+                            viewHolder.enematk.text = s.getAtk(em, amulti)
                         }
                     }
                 } else {
                     t.star = 0
                     viewHolder.enemhp.text = s.getHP(em, multi)
                     if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                        viewHolder.enematk.text = s.getDPS(em, multi)
+                        viewHolder.enematk.text = s.getDPS(em, amulti)
                     } else {
-                        viewHolder.enematk.text = s.getAtk(em, multi)
+                        viewHolder.enematk.text = s.getAtk(em, amulti)
                     }
                 }
             }
@@ -464,18 +478,18 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                             t.gods[i] = text.toString().toInt()
                             viewHolder.enemhp.text = s.getHP(em, multi)
                             if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                                viewHolder.enematk.text = s.getDPS(em, multi)
+                                viewHolder.enematk.text = s.getDPS(em, amulti)
                             } else {
-                                viewHolder.enematk.text = s.getAtk(em, multi)
+                                viewHolder.enematk.text = s.getAtk(em, amulti)
                             }
                         }
                     } else {
                         t.gods[i] = 0
                         viewHolder.enemhp.text = s.getHP(em, multi)
                         if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                            viewHolder.enematk.text = s.getDPS(em, multi)
+                            viewHolder.enematk.text = s.getDPS(em, amulti)
                         } else {
-                            viewHolder.enematk.text = s.getAtk(em, multi)
+                            viewHolder.enematk.text = s.getAtk(em, amulti)
                         }
                     }
                 }
@@ -494,9 +508,9 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             for (i in t.gods.indices) godmaskt[i].setText(t.gods[i].toString())
             viewHolder.enemhp.text = s.getHP(em, multi)
             if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                viewHolder.enematk.text = s.getDPS(em, multi)
+                viewHolder.enematk.text = s.getDPS(em, amulti)
             } else {
-                viewHolder.enematk.text = s.getAtk(em, multi)
+                viewHolder.enematk.text = s.getAtk(em, amulti)
             }
             viewHolder.enemdrop.text = s.getDrop(em, t)
         }
@@ -507,38 +521,38 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var name: TextView = itemView.findViewById(R.id.eneminfname)
-        var frse: Button = itemView.findViewById(R.id.eneminffrse)
-        var enemid: TextView = itemView.findViewById(R.id.eneminfidr)
-        var enemicon: ImageView = itemView.findViewById(R.id.eneminficon)
-        var enemhp: TextView = itemView.findViewById(R.id.eneminfhpr)
-        var enemhb: TextView = itemView.findViewById(R.id.eneminfhbr)
-        var enemmulti: EditText = itemView.findViewById(R.id.eneminfmultir)
-        var enematkb: Button = itemView.findViewById(R.id.eneminfatk)
-        var enematk: TextView = itemView.findViewById(R.id.eneminfatkr)
-        var enematktimeb: Button = itemView.findViewById(R.id.eneminfatktime)
-        var enematktime: TextView = itemView.findViewById(R.id.eneminfatktimer)
-        var enemabilt: TextView = itemView.findViewById(R.id.eneminfabiltr)
-        var enempreb: Button = itemView.findViewById(R.id.eneminfpre)
-        var enempre: TextView = itemView.findViewById(R.id.eneminfprer)
-        var enempostb: Button = itemView.findViewById(R.id.eneminfpost)
-        var enempost: TextView = itemView.findViewById(R.id.eneminfpostr)
-        var enemtbab: Button = itemView.findViewById(R.id.eneminftba)
-        var enemtba: TextView = itemView.findViewById(R.id.eneminftbar)
-        var enemtrait: TextView = itemView.findViewById(R.id.eneminftraitr)
-        var enematkt: TextView = itemView.findViewById(R.id.eneminfatktr)
-        var enemdrop: TextView = itemView.findViewById(R.id.eneminfdropr)
-        var enemrange: TextView = itemView.findViewById(R.id.eneminfranger)
-        var enembarrier: TextView = itemView.findViewById(R.id.eneminfbarrierr)
-        var enemspd: TextView = itemView.findViewById(R.id.eneminfspdr)
-        var none: TextView = itemView.findViewById(R.id.eneminfnone)
-        var emabil: RecyclerView = itemView.findViewById(R.id.eneminfabillist)
-
+        val name: TextView = itemView.findViewById(R.id.eneminfname)
+        val frse: Button = itemView.findViewById(R.id.eneminffrse)
+        val enemid: TextView = itemView.findViewById(R.id.eneminfidr)
+        val enemicon: ImageView = itemView.findViewById(R.id.eneminficon)
+        val enemhp: TextView = itemView.findViewById(R.id.eneminfhpr)
+        val enemhb: TextView = itemView.findViewById(R.id.eneminfhbr)
+        val enemmulti: EditText = itemView.findViewById(R.id.eneminfmultir)
+        val enematkb: Button = itemView.findViewById(R.id.eneminfatk)
+        val enematk: TextView = itemView.findViewById(R.id.eneminfatkr)
+        val enematktimeb: Button = itemView.findViewById(R.id.eneminfatktime)
+        val enematktime: TextView = itemView.findViewById(R.id.eneminfatktimer)
+        val enemabilt: TextView = itemView.findViewById(R.id.eneminfabiltr)
+        val enempreb: Button = itemView.findViewById(R.id.eneminfpre)
+        val enempre: TextView = itemView.findViewById(R.id.eneminfprer)
+        val enempostb: Button = itemView.findViewById(R.id.eneminfpost)
+        val enempost: TextView = itemView.findViewById(R.id.eneminfpostr)
+        val enemtbab: Button = itemView.findViewById(R.id.eneminftba)
+        val enemtba: TextView = itemView.findViewById(R.id.eneminftbar)
+        val enemtrait: TextView = itemView.findViewById(R.id.eneminftraitr)
+        val enematkt: TextView = itemView.findViewById(R.id.eneminfatktr)
+        val enemdrop: TextView = itemView.findViewById(R.id.eneminfdropr)
+        val enemrange: TextView = itemView.findViewById(R.id.eneminfranger)
+        val enembarrier: TextView = itemView.findViewById(R.id.eneminfbarrierr)
+        val enemspd: TextView = itemView.findViewById(R.id.eneminfspdr)
+        val none: TextView = itemView.findViewById(R.id.eneminfnone)
+        val emabil: RecyclerView = itemView.findViewById(R.id.eneminfabillist)
+        val enemamulti: EditText = itemView.findViewById(R.id.eneminfamultir)
     }
 
     private fun multiply(viewHolder: ViewHolder, em: Enemy) {
         viewHolder.enemhp.text = s.getHP(em, multi)
-        viewHolder.enematk.text = s.getAtk(em, multi)
+        viewHolder.enematk.text = s.getAtk(em, amulti)
     }
 
     private fun retime(viewHolder: ViewHolder, em: Enemy) {
@@ -570,21 +584,6 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
             viewHolder.emabil.adapter = adapterAbil
             ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false)
-        }
-    }
-
-    companion object {
-        private fun getAttributeColor(context: Context, attributeId: Int): Int {
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(attributeId, typedValue, true)
-            val colorRes = typedValue.resourceId
-            var color = -1
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: NotFoundException) {
-                e.printStackTrace()
-            }
-            return color
         }
     }
 }

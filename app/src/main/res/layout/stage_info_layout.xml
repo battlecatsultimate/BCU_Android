@@ -329,6 +329,62 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/stginfoloop"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="12dp"
+                android:text="@string/stg_info_loop"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfoloopt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/def_zero_time"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/stginfoloop1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/stg_info_loop1"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfoloop1t"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/def_zero_time"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
                 android:id="@+id/stginfobg"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -463,7 +519,7 @@
         app:layout_constraintTop_toBottomOf="@+id/stginfodrop">
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/stfinfochance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_span="1"

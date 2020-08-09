@@ -49,6 +49,12 @@ object SoundHandler {
     @JvmField
     var mu1 = 3
 
+    @JvmField
+    var lop: Long = 0L
+
+    @JvmField
+    var lop1: Long = 0L
+
     var sePlay = true
 
     @JvmField
@@ -63,6 +69,8 @@ object SoundHandler {
     var map = HashMap<Int, Int>()
 
     private val atk = listOf(20, 21)
+
+    var timer: PauseCountDown? = null
 
     @JvmStatic
     fun read(c: Context) {
@@ -87,6 +95,7 @@ object SoundHandler {
 
     @JvmStatic
     fun setSE(ind: Int) {
+        print(SoundPool.Builder().setMaxStreams(21))
         if (speed > 3) return
         if (play[ind]) return
         if (battleEnd) return
@@ -98,6 +107,10 @@ object SoundHandler {
 
                 MUSIC.reset()
                 MUSIC.isLooping = false
+
+                if(timer != null && timer?.isRunning == true) {
+                    timer?.cancel()
+                }
 
                 val g = Pack.def.ms[ind] ?: return
 
@@ -127,14 +140,49 @@ object SoundHandler {
 
                         h ?: return@setOnCompletionListener
 
-                        MUSIC.isLooping = true
-
                         try {
                             MUSIC.setVolume(mu_vol, mu_vol)
                             MUSIC.setDataSource(h.absolutePath)
                             MUSIC.prepareAsync()
                             MUSIC.setOnPreparedListener(object : MediaPrepare() {
                                 override fun prepare(mp: MediaPlayer?) {
+                                    if(lop1 > 0 && lop1 < MUSIC.duration) {
+                                        if(timer != null && timer?.isRunning == true) {
+                                            timer?.cancel()
+                                        }
+
+                                        timer = object : PauseCountDown((MUSIC.duration-1).toLong(), (MUSIC.duration-1).toLong(), true) {
+                                            override fun onFinish() {
+                                                MUSIC.seekTo(lop1.toInt(), true)
+
+                                                timer = object : PauseCountDown((MUSIC.duration-1).toLong()-lop1, (MUSIC.duration-1).toLong()-lop1, true) {
+                                                    override fun onFinish() {
+                                                        MUSIC.seekTo(lop1.toInt(), true)
+
+                                                        create()
+                                                    }
+
+                                                    override fun onTick(millisUntilFinished: Long) {
+                                                        MUSIC.seekTo(lop1.toInt(), true)
+                                                    }
+
+                                                }
+
+                                                timer?.create()
+                                            }
+
+                                            override fun onTick(millisUntilFinished: Long) {
+                                                MUSIC.seekTo(lop1.toInt(), true)
+                                            }
+
+                                        }
+
+                                        timer?.create()
+                                    } else {
+                                        timer = null
+                                        MUSIC.isLooping = true
+                                    }
+
                                     if(musicPlay) {
                                         MUSIC.start(false)
                                     }
@@ -213,6 +261,8 @@ object SoundHandler {
         haveToChange = false
         Changed = false
         mu1 = 3
+        lop = 0
+        lop1 = 0
         speed = 0
     }
 

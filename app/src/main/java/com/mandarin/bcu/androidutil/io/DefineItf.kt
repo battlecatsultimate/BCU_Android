@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil.io
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.util.Log
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
@@ -73,6 +74,15 @@ class DefineItf : Itf {
     override fun exit(save: Boolean) {}
 
     override fun prog(str: String) {}
+
+    override fun getMusicLength(f: File?): Long {
+        f ?: return -1
+
+        val mmr = MediaMetadataRetriever()
+        mmr.setDataSource(f.absolutePath)
+
+        return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+    }
 
     override fun readBytes(fi: File): InStream? {
         try {

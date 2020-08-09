@@ -52,7 +52,7 @@ class LUTreasureSetting : Fragment() {
     private val cotceid = intArrayOf(R.id.metalfrtreat, R.id.zombiefrtreat, R.id.alienfrtreat)
     private val maskeid = intArrayOf(R.id.masktreat, R.id.mask2treat, R.id.mask3treat)
 
-    private val expandid = intArrayOf(R.id.techexpand, R.id.eocexpand, R.id.eocitfexpand, R.id.itfexpand, R.id.cotcexpand)
+    private val expandid = intArrayOf(R.id.techexpand, R.id.orbadd, R.id.eocitfexpand, R.id.itfexpand, R.id.cotcexpand)
 
     private val layoutid = intArrayOf(R.id.techlayout, R.id.eoclayout, R.id.eocitflayout, R.id.itffruitlayout, R.id.cotclayout)
 
