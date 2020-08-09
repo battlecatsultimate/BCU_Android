@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil.lineup
 
 import android.content.Context
 import android.graphics.*
+import android.os.CountDownTimer
 import android.view.View
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
@@ -13,7 +14,7 @@ import java.io.File
 import java.util.*
 
 class LineUpView(context: Context?) : View(context) {
-    val position_REPLACE = 600
+    private val postionReplace = 600
 
     /**
      * Bitmap list of unit icons
@@ -93,11 +94,30 @@ class LineUpView(context: Context?) : View(context) {
     @JvmField
     var repform: Form? = null
 
+    var yello = false
+
+    private val timer: CountDownTimer = object : CountDownTimer(100, 100) {
+        override fun onFinish() {
+            yello = !yello
+
+            invalidate()
+
+            start()
+        }
+
+        override fun onTick(millisUntilFinished: Long) {}
+    }
+
+    init {
+        timer.start()
+    }
+
     public override fun onDraw(c: Canvas) {
         getPosition()
         drawUnits(c)
         drawDeleteBox(c)
         drawReplaceBox(c)
+        drawSelectedOutLine(c)
         if (drawFloating) drawFloatingImage(c)
         if (touched) {
             invalidate()
@@ -186,6 +206,66 @@ class LineUpView(context: Context?) : View(context) {
         }
     }
 
+    private fun drawSelectedOutLine(c: Canvas) {
+        val color = p.color
+
+        p.color = if(yello) {
+            Color.YELLOW
+        } else {
+            Color.MAGENTA
+        }
+
+        if(StaticStore.position == null) {
+            p.color = color
+            return
+        }
+
+        if(StaticStore.position[0] == -1) {
+            p.color = color
+            return
+        } else if(StaticStore.position[0] == 100) {
+            if(repform == null) {
+                p.color = color
+                return
+            }
+
+            p.strokeWidth = 5f / 128f * bw
+            p.style = Paint.Style.STROKE
+
+            val w = 110f / 128f * bw / 2f - p.strokeWidth / 2f - 2f
+            val h = 85f / 128f * bw / 2f - p.strokeWidth / 2f - 2f
+
+            val centerX = bw * 0.5f
+            val centerY = bw * 2.5f
+
+            c.drawRect(centerX-w, centerY-h, centerX+w, centerY+h, p)
+
+            p.style = Paint.Style.FILL
+            p.color = color
+        } else {
+            if(StaticStore.position[0] * 5 + StaticStore.position[1] < StaticStore.currentForms.size) {
+                if(StaticStore.currentForms[StaticStore.position[0] * 5 + StaticStore.position[1]] == null) {
+                    p.color = color
+                    return
+                }
+
+                p.strokeWidth = 5f / 128f * bw
+                p.style = Paint.Style.STROKE
+
+                val w = 110f / 128f * bw / 2f - p.strokeWidth / 2f - 2f
+                val h = 85f / 128f * bw / 2f - p.strokeWidth / 2f - 2f
+
+                val centerX = bw * (StaticStore.position[1] + 0.5f)
+                val centerY = bw * (StaticStore.position[0] + 0.5f)
+
+                c.drawRect(centerX-w, centerY-h, centerX+w, centerY+h, p)
+
+                p.style = Paint.Style.FILL
+                p.color = color
+            }
+        }
+    }
+
     /**
      * Changes 2 units' position using 2 ints. from is first unit's position, and to is second unit's position
      */
@@ -224,15 +304,15 @@ class LineUpView(context: Context?) : View(context) {
 
         //if target's position is empty then return
 
-        if (from == position_REPLACE && (to < 0 || to >= units.size))
+        if (from == postionReplace && (to < 0 || to >= units.size))
             return
 
         //if source's position is empty then return
 
-        if (to == position_REPLACE && (from < 0 || from >= units.size))
+        if (to == postionReplace && (from < 0 || from >= units.size))
             return
 
-        if (from == position_REPLACE) {
+        if (from == postionReplace) {
             if (repform != null) {
                 val icon = repform?.anim?.uni?.img?.bimg()
 
@@ -443,6 +523,11 @@ class LineUpView(context: Context?) : View(context) {
             System.arraycopy(lu.fs[i], 0, BasisSet.current.sele.lu.fs[i], 0, lu.fs[i].size)
         }
         updateLineUp()
+    }
+
+    override fun onDetachedFromWindow() {
+        timer.cancel()
+        super.onDetachedFromWindow()
     }
 
     init {

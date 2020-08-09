@@ -449,8 +449,6 @@ class LUOrbSetting : Fragment() {
             return
         }
 
-        parseData()
-
         val l = BasisSet.current.sele.lu.getLv(f.unit)
 
         val o = f.orbs
@@ -480,6 +478,8 @@ class LUOrbSetting : Fragment() {
                 l.orbs = Array(0) { intArrayOf()}
             }
         }
+
+        parseData()
 
         val c = context
 
