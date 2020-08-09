@@ -80,7 +80,7 @@ class SoundPlayer : MediaPlayer() {
     fun seekTo(millisec: Int, start: Boolean) {
         seekTo(millisec)
 
-        if(!isPlaying) {
+        if(!isPlaying && start) {
             start()
         }
     }
@@ -162,7 +162,6 @@ class SoundPlayer : MediaPlayer() {
         }
 
         if(!isInitialized) {
-            println(Thread.currentThread().stackTrace.contentDeepToString())
             Log.e("SoundPlayerIllegal","This SoundPlayer isn't initialized yet")
             return false
         }
