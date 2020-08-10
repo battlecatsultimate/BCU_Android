@@ -357,7 +357,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
                     StaticStore.set = null
                     StaticStore.lu = null
-                    StaticStore.combos.clear()
+                    StaticStore.combos?.clear()
 
                     activity.finish()
                 }

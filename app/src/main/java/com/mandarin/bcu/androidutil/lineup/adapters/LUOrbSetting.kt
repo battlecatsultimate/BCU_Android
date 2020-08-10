@@ -630,7 +630,9 @@ class LUOrbSetting : Fragment() {
 
         v1.adapter = a1
 
-        v1.setSelection(Orb.reverse(data[1]), false)
+        generateTraitData(od)
+
+        v1.setSelection(traitData.indexOf(data[1]), false)
 
         val g = od[data[1]] ?: return
 
