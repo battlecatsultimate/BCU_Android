@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
@@ -56,14 +57,14 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
                     val icon = ImageView(context)
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
                     icon.setImageBitmap(StaticStore.empty(context, 24f, 24f))
-                    icon.background = context.getDrawable(R.drawable.cell_shape)
+                    icon.background = ContextCompat.getDrawable(context, R.drawable.cell_shape)
                     holder.comimglayout.addView(icon)
                     holder.icons.add(icon)
                 } else {
                     val icon = ImageView(context)
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
                     icon.setImageBitmap(StaticStore.units[StaticStore.combos[position].units[i][0]].forms[StaticStore.combos[position].units[i][1]].anim.uni.img.bimg() as Bitmap)
-                    icon.background = context.getDrawable(R.drawable.cell_shape)
+                    icon.background = ContextCompat.getDrawable(context, R.drawable.cell_shape)
                     holder.comimglayout.addView(icon)
                     holder.icons.add(icon)
                 }

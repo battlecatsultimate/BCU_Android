@@ -95,7 +95,6 @@ object SoundHandler {
 
     @JvmStatic
     fun setSE(ind: Int) {
-        print(SoundPool.Builder().setMaxStreams(21))
         if (speed > 3) return
         if (play[ind]) return
         if (battleEnd) return

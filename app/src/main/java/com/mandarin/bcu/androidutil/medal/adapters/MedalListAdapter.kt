@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
@@ -42,7 +43,7 @@ class MedalListAdapter(private val activity: Activity, private val num: Int, wid
             if (posit + j < StaticStore.medals.size) {
                 val b = StaticStore.getResizeb(StaticStore.medals[posit + j], activity, imgwh)
                 val icon = ImageButton(activity)
-                icon.background = activity.getDrawable(R.drawable.image_button_circular)
+                icon.background = ContextCompat.getDrawable(activity, R.drawable.image_button_circular)
                 val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
                 params.height = height
                 params.marginStart = StaticStore.dptopx(2f, activity)
@@ -57,7 +58,7 @@ class MedalListAdapter(private val activity: Activity, private val num: Int, wid
                         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                                 ?: return
                         val v1 = dialog.window?.decorView ?: return
-                        v1.background = activity.getDrawable(R.drawable.dialog_box)
+                        v1.background = ContextCompat.getDrawable(activity, R.drawable.dialog_box)
                         val icon1 = dialog.findViewById<ImageView>(R.id.medalimg)
                         val name = dialog.findViewById<TextView>(R.id.medalname)
                         val desc = dialog.findViewById<TextView>(R.id.medaldesc)

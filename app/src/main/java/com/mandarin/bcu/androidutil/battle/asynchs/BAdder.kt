@@ -5,17 +5,25 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Point
 import android.media.MediaPlayer
 import android.os.AsyncTask
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.*
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import android.view.View.OnTouchListener
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionValues
+import com.google.android.material.circularreveal.CircularRevealRelativeLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MediaPrepare
@@ -30,10 +38,10 @@ import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics.Companion.clear
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.pack.AImageWriter
 import com.mandarin.bcu.androidutil.io.DefferedLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.pack.AImageWriter
 import com.mandarin.bcu.androidutil.stage.MapDefiner
 import com.mandarin.bcu.androidutil.unit.Definer
 import com.mandarin.bcu.util.page.BBCtrl
@@ -43,7 +51,9 @@ import common.system.P
 import common.system.fake.FakeImage
 import common.util.Data
 import common.util.pack.Pack
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.lang.ref.WeakReference
 import java.security.NoSuchAlgorithmException
 import java.util.*
@@ -53,6 +63,11 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var x = 0f
     private var y = 0f
+
+    private var realFX = 0f
+    private var previousX = 0f
+    private var previousScale = 0f
+    private var updateScale = false
     
     private val enemy = "0"
     private val map = "1"
@@ -299,6 +314,37 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                 val skipframe: FloatingActionButton = activity.findViewById(R.id.battlenextframe)
                 val fast: FloatingActionButton = activity.findViewById(R.id.battlefast)
                 val slow: FloatingActionButton = activity.findViewById(R.id.battleslow)
+                val reveal: RelativeLayout = activity.findViewById(R.id.battleconfiglayout)
+                val root: ConstraintLayout = activity.findViewById(R.id.battleroot)
+
+                val t = MaterialContainerTransform().apply {
+                    startView = actionButton
+                    endView = reveal
+
+                    addTarget(endView!!)
+
+                    setPathMotion(MaterialArcMotion())
+
+                    scrimColor = Color.TRANSPARENT
+
+                    fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
+                }
+
+                val t1 = MaterialContainerTransform().apply {
+                    startView = reveal
+                    endView = actionButton
+
+                    addTarget(endView!!)
+
+                    createAnimator(root, TransitionValues(reveal), TransitionValues(actionButton))
+
+                    setPathMotion(MaterialArcMotion())
+
+                    scrimColor = Color.TRANSPARENT
+
+                    fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
+                }
+
 
                 skipframe.setOnClickListener {
                     battleView.painter.bf.update()
@@ -313,7 +359,10 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                 actionButton.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
-                        actionButton.isExpanded = true
+                        TransitionManager.beginDelayedTransition(root, t)
+
+                        actionButton.visibility = View.GONE
+                        reveal.visibility = View.VISIBLE
                         battleView.paused = true
 
                         fast.hide()
@@ -323,7 +372,10 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                 play.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
-                        actionButton.isExpanded = false
+                        TransitionManager.beginDelayedTransition(root, t1)
+
+                        actionButton.visibility = View.VISIBLE
+                        reveal.visibility = View.GONE
                         battleView.paused = false
 
                         fast.show()
@@ -347,6 +399,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                         val action = event.action
 
                         if (action == MotionEvent.ACTION_DOWN) {
+                            updateScale = true
                             x = event.x
                             y = event.y
                         } else if (action == MotionEvent.ACTION_UP) {
@@ -527,7 +580,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                     }
 
                 })
-                val mus = activity.findViewById<Switch>(R.id.switchmus)
+                val mus = activity.findViewById<SwitchMaterial>(R.id.switchmus)
                 val musvol = activity.findViewById<SeekBar>(R.id.seekmus)
 
                 mus.isChecked = shared.getBoolean("music", true)
@@ -637,7 +690,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
 
-                val switchse = activity.findViewById<Switch>(R.id.switchse)
+                val switchse = activity.findViewById<SwitchMaterial>(R.id.switchse)
                 val seekse = activity.findViewById<SeekBar>(R.id.seekse)
 
                 switchse.isChecked = shared.getBoolean("SE", true)
@@ -808,7 +861,14 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
     private inner class ScaleListener internal constructor(private val cView: BattleView) : SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
+            val firstDistance = realFX - previousX
+
             cView.painter.siz *= detector.scaleFactor.toDouble()
+            cView.painter.regulate()
+
+            val difference = firstDistance * (cView.painter.siz / previousScale - 1)
+
+            cView.painter.pos = (previousX - difference).toInt()
 
             if (cView.paused) {
                 cView.invalidate()
@@ -817,6 +877,17 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
             return true
         }
 
+        override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+            if(updateScale) {
+                realFX = detector.focusX
+                previousX = cView.painter.pos.toFloat()
+                previousScale = cView.painter.siz.toFloat()
+
+                updateScale = false
+            }
+
+            return super.onScaleBegin(detector)
+        }
     }
 
     private fun checkPack(f: File) : Boolean {

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
@@ -61,7 +62,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
                 anim.duration = 300
                 anim.interpolator = DecelerateInterpolator()
                 anim.start()
-                viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp))
+                viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_more_black_24dp))
                 StaticStore.infoOpened[viewHolder.adapterPosition] = true
             } else {
                 viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -76,7 +77,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
                 anim.duration = 300
                 anim.interpolator = DecelerateInterpolator()
                 anim.start()
-                viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_less_black_24dp))
+                viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_less_black_24dp))
                 StaticStore.infoOpened[viewHolder.adapterPosition] = false
             }
         })
@@ -86,7 +87,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             val layout = viewHolder.moreinfo.layoutParams
             layout.height = viewHolder.moreinfo.measuredHeight
             viewHolder.moreinfo.layoutParams = layout
-            viewHolder.expand.setImageDrawable(activity.getDrawable(R.drawable.ic_expand_more_black_24dp))
+            viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_more_black_24dp))
         }
 
         val id = data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0

@@ -60,13 +60,13 @@ public interface BattleBox {
         public int pt = -1;
 
         protected final OuterBox page;
-        protected final BattleBox box;
+        public final BattleBox box;
 
         public double siz;
         protected double corr, unir; // siz = pix/p;
 
         private StageBasis sb;
-        private int maxW, maxH, minH; // in p
+        public int maxW, maxH, minH; // in p
         public int pos;
         private int midh, prew, preh; // in pix
 

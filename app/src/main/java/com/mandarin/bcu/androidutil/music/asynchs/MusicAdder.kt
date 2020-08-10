@@ -161,8 +161,6 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            val keys = Pack.map.keys.toMutableList()
-
             return if(position == 0) {
                 "Default"
             } else {

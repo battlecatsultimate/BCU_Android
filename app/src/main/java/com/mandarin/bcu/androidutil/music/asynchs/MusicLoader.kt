@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
@@ -224,7 +225,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
                     MusicPlayer.paused = true
                     MusicPlayer.sound.pause()
-                    play.setImageDrawable(ac.getDrawable(R.drawable.ic_play_arrow_black_24dp))
+                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
                 } else {
                     MusicPlayer.paused = false
                     if (MusicPlayer.completed) {
@@ -235,7 +236,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                         MusicPlayer.sound.start()
                     }
 
-                    play.setImageDrawable(ac.getDrawable(R.drawable.ic_pause_black_24dp))
+                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
                 }
             }
 
@@ -425,14 +426,14 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 mmr.setDataSource(g.absolutePath)
 
                 muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
-                play.setImageDrawable(ac.getDrawable(R.drawable.ic_pause_black_24dp))
+                play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
 
                 MusicPlayer.sound.start()
             }
 
             MusicPlayer.sound.setOnCompletionListener {
                 if (!MusicPlayer.sound.isLooping && !MusicPlayer.next) {
-                    play.setImageDrawable(ac.getDrawable(R.drawable.ic_play_arrow_black_24dp))
+                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
                     MusicPlayer.completed = true
                     MusicPlayer.sound.isRunning = false
                     MusicPlayer.paused = true
@@ -464,7 +465,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     val g = p.ms.list[MusicPlayer.posit]
 
                     if (!g.exists()) {
-                        play.setImageDrawable(ac.getDrawable(R.drawable.ic_play_arrow_black_24dp))
+                        play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
                         StaticStore.showShortMessage(ac, "No File Found")
                         return@setOnCompletionListener
                     }
@@ -675,7 +676,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             }
 
             if (MusicPlayer.paused || MusicPlayer.completed) {
-                play.setImageDrawable(ac.getDrawable(R.drawable.ic_play_arrow_black_24dp))
+                play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
             }
         }
     }

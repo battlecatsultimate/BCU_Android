@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.Revalidater
@@ -162,11 +163,11 @@ open class ConfigScreen : AppCompatActivity() {
 
         println(CommonStatic.Lang.lang)
 
-        val apktest = findViewById<Switch>(R.id.apktest)
+        val apktest = findViewById<SwitchCompat>(R.id.apktest)
 
         apktest.isChecked = shared.getBoolean("apktest", false)
 
-        val senderr = findViewById<Switch>(R.id.senderror)
+        val senderr = findViewById<SwitchCompat>(R.id.senderror)
 
         senderr.isChecked = shared.getBoolean("upload", false)
 
@@ -295,7 +296,7 @@ open class ConfigScreen : AppCompatActivity() {
             ed1.apply()
         }
 
-        val skiptext = findViewById<Switch>(R.id.configskiptext)
+        val skiptext = findViewById<SwitchCompat>(R.id.configskiptext)
 
         skiptext.isChecked = shared.getBoolean("Skip_Text", false)
 
@@ -316,7 +317,7 @@ open class ConfigScreen : AppCompatActivity() {
             }
         })
 
-        val axis = findViewById<Switch>(R.id.configaxis)
+        val axis = findViewById<SwitchCompat>(R.id.configaxis)
 
         axis.isChecked = shared.getBoolean("Axis", true)
 
@@ -326,7 +327,7 @@ open class ConfigScreen : AppCompatActivity() {
             ed1.apply()
         }
 
-        val fps = findViewById<Switch>(R.id.configfps)
+        val fps = findViewById<SwitchCompat>(R.id.configfps)
 
         fps.isChecked = shared.getBoolean("FPS", true)
 
@@ -336,7 +337,7 @@ open class ConfigScreen : AppCompatActivity() {
             ed1.apply()
         }
 
-        val mus = findViewById<Switch>(R.id.configmus)
+        val mus = findViewById<SwitchCompat>(R.id.configmus)
         val musvol = findViewById<SeekBar>(R.id.configmusvol)
 
         mus.isChecked = shared.getBoolean("music", true)
@@ -376,7 +377,7 @@ open class ConfigScreen : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        val soundeff = findViewById<Switch>(R.id.configse)
+        val soundeff = findViewById<SwitchCompat>(R.id.configse)
         val sevol = findViewById<SeekBar>(R.id.configsevol)
 
         soundeff.isChecked = shared.getBoolean("SE", true)

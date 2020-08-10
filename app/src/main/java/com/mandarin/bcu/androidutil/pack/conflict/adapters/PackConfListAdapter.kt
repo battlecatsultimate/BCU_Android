@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.mandarin.bcu.PackConflictSolve
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
@@ -64,7 +65,7 @@ class PackConfListAdapter(context: Context, name: ArrayList<String>) : ArrayAdap
                     holder.action.visibility = View.GONE
                     holder.remove.visibility = View.VISIBLE
 
-                    holder.status.setImageDrawable(context.getDrawable(R.drawable.ic_approve))
+                    holder.status.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_approve))
                     holder.status.tag = SOLVED
                 }
 
@@ -456,7 +457,7 @@ class PackConfListAdapter(context: Context, name: ArrayList<String>) : ArrayAdap
         var anim: AnimatedVectorDrawable
 
         v.apply {
-            setImageDrawable(context.getDrawable(id))
+            setImageDrawable(ContextCompat.getDrawable(context, id))
             anim = drawable as AnimatedVectorDrawable
         }
 

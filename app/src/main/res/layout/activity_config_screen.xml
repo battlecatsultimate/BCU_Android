@@ -182,7 +182,7 @@
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/apktest"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -197,7 +197,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/senderror" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/senderror"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -360,7 +360,7 @@
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configskiptext"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -396,7 +396,7 @@
                 app:layout_constraintStart_toStartOf="@+id/configinfport"
                 app:layout_constraintTop_toBottomOf="@+id/configinfport" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configaxis"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -407,7 +407,7 @@
                 app:layout_constraintStart_toStartOf="@+id/textView21"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configfps"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -430,7 +430,7 @@
                 app:layout_constraintStart_toStartOf="@+id/configmus"
                 app:layout_constraintTop_toBottomOf="@+id/configfps" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configmus"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -452,7 +452,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/configmus" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configse"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

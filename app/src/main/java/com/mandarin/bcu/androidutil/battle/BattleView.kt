@@ -9,8 +9,6 @@ import android.graphics.Paint
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -21,7 +19,6 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MediaPrepare
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
-import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.util.page.BBCtrl
@@ -35,7 +32,6 @@ import common.util.ImgCore
 import common.util.anim.ImgCut
 import common.util.pack.Pack
 import java.io.IOException
-import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.round
 

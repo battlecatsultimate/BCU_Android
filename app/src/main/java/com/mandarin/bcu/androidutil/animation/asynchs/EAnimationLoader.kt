@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.AsyncTask
-import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
@@ -39,6 +37,16 @@ import java.util.*
 class EAnimationLoader(activity: Activity, private val pid: Int, private val id: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
+
+    private var realFX = 0f
+    private var previousX = 0f
+
+    private var realFY = 0f
+    private var previousY = 0f
+
+    private var previousScale = 0f
+    private var updateScale = false
+
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
         val anims = activity.findViewById<Spinner>(R.id.animselect)
@@ -93,6 +101,9 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                         val id = event.getPointerId(0)
                         val x = event.x
                         val y = event.y
+                        if (event.action == MotionEvent.ACTION_DOWN) {
+                            updateScale = true
+                        }
                         if (event.action == MotionEvent.ACTION_MOVE) {
                             if (event.pointerCount == 1 && id == preid) {
                                 val dx = x - preX
@@ -135,14 +146,14 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
                 buttons[1].setOnClickListener {
-                    frame.setTextColor(getAttributeColor(activity, R.attr.TextPrimary))
+                    frame.setTextColor(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
                     if (StaticStore.play) {
-                        buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_play_arrow_black_24dp))
+                        buttons[1].setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_play_arrow_black_24dp))
                         buttons[0].show()
                         buttons[2].show()
                         controller.isEnabled = true
                     } else {
-                        buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_pause_black_24dp))
+                        buttons[1].setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_pause_black_24dp))
                         buttons[0].hide()
                         buttons[2].hide()
                         controller.isEnabled = false
@@ -161,7 +172,7 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                 buttons[2].setOnClickListener {
                     StaticStore.frame++
                     cView.anim!!.setTime(StaticStore.frame)
-                    frame.setTextColor(getAttributeColor(activity, R.attr.TextPrimary))
+                    frame.setTextColor(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
                 }
                 controller.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                     override fun onProgressChanged(controller: SeekBar, progress: Int, fromUser: Boolean) {
@@ -331,7 +342,7 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
             buttons[2].hide()
             controller.isEnabled = false
         } else {
-            buttons[1].setImageDrawable(activity.getDrawable(R.drawable.ic_pause_black_24dp))
+            buttons[1].setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_pause_black_24dp))
         }
         if (!shared.getBoolean("FPS", true)) fps.visibility = View.GONE
     }
@@ -351,24 +362,31 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
     private inner class ScaleListener internal constructor(private val cView: AnimationCView) : SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             cView.size *= detector.scaleFactor
+
+            val diffX = (realFX - previousX) * (cView.size / previousScale - 1)
+            val diffY = (realFY - previousY) * (cView.size / previousScale - 1)
+
+            cView.posx = previousX - diffX
+            cView.posy = previousY - diffY
+
             return true
         }
 
-    }
 
-    companion object {
-        private fun getAttributeColor(context: Context, attributeId: Int): Int {
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(attributeId, typedValue, true)
-            val colorRes = typedValue.resourceId
-            var color = -1
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: NotFoundException) {
-                e.printStackTrace()
+        override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+            if (updateScale) {
+                realFX = detector.focusX - cView.width / 2f
+                previousX = cView.posx
+
+                realFY = detector.focusY - cView.height * 2f / 3f
+                previousY = cView.posy
+
+                previousScale = cView.size
+
+                updateScale = false
             }
-            return color
+
+            return super.onScaleBegin(detector)
         }
     }
-
 }

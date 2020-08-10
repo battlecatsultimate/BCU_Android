@@ -4,11 +4,16 @@ import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.circularreveal.CircularRevealRelativeLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.asynchs.BAdder

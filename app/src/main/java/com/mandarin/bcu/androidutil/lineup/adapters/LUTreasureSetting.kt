@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -302,7 +303,9 @@ class LUTreasureSetting : Fragment() {
                     anim.interpolator = DecelerateInterpolator()
                     anim.start()
 
-                    expands[i]?.setImageDrawable(Objects.requireNonNull<Context>(context).getDrawable(R.drawable.ic_expand_more_black_24dp))
+                    val c = context ?: return@OnClickListener
+
+                    expands[i]?.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.ic_expand_more_black_24dp))
                 } else {
                     layouts[i]?.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
@@ -320,7 +323,9 @@ class LUTreasureSetting : Fragment() {
                     anim.interpolator = DecelerateInterpolator()
                     anim.start()
 
-                    expands[i]?.setImageDrawable(Objects.requireNonNull<Context>(context).getDrawable(R.drawable.ic_expand_less_black_24dp))
+                    val c = context ?: return@OnClickListener
+
+                    expands[i]?.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.ic_expand_less_black_24dp))
                 }
             })
         }
