@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.UnitInfo
-import com.mandarin.bcu.androidutil.FilterEntity
+import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
 import common.system.MultiLangCont
 import common.util.Data

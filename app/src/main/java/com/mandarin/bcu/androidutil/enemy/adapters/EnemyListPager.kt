@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.FilterEntity
+import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
 import common.system.MultiLangCont

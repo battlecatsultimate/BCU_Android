@@ -1,6 +1,9 @@
-package com.mandarin.bcu.androidutil
+package com.mandarin.bcu.androidutil.filter
 
+import com.mandarin.bcu.androidutil.StatFilterElement
+import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.util.Interpret
+import common.CommonStatic
 import common.system.MultiLangCont
 import common.util.Data
 import common.util.pack.Pack
@@ -157,6 +160,8 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
 
             val result = ArrayList<Int>()
 
+            val lang = Locale.getDefault().language
+
             for(i in StaticStore.ludata.indices) {
                 if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
                     if(StaticStore.entityname.isNotEmpty()) {
@@ -188,8 +193,11 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
 
                             name = Data.trio(j) + "-" + name.toLowerCase(Locale.ROOT)
 
-                            if(name.contains(StaticStore.entityname))
-                                added = true
+                            added = if(CommonStatic.Lang.lang == 2 || lang == "ko") {
+                                KoreanFilter.filter(name, StaticStore.entityname)
+                            } else {
+                                name.contains(StaticStore.entityname)
+                            }
                         }
 
                         if(added)
@@ -279,36 +287,67 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                 b40.add(b41)
                 b50.add(StatFilterElement.performFilter(f, StatFilterElement.orand))
             }
-            if (!StaticStore.empty) if (b10.contains(true)) b1.add(true) else b1.add(false)
-            if (StaticStore.attack.isNotEmpty()) if (b20.contains(true)) b2.add(true) else b2.add(false)
-            if (StaticStore.tg.isNotEmpty()) if (b30.contains(true)) b3.add(true) else b3.add(false)
-            if (StaticStore.ability.isNotEmpty()) if (b40.contains(true)) b4.add(true) else b4.add(false)
-            if (StatFilterElement.statFilter.isNotEmpty()) if (b50.contains(true)) b5.add(true) else b5.add(false)
+            if (!StaticStore.empty)
+                if (b10.contains(true))
+                    b1.add(true)
+                else
+                    b1.add(false)
+
+            if (StaticStore.attack.isNotEmpty())
+                if (b20.contains(true))
+                    b2.add(true)
+                else
+                    b2.add(false)
+
+            if (StaticStore.tg.isNotEmpty())
+                if (b30.contains(true))
+                    b3.add(true)
+                else
+                    b3.add(false)
+
+            if (StaticStore.ability.isNotEmpty())
+                if (b40.contains(true))
+                    b4.add(true)
+                else
+                    b4.add(false)
+
+            if (StatFilterElement.statFilter.isNotEmpty())
+                if (b50.contains(true))
+                    b5.add(true)
+                else
+                    b5.add(false)
         }
         val result = ArrayList<Int>()
-        for (i in 0 until entitynumber) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
-            if (entityname.isNotEmpty()) {
-                val u = p.us.ulist.list[i]
 
-                var added = false
+        val lang = Locale.getDefault().language
 
-                for (j in u.forms.indices) {
+        for (i in 0 until entitynumber)
+            if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
+                if (entityname.isNotEmpty()) {
+                    val u = p.us.ulist.list[i]
+
+                    var added = false
+
+                    for (j in u.forms.indices) {
+                        if (added)
+                            continue
+
+                        var name = MultiLangCont.FNAME.getCont(u.forms[j]) ?: u.forms[j].name
+
+                        if (name == null)
+                            name = ""
+
+                        name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
+
+                        added = if(CommonStatic.Lang.lang == 2 || lang == Interpret.KO) {
+                            KoreanFilter.filter(name, StaticStore.entityname)
+                        } else {
+                            name.contains(StaticStore.entityname)
+                        }
+                    }
+
                     if (added)
-                        continue
-
-                    var name = MultiLangCont.FNAME.getCont(u.forms[j]) ?: u.forms[j].name
-
-                    if (name == null)
-                        name = ""
-
-                    name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
-
-                    if (name.contains(entityname.toLowerCase(Locale.ROOT)))
-                        added = true
-                }
-
-                if (added)
-                    result.add(i)
+                        result.add(i)
             } else {
                 result.add(i)
             }
@@ -425,6 +464,8 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
 
         val result = ArrayList<Int>()
 
+        val lang = Locale.getDefault().language
+
         for (i in 0 until entitynumber)
             if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
                 if (entityname.isNotEmpty()) {
@@ -437,8 +478,15 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
 
                     name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
 
-                    if (name.contains(entityname.toLowerCase(Locale.ROOT)))
-                        result.add(i)
+                    if(CommonStatic.Lang.lang == 2 || lang == Interpret.KO) {
+                        if(KoreanFilter.filter(name, StaticStore.entityname)) {
+                            result.add(i)
+                        }
+                    } else {
+                        if(name.contains(StaticStore.entityname)) {
+                            result.add(i)
+                        }
+                    }
                 } else {
                     result.add(i)
                 }

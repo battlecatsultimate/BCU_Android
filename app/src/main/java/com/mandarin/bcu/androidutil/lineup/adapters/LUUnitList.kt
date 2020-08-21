@@ -9,10 +9,9 @@ import android.widget.AdapterView
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.FilterEntity
+import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import com.mandarin.bcu.androidutil.unit.adapters.UnitListAdapter
 import common.battle.BasisSet
 import common.util.pack.Pack
 import common.util.unit.Form
