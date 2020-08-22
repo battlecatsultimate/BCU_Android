@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/user/AndroidStudioProjects/BCU_Android/app/src/main/jni
+# Install script for directory: C:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/jni
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/user/AndroidStudioProjects/BCU_Android/app/.cxx/cmake/debug/x86_64/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/user/AndroidStudioProjects/BCU_Android_json/app/.cxx/cmake/debug/x86_64/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

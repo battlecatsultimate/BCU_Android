@@ -88,7 +88,7 @@ open class EnemyList : AppCompatActivity() {
             }
         })
 
-        StaticStore.getEnemynumber(this)
+        StaticStore.getEnemyNumber(this)
 
         EAdder(this,mode,supportFragmentManager).execute()
     }

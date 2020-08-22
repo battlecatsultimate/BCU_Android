@@ -161,8 +161,6 @@ open class ConfigScreen : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        println(CommonStatic.Lang.lang)
-
         val apktest = findViewById<SwitchCompat>(R.id.apktest)
 
         apktest.isChecked = shared.getBoolean("apktest", false)

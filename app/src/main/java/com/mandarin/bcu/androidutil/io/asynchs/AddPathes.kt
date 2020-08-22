@@ -28,7 +28,7 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
         ZipLib.init(StaticStore.getExternalPath(activity))
         ZipLib.read(StaticStore.getExternalPath(activity))
         StaticStore.getUnitnumber(activity)
-        StaticStore.getEnemynumber(activity)
+        StaticStore.getEnemyNumber(activity)
         StaticStore.root = 1
         DefineItf().init(activity)
         StaticStore.getLang(shared.getInt("Language", 0))

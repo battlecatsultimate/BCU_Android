@@ -116,7 +116,7 @@ class StatFilterElement(val type: Int, val option: Int, val lev: Int) {
     var delete: Boolean = false
 
     fun setFilter(entity: Form, result: Boolean, orand: Boolean) : Boolean {
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
         val du = if(entity.pCoin != null) {
             if(talent)
                 entity.maxu()

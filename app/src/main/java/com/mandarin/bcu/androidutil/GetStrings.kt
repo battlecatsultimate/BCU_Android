@@ -8,7 +8,7 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.CustomEntity
 import common.battle.data.MaskUnit
-import common.system.MultiLangCont
+import common.util.lang.MultiLangCont
 import common.util.stage.Limit
 import common.util.stage.SCDef
 import common.util.unit.Enemy
@@ -37,7 +37,7 @@ class GetStrings(private val c: Context) {
 
         val result = StringBuilder()
 
-        var name = MultiLangCont.FNAME.getCont(f) ?: f.name
+        var name = MultiLangCont.get(f) ?: f.name
 
         if (name == null)
             name = ""
@@ -191,8 +191,8 @@ class GetStrings(private val c: Context) {
             id + "-" + viewHolder.adapterPosition
     }
 
-    fun getID(form: Int, pid:String, id: String): String {
-        return "$pid-$id-$form"
+    fun getID(form: Int, id: String): String {
+        return "$id-$form"
     }
 
     fun getRange(f: Form?): String {
@@ -406,7 +406,7 @@ class GetStrings(private val c: Context) {
         if (em == null)
             return ""
 
-        return (em.de.multi(BasisSet.current) * em.de.hp * multi / 100).toInt().toString()
+        return (em.de.multi(BasisSet.current()) * em.de.hp * multi / 100).toInt().toString()
     }
 
     fun getTotAtk(f: Form?, t: Treasure?, lev: Int, talent: Boolean, lvs: IntArray?): String {
@@ -426,7 +426,7 @@ class GetStrings(private val c: Context) {
         if (em == null)
             return ""
 
-        return (em.de.multi(BasisSet.current) * em.de.allAtk() * multi / 100).toInt().toString()
+        return (em.de.multi(BasisSet.current()) * em.de.allAtk() * multi / 100).toInt().toString()
     }
 
     fun getDPS(f: Form?, t: Treasure?, lev: Int, talent: Boolean, lvs: IntArray?): String {
@@ -583,7 +583,7 @@ class GetStrings(private val c: Context) {
         val damages = ArrayList<Int>()
 
         for (atk in atks) {
-            damages.add((atk[0] * em.de.multi(BasisSet.current) * multi / 100).toInt())
+            damages.add((atk[0] * em.de.multi(BasisSet.current()) * multi / 100).toInt())
         }
 
         val result = StringBuilder("(")
@@ -674,49 +674,49 @@ class GetStrings(private val c: Context) {
         }
     }
 
-    fun getLayer(data: IntArray): String {
-        return if (data[SCDef.L0] == data[SCDef.L1])
-            "" + data[SCDef.L0]
+    fun getLayer(data: SCDef.Line): String {
+        return if (data.layer_0 == data.layer_1)
+            "" + data.layer_0
         else
-            data[SCDef.L0].toString() + " ~ " + data[SCDef.L1]
+            data.layer_0.toString() + " ~ " + data.layer_1
     }
 
-    fun getRespawn(data: IntArray, frse: Boolean): String {
-        return if (data[SCDef.R0] == data[SCDef.R1])
+    fun getRespawn(data: SCDef.Line, frse: Boolean): String {
+        return if (data.respawn_0 == data.respawn_1)
             if (frse)
-                data[SCDef.R0].toString() + "f"
+                data.respawn_0.toString() + "f"
             else
-                DecimalFormat("#.##").format(data[SCDef.R0].toFloat() / 30.toDouble()) + "s"
+                DecimalFormat("#.##").format(data.respawn_0.toFloat() / 30.toDouble()) + "s"
         else if (frse)
-            data[SCDef.R0].toString() + "f ~ " + data[SCDef.R1] + "f"
+            data.respawn_0.toString() + "f ~ " + data.respawn_1 + "f"
         else
-            DecimalFormat("#.##").format(data[SCDef.R0].toFloat() / 30.toDouble()) + "s ~ " + DecimalFormat("#.##").format(data[SCDef.R1].toFloat() / 30.toDouble()) + "s"
+            DecimalFormat("#.##").format(data.respawn_0.toFloat() / 30.toDouble()) + "s ~ " + DecimalFormat("#.##").format(data.respawn_1.toFloat() / 30.toDouble()) + "s"
     }
 
-    fun getBaseHealth(data: IntArray): String {
-        return data[SCDef.C0].toString() + "%"
+    fun getBaseHealth(data: SCDef.Line): String {
+        return data.castle_0.toString() + "%"
     }
 
-    fun getMultiply(data: IntArray, multi: Int): String {
-        return if(data[SCDef.M] == data[SCDef.M1]) {
-            (data[SCDef.M].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
+    fun getMultiply(data: SCDef.Line, multi: Int): String {
+        return if(data.multiple == data.mult_atk) {
+            (data.multiple.toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
         } else {
-            (data[SCDef.M].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + " / " + (data[SCDef.M1].toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
+            (data.multiple.toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + " / " + (data.mult_atk.toFloat() * multi.toFloat() / 100.toFloat()).toInt().toString() + "%"
         }
     }
 
-    fun getNumber(data: IntArray): String {
-        return if (data[SCDef.N] == 0)
+    fun getNumber(data: SCDef.Line): String {
+        return if (data.number == 0)
             c.getString(R.string.infinity)
         else
-            data[SCDef.N].toString()
+            data.number.toString()
     }
 
-    fun getStart(data: IntArray, frse: Boolean): String {
+    fun getStart(data: SCDef.Line, frse: Boolean): String {
         return if (frse)
-            data[SCDef.S0].toString() + "f"
+            data.spawn_0.toString() + "f"
         else
-            DecimalFormat("#.##").format(data[SCDef.S0].toFloat() / 30.toDouble()) + "s"
+            DecimalFormat("#.##").format(data.spawn_0.toFloat() / 30.toDouble()) + "s"
     }
 
     fun getLimit(l: Limit?): Array<String> {
@@ -769,11 +769,11 @@ class GetStrings(private val c: Context) {
                     continue
 
                 if (i == l.group.set.size - 1) {
-                    val f = MultiLangCont.FNAME.getCont(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id
+                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id.id
 
                     units.append(f)
                 } else {
-                    val f = MultiLangCont.FNAME.getCont(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id
+                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id.id
 
                     units.append(f).append(", ")
                 }

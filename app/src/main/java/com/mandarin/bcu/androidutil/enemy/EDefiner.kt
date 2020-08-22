@@ -3,7 +3,6 @@ package com.mandarin.bcu.androidutil.enemy
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Environment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
@@ -38,7 +37,7 @@ class EDefiner {
         try {
             if (StaticStore.enemies == null) {
                 try {
-                    StaticStore.getEnemynumber(context)
+                    StaticStore.getEnemyNumber(context)
                     Enemy.readData()
                 } catch (e: NullPointerException) {
                     StaticStore.clear()
@@ -47,7 +46,7 @@ class EDefiner {
                     ZipLib.init(StaticStore.getExternalPath(context))
                     ZipLib.read(StaticStore.getExternalPath(context))
                     ImageBuilder.builder = BMBuilder()
-                    StaticStore.getEnemynumber(context)
+                    StaticStore.getEnemyNumber(context)
                     DefineItf().init(context)
                     Enemy.readData()
                     StaticStore.root = 1

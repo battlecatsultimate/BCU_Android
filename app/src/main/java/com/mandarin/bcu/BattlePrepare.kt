@@ -140,7 +140,7 @@ class BattlePrepare : AppCompatActivity() {
     }
 
     private val setLUName: String
-        get() = BasisSet.current.name + " - " + BasisSet.current.sele.name
+        get() = BasisSet.current().name + " - " + BasisSet.current().sele.name
 
     public override fun onDestroy() {
         super.onDestroy()

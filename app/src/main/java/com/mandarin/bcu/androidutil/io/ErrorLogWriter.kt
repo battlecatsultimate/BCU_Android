@@ -122,6 +122,8 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
         }
 
         fun writeLog(error: Exception, upload: Boolean, c: Context) {
+            error.printStackTrace()
+
             try {
                 val path = StaticStore.getExternalPath(c)+"logs/"
                 val f = File(path)

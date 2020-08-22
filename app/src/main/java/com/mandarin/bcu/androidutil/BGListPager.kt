@@ -13,18 +13,19 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.R
-import common.util.Data
-import common.util.pack.Pack
+import common.io.json.JsonEncoder
+import common.pack.PackData
+import common.pack.UserProfile
 
 class BGListPager : Fragment() {
-    private var pid = 0
+    private var pid = PackData.Identifier.DEF
 
     companion object {
-        fun newInstance(pid: Int) : BGListPager {
+        fun newInstance(pid: String) : BGListPager {
             val blp = BGListPager()
             val bundle = Bundle()
 
-            bundle.putInt("pid", pid)
+            bundle.putString("pid", pid)
 
             blp.arguments = bundle
 
@@ -35,20 +36,20 @@ class BGListPager : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
-        pid = arguments?.getInt("pid") ?: 0
+        pid = arguments?.getString("pid") ?: PackData.Identifier.DEF
 
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
 
-        val p = Pack.map[pid] ?: return view
+        val p = UserProfile.getPack(pid) ?: return view
 
-        if(p.bg.size() != 0) {
+        if(p.bgs.size() != 0) {
             nores.visibility = View.GONE
 
             val names = ArrayList<String>()
 
-            for(i in p.bg.list.indices) {
-                names.add(Data.hex(pid) + " - " + Data.trio(p.bg.list[i].id))
+            for(i in p.bgs.list.indices) {
+                names.add(StaticStore.trio(p.bgs.list[i].id.id))
             }
 
             val c = activity ?: return view
@@ -65,15 +66,12 @@ class BGListPager : Fragment() {
 
                 val intent = Intent(c, ImageViewer::class.java)
 
-                if(pid == 0) {
-                    intent.putExtra("Path", StaticStore.getExternalPath(c)+"org/img/bg/bg" + number(position) + ".png")
-                    intent.putExtra("Img", 0)
+                if(pid == PackData.Identifier.DEF) {
                     intent.putExtra("BGNum", position)
-                } else {
-                    intent.putExtra("PID", pid)
-                    intent.putExtra("Img", 0)
-                    intent.putExtra("BGNum", StaticStore.getID(p.bg.list[position].id))
                 }
+
+                intent.putExtra("Data", JsonEncoder.encode(p.bgs.list[position].id).toString())
+                intent.putExtra("Img", 0)
 
                 c.startActivity(intent)
             }
@@ -82,19 +80,5 @@ class BGListPager : Fragment() {
         }
 
         return view
-    }
-
-    private fun number(n: Int): String {
-        return when (n) {
-            in 0..9 -> {
-                "00$n"
-            }
-            in 10..99 -> {
-                "0$n"
-            }
-            else -> {
-                n.toString()
-            }
-        }
     }
 }

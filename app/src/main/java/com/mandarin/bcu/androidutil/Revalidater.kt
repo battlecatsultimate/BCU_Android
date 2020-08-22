@@ -1,12 +1,10 @@
 package com.mandarin.bcu.androidutil
 
 import android.content.Context
-import com.mandarin.bcu.androidutil.StaticStore.unitnumber
 import com.mandarin.bcu.androidutil.unit.Definer
-import common.system.MultiLangCont
-import common.util.Data
-import common.util.pack.Pack
-import common.util.stage.MapColc
+import common.pack.PackData
+import common.pack.UserProfile
+import common.util.lang.MultiLangCont
 
 object Revalidater {
     fun validate(lang: String, context: Context) {
@@ -16,26 +14,35 @@ object Revalidater {
             StaticStore.lunames.clear()
             StaticStore.ludata.clear()
 
-            for(m in Pack.map) {
-                val p = m.value ?: continue
+            val plist = ArrayList<PackData>()
 
-                val pid = p.id
+            plist.add(UserProfile.getBCData())
+            plist.addAll(UserProfile.packs())
 
-                for(i in p.us.ulist.list.indices) {
-                    val unit = p.us.ulist.list[i]
+            for(m in plist) {
+                val pid = if(m is PackData.DefPack) {
+                    PackData.Identifier.DEF
+                } else if(m is PackData.UserPack) {
+                    m.desc.name
+                } else {
+                    continue
+                }
 
-                    val name = MultiLangCont.FNAME.getCont(unit.forms[0]) ?: unit.forms[0].name ?: ""
+                for(i in m.units.list.indices) {
+                    val unit = m.units.list[i]
 
-                    val id = if(p.id != 0) {
-                        StaticStore.getID(p.us.ulist.list[i].id)
+                    val name = MultiLangCont.get(unit.forms[0]) ?: unit.forms[0].name ?: ""
+
+                    val id = if(m !is PackData.DefPack) {
+                        StaticStore.getID(m.units.list[i].id.id)
                     } else {
                         i
                     }
 
                     val fullName = if(name != "") {
-                        Data.hex(pid)+" - "+number(id)+"/"+name
+                        pid+" - "+number(id)+"/"+name
                     } else {
-                        Data.hex(pid)+" - "+number(id)+"/"
+                        pid+" - "+number(id)+"/"
                     }
 
                     StaticStore.lunames.add(fullName)
@@ -51,20 +58,17 @@ object Revalidater {
                 StaticStore.mapcolcname.add(context.getString(i))
             }
 
-            for(i in Pack.map) {
-                val v= i.value
-
-                if(v.id == 0)
+            for(i in StaticStore.getPacks()) {
+                if(i is PackData.DefPack)
                     continue
-                else {
-                    val k = Data.hex(i.key)
+                else if(i is PackData.UserPack) {
+                    var k = i.desc.name
 
-                    val name = v.name ?: ""
+                    if(k.isEmpty()) {
+                        k = i.desc.id
+                    }
 
-                    if(name == "")
-                        StaticStore.mapcolcname.add(k)
-                    else
-                        StaticStore.mapcolcname.add(k + " - " + v.name)
+                    StaticStore.mapcolcname.add(k)
                 }
             }
         }

@@ -28,14 +28,11 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
-import common.system.MultiLangCont
-import common.util.Data
-import common.util.pack.Pack
+import common.pack.PackData
+import common.util.lang.MultiLangCont
 import common.util.unit.Enemy
 
 class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
-    private val pid: Int
-    private val id: Int
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
     private var activity: Activity?
     private var fs = 0
@@ -44,27 +41,26 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private var s: GetStrings
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray
+    private val data: PackData.Identifier<Enemy>
 
-    constructor(activity: Activity, id: Int, pid: Int) {
+    constructor(activity: Activity, data: PackData.Identifier<Enemy>) {
         this.activity = activity
-        this.id = id
-        this.pid = pid
         s = GetStrings(activity)
         color = intArrayOf(
                 StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
+        this.data = data
     }
 
-    constructor(activity: Activity, id: Int, multi: Int, amulti: Int, pid: Int) {
+    constructor(activity: Activity, multi: Int, amulti: Int, data: PackData.Identifier<Enemy>) {
         this.activity = activity
-        this.id = id
-        this.pid = pid
         this.multi = multi
         this.amulti = amulti
         s = GetStrings(activity)
         color = intArrayOf(
                 StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
+        this.data = data
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -73,9 +69,8 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        val p = Pack.map[pid] ?: return
+        val em = data.get() ?: return
 
-        val em = p.es[id]
         val t = StaticStore.t
         val shared = activity!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         if (shared.getBoolean("frame", true)) {
@@ -112,11 +107,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             til.counterMaxLength = 3
             til.setHelperTextColor(ColorStateList(states, color))
         }
-        viewHolder.name.text = MultiLangCont.ENAME.getCont(em) ?: em.name
-        val name = Data.hex(pid)+"-"+ s.number(id)
+        viewHolder.name.text = MultiLangCont.get(em) ?: em.name
+        val name = StaticStore.trio(em.id.id)
         viewHolder.enemid.text = name
         val ratio = 32f / 32f
-        val img = em?.anim?.edi?.img
+        val img = em.anim?.edi?.img
         var b: Bitmap? = null
         if (img != null) b = img.bimg() as Bitmap
         viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(b, activity, 85f * ratio, 32f * ratio))
@@ -168,13 +163,12 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     private fun listeners(viewHolder: ViewHolder) {
-        val p = Pack.map[pid] ?: return
-        val em = p.es[id]
+        val em = data.get() ?: return
 
         if (activity == null)
             return
 
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
         val aclev: TextInputLayout = activity!!.findViewById(R.id.aclev)
         val actrea: TextInputLayout = activity!!.findViewById(R.id.actrea)
         val itfcry: TextInputLayout = activity!!.findViewById(R.id.itfcrytrea)

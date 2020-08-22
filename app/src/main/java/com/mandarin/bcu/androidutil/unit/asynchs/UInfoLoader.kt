@@ -35,13 +35,13 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import com.mandarin.bcu.util.Interpret
-import common.CommonStatic
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.pack.PackData
+import common.util.lang.MultiLangCont
+import common.util.unit.Unit
 import java.lang.ref.WeakReference
 import java.util.*
 
-class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
+class UInfoLoader(activity: Activity, private val data: PackData.Identifier<Unit>, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
     private val weakActivity: WeakReference<Activity> = WeakReference(activity)
     private val names = ArrayList<String>()
     private val nformid = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
@@ -54,21 +54,24 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
     private var stopper = Object()
 
     init {
-        val p = Pack.map[pid]
         val ac = weakActivity.get()
 
-        if(p != null && ac != null) {
-            val fs = p.us.ulist[id].forms
+        if(ac != null) {
+            val u = data.get()
 
-            if(fs != null) {
-                for(n in fs.indices) {
-                    if(n in 0..2) {
-                        nform.add(ac.getString(nformid[n]))
-                    } else {
-                        if(Locale.getDefault().language == "en")
-                            nform.add(Interpret.numberWithExtension(n+1, Locale.getDefault().language))
-                        else
-                            nform.add(ac.getString(R.string.unit_info_forms).replace("_", (n+1).toString()))
+            if(u != null) {
+                val fs = u.forms
+
+                if(fs != null) {
+                    for(n in fs.indices) {
+                        if(n in 0..2) {
+                            nform.add(ac.getString(nformid[n]))
+                        } else {
+                            if(Locale.getDefault().language == "en")
+                                nform.add(Interpret.numberWithExtension(n+1, Locale.getDefault().language))
+                            else
+                                nform.add(ac.getString(R.string.unit_info_forms).replace("_", (n+1).toString()))
+                        }
                     }
                 }
             }
@@ -77,14 +80,13 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
     override fun onPreExecute() {
         val activity = weakActivity.get() ?: return
-
-        val p = Pack.map[pid] ?: return
+        val u = data.get() ?: return
 
         val fruittext = activity.findViewById<TextView>(R.id.cfinftext)
         val fruitpage: ViewPager = activity.findViewById(R.id.catfruitpager)
         val anim = activity.findViewById<Button>(R.id.animanim)
 
-        if (p.us.ulist[id].info == null || p.us.ulist[id].info.evo == null) {
+        if (u.info?.evo == null) {
             fruitpage.visibility = View.GONE
             fruittext.visibility = View.GONE
             anim.visibility = View.GONE
@@ -96,11 +98,10 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
         val activity = weakActivity.get() ?: return null
 
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val u = data.get() ?: return null
 
-        val p = Pack.map[pid] ?: return null
-
-        for (i in p.us.ulist[id].forms.indices) {
-            var name = MultiLangCont.FNAME.getCont(p.us.ulist[id].forms[i]) ?: p.us.ulist[id].forms[i].name
+        for (i in u.forms.indices) {
+            var name = MultiLangCont.get(u.forms[i]) ?: u.forms[i].name
 
             if (name == null)
                 name = ""
@@ -125,19 +126,19 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
-                table = TableTab(fm, tabs.tabCount, id, nform.toTypedArray())
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
+                table = TableTab(fm, tabs.tabCount, nform.toTypedArray())
+                explain = ExplanationTab(fm, tabs.tabCount, nform.toTypedArray())
             } else {
-                unitinfRecycle = UnitinfRecycle(activity, names, p.us.ulist[id].forms, pid, id)
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
+                unitinfRecycle = UnitinfRecycle(activity, names, u.forms, data)
+                explain = ExplanationTab(fm, tabs.tabCount, nform.toTypedArray())
             }
         } else {
             if (shared.getBoolean("Lay_Port", true)) {
-                table = TableTab(fm, tabs.tabCount, id, nform.toTypedArray())
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
+                table = TableTab(fm, tabs.tabCount, nform.toTypedArray())
+                explain = ExplanationTab(fm, tabs.tabCount, nform.toTypedArray())
             } else {
-                unitinfRecycle = UnitinfRecycle(activity, names, p.us.ulist[id].forms, pid, id)
-                explain = ExplanationTab(fm, tabs.tabCount, id, nform.toTypedArray())
+                unitinfRecycle = UnitinfRecycle(activity, names, u.forms, data)
+                explain = ExplanationTab(fm, tabs.tabCount, nform.toTypedArray())
             }
         }
         publishProgress(0)
@@ -181,8 +182,8 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
             true
         }
         val fruitpage: ViewPager = activity.findViewById(R.id.catfruitpager)
-        if (p.us.ulist[id].info.evo != null) {
-            fruitpage.adapter = DynamicFruit(activity, id)
+        if (u.info.evo != null) {
+            fruitpage.adapter = DynamicFruit(activity, data)
             fruitpage.offscreenPageLimit = 1
         }
         return null
@@ -212,9 +213,9 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
             1 -> {
                 val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
-                val p = Pack.map[pid] ?: return
+                val u = data.get() ?: return
 
-                for (i in p.us.ulist[id].forms.indices) {
+                for (i in u.forms.indices) {
                     tabs.addTab(tabs.newTab().setText(nform[i]))
                 }
 
@@ -268,18 +269,18 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUinfo(activity: Activity, tabs: TabLayout) {
-        val p = Pack.map[pid] ?: return
+        val u = data.get() ?: return
 
         val tablePager: ViewPager = activity.findViewById(R.id.unitinftable)
 
         tablePager.adapter = table
-        tablePager.offscreenPageLimit = p.us.ulist[id].forms.size
+        tablePager.offscreenPageLimit = u.forms.size
         tablePager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
         tabs.setupWithViewPager(tablePager)
 
         val viewPager: ViewPager = activity.findViewById(R.id.unitinfpager)
         viewPager.adapter = explain
-        viewPager.offscreenPageLimit = p.us.ulist[id].forms.size
+        viewPager.offscreenPageLimit = u.forms.size
         viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -292,13 +293,13 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        if (p.us.ulist[id].info.evo == null)
+        if (u.info.evo == null)
             viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
 
         val view = activity.findViewById<View>(R.id.view)
         val view2 = activity.findViewById<View>(R.id.view2)
         val exp = activity.findViewById<TextView>(R.id.unitinfexp)
-        if (MultiLangCont.FEXP.getCont(p.us.ulist[id].forms[0]) == null) {
+        if (MultiLangCont.getStatic().FEXP.getCont(u.forms[0]) == null) {
             viewPager.visibility = View.GONE
             view.visibility = View.GONE
             view2.visibility = View.GONE
@@ -306,9 +307,9 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
         }
     }
 
-    private inner class TableTab internal constructor(fm: FragmentManager?, var form: Int, var id: Int, var names: Array<String?>) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class TableTab internal constructor(fm: FragmentManager?, var form: Int, var names: Array<String?>) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(i: Int): Fragment {
-            return UnitinfPager.newInstance(i, pid, id, names)
+            return UnitinfPager.newInstance(i, data, names)
         }
 
         override fun getCount(): Int {
@@ -321,9 +322,9 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
 
     }
 
-    private inner class ExplanationTab internal constructor(fm: FragmentManager?, var number: Int, var id: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class ExplanationTab internal constructor(fm: FragmentManager?, var number: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(i: Int): Fragment {
-            return DynamicExplanation.newInstance(i, id, pid, title)
+            return DynamicExplanation.newInstance(i, data, title)
         }
 
         override fun getCount(): Int {
@@ -337,7 +338,7 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
     }
 
     private fun setUinfoR(activity: Activity, tabs: TabLayout) {
-        val p = Pack.map[pid] ?: return
+        val u = data.get() ?: return
 
         val recyclerView: RecyclerView = activity.findViewById(R.id.unitinfrec)
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -348,13 +349,13 @@ class UInfoLoader(private val pid: Int, private val id: Int, activity: Activity,
         viewPager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
         tabs.setupWithViewPager(viewPager)
 
-        if (p.us.ulist[id].info.evo == null)
+        if (u.info.evo == null)
             viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
 
         val view = activity.findViewById<View>(R.id.view)
         val view2 = activity.findViewById<View>(R.id.view2)
         val exp = activity.findViewById<TextView>(R.id.unitinfexp)
-        if (MultiLangCont.FEXP.getCont(p.us.ulist[id].forms[0]) == null) {
+        if (MultiLangCont.getStatic().FEXP.getCont(u.forms[0]) == null) {
             viewPager.visibility = View.GONE
             view.visibility = View.GONE
             view2.visibility = View.GONE

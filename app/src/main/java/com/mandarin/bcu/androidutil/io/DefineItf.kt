@@ -16,6 +16,7 @@ import common.io.OutStream
 import common.system.VImg
 import common.system.files.VFile
 import common.util.anim.AnimCI
+import common.util.stage.Music
 import java.io.*
 import java.util.*
 import java.util.function.Function
@@ -74,6 +75,13 @@ class DefineItf : Itf {
     override fun exit(save: Boolean) {}
 
     override fun prog(str: String) {}
+
+    override fun getMusicLength(f: Music?): Long {
+        f ?: return -1
+
+        val mmr = MediaMetadataRetriever()
+        mmr.setD
+    }
 
     override fun getMusicLength(f: File?): Long {
         f ?: return -1

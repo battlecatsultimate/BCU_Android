@@ -24,8 +24,7 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
 import com.mandarin.bcu.androidutil.stage.asynchs.MapAdder
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.pack.UserProfile
 import common.util.stage.MapColc
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -110,8 +109,8 @@ class MapList : AppCompatActivity() {
                 val resmc = ArrayList<String>()
                 val resposition = ArrayList<Int>()
 
-                for (i in 0 until filter.size()) {
-                    val index = StaticStore.mapcode.indexOf(filter.keyAt(i))
+                for (i in filter.keys) {
+                    val index = StaticStore.mapcode.indexOf(i)
 
                     if (index != -1) {
                         resmc.add(StaticStore.mapcolcname[index])
@@ -163,7 +162,9 @@ class MapList : AppCompatActivity() {
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         try {
-                            var index = StaticStore.mapcode.indexOf(filter.keyAt(position))
+                            val keys = filter.keys.toMutableList()
+
+                            var index = StaticStore.mapcode.indexOf(keys[position])
 
                             if (index == -1)
                                 index = 0
@@ -172,7 +173,8 @@ class MapList : AppCompatActivity() {
 
                             resposition.clear()
 
-                            val resmaplist = filter[filter.keyAt(position)]
+                            val resmaplist = filter[keys[position]]
+
 
                             val mc = if(index < StaticStore.BCmaps) {
                                 MapColc.MAPS[StaticStore.mapcode[index]] ?: return

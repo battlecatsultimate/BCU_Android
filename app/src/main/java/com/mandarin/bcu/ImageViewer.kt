@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
@@ -25,15 +26,16 @@ import com.mandarin.bcu.androidutil.animation.asynchs.UAnimationLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import common.system.fake.FakeImage
-import common.system.files.VFile
-import common.util.Data
-import common.util.anim.ImgCut
-import common.util.pack.Pack
+import common.io.json.JsonDecoder
+import common.pack.PackData
+import common.util.pack.Background
+import common.util.stage.CastleImg
+import common.util.unit.Enemy
+import common.util.unit.Unit
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
-import java.io.File
 import java.io.IOException
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,11 +44,14 @@ class ImageViewer : AppCompatActivity() {
     private val castle = 1
     private val animu = 2
     private val anime = 3
-    private var path: String? = null
+
+    private val skyUpper = 0
+    private val skyBelow = 1
+    private val groundUpper = 2
+    private val groundBelow = 3
+
     private var img = -1
     private var bgnum = -1
-    private var pid = 0
-    private var id = -1
     private var form = -1
 
     @SuppressLint("ClickableViewAccessibility")
@@ -88,16 +93,11 @@ class ImageViewer : AppCompatActivity() {
         setContentView(R.layout.activity_image_viewer)
 
         val result = intent
-        val extra = result.extras
+        val extra = result.extras ?: return
 
-        if (extra != null) {
-            path = extra.getString("Path")
-            img = extra.getInt("Img")
-            bgnum = extra.getInt("BGNum")
-            pid = extra.getInt("PID")
-            id = extra.getInt("ID")
-            form = extra.getInt("Form")
-        }
+        img = extra.getInt("Img")
+        bgnum = extra.getInt("BGNum")
+        form = extra.getInt("Form")
 
         val bck = findViewById<FloatingActionButton>(R.id.imgviewerbck)
         val row = findViewById<TableRow>(R.id.palyrow)
@@ -148,72 +148,30 @@ class ImageViewer : AppCompatActivity() {
 
                 val gh = height.toFloat() * 0.1f
 
-                if (imgcut == 1 || imgcut == 8) {
-                    if(pid == 0) {
-                        val b1 = getImg(b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
-                        val b2 = getImg2(b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
-                        val h = b1.height
-                        val w = b1.width
-                        var i = 0
+                val data = StaticStore.transformIdentifier<Background>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java)) ?: return
 
-                        while (i < 1 + width / w) {
-                            canvas.drawBitmap(b2, w * i.toFloat(), 0f, paint)
-                            canvas.drawBitmap(b1, w * i.toFloat(), h.toFloat(), paint)
-                            i++
-                        }
+                val bg = data.get() ?: return
 
-                        val gshader: Shader = LinearGradient(0f, h.toFloat() * 2, 0f, height.toFloat(), groundUpper, groundBelow, Shader.TileMode.CLAMP)
+                if(bg.top) {
+                    val b1 = getImg(bg, b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
+                    val b2 = getImg2(bg, b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
+                    val h = b1.height
+                    val w = b1.width
+                    var i = 0
 
-                        paint.shader = gshader
-
-                        canvas.drawRect(RectF(0f, h.toFloat() * 2, width.toFloat(), height.toFloat()), paint)
-                    } else {
-                        val p = Pack.map[pid] ?: return
-                        val bg = p.bg[bgnum] ?: return
-
-                        if(bg.top) {
-                            val b1 = getImg(b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
-                            val b2 = getImg2(b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
-                            val h = b1.height
-                            val w = b1.width
-                            var i = 0
-
-                            while (i < 1 + width / w) {
-                                canvas.drawBitmap(b2, w * i.toFloat(), 0f, paint)
-                                canvas.drawBitmap(b1, w * i.toFloat(), h.toFloat(), paint)
-                                i++
-                            }
-
-                            val gshader: Shader = LinearGradient(0f, h.toFloat() * 2, 0f, height.toFloat(), groundUpper, groundBelow, Shader.TileMode.CLAMP)
-
-                            paint.shader = gshader
-
-                            canvas.drawRect(RectF(0f, h.toFloat() * 2, width.toFloat(), height.toFloat()), paint)
-                        } else {
-                            val b1 = getImg(b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
-                            val h = b1.height
-                            val w = b1.width
-                            var i = 0
-
-                            while (i < 1 + width / w) {
-                                canvas.drawBitmap(b1, w * i.toFloat(), h.toFloat(), paint)
-                                i++
-                            }
-
-                            val shader: Shader = LinearGradient(0f, 0f, 0f, h.toFloat(), skyUpper, skyBelow, Shader.TileMode.CLAMP)
-
-                            paint.shader = shader
-                            canvas.drawRect(RectF(0f, 0f, width.toFloat(), h.toFloat()), paint)
-
-                            val gshader: Shader = LinearGradient(0f, h.toFloat() * 2, 0f, height.toFloat(), groundUpper, groundBelow, Shader.TileMode.CLAMP)
-
-                            paint.shader = gshader
-
-                            canvas.drawRect(RectF(0f, h.toFloat() * 2, width.toFloat(), height.toFloat()), paint)
-                        }
+                    while (i < 1 + width / w) {
+                        canvas.drawBitmap(b2, w * i.toFloat(), 0f, paint)
+                        canvas.drawBitmap(b1, w * i.toFloat(), h.toFloat(), paint)
+                        i++
                     }
+
+                    val gshader: Shader = LinearGradient(0f, h.toFloat() * 2, 0f, height.toFloat(), getColorData(bg, groundUpper), getColorData(bg, groundBelow), Shader.TileMode.CLAMP)
+
+                    paint.shader = gshader
+
+                    canvas.drawRect(RectF(0f, h.toFloat() * 2, width.toFloat(), height.toFloat()), paint)
                 } else {
-                    val b1 = getImg(b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
+                    val b1 = getImg(bg, b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
                     val h = b1.height
                     val w = b1.width
                     var i = 0
@@ -223,12 +181,12 @@ class ImageViewer : AppCompatActivity() {
                         i++
                     }
 
-                    val shader: Shader = LinearGradient(0f, 0f, 0f, h.toFloat(), skyUpper, skyBelow, Shader.TileMode.CLAMP)
+                    val shader: Shader = LinearGradient(0f, 0f, 0f, h.toFloat(), getColorData(bg, skyUpper), getColorData(bg, skyBelow), Shader.TileMode.CLAMP)
 
                     paint.shader = shader
                     canvas.drawRect(RectF(0f, 0f, width.toFloat(), h.toFloat()), paint)
 
-                    val gshader: Shader = LinearGradient(0f, h.toFloat() * 2, 0f, height.toFloat(), groundUpper, groundBelow, Shader.TileMode.CLAMP)
+                    val gshader: Shader = LinearGradient(0f, h.toFloat() * 2, 0f, height.toFloat(), getColorData(bg, groundUpper), getColorData(bg, groundBelow), Shader.TileMode.CLAMP)
 
                     paint.shader = gshader
 
@@ -248,10 +206,10 @@ class ImageViewer : AppCompatActivity() {
                     if (item.itemId == R.id.anim_option_png) {
                         val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                         val date = Date()
-                        val name = if(pid == 0) {
+                        val name = if(data.pack == PackData.Identifier.DEF) {
                             dateFormat.format(date) + "-BG-" + bgnum
                         } else {
-                            dateFormat.format(date) + "-BG-"+ Data.hex(pid)+"-"+bgnum
+                            dateFormat.format(date) + "-BG-"+ data.pack +"-"+bgnum
                         }
 
                         try {
@@ -289,17 +247,11 @@ class ImageViewer : AppCompatActivity() {
                 prog.visibility = View.GONE
                 forms.visibility = View.GONE
 
-                val b2 = if(path != null) {
-                    Objects.requireNonNull(VFile.getFile(path)).data.img.bimg() as Bitmap
-                } else {
-                    val p = Pack.map[pid] ?: return
+                val data = StaticStore.transformIdentifier<CastleImg>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java)) ?: return
 
-                    val cs = p.cs[bgnum]?.bimg?.bimg() ?: return
+                val c = data.get() ?: return
 
-                    cs as Bitmap
-                }
-
-                val bd = BitmapDrawable(resources, b2)
+                val bd = BitmapDrawable(resources, c.img.img.bimg() as Bitmap)
 
                 bd.isFilterBitmap = true
                 bd.setAntiAlias(true)
@@ -324,262 +276,63 @@ class ImageViewer : AppCompatActivity() {
                 img.setImageBitmap(castle)
             }
 
-            animu -> UAnimationLoader(this, pid, id, form).execute()
-            anime -> EAnimationLoader(this, pid, id).execute()
+            animu -> UAnimationLoader(this, StaticStore.transformIdentifier<Unit>(extra.getString("Data")), form).execute()
+            anime -> EAnimationLoader(this, StaticStore.transformIdentifier<Enemy>(extra.getString("Data"))).execute()
         }
     }
 
-    private val data: Array<String>?
-        get() {
-            try {
-                if(pid != 0)
-                    return null
-
-                val datapath = "./org/battle/bg/bg.csv"
-                val qs = VFile.getFile(datapath).data.readLine()
-
-                for (s in qs) {
-                    val data = s.trim { it <= ' ' }.split(",").toTypedArray()
-
-                    try {
-                        if (data[0].toInt() == bgnum)
-                            return data
-                    } catch (ignored: Exception) {
-                    }
-                }
-                return null
-            } catch(e : Exception) {
-                ErrorLogWriter.writeLog(e, StaticStore.upload, this)
-                StaticStore.showShortMessage(this,getString(R.string.err_file_not_exist).replace("_","bg.csv"))
-
-                return null
-            }
-        }
-
-    private fun getImg(height: Int, param: Float): Bitmap {
-        val data = data
-
-        if(data == null && pid == 0) {
-            return StaticStore.empty(this, 100f, 100f)
-        }
-
-        val imgPath: String
-
-        imgPath = if(data != null) {
-            if (data[13].toInt() == 8)
-                "./org/battle/bg/bg0" + 1 + ".imgcut"
-            else
-                "./org/battle/bg/bg0" + data[13] + ".imgcut"
-        } else {
-            "./org/battle/bg/bg0" + 1 + ".imgcut"
-        }
-
-        val img = ImgCut.newIns(imgPath)
-        val f = File(path ?: "")
-
+    private fun getImg(bg: Background, height: Int, param: Float): Bitmap {
         return try {
-            val png = if(f.absolutePath == "/") {
-                val p = Pack.map[pid]
-
-                if(p != null) {
-                    p.bg[bgnum].img.bimg
-                } else {
-                    return StaticStore.empty(this, 100f, 100f)
-                }
-            } else {
-                FakeImage.read(f)
-            }
-
-            val imgs = img.cut(png)
-            val b = imgs[0].bimg() as Bitmap
+            val b = bg.parts(0).bimg() as Bitmap
             val ratio = height.toFloat() / param / b.height.toFloat()
 
             StaticStore.getResizebp(b, this, ratio * b.width, ratio * b.height)
-        } catch (e: IOException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload, this)
             StaticStore.empty(this, 100f, 100f)
         }
     }
 
-    private fun getImg2(height: Int, param: Float): Bitmap {
-        val data = data
-        val imgPath: String
-
-        if(data == null && pid == 0) {
-            return StaticStore.empty(this, 100f, 100f)
-        }
-
-        imgPath = if(data != null) {
-            if (data[13].toInt() == 8)
-                "./org/battle/bg/bg0" + 1 + ".imgcut"
-            else
-                "./org/battle/bg/bg0" + data[13] + ".imgcut"
-        } else {
-            "./org/battle/bg/bg0" + 1 + ".imgcut"
-        }
-
-        val img = ImgCut.newIns(imgPath)
-
-        val f = File(path ?: "")
-
+    private fun getImg2(bg: Background, height: Int, param: Float): Bitmap {
         return try {
-            val png = if(f.absolutePath != "/") {
-                FakeImage.read(f)
-            } else {
-                val p = Pack.map[pid]
-
-                if(p != null) {
-                    p.bg[bgnum].img.bimg
-                } else {
-                    return StaticStore.empty(this, 100f, 100f)
-                }
-            }
-
-            val imgs = img.cut(png)
-            val b = imgs[20].bimg() as Bitmap
+            val b = bg.parts(20).bimg() as Bitmap
             val ratio = height.toFloat() / param / b.height.toFloat()
 
             StaticStore.getResizebp(b, this, ratio * b.width.toFloat(), ratio * b.height.toFloat())
-        } catch (e: IOException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload, this)
             StaticStore.empty(this, 100f, 100f)
         }
     }
 
-    private val imgcut: Int
-        get() {
-            if(pid == 0) {
-                val data = data ?: return -1
+    private fun getColorData(bg: Background, mode: Int) : Int {
+        bg.cs ?: return 0
 
-                return data[13].toInt()
-            } else {
-                return 1
+        if(bg.cs.isEmpty())
+            return 0
+
+        return when(mode) {
+            skyUpper -> {
+                val rgb = bg.cs[0] ?: return 0
+                Color.rgb(rgb[0], rgb[1], rgb[2])
+            }
+            skyBelow -> {
+                val rgb = bg.cs[1] ?: return 0
+                Color.rgb(rgb[0], rgb[1], rgb[2])
+            }
+            groundUpper -> {
+                val rgb = bg.cs[2] ?: return 0
+                Color.rgb(rgb[0], rgb[1], rgb[2])
+            }
+            groundBelow -> {
+                val rgb = bg.cs[3] ?: return 0
+                Color.rgb(rgb[0], rgb[1], rgb[2])
+            }
+            else -> {
+                0
             }
         }
-
-    private val skyUpper: Int
-        get() {
-            val data = data
-
-            if(data != null) {
-                val r = data[1].toInt()
-                val g = data[2].toInt()
-                val b = data[3].toInt()
-
-                return Color.rgb(r, g, b)
-            } else {
-                val p = Pack.map[pid]
-
-                return if(p == null) {
-                    0
-                } else {
-                    val bg = p.bg[bgnum]
-
-                    bg.cs ?: return 0
-
-                    if(bg.cs.isEmpty())
-                        return 0
-
-                    val rgb = bg.cs[0] ?: return 0
-
-                    Color.rgb(rgb[0], rgb[1], rgb[2])
-                }
-            }
-        }
-
-    private val skyBelow: Int
-        get() {
-            val data = data
-
-            if(data != null) {
-                val r = data[4].toInt()
-                val g = data[5].toInt()
-                val b = data[6].toInt()
-
-                return Color.rgb(r, g, b)
-            } else {
-                val p = Pack.map[pid]
-
-                return if(p == null) {
-                    0
-                } else {
-                    val bg = p.bg[bgnum]
-
-                    bg.cs ?: return 0
-
-                    if(1 >= bg.cs.size)
-                        return 0
-
-                    val rgb = bg.cs[1] ?: return 0
-
-                    Color.rgb(rgb[0], rgb[1], rgb[2])
-                }
-            }
-        }
-
-    private val groundUpper: Int
-        get() {
-            val data = data
-
-            if(data != null) {
-                val r = data[7].toInt()
-                val g = data[8].toInt()
-                val b = data[9].toInt()
-
-                println(data.contentDeepToString())
-
-                return Color.rgb(r, g, b)
-            } else {
-                val p = Pack.map[pid]
-
-                return if(p == null) {
-                    0
-                } else {
-                    val bg = p.bg[bgnum]
-
-                    bg.cs ?: return 0
-
-                    if(2 >= bg.cs.size)
-                        return 0
-
-                    val rgb = bg.cs[2] ?: return 0
-
-                    Color.rgb(rgb[0], rgb[1], rgb[2])
-                }
-            }
-        }
-
-    private val groundBelow: Int
-        get() {
-            val data = data
-
-            if(data != null) {
-                val r = data[10].toInt()
-                val g = data[11].toInt()
-                val b = data[12].toInt()
-
-                return Color.rgb(r, g, b)
-            } else {
-                val p = Pack.map[pid]
-
-                return if(p == null) {
-                    0
-                } else {
-                    val bg = p.bg[bgnum]
-
-                    bg.cs ?: return 0
-
-                    if(3 >= bg.cs.size)
-                        return 0
-
-                    val rgb = bg.cs[3] ?: return 0
-
-                    println(rgb.contentToString())
-
-                    Color.rgb(rgb[0], rgb[1], rgb[2])
-                }
-            }
-        }
+    }
 
     override fun onBackPressed() {
         val bck = findViewById<FloatingActionButton>(R.id.imgviewerbck)

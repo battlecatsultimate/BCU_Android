@@ -9,9 +9,10 @@ import com.mandarin.bcu.androidutil.AnimatedGifEncoder
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.keepDoing
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import common.util.Data
+import common.pack.PackData
+import common.util.unit.Enemy
+import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
@@ -19,22 +20,20 @@ import java.util.*
 
 class GIFAsync : AsyncTask<Void?, Void?, Void?> {
     private val context: WeakReference<Activity?>
-    private var pid = 0
-    private var id = -1
+    private val data: PackData.Identifier<*>
     private var form = -1
     private var done = false
 
     private var result = ""
 
-    constructor(context: Activity?, pid: Int, id: Int, form: Int) {
-        this.pid = pid
-        this.id = id
+    constructor(context: Activity?, data: PackData.Identifier<*>, form: Int) {
         this.form = form
         this.context = WeakReference(context)
+        this.data = data
     }
 
-    constructor(context: Activity?, id: Int) {
-        this.id = id
+    constructor(context: Activity?, data: PackData.Identifier<*>) {
+        this.data = data
         this.context = WeakReference(context)
     }
 
@@ -47,14 +46,16 @@ class GIFAsync : AsyncTask<Void?, Void?, Void?> {
         val date = Date()
         val name: String
 
-        name = if (id != -1) {
-            if (form != -1) {
-                dateFormat.format(date) + "-U-" + Data.hex(pid) + "-" + id + "-" + form
-            } else {
-                dateFormat.format(date) + "-E-" + id
-            }
+        val d = if(form != -1) {
+            StaticStore.transformIdentifier(data, Unit::class.java)
         } else {
-            dateFormat.format(date)
+            StaticStore.transformIdentifier(data, Enemy::class.java)
+        } ?: return null
+
+        name = if (form != -1) {
+            dateFormat.format(date) + "-U-" + d.pack + "-" + d.id + "-" + form
+        } else {
+            dateFormat.format(date) + "-E-" + d.id
         }
 
         if(keepDoing) {

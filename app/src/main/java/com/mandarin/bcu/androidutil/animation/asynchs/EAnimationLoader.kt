@@ -27,14 +27,15 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import common.util.pack.Pack
+import common.pack.PackData
+import common.util.unit.Enemy
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EAnimationLoader(activity: Activity, private val pid: Int, private val id: Int) : AsyncTask<Void?, Int?, Void?>() {
+class EAnimationLoader(activity: Activity, private val data: PackData.Identifier<Enemy>) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
 
@@ -88,7 +89,7 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                 val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
                 val option: FloatingActionButton = activity.findViewById(R.id.imgvieweroption)
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-                val cView = AnimationCView(activity, pid, id, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
+                val cView = AnimationCView(activity, data, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
                 cView.size = StaticStore.dptopx(1f, activity).toFloat() / 1.25f
                 val detector = ScaleGestureDetector(activity, ScaleListener(cView))
                 cView.setOnTouchListener(object : OnTouchListener {
@@ -121,8 +122,7 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                 val name: MutableList<String?> = ArrayList()
                 var i = 0
 
-                val pack = Pack.map[pid] ?: return
-                val e = pack.es[id]
+                val e = data.get() ?: return
 
                 while (i < e.anim.anims.size) {
                     name.add(activity.getString(animS[i]))
@@ -136,7 +136,7 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
-                            cView.anim!!.changeAnim(position)
+                            cView.anim!!.changeAnim(StaticStore.getAnimType(position))
                             controller.max = cView.anim!!.len()
                             controller.progress = 0
                             StaticStore.frame = 0
@@ -188,7 +188,7 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
                 controller.progress = StaticStore.frame
                 anims.setSelection(StaticStore.animposition)
-                cView.anim!!.changeAnim(StaticStore.animposition)
+                cView.anim!!.changeAnim(StaticStore.getAnimType(StaticStore.animposition))
                 cView.anim!!.setTime(StaticStore.frame)
                 controller.max = cView.anim!!.len()
                 val popup = PopupMenu(activity, option)
@@ -213,7 +213,11 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = dateFormat.format(date) + "-E-" + id
+                            val name2 = if(data.pack == PackData.Identifier.DEF) {
+                                "${dateFormat.format(date)}-E-Default-${StaticStore.trio(data.id)}"
+                            } else {
+                                "${dateFormat.format(date)}-E-${data.pack}-${StaticStore.trio(data.id)}"
+                            }
 
                             try {
                                 val path = MediaScanner.putImage(activity, b, name2)
@@ -240,7 +244,11 @@ class EAnimationLoader(activity: Activity, private val pid: Int, private val id:
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name3 = dateFormat.format(date) + "-E-Trans-" + id
+                            val name3 = if(data.pack == PackData.Identifier.DEF) {
+                                "${dateFormat.format(date)}-E-Trans-Default-${StaticStore.trio(data.id)}"
+                            } else {
+                                "${dateFormat.format(date)}-E-Trans-${data.pack}-${StaticStore.trio(data.id)}"
+                            }
 
                             try {
                                 val path = MediaScanner.putImage(activity, b, name3)

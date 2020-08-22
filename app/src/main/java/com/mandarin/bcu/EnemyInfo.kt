@@ -14,13 +14,17 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader
 import com.mandarin.bcu.androidutil.io.DefineItf
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.io.json.JsonDecoder
+import common.io.json.JsonEncoder
+import common.pack.PackData
+import common.util.lang.MultiLangCont
+import common.util.unit.Enemy
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -81,14 +85,12 @@ class EnemyInfo : AppCompatActivity() {
 
         if (extra != null) {
 
-            val id = extra.getInt("ID")
-            val pid = extra.getInt("PID")
+            val data = JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java) as PackData.Identifier<Enemy>
+            val pid = extra.getString("PID")
             val multi = extra.getInt("Multiply")
             val amulti = extra.getInt("AMultiply")
 
-            val p = Pack.map[pid] ?: return
-
-            title.text = MultiLangCont.ENAME.getCont(p.es[id]) ?: p.es[id]?.name
+            title.text = MultiLangCont.get(data.get()) ?: data.get().name
 
             val eanim = findViewById<Button>(R.id.eanimanim)
 
@@ -97,15 +99,15 @@ class EnemyInfo : AppCompatActivity() {
                     val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
                     intent.putExtra("Img", 3)
                     intent.putExtra("PID", pid)
-                    intent.putExtra("ID", id)
+                    intent.putExtra("Data", JsonEncoder.encode(data).toString())
                     startActivity(intent)
                 }
             })
 
             if (multi != 0)
-                EInfoLoader(this, id, multi, amulti, pid).execute()
+                EInfoLoader(this, multi, amulti, data).execute()
             else
-                EInfoLoader(this, id, pid).execute()
+                EInfoLoader(this, data).execute()
         }
     }
 

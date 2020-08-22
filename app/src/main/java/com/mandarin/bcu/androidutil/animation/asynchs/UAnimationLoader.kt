@@ -27,15 +27,15 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.unit.Definer
-import common.util.Data
-import common.util.pack.Pack
+import common.pack.PackData
+import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class UAnimationLoader(activity: Activity, private val pid: Int, private val id: Int, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
+open class UAnimationLoader(activity: Activity, private val data: PackData.Identifier<Unit>, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
 
@@ -91,7 +91,7 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                 val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
                 val option: FloatingActionButton = activity.findViewById(R.id.imgvieweroption)
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-                val cView = AnimationCView(activity, pid, id, StaticStore.formposition, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
+                val cView = AnimationCView(activity, data, StaticStore.formposition, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
                 cView.size = StaticStore.dptopx(1f, activity).toFloat() / 1.25f
                 val detector = ScaleGestureDetector(activity, ScaleListener(cView))
                 cView.setOnTouchListener(object : OnTouchListener {
@@ -124,19 +124,24 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                 cView.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 cViewlayout.addView(cView)
                 forms.setSelection(form)
-                val pack = Pack.map[pid] ?: Pack.def
+                val u = data.get() ?: return
                 val name: MutableList<String?> = ArrayList()
                 run {
                     var i = 0
-                    while (i < pack.us.ulist[id].forms[0].anim.anims.size) {
+                    while (i < u.forms[0].anim.anims.size) {
                         name.add(activity.getString(animS[i]))
                         i++
                     }
                 }
                 val ids: MutableList<String> = ArrayList()
                 var i = 0
-                while (i < pack.us.ulist[id].forms.size) {
-                    ids.add(Data.hex(pid)+"-$id-$i")
+                while (i < u.forms.size) {
+                    val n = if(data.pack == PackData.Identifier.DEF) {
+                        "Default-${data.id }-${StaticStore.trio(i)}"
+                    } else {
+                        "${data.pack}-${data.id}-${StaticStore.trio(i)}"
+                    }
+                    ids.add(n)
                     i++
                 }
                 val adapter1 = ArrayAdapter(activity, R.layout.spinneradapter, ids)
@@ -147,7 +152,7 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, ids: Long) {
                         if (StaticStore.formposition != position) {
                             StaticStore.formposition = position
-                            cView.anim = pack.us.ulist[id].forms[position].getEAnim(anims.selectedItemPosition)
+                            cView.anim = u.forms[position].getEAnim(StaticStore.getAnimType(anims.selectedItemPosition))
 
                             val max = cView.anim?.len() ?: 2
 
@@ -164,7 +169,7 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
-                            cView.anim!!.changeAnim(position)
+                            cView.anim!!.changeAnim(StaticStore.getAnimType(position))
 
                             val max = cView.anim?.len() ?: 2
 
@@ -218,7 +223,7 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
-                cView.anim!!.changeAnim(StaticStore.animposition)
+                cView.anim!!.changeAnim(StaticStore.getAnimType(StaticStore.animposition))
                 cView.anim!!.setTime(StaticStore.frame)
 
                 val max = cView.anim?.len() ?: 2
@@ -246,7 +251,11 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = dateFormat.format(date) + "-U-" + Data.hex(pid) + "-" + id + "-" + form
+                            val name2 = if(data.pack == PackData.Identifier.DEF) {
+                                dateFormat.format(date) + "-U-" + "Default" + "-" + StaticStore.trio(data.id) + "-" + form
+                            } else {
+                                "${dateFormat.format(date)}-U-${data.pack}-${StaticStore.trio(data.id)}-$form"
+                            }
 
                             try {
                                 val path = MediaScanner.putImage(activity, b, name2)
@@ -273,7 +282,11 @@ open class UAnimationLoader(activity: Activity, private val pid: Int, private va
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name1 = dateFormat.format(date) + "-U-Trans-" + Data.hex(pid) + "-" + id + "-" + form
+                            val name1 = if(data.pack == PackData.Identifier.DEF) {
+                                dateFormat.format(date) + "-U-Trans-" + "Default" + "-" + StaticStore.trio(data.id) + "-" + form
+                            } else {
+                                "${dateFormat.format(date)}-U-Trans-${data.pack}-${StaticStore.trio(data.id)}-$form"
+                            }
 
                             try {
                                 val path = MediaScanner.putImage(activity, b, name1)

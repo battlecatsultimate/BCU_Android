@@ -24,7 +24,9 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonParser;
 import com.mandarin.bcu.R;
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,11 +57,14 @@ import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.io.OutStream;
-import common.system.MultiLangCont;
+import common.io.json.JsonDecoder;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.system.fake.FakeImage;
 import common.util.Data;
+import common.util.anim.AnimU;
 import common.util.anim.ImgCut;
-import common.util.pack.Pack;
+import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
@@ -214,8 +219,7 @@ public class StaticStore {
      **/
     public static int[] bcMapNames = {R.string.stage_sol, R.string.stage_event, R.string.stage_collabo, R.string.stage_eoc, R.string.stage_ex, R.string.stage_dojo, R.string.stage_heavenly, R.string.stage_ranking, R.string.stage_challenge, R.string.stage_uncanny, R.string.stage_night, R.string.stage_baron, R.string.stage_enigma, R.string.stage_CA};
     public static List<String> mapcolcname = new ArrayList<>();
-    public static Map<Integer, MapColc> map = null;
-    public static List<Integer> mapcode = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 6, 7, 11, 12, 13, 14, 24, 25, 27));
+    public static List<String> mapcode = new ArrayList<String>(Arrays.asList("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027"));
     public static int BCmaps = mapcode.size();
     public static Bitmap[] eicons = null;
     public static long maplistClick = SystemClock.elapsedRealtime();
@@ -235,7 +239,7 @@ public class StaticStore {
     public static int bhop = -1;
     public static int stgcontin = -1;
     public static int stgboss = -1;
-    public static SparseArray<SparseArray<ArrayList<Integer>>> filter = null;
+    public static Map<String, SparseArray<ArrayList<Integer>>> filter = null;
 
     /**
      * Variables for Medal
@@ -361,7 +365,6 @@ public class StaticStore {
         durations.clear();
 
         mapcolcname = new ArrayList<>();
-        map = null;
         eicons = null;
         maplistClick = SystemClock.elapsedRealtime();
         stglistClick = SystemClock.elapsedRealtime();
@@ -409,7 +412,7 @@ public class StaticStore {
         enableGIF = false;
         keepDoing = true;
 
-        CommonStatic.clearData();
+        //TODO CommonStatic.clearData();
         filterReset();
         stgFilterReset();
     }
@@ -434,7 +437,7 @@ public class StaticStore {
     /**
      * Gets number of enemies from file
      */
-    public static void getEnemynumber(Context c) {
+    public static void getEnemyNumber(Context c) {
         String empath = StaticStore.getExternalPath(c)+"org/enemy/";
 
         File f = new File(empath);
@@ -609,16 +612,16 @@ public class StaticStore {
 
         if (lan == 0) {
             language = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
-            CommonStatic.Lang.lang = Arrays.asList(lang).indexOf(language) - 1;
+            CommonStatic.getConfig().lang = Arrays.asList(lang).indexOf(language) - 1;
             System.out.println("Auto Set : " + language);
         } else {
             System.out.println(lang[lan]);
-            CommonStatic.Lang.lang = lan - 1;
+            CommonStatic.getConfig().lang = lan - 1;
         }
-        System.out.println(CommonStatic.Lang.lang);
+        System.out.println(CommonStatic.getConfig().lang);
 
-        if (CommonStatic.Lang.lang >= 4 || CommonStatic.Lang.lang < 0)
-            CommonStatic.Lang.lang = 0;
+        if (CommonStatic.getConfig().lang >= 4 || CommonStatic.getConfig().lang < 0)
+            CommonStatic.getConfig().lang = 0;
     }
 
     /**
@@ -709,7 +712,7 @@ public class StaticStore {
      * If vectid returns null, then it will generate empty icon.
      */
     public static Bitmap getBitmapFromVector(Context context, int vectid) {
-        Drawable drawable = context.getDrawable(vectid);
+        Drawable drawable = ContextCompat.getDrawable(context, vectid);
 
         if (drawable == null) return empty(context, 100, 100);
 
@@ -802,9 +805,9 @@ public class StaticStore {
 
         OutputStream os = new FileOutputStream(f);
 
-        OutStream out = BasisSet.writeAll();
+        // TODO OutStream out = BasisSet.writeAll();
 
-        out.flush(os);
+        //TODO out.flush(os);
 
         os.close();
     }
@@ -1182,37 +1185,116 @@ public class StaticStore {
         return fullID / 1000;
     }
 
-    public static int getMusicIndex(int fullID) {
-        int pID = getPID(fullID);
-        int mID = getID(fullID);
-
-        Pack p = Pack.map.get(pID);
-
-        if(p == null)
-            return 0;
-
-        for(int i = 0; i < p.ms.getList().size(); i++) {
-            File f = p.ms.getList().get(i);
-
-            String name = f.getName();
-
-            if(name.endsWith(".ogg")) {
-                name = name.replace(".ogg", "");
-
-                if(name.equals(Data.trio(mID))) {
-                    return i;
-                }
-            } else {
-                return 0;
-            }
-        }
-
-        return 0;
-    }
+//    public static int getMusicIndex(int fullID) {
+//        int pID = getPID(fullID);
+//        int mID = getID(fullID);
+//
+//        Pack p = Pack.map.get(pID);
+//
+//        if(p == null)
+//            return 0;
+//
+//        for(int i = 0; i < p.ms.getList().size(); i++) {
+//            File f = p.ms.getList().get(i);
+//
+//            String name = f.getName();
+//
+//            if(name.endsWith(".ogg")) {
+//                name = name.replace(".ogg", "");
+//
+//                if(name.equals(Data.trio(mID))) {
+//                    return i;
+//                }
+//            } else {
+//                return 0;
+//            }
+//        }
+//
+//        return 0;
+//    }
 
     public static boolean isEnglish() {
         String lang = Locale.getDefault().getLanguage();
 
         return !lang.equals("zh") && !lang.equals("ko") && !lang.equals("ja");
+    }
+
+    /**
+     * Get current number of pack including {@link common.pack.PackData.DefPack}
+     * @return number of packs
+     */
+    public static int getPackSize() {
+        return UserProfile.packs().size() + 1;
+    }
+
+    /**
+     * Generate 3 digit formats
+     * @param id ID of specific object
+     * @return If id is 1 for example, it will return 001
+     */
+    public static String trio(int id) {
+        if(id < 0) {
+            return Integer.toString(id);
+        } else if(id < 10) {
+            return "00" + id;
+        } else if(id < 100) {
+            return "0" + id;
+        } else {
+            return Integer.toString(id);
+        }
+    }
+
+    /**
+     * Get list of pack including {@link common.pack.PackData.DefPack}
+     * @return returns list of packs
+     */
+    public static List<PackData> getPacks() {
+        ArrayList<PackData> packs = new ArrayList<>();
+
+        packs.add(UserProfile.getBCData());
+        packs.addAll(UserProfile.packs());
+
+        return packs;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends PackData.Indexable<?>>PackData.Identifier<T> transformIdentifier(PackData.Identifier<?> origin) {
+        try {
+            return (PackData.Identifier<T>) origin;
+        } catch (ClassCastException e) {
+            ErrorLogWriter.Companion.writeDriveLog(e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends PackData.Indexable<?>>PackData.Identifier<T> transformIdentifier(String data) {
+        try {
+            PackData.Identifier<?> id = JsonDecoder.decode(JsonParser.parseString(data), PackData.Identifier.class);
+
+            return (PackData.Identifier<T>) id;
+        } catch (ClassCastException e) {
+            ErrorLogWriter.Companion.writeDriveLog(e);
+            return null;
+        }
+    }
+
+    public static AnimU.UType getAnimType(int mode) {
+        switch (mode) {
+            case 1:
+                return AnimU.UType.IDLE;
+            case 2:
+                return AnimU.UType.ATK;
+            case 3:
+                return AnimU.UType.HB;
+            case 4:
+                return AnimU.UType.BURROW_DOWN;
+            case 5:
+                return AnimU.UType.BURROW_MOVE;
+            case 6:
+                return AnimU.UType.BURROW_UP;
+            default:
+                return AnimU.UType.WALK;
+        }
     }
 }

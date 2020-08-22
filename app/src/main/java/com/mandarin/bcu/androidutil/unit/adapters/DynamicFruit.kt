@@ -10,8 +10,10 @@ import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import common.pack.PackData
+import common.util.unit.Unit
 
-class DynamicFruit(private val activity: Activity, private val id: Int) : PagerAdapter() {
+class DynamicFruit(private val activity: Activity, private val data: PackData.Identifier<Unit>) : PagerAdapter() {
     private val fruits = arrayOfNulls<ImageView>(6)
     private val fruittext = arrayOfNulls<TextView>(6)
     private val cfdesc = arrayOfNulls<TextView>(3)
@@ -24,6 +26,9 @@ class DynamicFruit(private val activity: Activity, private val id: Int) : PagerA
     override fun instantiateItem(group: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(activity)
         val layout = inflater.inflate(R.layout.fruit_table, group, false) as ViewGroup
+
+        val u = data.get() ?: return layout
+
         for (i in fruits.indices) {
             fruits[i] = layout.findViewById(imgid[i])
             fruittext[i] = layout.findViewById(txid[i])
@@ -31,7 +36,7 @@ class DynamicFruit(private val activity: Activity, private val id: Int) : PagerA
         for (i in cfdesc.indices) {
             cfdesc[i] = layout.findViewById(cfdeid[i])
         }
-        val evo = StaticStore.units[id].info.evo
+        val evo = u.info.evo
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             fruits[5]!!.setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[13], activity, 48f))
         } else {
@@ -55,7 +60,7 @@ class DynamicFruit(private val activity: Activity, private val id: Int) : PagerA
             }
             if (exist[i]) fruittext[i]!!.text = evo[i + 1][1].toString() else fruittext[i]!!.text = ""
         }
-        val lines = StaticStore.units[id].info.getExplanation()
+        val lines = u.info.getExplanation()
         for (i in cfdesc.indices) {
             if (i >= lines.size) {
                 cfdesc[i]!!.visibility = View.GONE

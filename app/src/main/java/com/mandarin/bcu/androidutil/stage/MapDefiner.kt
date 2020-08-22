@@ -73,7 +73,7 @@ class MapDefiner {
                     StaticStore.getLang(shared.getInt("Language", 0))
                     ZipLib.init(StaticStore.getExternalPath(context))
                     ZipLib.read(StaticStore.getExternalPath(context))
-                    StaticStore.getEnemynumber(context)
+                    StaticStore.getEnemyNumber(context)
                     ImageBuilder.builder = BMBuilder()
                     DefineItf().init(context)
                     StaticStore.root = 1

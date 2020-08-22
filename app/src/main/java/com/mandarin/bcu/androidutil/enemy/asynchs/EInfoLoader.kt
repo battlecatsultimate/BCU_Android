@@ -25,40 +25,35 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.enemy.adapters.DynamicEmExplanation
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyRecycle
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.pack.PackData
+import common.util.lang.MultiLangCont
+import common.util.unit.Enemy
 import java.lang.ref.WeakReference
 
 class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
     private val weakReference: WeakReference<Activity>
-    private val id: Int
-    private val pid: Int
+    private val data: PackData.Identifier<Enemy>
     private var multi = -1
     private var amulti = -1
 
-    constructor(activity: Activity, id: Int, pid: Int) {
+    constructor(activity: Activity, data: PackData.Identifier<Enemy>) {
         weakReference = WeakReference(activity)
-        this.pid = pid
-        this.id = id
-
-        println(id)
+        this.data = data
     }
 
-    constructor(activity: Activity, id: Int, multi: Int, amulti: Int, pid: Int) {
+    constructor(activity: Activity, multi: Int, amulti: Int, data: PackData.Identifier<Enemy>) {
         weakReference = WeakReference(activity)
-        this.pid = pid
-        this.id = id
         this.multi = multi
         this.amulti = amulti
+        this.data = data
     }
 
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
 
-        val p = Pack.map[pid] ?: return
-        val e = p.es[id]
+        val e = data.get() ?: return
 
-        if (MultiLangCont.EEXP.getCont(e) == null) {
+        if (MultiLangCont.getStatic().EEXP.getCont(e) == null) {
             val view1 = activity.findViewById<View>(R.id.enemviewtop)
             val view2 = activity.findViewById<View>(R.id.enemviewbot)
             val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
@@ -82,16 +77,16 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
         val enemyRecycle: EnemyRecycle
 
         enemyRecycle = if (multi != -1 && amulti != -1)
-            EnemyRecycle(activity, id, multi, amulti, pid)
+            EnemyRecycle(activity, multi, amulti, data)
         else
-            EnemyRecycle(activity, id, pid)
+            EnemyRecycle(activity, data)
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = enemyRecycle
 
         ViewCompat.setNestedScrollingEnabled(recyclerView, false)
 
-        val explain = DynamicEmExplanation(activity, pid, id)
+        val explain = DynamicEmExplanation(activity, data)
 
         val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
 

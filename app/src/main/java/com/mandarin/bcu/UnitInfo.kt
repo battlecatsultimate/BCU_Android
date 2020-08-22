@@ -18,13 +18,16 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader
-import common.util.pack.Pack
+import common.io.json.JsonDecoder
+import common.pack.PackData
+import common.util.unit.Unit
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -145,36 +148,31 @@ class UnitInfo : AppCompatActivity() {
         }
 
         val result = intent
-        val extra = result.extras
+        val extra = result.extras ?: return
 
-        if (extra != null) {
-            val pid = extra.getInt("PID")
-            val id = extra.getInt("ID")
-            val s = GetStrings(this)
+        val data = JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java) as PackData.Identifier<Unit>
+        val s = GetStrings(this)
 
-            val p = Pack.map[pid] ?: return
+        val u = data.get() ?: return
 
-            unittitle.text = s.getTitle(p.us.ulist[id].forms[0])
+        unittitle.text = s.getTitle(u.forms[0])
 
-            val anim = findViewById<Button>(R.id.animanim)
+        val anim = findViewById<Button>(R.id.animanim)
 
-            anim.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    val intent = Intent(this@UnitInfo, ImageViewer::class.java)
+        anim.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@UnitInfo, ImageViewer::class.java)
 
-                    StaticStore.formposition = StaticStore.unittabposition
+                StaticStore.formposition = StaticStore.unittabposition
 
-                    intent.putExtra("Img", 2)
-                    intent.putExtra("PID",pid)
-                    intent.putExtra("ID", id)
-                    intent.putExtra("Form", StaticStore.formposition)
+                intent.putExtra("Img", 2)
+                intent.putExtra("Form", StaticStore.formposition)
 
-                    startActivity(intent)
-                }
-            })
+                startActivity(intent)
+            }
+        })
 
-            UInfoLoader(pid, id,this, supportFragmentManager).execute()
-        }
+        UInfoLoader(this, data, supportFragmentManager).execute()
     }
 
     override fun onBackPressed() {

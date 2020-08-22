@@ -9,11 +9,9 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +19,6 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,16 +32,16 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
-import common.util.Data
+import common.pack.PackData
 import common.util.unit.Form
+import common.util.unit.Unit
 import java.util.*
 
-class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, pid: Int, id: Int) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
+class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, data: PackData.Identifier<Unit>) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
     private val context: Activity?
     private val names: ArrayList<String>
     private val forms: Array<Form>
-    private val pid: Int
-    private val id: Int
+    private val data: PackData.Identifier<Unit>
     private var fs = 0
     private val s: GetStrings
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
@@ -57,15 +54,14 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         this.context = context
         this.names = names
         this.forms = forms
-        this.id = id
-        this.pid = pid
+        this.data = data
 
         s = GetStrings(this.context)
 
         s.talList
 
         color = intArrayOf(
-                getAttributeColor(context, R.attr.TextPrimary)
+                StaticStore.getAttributeColor(context, R.attr.TextPrimary)
         )
     }
 
@@ -75,6 +71,8 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+        val u = data.get() ?: return
+
         val cdlev: TextInputLayout = context!!.findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
@@ -99,7 +97,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             fs = 1
             viewHolder.frse.text = context.getString(R.string.unit_info_sec)
         }
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
         val f = forms[viewHolder.adapterPosition]
         if (f.pCoin == null) {
             viewHolder.unittalen.visibility = View.GONE
@@ -149,7 +147,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
 
         viewHolder.unitname.text = names[i]
-        viewHolder.unitid.text = s.getID(viewHolder, Data.hex(pid)+"-"+number(id))
+        viewHolder.unitid.text = s.getID(viewHolder, StaticStore.trio(u.id.id))
         viewHolder.unithp.text = s.getHP(f, t, f.unit.prefLv, false, pcoins)
         viewHolder.unithb.text = s.getHB(f, false, pcoins)
         viewHolder.unitatk.text = s.getTotAtk(f, t, f.unit.prefLv, false, pcoins)
@@ -196,7 +194,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             StaticStore.showShortMessage(context, R.string.unit_info_copied)
             true
         }
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
         val f = forms[viewHolder.adapterPosition]
         val levels: MutableList<Int> = ArrayList()
         for (j in 1 until f.unit.max + 1) levels.add(j)
@@ -854,20 +852,6 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
-    }
-
     private fun validate(viewHolder: ViewHolder, f: Form, t: Treasure) {
         val level = viewHolder.unitlevel.selectedItem as Int
         val levelp = viewHolder.unitlevelp.selectedItem as Int
@@ -933,25 +917,6 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false)
         } else {
             viewHolder.unitabil.visibility = View.GONE
-        }
-    }
-
-    companion object {
-        private fun getAttributeColor(context: Context, attributeId: Int): Int {
-            val typedValue = TypedValue()
-
-            context.theme.resolveAttribute(attributeId, typedValue, true)
-
-            val colorRes = typedValue.resourceId
-
-            var color = -1
-
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: NotFoundException) {
-                e.printStackTrace()
-            }
-            return color
         }
     }
 }

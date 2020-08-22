@@ -19,8 +19,9 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.pack.PackData
+import common.pack.UserProfile
 import common.util.pack.Background
-import common.util.pack.Pack
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -75,7 +76,7 @@ class BackgroundList : AppCompatActivity() {
 
         pager.removeAllViewsInLayout()
         pager.adapter = BGListTab(supportFragmentManager)
-        pager.offscreenPageLimit = Pack.map.keys.size
+        pager.offscreenPageLimit = StaticStore.getPackSize()
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
         tab.setupWithViewPager(pager)
@@ -119,7 +120,7 @@ class BackgroundList : AppCompatActivity() {
     }
 
     inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val keys: ArrayList<Int>
+        private val keys: ArrayList<String>
 
         init {
             val lit = fm.fragments
@@ -146,16 +147,16 @@ class BackgroundList : AppCompatActivity() {
             return if (position == 0) {
                 "Default"
             } else {
-                val pack = Pack.map[keys[position]]
+                val pack = UserProfile.getUserPack(keys[position])
 
                 if (pack == null) {
-                    keys[position].toString()
+                    keys[position]
                 }
 
-                val name = pack?.name ?: ""
+                val name = pack?.desc?.name ?: ""
 
                 if (name.isEmpty()) {
-                    keys[position].toString()
+                    keys[position]
                 } else {
                     name
                 }
@@ -166,15 +167,19 @@ class BackgroundList : AppCompatActivity() {
             return null
         }
 
-        private fun getExistingPack(): ArrayList<Int> {
-            val keys = Pack.map.keys.toMutableList()
-            val res = ArrayList<Int>()
+        private fun getExistingPack(): ArrayList<String> {
+            val list = ArrayList<PackData>()
 
-            for(k in keys) {
-                val p = Pack.map[k] ?: continue
+            list.add(UserProfile.getBCData())
+            list.addAll(UserProfile.packs())
 
-                if(p.bg.list.isNotEmpty()) {
-                    res.add(k)
+            val res = ArrayList<String>()
+
+            for(k in list) {
+                if(k is PackData.DefPack) {
+                    res.add(PackData.Identifier.DEF)
+                } else if(k is PackData.UserPack && k.bgs.size() != 0) {
+                    res.add(k.desc.id)
                 }
             }
 

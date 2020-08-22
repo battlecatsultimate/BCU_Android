@@ -8,12 +8,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
-import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -22,7 +20,6 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,52 +34,34 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
-import common.system.MultiLangCont
-import common.util.Data
-import common.util.pack.Pack
+import common.pack.PackData
+import common.util.lang.MultiLangCont
 import common.util.unit.Form
+import common.util.unit.Unit
 import java.util.*
 
 class UnitinfPager : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(form: Int, pid:Int, id: Int, names: Array<String?>?): UnitinfPager {
+        fun newInstance(form: Int, data: PackData.Identifier<Unit>, names: Array<String?>?): UnitinfPager {
             val pager = UnitinfPager()
 
             val bundle = Bundle()
 
             bundle.putInt("Form", form)
-            bundle.putInt("PID",pid)
-            bundle.putInt("ID", id)
             bundle.putStringArray("Names", names)
+
+            pager.setData(data)
 
             pager.arguments = bundle
 
             return pager
         }
-
-        private fun getAttributeColor(context: Context?, attributeId: Int): Int {
-            val typedValue = TypedValue()
-
-            context!!.theme.resolveAttribute(attributeId, typedValue, true)
-
-            val colorRes = typedValue.resourceId
-            var color = -1
-
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: NotFoundException) {
-                e.printStackTrace()
-            }
-
-            return color
-        }
     }
 
     private var form = 0
-    private var pid = 0
-    private var uid = 0
     private var fs = 0
+    private lateinit var data: PackData.Identifier<Unit>
     private var s: GetStrings? = null
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
@@ -128,14 +107,12 @@ class UnitinfPager : Fragment() {
         s!!.talList
 
         color = intArrayOf(
-                getAttributeColor(activity, R.attr.TextPrimary)
+                StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
 
         arguments ?: return view
 
         form = arguments!!.getInt("Form")
-        uid = arguments!!.getInt("ID")
-        pid = arguments!!.getInt("PID")
 
         unitabil.isFocusableInTouchMode = false
         unitabil.isFocusable = false
@@ -170,11 +147,11 @@ class UnitinfPager : Fragment() {
             frse.text = activity.getString(R.string.unit_info_sec)
         }
 
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
 
-        val p = Pack.map[pid] ?: return view
+        val u = data.get() ?: return view
 
-        val f = p.us.ulist[uid].forms[form]
+        val f = u.forms[form]
 
         if (f.pCoin == null) {
             unittalen.visibility = View.GONE
@@ -230,7 +207,7 @@ class UnitinfPager : Fragment() {
             Interpret.getProc(activity, f.du, 0, fs)
         }
 
-        var name = MultiLangCont.FNAME.getCont(f) ?: f.name
+        var name = MultiLangCont.get(f) ?: f.name
 
         if (name == null)
             name = ""
@@ -252,7 +229,7 @@ class UnitinfPager : Fragment() {
 
         unitname.text = name
 
-        unitid.text = s!!.getID(form, Data.hex(pid), number(uid))
+        unitid.text = s!!.getID(form, StaticStore.trio(u.id.id))
         unithp.text = s!!.getHP(f, t, f.unit.prefLv, false, pcoinlev)
         unithb.text = s!!.getHB(f, false, pcoinlev)
         unitatk.text = s!!.getTotAtk(f, t, f.unit.prefLv, false, pcoinlev)
@@ -326,11 +303,11 @@ class UnitinfPager : Fragment() {
         for (i in ids.indices)
             pcoins[i] = view.findViewById(ids[i])
 
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
 
-        val p = Pack.map[pid] ?: return
+        val u = data.get() ?: return
 
-        val f = p.us.ulist[uid].forms[form]
+        val f = u.forms[form]
 
         val levels: MutableList<Int> = ArrayList()
 
@@ -968,24 +945,14 @@ class UnitinfPager : Fragment() {
         }
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
-    }
-
     private fun getIndex(spinner: Spinner?, lev: Int): Int {
         var index = 0
         for (i in 0 until spinner!!.count)
             if (lev == spinner.getItemAtPosition(i) as Int) index = i
         return index
+    }
+
+    private fun setData(data: PackData.Identifier<Unit>) {
+        this.data = data
     }
 }

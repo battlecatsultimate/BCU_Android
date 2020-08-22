@@ -1,13 +1,12 @@
 package com.mandarin.bcu.androidutil
 
 import com.mandarin.bcu.util.Interpret
-import common.system.MultiLangCont
+import common.pack.UserProfile
 import common.util.Data
-import common.util.pack.Pack
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FilterEntity(private var entitynumber: Int, private var entityname: String, private var pid: Int) {
+class FilterEntity(private var entitynumber: Int, private var entityname: String, private var pid: String) {
     companion object {
         fun setLuFilter() : ArrayList<Int> {
             val b0 = ArrayList<Boolean>()
@@ -53,9 +52,9 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                     continue
                 }
 
-                val pid = data[0].toInt()
+                val pid = data[0]
 
-                val p = Pack.map[pid]
+                val p = UserProfile.getPack(pid)
 
                 if(p == null) {
                     b0.add(false)
@@ -68,7 +67,7 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
 
                 val id = data[1].toInt()
 
-                if(id >= p.us.ulist.list.size) {
+                if(id >= p.units.list.size) {
                     b0.add(false)
                     b1.add(false)
                     b2.add(false)
@@ -77,7 +76,7 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                     continue
                 }
 
-                val u = p.us.ulist.list[id]
+                val u = p.units.list[id]
 
                 b0.add(StaticStore.rare.contains(u.rarity.toString()))
 

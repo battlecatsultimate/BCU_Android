@@ -10,13 +10,15 @@ import android.os.AsyncTask
 import com.mandarin.bcu.androidutil.AnimatedGifEncoder
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
+import common.pack.PackData
 import common.system.P
 import common.util.anim.EAnimU
-import common.util.pack.Pack
+import common.util.unit.Enemy
+import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.lang.ref.WeakReference
 
-class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val pid: Int, private val id: Int, private val unit: Boolean) : AsyncTask<Void?, Void?, Void?>() {
+class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val data: PackData.Identifier<*>, private val unit: Boolean) : AsyncTask<Void?, Void?, Void?>() {
     companion object {
         var frame = 0
         var bos = ByteArrayOutputStream()
@@ -67,22 +69,36 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
         if(frame == StaticStore.gifFrame) {
             encoder.finish()
             if(unit) {
-                GIFAsync(this.c.get(),pid, id,StaticStore.formposition).execute()
+                GIFAsync(this.c.get(), data, StaticStore.formposition).execute()
             } else {
-                GIFAsync(this.c.get(),id).execute()
+                GIFAsync(this.c.get(), data).execute()
             }
         }
     }
 
     init {
         if (unit) {
-            val pack = Pack.map[pid] ?: Pack.def
-            this.animU = pack.us.ulist[id].forms[StaticStore.formposition].getEAnim(StaticStore.animposition)
-            this.animU?.setTime(StaticStore.frame)
+            val d = StaticStore.transformIdentifier<Unit>(data)
+
+            if(d != null) {
+                val u = d.get()
+
+                if(u != null) {
+                    this.animU = u.forms[StaticStore.formposition].getEAnim(StaticStore.getAnimType(StaticStore.animposition))
+                    this.animU?.setTime(StaticStore.frame)
+                }
+            }
         } else {
-            val pack = Pack.map[pid] ?: Pack.def
-            this.animU = pack.es[id].getEAnim(StaticStore.animposition)
-            this.animU?.setTime(StaticStore.frame)
+            val d = StaticStore.transformIdentifier<Enemy>(data)
+
+            if(d != null) {
+                val e = d.get()
+
+                if(e != null) {
+                    this.animU = e.getEAnim(StaticStore.getAnimType(StaticStore.animposition))
+                    this.animU?.setTime(StaticStore.frame)
+                }
+            }
         }
         this.w = w
         this.h = h

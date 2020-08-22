@@ -12,16 +12,16 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.asynchs.AddGIF
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
+import common.CommonStatic
+import common.pack.PackData
+import common.pack.UserProfile
 import common.system.P
-import common.util.ImgCore
 import common.util.anim.EAnimU
-import common.util.pack.Pack
+import common.util.unit.Enemy
+import common.util.unit.Unit
 
 @SuppressLint("ViewConstructor")
 class AnimationCView : View {
-    private var pid: Int = 0
-    private var eid: Int
-
     @JvmField
     var anim: EAnimU? = null
     val activity: Activity?
@@ -50,23 +50,23 @@ class AnimationCView : View {
     var posy = 0f
     var sleeptime: Long = 0
     var started = false
+    val data: PackData.Identifier<*>
 
-    constructor(context: Activity?, pid: Int, id: Int, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, data: PackData.Identifier<Unit>, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
         activity = context
         renderer = Renderer()
-        this.pid = pid
-        this.eid = id
         this.form = form
+        this.data = data
 
-        val pack = Pack.map[pid] ?: Pack.def
+        val value = StaticStore.getAnimType(mode)
 
-        anim = pack.us.ulist[eid].forms[form].getEAnim(mode)
+        anim = data.get().forms[form].getEAnim(value)
         anim?.setTime(StaticStore.frame)
         this.textView = textView
         this.seekBar = seekBar
         this.fpsind = fpsind
         this.gif = gif
-        ImgCore.ref = axis
+        CommonStatic.getConfig().ref = axis
         range.style = Paint.Style.STROKE
         if (night) {
             p.color = Color.argb(255, 54, 54, 54)
@@ -82,21 +82,21 @@ class AnimationCView : View {
         StaticStore.keepDoing = true
     }
 
-    constructor(context: Activity?, pid: Int, id: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
-        this.pid = pid
-        val pack = Pack.map[pid] ?: Pack.def
-
-        this.eid = id
-
+    constructor(context: Activity?, data: PackData.Identifier<Enemy>, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+        val e = data.get() ?: UserProfile.getBCData().enemies[0]
         activity = context
-        anim = pack.es[eid].getEAnim(mode)
+
+        val value = StaticStore.getAnimType(mode)
+
+        anim = e.getEAnim(value)
         anim?.setTime(StaticStore.frame)
         this.textView = textView
         this.seekBar = seekBar
         this.fpsind = fpsind
         this.gif = gif
+        this.data = data
         renderer = Renderer()
-        ImgCore.ref = axis
+        CommonStatic.getConfig().ref = axis
         if (night) {
             p.color = 0x363636
         } else {
@@ -122,7 +122,7 @@ class AnimationCView : View {
         }
         if (StaticStore.enableGIF) {
             animP = P.newP((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
-            AddGIF(activity, width, height, animP, size, night, pid, eid, form != -1).execute()
+            AddGIF(activity, width, height, animP, size, night, data, form != -1).execute()
             StaticStore.gifFrame++
         }
         if (StaticStore.play) {
