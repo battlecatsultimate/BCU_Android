@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mandarin.bcu.androidutil.FilterStage
+import com.mandarin.bcu.androidutil.filter.FilterStage
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.filter

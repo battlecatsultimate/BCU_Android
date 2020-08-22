@@ -18,12 +18,10 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionValues
-import com.google.android.material.circularreveal.CircularRevealRelativeLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialFadeThrough
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MediaPrepare
@@ -290,7 +288,9 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                 val stg = stm.list[stage] ?: return
 
-                val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current.sele, intArrayOf(item), 0L)
+                val r = Random(System.currentTimeMillis())
+
+                val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current.sele, intArrayOf(item), r.nextLong())
 
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
@@ -859,7 +859,7 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
         for (v in views) v.visibility = View.VISIBLE
     }
 
-    private inner class ScaleListener internal constructor(private val cView: BattleView) : SimpleOnScaleGestureListener() {
+    private inner class ScaleListener(private val cView: BattleView) : SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             val firstDistance = realFX - previousX
 

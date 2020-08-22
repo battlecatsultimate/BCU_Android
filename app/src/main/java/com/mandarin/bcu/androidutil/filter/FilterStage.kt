@@ -1,8 +1,9 @@
-package com.mandarin.bcu.androidutil
+package com.mandarin.bcu.androidutil.filter
 
 import android.content.Context
 import android.util.SparseArray
 import androidx.core.util.isNotEmpty
+import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.pack.PackData
 import common.util.lang.MultiLangCont

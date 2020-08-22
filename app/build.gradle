@@ -9,7 +9,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
-        versionName "0.14.16"
+        versionName "0.14.19"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "YOU_CANT_FIND_PASSWORD", "\"" + getPassword() + "\""
@@ -44,6 +44,8 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/CONTRIBUTORS.md'
+        exclude 'META-INF/LICENSE.md'
         exclude("META-INF/*.kotlin_module")
     }
 }
