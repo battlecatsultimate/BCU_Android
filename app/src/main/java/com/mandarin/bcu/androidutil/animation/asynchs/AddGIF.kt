@@ -10,15 +10,16 @@ import android.os.AsyncTask
 import com.mandarin.bcu.androidutil.AnimatedGifEncoder
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
-import common.pack.PackData
+import common.pack.Identifier
 import common.system.P
 import common.util.anim.EAnimU
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.lang.ref.WeakReference
 
-class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val data: PackData.Identifier<*>, private val unit: Boolean) : AsyncTask<Void?, Void?, Void?>() {
+class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val data: Identifier<*>, private val unit: Boolean) : AsyncTask<Void?, Void?, Void?>() {
     companion object {
         var frame = 0
         var bos = ByteArrayOutputStream()
@@ -89,12 +90,12 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
                 }
             }
         } else {
-            val d = StaticStore.transformIdentifier<Enemy>(data)
+            val d = StaticStore.transformIdentifier<AbEnemy>(data)
 
             if(d != null) {
                 val e = d.get()
 
-                if(e != null) {
+                if(e != null && e is Enemy) {
                     this.animU = e.getEAnim(StaticStore.getAnimType(StaticStore.animposition))
                     this.animU?.setTime(StaticStore.frame)
                 }

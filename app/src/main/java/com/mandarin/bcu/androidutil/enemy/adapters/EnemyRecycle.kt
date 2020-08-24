@@ -28,8 +28,9 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 
 class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
@@ -41,9 +42,9 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private var s: GetStrings
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray
-    private val data: PackData.Identifier<Enemy>
+    private val data: Identifier<AbEnemy>
 
-    constructor(activity: Activity, data: PackData.Identifier<Enemy>) {
+    constructor(activity: Activity, data: Identifier<AbEnemy>) {
         this.activity = activity
         s = GetStrings(activity)
         color = intArrayOf(
@@ -52,7 +53,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         this.data = data
     }
 
-    constructor(activity: Activity, multi: Int, amulti: Int, data: PackData.Identifier<Enemy>) {
+    constructor(activity: Activity, multi: Int, amulti: Int, data: Identifier<AbEnemy>) {
         this.activity = activity
         this.multi = multi
         this.amulti = amulti
@@ -69,9 +70,13 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        val em = data.get() ?: return
+        val em = Identifier.get(data) ?: return
+        val ac = activity ?: return
 
-        val t = StaticStore.t
+        if(em !is Enemy)
+            return
+
+        val t = BasisSet.current().t()
         val shared = activity!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         if (shared.getBoolean("frame", true)) {
             fs = 0
@@ -113,8 +118,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         val ratio = 32f / 32f
         val img = em.anim?.edi?.img
         var b: Bitmap? = null
-        if (img != null) b = img.bimg() as Bitmap
-        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(b, activity, 85f * ratio, 32f * ratio))
+
+        if (img != null)
+            b = img.bimg() as Bitmap
+
+        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(b, ac, 85f * ratio, 32f * ratio))
         viewHolder.enemhp.text = s.getHP(em, multi)
         viewHolder.enemhb.text = s.getHB(em)
         viewHolder.enemmulti.setText(multi.toString())
@@ -165,8 +173,10 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private fun listeners(viewHolder: ViewHolder) {
         val em = data.get() ?: return
 
-        if (activity == null)
+        if(em !is Enemy)
             return
+
+        val ac = activity ?: return
 
         val t = BasisSet.current().t()
         val aclev: TextInputLayout = activity!!.findViewById(R.id.aclev)
@@ -184,7 +194,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             val clipboardManager = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, viewHolder.name.text)
             clipboardManager.setPrimaryClip(data)
-            StaticStore.showShortMessage(activity, R.string.enem_info_copied)
+            StaticStore.showShortMessage(ac, R.string.enem_info_copied)
             true
         })
         val reset = activity!!.findViewById<Button>(R.id.enemtreareset)
@@ -514,7 +524,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         return 1
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.eneminfname)
         val frse: Button = itemView.findViewById(R.id.eneminffrse)
         val enemid: TextView = itemView.findViewById(R.id.eneminfidr)

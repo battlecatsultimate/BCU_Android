@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -134,9 +133,9 @@ class SearchAbilityAdapter(private val context: Context, private val tool: IntAr
 
             return getDrawable(b)
         } else {
-            val b = StaticStore.img15[abdraw[index]].bimg() as Bitmap
+            val icon = (StaticStore.img15?.get(abdraw[index])?.bimg() ?: StaticStore.empty(1, 1)) as Bitmap
 
-            return getDrawable(b)
+            return getDrawable(icon)
         }
     }
 

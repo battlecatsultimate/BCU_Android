@@ -6,12 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.google.gson.JsonParser
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.io.json.JsonDecoder
 import common.io.json.JsonEncoder
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Unit
 import java.util.*
@@ -19,7 +17,7 @@ import java.util.*
 class DynamicExplanation : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(`val`: Int, data: PackData.Identifier<Unit>, titles: Array<String?>?): DynamicExplanation {
+        fun newInstance(`val`: Int, data: Identifier<Unit>, titles: Array<String?>?): DynamicExplanation {
             val explanation = DynamicExplanation()
             val bundle = Bundle()
             bundle.putInt("Number", `val`)
@@ -35,7 +33,7 @@ class DynamicExplanation : Fragment() {
 
         val arg = arguments ?: return view
 
-        val data = JsonDecoder.decode(JsonParser.parseString(arg.getString("Data")), PackData.Identifier::class.java) as PackData.Identifier<Unit>
+        val data = StaticStore.transformIdentifier<Unit>(arg.getString("Data")) ?: return view
 
         val `val` = arg.getInt("Number", 0)
 

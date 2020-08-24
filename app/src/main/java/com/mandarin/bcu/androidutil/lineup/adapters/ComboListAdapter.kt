@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,8 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.battle.BasisSet
-import common.system.MultiLangCont
+import common.pack.UserProfile
+import common.util.lang.MultiLangCont
 import common.util.unit.Combo
 import java.text.DecimalFormat
 import java.util.*
@@ -46,8 +46,8 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
         }
 
         try {
-            holder.comboname.text = MultiLangCont.COMNAME.getCont(StaticStore.combos[position].name)
-            val occ = context.getString(R.string.combo_occu) + " : " + BasisSet.current.sele.lu.occupance(StaticStore.combos[position])
+            holder.comboname.text = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[position].name)
+            val occ = context.getString(R.string.combo_occu) + " : " + BasisSet.current().sele.lu.occupance(StaticStore.combos[position])
             holder.comboocc.text = occ
             holder.combodesc.text = getDescription(StaticStore.combos[position])
             holder.comimglayout.removeAllViews()
@@ -62,8 +62,9 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
                     holder.icons.add(icon)
                 } else {
                     val icon = ImageView(context)
+                    val u = UserProfile.getBCData().units[StaticStore.combos[position].units[i][0]] ?: return row
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
-                    icon.setImageBitmap(StaticStore.units[StaticStore.combos[position].units[i][0]].forms[StaticStore.combos[position].units[i][1]].anim.uni.img.bimg() as Bitmap)
+                    icon.setImageBitmap(u.forms[StaticStore.combos[position].units[i][1]].anim.uni.img.bimg() as Bitmap)
                     icon.background = ContextCompat.getDrawable(context, R.drawable.cell_shape)
                     holder.comimglayout.addView(icon)
                     holder.icons.add(icon)

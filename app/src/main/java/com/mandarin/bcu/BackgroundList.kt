@@ -18,7 +18,10 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.CommonStatic
+import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
 import common.util.pack.Background
@@ -65,6 +68,10 @@ class BackgroundList : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_background_list)
 
@@ -117,9 +124,10 @@ class BackgroundList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
-    inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val keys: ArrayList<String>
 
         init {
@@ -168,16 +176,13 @@ class BackgroundList : AppCompatActivity() {
         }
 
         private fun getExistingPack(): ArrayList<String> {
-            val list = ArrayList<PackData>()
-
-            list.add(UserProfile.getBCData())
-            list.addAll(UserProfile.packs())
+            val list = StaticStore.getPacks()
 
             val res = ArrayList<String>()
 
             for(k in list) {
                 if(k is PackData.DefPack) {
-                    res.add(PackData.Identifier.DEF)
+                    res.add(Identifier.DEF)
                 } else if(k is PackData.UserPack && k.bgs.size() != 0) {
                     res.add(k.desc.id)
                 }

@@ -74,7 +74,7 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
         val activity = weakReference.get() ?: return null
         var output: File
         try {
-            val assetlink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json"
+            val assetlink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getAssets.json"
             val asseturl = URL(assetlink)
             val `is` = asseturl.openStream()
             val isr = InputStreamReader(`is`, StandardCharsets.UTF_8)
@@ -312,7 +312,7 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
                 val version = versions.getString(1)
 
                 val thatver = version.split(".").toTypedArray()
-                val thisver = (BuildConfig.VERSION_NAME ?: StaticStore.VER).split(".").toTypedArray()
+                val thisver = BuildConfig.VERSION_NAME.split(".").toTypedArray()
 
                 if(check(thisver, thatver))
                     libmap.add(lib)
@@ -338,7 +338,14 @@ class CheckUpdates : AsyncTask<Void?, Int?, Void?> {
                 activity.startActivity(intent)
                 activity.finish()
             }
-            donloader.setNegativeButton(R.string.main_file_cancel) { _, _ -> if (!cando || lang || music) activity.finish() else AddPathes(activity, config).execute() }
+
+            donloader.setNegativeButton(R.string.main_file_cancel) { _, _ ->
+                if (!cando || lang || music)
+                    activity.finish()
+                else
+                    AddPathes(activity, config).execute()
+            }
+
             donloader.setCancelable(false)
             try {
                 val libs = Reader.getInfo(path)

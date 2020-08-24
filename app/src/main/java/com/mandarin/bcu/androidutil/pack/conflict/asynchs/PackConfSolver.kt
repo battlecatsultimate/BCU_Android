@@ -101,7 +101,7 @@ class PackConfSolver(c: Activity) : AsyncTask<Void, String, Void>() {
         if(res == 0)
             return ""
 
-        return if(StaticStore.isEnglish()) {
+        return if(StaticStore.isEnglish) {
             if(res == 1) {
                 "$res conflict"
             } else {

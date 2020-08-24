@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.music.asynchs
 import android.app.Activity
 import android.os.AsyncTask
 import android.os.Parcelable
+import android.util.SparseArray
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,10 +14,11 @@ import com.google.android.material.tabs.TabLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.music.adapters.MusicListPager
-import common.util.pack.Pack
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
 import java.lang.ref.WeakReference
 import kotlin.math.round
 
@@ -33,22 +35,19 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
-        val ac = weak.get() ?: return null
+        weak.get() ?: return null
 
-        if(!StaticStore.musicread) {
-            SoundHandler.read(ac)
-            StaticStore.musicread = true
-        }
-
-        if(StaticStore.musicnames.size != Pack.map.size || StaticStore.musicData.isEmpty()) {
+        if(StaticStore.musicnames.size != UserProfile.getAllPacks().size || StaticStore.musicData.isEmpty()) {
             StaticStore.musicnames.clear()
             StaticStore.musicData.clear()
 
-            for (i in Pack.map) {
-                val names = ArrayList<String>()
+            for (p in UserProfile.getAllPacks()) {
+                val names = SparseArray<String>()
 
-                for (j in i.value.ms.list.indices) {
-                    val f = i.value.ms.list[j]
+                for (j in p.musics.list.indices) {
+                    val m = p.musics[j]
+
+                    val f = StaticStore.getMusicFile(m)
 
                     val sp = SoundPlayer()
                     sp.setDataSource(f.toString())
@@ -75,12 +74,16 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
                     val secs = if (sec < 10) "0$sec"
                     else sec.toString()
 
-                    names.add("$mins:$secs")
+                    names.append(m.id.id, "$mins:$secs")
 
-                    StaticStore.musicData.add(i.key.toString() + "\\" + j)
+                    StaticStore.musicData.add(m.id)
                 }
 
-                StaticStore.musicnames[i.key] = names
+                if(p is PackData.DefPack) {
+                    StaticStore.musicnames[Identifier.DEF] = names
+                } else if(p is PackData.UserPack) {
+                    StaticStore.musicnames[p.desc.id] = names
+                }
             }
         }
 
@@ -102,7 +105,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
 
         pager.removeAllViewsInLayout()
         pager.adapter = MusicListTab(fm)
-        pager.offscreenPageLimit = Pack.map.keys.size
+        pager.offscreenPageLimit = existingPackNumber()
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
         tab.setupWithViewPager(pager)
@@ -119,7 +122,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
         setAppear(pager)
         setDisappear(loadt, prog)
 
-        if(Pack.map.size > 1) {
+        if(UserProfile.getAllPacks().size > 1) {
             setAppear(tab)
         }
     }
@@ -136,8 +139,21 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
         }
     }
 
+    private fun existingPackNumber() : Int {
+        val packs = UserProfile.getAllPacks()
+
+        var res = 0
+
+        for(p in packs) {
+            if(p.musics.list.isNotEmpty())
+                res++
+        }
+
+        return res
+    }
+
     inner class MusicListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val keys: ArrayList<Int>
+        private val keys: ArrayList<String>
 
         init {
             val lit = fm.fragments
@@ -164,16 +180,26 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
             return if(position == 0) {
                 "Default"
             } else {
-                val pack = Pack.map[keys[position]]
+                val pack = UserProfile.getPack(keys[position])
 
                 if(pack == null) {
-                    keys[position].toString()
+                    keys[position]
                 }
 
-                val name = pack?.name ?: ""
+                val name = when (pack) {
+                    is PackData.DefPack -> {
+                        weak.get()?.getString(R.string.pack_default) ?: "Default"
+                    }
+                    is PackData.UserPack -> {
+                        StaticStore.getPackName(pack.desc.id)
+                    }
+                    else -> {
+                        ""
+                    }
+                }
 
                 if(name.isEmpty()) {
-                    keys[position].toString()
+                    keys[position]
                 } else {
                     name
                 }
@@ -184,15 +210,17 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
             return null
         }
 
-        private fun getExistingPack() : ArrayList<Int> {
-            val keys = Pack.map.keys.toMutableList()
-            val res = ArrayList<Int>()
+        private fun getExistingPack() : ArrayList<String> {
+            val packs = UserProfile.getAllPacks()
+            val res = ArrayList<String>()
 
-            for(k in keys) {
-                val p = Pack.map[k] ?: continue
-
-                if(p.ms.list.isNotEmpty()) {
-                    res.add(k)
+            for(p in packs) {
+                if(p.musics.list.isNotEmpty()) {
+                    if(p is PackData.DefPack) {
+                        res.add(Identifier.DEF)
+                    } else if(p is PackData.UserPack) {
+                        res.add(p.desc.id)
+                    }
                 }
             }
 

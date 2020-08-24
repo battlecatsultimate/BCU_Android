@@ -9,8 +9,8 @@ import android.widget.ListView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
-import common.util.unit.Combo
+import common.CommonStatic
+import common.util.lang.MultiLangCont
 import java.util.*
 
 class ComboSubSchListAdapter internal constructor(private val activity: Activity, private val sch: List<String?>, private val combolist: ListView, private val defcom: List<Int>, private var comboListAdapter: ComboListAdapter?) : ArrayAdapter<String?>(activity, R.layout.spinneradapter, sch) {
@@ -49,21 +49,21 @@ class ComboSubSchListAdapter internal constructor(private val activity: Activity
             StaticStore.combos.clear()
             if (comid.isEmpty()) {
                 for (i in defcom.indices) {
-                    StaticStore.combos.addAll(listOf(*Combo.combos[defcom[i]]))
+                    StaticStore.combos.addAll(listOf(*CommonStatic.getBCAssets().combos[defcom[i]]))
                 }
                 val names = arrayOfNulls<String>(StaticStore.combos.size)
                 for (i in StaticStore.combos.indices) {
-                    names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
+                    names[i] = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[i].name)
                 }
                 comboListAdapter = ComboListAdapter(activity, names)
                 combolist.adapter = comboListAdapter
             } else {
                 for (i in comid.indices) {
-                    StaticStore.combos.addAll(listOf(*Combo.combos[comid[i].toInt()]))
+                    StaticStore.combos.addAll(listOf(*CommonStatic.getBCAssets().combos[comid[i].toInt()]))
                 }
                 val names = arrayOfNulls<String>(StaticStore.combos.size)
                 for (i in StaticStore.combos.indices) {
-                    names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
+                    names[i] = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[i].name)
                 }
                 comboListAdapter = ComboListAdapter(activity, names)
                 combolist.adapter = comboListAdapter

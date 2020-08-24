@@ -12,16 +12,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.stage.asynchs.StageAdder
+import common.CommonStatic
+import common.util.stage.Stage
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
 
 class StageInfo : AppCompatActivity() {
-    private var mapcode = 0
-    private var stid = 0
-    private var posit = 0
     private var custom = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +59,10 @@ class StageInfo : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_stage_info)
 
         val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
@@ -75,13 +79,12 @@ class StageInfo : AppCompatActivity() {
         val extra = result.extras
 
         if (extra != null) {
-            mapcode = extra.getInt("mapcode")
-            stid = extra.getInt("stid")
-            posit = extra.getInt("posit")
-            custom = extra.getBoolean("custom")
-        }
+            val data = StaticStore.transformIdentifier<Stage>(extra.getString("Data")) ?: return
 
-        StageAdder(this, mapcode, stid, posit, custom).execute()
+            custom = extra.getBoolean("custom")
+
+            StageAdder(this, data, custom).execute()
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -118,5 +121,6 @@ class StageInfo : AppCompatActivity() {
         super.onDestroy()
 
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

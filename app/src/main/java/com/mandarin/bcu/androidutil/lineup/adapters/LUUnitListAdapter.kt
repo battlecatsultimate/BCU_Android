@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.util.pack.Pack
+import common.pack.Identifier
+import common.util.Data
+import common.util.lang.MultiLangCont
+import common.util.unit.Unit
 
-class LUUnitListAdapter(context: Context, private val names: ArrayList<String>, private val numbers: ArrayList<Int>) : ArrayAdapter<String?>(context, R.layout.listlayout, names.toTypedArray()) {
+class LUUnitListAdapter(context: Context, private val numbers: ArrayList<Identifier<Unit>>) : ArrayAdapter<Identifier<Unit>>(context, R.layout.listlayout, numbers.toTypedArray()) {
     private class ViewHolder constructor(row: View) {
         var id: TextView = row.findViewById(R.id.unitID)
         var title: TextView = row.findViewById(R.id.unitname)
@@ -41,64 +43,27 @@ class LUUnitListAdapter(context: Context, private val names: ArrayList<String>, 
             return row
         }
 
-        if(numbers[position] < 0 || numbers[position] >= StaticStore.ludata.size) {
-            holder.title.visibility = View.GONE
-            holder.image.visibility = View.GONE
-
-            return row
-        }
-
-        val info = StaticStore.ludata[numbers[position]].split("-")
-
-        if(info.size < 2) {
-            holder.title.visibility = View.GONE
-            holder.image.visibility = View.GONE
-
-            return row
-        }
-
-        val pid = info[0].toInt()
-
-        val p = Pack.map[pid]
-
-        if(p == null) {
-            holder.title.visibility = View.GONE
-            holder.image.visibility = View.GONE
-
-            return row
-        }
-
-        val id = info[1].toInt()
-
-        if(id < 0 || id >= p.us.ulist.list.size) {
-            holder.title.visibility = View.GONE
-            holder.image.visibility = View.GONE
-
-            return row
-        }
-
-        val u = p.us.ulist.list[id]
+        val u = Identifier.get(numbers[position]) ?: return row
 
         val icon = u.forms[0].anim.uni?.img?.bimg()
 
-        val nameInfo = names[position].split("/")
-
-        if(info.size != 2) {
-            Log.w("ListAdapter","Invalid Format : "+ names[position])
-
-            holder.id.visibility = View.GONE
-            holder.title.text = names[position]
-        } else {
-            holder.id.text = nameInfo[0]
-            holder.title.text = nameInfo[1]
-        }
+        holder.id.text = generateID(numbers[position])
+        holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].name ?: ""
 
         if(icon != null) {
-            holder.image.setImageBitmap(StaticStore.MakeIcon(context, icon as Bitmap , 48f))
+            holder.image.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap , 48f))
         } else {
-            holder.image.setImageBitmap(StaticStore.MakeIcon(context, null , 48f))
+            holder.image.setImageBitmap(StaticStore.makeIcon(context, null , 48f))
         }
 
         return row
+    }
+
+    private fun generateID(id: Identifier<Unit>) : String {
+        return if(id.pack == Identifier.DEF) {
+            context.getString(R.string.pack_default)+" - "+ Data.trio(id.id)
+        } else {
+            StaticStore.getPackName(id.pack) + " - " + Data.trio(id.id)
+        }
     }
 }

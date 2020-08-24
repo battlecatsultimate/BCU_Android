@@ -10,10 +10,10 @@ import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.unit.Unit
 
-class DynamicFruit(private val activity: Activity, private val data: PackData.Identifier<Unit>) : PagerAdapter() {
+class DynamicFruit(private val activity: Activity, private val data: Identifier<Unit>) : PagerAdapter() {
     private val fruits = arrayOfNulls<ImageView>(6)
     private val fruittext = arrayOfNulls<TextView>(6)
     private val cfdesc = arrayOfNulls<TextView>(3)
@@ -37,18 +37,23 @@ class DynamicFruit(private val activity: Activity, private val data: PackData.Id
             cfdesc[i] = layout.findViewById(cfdeid[i])
         }
         val evo = u.info.evo
+
+        val icon = StaticStore.fruit?.get(14) ?: StaticStore.empty(1, 1)
+
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            fruits[5]!!.setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[13], activity, 48f))
+            fruits[5]!!.setImageBitmap(StaticStore.getResizeb(icon, activity, 48f))
         } else {
-            fruits[5]!!.setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[13], activity, 40f))
+            fruits[5]!!.setImageBitmap(StaticStore.getResizeb(icon, activity, 40f))
         }
         fruittext[5]!!.text = evo[0][0].toString()
         for (i in 0 until fruits.size - 1) {
             try {
+                val ic = StaticStore.fruit?.get(ids.indexOf(evo[i + 1][0])) ?: StaticStore.empty(1,1)
+
                 if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    fruits[i]!!.setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[ids.indexOf(evo[i + 1][0])], activity, 48f))
+                    fruits[i]!!.setImageBitmap(StaticStore.getResizeb(ic, activity, 48f))
                 } else {
-                    fruits[i]!!.setImageBitmap(StaticStore.getResizeb(StaticStore.fruit[ids.indexOf(evo[i + 1][0])], activity, 40f))
+                    fruits[i]!!.setImageBitmap(StaticStore.getResizeb(ic , activity, 40f))
                 }
                 exist[i] = true
             } catch (e: IndexOutOfBoundsException) {

@@ -128,9 +128,9 @@ class LUOrbSetting : Fragment() {
                 generateImage(orb[position], image)
 
                 if(orb[position].isNotEmpty() && orb[position][0] == 0) {
-                    generateTraitData(Orb.ATKORB)
+                    generateTraitData(CommonStatic.getBCAssets().ATKORB)
                 } else if(orb[position].isNotEmpty()) {
-                    generateTraitData(Orb.RESORB)
+                    generateTraitData(CommonStatic.getBCAssets().RESORB)
                 }
             }
         }
@@ -255,9 +255,9 @@ class LUOrbSetting : Fragment() {
                 setAppear(image, trait, grade)
 
                 val od = if(data[0] == 0) {
-                    Orb.ATKORB
+                    CommonStatic.getBCAssets().ATKORB
                 } else {
-                    Orb.RESORB
+                    CommonStatic.getBCAssets().RESORB
                 }
 
                 generateTraitData(od)
@@ -279,7 +279,7 @@ class LUOrbSetting : Fragment() {
                     }
                 }
 
-                val a1 = ArrayAdapter<String>(c, R.layout.spinnersmall, t.toTypedArray())
+                val a1 = ArrayAdapter(c, R.layout.spinnersmall, t.toTypedArray())
 
                 trait.adapter = a1
 
@@ -298,7 +298,7 @@ class LUOrbSetting : Fragment() {
                     }
                 }
 
-                val a2 = ArrayAdapter<String>(c, R.layout.spinnersmall, gr.toTypedArray())
+                val a2 = ArrayAdapter(c, R.layout.spinnersmall, gr.toTypedArray())
 
                 grade.adapter = a2
 
@@ -332,9 +332,9 @@ class LUOrbSetting : Fragment() {
                 }
 
                 val od = if(data[0] == 0) {
-                    Orb.ATKORB
+                    CommonStatic.getBCAssets().ATKORB
                 } else {
-                    Orb.RESORB
+                    CommonStatic.getBCAssets().RESORB
                 }
 
                 if(position >= traitData.size) {
@@ -358,7 +358,7 @@ class LUOrbSetting : Fragment() {
                     }
                 }
 
-                val a2 = ArrayAdapter<String>(c, R.layout.spinnersmall, gr.toTypedArray())
+                val a2 = ArrayAdapter(c, R.layout.spinnersmall, gr.toTypedArray())
 
                 grade.adapter = a2
 
@@ -449,7 +449,7 @@ class LUOrbSetting : Fragment() {
             return
         }
 
-        val l = BasisSet.current.sele.lu.getLv(f.unit)
+        val l = BasisSet.current().sele.lu.getLv(f.unit)
 
         val o = f.orbs
 
@@ -520,7 +520,7 @@ class LUOrbSetting : Fragment() {
                 types.add(c.getString(R.string.orb_res))
             }
 
-            val a0 = ArrayAdapter<String>(c, R.layout.spinnersmall, types.toTypedArray())
+            val a0 = ArrayAdapter(c, R.layout.spinnersmall, types.toTypedArray())
 
             type.adapter = a0
         }
@@ -555,7 +555,7 @@ class LUOrbSetting : Fragment() {
 
         orb.clear()
 
-        val data = BasisSet.current.sele.lu.getLv(f?.unit).orbs ?: return
+        val data = BasisSet.current().sele.lu.getLv(f?.unit).orbs ?: return
 
         for(d in data) {
             orb.add(d)
@@ -576,7 +576,7 @@ class LUOrbSetting : Fragment() {
             types.add(c.getString(R.string.orb_res))
         }
 
-        val a0 = ArrayAdapter<String>(c, R.layout.spinnersmall, types.toTypedArray())
+        val a0 = ArrayAdapter(c, R.layout.spinnersmall, types.toTypedArray())
 
         v.adapter = a0
 
@@ -608,9 +608,9 @@ class LUOrbSetting : Fragment() {
         setAppear(v1, v2)
 
         val od = if(data[0] == 0) {
-            Orb.ATKORB
+            CommonStatic.getBCAssets().ATKORB
         } else {
-            Orb.RESORB
+            CommonStatic.getBCAssets().RESORB
         }
 
         val t = ArrayList<String>()
@@ -626,7 +626,7 @@ class LUOrbSetting : Fragment() {
             }
         }
 
-        val a1 = ArrayAdapter<String>(c, R.layout.spinnersmall, t.toTypedArray())
+        val a1 = ArrayAdapter(c, R.layout.spinnersmall, t.toTypedArray())
 
         v1.adapter = a1
 
@@ -647,7 +647,7 @@ class LUOrbSetting : Fragment() {
             }
         }
 
-        val a2 = ArrayAdapter<String>(c, R.layout.spinnersmall, gr.toTypedArray())
+        val a2 = ArrayAdapter(c, R.layout.spinnersmall, gr.toTypedArray())
 
         v2.adapter = a2
 
@@ -664,7 +664,7 @@ class LUOrbSetting : Fragment() {
         val o = f?.orbs ?: return res
 
         if(o.slots != -1) {
-            val l = BasisSet.current.sele.lu.getLv(f?.unit)
+            val l = BasisSet.current().sele.lu.getLv(f?.unit)
 
             if(l.orbs == null) {
                 for(i in 0 until o.slots) {
@@ -684,7 +684,7 @@ class LUOrbSetting : Fragment() {
                 }
             }
         } else {
-            val l = BasisSet.current.sele.lu.getLv(f?.unit) ?: return res
+            val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return res
 
             if(l.orbs == null || l.orbs.isEmpty()) {
                 return res
@@ -713,7 +713,7 @@ class LUOrbSetting : Fragment() {
         val o = f?.orbs ?: return ""
 
         if(o.slots != -1) {
-            val l = BasisSet.current.sele.lu.getLv(f?.unit)
+            val l = BasisSet.current().sele.lu.getLv(f?.unit)
 
             if(l.orbs == null) {
                 return c.getString(R.string.lineup_orb)+"${index+1} - "+c.getString(R.string.unit_info_t_none)
@@ -730,7 +730,7 @@ class LUOrbSetting : Fragment() {
                 c.getString(R.string.lineup_orb)+"${index+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}"
             }
         } else {
-            val l = BasisSet.current.sele.lu.getLv(f?.unit) ?: return ""
+            val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return ""
 
             return if(l.orbs == null || l.orbs.isEmpty()) {
                 ""
@@ -799,7 +799,7 @@ class LUOrbSetting : Fragment() {
     private fun setData() {
         f ?: return
 
-        val o = BasisSet.current.sele.lu.getLv(f?.unit) ?: return
+        val o = BasisSet.current().sele.lu.getLv(f?.unit) ?: return
 
         o.orbs = orb.toTypedArray()
     }
@@ -832,15 +832,15 @@ class LUOrbSetting : Fragment() {
 
         val p = Paint()
 
-        cv.drawBitmap(StaticStore.getResizeb(Orb.TRAITS[Orb.reverse(data[1])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TRAITS[Orb.reverse(data[1])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         p.alpha = (255 * 0.75).toInt()
 
-        cv.drawBitmap(StaticStore.getResizeb(Orb.TYPES[data[0]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TYPES[data[0]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         p.alpha = 255
 
-        cv.drawBitmap(StaticStore.getResizeb(Orb.GRADES[data[2]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().GRADES[data[2]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         v.setImageBitmap(b)
     }
@@ -883,7 +883,7 @@ class LUOrbSetting : Fragment() {
     private fun setLevel() {
         val o = Array(orb.size) { i -> orb[i]}
 
-        val l = BasisSet.current.sele.lu.getLv(f?.unit) ?: return
+        val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return
 
         l.orbs = o
 

@@ -24,11 +24,17 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import common.system.MultiLangCont
+import common.CommonStatic
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
 import common.util.Data
-import common.util.pack.Pack
+import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
+import common.util.unit.Enemy
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.lang.NumberFormatException
@@ -43,8 +49,8 @@ class StageSearchFilter : AppCompatActivity() {
 
     private val radioid = intArrayOf(R.id.lessthan, R.id.same, R.id.greaterthan)
 
-    private val mdata = ArrayList<Int>()
-    private val bdata = ArrayList<Int>()
+    private val mdata = ArrayList<String>()
+    private val bdata = ArrayList<String>()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +88,10 @@ class StageSearchFilter : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_stage_search_filter)
 
         val bck = findViewById<FloatingActionButton>(R.id.statschbck)
@@ -105,11 +115,11 @@ class StageSearchFilter : AppCompatActivity() {
 
         for (id in StaticStore.stgenem) {
             val chip = Chip(this)
-            chip.id = R.id.enemychip + id
+            chip.id = R.id.enemychip + id.id.pack.hashCode() + id.id.id
             chip.text = getEnemyName(id)
             chip.isCloseIconVisible = true
             chip.setOnCloseIconClickListener {
-                StaticStore.stgenem.remove(Integer.valueOf(id))
+                StaticStore.stgenem.remove(id)
                 enemygroup.removeView(chip)
             }
 
@@ -155,21 +165,23 @@ class StageSearchFilter : AppCompatActivity() {
         musics.add(getString(R.string.combo_all))
 
         for (i in GAME_MUSICS) {
-            musics.add(Data.hex(0) + " - "+number(i))
-            mdata.add(i)
+            musics.add(getString(R.string.pack_default) + " - "+number(i))
+            mdata.add(Identifier.DEF+" - "+number(i))
         }
 
-        for(i in Pack.map) {
-            if(i.value.id == 0)
+        for(i in UserProfile.getAllPacks()) {
+            if(i is PackData.DefPack)
                 continue
 
-            val ms = i.value.ms
+            val ms = i.musics
 
             for(j in ms.list) {
-                val musicName = j.name.replace(".ogg", "")
+                val p = StaticStore.getPackName(j.id.pack)
 
-                musics.add(Data.hex(i.key) + " - " + musicName)
-                mdata.add(i.key*1000+musicName.toInt())
+                val musicName = "$p - ${Data.trio(j.id.id)}"
+
+                musics.add(musicName)
+                mdata.add(musicName)
             }
         }
 
@@ -184,33 +196,37 @@ class StageSearchFilter : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 StaticStore.stgmusic = if(position == 0)
-                    -1
+                    ""
                 else
                     mdata[position-1]
             }
         }
 
-        if (StaticStore.stgmusic != -1) {
+        if (StaticStore.stgmusic.isNotEmpty()) {
             musicspin.setSelection(mdata.indexOf(StaticStore.stgmusic)+1, false)
         }
 
         val backgrounds = ArrayList<String>()
         backgrounds.add(getString(R.string.combo_all))
 
-        for(i in Pack.def.bg.list.indices) {
-            backgrounds.add(Data.hex(0)+ " - "+number(i))
-            bdata.add(i)
+        for(i in UserProfile.getBCData().bgs.list) {
+            backgrounds.add(getString(R.string.pack_default)+ " - "+number(i.id.id))
+
+            bdata.add(Identifier.DEF+" - "+number(i.id.id))
         }
 
-        for(i in Pack.map) {
-            if(i.value.id == 0)
+        for(i in UserProfile.getAllPacks()) {
+            if(i is PackData.DefPack)
                 continue
 
-            val bg = i.value.bg.list
+            if(i !is PackData.UserPack)
+                continue
+
+            val bg = i.bgs.list
 
             for(b in bg) {
-                backgrounds.add(Data.hex(i.key) + " - "+ number(StaticStore.getID(b.id)))
-                bdata.add(i.key*1000+StaticStore.getID(b.id))
+                backgrounds.add(i.desc.name + " - "+ number(b.id.id))
+                bdata.add(StaticStore.getPackName(b.id.pack) + " - "+number(b.id.id))
             }
         }
 
@@ -225,14 +241,14 @@ class StageSearchFilter : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 StaticStore.stgbg = if(position == 0)
-                    -1
+                    ""
                 else
                     bdata[position-1]
             }
 
         }
 
-        if(StaticStore.stgbg != -1) {
+        if(StaticStore.stgbg.isNotEmpty()) {
             val index = bdata.indexOf(StaticStore.stgbg)
 
             bgspin.setSelection(index+1, false)
@@ -455,24 +471,23 @@ class StageSearchFilter : AppCompatActivity() {
 
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
-                val id = data.getIntExtra("id", 0)
-                val pid = data.getIntExtra("pid", 0)
+                val id = StaticStore.transformIdentifier<AbEnemy>(data.getStringExtra("Data")) ?: return
+                val e = id.get() ?: return
 
-                val p = Pack.map[pid] ?: return
+                if(e !is Enemy)
+                    return
 
-                val e = p.es.list[id]
-
-                if (!StaticStore.stgenem.contains(e.id)) {
-                    StaticStore.stgenem.add(e.id)
+                if (!StaticStore.stgenem.contains(e)) {
+                    StaticStore.stgenem.add(e)
 
                     val enemygroup = findViewById<ChipGroup>(R.id.enemygroup)
 
                     val chip = Chip(this)
-                    chip.id = R.id.enemychip + e.id
-                    chip.text = getEnemyName(e.id)
+                    chip.id = R.id.enemychip + e.id.pack.hashCode() + e.id.id
+                    chip.text = getEnemyName(e)
                     chip.isCloseIconVisible = true
                     chip.setOnCloseIconClickListener {
-                        StaticStore.stgenem.remove(Integer.valueOf(e.id))
+                        StaticStore.stgenem.remove(e)
                         enemygroup.removeView(chip)
                     }
 
@@ -509,24 +524,25 @@ class StageSearchFilter : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
-    private fun getEnemyName(id: Int): String {
+    private fun getEnemyName(id: Enemy): String {
         try {
-            val p = Pack.map[StaticStore.getPID(id)] ?: return ""
+            val name = MultiLangCont.get(id) ?: id.name ?: ""
 
-            val e = p.es[StaticStore.getID(id)]
-
-            val name = MultiLangCont.ENAME.getCont(e) ?: e.name ?: ""
+            val pack = StaticStore.getPackName(id.id.pack)
 
             if (name == "") {
-                return getString(R.string.stg_sch_enemy) + number(id)
+                return getString(R.string.stg_sch_enemy) + " $pack - ${number(id.id.id)}"
             }
 
             return name
         } catch (e: Exception) {
             ErrorLogWriter.writeLog(e, StaticStore.upload, this)
-            return getString(R.string.stg_sch_enemy) + number(id)
+            val pack = StaticStore.getPackName(id.id.pack)
+
+            return getString(R.string.stg_sch_enemy) + " $pack - ${number(id.id.id)}"
         }
     }
 

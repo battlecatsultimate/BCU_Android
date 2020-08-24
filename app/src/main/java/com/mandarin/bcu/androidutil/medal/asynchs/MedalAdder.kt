@@ -32,7 +32,7 @@ class MedalAdder(activity: Activity) : AsyncTask<Void?, Int?, Void?>() {
         val activity = weakReference.get() ?: return null
         MDefiner().define(activity)
         publishProgress(0)
-        if (StaticStore.medals == null) {
+        if (StaticStore.medals.isEmpty()) {
             StaticStore.medals = ArrayList()
             val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
             for (i in 0 until StaticStore.medalnumber) {

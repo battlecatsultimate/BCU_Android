@@ -34,6 +34,7 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
+import common.pack.Identifier
 import common.pack.PackData
 import common.util.lang.MultiLangCont
 import common.util.unit.Form
@@ -43,7 +44,7 @@ import java.util.*
 class UnitinfPager : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(form: Int, data: PackData.Identifier<Unit>, names: Array<String?>?): UnitinfPager {
+        fun newInstance(form: Int, data: Identifier<Unit>, names: Array<String?>?): UnitinfPager {
             val pager = UnitinfPager()
 
             val bundle = Bundle()
@@ -61,7 +62,7 @@ class UnitinfPager : Fragment() {
 
     private var form = 0
     private var fs = 0
-    private lateinit var data: PackData.Identifier<Unit>
+    private lateinit var data: Identifier<Unit>
     private var s: GetStrings? = null
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
@@ -221,7 +222,7 @@ class UnitinfPager : Fragment() {
         }
 
         icon = if (icon.height != icon.width)
-            StaticStore.MakeIcon(activity, icon, 48f)
+            StaticStore.makeIcon(activity, icon, 48f)
         else
             StaticStore.getResizeb(icon, activity, 48f)
 
@@ -952,7 +953,7 @@ class UnitinfPager : Fragment() {
         return index
     }
 
-    private fun setData(data: PackData.Identifier<Unit>) {
+    private fun setData(data: Identifier<Unit>) {
         this.data = data
     }
 }

@@ -23,19 +23,18 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.asynchs.EAnimationLoader
 import com.mandarin.bcu.androidutil.animation.asynchs.UAnimationLoader
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.MediaScanner
+import common.CommonStatic
 import common.io.json.JsonDecoder
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.pack.Background
 import common.util.stage.CastleImg
-import common.util.unit.Enemy
-import common.util.unit.Unit
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.IOException
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,6 +88,10 @@ class ImageViewer : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_image_viewer)
 
@@ -148,9 +151,9 @@ class ImageViewer : AppCompatActivity() {
 
                 val gh = height.toFloat() * 0.1f
 
-                val data = StaticStore.transformIdentifier<Background>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java)) ?: return
+                val data = StaticStore.transformIdentifier<Background>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), Identifier::class.java)) ?: return
 
-                val bg = data.get() ?: return
+                val bg = Identifier.get(data) ?: return
 
                 if(bg.top) {
                     val b1 = getImg(bg, b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
@@ -206,7 +209,7 @@ class ImageViewer : AppCompatActivity() {
                     if (item.itemId == R.id.anim_option_png) {
                         val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                         val date = Date()
-                        val name = if(data.pack == PackData.Identifier.DEF) {
+                        val name = if(data.pack == Identifier.DEF) {
                             dateFormat.format(date) + "-BG-" + bgnum
                         } else {
                             dateFormat.format(date) + "-BG-"+ data.pack +"-"+bgnum
@@ -247,9 +250,9 @@ class ImageViewer : AppCompatActivity() {
                 prog.visibility = View.GONE
                 forms.visibility = View.GONE
 
-                val data = StaticStore.transformIdentifier<CastleImg>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java)) ?: return
+                val data = StaticStore.transformIdentifier<CastleImg>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), Identifier::class.java)) ?: return
 
-                val c = data.get() ?: return
+                val c = Identifier.get(data) ?: return
 
                 val bd = BitmapDrawable(resources, c.img.img.bimg() as Bitmap)
 
@@ -276,8 +279,8 @@ class ImageViewer : AppCompatActivity() {
                 img.setImageBitmap(castle)
             }
 
-            animu -> UAnimationLoader(this, StaticStore.transformIdentifier<Unit>(extra.getString("Data")), form).execute()
-            anime -> EAnimationLoader(this, StaticStore.transformIdentifier<Enemy>(extra.getString("Data"))).execute()
+            animu -> UAnimationLoader(this, StaticStore.transformIdentifier(extra.getString("Data")), form).execute()
+            anime -> EAnimationLoader(this, StaticStore.transformIdentifier(extra.getString("Data"))).execute()
         }
     }
 
@@ -367,5 +370,6 @@ class ImageViewer : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

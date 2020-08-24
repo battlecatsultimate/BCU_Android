@@ -1,17 +1,13 @@
 package com.mandarin.bcu.androidutil.lineup.adapters
 
-import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -42,7 +38,7 @@ class LUConstruction : Fragment() {
 
         if (context == null) return view
 
-        color = intArrayOf(getAttributeColor(context!!, R.attr.TextPrimary))
+        color = intArrayOf(StaticStore.getAttributeColor(context!!, R.attr.TextPrimary))
 
         listeners(view)
 
@@ -56,9 +52,9 @@ class LUConstruction : Fragment() {
                     val text = view.findViewById<TextInputEditText>(R.id.constlevt)
 
                     if (valuesAllSame())
-                        text.setText(BasisSet.current.t().bslv[0].toString())
+                        text.setText(BasisSet.current().t().bslv[0].toString())
 
-                    val vals = BasisSet.current.t().bslv
+                    val vals = BasisSet.current().t().bslv
 
                     for (i in vals.indices) {
                         texts[i] = view.findViewById(textid[i])
@@ -101,9 +97,9 @@ class LUConstruction : Fragment() {
         setListenerforTextInputLayouts(constructions)
 
         if (valuesAllSame())
-            text.setText(BasisSet.current.t().bslv[0].toString())
+            text.setText(BasisSet.current().t().bslv[0].toString())
 
-        val vals = BasisSet.current.t().bslv
+        val vals = BasisSet.current().t().bslv
 
         for (i in vals.indices) {
             texts[i]?.setText(vals[i].toString())
@@ -144,7 +140,7 @@ class LUConstruction : Fragment() {
 
             override fun afterTextChanged(s: Editable) {
                 if (s.toString().isNotEmpty()) {
-                    val t = BasisSet.current.t()
+                    val t = BasisSet.current().t()
 
                     editable = false
 
@@ -220,7 +216,7 @@ class LUConstruction : Fragment() {
                     if (!initialized) return
 
                     if (s.toString().isNotEmpty()) {
-                        val t = BasisSet.current.t()
+                        val t = BasisSet.current().t()
 
                         if (editable && Integer.parseInt(s.toString()) <= 20 && Integer.parseInt(s.toString()) >= 1) {
                             val `val` = Integer.parseInt(s.toString())
@@ -232,7 +228,9 @@ class LUConstruction : Fragment() {
                             construction.helperText = "1~20 Lv."
                         }
 
-                        StaticStore.saveLineUp(context)
+                        val c = context ?: return
+
+                        StaticStore.saveLineUp(c)
                     }
                 }
             })
@@ -240,7 +238,7 @@ class LUConstruction : Fragment() {
     }
 
     private fun valuesAllSame(): Boolean {
-        val bases = BasisSet.current.t().bslv ?: return false
+        val bases = BasisSet.current().t().bslv ?: return false
 
         val check = bases[0]
 
@@ -256,20 +254,6 @@ class LUConstruction : Fragment() {
 
         fun newInstance(): LUConstruction {
             return LUConstruction()
-        }
-
-        private fun getAttributeColor(context: Context, attributeId: Int): Int {
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(attributeId, typedValue, true)
-            val colorRes = typedValue.resourceId
-            var color = -1
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: Resources.NotFoundException) {
-                e.printStackTrace()
-            }
-
-            return color
         }
     }
 }

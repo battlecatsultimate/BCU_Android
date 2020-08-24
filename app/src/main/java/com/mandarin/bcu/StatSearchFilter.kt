@@ -25,7 +25,9 @@ import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.adapters.StatFilterAdapter
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.lang.NumberFormatException
@@ -72,6 +74,10 @@ class StatSearchFilter : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_stat_search_filter)
 
@@ -649,6 +655,7 @@ class StatSearchFilter : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
         StatFilterElement.started = false
     }
 

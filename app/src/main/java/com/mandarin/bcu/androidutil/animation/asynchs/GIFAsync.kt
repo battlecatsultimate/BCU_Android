@@ -9,8 +9,8 @@ import com.mandarin.bcu.androidutil.AnimatedGifEncoder
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.keepDoing
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import common.pack.PackData
-import common.util.unit.Enemy
+import common.pack.Identifier
+import common.util.unit.AbEnemy
 import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -20,19 +20,19 @@ import java.util.*
 
 class GIFAsync : AsyncTask<Void?, Void?, Void?> {
     private val context: WeakReference<Activity?>
-    private val data: PackData.Identifier<*>
+    private val data: Identifier<*>
     private var form = -1
     private var done = false
 
     private var result = ""
 
-    constructor(context: Activity?, data: PackData.Identifier<*>, form: Int) {
+    constructor(context: Activity?, data: Identifier<*>, form: Int) {
         this.form = form
         this.context = WeakReference(context)
         this.data = data
     }
 
-    constructor(context: Activity?, data: PackData.Identifier<*>) {
+    constructor(context: Activity?, data: Identifier<*>) {
         this.data = data
         this.context = WeakReference(context)
     }
@@ -47,9 +47,9 @@ class GIFAsync : AsyncTask<Void?, Void?, Void?> {
         val name: String
 
         val d = if(form != -1) {
-            StaticStore.transformIdentifier(data, Unit::class.java)
+            StaticStore.transformIdentifier<Unit>(data)
         } else {
-            StaticStore.transformIdentifier(data, Enemy::class.java)
+            StaticStore.transformIdentifier<AbEnemy>(data)
         } ?: return null
 
         name = if (form != -1) {

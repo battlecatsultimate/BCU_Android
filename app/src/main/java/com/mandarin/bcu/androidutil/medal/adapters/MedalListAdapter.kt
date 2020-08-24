@@ -37,6 +37,7 @@ class MedalListAdapter(private val activity: Activity, private val num: Int, wid
 
 
         val posit = num * position
+
         holder.layout.removeAllViews()
         holder.icons.clear()
         for (j in 0 until num) {

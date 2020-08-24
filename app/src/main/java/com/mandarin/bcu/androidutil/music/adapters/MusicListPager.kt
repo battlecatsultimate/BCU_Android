@@ -11,18 +11,19 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
-import common.util.Data
-import common.util.pack.Pack
+import common.pack.Identifier
+import common.pack.UserProfile
+import common.util.stage.Music
 
 class MusicListPager : Fragment() {
-    private var pid = 0
+    private var pid = "000000"
 
     companion object {
-        fun newIntance(pid: Int) : MusicListPager {
+        fun newIntance(pid: String) : MusicListPager {
             val mlp = MusicListPager()
             val bundle = Bundle()
 
-            bundle.putInt("pid", pid)
+            bundle.putString("pid", pid)
 
             mlp.arguments = bundle
 
@@ -33,27 +34,23 @@ class MusicListPager : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
-        pid = arguments?.getInt("pid") ?: 0
+        pid = arguments?.getString("pid") ?: "000000"
         val ac = activity ?: return view
 
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
 
-        val p = Pack.map[pid] ?: return view
+        val p = UserProfile.getPack(pid) ?: return view
 
-        val ms = p.ms.list
+        val ms = p.musics.list
 
         if(ms.isNotEmpty()) {
             nores.visibility = View.GONE
 
-            val names = ArrayList<String>()
-            val locate = ArrayList<Int>()
+            val names = ArrayList<Identifier<Music>>()
 
             for(i in ms.indices) {
-                val name = ms[i].name
-
-                names.add(Data.hex(pid) + " - " + name)
-                locate.add(i)
+                names.add(ms[i].id)
             }
 
             val adapter = MusicListAdapter(ac, names, pid, false)

@@ -16,9 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.asynchs.BPAdder
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.lineup.LineUpView
+import common.CommonStatic
 import common.battle.BasisSet
+import common.util.stage.Stage
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -65,6 +68,10 @@ class BattlePrepare : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_battle_prepare)
 
         val line = LineUpView(this)
@@ -95,14 +102,12 @@ class BattlePrepare : AppCompatActivity() {
         val result = intent.extras
 
         if (result != null) {
-            val mapcode = result.getInt("mapcode")
-            val stid = result.getInt("stid")
-            val posit = result.getInt("stage")
+            val data = StaticStore.transformIdentifier<Stage>(result.getString("Data")) ?: return
 
             if (result.containsKey("selection")) {
-                BPAdder(this, mapcode, stid, posit, result.getInt("selection")).execute()
+                BPAdder(this, data, result.getInt("selection")).execute()
             } else {
-                BPAdder(this, mapcode, stid, posit).execute()
+                BPAdder(this, data).execute()
             }
         }
     }
@@ -145,5 +150,6 @@ class BattlePrepare : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

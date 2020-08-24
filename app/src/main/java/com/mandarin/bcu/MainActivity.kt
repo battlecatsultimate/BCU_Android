@@ -24,9 +24,11 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.asynchs.UploadLogs
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.File
@@ -85,6 +87,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         deleter(File(Environment.getDataDirectory().absolutePath+"/data/com.mandarin.bcu/temp/"))
 
         Thread.setDefaultUncaughtExceptionHandler(ErrorLogWriter(StaticStore.getExternalLog(this), shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)))
@@ -356,6 +363,7 @@ class MainActivity : AppCompatActivity() {
 
         StaticStore.dialogisShowed = false
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
 
         super.onDestroy()
     }

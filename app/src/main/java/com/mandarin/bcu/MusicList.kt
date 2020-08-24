@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.music.asynchs.MusicAdder
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -53,6 +55,10 @@ class MusicList : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_music_list)
 
         val bck: FloatingActionButton = findViewById(R.id.mulistbck)
@@ -91,5 +97,6 @@ class MusicList : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

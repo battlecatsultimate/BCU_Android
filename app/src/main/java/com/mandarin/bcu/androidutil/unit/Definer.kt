@@ -10,23 +10,14 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.decode.ZipLib
+import com.mandarin.bcu.androidutil.io.LangLoader
 import com.mandarin.bcu.util.Interpret
-import common.CommonStatic
-import common.battle.BasisSet
-import common.battle.data.Orb
-import common.battle.data.PCoin
-import common.system.MultiLangCont
 import common.system.fake.ImageBuilder
-import common.system.files.AssetData
-import common.util.pack.Pack
-import common.util.unit.Combo
-import common.util.unit.Unit
-import java.io.File
+import common.system.files.VFile
 import java.io.IOException
 import java.util.*
 
-class Definer {
+object Definer {
     private val colorid = StaticStore.colorid
     private val starid = StaticStore.starid
     private val starstring = arrayOfNulls<String>(5)
@@ -37,36 +28,16 @@ class Definer {
     private val abi = arrayOfNulls<String>(abiid.size)
     private val textid = StaticStore.textid
     private val textstring = arrayOfNulls<String>(textid.size)
-    private val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
-    private val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
+
     fun define(context: Context) {
         try {
-            if (StaticStore.units == null) {
-                try {
-                    StaticStore.getUnitnumber(context)
-                    ImageBuilder.builder = BMBuilder()
-                    DefineItf().init(context)
-                    Unit.readData()
-                    PCoin.read()
-                    Combo.readFile()
-                    Orb.read()
-                } catch (e: Exception) {
-                    StaticStore.clear()
-                    val shared2 = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-                    StaticStore.getLang(shared2.getInt("Language", 0))
-                    ZipLib.init(StaticStore.getExternalPath(context))
-                    ZipLib.read(StaticStore.getExternalPath(context))
-                    ImageBuilder.builder = BMBuilder()
-                    StaticStore.getUnitnumber(context)
-                    DefineItf().init(context)
-                    Unit.readData()
-                    PCoin.read()
-                    Combo.readFile()
-                    Orb.read()
-                    StaticStore.root = 1
-                    println(StaticStore.unitnumber)
-                }
-                StaticStore.units = Pack.def.us.ulist.list
+            if (!StaticStore.init) {
+                StaticStore.clear()
+                val shared2 = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+                StaticStore.getLang(shared2.getInt("Language", 0))
+                ImageBuilder.builder = BMBuilder()
+                DefineItf().init(context)
+                StaticStore.init = true
 
                 if (StaticStore.img15 == null) {
                     StaticStore.readImg(context)
@@ -98,125 +69,77 @@ class Definer {
             }
 
             if (StaticStore.unitlang == 1) {
-                MultiLangCont.FNAME.clear()
-                MultiLangCont.FEXP.clear()
-                MultiLangCont.CFEXP.clear()
-                MultiLangCont.COMNAME.clear()
-
-                for (l in lan) {
-                    for (n in files) {
-                        val path = StaticStore.getExternalPath(context)+"lang" + l + n
-                        val f = File(path)
-                        if (f.exists()) {
-                            val qs = AssetData.getAsset(f).readLine()
-                            when (n) {
-                                "UnitName.txt" -> {
-                                    val size = qs.size
-                                    var j = 0
-                                    while (j < size) {
-                                        val strs = qs.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: return
-                                        val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
-                                        if (u == null) {
-                                            j++
-                                            continue
-                                        }
-                                        var i = 0
-                                        while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
-                                            MultiLangCont.FNAME.put(l.substring(1, l.length - 1), u.forms[i], strs[i + 1].trim { it <= ' ' })
-                                            i++
-                                        }
-                                        j++
-                                    }
-                                }
-                                "UnitExplanation.txt" -> {
-                                    val size = qs.size
-                                    var j = 0
-                                    while (j < size) {
-                                        val strs = qs.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: return
-                                        val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
-                                        if (u == null) {
-                                            j++
-                                            continue
-                                        }
-                                        var i = 0
-                                        while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
-                                            val lines = strs[i + 1].trim { it <= ' ' }.split("<br>").toTypedArray()
-                                            MultiLangCont.FEXP.put(l.substring(1, l.length - 1), u.forms[i], lines)
-                                            i++
-                                        }
-                                        j++
-                                    }
-                                }
-                                "CatFruitExplanation.txt" -> for (str in qs) {
-                                    val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
-                                    val u = Pack.def.us.ulist[CommonStatic.parseIntN(strs[0])]
-                                            ?: continue
-                                    if (strs.size == 1) {
-                                        continue
-                                    }
-                                    val lines = strs[1].split("<br>").toTypedArray()
-                                    MultiLangCont.CFEXP.put(l.substring(1, l.length - 1), u.info, lines)
-                                }
-                                "ComboName.txt" -> for (str in qs) {
-                                    val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
-                                    if (strs.size <= 1) {
-                                        continue
-                                    }
-                                    val id = strs[0].trim { it <= ' ' }.toInt()
-                                    val name = strs[1].trim { it <= ' ' }
-                                    MultiLangCont.COMNAME.put(l.substring(1, l.length - 1), id, name)
-                                }
-                            }
-                        }
-                    }
-                }
-                StaticStore.unitlang = 0
-            }
-
-            if (StaticStore.t == null) {
-                Combo.readFile()
-                StaticStore.t = BasisSet.current.t()
+                LangLoader.readUnitLang(context)
             }
 
             if (StaticStore.fruit == null) {
-                val path1 = StaticStore.getExternalPath(context)+"org/page/catfruit/"
-                val f = File(path1)
+                val path1 = "./org/page/catfruit/"
 
                 val names = arrayOf("gatyaitemD_30_f.png", "gatyaitemD_31_f.png", "gatyaitemD_32_f.png", "gatyaitemD_33_f.png", "gatyaitemD_34_f.png", "gatyaitemD_35_f.png", "gatyaitemD_36_f.png"
-                        , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "xp.png")
+                        , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "datyaitemD_43_f.png", "xp.png")
 
-                StaticStore.fruit = arrayOfNulls(f.listFiles()?.size ?: names.size)
+                StaticStore.fruit = Array(names.size) {i ->
+                    val vf = VFile.get(path1+names[i])
 
-                for (i in names.indices) {
-                    StaticStore.fruit[i] = BitmapFactory.decodeFile(path1 + names[i])
+                    if(vf == null)
+                        StaticStore.empty(1, 1)
+
+                    val icon = vf.data?.img?.bimg()
+
+                    if(icon == null)
+                        StaticStore.empty(1, 1)
+
+                    icon as Bitmap
                 }
             }
+
+            if (StaticStore.img15 == null) {
+                StaticStore.readImg(context)
+            }
+
             if (StaticStore.icons == null) {
                 val number = StaticStore.anumber
-                StaticStore.icons = arrayOfNulls(number.size)
-                for (i in number.indices) StaticStore.icons[i] = StaticStore.img15[number[i]].bimg() as Bitmap
-                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
                 val files = StaticStore.afiles
-                for (i in files.indices) {
-                    if (files[i] == "") continue
-                    StaticStore.icons[i] = BitmapFactory.decodeFile(iconpath + files[i])
+
+                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
+
+                StaticStore.icons = Array(number.size) {i ->
+                    if(number[i] == 227) {
+                        if(files[i].isNotEmpty()) {
+                            BitmapFactory.decodeFile(iconpath+files[i])
+                        } else {
+                            StaticStore.empty(1, 1)
+                        }
+                    } else {
+                        (StaticStore.img15?.get(number[i])?.bimg() ?: StaticStore.empty(1,1)) as Bitmap
+                    }
                 }
             }
+
             if (StaticStore.picons == null) {
                 val number = StaticStore.pnumber
-                StaticStore.picons = arrayOfNulls(number.size)
-                for (i in number.indices) StaticStore.picons[i] = StaticStore.img15[number[i]].bimg() as Bitmap
-                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
                 val files = StaticStore.pfiles
-                for (i in files.indices) {
-                    if (files[i] == "") continue
-                    StaticStore.picons[i] = BitmapFactory.decodeFile(iconpath + files[i])
+
+                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
+
+                StaticStore.picons = Array(number.size) {i ->
+                    if(number[i] == 227) {
+                        if(files[i].isNotEmpty()) {
+                            BitmapFactory.decodeFile(iconpath+files[i])
+                        } else {
+                            StaticStore.empty(1, 1)
+                        }
+                    } else {
+                        (StaticStore.img15?.get(number[i])?.bimg() ?: StaticStore.empty(1,1)) as Bitmap
+                    }
                 }
             }
+
             if (StaticStore.addition == null) {
                 val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas)
-                StaticStore.addition = arrayOfNulls(addid.size)
-                for (i in addid.indices) StaticStore.addition[i] = context.getString(addid[i])
+                StaticStore.addition = Array(addid.size) { i ->
+                    context.getString(addid[i])
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -235,8 +158,10 @@ class Definer {
         for (i in abiid.indices) abi[i] = getString(context, abiid[i], lang)
         for (i in textid.indices) textstring[i] = getString(context, textid[i], lang)
         val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas)
-        StaticStore.addition = arrayOfNulls(addid.size)
-        for (i in addid.indices) StaticStore.addition[i] = getString(context, addid[i], lang)
+        StaticStore.addition = Array(addid.size) { i ->
+            getString(context, addid[i], lang)
+        }
+
         Interpret.TRAIT = colorstring
         Interpret.STAR = starstring
         Interpret.PROC = proc

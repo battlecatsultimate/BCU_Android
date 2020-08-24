@@ -17,8 +17,10 @@ import androidx.core.content.ContextCompat
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.asynchs.DownloadApk
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -58,6 +60,10 @@ class ApkDownload : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_apk_download)
 
@@ -120,5 +126,6 @@ class ApkDownload : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

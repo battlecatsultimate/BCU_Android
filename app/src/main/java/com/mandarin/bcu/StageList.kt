@@ -11,18 +11,20 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.CommonStatic
+import common.pack.Identifier
+import common.util.Data
+import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
+import common.util.stage.StageMap
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
 
 class StageList : AppCompatActivity() {
-    private var mapcode = 0
-    private var stid = 0
     private var custom = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,40 +62,31 @@ class StageList : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_stage_list)
 
         val result = intent
         val extra = result.extras
 
         if (extra != null) {
-            mapcode = extra.getInt("mapcode")
-            stid = extra.getInt("stid")
+            val data = StaticStore.transformIdentifier<StageMap>(extra.getString("Data")) ?: return
+            val stm = Identifier.get(data) ?: return
+
+            val stname = MultiLangCont.get(stm) ?: stm.name ?: Data.trio(data.id)
+
             custom = extra.getBoolean("custom")
-        }
 
-        val name = findViewById<TextView>(R.id.stglistname)
+            val name = findViewById<TextView>(R.id.stglistname)
 
-        val index = StaticStore.mapcode.indexOf(mapcode)
-
-        val mc = if(index < StaticStore.BCmaps) {
-            MapColc.MAPS[mapcode]
-        } else {
-            val p = Pack.map[mapcode] ?: return
-
-            p.mc
-        }
-
-        if (mc != null) {
-            val stm = mc.maps[stid]
-            var stname = MultiLangCont.SMNAME.getCont(stm) ?: stm.name
-            if (stname == null)
-                stname = number(stid)
             name.text = stname
+
+            val stageLoader = StageLoader(this, data, custom)
+
+            stageLoader.execute()
         }
-
-        val stageLoader = StageLoader(this, mapcode, stid, custom)
-
-        stageLoader.execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -130,6 +123,7 @@ class StageList : AppCompatActivity() {
         super.onDestroy()
 
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
     private fun number(num: Int): String {

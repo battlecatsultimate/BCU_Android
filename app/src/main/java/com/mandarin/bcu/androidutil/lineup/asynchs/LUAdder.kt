@@ -6,13 +6,11 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -32,27 +30,15 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.SearchFilter
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.pack.AImageWriter
-import com.mandarin.bcu.androidutil.io.DefferedLoader
-import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.adapters.*
 import com.mandarin.bcu.androidutil.lineup.adapters.LUCatCombo.Companion.newInstance
 import com.mandarin.bcu.androidutil.unit.Definer
 import common.battle.BasisSet
-import common.io.InStream
-import common.system.MultiLangCont
-import common.system.fake.FakeImage
-import common.util.Data
-import common.util.pack.Pack
-import java.io.BufferedInputStream
+import common.pack.UserProfile
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.lang.ref.WeakReference
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncTask<Void?, String?, Void?>() {
@@ -87,216 +73,43 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        Definer().define(activity)
+        Definer.define(activity)
 
-        publishProgress(pack)
-
-        if(!StaticStore.packread && Pack.map.size == 1) {
-            checkValidPack()
-            handlePack()
-            removeIfDifferent()
-
-            try {
-
-                Pack.read()
-                StaticStore.packread = true
-                DefferedLoader.clearPending("Context", activity)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
-            }
-
-            for (path in DefineItf.packPath) {
-                val f = File(path)
-
-                val fname = f.name
-
-                if (fname.endsWith(".bcupack")) {
-                    if (!checkPack(f)) {
-                        val p = findPack(f)
-
-                        val name = f.name.replace(".bcupack", "")
-
-                        val shared = activity.getSharedPreferences(name, Context.MODE_PRIVATE)
-                        val ed = shared.edit()
-
-                        ed.putString(name, StaticStore.fileToMD5(f))
-                        ed.apply()
-
-                        val resimg = StaticStore.getExternalRes(activity) + "img/$name/"
-
-                        val g = File(resimg)
-
-                        val glit = g.listFiles() ?: continue
-
-                        for (gs in glit) {
-                            val pngname = gs.name
-
-                            publishProgress(image, pngname.replace(".png", ""))
-
-                            if (pngname.endsWith(".png")) {
-                                val md5 = StaticStore.fileToMD5(gs)
-
-                                StaticStore.encryptPNG(gs.absolutePath, md5, StaticStore.IV, true)
-
-                                ed.putString(gs.absolutePath.replace(".png", ".bcuimg"), md5)
-                                ed.apply()
-                            }
-                        }
-
-                        p ?: continue
-
-                        val bpathList = ArrayList<String>()
-
-                        for (i in p.bg.list) {
-                            val img = i.img?.bimg ?: continue
-
-                            val bpath = StaticStore.getExternalRes(activity) + "img/$name/"
-                            val bname = findBgName(bpath)
-
-                            val info = extractImage(activity, img, bpath, bname, false)
-
-                            if (info.size != 2)
-                                continue
-
-                            val result = info[0] + "\\" + info[1]
-
-                            (i.img.bimg as FIBM).reference = result
-
-                            bpathList.add(result)
-                        }
-
-                        for (i in bpathList) {
-                            val info = i.split("\\")
-
-                            val bf = File(info[0].replace(".bcuimg", ".png"))
-
-                            if (!bf.exists())
-                                continue
-
-                            publishProgress(bg, bf.name.replace(".png", ""))
-
-                            if (info.size != 2)
-                                continue
-
-                            StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
-                        }
-
-                        val cpathList = ArrayList<String>()
-
-                        for (i in p.cs.list) {
-                            val img = i.img ?: continue
-
-                            val cpath = StaticStore.getExternalRes(activity) + "img/$name/"
-                            val cname = findCsName(cpath)
-
-                            val info = extractImage(activity, img, cpath, cname, false)
-
-                            if (info.size != 2)
-                                continue
-
-                            val result = info[0] + "\\" + info[1]
-
-                            (i.img as FIBM).reference = result
-
-                            cpathList.add(result)
-                        }
-
-                        for (i in cpathList) {
-                            val info = i.split("\\")
-
-                            val cf = File(info[0].replace(".bcuimg", ".png"))
-
-                            if (!cf.exists())
-                                continue
-
-                            publishProgress(castle, cf.name.replace(".png", ""))
-
-                            if (info.size != 2)
-                                continue
-
-                            StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
-                        }
-
-                        publishProgress(packext, f.name.replace(".bcupack", ""))
-
-                        p.packData(AImageWriter())
-                    }
-                }
-            }
-
-            DefineItf.packPath.clear()
-
-            StaticStore.filterEntityList = BooleanArray(Pack.map.size)
-        }
-
-        if (StaticStore.lunames.isEmpty() || StaticStore.ludata.isEmpty()) {
-            StaticStore.lunames.clear()
+        if (StaticStore.ludata.isEmpty()) {
             StaticStore.ludata.clear()
 
-            for(m in Pack.map) {
-                val p = m.value ?: continue
+            for(p in UserProfile.getAllPacks()) {
+                for(i in p.units.list.indices) {
+                    val unit = p.units.list[i]
 
-                val pid = p.id
-
-                for(i in p.us.ulist.list.indices) {
-                    val unit = p.us.ulist.list[i]
-
-                    val name = MultiLangCont.FNAME.getCont(unit.forms[0]) ?: unit.forms[0].name ?: ""
-
-                    val id = if(p.id != 0) {
-                        StaticStore.getID(p.us.ulist.list[i].id)
-                    } else {
-                        i
-                    }
-
-                    val fullName = if(name != "") {
-                        Data.hex(pid)+" - "+number(id)+"/"+name
-                    } else {
-                        Data.hex(pid)+" - "+number(id)+"/"
-                    }
-
-                    StaticStore.lunames.add(fullName)
-                    StaticStore.ludata.add("$pid-$i")
+                    StaticStore.ludata.add(unit.id)
                 }
             }
         }
 
         publishProgress(lu)
         if (!StaticStore.LUread) {
-            val path = StaticStore.getExternalPath(activity)+"user/basis.v"
+            val path = StaticStore.getExternalUser(activity)+"/basis.json"
             val f = File(path)
 
             if (f.exists()) {
                 if (f.length() != 0L) {
-                    val buff = ByteArray(f.length().toInt())
                     try {
-                        val bis = BufferedInputStream(FileInputStream(f))
-                        bis.read(buff, 0, buff.size)
-                        bis.close()
-                        val `is` = InStream.getIns(buff)
-                        try {
-                            BasisSet.read(`is`)
-                        } catch (e: Exception) {
-                            publishProgress(activity.getString(R.string.lineup_file_err))
-                            val def = BasisSet.list[0]
-                            BasisSet.list.clear()
-                            BasisSet.list.add(def)
-                            ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
-                        }
+                        BasisSet.read()
                     } catch (e: Exception) {
                         publishProgress(activity.getString(R.string.lineup_file_err))
-                        val def = BasisSet.list[0]
-                        BasisSet.list.clear()
-                        BasisSet.list.add(def)
+                        val def = BasisSet.list()[0]
+                        BasisSet.list().clear()
+                        BasisSet.list().add(def)
                         ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                     }
                 }
             }
             StaticStore.LUread = true
         }
-        StaticStore.sets = BasisSet.list
+        
         publishProgress(done)
+        
         return null
     }
 
@@ -357,7 +170,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
                     StaticStore.set = null
                     StaticStore.lu = null
-                    StaticStore.combos?.clear()
+                    StaticStore.combos.clear()
 
                     activity.finish()
                 }
@@ -424,15 +237,15 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 val setspin = activity.findViewById<Spinner>(R.id.setspin)
                 val luspin = activity.findViewById<Spinner>(R.id.luspin)
 
-                if (setn >= BasisSet.list.size)
-                    setn = BasisSet.list.size - 1
+                if (setn >= BasisSet.list().size)
+                    setn = BasisSet.list().size - 1
 
-                BasisSet.current = BasisSet.list[setn]
+                BasisSet.setCurrent(BasisSet.list()[setn])
 
                 val setname: MutableList<String> = ArrayList()
 
-                for (i in StaticStore.sets.indices)
-                    setname.add(StaticStore.sets[i].name)
+                for (i in BasisSet.list().indices)
+                    setname.add(BasisSet.list()[i].name)
 
                 val adapter = ArrayAdapter(activity, R.layout.spinneradapter, setname)
 
@@ -445,7 +258,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             return
                         }
 
-                        BasisSet.current = StaticStore.sets[position]
+                        BasisSet.setCurrent(BasisSet.list()[position])
 
                         val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                         val editor = preferences.edit()
@@ -455,8 +268,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
                         val luname: MutableList<String> = ArrayList()
 
-                        for (i in BasisSet.current.lb.indices) {
-                            luname.add(BasisSet.current.lb[i].name)
+                        for (i in BasisSet.current().lb.indices) {
+                            luname.add(BasisSet.current().lb[i].name)
                         }
 
                         val adapter1 = ArrayAdapter(activity, R.layout.spinneradapter, luname)
@@ -486,13 +299,13 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
                 val luname: MutableList<String> = ArrayList()
 
-                if (lun >= BasisSet.current.lb.size)
-                    lun = BasisSet.current.lb.size - 1
+                if (lun >= BasisSet.current().lb.size)
+                    lun = BasisSet.current().lb.size - 1
 
-                BasisSet.current.sele = BasisSet.current.lb[lun]
+                BasisSet.current().sele = BasisSet.current().lb[lun]
 
-                for (i in BasisSet.current.lb.indices) {
-                    luname.add(BasisSet.current.lb[i].name)
+                for (i in BasisSet.current().lb.indices) {
+                    luname.add(BasisSet.current().lb[i].name)
                 }
 
                 val adapter1 = ArrayAdapter(activity, R.layout.spinneradapter, luname)
@@ -503,7 +316,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         if (!initialized)
                             return
 
-                        BasisSet.current.sele = BasisSet.current.lb[position]
+                        BasisSet.current().sele = BasisSet.current().lb[position]
 
                         val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                         val editor = preferences.edit()
@@ -511,12 +324,12 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         editor.putInt("equip_lu", position)
                         editor.apply()
 
-                        line.changeFroms(BasisSet.current.sele.lu)
+                        line.changeFroms(BasisSet.current().sele.lu)
 
                         StaticStore.updateForm = true
                         StaticStore.updateOrb = true
 
-                        menu.getItem(5).subMenu.getItem(1).isEnabled = BasisSet.current.lb.size != 1
+                        menu.getItem(5).subMenu.getItem(1).isEnabled = BasisSet.current().lb.size != 1
                         menu.getItem(5).isEnabled = !(!menu.getItem(5).subMenu.getItem(0).isEnabled && !menu.getItem(5).subMenu.getItem(1).isEnabled)
 
                         line.invalidate()
@@ -553,7 +366,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             val setdone = dialog.findViewById<Button>(R.id.setludone)
                             val cancel = dialog.findViewById<Button>(R.id.setlucancel)
 
-                            edit.hint = "set " + BasisSet.list.size
+                            edit.hint = "set " + BasisSet.list().size
 
                             val rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
 
@@ -565,15 +378,15 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 else {
                                     BasisSet()
 
-                                    BasisSet.list[BasisSet.list.size - 1].name = edit.text.toString()
+                                    BasisSet.list()[BasisSet.list().size - 1].name = edit.text.toString()
                                 }
 
                                 val names: MutableList<String> = ArrayList()
 
                                 var i = 0
 
-                                while (i < BasisSet.list.size) {
-                                    names.add(BasisSet.list[i].name)
+                                while (i < BasisSet.list().size) {
+                                    names.add(BasisSet.list()[i].name)
                                     i++
                                 }
 
@@ -608,7 +421,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             val setdone: Button = dialog.findViewById(R.id.setludone)
                             val cancel: Button = dialog.findViewById(R.id.setlucancel)
 
-                            edit.hint = "lineup " + BasisSet.current.lb.size
+                            edit.hint = "lineup " + BasisSet.current().lb.size
 
                             val rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
 
@@ -616,18 +429,18 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
                             setdone.setOnClickListener {
                                 if (edit.text.toString().isEmpty())
-                                    BasisSet.current.add()
+                                    BasisSet.current().add()
                                 else {
-                                    BasisSet.current.add()
-                                    BasisSet.current.lb[BasisSet.current.lb.size - 1].name = edit.text.toString()
+                                    BasisSet.current().add()
+                                    BasisSet.current().lb[BasisSet.current().lb.size - 1].name = edit.text.toString()
                                 }
 
                                 val names: MutableList<String> = ArrayList()
 
                                 var i = 0
 
-                                while (i < BasisSet.current.lb.size) {
-                                    names.add(BasisSet.current.lb[i].name)
+                                while (i < BasisSet.current().lb.size) {
+                                    names.add(BasisSet.current().lb[i].name)
                                     i++
                                 }
 
@@ -650,14 +463,14 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             return@setOnMenuItemClickListener true
                         }
                         R.id.lineup_copy_set -> {
-                            StaticStore.set = BasisSet.current.copy()
-                            BasisSet.current = BasisSet.list[setspin.selectedItemPosition]
+                            StaticStore.set = BasisSet.current().copy()
+                            BasisSet.setCurrent(BasisSet.list()[setspin.selectedItemPosition])
 
-                            for(i in BasisSet.current.lb.indices) {
-                                StaticStore.set.lb[i].name = BasisSet.current.lb[i].name
+                            for(i in BasisSet.current().lb.indices) {
+                                BasisSet.current().lb[i].name = BasisSet.current().lb[i].name
                             }
 
-                            BasisSet.list.removeAt(BasisSet.list.size - 1)
+                            BasisSet.list().removeAt(BasisSet.list().size - 1)
 
                             StaticStore.showShortMessage(activity, R.string.lineup_set_copied)
 
@@ -667,7 +480,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             return@setOnMenuItemClickListener true
                         }
                         R.id.lineup_copy_lineup -> {
-                            StaticStore.lu = BasisSet.current.sele.copy()
+                            StaticStore.lu = BasisSet.current().sele.copy()
                             StaticStore.showShortMessage(activity, R.string.lineup_lu_copied)
                             menu.getItem(2).isEnabled = true
                             menu.getItem(2).subMenu.getItem(1).isEnabled = true
@@ -675,25 +488,28 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         }
                         R.id.lineup_paste_set -> {
                             val builder = AlertDialog.Builder(activity)
+
+                            val s = StaticStore.set ?: return@setOnMenuItemClickListener true
+
                             builder.setTitle(R.string.lineup_pasting_set)
                             builder.setMessage(R.string.lineup_paste_set_msg)
                             builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
-                                val name = BasisSet.current.name
+                                val name = BasisSet.current().name
 
                                 if(setspin.selectedItemPosition != 0) {
-                                    BasisSet.list.removeAt(setspin.selectedItemPosition)
-                                    BasisSet.list.add(setspin.selectedItemPosition, StaticStore.set.copy())
-                                    BasisSet.list.removeAt(BasisSet.list.size - 1)
-                                    BasisSet.current = BasisSet.list[setspin.selectedItemPosition]
-                                    BasisSet.current.name = name
+                                    BasisSet.list().removeAt(setspin.selectedItemPosition)
+                                    BasisSet.list().add(setspin.selectedItemPosition, s.copy())
+                                    BasisSet.list().removeAt(BasisSet.list().size - 1)
+                                    BasisSet.setCurrent(BasisSet.list()[setspin.selectedItemPosition])
+                                    BasisSet.current().name = name
                                 } else {
-                                    BasisSet.def.lb.clear()
+                                    BasisSet.def().lb.clear()
 
-                                    for(i in StaticStore.set.lb.indices) {
-                                        val lb = StaticStore.set.lb[i].copy()
-                                        lb.name = StaticStore.set.lb[i].name
+                                    for(i in s.lb.indices) {
+                                        val lb = s.lb[i].copy()
+                                        lb.name = s.lb[i].name
 
-                                        BasisSet.def.lb.add(lb)
+                                        BasisSet.def().lb.add(lb)
                                     }
                                 }
 
@@ -701,8 +517,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                                 line.invalidate()
                                 val luname1: MutableList<String> = ArrayList()
                                 var i = 0
-                                while (i < BasisSet.current.lb.size) {
-                                    luname1.add(BasisSet.current.lb[i].name)
+                                while (i < BasisSet.current().lb.size) {
+                                    luname1.add(BasisSet.current().lb[i].name)
                                     i++
                                 }
                                 val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
@@ -716,14 +532,17 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                         }
                         R.id.lineup_paste_lineup -> {
                             val builder = AlertDialog.Builder(activity)
+
+                            val l = StaticStore.lu ?: return@setOnMenuItemClickListener true
+
                             builder.setTitle(R.string.lineup_pasting_lu)
                             builder.setMessage(R.string.lineup_paste_lu_msg)
                             builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
-                                val name = BasisSet.current.sele.name
-                                BasisSet.current.lb.removeAt(luspin.selectedItemPosition)
-                                BasisSet.current.lb.add(luspin.selectedItemPosition, StaticStore.lu.copy())
-                                BasisSet.current.sele = BasisSet.current.lb[luspin.selectedItemPosition]
-                                BasisSet.current.sele.name = name
+                                val name = BasisSet.current().sele.name
+                                BasisSet.current().lb.removeAt(luspin.selectedItemPosition)
+                                BasisSet.current().lb.add(luspin.selectedItemPosition, l.copy())
+                                BasisSet.current().sele = BasisSet.current().lb[luspin.selectedItemPosition]
+                                BasisSet.current().sele.name = name
                                 line.updateLineUp()
                                 line.invalidate()
                                 StaticStore.showShortMessage(activity, R.string.lineup_paste_lu_done)
@@ -741,16 +560,16 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             val cancel: Button = dialog.findViewById(R.id.setlucancel)
                             val setluname: TextView = dialog.findViewById(R.id.setluname)
                             setluname.setText(R.string.lineup_renaming_set)
-                            edit.hint = BasisSet.current.name
+                            edit.hint = BasisSet.current().name
                             val rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
                             edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]))
                             setdone.setOnClickListener {
                                 if (edit.text.toString().isNotEmpty()) {
-                                    BasisSet.current.name = edit.text.toString()
+                                    BasisSet.current().name = edit.text.toString()
                                     val setname1: MutableList<String> = ArrayList()
                                     var i = 0
-                                    while (i < StaticStore.sets.size) {
-                                        setname1.add(StaticStore.sets[i].name)
+                                    while (i < BasisSet.list().size) {
+                                        setname1.add(BasisSet.list()[i].name)
                                         i++
                                     }
                                     val adapter22 = ArrayAdapter(activity, R.layout.spinneradapter, setname1)
@@ -773,21 +592,21 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             val cancel: Button = dialog.findViewById(R.id.setlucancel)
                             val setluname:TextView = dialog.findViewById(R.id.setluname)
                             setluname.setText(R.string.lineup_renaming_lu)
-                            edit.hint = BasisSet.current.sele.name
+                            edit.hint = BasisSet.current().sele.name
                             val rgb = StaticStore.getRGB(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
                             edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]))
                             setdone.setOnClickListener {
                                 if (edit.text.toString().isNotEmpty()) {
-                                    BasisSet.current.sele.name = edit.text.toString()
+                                    BasisSet.current().sele.name = edit.text.toString()
                                     val luname1: MutableList<String> = ArrayList()
                                     var i = 0
-                                    while (i < BasisSet.current.lb.size) {
-                                        luname1.add(BasisSet.current.lb[i].name)
+                                    while (i < BasisSet.current().lb.size) {
+                                        luname1.add(BasisSet.current().lb[i].name)
                                         i++
                                     }
                                     val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                                     luspin.adapter = adapter11
-                                    luspin.setSelection(BasisSet.current.lb.size - 1)
+                                    luspin.setSelection(BasisSet.current().lb.size - 1)
                                     StaticStore.saveLineUp(activity)
                                 }
                                 dialog.dismiss()
@@ -797,35 +616,35 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             return@setOnMenuItemClickListener true
                         }
                         R.id.lineup_clone_set -> {
-                            val origin = BasisSet.current.name
-                            BasisSet.current.copy()
-                            BasisSet.list[BasisSet.list.size - 1].name = "$origin`"
+                            val origin = BasisSet.current().name
+                            BasisSet.current().copy()
+                            BasisSet.list()[BasisSet.list().size - 1].name = "$origin`"
                             val setname1: MutableList<String> = ArrayList()
                             var i = 0
-                            while (i < StaticStore.sets.size) {
-                                setname1.add(StaticStore.sets[i].name)
+                            while (i < BasisSet.list().size) {
+                                setname1.add(BasisSet.list()[i].name)
                                 i++
                             }
                             val adapter22 = ArrayAdapter(activity, R.layout.spinneradapter, setname1)
                             setspin.adapter = adapter22
-                            setspin.setSelection(BasisSet.list.size - 1)
+                            setspin.setSelection(BasisSet.list().size - 1)
                             StaticStore.saveLineUp(activity)
                             StaticStore.showShortMessage(activity, R.string.lineup_cloned_set)
                             return@setOnMenuItemClickListener true
                         }
                         R.id.lineup_clone_lineup -> {
-                            val lu = BasisSet.current.sele.copy()
-                            lu.name = BasisSet.current.sele.name + "`"
-                            BasisSet.current.lb.add(lu)
+                            val lu = BasisSet.current().sele.copy()
+                            lu.name = BasisSet.current().sele.name + "`"
+                            BasisSet.current().lb.add(lu)
                             val luname1: MutableList<String> = ArrayList()
                             var i = 0
-                            while (i < BasisSet.current.lb.size) {
-                                luname1.add(BasisSet.current.lb[i].name)
+                            while (i < BasisSet.current().lb.size) {
+                                luname1.add(BasisSet.current().lb[i].name)
                                 i++
                             }
                             val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                             luspin.adapter = adapter11
-                            luspin.setSelection(BasisSet.current.lb.size - 1)
+                            luspin.setSelection(BasisSet.current().lb.size - 1)
                             StaticStore.saveLineUp(activity)
                             StaticStore.showShortMessage(activity, R.string.lineup_cloned_lineup)
                             return@setOnMenuItemClickListener true
@@ -835,17 +654,17 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             builder.setTitle(R.string.lineup_removing_set)
                             builder.setMessage(R.string.lineup_remove_set_msg)
                             builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
-                                BasisSet.list.removeAt(setspin.selectedItemPosition)
+                                BasisSet.list().removeAt(setspin.selectedItemPosition)
                                 val pos = setspin.selectedItemPosition
                                 val setname2: MutableList<String> = ArrayList()
                                 var i = 0
-                                while (i < StaticStore.sets.size) {
-                                    setname2.add(StaticStore.sets[i].name)
+                                while (i < BasisSet.list().size) {
+                                    setname2.add(BasisSet.list()[i].name)
                                     i++
                                 }
                                 val adapter23 = ArrayAdapter(activity, R.layout.spinneradapter, setname2)
                                 setspin.adapter = adapter23
-                                if (pos >= BasisSet.list.size) setspin.setSelection(BasisSet.list.size - 1) else setspin.setSelection(pos)
+                                if (pos >= BasisSet.list().size) setspin.setSelection(BasisSet.list().size - 1) else setspin.setSelection(pos)
 
                                 try {
                                     StaticStore.saveLineUp(activity)
@@ -863,17 +682,17 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                             builder.setTitle(R.string.lineup_removing_lu)
                             builder.setMessage(R.string.lineup_remove_lu_msg)
                             builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
-                                BasisSet.current.lb.removeAt(luspin.selectedItemPosition)
+                                BasisSet.current().lb.removeAt(luspin.selectedItemPosition)
                                 val pos = luspin.selectedItemPosition
                                 val luname2: MutableList<String> = ArrayList()
                                 var i = 0
-                                while (i < BasisSet.current.lb.size) {
-                                    luname2.add(BasisSet.current.lb[i].name)
+                                while (i < BasisSet.current().lb.size) {
+                                    luname2.add(BasisSet.current().lb[i].name)
                                     i++
                                 }
                                 val adapter12 = ArrayAdapter(activity, R.layout.spinneradapter, luname2)
                                 luspin.adapter = adapter12
-                                if (pos >= BasisSet.current.lb.size) luspin.setSelection(BasisSet.current.lb.size - 1) else luspin.setSelection(pos)
+                                if (pos >= BasisSet.current().lb.size) luspin.setSelection(BasisSet.current().lb.size - 1) else luspin.setSelection(pos)
 
                                 try {
                                     StaticStore.saveLineUp(activity)
@@ -940,21 +759,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
         for (v in view) v.visibility = View.VISIBLE
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
-    }
-
-    private inner class LUTab internal constructor(fm: FragmentManager?, private val lineup: LineUpView) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class LUTab(fm: FragmentManager?, private val lineup: LineUpView) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         init {
             val lit = fm?.fragments
             val trans = fm?.beginTransaction()
@@ -970,7 +775,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
         override fun getItem(i: Int): Fragment {
             when (i) {
-                0 -> return LUUnitList.newInstance(StaticStore.lunames, lineup)
+                0 -> return LUUnitList.newInstance(lineup)
                 1 -> return LUUnitSetting.newInstance(lineup)
                 2 -> return LUOrbSetting.newInstance(lineup)
                 3 -> return LUCastleSetting.newInstance()
@@ -979,7 +784,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 6 -> return newInstance(lineup)
             }
 
-            return LUUnitList.newInstance(StaticStore.lunames, lineup)
+            return LUUnitList.newInstance(lineup)
         }
 
         override fun getCount(): Int {
@@ -992,243 +797,6 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
         override fun saveState(): Parcelable? {
             return null
-        }
-    }
-
-    private fun checkPack(f: File) : Boolean {
-        val ac = weakReference.get() ?: return false
-
-        val name = f.name.replace(".bcupack","").replace(".bcudata","")
-
-        val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
-
-        return if(shared.contains(name)) {
-            val md5 = shared.getString(name, "")
-
-            val fmd5 = StaticStore.fileToMD5(f)
-
-            val g = File(StaticStore.getExternalRes(ac)+"data/"+f.name.replace(".bcupack",".bcudata"))
-
-            md5 == fmd5 && g.exists()
-        } else {
-            false
-        }
-    }
-
-    private fun findBgName(path: String) : String {
-        var i = 0
-
-        while(true) {
-            val name = "bg-"+ Data.trio(i)+".png"
-
-            val f = File(path, name)
-
-            if(f.exists()) {
-                i++
-            } else {
-                println(name)
-                return name
-            }
-        }
-    }
-
-    private fun findCsName(path: String) : String {
-        var i = 0
-
-        while(true) {
-            val name = "castle-"+ Data.trio(i)+".png"
-
-            val f = File(path, name)
-
-            if(f.exists()) {
-                i++
-            } else {
-                return name
-            }
-        }
-    }
-
-    private fun findPack(f: File) : Pack? {
-        val path = f.absolutePath
-
-        for(p in Pack.map) {
-            if(p.value.id == 0)
-                continue
-
-            val ppath = p.value.file?.absolutePath ?: ""
-
-            if(ppath == path)
-                return p.value
-        }
-
-        return null
-    }
-
-    private fun extractImage(c: Context, img: FakeImage, path: String, name: String, unload: Boolean) : Array<String> {
-        val f = File(path)
-        val result = arrayOf("", "")
-
-        if(!f.exists()) {
-            if(!f.mkdirs()) {
-                Log.e("PackExtract", "Failed to create directory "+f.absolutePath)
-                return result
-            }
-        }
-
-        val g = File(path, name)
-
-        if(!g.exists()) {
-            if(!g.createNewFile()) {
-                Log.e("PackExtract", "Failed to create file "+g.absolutePath)
-                return result
-            }
-        }
-
-        img.bimg() ?: return result
-
-        (img.bimg() as Bitmap).compress(Bitmap.CompressFormat.PNG, 0, FileOutputStream(g))
-
-        if(unload) {
-            img.unload()
-        }
-
-        return try {
-            arrayOf(g.absolutePath.replace(".png",".bcuimg"), StaticStore.fileToMD5(g))
-        } catch (e: NoSuchAlgorithmException) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload, c)
-            arrayOf(g.absolutePath.replace(".png", ".bcuimg"),"")
-        }
-    }
-
-    private fun removeIfDifferent() {
-        val ac = weakReference.get() ?: return
-
-        val path = File(StaticStore.getExternalPack(ac))
-
-        val lit = path.listFiles() ?: return
-
-        for(f in lit) {
-            if(!f.name.endsWith(".bcupack"))
-                continue
-
-            val name = f.name.replace(".bcupack", "").replace(".bcuata", "")
-
-            val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
-
-            if (shared.contains(name)) {
-                val omd5 = shared.getString(name, "")
-
-                val cmd5 = StaticStore.fileToMD5(f)
-
-                if (omd5 != cmd5) {
-                    val g = File(StaticStore.getExternalRes(ac) + "data/" + f.name.replace(".bcupack", ".bcudata"))
-
-                    if (g.exists()) {
-                        if (!g.delete()) {
-                            Log.e("PackExtract", "Failed to remove file " + g.absolutePath)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Compare bcupack files with shared preferences data, and remove other pack data automatically
-     */
-    private fun handlePack() {
-        val ac = weakReference.get() ?: return
-
-        val sharedDir = StaticStore.getDataPath()+"shared_prefs/"
-
-        val f = File(sharedDir)
-
-        if(!f.exists())
-            return
-
-        val lit = f.listFiles() ?: return
-
-        val handler = listOf<String>().toMutableList()
-
-        for(fs in lit) {
-            if(fs.name == "configuration.xml")
-                continue
-
-            val name = fs.name.replace(".xml",".bcupack")
-
-            val g = File(StaticStore.getExternalPack(ac), name)
-
-            if(!g.exists()) {
-                handler.add(name.replace(".bcupack",""))
-            }
-        }
-
-        for(name in handler) {
-            removeRelatedPackData(name)
-        }
-    }
-
-    /**
-     * Remove all pack data with specified name
-     *
-     * @param name Name of pack file, must not contain extension
-     */
-    private fun removeRelatedPackData(name: String) {
-        val ac = weakReference.get() ?: return
-
-        if(name == "configuration")
-            return
-
-        val sharedPath = StaticStore.getDataPath()+"shared_prefs/$name.xml"
-
-        var f = File(sharedPath)
-
-        if(f.exists()) {
-            if(!f.delete()) {
-                Log.e("PackExtract","Failed to remove file "+f.absolutePath)
-            }
-        }
-
-        val resDataPath = StaticStore.getExternalRes(ac)+"data/$name.bcudata"
-
-        f = File(resDataPath)
-
-        if(f.exists()) {
-            if(!f.delete()) {
-                Log.e("PackExtract", "Failed to remove file "+f.absolutePath)
-            }
-        }
-
-        val resImgPath = StaticStore.getExternalRes(ac)+"img/$name/"
-
-        f = File(resImgPath)
-
-        StaticStore.removeAllFiles(f)
-    }
-
-    /**
-     * Check if there are invalid bcupack files, so it won't affect application data shared preferences
-     */
-    private fun checkValidPack() {
-        val ac = weakReference.get() ?: return
-
-        val invalid = listOf("configuration")
-
-        val packDir = StaticStore.getExternalPack(ac)
-
-        val f = File(packDir)
-
-        if(!f.exists())
-            return
-
-        val lit = f.listFiles() ?: return
-
-        for(fs in lit) {
-            if(invalid.contains(fs.name.replace(".bcupack","").replace(".bcudata","").toLowerCase(Locale.ROOT))) {
-                if(!fs.delete()) {
-                    Log.e("Adder", "Failed to delete file "+ f.absolutePath)
-                }
-            }
         }
     }
 }

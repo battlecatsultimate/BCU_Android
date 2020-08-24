@@ -18,15 +18,14 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader
-import common.io.json.JsonDecoder
-import common.pack.PackData
+import common.CommonStatic
 import common.util.unit.Unit
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -72,6 +71,10 @@ class UnitInfo : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
@@ -150,10 +153,10 @@ class UnitInfo : AppCompatActivity() {
         val result = intent
         val extra = result.extras ?: return
 
-        val data = JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java) as PackData.Identifier<Unit>
+        val data = StaticStore.transformIdentifier<Unit>(extra.getString("Data"))
         val s = GetStrings(this)
 
-        val u = data.get() ?: return
+        val u = data?.get() ?: return
 
         unittitle.text = s.getTitle(u.forms[0])
 
@@ -212,5 +215,6 @@ class UnitInfo : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

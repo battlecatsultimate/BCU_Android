@@ -15,14 +15,14 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.stage.adapters.EnemyListRecycle
 import com.mandarin.bcu.androidutil.stage.adapters.StageRecycle
-import common.system.MultiLangCont
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.lang.MultiLangCont
 import common.util.pack.Background
-import common.util.pack.Pack
-import common.util.stage.MapColc
+import common.util.stage.Stage
 import java.lang.ref.WeakReference
-import kotlin.math.acos
 
-open class StageAdder(activity: Activity, private val mapcode: Int, private val stid: Int, private val posit: Int, private val custom: Boolean) : AsyncTask<Void?, Int?, Void?>() {
+open class StageAdder(activity: Activity, private val data: Identifier<Stage>, private val custom: Boolean) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
@@ -58,27 +58,17 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
             1 -> {
                 st.setText(R.string.stg_info_loadfilt)
                 val title = activity.findViewById<TextView>(R.id.stginfoname)
-                val mc = if(custom) {
-                    Pack.map[mapcode]?.mc ?: return
-                } else {
-                    MapColc.MAPS[mapcode] ?: return
-                }
-                if (stid >= mc.maps.size || stid < 0) return
-                val stm = mc.maps[stid] ?: return
-                if (posit >= stm.list.size || posit < 0) return
-                val stage = stm.list[posit]
+                val stage = Identifier.get(data) ?: return
                 val battle = activity.findViewById<Button>(R.id.battlebtn)
                 val stgrec: RecyclerView = activity.findViewById(R.id.stginforec)
                 stgrec.layoutManager = LinearLayoutManager(activity)
                 ViewCompat.setNestedScrollingEnabled(stgrec, false)
-                val stageRecycle = StageRecycle(activity, mapcode, stid, posit, custom)
+                val stageRecycle = StageRecycle(activity, data)
                 stgrec.adapter = stageRecycle
                 battle.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(activity, BattlePrepare::class.java)
-                        intent.putExtra("mapcode", mapcode)
-                        intent.putExtra("stid", stid)
-                        intent.putExtra("stage", posit)
+                        intent.putExtra("Data", JsonEncoder.encode(data).toString())
                         val manager = stgrec.layoutManager
                         if (manager != null) {
                             val row = manager.findViewByPosition(0)
@@ -90,7 +80,7 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
                         activity.startActivity(intent)
                     }
                 })
-                title.text = MultiLangCont.STNAME.getCont(stage) ?: stage.name ?: getStageName(posit)
+                title.text = MultiLangCont.get(stage) ?: stage.name ?: getStageName(stage.id.id)
                 val stgscroll = activity.findViewById<ScrollView>(R.id.stginfoscroll)
                 stgscroll.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
                 stgscroll.isFocusable = false
@@ -98,7 +88,7 @@ open class StageAdder(activity: Activity, private val mapcode: Int, private val 
                 val stgen: RecyclerView = activity.findViewById(R.id.stginfoenrec)
                 stgen.layoutManager = LinearLayoutManager(activity)
                 ViewCompat.setNestedScrollingEnabled(stgen, false)
-                val enemyListRecycle = EnemyListRecycle(activity, stage, mapcode, custom)
+                val enemyListRecycle = EnemyListRecycle(activity, stage)
                 stgen.adapter = enemyListRecycle
                 if(stage.data.allEnemy.isEmpty()) {
                     stgen.visibility = View.GONE

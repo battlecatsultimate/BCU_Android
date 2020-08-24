@@ -5,35 +5,32 @@ import android.util.SparseArray
 import androidx.core.util.isNotEmpty
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import common.pack.PackData
+import common.pack.Identifier
+import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
-import common.util.stage.Music
-import common.util.stage.SCDef
 import common.util.stage.Stage
 import common.util.unit.Enemy
 import java.util.*
 import kotlin.collections.ArrayList
 
 object FilterStage {
-    fun setFilter(name: String, stmname: String, enemies: List<Int>, enemorand: Boolean, music: String, bg: Int, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
+    fun setFilter(name: String, stmname: String, enemies: List<Enemy>, enemorand: Boolean, music: String, bg: String, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
         val result = HashMap<String, SparseArray<ArrayList<Int>>>()
-
-        val mc = MapColc.values()?.toMutableList() ?: return result
 
         for(n in 0 until StaticStore.mapcode.size) {
             val i = StaticStore.mapcode[n]
-            val m = mc[0]
+            val m = MapColc.get(i) ?: continue
 
             val stresult = SparseArray<ArrayList<Int>>()
 
-            for(j in m.maps.indices) {
+            for(j in m.maps.list.indices) {
                 val stm = m.maps[j] ?: continue
 
                 val sresult = ArrayList<Int>()
 
-                for(k in 0 until stm.list.size) {
-                    val s = stm.list[k] ?: continue
+                for(k in 0 until stm.list.list.size) {
+                    val s = stm.list.list[k] ?: continue
 
                     val nam = if(stmname != "") {
                         if(name != "") {
@@ -50,12 +47,27 @@ object FilterStage {
 
                     val enem = containEnemy(enemies, s.data.allEnemy, enemorand)
 
-                    val m0 = s.mus0.pack + " - " + s.mus0.id
-                    val m1 = s.mus1.pack + " - " + s.mus1.id
+                    var mus = music.isEmpty()
 
-                    val mus = s.mus0.get() == music.get() || s.mus1.get() == music.get() || music
+                    if(!mus && Identifier.get(s.mus0) != null) {
+                        val m0 = s.mus0.pack + " - " + Data.trio(s.mus0.id)
 
-                    val backg = s.bg == bg || bg == -1
+                        mus = mus || m0 == music
+                    }
+
+                    if(!mus && Identifier.get(s.mus1) != null) {
+                        val m1 = s.mus1.pack + " - " + Data.trio(s.mus1.id)
+
+                        mus = mus || m1 == music
+                    }
+
+                    var backg = bg.isEmpty()
+
+                    if(!backg && Identifier.get(s.bg) != null) {
+                        val b = s.bg.pack + " - " + Data.trio(s.bg.id)
+
+                        backg = backg || bg == b
+                    }
 
                     val stars = stm.stars.size > star
 
@@ -94,22 +106,22 @@ object FilterStage {
             }
 
             if(stresult.isNotEmpty())
-                result.put(i,stresult)
+                result[i] = stresult
         }
 
         return result
     }
 
-    private fun containEnemy(src: List<Int>, target: Set<Enemy>, orand: Boolean) : Boolean {
+    private fun containEnemy(src: List<Enemy>, target: Set<Enemy>, orand: Boolean) : Boolean {
         if(src.isEmpty()) return true
 
         if(target.isEmpty()) return false
 
-        val targetid = ArrayList<Int>()
+        val targetid = ArrayList<Enemy>()
 
         for(ten in target) {
-            if (!targetid.contains(ten.id)) {
-                targetid.add(ten.id)
+            if (!targetid.contains(ten)) {
+                targetid.add(ten)
             }
         }
 
@@ -132,7 +144,7 @@ object FilterStage {
             val def = st.data ?: return false
 
             for (i in def.datas) {
-                if (i[SCDef.B] == 1)
+                if (i.boss == 1)
                     return true
             }
         } catch(e: Exception) {

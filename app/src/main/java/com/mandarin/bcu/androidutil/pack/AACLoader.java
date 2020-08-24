@@ -20,16 +20,16 @@ import javax.crypto.NoSuchPaddingException;
 
 import common.CommonStatic;
 import common.io.InStream;
+import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.util.Res;
-import common.util.anim.AnimCI;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class AACLoader implements AnimCI.AnimLoader {
+public class AACLoader implements Source.AnimLoader {
     private String name;
     private FakeImage num;
     private ImgCut imgcut;
@@ -167,14 +167,13 @@ public class AACLoader implements AnimCI.AnimLoader {
     }
 
     @Override
-    public String getName() {
+    public Source.ResourceLocation getName() {
         return name;
     }
+
     @Override
-    public FakeImage getNum(boolean load) {
-        if(load) {
-            check();
-        }
+    public FakeImage getNum() {
+        check();
 
         return num;
     }

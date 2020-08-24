@@ -25,23 +25,24 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.enemy.adapters.DynamicEmExplanation
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyRecycle
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import java.lang.ref.WeakReference
 
 class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
     private val weakReference: WeakReference<Activity>
-    private val data: PackData.Identifier<Enemy>
+    private val data: Identifier<AbEnemy>
     private var multi = -1
     private var amulti = -1
 
-    constructor(activity: Activity, data: PackData.Identifier<Enemy>) {
+    constructor(activity: Activity, data: Identifier<AbEnemy>) {
         weakReference = WeakReference(activity)
         this.data = data
     }
 
-    constructor(activity: Activity, multi: Int, amulti: Int, data: PackData.Identifier<Enemy>) {
+    constructor(activity: Activity, multi: Int, amulti: Int, data: Identifier<AbEnemy>) {
         weakReference = WeakReference(activity)
         this.multi = multi
         this.amulti = amulti
@@ -52,6 +53,9 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
         val activity = weakReference.get() ?: return
 
         val e = data.get() ?: return
+
+        if(e !is Enemy)
+            return
 
         if (MultiLangCont.getStatic().EEXP.getCont(e) == null) {
             val view1 = activity.findViewById<View>(R.id.enemviewtop)

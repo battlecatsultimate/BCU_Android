@@ -11,23 +11,23 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.UnitInfo
-import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
-import common.util.Data
-import common.util.pack.Pack
+import com.mandarin.bcu.androidutil.filter.FilterEntity
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.unit.Unit
 import kotlin.collections.ArrayList
 
 class UnitListPager : Fragment() {
-    private var pid = 0
+    private var pid = "000000"
     private var position = 0
 
     companion object {
-        fun newInstance(pid: Int, position: Int) : UnitListPager {
+        fun newInstance(pid: String, position: Int) : UnitListPager {
             val ulp = UnitListPager()
             val bundle = Bundle()
 
-            bundle.putInt("pid", pid)
+            bundle.putString("pid", pid)
             bundle.putInt("position", position)
 
             ulp.arguments = bundle
@@ -41,7 +41,7 @@ class UnitListPager : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
-        pid = arguments?.getInt("pid") ?: 0
+        pid = arguments?.getString("pid") ?: "000000"
         position = arguments?.getInt("position") ?: 0
 
         val list = view.findViewById<ListView>(R.id.entitylist)
@@ -74,58 +74,36 @@ class UnitListPager : Fragment() {
     }
 
     private fun validate(nores: TextView, list: ListView) {
-        val p = Pack.map[pid] ?: return
-
-        val filterEntity = FilterEntity(p.us.ulist.size(), StaticStore.entityname, pid)
-
-        val numbers = filterEntity.setFilter()
+        val numbers = FilterEntity.setUnitFilter(pid)
 
         if(numbers.isNotEmpty()) {
             nores.visibility = View.GONE
             list.visibility = View.VISIBLE
 
-            val names = ArrayList<String>()
+            val names = ArrayList<Identifier<Unit>>()
 
             for(i in numbers) {
-                if(p.us.ulist.list[i] == null)
-                    continue
+                val u = Identifier.get(i) ?: return
 
-                val name = if(pid == 0) {
-                    MultiLangCont.FNAME.getCont(p.us.ulist.list[i].forms[0]) ?: ""
-                } else {
-                    p.us.ulist.list[i]?.forms?.get(0)?.name ?: ""
-                }
-
-                val id = if(pid != 0) {
-                    StaticStore.getID(p.us.ulist.list[i].id)
-                } else {
-                    i
-                }
-
-                names.add(getName(id, name))
+                names.add(u.id)
             }
 
             val cont = context ?: return
 
-            val adapter = UnitListAdapter(cont, names, numbers, pid)
+            val adapter = UnitListAdapter(cont, names)
 
             list.adapter = adapter
 
             list.setOnItemClickListener { _, _, position, _ ->
                 val intent = Intent(activity, UnitInfo::class.java)
 
-                if(position < 0 || position >= numbers.size)
-                    return@setOnItemClickListener
-
-                intent.putExtra("PID",pid)
-
-                val id = if(pid != 0) {
-                    StaticStore.getID(p.us.ulist.list[numbers[position]].id)
+                val u = if(list.adapter is UnitListAdapter) {
+                    (list.adapter as UnitListAdapter).getItem(position) ?: return@setOnItemClickListener
                 } else {
-                    numbers[position]
+                    return@setOnItemClickListener
                 }
 
-                intent.putExtra("ID",id)
+                intent.putExtra("Data", JsonEncoder.encode(u).toString())
 
                 activity?.startActivity(intent)
             }
@@ -138,27 +116,5 @@ class UnitListPager : Fragment() {
     override fun onDestroy() {
         destroyed = true
         super.onDestroy()
-    }
-
-    private fun getName(i: Int, name: String) : String {
-        return if(name == "") {
-            Data.hex(pid)+" - "+number(i) + "/"
-        } else {
-            Data.hex(pid)+" - "+number(i) + "/" + name
-        }
-    }
-
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
     }
 }

@@ -9,8 +9,6 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.asynchs.PackExtract
-import com.mandarin.bcu.androidutil.unit.Definer
-import com.mandarin.bcu.decode.ZipLib
 import common.util.pack.Background
 import java.lang.ref.WeakReference
 
@@ -25,24 +23,18 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        ZipLib.init(StaticStore.getExternalPath(activity))
-        ZipLib.read(StaticStore.getExternalPath(activity))
-        StaticStore.getUnitnumber(activity)
-        StaticStore.getEnemyNumber(activity)
-        StaticStore.root = 1
         DefineItf().init(activity)
         StaticStore.getLang(shared.getInt("Language", 0))
 
         publishProgress(0)
 
-        if(StaticStore.units == null) {
-            Definer().define(activity)
-        }
-
         if(StaticStore.bgread == 0) {
             Background.read()
             StaticStore.bgread = 1
         }
+
+        StaticStore.init = true
+
         return null
     }
 

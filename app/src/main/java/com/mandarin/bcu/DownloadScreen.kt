@@ -18,8 +18,10 @@ import androidx.core.content.ContextCompat
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.asynchs.Downloader
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -67,6 +69,10 @@ open class DownloadScreen : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_download_screen)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -92,7 +98,7 @@ open class DownloadScreen : AppCompatActivity() {
 
         prog.max = 100
 
-        Downloader(path ?: StaticStore.getExternalPath(this), fileneed ?: ArrayList(), musics ?: ArrayList(), downloading ?: "Downloading Files : ", extracting ?: "Extracting Files : ", this@DownloadScreen).execute()
+        Downloader(fileneed ?: ArrayList(), musics ?: ArrayList(), this@DownloadScreen).execute()
 
         listeners()
     }
@@ -103,7 +109,7 @@ open class DownloadScreen : AppCompatActivity() {
         retry.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 retry.visibility = View.GONE
-                Downloader(path ?: StaticStore.getExternalPath(this@DownloadScreen), fileneed ?: ArrayList(), musics ?: ArrayList(), downloading ?: "Downloading Files : ", extracting ?: "Extracting Files : ", this@DownloadScreen).execute()
+                Downloader(fileneed ?: ArrayList(), musics ?: ArrayList(),this@DownloadScreen).execute()
             }
         })
     }
@@ -145,5 +151,6 @@ open class DownloadScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

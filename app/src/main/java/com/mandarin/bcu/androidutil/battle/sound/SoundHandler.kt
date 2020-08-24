@@ -1,13 +1,11 @@
 package com.mandarin.bcu.androidutil.battle.sound
 
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MediaPrepare
-import common.CommonStatic
-import common.util.pack.Pack
+import common.pack.UserProfile
 import java.io.File
 
 object SoundHandler {
@@ -15,7 +13,6 @@ object SoundHandler {
     const val SE_ATK = 1
     const val SE_BASE = 2
 
-    @JvmField
     var MUSIC = SoundPlayer()
 
     /** SoundPool for all other sound effects **/
@@ -25,45 +22,32 @@ object SoundHandler {
     /** SoundPool for base attack sounds **/
     var BASE : SoundPool? = SoundPool.Builder().build()
 
-    @JvmField
     var play: BooleanArray = BooleanArray(1)
 
-    @JvmField
     var inBattle = false
 
-    @JvmField
     var battleEnd = false
 
-    @JvmField
     var twoMusic = false
 
-    @JvmField
     var haveToChange = false
 
-    @JvmField
     var Changed = false
 
-    @JvmField
     var musicPlay = true
 
-    @JvmField
-    var mu1 = 3
+    var mu1: File? = null
 
-    @JvmField
     var lop: Long = 0L
 
-    @JvmField
     var lop1: Long = 0L
 
     var sePlay = true
 
-    @JvmField
     var se_vol = 1f
 
-    @JvmField
     var mu_vol = 1f
 
-    @JvmField
     var speed = 0
 
     var map = HashMap<Int, Int>()
@@ -71,27 +55,6 @@ object SoundHandler {
     private val atk = listOf(20, 21)
 
     var timer: PauseCountDown? = null
-
-    @JvmStatic
-    fun read(c: Context) {
-        val path = StaticStore.getExternalPath(c)+"music/"
-        val mf = File(path)
-        if (!mf.exists())
-            return
-
-        val mflit = mf.listFiles() ?: return
-
-        play = BooleanArray(mflit.size)
-
-        for (f in mflit) {
-            val name = f.name
-            if (name.length != 7) continue
-            if (!name.endsWith("ogg")) continue
-            val id = CommonStatic.parseIntN(name.substring(0, 3))
-            if (id < 0) continue
-            Pack.def.ms[id] = f
-        }
-    }
 
     @JvmStatic
     fun setSE(ind: Int) {
@@ -111,7 +74,7 @@ object SoundHandler {
                     timer?.cancel()
                 }
 
-                val g = Pack.def.ms[ind] ?: return
+                val g = StaticStore.getMusicFile(UserProfile.getBCData().musics[ind]) ?: return
 
                 try {
                     MUSIC.setDataSource(g.absolutePath)
@@ -125,17 +88,7 @@ object SoundHandler {
                     MUSIC.setOnCompletionListener {
                         MUSIC.reset()
 
-                        val h = if(mu1 < 1000) {
-                            Pack.def.ms[mu1]
-                        } else {
-                            val p = Pack.map[StaticStore.getPID(mu1)]
-
-                            if(p == null) {
-                                Pack.def.ms[3]
-                            } else {
-                                p.ms.list[StaticStore.getMusicIndex(mu1)]
-                            }
-                        }
+                        val h = mu1
 
                         h ?: return@setOnCompletionListener
 
@@ -259,7 +212,7 @@ object SoundHandler {
         twoMusic = false
         haveToChange = false
         Changed = false
-        mu1 = 3
+        mu1 = null
         lop = 0
         lop1 = 0
         speed = 0
@@ -286,7 +239,7 @@ object SoundHandler {
     }
 
     fun load(type: Int, ind: Int, play: Boolean) : Int {
-        val f = Pack.def.ms[ind] ?: return -1
+        val f = StaticStore.getMusicFile(UserProfile.getBCData().musics[ind]) ?: return -1
 
         check()
 

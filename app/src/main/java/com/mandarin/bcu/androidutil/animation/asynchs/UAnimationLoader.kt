@@ -27,7 +27,7 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.unit.Definer
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -35,7 +35,7 @@ import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class UAnimationLoader(activity: Activity, private val data: PackData.Identifier<Unit>, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
+open class UAnimationLoader(activity: Activity, private val data: Identifier<Unit>?, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
 
@@ -67,7 +67,7 @@ open class UAnimationLoader(activity: Activity, private val data: PackData.Ident
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        Definer().define(activity)
+        Definer.define(activity)
 
         publishProgress(2)
         return null
@@ -76,6 +76,7 @@ open class UAnimationLoader(activity: Activity, private val data: PackData.Ident
     @SuppressLint("ClickableViewAccessibility")
     override fun onProgressUpdate(vararg result: Int?) {
         val activity = weakReference.get() ?: return
+        data ?: return
         val st = activity.findViewById<TextView>(R.id.imgviewerst)
         when (result[0]) {
             0 -> st.setText(R.string.unit_list_unitname)
@@ -136,7 +137,7 @@ open class UAnimationLoader(activity: Activity, private val data: PackData.Ident
                 val ids: MutableList<String> = ArrayList()
                 var i = 0
                 while (i < u.forms.size) {
-                    val n = if(data.pack == PackData.Identifier.DEF) {
+                    val n = if(data.pack == Identifier.DEF) {
                         "Default-${data.id }-${StaticStore.trio(i)}"
                     } else {
                         "${data.pack}-${data.id}-${StaticStore.trio(i)}"
@@ -251,7 +252,7 @@ open class UAnimationLoader(activity: Activity, private val data: PackData.Ident
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = if(data.pack == PackData.Identifier.DEF) {
+                            val name2 = if(data.pack == Identifier.DEF) {
                                 dateFormat.format(date) + "-U-" + "Default" + "-" + StaticStore.trio(data.id) + "-" + form
                             } else {
                                 "${dateFormat.format(date)}-U-${data.pack}-${StaticStore.trio(data.id)}-$form"
@@ -282,7 +283,7 @@ open class UAnimationLoader(activity: Activity, private val data: PackData.Ident
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name1 = if(data.pack == PackData.Identifier.DEF) {
+                            val name1 = if(data.pack == Identifier.DEF) {
                                 dateFormat.format(date) + "-U-Trans-" + "Default" + "-" + StaticStore.trio(data.id) + "-" + form
                             } else {
                                 "${dateFormat.format(date)}-U-Trans-${data.pack}-${StaticStore.trio(data.id)}-$form"
@@ -409,7 +410,7 @@ open class UAnimationLoader(activity: Activity, private val data: PackData.Ident
         }
     }
 
-    private inner class ScaleListener internal constructor(private val cView: AnimationCView) : SimpleOnScaleGestureListener() {
+    private inner class ScaleListener(private val cView: AnimationCView) : SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             cView.size *= detector.scaleFactor
 

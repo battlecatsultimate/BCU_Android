@@ -8,11 +8,12 @@ import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 
-class DynamicEmExplanation(private val activity: Activity, private val data: PackData.Identifier<Enemy>) : PagerAdapter() {
+class DynamicEmExplanation(private val activity: Activity, private val data: Identifier<AbEnemy>) : PagerAdapter() {
     private val txid = intArrayOf(R.id.enemyex0, R.id.enemyex1, R.id.enemyex2, R.id.enemyex3)
     override fun instantiateItem(group: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(activity)
@@ -20,6 +21,8 @@ class DynamicEmExplanation(private val activity: Activity, private val data: Pac
         val title = layout.findViewById<TextView>(R.id.enemyexname)
 
         val e = data.get() ?: return layout
+
+        if(e !is Enemy) return layout
 
         var name = MultiLangCont.get(e) ?: e.name
 

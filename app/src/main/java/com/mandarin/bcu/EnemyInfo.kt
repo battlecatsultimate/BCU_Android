@@ -14,16 +14,16 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import common.io.json.JsonDecoder
+import common.CommonStatic
 import common.io.json.JsonEncoder
-import common.pack.PackData
 import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -66,6 +66,10 @@ class EnemyInfo : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_enemy_info)
 
         treasure = findViewById(R.id.enemtreasure)
@@ -85,12 +89,15 @@ class EnemyInfo : AppCompatActivity() {
 
         if (extra != null) {
 
-            val data = JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), PackData.Identifier::class.java) as PackData.Identifier<Enemy>
-            val pid = extra.getString("PID")
+            val data = StaticStore.transformIdentifier<AbEnemy>(extra.getString("Data")) ?: return
             val multi = extra.getInt("Multiply")
             val amulti = extra.getInt("AMultiply")
 
-            title.text = MultiLangCont.get(data.get()) ?: data.get().name
+            val e = data.get()
+
+            if(e is Enemy) {
+                title.text = MultiLangCont.get(e) ?: e.name
+            }
 
             val eanim = findViewById<Button>(R.id.eanimanim)
 
@@ -98,7 +105,6 @@ class EnemyInfo : AppCompatActivity() {
                 override fun onSingleClick(v: View?) {
                     val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
                     intent.putExtra("Img", 3)
-                    intent.putExtra("PID", pid)
                     intent.putExtra("Data", JsonEncoder.encode(data).toString())
                     startActivity(intent)
                 }
@@ -142,5 +148,6 @@ class EnemyInfo : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

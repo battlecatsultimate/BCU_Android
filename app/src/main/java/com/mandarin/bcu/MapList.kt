@@ -14,18 +14,21 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.util.isEmpty
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mandarin.bcu.androidutil.filter.FilterStage
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.filter
+import com.mandarin.bcu.androidutil.filter.FilterStage
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
 import com.mandarin.bcu.androidutil.stage.asynchs.MapAdder
-import common.pack.UserProfile
+import common.CommonStatic
+import common.io.json.JsonEncoder
+import common.pack.Identifier
 import common.util.stage.MapColc
+import common.util.stage.StageMap
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -71,6 +74,10 @@ class MapList : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_map_list)
 
         val back = findViewById<FloatingActionButton>(R.id.stgbck)
@@ -91,11 +98,15 @@ class MapList : AppCompatActivity() {
         if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             filter = FilterStage.setFilter(StaticStore.stgschname, StaticStore.stmschname, StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss, this)
 
+            val f = filter ?: return
+
+            val keys = f.keys.toMutableList()
+
             val stageset = findViewById<Spinner>(R.id.stgspin)
             val maplist = findViewById<ListView>(R.id.maplist)
             val loadt = findViewById<TextView>(R.id.mapst)
 
-            if(filter.isEmpty()) {
+            if(f.isEmpty()) {
                 stageset.visibility = View.GONE
                 maplist.visibility = View.GONE
 
@@ -109,7 +120,7 @@ class MapList : AppCompatActivity() {
                 val resmc = ArrayList<String>()
                 val resposition = ArrayList<Int>()
 
-                for (i in filter.keys) {
+                for (i in f.keys) {
                     val index = StaticStore.mapcode.indexOf(i)
 
                     if (index != -1) {
@@ -162,36 +173,27 @@ class MapList : AppCompatActivity() {
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         try {
-                            val keys = filter.keys.toMutableList()
-
                             var index = StaticStore.mapcode.indexOf(keys[position])
 
                             if (index == -1)
                                 index = 0
 
-                            val resmapname = ArrayList<String>()
+                            val resmapname = ArrayList<Identifier<StageMap>>()
 
                             resposition.clear()
 
-                            val resmaplist = filter[keys[position]]
+                            val resmaplist = f[keys[position]] ?: return
 
-
-                            val mc = if(index < StaticStore.BCmaps) {
-                                MapColc.MAPS[StaticStore.mapcode[index]] ?: return
-                            } else {
-                                val p = Pack.map[StaticStore.mapcode[index]] ?: return
-
-                                p.mc ?: return
-                            }
+                            val mc = MapColc.get(StaticStore.mapcode[index]) ?: return
 
                             for(i in 0 until resmaplist.size()) {
                                 val stm = mc.maps[resmaplist.keyAt(i)]
 
-                                resmapname.add(MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "")
+                                resmapname.add(stm.id)
                                 resposition.add(resmaplist.keyAt(i))
                             }
 
-                            val mapListAdapter = MapListAdapter(this@MapList, resmapname, filter.keyAt(position), resposition, index >= StaticStore.BCmaps)
+                            val mapListAdapter = MapListAdapter(this@MapList, resmapname)
 
                             maplist.adapter = mapListAdapter
                         } catch (e: NullPointerException) {
@@ -204,31 +206,25 @@ class MapList : AppCompatActivity() {
 
                 stageset.adapter = adapter
 
-                val index = StaticStore.mapcode.indexOf(filter.keyAt(stageset.selectedItemPosition))
+                val index = StaticStore.mapcode.indexOf(keys[stageset.selectedItemPosition])
 
                 if (index == -1)
                     return
 
-                val resmapname = ArrayList<String>()
+                val resmapname = ArrayList<Identifier<StageMap>>()
 
-                val resmaplist = filter[filter.keyAt(stageset.selectedItemPosition)]
+                val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return
 
-                val mc = if(index < StaticStore.BCmaps) {
-                    MapColc.MAPS[filter.keyAt(stageset.selectedItemPosition)] ?: return
-                } else {
-                    val p = Pack.map[filter.keyAt(stageset.selectedItemPosition)] ?: return
-
-                    p.mc ?: return
-                }
+                val mc = MapColc.get(keys[stageset.selectedItemPosition])
 
                 for(i in 0 until resmaplist.size()) {
                     val stm = mc.maps[i]
 
-                    resmapname.add(MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "")
+                    resmapname.add(stm.id)
                     resposition.add(resmaplist.keyAt(i))
                 }
 
-                val mapListAdapter = MapListAdapter(this, resmapname, filter.keyAt(stageset.selectedItemPosition),resposition, index >= StaticStore.BCmaps)
+                val mapListAdapter = MapListAdapter(this, resmapname)
 
                 maplist.adapter = mapListAdapter
 
@@ -238,13 +234,16 @@ class MapList : AppCompatActivity() {
 
                     StaticStore.maplistClick = SystemClock.elapsedRealtime()
 
+                    val stm = if(maplist.adapter is MapListAdapter) {
+                        (maplist.adapter as MapListAdapter).getItem(position) ?: return@OnItemClickListener
+                    } else {
+                        return@OnItemClickListener
+                    }
+
                     val intent = Intent(this@MapList, StageList::class.java)
 
-                    val rIndex = StaticStore.mapcode.indexOf(filter.keyAt(stageset.selectedItemPosition))
-
-                    intent.putExtra("mapcode", filter.keyAt(stageset.selectedItemPosition))
-                    intent.putExtra("stid", resposition[position])
-                    intent.putExtra("custom", rIndex >= StaticStore.BCmaps)
+                    intent.putExtra("Data", JsonEncoder.encode(stm).toString())
+                    intent.putExtra("custom", stm.pack.length != 6)
 
                     startActivity(intent)
                 }
@@ -284,5 +283,6 @@ class MapList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

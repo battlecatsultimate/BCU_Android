@@ -13,9 +13,9 @@ import common.CommonStatic
 import common.CommonStatic.Itf
 import common.io.InStream
 import common.io.OutStream
+import common.pack.Source
 import common.system.VImg
 import common.system.files.VFile
-import common.util.anim.AnimCI
 import common.util.stage.Music
 import java.io.*
 import java.util.*
@@ -33,19 +33,7 @@ class DefineItf : Itf {
         }
     }
 
-    override fun check(f: File) {
-        try {
-            if (f.isFile) {
-                val g = File(f.absolutePath)
-                if (!g.exists()) g.mkdirs()
-                if (!f.exists()) f.createNewFile()
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun loadAnim(ins: InStream?, r: CommonStatic.ImgReader?): AnimCI.AnimLoader {
+    override fun loadAnim(ins: InStream?, r: CommonStatic.ImgReader?): Source.AnimLoader {
         var name = ""
 
         return if(r != null) {
@@ -61,33 +49,15 @@ class DefineItf : Itf {
         }
     }
 
-    override fun delete(file: File) {
-        if (file.isDirectory) {
-            val lit = file.listFiles() ?: return
-
-            for (g in lit)
-                delete(g)
-        } else {
-            file.delete()
-        }
-    }
-
     override fun exit(save: Boolean) {}
 
     override fun prog(str: String) {}
 
     override fun getMusicLength(f: Music?): Long {
-        f ?: return -1
+        val file = StaticStore.getMusicFile(f) ?: return -1
 
         val mmr = MediaMetadataRetriever()
-        mmr.setD
-    }
-
-    override fun getMusicLength(f: File?): Long {
-        f ?: return -1
-
-        val mmr = MediaMetadataRetriever()
-        mmr.setDataSource(f.absolutePath)
+        mmr.setDataSource(file.absolutePath)
 
         return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
     }
@@ -133,7 +103,6 @@ class DefineItf : Itf {
         ErrorLogWriter.writeDriveLog(e)
     }
 
-    override fun redefine(class1: Class<*>?) {}
     override fun setSE(ind: Int) {
         SoundHandler.setSE(ind)
     }

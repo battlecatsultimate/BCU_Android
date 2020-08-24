@@ -25,18 +25,20 @@ import com.mandarin.bcu.util.page.BBCtrl
 import com.mandarin.bcu.util.page.BattleBox
 import com.mandarin.bcu.util.page.BattleBox.BBPainter
 import com.mandarin.bcu.util.page.BattleBox.OuterBox
+import common.CommonStatic
 import common.battle.BattleField
 import common.battle.SBCtrl
 import common.battle.entity.EEnemy
-import common.util.ImgCore
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.pack.UserProfile
 import common.util.anim.ImgCut
-import common.util.pack.Pack
 import java.io.IOException
 import kotlin.math.pow
 import kotlin.math.round
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, private val stid: Int) : View(context), BattleBox, OuterBox {
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity) : View(context), BattleBox, OuterBox {
     @JvmField
     var painter: BBPainter = if (type == 0) BBPainter(this, field, this) else BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat())
 
@@ -54,7 +56,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
     init {
         painter.dpi = StaticStore.dptopx(32f, context)
-        ImgCore.ref = axis
+        CommonStatic.getConfig().ref = axis
         updater = Updater()
 
         val aa = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_GAME).build()
@@ -84,7 +86,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             }
         }
 
-        if(painter.bf.sb.st.mus0 > 0) {
+        if(painter.bf.sb.st.mus0 != null) {
             SoundHandler.lop = painter.bf.sb.st.loop0
         }
 
@@ -166,19 +168,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     SoundHandler.haveToChange = true
                     SoundHandler.MUSIC.stop()
                     SoundHandler.MUSIC.reset()
-                    val f = if(painter.bf.sb.st.mus0 < 1000) {
-                        Pack.def.ms[painter.bf.sb.st.mus1]
-                    } else {
-                        val mp = Pack.map[StaticStore.getPID(painter.bf.sb.st.mus1)]
+                    val f = StaticStore.getMusicFile(Identifier.get(painter.bf.sb.st.mus1))
 
-                        if(mp != null) {
-                            mp.ms.list[StaticStore.getMusicIndex(painter.bf.sb.st.mus1)]
-                        } else {
-                            Pack.def.ms[3]
-                        }
-                    }
-
-                    if (f != null) {
+                    if (f != null && f.exists()) {
                         try {
                             SoundHandler.MUSIC.setDataSource(f.absolutePath)
                             SoundHandler.MUSIC.prepareAsync()
@@ -261,7 +253,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.MUSIC.stop()
             SoundHandler.MUSIC.reset()
             SoundHandler.MUSIC.isLooping = false
-            val f = Pack.def.ms[8]
+            val f = StaticStore.getMusicFile(UserProfile.getBCData().musics[8])
             if (f != null) {
                 if (f.exists()) {
                     try {
@@ -294,7 +286,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.MUSIC.stop()
             SoundHandler.MUSIC.reset()
             SoundHandler.MUSIC.isLooping = false
-            val f = Pack.def.ms[9]
+            val f = StaticStore.getMusicFile(UserProfile.getBCData().musics[9])
             if (f != null) {
                 if (f.exists()) {
                     try {
@@ -377,9 +369,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     fun retry() {
         val intent = Intent(activity,BattleSimulation::class.java)
 
-        intent.putExtra("mapcode",painter.bf.sb.st.map.mc.id)
-        intent.putExtra("stid", stid)
-        intent.putExtra("stage",painter.bf.sb.st.id())
+        intent.putExtra("Data", JsonEncoder.encode(painter.bf.sb.st.id).toString())
         intent.putExtra("star",painter.bf.sb.est.star)
         intent.putExtra("item",painter.bf.sb.conf[0])
 

@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.mandarin.bcu.R
-import common.util.pack.Pack
-import common.util.stage.MapColc
+import common.pack.Identifier
+import common.util.Data
+import common.util.lang.MultiLangCont
+import common.util.stage.StageMap
 
-class MapListAdapter(private val activity: Activity, private val maps: ArrayList<String>, private val mapcode: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.map_list_layout, maps.toTypedArray()) {
+class MapListAdapter(private val activity: Activity, private val maps: ArrayList<Identifier<StageMap>>) : ArrayAdapter<Identifier<StageMap>>(activity, R.layout.map_list_layout, maps.toTypedArray()) {
 
     private class ViewHolder constructor(row: View) {
         var name: TextView = row.findViewById(R.id.map_list_name)
@@ -31,38 +33,29 @@ class MapListAdapter(private val activity: Activity, private val maps: ArrayList
             holder = row.tag as ViewHolder
         }
 
-        val mc = if(custom) {
-            val p = Pack.map[mapcode] ?: return row
+        val stm = Identifier.get(maps[position]) ?: return row
 
-            p.mc
-        } else {
-            MapColc.MAPS[mapcode]
-        }
-
-        holder.name.text = withID(positions[position], maps[position])
+        holder.name.text = withID(maps[position])
 
         val numbers: String
         numbers =
-                if (mc != null)
-                    if (mc.maps[positions[position]].list.size == 1)
-                        mc.maps[positions[position]].list.size.toString() + activity.getString(R.string.map_list_stage)
-                    else
-                        mc.maps[positions[position]].list.size.toString() + activity.getString(R.string.map_list_stages)
+                if (stm.list.size() == 1)
+                    stm.list.size().toString() + activity.getString(R.string.map_list_stage)
                 else
-                    0.toString() + activity.getString(R.string.map_list_stages)
+                    stm.list.size().toString() + activity.getString(R.string.map_list_stages)
         holder.count.text = numbers
         return row
     }
 
-    private fun number(num: Int): String {
-        return if (num in 0..9) "00$num" else if (num in 10..99) "0$num" else "" + num
-    }
+    private fun withID(name: Identifier<StageMap>): String {
+        val stm = Identifier.get(name) ?: return Data.trio(name.id)
 
-    private fun withID(id: Int, name: String): String {
-        return if (name == "") {
-            number(id)
+        val n = MultiLangCont.get(stm) ?: stm.name ?: ""
+
+        return if (n == "") {
+            Data.trio(name.id)
         } else {
-            number(id) + " - " + name
+            Data.trio(name.id) + " - " + n
         }
     }
 

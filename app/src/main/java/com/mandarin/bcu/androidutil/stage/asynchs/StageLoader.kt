@@ -13,14 +13,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.StageInfo
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.StaticStore.filter
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.stage.adapters.CStageListAdapter
 import com.mandarin.bcu.androidutil.stage.adapters.StageListAdapter
-import common.system.MultiLangCont
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.stage.Stage
+import common.util.stage.StageMap
 import java.lang.ref.WeakReference
 
-class StageLoader(activity: Activity, private val mapcode: Int, private val stid: Int, private val custom: Boolean) : AsyncTask<Void?, Int?, Void?>() {
+class StageLoader(activity: Activity, private val data: Identifier<StageMap>, private val custom: Boolean) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
@@ -31,7 +33,7 @@ class StageLoader(activity: Activity, private val mapcode: Int, private val stid
     override fun doInBackground(vararg voids: Void?): Void? {
         weakReference.get() ?: return null
 
-        StaticStore.map[mapcode] ?: return null
+        Identifier.get(data) ?: return null
 
         publishProgress(0)
         return null
@@ -39,38 +41,19 @@ class StageLoader(activity: Activity, private val mapcode: Int, private val stid
 
     override fun onProgressUpdate(vararg result: Int?) {
         val activity = weakReference.get() ?: return
-        val mc = StaticStore.map[mapcode] ?: return
-        val stm = mc.maps[stid] ?: return
+
+        val stm = Identifier.get(data) ?: return
 
         val stageListAdapter: Any
-        val positions = ArrayList<Int>()
 
-        if(filter == null) {
-            val stages = arrayOfNulls<String>(stm.list.size)
+        val stages = Array<Identifier<Stage>>(stm.list.list.size) { i ->
+            stm.list.list[i].id
+        }
 
-            for (i in stages.indices) {
-                stages[i] = MultiLangCont.STNAME.getCont(stm.list[i]) ?: stm.list[i].name
-                positions.add(i)
-            }
-
-            stageListAdapter = if(custom) {
-                CStageListAdapter(activity, stages, mapcode, stid, positions, custom)
-            } else {
-                StageListAdapter(activity, stages, mapcode, stid, positions, custom)
-            }
+        stageListAdapter = if(custom) {
+            CStageListAdapter(activity, stages)
         } else {
-            val stages = arrayOfNulls<String>(filter[mapcode][stid].size)
-
-            for(i in stages.indices) {
-                stages[i] = MultiLangCont.STNAME.getCont(stm.list[filter[mapcode][stid][i]]) ?: stm.list[filter[mapcode][stid][i]].name ?: ""
-                positions.add(filter[mapcode][stid][i])
-            }
-
-            stageListAdapter = if(custom) {
-                CStageListAdapter(activity, stages, mapcode, stid, positions, custom)
-            } else {
-                StageListAdapter(activity, stages, mapcode, stid, positions, custom)
-            }
+            StageListAdapter(activity, stages)
         }
 
         val stglist = activity.findViewById<ListView>(R.id.stglist)
@@ -78,10 +61,21 @@ class StageLoader(activity: Activity, private val mapcode: Int, private val stid
         stglist.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             if (SystemClock.elapsedRealtime() - StaticStore.stglistClick < StaticStore.INTERVAL) return@OnItemClickListener
             StaticStore.stglistClick = SystemClock.elapsedRealtime()
+
+            val data: Identifier<Stage> = when (stglist.adapter) {
+                is CStageListAdapter -> {
+                    (stglist.adapter as CStageListAdapter).getItem(position) ?: return@OnItemClickListener
+                }
+                is StageListAdapter -> {
+                    (stglist.adapter as StageListAdapter).getItem(position) ?: return@OnItemClickListener
+                }
+                else -> {
+                    return@OnItemClickListener
+                }
+            }
+
             val intent = Intent(activity, StageInfo::class.java)
-            intent.putExtra("mapcode", mapcode)
-            intent.putExtra("stid", stid)
-            intent.putExtra("posit", positions[position])
+            intent.putExtra("Data", JsonEncoder.encode(data).toString())
             intent.putExtra("custom", custom)
             activity.startActivity(intent)
         }

@@ -8,6 +8,7 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.CustomEntity
 import common.battle.data.MaskUnit
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.stage.Limit
 import common.util.stage.SCDef
@@ -24,7 +25,7 @@ class GetStrings(private val c: Context) {
             R.string.unit_info_atk, R.string.unit_info_hp, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_abi_iv)
     private val talTool = arrayOfNulls<String>(talID.size)
     private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
-    private val mapcodes = listOf("0", "1", "2", "3", "4", "6", "7", "11", "12", "13", "14", "24", "25", "27")
+    private val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
     private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
     val talList: Unit
         get() {
@@ -201,7 +202,7 @@ class GetStrings(private val c: Context) {
 
         val tb = f.du.range
 
-        val du = if(f.unit.pack.id != 0) {
+        val du = if(f.unit.id.pack != Identifier.DEF) {
             f.du as CustomEntity
         } else {
             f.du
@@ -236,7 +237,7 @@ class GetStrings(private val c: Context) {
 
         val tb = em.de.range
 
-        val de = if(em.pac.id != 0) {
+        val de = if(em.id.pack != Identifier.DEF) {
             em.de as CustomEntity
         } else {
             em.de
@@ -653,13 +654,17 @@ class GetStrings(private val c: Context) {
         }
     }
 
-    fun getID(mapcode: Int, stid: Int, posit: Int): String {
-        val p = mapcodes.indexOf(mapcode.toString())
+    fun getID(mapcode: String, stid: Int, posit: Int): String {
+        return if(mapcode.length == 6) {
+            val index = mapcolcid.indexOf(mapcode)
 
-        return if (p == -1 || p >= mapcolcid.size) {
-            "$mapcode-$stid-$posit"
+            if(index != -1) {
+                "${mapcodes[index]}-$stid-$posit"
+            } else {
+                "$mapcode-$stid-$posit"
+            }
         } else {
-            mapcolcid[p] + "-" + stid + "-" + posit
+            "${StaticStore.getPackName(mapcode)}-$stid=$posit"
         }
     }
 

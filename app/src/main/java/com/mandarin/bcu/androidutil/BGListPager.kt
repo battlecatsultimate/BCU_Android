@@ -14,11 +14,12 @@ import androidx.fragment.app.Fragment
 import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.R
 import common.io.json.JsonEncoder
+import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
 
 class BGListPager : Fragment() {
-    private var pid = PackData.Identifier.DEF
+    private var pid = Identifier.DEF
 
     companion object {
         fun newInstance(pid: String) : BGListPager {
@@ -36,7 +37,7 @@ class BGListPager : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
-        pid = arguments?.getString("pid") ?: PackData.Identifier.DEF
+        pid = arguments?.getString("pid") ?: Identifier.DEF
 
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
@@ -66,7 +67,7 @@ class BGListPager : Fragment() {
 
                 val intent = Intent(c, ImageViewer::class.java)
 
-                if(pid == PackData.Identifier.DEF) {
+                if(pid == Identifier.DEF) {
                     intent.putExtra("BGNum", position)
                 }
 

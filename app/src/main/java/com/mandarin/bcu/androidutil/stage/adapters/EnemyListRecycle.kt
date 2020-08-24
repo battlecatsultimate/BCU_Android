@@ -17,25 +17,19 @@ open class EnemyListRecycle : RecyclerView.Adapter<EnemyListRecycle.ViewHolder> 
     private val activity: Activity
     private val st: Stage
     private var multi = 0
-    private val mapcode: Int
-    private val custom: Boolean
 
-    constructor(activity: Activity, st: Stage, mapcode: Int, custom: Boolean) {
+    constructor(activity: Activity, st: Stage) {
         this.activity = activity
         this.st = st
-        this.mapcode = mapcode
-        this.custom = custom
     }
 
-    constructor(activity: Activity, st: Stage, multi: Int, mapcode: Int, custom: Boolean) {
+    constructor(activity: Activity, st: Stage, multi: Int) {
         this.activity = activity
         this.st = st
         this.multi = multi
-        this.mapcode = mapcode
-        this.custom = custom
     }
 
-    inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
+    class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         var listView: RecyclerView = row.findViewById(R.id.stginfoenemlist)
         var frse: Button = row.findViewById(R.id.stginfoenfrse)
 
@@ -53,7 +47,7 @@ open class EnemyListRecycle : RecyclerView.Adapter<EnemyListRecycle.ViewHolder> 
 
         ViewCompat.setNestedScrollingEnabled(viewHolder.listView, false)
 
-        val listAdapter = StEnListRecycle(activity, st, multi, shared.getBoolean("frame", true),mapcode, custom)
+        val listAdapter = StEnListRecycle(activity, st, multi, shared.getBoolean("frame", true))
 
         viewHolder.listView.adapter = listAdapter
 
@@ -62,11 +56,11 @@ open class EnemyListRecycle : RecyclerView.Adapter<EnemyListRecycle.ViewHolder> 
 
         viewHolder.frse.setOnClickListener {
             if (viewHolder.frse.text.toString() == activity.getString(R.string.config_frames)) {
-                val listAdapter1 = StEnListRecycle(activity, st, multi, false, mapcode, custom)
+                val listAdapter1 = StEnListRecycle(activity, st, multi, false)
                 viewHolder.listView.adapter = listAdapter1
                 viewHolder.frse.text = activity.getString(R.string.config_seconds)
             } else {
-                val listAdapter2 = StEnListRecycle(activity, st, multi, true, mapcode, custom)
+                val listAdapter2 = StEnListRecycle(activity, st, multi, true)
                 viewHolder.listView.adapter = listAdapter2
                 viewHolder.frse.text = activity.getString(R.string.config_frames)
             }

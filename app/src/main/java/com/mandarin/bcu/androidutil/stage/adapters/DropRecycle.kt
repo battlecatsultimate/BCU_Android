@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
+import common.util.lang.MultiLangCont
 import common.util.stage.Stage
 import java.text.DecimalFormat
 
@@ -20,7 +20,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         dropData = handleDrops()
     }
 
-    inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
+    class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         var chance: TextView = row.findViewById(R.id.dropchance)
         var item: TextView = row.findViewById(R.id.dropitem)
         var amount: TextView = row.findViewById(R.id.dropamount)
@@ -46,7 +46,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
 
         val data = st.info.drop[i]
         viewHolder.chance.text = c
-        var reward = MultiLangCont.RWNAME.getCont(data[1])
+        var reward = MultiLangCont.getStatic().RWNAME.getCont(data[1])
         if (reward == null) reward = data[1].toString()
         if (i == 0) {
             if (data[0] != 100) {

@@ -35,13 +35,13 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import com.mandarin.bcu.util.Interpret
-import common.pack.PackData
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Unit
 import java.lang.ref.WeakReference
 import java.util.*
 
-class UInfoLoader(activity: Activity, private val data: PackData.Identifier<Unit>, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
+class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
     private val weakActivity: WeakReference<Activity> = WeakReference(activity)
     private val names = ArrayList<String>()
     private val nformid = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
@@ -307,7 +307,7 @@ class UInfoLoader(activity: Activity, private val data: PackData.Identifier<Unit
         }
     }
 
-    private inner class TableTab internal constructor(fm: FragmentManager?, var form: Int, var names: Array<String?>) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class TableTab(fm: FragmentManager?, var form: Int, var names: Array<String?>) : FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(i: Int): Fragment {
             return UnitinfPager.newInstance(i, data, names)
         }
@@ -322,7 +322,7 @@ class UInfoLoader(activity: Activity, private val data: PackData.Identifier<Unit
 
     }
 
-    private inner class ExplanationTab internal constructor(fm: FragmentManager?, var number: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class ExplanationTab(fm: FragmentManager?, var number: Int, var title: Array<String?>) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(i: Int): Fragment {
             return DynamicExplanation.newInstance(i, data, title)
         }

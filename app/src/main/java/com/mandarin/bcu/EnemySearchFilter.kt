@@ -23,7 +23,9 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SearchAbilityAdapter
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.CommonStatic
 import common.util.Data
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -92,6 +94,10 @@ open class EnemySearchFilter : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_enemy_search_filter)
 
@@ -162,7 +168,8 @@ open class EnemySearchFilter : AppCompatActivity() {
     }
 
     private fun getResizeDraw(id: Int, dp: Float): BitmapDrawable {
-        val bd = BitmapDrawable(resources, StaticStore.getResizeb(StaticStore.img15[id].bimg() as Bitmap, this, dp))
+        val icon = StaticStore.img15?.get(id)?.bimg() ?: StaticStore.empty(this, dp, dp)
+        val bd = BitmapDrawable(resources, StaticStore.getResizeb(icon as Bitmap, this, dp))
 
         bd.isFilterBitmap = true
         bd.setAntiAlias(true)
@@ -300,12 +307,12 @@ open class EnemySearchFilter : AppCompatActivity() {
             abgroup.check(R.id.eschrdaband)
 
         for (i in atks.indices) {
-            if (StaticStore.attack != null && StaticStore.attack.contains(atks[i]))
+            if (StaticStore.attack.contains(atks[i]))
                 attacks[i]?.isChecked = true
         }
 
         for (i in colors.indices) {
-            if (StaticStore.tg != null && StaticStore.tg.contains(colors[i]))
+            if (StaticStore.tg.contains(colors[i]))
                 traits[i]?.isChecked = true
         }
     }
@@ -343,5 +350,6 @@ open class EnemySearchFilter : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

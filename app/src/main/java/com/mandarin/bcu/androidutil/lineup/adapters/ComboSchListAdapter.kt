@@ -9,8 +9,8 @@ import android.widget.ListView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
-import common.util.unit.Combo
+import common.CommonStatic
+import common.util.lang.MultiLangCont
 import java.util.*
 
 class ComboSchListAdapter internal constructor(private val activity: Activity, private val sch: Array<String?>, private val schlst2: ListView, private val combolist: ListView, private var comboListAdapter: ComboListAdapter?) : ArrayAdapter<String?>(activity, R.layout.spinneradapter, sch) {
@@ -21,7 +21,6 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
 
     private class ViewHolder constructor(view: View) {
         var category: TextView = view.findViewById(R.id.spinnertext)
-
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -56,8 +55,8 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
                         locates.add(j)
                     }
                 }
-                for (i in Combo.combos.indices) {
-                    StaticStore.combos.addAll(listOf(*Combo.combos[i]))
+                for (i in CommonStatic.getBCAssets().combos.indices) {
+                    StaticStore.combos.addAll(listOf(*CommonStatic.getBCAssets().combos[i]))
                 }
                 val names = arrayOfNulls<String>(StaticStore.combos.size)
                 val subsch: MutableList<String> = ArrayList()
@@ -67,7 +66,7 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
                     }
                 }
                 for (i in StaticStore.combos.indices) {
-                    names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
+                    names[i] = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[i].name)
                 }
                 comboListAdapter = ComboListAdapter(activity, names)
                 combolist.adapter = comboListAdapter
@@ -87,11 +86,11 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
                     }
                 }
                 for (i in locates.indices) {
-                    StaticStore.combos.addAll(listOf(*Combo.combos[locates[i]]))
+                    StaticStore.combos.addAll(listOf(*CommonStatic.getBCAssets().combos[locates[i]]))
                 }
                 val names = arrayOfNulls<String>(StaticStore.combos.size)
                 for (i in StaticStore.combos.indices) {
-                    names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
+                    names[i] = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[i].name)
                 }
                 comboListAdapter = ComboListAdapter(activity, names)
                 val adapter = ComboSubSchListAdapter(activity, subsch, combolist, locates, comboListAdapter)

@@ -11,9 +11,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.music.asynchs.MusicLoader
+import common.CommonStatic
+import common.pack.Identifier
+import common.util.stage.Music
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.lang.ref.WeakReference
@@ -22,8 +26,7 @@ import java.util.*
 class MusicPlayer : AppCompatActivity() {
     companion object {
         var sound = SoundPlayer()
-        var posit = 0
-        var pid = 0
+        var music: Identifier<Music>? = null
         var next = false
         var looping = false
         var completed = false
@@ -33,8 +36,6 @@ class MusicPlayer : AppCompatActivity() {
         var opened = false
 
         fun reset() {
-            pid = 0
-            posit = 0
             next = false
             looping = false
             completed = false
@@ -83,6 +84,10 @@ class MusicPlayer : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         registerReceiver(musicreceive, IntentFilter(Intent.ACTION_HEADSET_PLUG))
 
         setContentView(R.layout.activity_music_player)
@@ -92,8 +97,7 @@ class MusicPlayer : AppCompatActivity() {
 
             if (bundle != null) {
                 if (!opened) {
-                    posit = bundle.getInt("Music")
-                    pid = bundle.getInt("PID")
+                    music = StaticStore.transformIdentifier(bundle.getString("Data"))
                     opened = true
                 }
 
@@ -122,6 +126,7 @@ class MusicPlayer : AppCompatActivity() {
         musicasync = null
         unregisterReceiver(musicreceive)
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
         super.onDestroy()
     }
 

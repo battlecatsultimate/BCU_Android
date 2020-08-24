@@ -17,16 +17,14 @@ import common.battle.Treasure;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
-import common.system.MultiLangCont;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
 
 public class Interpret extends Data {
-    
+
     public static final String EN = "en";
     public static final String ZH = "zh";
     public static final String JA = "ja";
@@ -168,10 +166,6 @@ public class Interpret extends Data {
     public static final int[] ABIIND = {113, 114, 115, 116, 117, 118, 119};
     public static final int IMUSFT = 13, EFILTER = 8;
 
-    public static String comboInfo(Combo c) {
-        return combo(c.type, Combo.values[c.type][c.lv]);
-    }
-
     public static String[] comboInfo(int[] inc) {
         List<String> ls = new ArrayList<>();
         for (int i = 0; i < C_TOT; i++) {
@@ -180,14 +174,6 @@ public class Interpret extends Data {
             ls.add(combo(i, inc[i]));
         }
         return ls.toArray(new String[0]);
-    }
-
-    public static String[] getComboFilter(int n) {
-        int[] res = Combo.filter[n];
-        String[] strs = new String[res.length];
-        for (int i = 0; i < res.length; i++)
-            strs[i] = COMN[res[i]];
-        return strs;
     }
 
     public static int getComp(int ind, Treasure t) {

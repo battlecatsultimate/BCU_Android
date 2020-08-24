@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +23,12 @@ class AdapterAbil(private val ability: List<String>, private val procs: List<Str
         if (viewHolder.adapterPosition < abilicon.size) {
             viewHolder.abiltext.text = ability[viewHolder.adapterPosition]
 
+            val icon = StaticStore.icons?.get(abilicon[viewHolder.adapterPosition]) ?: StaticStore.empty(1, 1)
+
             val resized: Bitmap = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                StaticStore.getResizeb(StaticStore.icons[abilicon[viewHolder.adapterPosition]], context, 28f)
+                StaticStore.getResizeb(icon, context, 28f)
             } else {
-                StaticStore.getResizeb(StaticStore.icons[abilicon[viewHolder.adapterPosition]], context, 24f)
+                StaticStore.getResizeb(icon, context, 24f)
             }
             viewHolder.abilicon.setImageBitmap(resized)
         } else {
@@ -46,10 +47,12 @@ class AdapterAbil(private val ability: List<String>, private val procs: List<Str
 
             val resized: Bitmap
 
+            val icon = StaticStore.picons?.get(id) ?: StaticStore.empty(1, 1)
+
             resized = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                StaticStore.getResizeb(StaticStore.picons[id], context, 28f)
+                StaticStore.getResizeb(icon, context, 28f)
             } else {
-                StaticStore.getResizeb(StaticStore.picons[id], context, 24f)
+                StaticStore.getResizeb(icon, context, 24f)
             }
             viewHolder.abilicon.setImageBitmap(resized)
         }
@@ -59,7 +62,7 @@ class AdapterAbil(private val ability: List<String>, private val procs: List<Str
         return abilicon.size + procs.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var abilicon: ImageView = itemView.findViewById(R.id.abilicon)
         var abiltext: TextView = itemView.findViewById(R.id.ability)
     }

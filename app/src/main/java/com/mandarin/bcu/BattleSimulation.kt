@@ -4,21 +4,19 @@ import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.circularreveal.CircularRevealRelativeLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.transition.MaterialArcMotion
-import com.google.android.material.transition.MaterialContainerTransform
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.asynchs.BAdder
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.CommonStatic
+import common.util.stage.Stage
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -55,6 +53,10 @@ class BattleSimulation : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_battle_simulation)
 
         SoundHandler.inBattle = true
@@ -63,13 +65,11 @@ class BattleSimulation : AppCompatActivity() {
         val bundle = intent.extras
 
         if (bundle != null) {
-            val mapcode = bundle.getInt("mapcode")
-            val stid = bundle.getInt("stid")
-            val posit = bundle.getInt("stage")
+            val data = StaticStore.transformIdentifier<Stage>(bundle.getString("Data")) ?: return
             val star = bundle.getInt("star")
             val item = bundle.getInt("item")
 
-            BAdder(this, mapcode, stid, posit, star, item).execute()
+            BAdder(this, data, star, item).execute()
         }
     }
 
@@ -116,6 +116,7 @@ class BattleSimulation : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
     public override fun onPause() {

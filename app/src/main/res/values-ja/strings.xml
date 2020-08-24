@@ -680,4 +680,5 @@
     <string name="pack_conf_unsupported">パックはサポートされていないバージョンです</string>
     <string name="pack_desc_unsupported">サポートされていないパックのバージョン _ (現在サポートしているバージョン : -)</string>
     <string name="def_divider">/</string>
+    <string name="pack_default">Default</string>
 </resources>

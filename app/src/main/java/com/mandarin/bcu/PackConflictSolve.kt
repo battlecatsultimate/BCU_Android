@@ -18,10 +18,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.conflict.adapters.PackConfListAdapter
 import com.mandarin.bcu.androidutil.pack.conflict.asynchs.PackConfSolver
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -69,6 +71,10 @@ class PackConflictSolve : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_pack_conflict_solve)
 
@@ -148,6 +154,7 @@ class PackConflictSolve : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

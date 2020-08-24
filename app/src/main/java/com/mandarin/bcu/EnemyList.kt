@@ -19,14 +19,15 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import common.CommonStatic
 import common.system.fake.ImageBuilder
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
 
 open class EnemyList : AppCompatActivity() {
-    private var numbers = ArrayList<Int>()
     private var mode = EAdder.MODE_INFO
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +65,10 @@ open class EnemyList : AppCompatActivity() {
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_enemy_list)
 
         ImageBuilder.builder = BMBuilder()
@@ -87,8 +92,6 @@ open class EnemyList : AppCompatActivity() {
                 gotoFilter()
             }
         })
-
-        StaticStore.getEnemyNumber(this)
 
         EAdder(this,mode,supportFragmentManager).execute()
     }
@@ -153,5 +156,6 @@ open class EnemyList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

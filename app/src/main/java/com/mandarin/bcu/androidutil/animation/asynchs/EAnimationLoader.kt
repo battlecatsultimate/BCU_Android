@@ -27,7 +27,8 @@ import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import common.pack.PackData
+import common.pack.Identifier
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -35,7 +36,7 @@ import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EAnimationLoader(activity: Activity, private val data: PackData.Identifier<Enemy>) : AsyncTask<Void?, Int?, Void?>() {
+class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>?) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
 
@@ -67,7 +68,7 @@ class EAnimationLoader(activity: Activity, private val data: PackData.Identifier
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        EDefiner().define(activity)
+        EDefiner.define(activity)
         publishProgress(2)
         return null
     }
@@ -75,6 +76,7 @@ class EAnimationLoader(activity: Activity, private val data: PackData.Identifier
     @SuppressLint("ClickableViewAccessibility")
     override fun onProgressUpdate(vararg result: Int?) {
         val activity = weakReference.get() ?: return
+        data ?: return
         val st = activity.findViewById<TextView>(R.id.imgviewerst)
         when (result[0]) {
             0 -> st.setText(R.string.stg_info_enemname)
@@ -123,6 +125,9 @@ class EAnimationLoader(activity: Activity, private val data: PackData.Identifier
                 var i = 0
 
                 val e = data.get() ?: return
+
+                if(e !is Enemy)
+                    return
 
                 while (i < e.anim.anims.size) {
                     name.add(activity.getString(animS[i]))
@@ -213,7 +218,7 @@ class EAnimationLoader(activity: Activity, private val data: PackData.Identifier
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = if(data.pack == PackData.Identifier.DEF) {
+                            val name2 = if(data.pack == Identifier.DEF) {
                                 "${dateFormat.format(date)}-E-Default-${StaticStore.trio(data.id)}"
                             } else {
                                 "${dateFormat.format(date)}-E-${data.pack}-${StaticStore.trio(data.id)}"
@@ -244,7 +249,7 @@ class EAnimationLoader(activity: Activity, private val data: PackData.Identifier
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name3 = if(data.pack == PackData.Identifier.DEF) {
+                            val name3 = if(data.pack == Identifier.DEF) {
                                 "${dateFormat.format(date)}-E-Trans-Default-${StaticStore.trio(data.id)}"
                             } else {
                                 "${dateFormat.format(date)}-E-Trans-${data.pack}-${StaticStore.trio(data.id)}"
@@ -367,7 +372,7 @@ class EAnimationLoader(activity: Activity, private val data: PackData.Identifier
         }
     }
 
-    private inner class ScaleListener internal constructor(private val cView: AnimationCView) : SimpleOnScaleGestureListener() {
+    private inner class ScaleListener(private val cView: AnimationCView) : SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             cView.size *= detector.scaleFactor
 

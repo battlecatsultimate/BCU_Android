@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.media.MediaPlayer
 import android.os.AsyncTask
-import android.util.Log
 import android.view.*
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import android.view.View.OnTouchListener
@@ -35,29 +33,20 @@ import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics.Companion.clear
-import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.io.DefferedLoader
-import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.pack.AImageWriter
 import com.mandarin.bcu.androidutil.stage.MapDefiner
 import com.mandarin.bcu.androidutil.unit.Definer
 import com.mandarin.bcu.util.page.BBCtrl
 import common.battle.BasisSet
 import common.battle.SBCtrl
+import common.pack.Identifier
 import common.system.P
-import common.system.fake.FakeImage
-import common.util.Data
-import common.util.pack.Pack
-import java.io.File
-import java.io.FileOutputStream
+import common.util.stage.Stage
 import java.io.IOException
 import java.lang.ref.WeakReference
-import java.security.NoSuchAlgorithmException
 import java.util.*
 import kotlin.math.ln
 
-class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int, private val stage: Int, private val star: Int, private val item: Int) : AsyncTask<Void?, String?, Void?>() {
+class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int) : AsyncTask<Void?, String?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var x = 0f
     private var y = 0f
@@ -66,17 +55,12 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
     private var previousX = 0f
     private var previousScale = 0f
     private var updateScale = false
-    
+
     private val enemy = "0"
     private val map = "1"
     private val battle = "2"
     private val done = "3"
-    private val pack = "4"
-    private val image = "5"
-    private val castle = "6"
-    private val bg = "7"
-    private val packext = "8"
-    
+
     public override fun onPreExecute() {
         val activity = weakReference.get() ?: return
         val fab: FloatingActionButton = activity.findViewById(R.id.battlepause)
@@ -90,152 +74,12 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
 
-        Definer().define(activity)
+        Definer.define(activity)
 
         publishProgress(enemy)
 
-        EDefiner().define(activity)
+        EDefiner.define(activity)
 
-        publishProgress(pack)
-
-        if(!StaticStore.packread && Pack.map.size == 1) {
-            checkValidPack()
-            handlePack()
-            removeIfDifferent()
-
-            try {
-                Pack.read()
-                StaticStore.packread = true
-                DefferedLoader.clearPending("Context", activity)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
-            }
-
-            for (path in DefineItf.packPath) {
-                val f = File(path)
-
-                val fname = f.name
-
-                if (fname.endsWith(".bcupack")) {
-                    if (!checkPack(f)) {
-                        val p = findPack(f)
-
-                        val name = f.name.replace(".bcupack", "")
-
-                        val shared = activity.getSharedPreferences(name, Context.MODE_PRIVATE)
-                        val ed = shared.edit()
-
-                        ed.putString(name, StaticStore.fileToMD5(f))
-                        ed.apply()
-
-                        val resimg = StaticStore.getExternalRes(activity) + "img/$name/"
-
-                        val g = File(resimg)
-
-                        val glit = g.listFiles() ?: continue
-
-                        for (gs in glit) {
-                            val pngname = gs.name
-
-                            publishProgress(image, pngname.replace(".png", ""))
-
-                            if (pngname.endsWith(".png")) {
-                                val md5 = StaticStore.fileToMD5(gs)
-
-                                StaticStore.encryptPNG(gs.absolutePath, md5, StaticStore.IV, true)
-
-                                ed.putString(gs.absolutePath.replace(".png", ".bcuimg"), md5)
-                                ed.apply()
-                            }
-                        }
-
-                        p ?: continue
-
-                        val bpathList = ArrayList<String>()
-
-                        for (i in p.bg.list) {
-                            val img = i.img?.bimg ?: continue
-
-                            val bpath = StaticStore.getExternalRes(activity) + "img/$name/"
-                            val bname = findBgName(bpath)
-
-                            val info = extractImage(activity, img, bpath, bname, false)
-
-                            if (info.size != 2)
-                                continue
-
-                            val result = info[0] + "\\" + info[1]
-
-                            (i.img.bimg as FIBM).reference = result
-
-                            bpathList.add(result)
-                        }
-
-                        for (i in bpathList) {
-                            val info = i.split("\\")
-
-                            val bf = File(info[0].replace(".bcuimg", ".png"))
-
-                            if (!bf.exists())
-                                continue
-
-                            publishProgress(bg, bf.name.replace(".png", ""))
-
-                            if (info.size != 2)
-                                continue
-
-                            StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
-                        }
-
-                        val cpathList = ArrayList<String>()
-
-                        for (i in p.cs.list) {
-                            val img = i.img ?: continue
-
-                            val cpath = StaticStore.getExternalRes(activity) + "img/$name/"
-                            val cname = findCsName(cpath)
-
-                            val info = extractImage(activity, img, cpath, cname, false)
-
-                            if (info.size != 2)
-                                continue
-
-                            val result = info[0] + "\\" + info[1]
-
-                            (i.img as FIBM).reference = result
-
-                            cpathList.add(result)
-                        }
-
-                        for (i in cpathList) {
-                            val info = i.split("\\")
-
-                            val cf = File(info[0].replace(".bcuimg", ".png"))
-
-                            if (!cf.exists())
-                                continue
-
-                            publishProgress(castle, cf.name.replace(".png", ""))
-
-                            if (info.size != 2)
-                                continue
-
-                            StaticStore.encryptPNG(info[0].replace(".bcuimg", ".png"), info[1], StaticStore.IV, true)
-                        }
-
-                        publishProgress(packext, f.name.replace(".bcupack", ""))
-
-                        p.packData(AImageWriter())
-                    }
-                }
-            }
-
-            DefineItf.packPath.clear()
-
-            StaticStore.filterEntityList = BooleanArray(Pack.map.size)
-        }
-        
         publishProgress(map)
         MapDefiner().define(activity)
         publishProgress(battle)
@@ -249,54 +93,23 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
         val activity = weakReference.get() ?: return
         val loadt = activity.findViewById<TextView>(R.id.battleloadt)
         when (results[0]) {
-            pack -> {
-                loadt.setText(R.string.main_pack)
-            }
-
-            image -> {
-                val name = activity.getString(R.string.main_pack_img)+ (results[1] ?: "")
-
-                loadt.text = name
-            }
-
-            bg -> {
-                val name = activity.getString(R.string.main_pack_bg) + (results[1] ?: "")
-
-                loadt.text = name
-            }
-
-            castle -> {
-                val name = activity.getString(R.string.main_pack_castle) + (results[1] ?: "")
-
-                loadt.text = name
-            }
-
-            packext -> {
-                val name = activity.getString(R.string.main_pack_ext)+ (results[1] ?: "")
-
-                loadt.text = name
-            }
             enemy -> loadt.setText(R.string.stg_info_enem)
             map -> loadt.setText(R.string.stg_list_stl)
             battle -> loadt.setText(R.string.battle_loading)
             done -> {
                 val layout = activity.findViewById<LinearLayout>(R.id.battlelayout)
 
-                val mc = StaticStore.map[mapcode] ?: return
-
-                val stm = mc.maps[stid] ?: return
-
-                val stg = stm.list[stage] ?: return
+                val stg = Identifier.get(data) ?: return
 
                 val r = Random(System.currentTimeMillis())
 
-                val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current.sele, intArrayOf(item), r.nextLong())
+                val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current().sele, intArrayOf(item), r.nextLong())
 
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
                 val axis = shared.getBoolean("Axis", true)
 
-                val view = BattleView(activity, ctrl, 1, axis,activity, stid)
+                val view = BattleView(activity, ctrl, 1, axis,activity)
 
                 view.initialized = false
                 view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -759,21 +572,11 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
 
                 if (SoundHandler.twoMusic) {
                     SoundHandler.lop1 = battleView.painter.bf.sb.st.loop1
-                    SoundHandler.mu1 = battleView.painter.bf.sb.st.mus1
+                    SoundHandler.mu1 = StaticStore.getMusicFile(Identifier.get(battleView.painter.bf.sb.st.mus1))
                 }
 
-                if(battleView.painter.bf.sb.st.mus0 >= 0) {
-                    val f = if(battleView.painter.bf.sb.st.mus0 < 1000) {
-                        Pack.def.ms[battleView.painter.bf.sb.st.mus0]
-                    } else {
-                        val mp = Pack.map[StaticStore.getPID(battleView.painter.bf.sb.st.mus0)]
-
-                        if(mp != null) {
-                            mp.ms.list[StaticStore.getMusicIndex(battleView.painter.bf.sb.st.mus0)]
-                        } else {
-                            Pack.def.ms[3]
-                        }
-                    }
+                if(battleView.painter.bf.sb.st.mus0 != null) {
+                    val f = StaticStore.getMusicFile(Identifier.get(battleView.painter.bf.sb.st.mus0))
 
                     if (f != null) {
                         if (f.exists()) {
@@ -887,243 +690,6 @@ class BAdder(activity: Activity, private val mapcode: Int, private val stid: Int
             }
 
             return super.onScaleBegin(detector)
-        }
-    }
-
-    private fun checkPack(f: File) : Boolean {
-        val ac = weakReference.get() ?: return false
-
-        val name = f.name.replace(".bcupack","").replace(".bcudata","")
-
-        val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
-
-        return if(shared.contains(name)) {
-            val md5 = shared.getString(name, "")
-
-            val fmd5 = StaticStore.fileToMD5(f)
-
-            val g = File(StaticStore.getExternalRes(ac)+"data/"+f.name.replace(".bcupack",".bcudata"))
-
-            md5 == fmd5 && g.exists()
-        } else {
-            false
-        }
-    }
-
-    private fun findBgName(path: String) : String {
-        var i = 0
-
-        while(true) {
-            val name = "bg-"+ Data.trio(i)+".png"
-
-            val f = File(path, name)
-
-            if(f.exists()) {
-                i++
-            } else {
-                println(name)
-                return name
-            }
-        }
-    }
-
-    private fun findCsName(path: String) : String {
-        var i = 0
-
-        while(true) {
-            val name = "castle-"+ Data.trio(i)+".png"
-
-            val f = File(path, name)
-
-            if(f.exists()) {
-                i++
-            } else {
-                return name
-            }
-        }
-    }
-
-    private fun findPack(f: File) : Pack? {
-        val path = f.absolutePath
-
-        for(p in Pack.map) {
-            if(p.value.id == 0)
-                continue
-
-            val ppath = p.value.file?.absolutePath ?: ""
-
-            if(ppath == path)
-                return p.value
-        }
-
-        return null
-    }
-
-    private fun extractImage(c: Context, img: FakeImage, path: String, name: String, unload: Boolean) : Array<String> {
-        val f = File(path)
-        val result = arrayOf("", "")
-
-        if(!f.exists()) {
-            if(!f.mkdirs()) {
-                Log.e("PackExtract", "Failed to create directory "+f.absolutePath)
-                return result
-            }
-        }
-
-        val g = File(path, name)
-
-        if(!g.exists()) {
-            if(!g.createNewFile()) {
-                Log.e("PackExtract", "Failed to create file "+g.absolutePath)
-                return result
-            }
-        }
-
-        img.bimg() ?: return result
-
-        (img.bimg() as Bitmap).compress(Bitmap.CompressFormat.PNG, 0, FileOutputStream(g))
-
-        if(unload) {
-            img.unload()
-        }
-
-        return try {
-            arrayOf(g.absolutePath.replace(".png",".bcuimg"), StaticStore.fileToMD5(g))
-        } catch (e: NoSuchAlgorithmException) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload, c)
-            arrayOf(g.absolutePath.replace(".png", ".bcuimg"),"")
-        }
-    }
-
-    private fun removeIfDifferent() {
-        val ac = weakReference.get() ?: return
-
-        val path = File(StaticStore.getExternalPack(ac))
-
-        val lit = path.listFiles() ?: return
-
-        for(f in lit) {
-            if(!f.name.endsWith(".bcupack"))
-                continue
-
-            val name = f.name.replace(".bcupack", "").replace(".bcuata", "")
-
-            val shared = ac.getSharedPreferences(name, Context.MODE_PRIVATE)
-
-            if (shared.contains(name)) {
-                val omd5 = shared.getString(name, "")
-
-                val cmd5 = StaticStore.fileToMD5(f)
-
-                if (omd5 != cmd5) {
-                    val g = File(StaticStore.getExternalRes(ac) + "data/" + f.name.replace(".bcupack", ".bcudata"))
-
-                    if (g.exists()) {
-                        if (!g.delete()) {
-                            Log.e("PackExtract", "Failed to remove file " + g.absolutePath)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Compare bcupack files with shared preferences data, and remove other pack data automatically
-     */
-    private fun handlePack() {
-        val ac = weakReference.get() ?: return
-
-        val sharedDir = StaticStore.getDataPath()+"shared_prefs/"
-
-        val f = File(sharedDir)
-
-        if(!f.exists())
-            return
-
-        val lit = f.listFiles() ?: return
-
-        val handler = listOf<String>().toMutableList()
-
-        for(fs in lit) {
-            if(fs.name == "configuration.xml")
-                continue
-
-            val name = fs.name.replace(".xml",".bcupack")
-
-            val g = File(StaticStore.getExternalPack(ac), name)
-
-            if(!g.exists()) {
-                handler.add(name.replace(".bcupack",""))
-            }
-        }
-
-        for(name in handler) {
-            removeRelatedPackData(name)
-        }
-    }
-
-    /**
-     * Remove all pack data with specified name
-     *
-     * @param name Name of pack file, must not contain extension
-     */
-    private fun removeRelatedPackData(name: String) {
-        val ac = weakReference.get() ?: return
-
-        if(name == "configuration")
-            return
-
-        val sharedPath = StaticStore.getDataPath()+"shared_prefs/$name.xml"
-
-        var f = File(sharedPath)
-
-        if(f.exists()) {
-            if(!f.delete()) {
-                Log.e("PackExtract","Failed to remove file "+f.absolutePath)
-            }
-        }
-
-        val resDataPath = StaticStore.getExternalRes(ac)+"data/$name.bcudata"
-
-        f = File(resDataPath)
-
-        if(f.exists()) {
-            if(!f.delete()) {
-                Log.e("PackExtract", "Failed to remove file "+f.absolutePath)
-            }
-        }
-
-        val resImgPath = StaticStore.getExternalRes(ac)+"img/$name/"
-
-        f = File(resImgPath)
-
-        StaticStore.removeAllFiles(f)
-    }
-
-    /**
-     * Check if there are invalid bcupack files, so it won't affect application data shared preferences
-     */
-    private fun checkValidPack() {
-        val ac = weakReference.get() ?: return
-
-        val invalid = listOf("configuration")
-
-        val packDir = StaticStore.getExternalPack(ac)
-
-        val f = File(packDir)
-
-        if(!f.exists())
-            return
-
-        val lit = f.listFiles() ?: return
-
-        for(fs in lit) {
-            if(invalid.contains(fs.name.replace(".bcupack","").replace(".bcudata","").toLowerCase(Locale.ROOT))) {
-                if(!fs.delete()) {
-                    Log.e("Adder", "Failed to delete file "+ f.absolutePath)
-                }
-            }
         }
     }
 }

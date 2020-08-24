@@ -14,10 +14,12 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder
+import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -58,6 +60,10 @@ class LineUpScreen : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_line_up_screen)
 
@@ -118,10 +124,7 @@ class LineUpScreen : AppCompatActivity() {
         StaticStore.set = null
         StaticStore.lu = null
 
-        if(StaticStore.combos != null)
-            StaticStore.combos.clear()
-        else
-            StaticStore.combos = ArrayList()
+        StaticStore.combos.clear()
 
         super.onBackPressed()
     }
@@ -129,6 +132,7 @@ class LineUpScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {

@@ -23,6 +23,7 @@ import com.mandarin.bcu.androidutil.Revalidater
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import common.CommonStatic
 import leakcanary.AppWatcher
@@ -74,6 +75,10 @@ open class ConfigScreen : AppCompatActivity() {
         }
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_config_screen)
 
@@ -232,11 +237,9 @@ open class ConfigScreen : AppCompatActivity() {
                     ed1.putInt("Language", l)
                     ed1.apply()
 
-                    if (StaticStore.units != null || StaticStore.enemies != null)
-                        revalidate = true
-                    else {
-                        StaticStore.getLang(l)
-                    }
+                    revalidate = true
+
+                    StaticStore.getLang(l)
 
                     restart()
                 }
@@ -517,5 +520,6 @@ open class ConfigScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+        (CommonStatic.ctx as AContext).releaseActivity()
     }
 }

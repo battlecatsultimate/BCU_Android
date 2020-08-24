@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.lineup.LineUpView
+import common.CommonStatic
 import common.battle.BasisSet
-import common.system.MultiLangCont
-import common.util.unit.Combo
+import common.util.lang.MultiLangCont
 import java.util.*
 
 
@@ -29,14 +29,18 @@ class LUCatCombo : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_cat_combo, group, false)
-        if (context == null) return view
-        if (StaticStore.combos != null) StaticStore.combos.clear() else StaticStore.combos = ArrayList()
-        for (i in Combo.combos.indices) {
-            StaticStore.combos.addAll(listOf(*Combo.combos[i]))
+
+        if (context == null)
+            return view
+
+        StaticStore.combos.clear()
+
+        for (i in CommonStatic.getBCAssets().combos.indices) {
+            StaticStore.combos.addAll(listOf(*CommonStatic.getBCAssets().combos[i]))
         }
         val names = arrayOfNulls<String>(StaticStore.combos.size)
         for (i in StaticStore.combos.indices) {
-            names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
+            names[i] = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[i].name)
         }
         val combolist = view.findViewById<ListView>(R.id.combolist)
         val schlist = view.findViewById<ListView>(R.id.comschlist1)
@@ -67,9 +71,9 @@ class LUCatCombo : Fragment() {
             if (context == null) return@OnItemClickListener
             val c = StaticStore.combos[position]
             posit = position
-            if (!BasisSet.current.sele.lu.contains(c)) {
+            if (!BasisSet.current().sele.lu.contains(c)) {
                 use.isClickable = true
-                if (BasisSet.current.sele.lu.willRem(c)) {
+                if (BasisSet.current().sele.lu.willRem(c)) {
                     use.setTextColor(Color.rgb(229, 57, 53))
                     use.setText(R.string.combo_rep)
                 } else {
@@ -86,7 +90,7 @@ class LUCatCombo : Fragment() {
             if (context == null) return@OnClickListener
             if (posit < 0) return@OnClickListener
             val c = StaticStore.combos[posit]
-            BasisSet.current.sele.lu.set(c.units)
+            BasisSet.current().sele.lu.set(c.units)
             line?.updateLineUp()
             use.setText(R.string.combo_using)
             use.setTextColor(StaticStore.getAttributeColor(context, R.attr.TextPrimary))

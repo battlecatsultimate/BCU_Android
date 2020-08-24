@@ -1,9 +1,7 @@
 package com.mandarin.bcu.androidutil.enemy.adapters
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +10,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.util.pack.Pack
-import java.util.*
-import kotlin.collections.ArrayList
+import common.pack.Identifier
+import common.pack.UserProfile
+import common.util.Data
+import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
+import common.util.unit.Enemy
 
-class EnemyListAdapter(context: Context, private val name: ArrayList<String>, private val locate: ArrayList<Int>, private val pid: Int) : ArrayAdapter<String?>(context, R.layout.listlayout, name.toTypedArray()) {
+class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<AbEnemy>>, private val pid: String) : ArrayAdapter<Identifier<AbEnemy>>(context, R.layout.listlayout, name.toTypedArray()) {
 
     private class ViewHoler constructor(row: View) {
         var id: TextView = row.findViewById(R.id.unitID)
@@ -38,25 +39,19 @@ class EnemyListAdapter(context: Context, private val name: ArrayList<String>, pr
             holder = row.tag as ViewHoler
         }
 
-        val p = Pack.map[pid] ?: return row
+        UserProfile.getPack(pid) ?: return row
 
-        if(position < 0 || position >= name.size || position >= locate.size) {
+        val e = Identifier.get(name[position]) ?: return row
+
+        if(e !is Enemy) {
             return row
         }
 
-        val info = name[position].split("/")
+        holder.id.text = generateName(name[position])
 
-        if(info.size != 2) {
-            Log.w("ListAapter", "Invalid Format : "+name[position])
+        holder.title.text = MultiLangCont.get(name[position].get()) ?: e.name ?: ""
 
-            holder.id.visibility = View.GONE
-            holder.title.text = name[position]
-        } else {
-            holder.id.text = info[0]
-            holder.title.text = info[1]
-        }
-
-        val icon = p.es.list[locate[position]]?.anim?.edi?.img?.bimg()
+        val icon = e.anim?.edi?.img?.bimg()
 
         if (icon != null)
             holder.image.setImageBitmap(StaticStore.getResizeb(icon as Bitmap, context, 85f, 32f))
@@ -64,6 +59,14 @@ class EnemyListAdapter(context: Context, private val name: ArrayList<String>, pr
             holder.image.setImageBitmap(StaticStore.empty(context, 85f, 32f))
 
         return row
+    }
+
+    private fun generateName(id: Identifier<AbEnemy>) : String {
+        return if(id.pack == Identifier.DEF) {
+            context.getString(R.string.pack_default) + " - " + Data.trio(id.id)
+        } else {
+            StaticStore.getPackName(id.pack) + " - " + Data.trio(id.id)
+        }
     }
 
 }

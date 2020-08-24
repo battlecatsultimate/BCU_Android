@@ -9,7 +9,7 @@ import android.media.MediaMetadataRetriever
 import android.os.AsyncTask
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.util.Log
+import android.util.SparseArray
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
@@ -23,11 +23,12 @@ import com.mandarin.bcu.androidutil.adapters.AlphaAnimator
 import com.mandarin.bcu.androidutil.adapters.AnimatorConst
 import com.mandarin.bcu.androidutil.adapters.ScaleAnimator
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.music.adapters.MusicListAdapter
-import common.util.Data
-import common.util.pack.Pack
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
+import common.util.stage.Music
 import java.lang.ref.WeakReference
 import kotlin.math.round
 
@@ -79,22 +80,17 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
-        val ac = weak.get() ?: return null
+        weak.get() ?: return null
 
-        if(!StaticStore.musicread) {
-            SoundHandler.read(ac)
-            StaticStore.musicread = true
-        }
-
-        if(StaticStore.musicnames.size != Pack.map.size || StaticStore.musicData.isEmpty()) {
+        if(StaticStore.musicnames.size != UserProfile.getAllPacks().size || StaticStore.musicData.isEmpty()) {
             StaticStore.musicnames.clear()
             StaticStore.musicData.clear()
 
-            for (i in Pack.map) {
-                val names = ArrayList<String>()
+            for (p in UserProfile.getAllPacks()) {
+                val names = SparseArray<String>()
 
-                for (j in i.value.ms.list.indices) {
-                    val f = i.value.ms.list[j]
+                for (j in p.musics.list.indices) {
+                    val f = StaticStore.getMusicFile(p.musics.list[j]) ?: continue
 
                     val sp = SoundPlayer()
                     sp.setDataSource(f.absolutePath)
@@ -121,12 +117,16 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     val secs = if (sec < 10) "0$sec"
                     else sec.toString()
 
-                    names.add("$mins:$secs")
+                    names.append(p.musics.list[j].id.id, "$mins:$secs")
 
-                    StaticStore.musicData.add(i.key.toString() + "\\" + j)
+                    StaticStore.musicData.add(p.musics.list[j].id)
                 }
 
-                StaticStore.musicnames[i.key] = names
+                if(p is PackData.DefPack) {
+                    StaticStore.musicnames[Identifier.DEF] = names
+                } else if(p is PackData.UserPack) {
+                    StaticStore.musicnames[p.desc.id] = names
+                }
             }
         }
 
@@ -137,11 +137,9 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
     override fun onProgressUpdate(vararg values: Int?) {
         val ac = weak.get() ?: return
+        val m0 = MusicPlayer.music ?: return
 
-        val music = StaticStore.musicnames[MusicPlayer.pid] ?: return
-
-        if (MusicPlayer.posit >= music.size)
-            MusicPlayer.posit = 0
+        StaticStore.musicnames[m0.pack] ?: return
         
         if(values[0] == 0) {
             val name: TextView = ac.findViewById(R.id.musicname)
@@ -162,9 +160,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
             close.hide()
 
-            val fp = Pack.map[MusicPlayer.pid] ?: return
-
-            val f = fp.ms.list[MusicPlayer.posit]
+            val f = StaticStore.getMusicFile(Identifier.get(MusicPlayer.music)) ?: return
 
             if (!f.exists())
                 return
@@ -251,30 +247,17 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                     MusicPlayer.sound.reset()
 
-                    val currentData = MusicPlayer.pid.toString() + "\\" + MusicPlayer.posit
-
-                    var index = StaticStore.musicData.indexOf(currentData) + 1
+                    var index = StaticStore.musicData.indexOf(MusicPlayer.music) + 1
 
                     if(index >= StaticStore.musicData.size) {
                         index = 0
                     }
 
-                    val info = StaticStore.musicData[index].split("\\")
+                    MusicPlayer.music = StaticStore.musicData[index]
 
-                    if(info.size != 2) {
-                        Log.e("MusicLoader", "Invalid String format : " + StaticStore.musicData[index])
-                        return
-                    }
+                    val m = MusicPlayer.music ?: return
 
-                    MusicPlayer.pid = info[0].toInt()
-                    MusicPlayer.posit = info[1].toInt()
-
-                    val p = Pack.map[MusicPlayer.pid] ?: return
-
-                    if(MusicPlayer.posit >= p.ms.size())
-                        MusicPlayer.posit = 0
-
-                    val g = p.ms.list[MusicPlayer.posit]
+                    val g = StaticStore.getMusicFile(Identifier.get(MusicPlayer.music)) ?: return
 
                     if (!g.exists()) {
                         StaticStore.showShortMessage(ac, "No File Found")
@@ -285,11 +268,10 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                     MusicPlayer.sound.isLooping = MusicPlayer.looping
 
-                    val names = StaticStore.musicnames[MusicPlayer.pid] ?: return
+                    val names = StaticStore.musicnames[m.pack] ?: return
 
-                    val gname = Data.hex(MusicPlayer.pid) + " - " + g.name
-                    name.text = gname
-                    max.text = names[MusicPlayer.posit]
+                    name.text = StaticStore.generateIdName(m, ac)
+                    max.text = names[m.id]
 
                     val mmr = MediaMetadataRetriever()
                     mmr.setDataSource(g.absolutePath)
@@ -319,21 +301,16 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                         MusicPlayer.sound.seekTo(0)
                         MusicPlayer.sound.start()
                     } else {
-                        var index = StaticStore.musicData.indexOf(MusicPlayer.pid.toString() + "\\" + MusicPlayer.posit) - 1
+                        var index = StaticStore.musicData.indexOf(MusicPlayer.music) - 1
 
                         if (index < 0)
                             index = 0
 
-                        val info = StaticStore.musicData[index].split("\\")
+                        MusicPlayer.music = StaticStore.musicData[index]
 
-                        if(info.size != 2) {
-                            Log.e("MusicLoader", "Invalid String Format : "+StaticStore.musicData[index])
-                            return
-                        }
+                        val m = MusicPlayer.music ?: return
 
-                        val p = Pack.map[info[0].toInt()] ?: return
-
-                        val g = p.ms.list[info[1].toInt()]
+                        val g = StaticStore.getMusicFile(Identifier.get(m)) ?: return
 
                         if (!g.exists()) {
                             StaticStore.showShortMessage(ac, "No File Found")
@@ -347,18 +324,10 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                         MusicPlayer.sound.isLooping = MusicPlayer.looping
 
-                        MusicPlayer.pid = info[0].toInt()
-                        MusicPlayer.posit = info[1].toInt()
+                        val names = StaticStore.musicnames[m.pack] ?: return
 
-                        val names = StaticStore.musicnames[MusicPlayer.pid] ?: return
-
-                        if(MusicPlayer.posit >= p.ms.list.size)
-                            MusicPlayer.posit = 0
-
-                        val gname = Data.hex(MusicPlayer.pid) + " - " + g.name
-
-                        name.text = gname
-                        max.text = names[MusicPlayer.posit]
+                        name.text = StaticStore.generateIdName(m, ac)
+                        max.text = names[m.id]
 
                         val mmr = MediaMetadataRetriever()
                         mmr.setDataSource(g.absolutePath)
@@ -376,8 +345,6 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             })
 
             mulist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                MusicPlayer.posit = position
-
                 MusicPlayer.completed = false
                 MusicPlayer.paused = false
 
@@ -388,23 +355,11 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                 MusicPlayer.sound.reset()
 
-                val info = StaticStore.musicData[position].split("\\")
+                MusicPlayer.music = StaticStore.musicData[position]
 
-                if(info.size != 2) {
-                    Log.e("MusicLoader", "Invalid String Format : "+StaticStore.musicData[position])
-                    return@OnItemClickListener
-                }
+                val m = MusicPlayer.music ?: return@OnItemClickListener
 
-                MusicPlayer.pid = info[0].toInt()
-
-                val p = Pack.map[MusicPlayer.pid] ?: return@OnItemClickListener
-
-                MusicPlayer.posit = info[1].toInt()
-
-                if(MusicPlayer.posit >= p.ms.list.size)
-                    MusicPlayer.posit = 0
-
-                val g = p.ms.list[MusicPlayer.posit]
+                val g = StaticStore.getMusicFile(Identifier.get(m)) ?: return@OnItemClickListener
 
                 if (!g.exists()) {
                     StaticStore.showShortMessage(ac, "No File Found")
@@ -415,12 +370,10 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                 MusicPlayer.sound.isLooping = MusicPlayer.looping
 
-                val names = StaticStore.musicnames[MusicPlayer.pid] ?: return@OnItemClickListener
+                val names = StaticStore.musicnames[m.pack] ?: return@OnItemClickListener
 
-                val gname = Data.hex(MusicPlayer.pid) + " - " + g.name
-
-                    name.text = gname
-                max.text = names[MusicPlayer.posit]
+                name.text = StaticStore.generateIdName(m, ac)
+                max.text = names[m.id]
 
                 val mmr = MediaMetadataRetriever()
                 mmr.setDataSource(g.absolutePath)
@@ -440,29 +393,17 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 }
 
                 if (MusicPlayer.next && !MusicPlayer.sound.isLooping) {
-                    var index = StaticStore.musicData.indexOf(MusicPlayer.pid.toString() + "\\" + MusicPlayer.posit) + 1
+                    var index = StaticStore.musicData.indexOf(MusicPlayer.music) + 1
 
                     if (index >= StaticStore.musicData.size) {
                         index = 0
                     }
 
-                    val info = StaticStore.musicData[index].split("\\")
+                    MusicPlayer.music = StaticStore.musicData[index]
 
-                    if(info.size != 2) {
-                        Log.e("MusicLoader", "Invalid String Format : "+StaticStore.musicData[index])
-                        return@setOnCompletionListener
-                    }
+                    val m = MusicPlayer.music ?: return@setOnCompletionListener
 
-                    MusicPlayer.pid = info[0].toInt()
-
-                    val p = Pack.map[MusicPlayer.pid] ?: return@setOnCompletionListener
-
-                    MusicPlayer.posit = info[1].toInt()
-
-                    if(MusicPlayer.posit >= p.ms.list.size)
-                        MusicPlayer.posit = 0
-
-                    val g = p.ms.list[MusicPlayer.posit]
+                    val g = StaticStore.getMusicFile(Identifier.get(m)) ?: return@setOnCompletionListener
 
                     if (!g.exists()) {
                         play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
@@ -476,39 +417,39 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                     muprog.max = StaticStore.durations[index]
 
-                    val names = StaticStore.musicnames[MusicPlayer.pid] ?: return@setOnCompletionListener
+                    val names = StaticStore.musicnames[m.pack] ?: return@setOnCompletionListener
 
-                    val gname = Data.hex(MusicPlayer.pid) + " - " + g.name
-
-                    name.text = gname
-                    max.text = names[MusicPlayer.posit]
+                    name.text = StaticStore.generateIdName(m, ac)
+                    max.text = names[m.id]
 
                     MusicPlayer.sound.start()
                 }
             }
 
-            val index = StaticStore.musicData.indexOf(MusicPlayer.pid.toString()+"\\"+MusicPlayer.posit)
+            val index = StaticStore.musicData.indexOf(MusicPlayer.music)
+
+            val m = MusicPlayer.music ?: return
 
             muprog.max = StaticStore.durations[index]
             muprog.progress = MusicPlayer.prog
 
-            val fname = Data.hex(MusicPlayer.pid) + " - " + f.name
+            val fname = StaticStore.generateIdName(m, ac)
 
             name.text = fname
 
-            val mnaems = StaticStore.musicnames[MusicPlayer.pid] ?: return
+            val mnames = StaticStore.musicnames[m.pack] ?: return
 
-            max.text = mnaems[MusicPlayer.posit]
+            max.text = mnames[m.id]
 
-            val names = ArrayList<String>()
+            val names = ArrayList<Identifier<Music>>()
 
-            for(i in Pack.map) {
-                for(j in i.value.ms.list.indices) {
-                    names.add(Data.hex(i.key)+" - "+i.value.ms.list[j].name)
+            for(i in UserProfile.getAllPacks()) {
+                for(j in i.musics.list.indices) {
+                    names.add(i.musics.list[j].id)
                 }
             }
 
-            val adapter = MusicListAdapter(ac, names, MusicPlayer.pid, true)
+            val adapter = MusicListAdapter(ac, names, m.pack, true)
             mulist.adapter = adapter
 
             loop.setOnClickListener {

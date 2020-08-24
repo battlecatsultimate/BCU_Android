@@ -32,16 +32,17 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
+import common.pack.Identifier
 import common.pack.PackData
 import common.util.unit.Form
 import common.util.unit.Unit
 import java.util.*
 
-class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, data: PackData.Identifier<Unit>) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
+class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, data: Identifier<Unit>) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
     private val context: Activity?
     private val names: ArrayList<String>
     private val forms: Array<Form>
-    private val data: PackData.Identifier<Unit>
+    private val data: Identifier<Unit>
     private var fs = 0
     private val s: GetStrings
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
@@ -141,9 +142,9 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         val icon = f.anim?.uni?.img?.bimg()
 
         if(icon == null) {
-            viewHolder.uniticon.setImageBitmap(StaticStore.MakeIcon(context, null, 48f))
+            viewHolder.uniticon.setImageBitmap(StaticStore.makeIcon(context, null, 48f))
         } else {
-            viewHolder.uniticon.setImageBitmap(StaticStore.MakeIcon(context, icon as Bitmap, 48f))
+            viewHolder.uniticon.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap, 48f))
         }
 
         viewHolder.unitname.text = names[i]
@@ -807,7 +808,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         return names.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var frse: Button = itemView.findViewById(R.id.unitinffrse)
         var unitname: TextView = itemView.findViewById(R.id.unitinfname)
         var unitid: TextView = itemView.findViewById(R.id.unitinfidr)

@@ -681,4 +681,5 @@
     <string name="pack_conf_unsupported">해당 팩을 지원하지 않습니다</string>
     <string name="pack_desc_unsupported">지원하지 않는 팩 버전 _ (현재 지원하는 버전 : -)</string>
     <string name="def_divider">/</string>
+    <string name="pack_default">기본</string>
 </resources>

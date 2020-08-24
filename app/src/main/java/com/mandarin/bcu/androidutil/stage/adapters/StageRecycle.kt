@@ -17,19 +17,18 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import common.util.pack.Pack
+import common.battle.BasisSet
+import common.io.json.JsonEncoder
+import common.pack.Identifier
 import common.util.stage.Limit
+import common.util.stage.Stage
 import java.text.DecimalFormat
 import java.util.*
 
-class StageRecycle(private val activity: Activity, private val mapcode: Int, private val stid: Int, private val posit: Int, private val custom: Boolean) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
+class StageRecycle(private val activity: Activity, private val data: Identifier<Stage>) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
     private val s: GetStrings = GetStrings(activity)
-    private val castles = intArrayOf(45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 32, 31, 30, 29, 28, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 46, 47, 45, 47, 47, 45, 45)
-    private val wc = listOf(3, 4, 5, 10, 12)
-    private val ec = listOf(0, 1, 2, 9)
-    private val sc = listOf(6, 7, 8)
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val id: TextView = itemView.findViewById(R.id.stginfoidr)
         val star: Spinner = itemView.findViewById(R.id.stginfostarr)
         val energy: TextView = itemView.findViewById(R.id.stginfoengr)
@@ -66,13 +65,12 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        val t = StaticStore.t
-        val mc = StaticStore.map[mapcode] ?: return
-        if (stid >= mc.maps.size || stid < 0) return
-        val stm = mc.maps[stid] ?: return
-        if (posit >= stm.list.size || posit < 0) return
-        val st = stm.list[posit]
-        viewHolder.id.text = s.getID(mapcode, stid, posit)
+        val t = BasisSet.current().t()
+
+        val st = Identifier.get(data) ?: return
+        val stm = st.info.map.sm ?: return
+
+        viewHolder.id.text = s.getID(data.pack, st.info.map.sm.id.id, data.id)
         val stars: MutableList<String> = ArrayList()
         for (k in stm.stars.indices) {
             val s: String = (k + 1).toString() + " (" + stm.stars[k] + " %)"
@@ -102,7 +100,7 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
                 val enrec: RecyclerView = activity.findViewById(R.id.stginfoenrec)
                 enrec.layoutManager = LinearLayoutManager(activity)
                 ViewCompat.setNestedScrollingEnabled(enrec, false)
-                val listRecycle = EnemyListRecycle(activity, st, stm.stars[position], mapcode, custom)
+                val listRecycle = EnemyListRecycle(activity, st, stm.stars[position])
                 enrec.adapter = listRecycle
                 StaticStore.stageSpinner = position
                 val l = st.getLim(position)
@@ -112,7 +110,7 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
                 } else {
                     viewHolder.limitscroll.visibility = View.VISIBLE
                     viewHolder.limitNone.visibility = View.GONE
-                    if (posit == l.sid || l.sid == -1) {
+                    if (data.id == l.sid || l.sid == -1) {
                         if (viewHolder.star.selectedItemPosition == l.star || l.star == -1) {
                             viewHolder.limitrec.layoutManager = LinearLayoutManager(activity)
                             ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec, false)
@@ -129,31 +127,42 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
             viewHolder.star.setSelection(StaticStore.stageSpinner)
         }
         if (st.info != null) {
-            if (mapcode == 0 || mapcode == 13) viewHolder.xp.text = s.getXP(st.info.xp, t, true) else viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+            if (data.pack == "000000" || data.pack == "000013")
+                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+            else
+                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
         } else {
             viewHolder.xp.text = "0"
         }
-        if (st.info != null) viewHolder.energy.text = st.info.energy.toString() else viewHolder.energy.text = "0"
+
+        if (st.info != null)
+            viewHolder.energy.text = st.info.energy.toString()
+        else
+            viewHolder.energy.text = "0"
+
         viewHolder.health.text = st.health.toString()
-        if (st.info != null) viewHolder.difficulty.text = s.getDifficulty(st.info.diff) else viewHolder.difficulty.setText(R.string.unit_info_t_none)
-        viewHolder.continueable.text = if (st.non_con) activity.getString(R.string.stg_info_impo) else activity.getString(R.string.stg_info_poss)
+
+        if (st.info != null)
+            viewHolder.difficulty.text = s.getDifficulty(st.info.diff)
+        else
+            viewHolder.difficulty.setText(R.string.unit_info_t_none)
+
+        viewHolder.continueable.text = if (st.non_con)
+            activity.getString(R.string.stg_info_impo)
+        else
+            activity.getString(R.string.stg_info_poss)
+
         viewHolder.length.text = st.len.toString()
         viewHolder.maxenemy.text = st.max.toString()
         viewHolder.music.text = st.mus0.toString()
 
         viewHolder.music.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                if(st.mus0 < 0)
+                if(st.mus0 == null)
                     return
 
                 val intent = Intent(activity, MusicPlayer::class.java)
-
-                if(st.mus0 >= 1000) {
-                    intent.putExtra("PID", StaticStore.getPID(st.mus0))
-                    intent.putExtra("Music", StaticStore.getMusicIndex(st.mus0))
-                } else {
-                    intent.putExtra("Music", st.mus0)
-                }
+                intent.putExtra("Data", JsonEncoder.encode(st.mus0).toString())
 
                 activity.startActivity(intent)
             }
@@ -165,19 +174,11 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
 
         viewHolder.music2.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                if(st.mus1 < 0)
+                if(st.mus1 == null)
                     return
 
                 val intent = Intent(activity, MusicPlayer::class.java)
-
-                if(st.mus1 >= 1000) {
-                    println(StaticStore.getMusicIndex(st.mus1))
-
-                    intent.putExtra("PID", StaticStore.getPID(st.mus1))
-                    intent.putExtra("Music", StaticStore.getMusicIndex(st.mus1))
-                } else {
-                    intent.putExtra("Music", st.mus1)
-                }
+                intent.putExtra("Data", JsonEncoder.encode(st.mus1).toString())
 
                 activity.startActivity(intent)
             }
@@ -192,65 +193,21 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         viewHolder.background.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, ImageViewer::class.java)
+                intent.putExtra("Data", JsonEncoder.encode(st.bg).toString())
 
-                if(st.bg < 1000) {
-                    intent.putExtra("Path", StaticStore.getExternalPath(activity)+"org/img/bg/bg" + number(st.bg) + ".png")
-                    intent.putExtra("Img", 0)
-                    intent.putExtra("BGNum", st.bg)
-                } else {
-                    val pid = StaticStore.getPID(st.bg)
-                    val p = Pack.map[pid]
-
-                    if(p != null) {
-                        intent.putExtra("PID", pid)
-                        intent.putExtra("Img", 0)
-                        intent.putExtra("BGNum", StaticStore.getID(st.bg))
-                    }
-                }
                 activity.startActivity(intent)
             }
         })
         viewHolder.castle.text = st.castle.toString()
         viewHolder.castle.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                if (mapcode == 3 && stid == 11) return
-                if (mapcode == 3) {
-                    when {
-                        ec.contains(stid) -> {
-                            val path = "./org/img/ec/ec" + number(castles[posit]) + ".png"
-                            val intent = Intent(activity, ImageViewer::class.java)
-                            intent.putExtra("Path", path)
-                            intent.putExtra("Img", 1)
-                            activity.startActivity(intent)
-                        }
-                        wc.contains(stid) -> {
-                            val path = "./org/img/wc/wc" + number(castles[posit]) + ".png"
-                            val intent = Intent(activity, ImageViewer::class.java)
-                            intent.putExtra("Path", path)
-                            intent.putExtra("Img", 1)
-                            activity.startActivity(intent)
-                        }
-                        sc.contains(stid) -> {
-                            val path = "./org/img/sc/sc" + number(castles[posit]) + ".png"
-                            val intent = Intent(activity, ImageViewer::class.java)
-                            intent.putExtra("Path", path)
-                            intent.putExtra("Img", 1)
-                            activity.startActivity(intent)
-                        }
-                    }
-                } else {
+                if (data.pack == "000003" && stm.id.id == 11)
+                    return
+                else {
                     val intent = Intent(activity, ImageViewer::class.java)
+                    intent.putExtra("Data", JsonEncoder.encode(st.castle).toString())
 
-                    if(st.castle < 1000) {
-                        val path = "./org/img/rc/rc" + number(st.castle) + ".png"
-
-                        intent.putExtra("Path", path)
-                        intent.putExtra("Img", 1)
-                    } else {
-                        intent.putExtra("Img",1)
-                        intent.putExtra("PID",StaticStore.getPID(st.castle))
-                        intent.putExtra("BGNum", StaticStore.getID(st.castle))
-                    }
+                    st.castle.get().img
 
                     activity.startActivity(intent)
                 }
@@ -296,7 +253,7 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
         } else {
             viewHolder.limitscroll.visibility = View.VISIBLE
             viewHolder.limitNone.visibility = View.GONE
-            if (posit == l.sid || l.sid == -1) {
+            if (data.id == l.sid || l.sid == -1) {
                 if (viewHolder.star.selectedItemPosition == l.star || l.star == -1) {
                     viewHolder.limitrec.layoutManager = LinearLayoutManager(activity)
                     ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec, false)
@@ -309,20 +266,6 @@ class StageRecycle(private val activity: Activity, private val mapcode: Int, pri
 
     override fun getItemCount(): Int {
         return 1
-    }
-
-    private fun number(n: Int): String {
-        return when (n) {
-            in 0..9 -> {
-                "00$n"
-            }
-            in 10..98 -> {
-                "0$n"
-            }
-            else -> {
-                n.toString()
-            }
-        }
     }
 
     private fun none(l: Limit?): Boolean {

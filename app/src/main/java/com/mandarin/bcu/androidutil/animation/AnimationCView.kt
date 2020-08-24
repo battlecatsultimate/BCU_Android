@@ -13,10 +13,11 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.asynchs.AddGIF
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import common.CommonStatic
-import common.pack.PackData
+import common.pack.Identifier
 import common.pack.UserProfile
 import common.system.P
 import common.util.anim.EAnimU
+import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import common.util.unit.Unit
 
@@ -50,9 +51,9 @@ class AnimationCView : View {
     var posy = 0f
     var sleeptime: Long = 0
     var started = false
-    val data: PackData.Identifier<*>
+    val data: Identifier<*>
 
-    constructor(context: Activity?, data: PackData.Identifier<Unit>, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, data: Identifier<Unit>, form: Int, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
         activity = context
         renderer = Renderer()
         this.form = form
@@ -82,31 +83,34 @@ class AnimationCView : View {
         StaticStore.keepDoing = true
     }
 
-    constructor(context: Activity?, data: PackData.Identifier<Enemy>, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
+    constructor(context: Activity?, data: Identifier<AbEnemy>, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
         val e = data.get() ?: UserProfile.getBCData().enemies[0]
         activity = context
 
         val value = StaticStore.getAnimType(mode)
 
-        anim = e.getEAnim(value)
-        anim?.setTime(StaticStore.frame)
-        this.textView = textView
-        this.seekBar = seekBar
-        this.fpsind = fpsind
-        this.gif = gif
         this.data = data
-        renderer = Renderer()
-        CommonStatic.getConfig().ref = axis
-        if (night) {
-            p.color = 0x363636
-        } else {
-            p.color = Color.WHITE
+
+        if(e is Enemy) {
+            anim = e.getEAnim(value)
+            anim?.setTime(StaticStore.frame)
+            this.textView = textView
+            this.seekBar = seekBar
+            this.fpsind = fpsind
+            this.gif = gif
+            renderer = Renderer()
+            CommonStatic.getConfig().ref = axis
+            if (night) {
+                p.color = 0x363636
+            } else {
+                p.color = Color.WHITE
+            }
+            p1.isFilterBitmap = true
+            p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
+            cv = CVGraphics(Canvas(), p1, bp, night)
+            this.night = night
+            StaticStore.keepDoing = true
         }
-        p1.isFilterBitmap = true
-        p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
-        cv = CVGraphics(Canvas(), p1, bp, night)
-        this.night = night
-        StaticStore.keepDoing = true
     }
 
     public override fun onAttachedToWindow() {

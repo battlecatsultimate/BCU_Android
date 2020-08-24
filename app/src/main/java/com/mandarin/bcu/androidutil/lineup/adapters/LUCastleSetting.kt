@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
@@ -59,16 +58,16 @@ class LUCastleSetting : Fragment() {
     private fun setNyb(index: Int, img: ImageView) {
         if (index >= 3) return
 
-        if (BasisSet.current.sele.nyc[index] == 7)
-            BasisSet.current.sele.nyc[index] = 0
+        if (BasisSet.current().sele.nyc[index] == 7)
+            BasisSet.current().sele.nyc[index] = 0
         else
-            BasisSet.current.sele.nyc[index]++
+            BasisSet.current().sele.nyc[index]++
 
         drawCastle(img)
     }
 
     private fun drawCastle(img: ImageView) {
-        var data: IntArray? = BasisSet.current.sele.nyc
+        var data: IntArray? = BasisSet.current().sele.nyc
 
         if (data == null)
             data = intArrayOf(0, 0, 0)
