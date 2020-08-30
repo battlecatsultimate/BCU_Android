@@ -411,6 +411,8 @@ open class ConfigScreen : AppCompatActivity() {
                     editor.putInt("se_vol", progress)
                     editor.apply()
                     SoundHandler.se_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+
+                    println(SoundHandler.se_vol)
                 }
             }
 

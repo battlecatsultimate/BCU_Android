@@ -60,15 +60,15 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
         back.setOnClickListener {
             destroyed = true
-            if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized) {
-                if (MusicPlayer.sound.isRunning || MusicPlayer.sound.isPlaying) {
-                    MusicPlayer.sound.pause()
-                    MusicPlayer.sound.stop()
+            if (MusicPlayer.sound?.isReleased == false && MusicPlayer.sound?.isInitialized == true) {
+                if (MusicPlayer.sound?.isRunning == true || MusicPlayer.sound?.isPlaying == true) {
+                    MusicPlayer.sound?.pause()
+                    MusicPlayer.sound?.stop()
                 }
 
-                MusicPlayer.sound.reset()
+                MusicPlayer.sound?.reset()
             }
-            MusicPlayer.sound.setOnCompletionListener {
+            MusicPlayer.sound?.setOnCompletionListener {
 
             }
             MusicPlayer.reset()
@@ -169,14 +169,14 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             if (!f.exists())
                 return
 
-            if (!MusicPlayer.sound.isInitialized)
-                MusicPlayer.sound.setDataSource(f.absolutePath)
+            if (MusicPlayer.sound?.isInitialized == false)
+                MusicPlayer.sound?.setDataSource(f.absolutePath)
 
-            if (!MusicPlayer.sound.isPrepared) {
-                MusicPlayer.sound.prepareAsync()
-                MusicPlayer.sound.setOnPreparedListener {
-                    MusicPlayer.sound.isPrepared = true
-                    MusicPlayer.sound.start()
+            if (MusicPlayer.sound?.isPrepared == false) {
+                MusicPlayer.sound?.prepareAsync()
+                MusicPlayer.sound?.setOnPreparedListener {
+                    MusicPlayer.sound?.isPrepared = true
+                    MusicPlayer.sound?.start()
                 }
             }
 
@@ -208,7 +208,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                     val scale = StaticStore.getVolumScaler(progress)
 
-                    MusicPlayer.sound.setVolume(scale, scale)
+                    MusicPlayer.sound?.setVolume(scale, scale)
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -222,18 +222,18 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             })
 
             play.setOnClickListener {
-                if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
+                if (MusicPlayer.sound?.isPlaying == true || MusicPlayer.sound?.isRunning == true) {
                     MusicPlayer.paused = true
-                    MusicPlayer.sound.pause()
+                    MusicPlayer.sound?.pause()
                     play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
                 } else {
                     MusicPlayer.paused = false
                     if (MusicPlayer.completed) {
-                        MusicPlayer.sound.seekTo(0)
-                        MusicPlayer.sound.start()
+                        MusicPlayer.sound?.seekTo(0)
+                        MusicPlayer.sound?.start()
                         MusicPlayer.completed = false
                     } else {
-                        MusicPlayer.sound.start()
+                        MusicPlayer.sound?.start()
                     }
 
                     play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
@@ -242,14 +242,14 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
             nex.setOnClickListener(object : SingleClick() {
                 override fun onSingleClick(v: View?) {
-                    if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
-                        MusicPlayer.sound.pause()
-                        MusicPlayer.sound.stop()
+                    if (MusicPlayer.sound?.isPlaying == true || MusicPlayer.sound?.isRunning == true) {
+                        MusicPlayer.sound?.pause()
+                        MusicPlayer.sound?.stop()
                     }
 
                     MusicPlayer.completed = false
 
-                    MusicPlayer.sound.reset()
+                    MusicPlayer.sound?.reset()
 
                     val currentData = MusicPlayer.pid.toString() + "\\" + MusicPlayer.posit
 
@@ -281,9 +281,9 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                         nex.performClick()
                     }
 
-                    MusicPlayer.sound.setDataSource(g.absolutePath)
+                    MusicPlayer.sound?.setDataSource(g.absolutePath)
 
-                    MusicPlayer.sound.isLooping = MusicPlayer.looping
+                    MusicPlayer.sound?.isLooping = MusicPlayer.looping
 
                     val names = StaticStore.musicnames[MusicPlayer.pid] ?: return
 
@@ -296,11 +296,11 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                     muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
 
-                    muprog.progress = MusicPlayer.sound.currentPosition
-                    current.text = getTime(MusicPlayer.sound.currentPosition)
+                    muprog.progress = MusicPlayer.sound?.currentPosition ?: 0
+                    current.text = getTime(MusicPlayer.sound?.currentPosition ?: 0)
 
                     if (!MusicPlayer.paused)
-                        MusicPlayer.sound.start()
+                        MusicPlayer.sound?.start()
                 }
 
             })
@@ -311,13 +311,13 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                     MusicPlayer.completed = false
 
-                    if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized)
-                        ratio = (MusicPlayer.sound.currentPosition.toFloat() / muprog.max.toFloat() * 100).toInt()
+                    if (MusicPlayer.sound?.isReleased == false && MusicPlayer.sound?.isInitialized == true)
+                        ratio = (MusicPlayer.sound?.currentPosition?.toFloat() ?: 0 / muprog.max.toFloat() * 100).toInt()
 
                     if (ratio > 5) {
-                        MusicPlayer.sound.pause()
-                        MusicPlayer.sound.seekTo(0)
-                        MusicPlayer.sound.start()
+                        MusicPlayer.sound?.pause()
+                        MusicPlayer.sound?.seekTo(0)
+                        MusicPlayer.sound?.start()
                     } else {
                         var index = StaticStore.musicData.indexOf(MusicPlayer.pid.toString() + "\\" + MusicPlayer.posit) - 1
 
@@ -341,11 +341,11 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                             return
                         }
 
-                        MusicPlayer.sound.reset()
+                        MusicPlayer.sound?.reset()
 
-                        MusicPlayer.sound.setDataSource(g.absolutePath)
+                        MusicPlayer.sound?.setDataSource(g.absolutePath)
 
-                        MusicPlayer.sound.isLooping = MusicPlayer.looping
+                        MusicPlayer.sound?.isLooping = MusicPlayer.looping
 
                         MusicPlayer.pid = info[0].toInt()
                         MusicPlayer.posit = info[1].toInt()
@@ -365,11 +365,11 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
                         muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
 
-                        muprog.progress = MusicPlayer.sound.currentPosition
-                        current.text = getTime(MusicPlayer.sound.currentPosition)
+                        muprog.progress = MusicPlayer.sound?.currentPosition ?: 0
+                        current.text = getTime(MusicPlayer.sound?.currentPosition ?: 0)
 
                         if (!MusicPlayer.paused)
-                            MusicPlayer.sound.start()
+                            MusicPlayer.sound?.start()
                     }
                 }
 
@@ -381,12 +381,12 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 MusicPlayer.completed = false
                 MusicPlayer.paused = false
 
-                if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
-                    MusicPlayer.sound.pause()
-                    MusicPlayer.sound.stop()
+                if (MusicPlayer.sound?.isPlaying == true || MusicPlayer.sound?.isRunning == true) {
+                    MusicPlayer.sound?.pause()
+                    MusicPlayer.sound?.stop()
                 }
 
-                MusicPlayer.sound.reset()
+                MusicPlayer.sound?.reset()
 
                 val info = StaticStore.musicData[position].split("\\")
 
@@ -411,9 +411,9 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     nex.performClick()
                 }
 
-                MusicPlayer.sound.setDataSource(g.absolutePath)
+                MusicPlayer.sound?.setDataSource(g.absolutePath)
 
-                MusicPlayer.sound.isLooping = MusicPlayer.looping
+                MusicPlayer.sound?.isLooping = MusicPlayer.looping
 
                 val names = StaticStore.musicnames[MusicPlayer.pid] ?: return@OnItemClickListener
 
@@ -428,18 +428,18 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
                 play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
 
-                MusicPlayer.sound.start()
+                MusicPlayer.sound?.start()
             }
 
-            MusicPlayer.sound.setOnCompletionListener {
-                if (!MusicPlayer.sound.isLooping && !MusicPlayer.next) {
+            MusicPlayer.sound?.setOnCompletionListener {
+                if (MusicPlayer.sound?.isLooping == true && !MusicPlayer.next) {
                     play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
                     MusicPlayer.completed = true
-                    MusicPlayer.sound.isRunning = false
+                    MusicPlayer.sound?.isRunning = false
                     MusicPlayer.paused = true
                 }
 
-                if (MusicPlayer.next && !MusicPlayer.sound.isLooping) {
+                if (MusicPlayer.next && MusicPlayer.sound?.isLooping == false) {
                     var index = StaticStore.musicData.indexOf(MusicPlayer.pid.toString() + "\\" + MusicPlayer.posit) + 1
 
                     if (index >= StaticStore.musicData.size) {
@@ -470,9 +470,9 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                         return@setOnCompletionListener
                     }
 
-                    MusicPlayer.sound.reset()
+                    MusicPlayer.sound?.reset()
 
-                    MusicPlayer.sound.setDataSource(g.absolutePath)
+                    MusicPlayer.sound?.setDataSource(g.absolutePath)
 
                     muprog.max = StaticStore.durations[index]
 
@@ -483,7 +483,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     name.text = gname
                     max.text = names[MusicPlayer.posit]
 
-                    MusicPlayer.sound.start()
+                    MusicPlayer.sound?.start()
                 }
             }
 
@@ -512,7 +512,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             mulist.adapter = adapter
 
             loop.setOnClickListener {
-                if (MusicPlayer.sound.isLooping) {
+                if (MusicPlayer.sound?.isLooping == true) {
                     MusicPlayer.looping = false
                     loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
                 } else {
@@ -522,7 +522,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
                 }
 
-                MusicPlayer.sound.isLooping = !MusicPlayer.sound.isLooping
+                MusicPlayer.sound?.isLooping = MusicPlayer.sound?.isLooping ?: false
             }
 
             nextsong.setOnClickListener {
@@ -530,7 +530,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                     nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
                 } else {
                     nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
-                    MusicPlayer.sound.isLooping = false
+                    MusicPlayer.sound?.isLooping = false
                     MusicPlayer.looping = false
                     loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
                 }
@@ -552,8 +552,8 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized) {
-                        MusicPlayer.sound.seekTo(seekBar?.progress ?: 0)
+                    if (MusicPlayer.sound?.isReleased == false && MusicPlayer.sound?.isInitialized == true) {
+                        MusicPlayer.sound?.seekTo(seekBar?.progress ?: 0)
                     }
 
                     isControlling = false
@@ -653,10 +653,10 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
 
             val runnable = object : Runnable {
                 override fun run() {
-                    if (MusicPlayer.sound.isInitialized && !MusicPlayer.sound.isReleased && !isControlling) {
-                        if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
-                            muprog.progress = MusicPlayer.sound.currentPosition
-                            current.text = getTime(MusicPlayer.sound.currentPosition)
+                    if (MusicPlayer.sound?.isInitialized == true && MusicPlayer.sound?.isReleased == false && !isControlling) {
+                        if (MusicPlayer.sound?.isPlaying == true || MusicPlayer.sound?.isRunning == true) {
+                            muprog.progress = MusicPlayer.sound?.currentPosition ?: 0
+                            current.text = getTime(MusicPlayer.sound?.currentPosition ?: 0)
                         }
                     }
 

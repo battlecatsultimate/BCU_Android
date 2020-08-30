@@ -1,3 +1,5 @@
+CMAKE SERVER: Trying to locate CMake in local SDK repository.
+CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'
 CMAKE SERVER: 
 
 CMAKE SERVER: [== "CMake Server" ==[
@@ -47,6 +49,7 @@ CMAKE SERVER: {
     "-DCMAKE_ANDROID_NDK\u003dC:\\Users\\user\\AppData\\Local\\Android\\Sdk\\ndk-bundle",
     "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
     "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\Users\\user\\AndroidStudioProjects\\BCU_Android\\app\\build\\intermediates\\cmake\\release\\obj\\x86_64",
+    "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\Users\\user\\AndroidStudioProjects\\BCU_Android\\app\\build\\intermediates\\cmake\\release\\obj\\x86_64",
     "-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\user\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
     "-DCMAKE_SYSTEM_NAME\u003dAndroid",
     "-DCMAKE_SYSTEM_VERSION\u003d24"
@@ -334,6 +337,10 @@ CMAKE SERVER: {"buildFiles":[{"isCMake":true,"isTemporary":false,"sources":["C:/
 
 CMAKE SERVER: ]== "CMake Server" ==]
 
+CMAKE SERVER: Trying to locate CMake in local SDK repository.
+CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'
+CMAKE SERVER: Trying to locate CMake in local SDK repository.
+CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'
 CMAKE SERVER: [== "CMake Server" ==[
 
 CMAKE SERVER: {"type":"codemodel"}
@@ -348,3 +355,5 @@ CMAKE SERVER: {"configurations":[{"name":"Release","projects":[{"buildDirectory"
 
 CMAKE SERVER: ]== "CMake Server" ==]
 
+CMAKE SERVER: Trying to locate CMake in local SDK repository.
+CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'

@@ -92,9 +92,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         SoundHandler.musicPlay = shared.getBoolean("music", true)
-        SoundHandler.mu_vol = StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
+        SoundHandler.mu_vol = if(shared.getBoolean("music", true)) {
+            StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
+        } else {
+            0f
+        }
         SoundHandler.sePlay = shared.getBoolean("SE", true)
-        SoundHandler.se_vol = StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
+        SoundHandler.se_vol = if(shared.getBoolean("SE", true)) {
+            StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
+        } else {
+            0f
+        }
         StaticStore.upload = shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)
 
         val result = intent

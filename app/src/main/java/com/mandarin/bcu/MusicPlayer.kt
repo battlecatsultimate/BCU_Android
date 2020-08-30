@@ -21,8 +21,8 @@ import java.util.*
 
 class MusicPlayer : AppCompatActivity() {
     companion object {
-        var sound = SoundPlayer()
-        var posit = 0
+        var sound : SoundPlayer? = SoundPlayer()
+        var posit = 1
         var pid = 0
         var next = false
         var looping = false
@@ -34,7 +34,7 @@ class MusicPlayer : AppCompatActivity() {
 
         fun reset() {
             pid = 0
-            posit = 0
+            posit = 1
             next = false
             looping = false
             completed = false
@@ -97,6 +97,8 @@ class MusicPlayer : AppCompatActivity() {
                     opened = true
                 }
 
+                sound = SoundPlayer()
+
                 musicasync = MusicLoader(this)
 
                 musicasync?.execute()
@@ -121,6 +123,8 @@ class MusicPlayer : AppCompatActivity() {
         musicasync?.destroyed = true
         musicasync = null
         unregisterReceiver(musicreceive)
+        sound?.release()
+        sound = null
         StaticStore.toast = null
         super.onDestroy()
     }
@@ -149,17 +153,13 @@ class MusicPlayer : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    class MusicReceiver : BroadcastReceiver {
+    class MusicReceiver(ac: Activity) : BroadcastReceiver() {
         private var unregister = false
         private var rotated = true
         private val ac: WeakReference<Activity>?
 
-        constructor(ac: Activity) {
+        init {
             this.ac = WeakReference(ac)
-        }
-
-        constructor() {
-            this.ac = null
         }
 
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -173,8 +173,8 @@ class MusicPlayer : AppCompatActivity() {
             if(intent?.action.equals(Intent.ACTION_HEADSET_PLUG)) {
 
                 when(intent?.getIntExtra("state",-1) ?: -1) {
-                    0 -> if(sound.isInitialized && !sound.isReleased) {
-                        if(sound.isRunning || sound.isPlaying) {
+                    0 -> if(sound?.isInitialized == true && sound?.isReleased == false) {
+                        if(sound?.isRunning == true || sound?.isPlaying == true) {
                             val play: FloatingActionButton = ac?.get()?.findViewById(R.id.musicplay) ?: return
 
                             play.performClick()
