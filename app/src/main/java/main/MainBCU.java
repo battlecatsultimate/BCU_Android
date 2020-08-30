@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class MainBCU {
 
-	public static final int ver = 41008;
+	public static final int ver = 41009;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();

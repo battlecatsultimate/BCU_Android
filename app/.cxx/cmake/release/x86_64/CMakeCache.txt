@@ -161,6 +161,9 @@ CMAKE_RANLIB:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/t
 //No help, variable specified on the command line.
 CMAKE_RUNTIME_OUTPUT_DIRECTORY:UNINITIALIZED=C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\build\intermediates\cmake\release\obj\x86_64
 
+//No help, variable specified on the command line.
+CMAKE_RUNTIME_OUTPUT_DIRECTORY:UNINITIALIZED=C:\Users\user\AndroidStudioProjects\BCU_Android\app\build\intermediates\cmake\release\obj\x86_64
+
 //Flags used by the linker during the creation of dll's.
 CMAKE_SHARED_LINKER_FLAGS:STRING=
 
