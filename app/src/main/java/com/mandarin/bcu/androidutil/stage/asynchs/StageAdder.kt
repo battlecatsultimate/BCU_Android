@@ -22,7 +22,7 @@ import common.util.pack.Background
 import common.util.stage.Stage
 import java.lang.ref.WeakReference
 
-open class StageAdder(activity: Activity, private val data: Identifier<Stage>, private val custom: Boolean) : AsyncTask<Void?, Int?, Void?>() {
+open class StageAdder(activity: Activity, private val data: Identifier<Stage>) : AsyncTask<Void?, Int?, Void?>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return

@@ -22,7 +22,6 @@ import common.system.fake.FakeImage;
 
 public class AImageReader implements CommonStatic.ImgReader {
     public String name;
-
     private boolean isNull;
 
     public AImageReader(String n, boolean isNull) {

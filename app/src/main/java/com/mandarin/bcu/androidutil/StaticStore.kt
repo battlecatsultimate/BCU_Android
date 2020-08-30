@@ -30,13 +30,13 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter.Companion.writeDriveLog
 import common.CommonStatic
 import common.battle.BasisLU
 import common.battle.BasisSet
-import common.battle.Treasure
 import common.io.json.JsonDecoder
 import common.pack.Identifier
 import common.pack.IndexContainer.Indexable
 import common.pack.PackData
 import common.pack.UserProfile
 import common.system.fake.FakeImage
+import common.system.files.VFile
 import common.util.Data
 import common.util.anim.AnimU.UType
 import common.util.anim.ImgCut
@@ -46,7 +46,10 @@ import common.util.unit.Combo
 import common.util.unit.Enemy
 import common.util.unit.Form
 import common.util.unit.Unit
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 import java.math.BigInteger
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
@@ -66,20 +69,13 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.14.11"
+    const val VER = "0.15.0"
 
     /**Fild ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
 
     /**Required libraries list */
-    @JvmField
-    val LIBREQ = arrayOf("000001", "000002", "000003", "080602", "080603", "080604", "080605", "080700", "080705", "080706", "080800", "080801", "080802",
-            "080900", "080901", "080902", "081000", "081001", "081005", "081006", "090000", "090001", "090100", "090101", "090102", "090103", "090104", "090200", "090201",
-            "090300", "090301", "090400", "090401", "090402", "090403", "090405", "090500", "090502", "090600", "090601", "090602", "090603", "090800", "090801", "090802")
-
-    /**Optional libraries list */
-    @JvmField
-    val OPTREQS = arrayOf("080504", "090404", "090406", "090501", "090803")
+    val LIBREQ = arrayOf("000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010", "090900", "090901")
 
     /**Locale codes list */
     val lang = arrayOf("", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es")
@@ -120,33 +116,6 @@ object StaticStore {
     /** Value which tells if Medal language data is loaded  */
     var medallang = 1
 
-    /** Boolean which tells if Map data is loaded  */
-    var mapread = false
-
-    /** Boolean which tells if Character group data is loaded  */
-    var chararead = false
-
-    /** Boolean which tells if Effect data is loaded  */
-    var effread = false
-
-    /** Boolean which tells if Soul data is loaded  */
-    var soulread = false
-
-    /** Boolean which tells if Castle data is loaded  */
-    var nycread = false
-
-    /** Boolean which tells if Res data is loaded  */
-    var resread = false
-
-    /** Boolean which tells if Music data is loaded  */
-    var musicread = false
-
-    /** Boolean which tells if Limit data is loaded  */
-    var limitread = false
-
-    /** Boolean which tells if pack data is loaded  */
-    var packread = false
-
     /** Boolean which tells if error log dialog is already opened once  */
     var dialogisShowed = false
 
@@ -180,7 +149,7 @@ object StaticStore {
     var fruit: Array<Bitmap>? = null
 
     /** Additional ability explanation texts  */
-    var addition: Array<String>? = null
+    var addition: Array<String> = Array(0) {""}
 
     /** Imgcut index list of ablities  */
     var anumber = intArrayOf(203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114)
@@ -334,21 +303,12 @@ object StaticStore {
         stagelang = 1
         maplang = 1
         medallang = 1
-        mapread = false
-        chararead = false
-        effread = false
-        soulread = false
-        nycread = false
-        resread = false
-        musicread = false
-        limitread = false
-        packread = false
         toast = null
         img15 = null
         icons = null
         picons = null
         fruit = null
-        addition = null
+        addition = Array(0) {""}
         unitinflistClick = SystemClock.elapsedRealtime()
         UisOpen = false
         unittabposition = 0
@@ -525,13 +485,14 @@ object StaticStore {
     /**
      * Saves img15 as cut state by img015.imgcut.
      */
-    fun readImg(c: Context?) {
-        val path = getExternalPath(c) + "org/page/img015.png"
+    fun readImg() {
+        val path = "./org/page/img015.png"
         val imgcut = "./org/page/img015.imgcut"
-        val f = File(path)
+
         val img = ImgCut.newIns(imgcut)
+
         img15 = try {
-            val png = FakeImage.read(f)
+            val png = VFile.get(path).data.img
             img.cut(png)
         } catch (e: IOException) {
             e.printStackTrace()

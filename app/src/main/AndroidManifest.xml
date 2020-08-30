@@ -74,6 +74,7 @@
         <activity
             android:name=".CheckUpdateScreen"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:launchMode="singleTop"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -100,10 +101,6 @@
             android:screenOrientation="locked" />
         <activity
             android:name=".UnitInfo"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".DownloadScreen"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="locked" />
         <activity
             android:name=".SearchFilter"

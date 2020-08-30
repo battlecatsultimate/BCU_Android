@@ -159,12 +159,12 @@ class MusicPlayer : AppCompatActivity() {
         private var rotated = true
         private val ac: WeakReference<Activity>?
 
-        constructor(ac: Activity) {
-            this.ac = WeakReference(ac)
+        constructor() {
+            ac = null
         }
 
-        constructor() {
-            this.ac = null
+        constructor(ac: Activity) {
+            this.ac = WeakReference(ac)
         }
 
         override fun onReceive(context: Context?, intent: Intent?) {

@@ -1,20 +1,20 @@
 package com.mandarin.bcu.androidutil.io
 
 import android.app.Activity
+import android.util.Log
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.CommonStatic
 import common.io.PackLoader
 import common.io.assets.AssetLoader
+import common.io.assets.UpdateCheck
 import common.pack.Context
 import common.pack.Identifier
-import common.pack.PackData
 import common.pack.UserProfile
 import common.util.Data
 import common.util.stage.Music
 import java.io.File
 import java.io.InputStream
-import java.lang.Exception
 import java.lang.ref.WeakReference
 
 class AContext : Context {
@@ -26,8 +26,6 @@ class AContext : Context {
         }
     }
 
-    private val lang = arrayOf("en/", "zh/", "kr/", "jp/", "ru/", "fr/")
-
     var c: WeakReference<Activity?>? = null
 
     fun updateActivity(a: Activity) {
@@ -38,8 +36,25 @@ class AContext : Context {
         c = null
     }
 
-    override fun noticeErr(e: Exception?, t: Context.ErrType?, str: String?) {
-        TODO("Not yet implemented")
+    override fun noticeErr(e: Exception, t: Context.ErrType, str: String) {
+        e.printStackTrace()
+        Log.e("AContext", str)
+
+        val wac = c
+
+        if(wac == null) {
+            ErrorLogWriter.writeDriveLog(e)
+            return
+        }
+
+        val a = wac.get()
+
+        if(a == null) {
+            ErrorLogWriter.writeDriveLog(e)
+            return
+        }
+
+        ErrorLogWriter.writeLog(e, StaticStore.upload, a)
     }
 
     override fun getWorkspaceFile(relativePath: String): File {
@@ -58,10 +73,16 @@ class AContext : Context {
         return File(string.replace("./",StaticStore.getExternalAsset(a)))
     }
 
-    override fun initProfile() {
-        AssetLoader.load()
+    override fun getAuxFile(string: String): File {
+        val wac = c ?: return File("")
 
-        UserProfile.getBCData().load(this::printer)
+        val a = wac.get() ?: return File("")
+
+        return File(string.replace("./",StaticStore.getExternalPath(a)))
+    }
+
+    override fun initProfile() {
+        UpdateCheck.addRequiredAssets("090901")
     }
 
     override fun getPackFolder(): File {
@@ -81,11 +102,11 @@ class AContext : Context {
     }
 
     override fun confirmDelete(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun printErr(t: Context.ErrType?, str: String?) {
-        TODO("Not yet implemented")
+        println(str)
     }
 
     override fun getLangFile(file: String): InputStream? {
@@ -112,6 +133,10 @@ class AContext : Context {
     }
 
     fun printer(msg: String) {
+        println(msg)
+    }
+
+    fun printer(msg: Double) {
         println(msg)
     }
 }

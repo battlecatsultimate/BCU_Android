@@ -262,10 +262,4 @@ object LangLoader {
         }
         StaticStore.stagelang = 0
     }
-
-    fun readALL(c: Context) {
-        readUnitLang(c)
-        readEnemyLang(c)
-        readStageLang(c)
-    }
 }

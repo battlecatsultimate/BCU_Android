@@ -681,4 +681,9 @@
     <string name="pack_desc_unsupported">サポートされていないパックのバージョン _ (現在サポートしているバージョン : -)</string>
     <string name="def_divider">/</string>
     <string name="pack_default">Default</string>
+    <string name="main_file_text">Text Update Found</string>
+    <string name="main_file_music">Music Update Found</string>
+    <string name="main_file_asset">Asset Update Found</string>
+    <string name="main_notif_down">Downloaing Files</string>
+    <string name="main_notif_music">Downloading Music</string>
 </resources>

@@ -20,9 +20,8 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListPager
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
@@ -69,10 +68,6 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
         publishProgress("6")
 
         Definer.define(activity)
-
-        publishProgress("7")
-
-        EDefiner.define(activity)
         
         publishProgress("2")
 

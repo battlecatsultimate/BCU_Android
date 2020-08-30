@@ -18,7 +18,6 @@ import common.CommonStatic
 import common.pack.Identifier
 import common.util.Data
 import common.util.lang.MultiLangCont
-import common.util.stage.MapColc
 import common.util.stage.StageMap
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -126,17 +125,4 @@ class StageList : AppCompatActivity() {
         (CommonStatic.ctx as AContext).releaseActivity()
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
-    }
 }

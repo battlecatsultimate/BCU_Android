@@ -17,7 +17,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.pack.Identifier

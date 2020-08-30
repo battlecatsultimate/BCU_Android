@@ -5,10 +5,12 @@ import android.graphics.Point;
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
 import com.mandarin.bcu.util.PP;
 
+import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
 import common.battle.StageBasis;
 import common.battle.entity.Entity;
+import common.pack.Identifier;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
@@ -18,8 +20,8 @@ import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
-import common.util.pack.NyCastle;
-import common.util.stage.Castles;
+import common.util.stage.CastleImg;
+import common.util.stage.CastleList;
 import common.util.unit.Form;
 
 public interface BattleBox {
@@ -38,17 +40,17 @@ public interface BattleBox {
         public int dpi = 1;
 
         public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
-            FakeImage bimg = NyCastle.main[2][inf[2]].getImg();
+            FakeImage bimg = CommonStatic.getBCAssets().main[2][inf[2]].getImg();
             int bw = bimg.getWidth();
             int bh = bimg.getHeight();
             int cy = (int) (y + c0y * siz);
             gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
-            bimg = NyCastle.main[0][inf[0]].getImg();
+            bimg = CommonStatic.getBCAssets().main[0][inf[0]].getImg();
             bw = bimg.getWidth();
             bh = bimg.getHeight();
             cy = (int) (y + c2y * siz);
             gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
-            bimg = NyCastle.main[1][inf[1]].getImg();
+            bimg = CommonStatic.getBCAssets().main[1][inf[1]].getImg();
             bw = bimg.getWidth();
             bh = bimg.getHeight();
             cy = (int) (y + c1y * siz);
@@ -194,12 +196,12 @@ public interface BattleBox {
             int mtype = sb.mon < sb.next_lv ? 0 : time == 0 ? 1 : 2;
             if (sb.work_lv == 8)
                 mtype = 2;
-            FakeImage left = Res.battle[0][mtype].getImg();
+            FakeImage left = CommonStatic.getBCAssets().battle[0][mtype].getImg();
             int ctype = sb.can == sb.max_can && time == 0 ? 1 : 0;
-            FakeImage right = Res.battle[1][ctype].getImg();
+            FakeImage right = CommonStatic.getBCAssets().battle[1][ctype].getImg();
             cw += left.getWidth();
             cw += right.getWidth();
-            cw += Res.slot[0].getImg().getWidth() * 5;
+            cw += CommonStatic.getBCAssets().slot[0].getImg().getWidth() * 5;
             double r = 1.0 * w / cw;
             double avah = (h * (10 - bar) / 10f);
             double hr = avah / left.getHeight();
@@ -218,7 +220,7 @@ public interface BattleBox {
             double marg = 0;
             if (ctype == 0)
                 for (int i = 0; i < 10 * sb.can / sb.max_can; i++) {
-                    FakeImage img = Res.battle[1][2 + i].getImg();
+                    FakeImage img = CommonStatic.getBCAssets().battle[1][2 + i].getImg();
                     iw = (int) (hr * img.getWidth());
                     ih = (int) (hr * img.getHeight());
                     marg += hr * img.getHeight() - ih;
@@ -229,12 +231,12 @@ public interface BattleBox {
                     hi -= ih;
                     g.drawImage(img, w - iw, hi, iw, ih);
                 }
-            hr = avah * 1.2 / 2 / Res.slot[0].getImg().getHeight();
+            hr = avah * 1.2 / 2 / CommonStatic.getBCAssets().slot[0].getImg().getHeight();
             hr = Math.min(r, hr);
             for (int i = 0; i < 10; i++) {
                 Form f = sb.b.lu.fs[i / 5][i % 5];
 
-                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
+                FakeImage img = f == null ? CommonStatic.getBCAssets().slot[0].getImg() : f.anim.getUni().getImg();
 
                 iw = (int) (hr * img.getWidth());
                 ih = (int) (hr * img.getHeight());
@@ -277,14 +279,20 @@ public interface BattleBox {
             int posy = (int) (midh - road_h * siz);
             int posx = (int) ((800 * ratio + off) * siz + pos);
             if (!drawCast) {
-                int cind = sb.st.getCastle();
-                if (cind == -1)
-                    cind = 0;
-                VImg cast = Castles.getCastle(cind);
-                FakeImage bimg = cast.getImg();
-                int bw = (int) (bimg.getWidth() * siz);
-                int bh = (int) (bimg.getHeight() * siz);
-                gra.drawImage(bimg, posx - bw, posy - bh, bw, bh);
+                CastleImg c = Identifier.get(sb.st.castle);
+
+                if(c != null) {
+                    VImg cast = c.img;
+
+                    if(cast == null) {
+                        return;
+                    }
+
+                    FakeImage bimg = cast.getImg();
+                    int bw = (int) (bimg.getWidth() * siz);
+                    int bh = (int) (bimg.getHeight() * siz);
+                    gra.drawImage(bimg, posx - bw, posy - bh, bw, bh);
+                }
             } else {
                 setP(posx, posy);
                 ((Entity) sb.ebase).anim.draw(gra, p, siz * sprite);
@@ -307,7 +315,7 @@ public interface BattleBox {
             int h = box.getHeight();
             FakeTransform at = gra.getTransform();
             double psiz = siz * sprite;
-            ImgCore.battle = true;
+            CommonStatic.getConfig().battle = true;
             for (int i = 0; i < 10; i++) {
                 int dep = i * DEP;
                 for (int j = 0; j < sb.le.size(); j++) {
@@ -383,7 +391,7 @@ public interface BattleBox {
             }
             gra.setTransform(at);
             gra.delete(at);
-            ImgCore.battle = false;
+            CommonStatic.getConfig().battle = false;
         }
 
         private void drawTop(FakeGraphics g) {
@@ -394,19 +402,19 @@ public interface BattleBox {
             P p = Res.getMoney((int) sb.mon, sb.max_mon, sc);
             int ih = (int) p.y;
             int n = 0;
-            FakeImage bimg = Res.battle[2][1].getImg();
+            FakeImage bimg = CommonStatic.getBCAssets().battle[2][1].getImg();
             int cw = (int)(bimg.getWidth()*ratio);
             if ((sb.conf[0] & 2) > 0) {
-                bimg = Res.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
+                bimg = CommonStatic.getBCAssets().battle[2][sb.sniper.enabled ? 2 : 4].getImg();
                 g.drawImage(bimg, w - cw, ih,dpi,dpi);
                 n++;
             }
-            bimg = Res.battle[2][1].getImg();
+            bimg = CommonStatic.getBCAssets().battle[2][1].getImg();
             if ((sb.conf[0] & 1) > 0) {
                 g.drawImage(bimg, w - cw * (n + 1), ih,dpi,dpi);
                 n++;
             }
-            bimg = Res.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
+            bimg = CommonStatic.getBCAssets().battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
             for (int i = 0; i < Math.abs(page.getSpeed()); i++)
                 g.drawImage(bimg, w - cw * (i + 1 + n), ih,dpi,dpi);
 

@@ -26,7 +26,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.MediaScanner
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import common.pack.Identifier
 import common.util.unit.Unit
 import java.io.ByteArrayOutputStream

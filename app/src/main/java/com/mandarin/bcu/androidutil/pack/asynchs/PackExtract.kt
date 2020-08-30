@@ -1,37 +1,14 @@
 package com.mandarin.bcu.androidutil.pack.asynchs
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.AsyncTask
-import android.util.Log
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.TextView
 import com.mandarin.bcu.MainActivity
 import com.mandarin.bcu.PackConflictSolve
-import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.fakeandroid.FIBM
-import com.mandarin.bcu.androidutil.pack.AImageWriter
-import com.mandarin.bcu.androidutil.io.DefferedLoader
-import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import common.pack.UserProfile
-import common.system.fake.FakeImage
-import common.util.Data
-import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
 import java.lang.ref.WeakReference
-import java.security.NoSuchAlgorithmException
-import java.util.*
-import kotlin.collections.ArrayList
 
 class PackExtract(ac: Activity, private val config: Boolean) : AsyncTask<Void, String, Void>() {
     private val pack = "1"

@@ -83,7 +83,7 @@ class StageInfo : AppCompatActivity() {
 
             custom = extra.getBoolean("custom")
 
-            StageAdder(this, data, custom).execute()
+            StageAdder(this, data).execute()
         }
     }
 

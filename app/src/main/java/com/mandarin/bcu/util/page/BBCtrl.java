@@ -5,10 +5,10 @@ import android.view.MotionEvent;
 
 import com.mandarin.bcu.util.PP;
 
+import common.CommonStatic;
 import common.battle.SBCtrl;
 import common.system.P;
 import common.system.fake.FakeImage;
-import common.util.Res;
 import common.util.unit.Form;
 
 public class BBCtrl extends BattleBox.BBPainter {
@@ -33,7 +33,7 @@ public class BBCtrl extends BattleBox.BBPainter {
             for (int i = 0; i < 10; i++) {
                 Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
 
-                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
+                FakeImage img = f == null ? CommonStatic.getBCAssets().slot[0].getImg() : f.anim.getUni().getImg();
 
                 int iw = (int) (hr * img.getWidth());
                 int ih = (int) (hr * img.getHeight());
@@ -45,8 +45,8 @@ public class BBCtrl extends BattleBox.BBPainter {
             }
 
             hr = corr;
-            FakeImage left = Res.battle[0][0].getImg();
-            FakeImage right = Res.battle[1][0].getImg();
+            FakeImage left = CommonStatic.getBCAssets().battle[0][0].getImg();
+            FakeImage right = CommonStatic.getBCAssets().battle[1][0].getImg();
 
             float ratio = dpi/58f;
 
@@ -61,10 +61,10 @@ public class BBCtrl extends BattleBox.BBPainter {
                 ctrl.action.add(-2);
 
             if ((ctrl.sb.conf[0] & 2) > 0) {
-                FakeImage bimg = Res.battle[2][1].getImg();
+                FakeImage bimg = CommonStatic.getBCAssets().battle[2][1].getImg();
                 int cw = (int)(bimg.getWidth()*ratio);
                 int ch = (int)(bimg.getHeight()*ratio);
-                int mh = (int)(Res.num[0][0].getImg().getHeight()*ratio);
+                int mh = (int)(CommonStatic.getBCAssets().num[0][0].getImg().getHeight()*ratio);
                 if (!new PP(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
                     ctrl.action.add(-3);
             }
@@ -78,7 +78,7 @@ public class BBCtrl extends BattleBox.BBPainter {
             for (int i = 0; i < 10; i++) {
                 Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
 
-                FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
+                FakeImage img = f == null ? CommonStatic.getBCAssets().slot[0].getImg() : f.anim.getUni().getImg();
 
                 int iw = (int) (hr * img.getWidth());
                 int ih = (int) (hr * img.getHeight());

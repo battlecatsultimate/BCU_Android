@@ -88,8 +88,18 @@ class DefineItf : Itf {
     }
 
     override fun <T> readSave(path: String, func: Function<Queue<String>, T>): T {
-        val f = VFile.getFile(path)
-        val qs = f.data!!.readLine()
+        println(path)
+
+        val f = VFile.get(path)
+
+        println("File : $f")
+
+        println("Data : ${f.data}")
+
+        val qs = f.data.readLine()
+
+        println("QS : $qs")
+
         if (qs != null) try {
             val t: T? = func.apply(qs)
             if (t != null) return t

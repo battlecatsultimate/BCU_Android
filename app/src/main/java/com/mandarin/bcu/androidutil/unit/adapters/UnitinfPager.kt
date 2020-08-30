@@ -7,7 +7,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
@@ -35,7 +34,6 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
 import common.pack.Identifier
-import common.pack.PackData
 import common.util.lang.MultiLangCont
 import common.util.unit.Form
 import common.util.unit.Unit
@@ -194,19 +192,7 @@ class UnitinfPager : Fragment() {
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        var language = StaticStore.lang[shared.getInt("Language", 0)]
-
-        if (language == "") {
-            language = Resources.getSystem().configuration.locales[0].language
-        }
-
-        val proc: List<String>
-
-        proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(activity, f.du, 1, fs)
-        } else {
-            Interpret.getProc(activity, f.du, 0, fs)
-        }
+        val proc = Interpret.getProc(f.du, fs == 1)
 
         var name = MultiLangCont.get(f) ?: f.name
 
@@ -246,7 +232,7 @@ class UnitinfPager : Fragment() {
         unitatkt.text = s!!.getAtkTime(f, fs)
         unitabilt.text = s!!.getAbilT(f)
 
-        if (ability.size > 0 || proc.isNotEmpty()) {
+        if (ability.isNotEmpty() || proc.isNotEmpty()) {
             none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(activity)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -369,14 +355,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val language = Locale.getDefault().language
-
-                    val proc: List<String>
-
-                    proc = if (language == "ko" || language == "ja")
-                        Interpret.getProc(activity, du, 1, fs)
-                    else
-                        Interpret.getProc(activity, du, 0, fs)
+                    val proc = Interpret.getProc(du, fs == 1)
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -418,14 +397,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val language = Locale.getDefault().language
-
-                    val proc: List<String>
-
-                    proc = if (language == "ko" || language == "ja")
-                        Interpret.getProc(activity, du, 1, fs)
-                    else
-                        Interpret.getProc(activity, du, 0, fs)
+                    val proc = Interpret.getProc(du, fs == 1)
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -909,25 +881,11 @@ class UnitinfPager : Fragment() {
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-
-        var language = StaticStore.lang[shared.getInt("Language", 0)]
-
-        if (language == "") {
-            language = Resources.getSystem().configuration.locales[0].language
-        }
-
-        val proc: List<String>
-
-        proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(activity, du, 1, fs)
-        } else {
-            Interpret.getProc(activity, du, 0, fs)
-        }
+        val proc = Interpret.getProc(du, fs == 1)
 
         val abilityicon = Interpret.getAbiid(du)
 
-        if (abil.size > 0 || proc.isNotEmpty()) {
+        if (abil.isNotEmpty() || proc.isNotEmpty()) {
             none.visibility = View.GONE
 
             val linearLayoutManager = LinearLayoutManager(activity)

@@ -34,7 +34,7 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.adapters.*
 import com.mandarin.bcu.androidutil.lineup.adapters.LUCatCombo.Companion.newInstance
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import common.battle.BasisSet
 import common.pack.UserProfile
 import java.io.File

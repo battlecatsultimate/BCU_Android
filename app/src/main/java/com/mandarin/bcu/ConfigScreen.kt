@@ -40,7 +40,7 @@ open class ConfigScreen : AppCompatActivity() {
     private var started = false
     private var changed = false
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -682,4 +682,9 @@
     <string name="pack_desc_unsupported">지원하지 않는 팩 버전 _ (현재 지원하는 버전 : -)</string>
     <string name="def_divider">/</string>
     <string name="pack_default">기본</string>
+    <string name="main_file_text">언어 파일 업데이트 발견</string>
+    <string name="main_file_music">음악 업데이트 발견</string>
+    <string name="main_file_asset">데이터 업데이트 발견</string>
+    <string name="main_notif_down">파일 다운로드 중</string>
+    <string name="main_notif_music">음악 다운로드 중</string>
 </resources>

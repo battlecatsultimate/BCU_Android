@@ -30,7 +30,7 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
                 StatFilterElement.BARRIER, StatFilterElement.PREATK, StatFilterElement.ATKCOUNT)
     }
 
-    inner class ViewHolder constructor(row: View) : RecyclerView.ViewHolder(row) {
+    class ViewHolder constructor(row: View) : RecyclerView.ViewHolder(row) {
         var delete: CheckBox = row.findViewById(R.id.statschdelete)
         var layout: TextInputLayout = row.findViewById(R.id.statschmulti)
         var edit: TextInputEditText = row.findViewById(R.id.statschmultiedit)

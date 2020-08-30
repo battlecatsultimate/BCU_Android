@@ -22,10 +22,10 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.AnimatedGifEncoder
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.animation.AnimationCView
-import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import common.pack.Identifier
 import common.util.unit.AbEnemy
@@ -68,7 +68,7 @@ class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        EDefiner.define(activity)
+        Definer.define(activity)
         publishProgress(2)
         return null
     }

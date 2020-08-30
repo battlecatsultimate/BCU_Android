@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil
 
 import android.content.Context
-import com.mandarin.bcu.androidutil.unit.Definer
 import common.pack.PackData
 import common.pack.UserProfile
 

@@ -13,7 +13,7 @@ import common.util.stage.Limit
 class LimitRecycle(private val activity: Activity, l: Limit?) : RecyclerView.Adapter<LimitRecycle.ViewHolder>() {
     private val limits: Array<String>
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var limit: TextView = itemView.findViewById(R.id.limitst)
 
     }

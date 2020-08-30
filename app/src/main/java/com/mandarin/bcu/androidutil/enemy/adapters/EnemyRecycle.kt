@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
@@ -139,19 +138,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enemrange.text = s.getRange(em)
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
-        var language = StaticStore.lang[shared.getInt("Language", 0)]
-        if (language == "") {
-            language = Resources.getSystem().configuration.locales[0].language
-        }
         val proc: List<String>
-        proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(activity, em.de, 1, fs)
-        } else {
-            Interpret.getProc(activity, em.de, 0, fs)
-        }
+        proc = Interpret.getProc(em.de, fs == 1)
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(em.de)
-        if (ability.size > 0 || proc.isNotEmpty()) {
+        if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(activity)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -564,23 +555,13 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempre.text = s.getPre(em, fs)
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
-        val shared = activity!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        var language = StaticStore.lang[shared.getInt("Language", 0)]
-        if (language == "") {
-            language = Resources.getSystem().configuration.locales[0].language
-        }
-        val proc: List<String>
-        proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(activity, em.de, 1, fs)
-        } else {
-            Interpret.getProc(activity, em.de, 0, fs)
-        }
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1)
 
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
 
         val abilityicon = Interpret.getAbiid(em.de)
 
-        if (ability.size > 0 || proc.isNotEmpty()) {
+        if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(activity)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL

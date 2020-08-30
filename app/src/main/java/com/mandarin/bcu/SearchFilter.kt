@@ -76,7 +76,7 @@ class SearchFilter : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (StaticStore.img15 == null)
-            StaticStore.readImg(this)
+            StaticStore.readImg()
 
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val ed: Editor

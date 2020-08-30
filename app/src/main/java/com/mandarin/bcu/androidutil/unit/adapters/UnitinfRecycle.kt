@@ -8,7 +8,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
@@ -33,7 +32,6 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
 import common.pack.Identifier
-import common.pack.PackData
 import common.util.unit.Form
 import common.util.unit.Unit
 import java.util.*
@@ -128,16 +126,8 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         cdtreat.setText(t.trea[2].toString())
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
-        var language = StaticStore.lang[shared.getInt("Language", 0)]
-        if (language == "") {
-            language = Resources.getSystem().configuration.locales[0].language
-        }
-        val proc: List<String>
-        proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(context, f.du, 1, fs)
-        } else {
-            Interpret.getProc(context, f.du, 0, fs)
-        }
+
+        val proc = Interpret.getProc(f.du, fs == 1)
 
         val icon = f.anim?.uni?.img?.bimg()
 
@@ -163,7 +153,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         viewHolder.unittba.text = s.getTBA(f, fs)
         viewHolder.unitatkt.text = s.getAtkTime(f, fs)
         viewHolder.unitabilt.text = s.getAbilT(f)
-        if (ability.size > 0 || proc.isNotEmpty()) {
+        if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(context)
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -242,14 +232,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val language = Locale.getDefault().language
-
-                    val proc: List<String>
-
-                    proc = if (language == "ko" || language == "ja")
-                        Interpret.getProc(context, du, 1, fs)
-                    else
-                        Interpret.getProc(context, du, 0, fs)
+                    val proc = Interpret.getProc(du, fs == 1)
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -286,14 +269,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val language = Locale.getDefault().language
-
-                    val proc: List<String>
-
-                    proc = if (language == "ko" || language == "ja")
-                        Interpret.getProc(context, du, 1, fs)
-                    else
-                        Interpret.getProc(context, du, 0, fs)
+                    val proc = Interpret.getProc(du, fs == 1)
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -884,25 +860,11 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val shared = context!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-
-        var language = StaticStore.lang[shared.getInt("Language", 0)]
-
-        if (language == "") {
-            language = Resources.getSystem().configuration.locales[0].language
-        }
-
-        val proc: List<String>
-
-        proc = if (language == "ko" || language == "ja") {
-            Interpret.getProc(context, du, 1, fs)
-        } else {
-            Interpret.getProc(context, du, 0, fs)
-        }
+        val proc = Interpret.getProc(du, fs == 1)
 
         val abilityicon = Interpret.getAbiid(du)
 
-        if (abil.size > 0 || proc.isNotEmpty()) {
+        if (abil.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
 
             val linearLayoutManager = LinearLayoutManager(context)
@@ -911,7 +873,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
             viewHolder.unitabil.layoutManager = linearLayoutManager
 
-            val adapterAbil = AdapterAbil(abil, proc, abilityicon, context)
+            val adapterAbil = AdapterAbil(abil, proc, abilityicon, context!!)
 
             viewHolder.unitabil.adapter = adapterAbil
 

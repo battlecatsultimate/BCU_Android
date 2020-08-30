@@ -28,7 +28,6 @@ public class MainBCU {
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
-			StaticStore.showShortMessage(context,"Low Memory! Performance may be slow");
 			String mems = "Required Memory : "+(int)(Opts.MEMORY)+" Current memory : "+(int)(mem >> 20);
 			Toast.makeText(context,mems,Toast.LENGTH_SHORT).show();
 		}

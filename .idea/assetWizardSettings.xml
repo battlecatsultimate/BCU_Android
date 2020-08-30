@@ -180,7 +180,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/remove/baseline_remove_24.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/arrow_downward/baseline_arrow_downward_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -191,7 +191,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="dddddd" />
-                            <entry key="outputName" value="ic_baseline_remove_24" />
+                            <entry key="outputName" value="ic_baseline_arrow_downward_24" />
                             <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\approve.svg" />
                           </map>
                         </option>

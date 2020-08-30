@@ -15,7 +15,6 @@ import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.R
 import common.io.json.JsonEncoder
 import common.pack.Identifier
-import common.pack.PackData
 import common.pack.UserProfile
 
 class BGListPager : Fragment() {

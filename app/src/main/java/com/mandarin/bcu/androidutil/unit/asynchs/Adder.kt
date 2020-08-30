@@ -18,7 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListPager
 import common.pack.Identifier
 import common.pack.PackData

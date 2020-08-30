@@ -1,12 +1,20 @@
 package com.mandarin.bcu
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +23,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
@@ -22,18 +31,23 @@ import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.io.asynchs.CheckApk
+import com.mandarin.bcu.androidutil.io.asynchs.UpdateCheckDownload
 import common.CommonStatic
 import common.system.fake.ImageBuilder
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
-import java.io.*
+import java.io.File
+import java.lang.ref.WeakReference
 import java.util.*
 
 open class CheckUpdateScreen : AppCompatActivity() {
-    private var path: String? = null
     private var config = false
+    private lateinit var checker: UpdateCheckDownload
 
+    private lateinit var notifyManager: NotificationManager
+    private lateinit var notifyBuilder: NotificationCompat.Builder
+
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,6 +55,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
         val ed = shared.edit()
 
         if (!shared.contains("initial")) {
+            initializeAsset()
             ed.putBoolean("initial", true)
             ed.putBoolean("theme", true)
             ed.putBoolean("frame", true)
@@ -180,7 +195,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
         setContentView(R.layout.activity_check_update_screen)
 
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 786)
 
         if (MainActivity.isRunning)
             finish()
@@ -195,158 +210,86 @@ open class CheckUpdateScreen : AppCompatActivity() {
             config = extra!!.getBoolean("Config")
         }
 
-        val mainprog = findViewById<ProgressBar>(R.id.mainprogup)
-        val retry = findViewById<Button>(R.id.checkupretry)
+        val retry = findViewById<Button>(R.id.retry)
+        val prog = findViewById<ProgressBar>(R.id.updateprog)
 
         retry.visibility = View.GONE
-
-        path = StaticStore.getExternalPath(this)
+        prog.isIndeterminate = true
 
         ImageBuilder.builder = BMBuilder()
 
         StaticStore.checkFolders(StaticStore.getExternalPath(this), StaticStore.getExternalLog(this), StaticStore.getExternalPack(this), StaticStore.getExternalRes(this))
 
-        retry.setOnClickListener {
-            if (connectivityManager.activeNetwork != null) {
-                retry.visibility = View.GONE
-                mainprog.visibility = View.VISIBLE
-                val lang = false
-                val checkApk = CheckApk(path ?: StaticStore.getExternalPath(this), lang, this@CheckUpdateScreen, cando())
-                checkApk.execute()
-            } else {
-                StaticStore.showShortMessage(this@CheckUpdateScreen, R.string.needconnect)
+        notifyManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notifyBuilder = NotificationCompat.Builder(this, UpdateCheckDownload.NOTIF)
+
+        notifyBuilder.setSmallIcon(R.drawable.ic_baseline_arrow_downward_24)
+        notifyBuilder.priority = NotificationCompat.PRIORITY_DEFAULT
+        notifyBuilder.setOnlyAlertOnce(true)
+        notifyBuilder.setOngoing(true)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.app_name)
+            val desc = getString(R.string.main_notif_down)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(UpdateCheckDownload.NOTIF, name, importance).apply {
+                description = desc
             }
+
+            notifyManager.createNotificationChannel(channel)
         }
 
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if(checkOldFiles() && !shared.getBoolean("Announce_0.13.0",false)) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        val i = Intent(applicationContext, CheckUpdateScreen::class.java)
+        val p = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                val builder = AlertDialog.Builder(this)
-                val inflater = LayoutInflater.from(this)
-                val v = inflater.inflate(R.layout.announce_dialog, null)
+        notifyBuilder.setContentIntent(p)
 
-                builder.setView(v)
+        checker = UpdateCheckDownload(this, config, false, notifyManager, notifyBuilder)
 
-                val confirm = v.findViewById<Button>(R.id.anncomfirm)
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q && checkOldFiles() && !shared.getBoolean("Announce_0.13.0",false)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
-                val dialog = builder.create()
+            val builder = AlertDialog.Builder(this)
+            val inflater = LayoutInflater.from(this)
+            val v = inflater.inflate(R.layout.announce_dialog, null)
 
-                dialog.setCancelable(false)
+            builder.setView(v)
 
-                dialog.show()
+            val confirm = v.findViewById<Button>(R.id.anncomfirm)
 
-                v.post {
-                    val w = (resources.displayMetrics.widthPixels*0.75).toInt()
+            val dialog = builder.create()
 
-                    dialog.window?.setLayout(w, ViewGroup.LayoutParams.WRAP_CONTENT)
-                }
+            dialog.setCancelable(false)
 
-                dialog.setOnDismissListener {
-                    when {
-                        shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                        shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                        shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                    }
-                }
+            dialog.show()
 
-                confirm.setOnClickListener(object : SingleClick() {
-                    override fun onSingleClick(v: View?) {
-                        ed.putBoolean("Announce_0.13.0",true)
-                        ed.apply()
+            v.post {
+                val w = (resources.displayMetrics.widthPixels*0.75).toInt()
 
-                        startCheckUpdates()
-
-                        dialog.dismiss()
-                    }
-
-                })
-            } else {
-                startCheckUpdates()
+                dialog.window?.setLayout(w, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
+
+            dialog.setOnDismissListener {
+                when {
+                    shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                    shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                    shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                }
+            }
+
+            confirm.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    ed.putBoolean("Announce_0.13.0",true)
+                    ed.apply()
+
+                    checker.execute()
+
+                    dialog.dismiss()
+                }
+
+            })
         } else {
-            startCheckUpdates()
-        }
-    }
-
-    private fun startCheckUpdates() {
-        val checkstate = findViewById<TextView>(R.id.mainstup)
-        val mainprog = findViewById<ProgressBar>(R.id.mainprogup)
-        val retry = findViewById<Button>(R.id.checkupretry)
-
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        if (connectivityManager.activeNetwork != null) {
-            if (!config) {
-                val lang = false
-                val checkApk = CheckApk(path ?: StaticStore.getExternalPath(this), lang, this, cando())
-                checkApk.execute()
-            } else {
-                val lang = false
-                val checkApk = CheckApk(path ?: StaticStore.getExternalPath(this), lang, this, cando(), config)
-                checkApk.execute()
-            }
-        } else {
-            if (cando()) {
-                val lang = false
-                CheckApk(path ?: StaticStore.getExternalPath(this), lang, this, cando(), config).execute()
-
-            } else {
-                mainprog.visibility = View.GONE
-                retry.visibility = View.VISIBLE
-                checkstate.setText(R.string.main_internet_no)
-                StaticStore.showShortMessage(this, R.string.needconnect)
-            }
-        }
-    }
-
-    private fun cando(): Boolean {
-        val infopath = path!! + "info/"
-        val filename = "info_android.ini"
-
-        val f = File(infopath, filename)
-
-        return if (f.exists()) {
-            try {
-                var line: String?
-
-                val fis = FileInputStream(f)
-                val isr = InputStreamReader(fis)
-                val br = BufferedReader(isr)
-
-                val lines = ArrayList<String>()
-
-                while (true) {
-                    line = br.readLine()
-
-                    if(line == null) break
-
-                    lines.add(line)
-                }
-
-                try {
-                    val libs = TreeSet(listOf(*lines[2].split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
-
-                    for (s in StaticStore.LIBREQ)
-                        if (!libs.contains(s))
-                            return false
-
-                    true
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    false
-                }
-
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-                false
-            } catch (e: IOException) {
-                e.printStackTrace()
-                false
-            }
-
-        } else {
-            false
+            checker.execute()
         }
     }
 
@@ -390,6 +333,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
         super.onDestroy()
         StaticStore.toast = null
         (CommonStatic.ctx as AContext).releaseActivity()
+        checker.cancel(true)
+        notifyBuilder.setOngoing(false)
+        notifyManager.notify(UpdateCheckDownload.NOTIF, R.id.downloadnotification, notifyBuilder.build())
     }
 
     private fun checkOldFiles() : Boolean {
@@ -415,4 +361,67 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
         return result
     }
+
+    private fun initializeAsset() {
+        var f = File(StaticStore.getExternalAsset(this))
+
+        if(!f.exists())
+            f.mkdirs()
+
+        f = File(StaticStore.getExternalAsset(this)+"assets/")
+
+        if(!f.exists())
+            f.mkdirs()
+
+        f = File(StaticStore.getExternalAsset(this)+"lang/")
+
+        if(!f.exists())
+            f.mkdirs()
+
+        f = File(StaticStore.getExternalAsset(this)+"music/")
+
+        if(!f.exists())
+            f.mkdirs()
+    }
+
+    class RetryDownload : BroadcastReceiver {
+        private val w: WeakReference<CheckUpdateScreen>?
+
+        constructor() {
+            w = null
+        }
+
+        constructor(ac: CheckUpdateScreen) {
+            w = WeakReference(ac)
+        }
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val ac = w?.get()
+
+            if(ac == null) {
+                Log.e("RetryDownload", "Activity is not found!")
+                return
+            }
+
+            val connectivityManager = ac.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            if (connectivityManager.activeNetwork != null) {
+                val retry = ac.findViewById<TextView>(R.id.retry)
+                val prog = ac.findViewById<ProgressBar>(R.id.updateprog)
+
+                prog.isIndeterminate = true
+                retry.visibility = View.GONE
+
+                ac.checker.cancel(true)
+
+                ac.checker = UpdateCheckDownload(ac, ac.config, true, ac.notifyManager, ac.notifyBuilder)
+
+                ac.checker.execute()
+            } else {
+                StaticStore.showShortMessage(ac, R.string.needconnect)
+            }
+        }
+    }
 }
+
+

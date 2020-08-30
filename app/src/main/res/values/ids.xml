@@ -7,4 +7,5 @@
     <item name="unitshowlist" type="id"/>
     <item name="enemyshowlist" type="id"/>
     <item name="enemychip" type="id"/>
+    <item name="downloadnotification" type="id"/>
 </resources>

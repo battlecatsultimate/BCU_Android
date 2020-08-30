@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.os.AsyncTask
-import android.os.Environment
 import android.view.View
 import android.widget.ListView
 import android.widget.ProgressBar

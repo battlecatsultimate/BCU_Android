@@ -102,7 +102,7 @@ open class EnemySearchFilter : AppCompatActivity() {
         setContentView(R.layout.activity_enemy_search_filter)
 
         if (StaticStore.img15 == null) {
-            StaticStore.readImg(this)
+            StaticStore.readImg()
         }
 
         val tgor = findViewById<RadioButton>(R.id.eschrdtgor)

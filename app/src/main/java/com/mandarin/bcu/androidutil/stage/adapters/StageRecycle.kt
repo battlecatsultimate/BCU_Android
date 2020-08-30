@@ -68,9 +68,9 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val t = BasisSet.current().t()
 
         val st = Identifier.get(data) ?: return
-        val stm = st.info.map.sm ?: return
+        val stm = st.cont ?: return
 
-        viewHolder.id.text = s.getID(data.pack, st.info.map.sm.id.id, data.id)
+        viewHolder.id.text = s.getID(st.cont.cont.sid, st.info.map.sm.id.id, data.id)
         val stars: MutableList<String> = ArrayList()
         for (k in stm.stars.indices) {
             val s: String = (k + 1).toString() + " (" + stm.stars[k] + " %)"
@@ -127,7 +127,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             viewHolder.star.setSelection(StaticStore.stageSpinner)
         }
         if (st.info != null) {
-            if (data.pack == "000000" || data.pack == "000013")
+            if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
                 viewHolder.xp.text = s.getXP(st.info.xp, t, true)
             else
                 viewHolder.xp.text = s.getXP(st.info.xp, t, false)
@@ -201,7 +201,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         viewHolder.castle.text = st.castle.toString()
         viewHolder.castle.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                if (data.pack == "000003" && stm.id.id == 11)
+                if (st.cont.cont.sid == "000003" && stm.id.id == 11)
                     return
                 else {
                     val intent = Intent(activity, ImageViewer::class.java)

@@ -24,7 +24,6 @@ import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
-import common.util.Res;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
@@ -90,7 +89,7 @@ public class AACLoader implements Source.AnimLoader {
         if(!is.end())
             uni = new VImg(is.nextBytesI());
 
-        if(uni != null && uni != Res.slot[0]) {
+        if(uni != null && uni != CommonStatic.getBCAssets().slot[0]) {
             uni.mark(FakeImage.Marker.UNI);
 
             try {
@@ -168,7 +167,7 @@ public class AACLoader implements Source.AnimLoader {
 
     @Override
     public Source.ResourceLocation getName() {
-        return name;
+        return new Source.ResourceLocation(null, name);
     }
 
     @Override

@@ -18,7 +18,7 @@
 ANDROID_ABI:UNINITIALIZED=x86
 
 //No help, variable specified on the command line.
-ANDROID_NDK:UNINITIALIZED=C:\Users\user\AppData\Local\Android\Sdk\ndk-bundle
+ANDROID_NDK:UNINITIALIZED=C:\Users\user\AppData\Local\Android\Sdk\ndk\21.2.6472646
 
 //No help, variable specified on the command line.
 ANDROID_PLATFORM:UNINITIALIZED=android-24
@@ -27,10 +27,10 @@ ANDROID_PLATFORM:UNINITIALIZED=android-24
 CMAKE_ANDROID_ARCH_ABI:UNINITIALIZED=x86
 
 //No help, variable specified on the command line.
-CMAKE_ANDROID_NDK:UNINITIALIZED=C:\Users\user\AppData\Local\Android\Sdk\ndk-bundle
+CMAKE_ANDROID_NDK:UNINITIALIZED=C:\Users\user\AppData\Local\Android\Sdk\ndk\21.2.6472646
 
 //Archiver
-CMAKE_AR:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-ar.exe
+CMAKE_AR:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-ar.exe
 
 //Flags used by the compiler during all build types.
 CMAKE_ASM_FLAGS:STRING=
@@ -123,7 +123,7 @@ CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/Project
 CMAKE_LIBRARY_OUTPUT_DIRECTORY:UNINITIALIZED=C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\build\intermediates\cmake\release\obj\x86
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-ld.exe
+CMAKE_LINKER:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-ld.exe
 
 //No help, variable specified on the command line.
 CMAKE_MAKE_PROGRAM:UNINITIALIZED=C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
@@ -144,19 +144,22 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-nm.exe
+CMAKE_NM:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-nm.exe
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-objcopy.exe
+CMAKE_OBJCOPY:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-objcopy.exe
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-objdump.exe
+CMAKE_OBJDUMP:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-objdump.exe
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=Project
 
 //Ranlib
-CMAKE_RANLIB:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-ranlib.exe
+CMAKE_RANLIB:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-ranlib.exe
+
+//No help, variable specified on the command line.
+CMAKE_RUNTIME_OUTPUT_DIRECTORY:UNINITIALIZED=C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\build\intermediates\cmake\release\obj\x86
 
 //Flags used by the linker during the creation of dll's.
 CMAKE_SHARED_LINKER_FLAGS:STRING=
@@ -196,7 +199,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-strip.exe
+CMAKE_STRIP:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/bin/i686-linux-android-strip.exe
 
 //No help, variable specified on the command line.
 CMAKE_SYSTEM_NAME:UNINITIALIZED=Android
@@ -205,7 +208,7 @@ CMAKE_SYSTEM_NAME:UNINITIALIZED=Android
 CMAKE_SYSTEM_VERSION:UNINITIALIZED=24
 
 //The CMake toolchain file
-CMAKE_TOOLCHAIN_FILE:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake
+CMAKE_TOOLCHAIN_FILE:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/build/cmake/android.toolchain.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -220,10 +223,10 @@ Project_BINARY_DIR:STATIC=C:/Users/user/AndroidStudioProjects/BCU_Android_json/a
 Project_SOURCE_DIR:STATIC=C:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/jni
 
 //Path to a library.
-log-lib:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/i686-linux-android/24/liblog.so
+log-lib:FILEPATH=C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/i686-linux-android/24/liblog.so
 
 //Dependencies for the target
-matrix-calc_LIB_DEPENDS:STATIC=general;C:/Users/user/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/i686-linux-android/24/liblog.so;
+matrix-calc_LIB_DEPENDS:STATIC=general;C:/Users/user/AppData/Local/Android/Sdk/ndk/21.2.6472646/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/i686-linux-android/24/liblog.so;
 
 
 ########################

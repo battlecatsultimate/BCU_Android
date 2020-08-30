@@ -30,11 +30,9 @@ import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler.resetHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
-import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics.Companion.clear
-import com.mandarin.bcu.androidutil.stage.MapDefiner
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.util.page.BBCtrl
 import common.battle.BasisSet
 import common.battle.SBCtrl
@@ -75,13 +73,6 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
         val activity = weakReference.get() ?: return null
 
         Definer.define(activity)
-
-        publishProgress(enemy)
-
-        EDefiner.define(activity)
-
-        publishProgress(map)
-        MapDefiner().define(activity)
         publishProgress(battle)
         BDefinder().define(activity)
         publishProgress(done)

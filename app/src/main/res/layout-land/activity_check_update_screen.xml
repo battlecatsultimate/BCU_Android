@@ -6,35 +6,46 @@
     android:background="?attr/backgroundPrimary"
     tools:context=".CheckUpdateScreen">
 
-    <Space
-        android:id="@+id/space"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
     <ProgressBar
-        android:id="@+id/mainprogup"
+        android:id="@+id/updateprog"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
     <TextView
-        android:id="@+id/mainstup"
+        android:id="@+id/updatestate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/space"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:text="@string/main_check_up"
-        android:textColor="?attr/TextPrimary" />
+        android:layout_below="@+id/updateprog"
+        android:layout_alignStart="@+id/updateprog"
+        android:layout_alignBottom="@+id/retry"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/retry"
+        android:gravity="center_vertical"
+        android:text="@string/down_state_rea"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/checkupretry"
+        android:id="@+id/retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@+id/updateprog"
+        android:layout_alignEnd="@+id/updateprog"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
         android:backgroundTint="?attr/ButtonPrimary"
         android:text="@string/down_redown"
-        android:textAllCaps="false"
         android:textColor="?attr/TextPrimary" />
+
 </RelativeLayout>

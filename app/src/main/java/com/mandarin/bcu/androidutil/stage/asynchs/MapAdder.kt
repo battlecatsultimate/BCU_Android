@@ -19,11 +19,9 @@ import com.mandarin.bcu.StageSearchFilter
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.filter
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.EDefiner
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.stage.MapDefiner
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
-import com.mandarin.bcu.androidutil.unit.Definer
+import com.mandarin.bcu.androidutil.Definer
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile
@@ -53,11 +51,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
         val activity = weakReference.get() ?: return null
         publishProgress(unit)
         Definer.define(activity)
-        publishProgress(enemy)
-        EDefiner.define(activity)
-
-        publishProgress(map)
-        MapDefiner().define(activity)
 
         publishProgress(icon)
 
