@@ -150,7 +150,7 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
                             total += len1.toLong()
                             var progress = 0
                             if (size != 0) progress = total.toInt()
-                            publishProgress(progress, 50, i)
+                            publishProgress(progress, 1000, i)
                             fos.write(buffer, 0, len1)
                         }
                         connection.disconnect()
@@ -262,10 +262,10 @@ class Downloader(private val path: String, private val fileneed: ArrayList<Strin
         }
 
         prog.progress = values[0] ?: 0
-        if (values[1] != 100 && values[1] != 50) {
+        if (values[1] != 100 && values[1] != 1000) {
             val t = downloading + purifyneed[values[1] ?: 0]
             state.text = t
-        } else if (values[1] == 50) {
+        } else if (values[1] == 1000) {
             val t = activity.getString(R.string.down_state_music) + musics[values[2] ?: 0]
             state.text = t
         } else {
