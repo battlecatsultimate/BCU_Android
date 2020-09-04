@@ -7,7 +7,7 @@
     tools:context=".CheckUpdateScreen">
 
     <ProgressBar
-        android:id="@+id/updateprog"
+        android:id="@+id/prog"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,11 +20,11 @@
         android:layout_marginEnd="24dp" />
 
     <TextView
-        android:id="@+id/updatestate"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/updateprog"
-        android:layout_alignStart="@+id/updateprog"
+        android:layout_below="@+id/prog"
+        android:layout_alignStart="@+id/prog"
         android:layout_alignBottom="@+id/retry"
         android:layout_marginStart="0dp"
         android:layout_marginTop="16dp"
@@ -34,18 +34,19 @@
         android:gravity="center_vertical"
         android:text="@string/down_state_rea"
         android:textColor="?attr/TextPrimary"
-        android:textSize="18sp" />
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/updateprog"
-        android:layout_alignEnd="@+id/updateprog"
+        android:layout_below="@+id/prog"
+        android:layout_alignEnd="@+id/prog"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
         android:backgroundTint="?attr/ButtonPrimary"
         android:text="@string/down_redown"
+        android:textAllCaps="false"
         android:textColor="?attr/TextPrimary" />
 
 </RelativeLayout>

@@ -145,7 +145,7 @@ public class Opts {
 		confs.add(p.replace(".bcudata",".bcupack"));
 		confs.add(v);
 
-		new PackConflict(PackConflict.ID_UNSUPPORTED_BCU, confs, true);
+		new PackConflict(PackConflict.ID_UNSUPPORTED_CORE_VERSION, confs, true);
 	}
 
 	public static boolean writeErr0(String f) {

@@ -16,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
@@ -57,6 +58,8 @@ class LUOrbSetting : Fragment() {
 
         val obj = Object()
 
+        val c = context ?: return view
+
         val r = object : Runnable {
             override fun run() {
                 if(StaticStore.updateOrb) {
@@ -71,7 +74,7 @@ class LUOrbSetting : Fragment() {
                             try{
                                 obj.wait()
                             } catch (e: InterruptedException) {
-                                CommonStatic.def.writeErrorLog(e)
+                                ErrorLogWriter.writeLog(e, StaticStore.upload, c)
                             }
                         }
                     }

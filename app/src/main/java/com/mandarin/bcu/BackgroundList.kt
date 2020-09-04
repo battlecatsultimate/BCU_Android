@@ -83,12 +83,16 @@ class BackgroundList : AppCompatActivity() {
 
         pager.removeAllViewsInLayout()
         pager.adapter = BGListTab(supportFragmentManager)
-        pager.offscreenPageLimit = StaticStore.getPackSize()
+        pager.offscreenPageLimit = getExistingBGPack()
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
         tab.setupWithViewPager(pager)
 
+        if(getExistingBGPack() == 1)
+            tab.visibility = View.GONE
+
         val bck = findViewById<FloatingActionButton>(R.id.bgbck)
+
 
         bck.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
@@ -124,7 +128,26 @@ class BackgroundList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
+    }
+
+    private fun getExistingBGPack() : Int {
+        var res = 0
+
+        for(p in UserProfile.getAllPacks()) {
+            if(p.bgs.list.isNotEmpty())
+                res++
+        }
+
+        return res
     }
 
     class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -176,7 +199,7 @@ class BackgroundList : AppCompatActivity() {
         }
 
         private fun getExistingPack(): ArrayList<String> {
-            val list = StaticStore.getPacks()
+            val list = UserProfile.getAllPacks()
 
             val res = ArrayList<String>()
 

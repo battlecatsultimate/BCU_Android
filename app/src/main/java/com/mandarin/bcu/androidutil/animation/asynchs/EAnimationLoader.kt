@@ -36,7 +36,11 @@ import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>?) : AsyncTask<Void?, Int?, Void?>() {
+class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>?) : AsyncTask<Void, String, Void>() {
+    companion object {
+        const val PROCCESS = "process"
+    }
+
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
 
@@ -61,27 +65,48 @@ class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>
         val gif = activity.findViewById<TextView>(R.id.imgviewergiffr)
         val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
         val img = activity.findViewById<ImageView>(R.id.imgviewerimg)
-        val loadst = activity.findViewById<TextView>(R.id.imgviewerst)
-        loadst.setText(R.string.stg_info_enem)
+        val loadst = activity.findViewById<TextView>(R.id.status)
+        loadst.setText(R.string.load_enemy)
         setDisappear(anims, forms, setting, player, controller, frame, fps, gif, cViewlayout, img)
     }
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        Definer.define(activity)
-        publishProgress(2)
+
+        Definer.define(activity, this::updateProg, this::updateText)
+
+        publishProgress(PROCCESS, "")
+
         return null
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg result: Int?) {
+    override fun onProgressUpdate(vararg result: String) {
         val activity = weakReference.get() ?: return
+
         data ?: return
-        val st = activity.findViewById<TextView>(R.id.imgviewerst)
+
+        if(result.size < 2)
+            return
+
+        val st = activity.findViewById<TextView>(R.id.status)
+
         when (result[0]) {
-            0 -> st.setText(R.string.stg_info_enemname)
-            1 -> st.setText(R.string.stg_info_enemimg)
-            2 -> {
+            StaticStore.TEXT -> st.text = result[1]
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(result[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = result[1].toInt()
+            }
+            PROCCESS -> {
                 val anims = activity.findViewById<Spinner>(R.id.animselect)
                 val controller = activity.findViewById<SeekBar>(R.id.animframeseek)
                 val frame = activity.findViewById<TextView>(R.id.animframe)
@@ -335,8 +360,8 @@ class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>
 
     override fun onPostExecute(result: Void?) {
         val activity = weakReference.get() ?: return
-        val prog = activity.findViewById<ProgressBar>(R.id.imgviewerprog)
-        val st = activity.findViewById<TextView>(R.id.imgviewerst)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
+        val st = activity.findViewById<TextView>(R.id.status)
         setDisappear(prog, st)
         val anims = activity.findViewById<Spinner>(R.id.animselect)
         val setting: FloatingActionButton = activity.findViewById(R.id.imgvieweroption)
@@ -370,6 +395,16 @@ class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>
         for (v in views) {
             v.visibility = View.VISIBLE
         }
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(prog: Double) {
+        publishProgress(StaticStore.PROG, (prog * 10000.0).toInt().toString())
     }
 
     private inner class ScaleListener(private val cView: AnimationCView) : SimpleOnScaleGestureListener() {

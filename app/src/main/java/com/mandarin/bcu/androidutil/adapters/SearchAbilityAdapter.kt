@@ -13,6 +13,7 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import common.system.files.VFile
 import kotlin.math.ceil
 
 class SearchAbilityAdapter(private val context: Context, private val tool: IntArray, private val abils: Array<IntArray>, private val abdraw: IntArray, private val abdrawf: Array<String>) : RecyclerView.Adapter<SearchAbilityAdapter.ViewHolder>() {
@@ -127,9 +128,9 @@ class SearchAbilityAdapter(private val context: Context, private val tool: IntAr
             if(abdrawf[index] == "")
                 return null
 
-            val name = StaticStore.getExternalPath(context) + "org/page/icons/" + abdrawf[index] + ".png"
+            val name = "./org/page/icons/" + abdrawf[index] + ".png"
 
-            val b = BitmapFactory.decodeFile(name)
+            val b = VFile.get(name).data.img.bimg() as Bitmap
 
             return getDrawable(b)
         } else {

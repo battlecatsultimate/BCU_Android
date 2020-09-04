@@ -33,53 +33,55 @@
             android:layout_height="match_parent"
             android:background="@drawable/cell_shape">
 
+            <Button
+                android:id="@+id/stginfopack"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_inf_pack"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfopackr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
             <TextView
                 android:id="@+id/stginfoid"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_id"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/stginfoidr"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cell_shape"
-                android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:text="@string/def_stage_id"
-                android:textColor="?attr/TextPrimary" />
-
-            <TextView
-                android:id="@+id/stginfostar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cell_shape"
-                android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:text="@string/stg_info_star"
-                android:textColor="?attr/TextPrimary"
-                android:textStyle="bold" />
-
-            <TableRow
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/cell_shape">
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
-                <Spinner
-                    android:id="@+id/stginfostarr"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:backgroundTint="?attr/TextPrimary"
-                    android:popupBackground="?attr/backgroundPrimary" />
-            </TableRow>
         </TableRow>
 
         <TableRow
@@ -89,6 +91,7 @@
             <TextView
                 android:id="@+id/stginfoeng"
                 android:layout_width="wrap_content"
+                android:textSize="12sp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -106,31 +109,36 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_energy"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/stginfoxp"
+                android:id="@+id/stginfostar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/stg_info_xp"
+                android:text="@string/stg_info_star"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/stginfoxpr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
-                android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:text="@string/def_stage_xp"
-                android:textColor="?attr/TextPrimary" />
+                android:textSize="12sp">
+
+                <Spinner
+                    android:id="@+id/stginfostarr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:popupBackground="?attr/backgroundPrimary" />
+            </TableRow>
+
         </TableRow>
 
         <TableRow
@@ -143,25 +151,47 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
-                android:paddingStart="4dp"
                 android:paddingTop="12dp"
-                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bh"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/stginfobhr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_base_health"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/stginfoxp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/stg_info_xp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfoxpr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -172,6 +202,7 @@
                 android:id="@+id/stginfodif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="12sp"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -188,8 +219,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_diff"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/stginfocontin"
@@ -197,12 +228,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
-                android:paddingStart="4dp"
                 android:paddingTop="12dp"
-                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_cont"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -213,8 +243,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_cont"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -224,6 +254,7 @@
             <TextView
                 android:id="@+id/stginfolen"
                 android:layout_width="wrap_content"
+                android:textSize="12sp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -241,8 +272,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stg_length"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/stginfomaxen"
@@ -250,13 +281,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
-                android:paddingStart="4dp"
                 android:paddingTop="12dp"
-                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_maxen"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -267,8 +296,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_max_enemy"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -283,6 +312,7 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:textSize="12sp"
                 android:text="@string/stg_info_music"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -291,13 +321,20 @@
                 android:id="@+id/stginfomusicr"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="3"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_music"
                 android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/stginfomusic2"
@@ -309,19 +346,21 @@
                 android:paddingBottom="12dp"
                 android:text="@string/def_music2"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/stginfomusic2r"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="3"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_music2"
                 android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -340,7 +379,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_loop"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -353,7 +392,8 @@
                 android:paddingBottom="12dp"
                 android:text="@string/def_zero_time"
                 android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/stginfoloop1"
@@ -365,6 +405,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_loop1"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -377,7 +418,8 @@
                 android:paddingBottom="12dp"
                 android:text="@string/def_zero_time"
                 android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -387,29 +429,34 @@
             <TextView
                 android:id="@+id/stginfobg"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
-                android:paddingStart="4dp"
                 android:paddingTop="12dp"
-                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bg"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/stginfobgr"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="3"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_bg"
                 android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
             <TextView
                 android:id="@+id/stginfoct"
@@ -421,19 +468,21 @@
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_ct"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/stginfoctr"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="3"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_stage_castle"
                 android:textAllCaps="false"
-                android:textColor="?attr/TextPrimary" />
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -444,6 +493,7 @@
                 android:id="@+id/stginfolimit"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:textSize="12sp"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -463,6 +513,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/cell_shape"
                     android:gravity="center"
+                    android:textSize="12sp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:text="@string/unit_info_t_none"

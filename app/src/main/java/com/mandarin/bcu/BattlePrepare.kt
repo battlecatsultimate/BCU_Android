@@ -150,6 +150,14 @@ class BattlePrepare : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

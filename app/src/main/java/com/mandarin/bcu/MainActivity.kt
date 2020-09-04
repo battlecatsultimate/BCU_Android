@@ -29,6 +29,7 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.asynchs.UploadLogs
 import common.CommonStatic
+import common.pack.UserProfile
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.File
@@ -371,9 +372,19 @@ class MainActivity : AppCompatActivity() {
 
         StaticStore.dialogisShowed = false
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
 
         super.onDestroy()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        println("UPDATED")
+
+        super.onResume()
     }
 
     private fun deleter(f: File) {

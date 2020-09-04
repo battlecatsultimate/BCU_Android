@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.content.res.Resources.NotFoundException
@@ -33,7 +34,6 @@ import common.battle.BasisSet
 import common.io.json.JsonDecoder
 import common.pack.Identifier
 import common.pack.IndexContainer.Indexable
-import common.pack.PackData
 import common.pack.UserProfile
 import common.system.fake.FakeImage
 import common.system.files.VFile
@@ -46,10 +46,7 @@ import common.util.unit.Combo
 import common.util.unit.Enemy
 import common.util.unit.Form
 import common.util.unit.Unit
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.math.BigInteger
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
@@ -86,6 +83,13 @@ object StaticStore {
     /**Shared preferences name */
     const val CONFIG = "configuration"
 
+    const val LANG = "language"
+
+    const val PACK = "pack"
+
+    const val PROG = "prog"
+    const val TEXT = "text"
+
     /**
      * This value prevents button is performed less than every 1 sec<br></br>
      * Used when preventing activity is opened double
@@ -110,9 +114,6 @@ object StaticStore {
     /** Value which tells if Stage language data is loaded  */
     var stagelang = 1
 
-    /** Value which tells if Map language data is loaded  */
-    var maplang = 1
-
     /** Value which tells if Medal language data is loaded  */
     var medallang = 1
 
@@ -130,6 +131,9 @@ object StaticStore {
 
     /** Value which tells if file paths are added to memory  */
     var init = false
+
+    /** Value which tells if app already read pack or not */
+    var packRead = false
 
     /** Initial vector used when encrypt/decrypt images  */
     @JvmField
@@ -155,14 +159,14 @@ object StaticStore {
     var anumber = intArrayOf(203, 204, 206, 202, 205, 200, 209, 227, 218, 227, 227, 227, 227, 260, 258, 227, 227, 110, 227, 227, 122, 114)
 
     /** Imgcut index list of procs  */
-    var pnumber = intArrayOf(207, 197, 198, 201, 208, 195, 264, 266, 289, 196, 199, 227, 227, 216, 214, 215, 210, 213, 262, 116, 227, 227, 227, 227, 227, 227, 227, 227, 227, 229, 231, 227, 239, 237, 243, 227, 227, 49, 45, 47, 51, 43, 53, 109)
+    var pnumber = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 201, 264, 229, 208, 239, 213, 214, 215, 216, 210, 243, 262, 116, 237, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 43, 45, 47, 49, 51, 53, 109)
 
     /** File index list of abilities  */
     var afiles = arrayOf("", "", "", "", "", "", "", "MovingX.png", "", "SnipeX.png", "TimeX.png", "Ghost.png", "PoisonX.png", "", "", "Suicide.png", "ThemeX.png",
             "", "SealX.png", "BossWaveX.png", "", "")
 
     /** File index list of procs  */
-    var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "Burrow.png", "Revive.png", "", "", "", "", "", "", "", "Snipe.png", "Time.png", "Seal.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "CritX.png", "", "", "BCPoison.png", "", "", "", "ArmorBreak.png", "Speed.png")
+    var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison.png", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "CritX.png", "", "", "", "", "", "", "")
 
     /** String ID list of traits  */
     var colorid = intArrayOf(R.string.sch_wh, R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.esch_eva, R.string.esch_witch)
@@ -231,9 +235,9 @@ object StaticStore {
      * Variables for Medal
      */
     var medalnumber = 0
-    var medals: ArrayList<Bitmap> = ArrayList()
-    var MEDNAME = MultiLangCont<Int, String>()
-    var MEDEXP = MultiLangCont<Int, String>()
+    val medals: ArrayList<Bitmap> = ArrayList()
+    val MEDNAME = MultiLangCont<Int, String>()
+    val MEDEXP = MultiLangCont<Int, String>()
 
     /**
      * Variables for Music
@@ -301,7 +305,6 @@ object StaticStore {
         unitlang = 1
         enemeylang = 1
         stagelang = 1
-        maplang = 1
         medallang = 1
         toast = null
         img15 = null
@@ -377,12 +380,16 @@ object StaticStore {
     }
 
     fun getResizeb(b: Bitmap?, context: Context, dp: Float): Bitmap {
-        if (b == null) return empty(context, dp, dp)
-        val r = context.resources
-        val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.displayMetrics)
-        val bd = BitmapDrawable(context.resources, Bitmap.createScaledBitmap(b, px.toInt(), px.toInt(), true))
+        if (b == null || b.isRecycled)
+            return empty(context, dp, dp)
+
+        val px = dptopx(dp, context)
+
+        val bd = BitmapDrawable(context.resources, Bitmap.createScaledBitmap(b, px, px, true))
+
         bd.isFilterBitmap = true
         bd.setAntiAlias(true)
+
         return bd.bitmap
     }
 
@@ -396,7 +403,7 @@ object StaticStore {
      * @return Returns resized Bitmap using specified dpi value.
      */
     fun getResizeb(b: Bitmap?, context: Context, w: Float, h: Float): Bitmap {
-        if (b == null) return empty(context, w, h)
+        if (b == null || b.isRecycled) return empty(context, w, h)
         val r = context.resources
         val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, w, r.displayMetrics)
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, h, r.displayMetrics)
@@ -445,7 +452,10 @@ object StaticStore {
      * @return Returns resized bitmap using antialiasing.
      */
     fun getResizebp(b: Bitmap?, context: Context, w: Float, h: Float): Bitmap {
-        val bd = BitmapDrawable(context.resources, Bitmap.createScaledBitmap(b!!, w.toInt(), h.toInt(), true))
+        if(b == null || b.isRecycled)
+            return empty(context, w, h)
+
+        val bd = BitmapDrawable(context.resources, Bitmap.createScaledBitmap(b, w.toInt(), h.toInt(), true))
         bd.isFilterBitmap = true
         bd.setAntiAlias(true)
         return bd.bitmap
@@ -503,13 +513,12 @@ object StaticStore {
     /**
      * Reads Treasure Radar icon.
      */
-    fun readTreasureIcon(c: Context?) {
-        val path = getExternalPath(c) + "org/page/img002.png"
+    fun readTreasureIcon() {
+        val path = "./org/page/img002.png"
         val imgcut = "./org/page/img002.imgcut"
-        val f = File(path)
         val img = ImgCut.newIns(imgcut)
         try {
-            val png = FakeImage.read(f)
+            val png = VFile.get(path).data.img
             val imgs = img.cut(png)
             treasure = imgs[28].bimg() as Bitmap
         } catch (e: IOException) {
@@ -553,7 +562,6 @@ object StaticStore {
         empty = true
         talents = false
         starred = false
-        entityname = ""
         statFilter.clear()
     }
 
@@ -826,7 +834,7 @@ object StaticStore {
 
     @JvmStatic
     fun getExternalPack(c: Context?): String {
-        return getExternalPath(c) + "pack/"
+        return getExternalPath(c) + "packs/"
     }
 
     fun getExternalLog(c: Context?): String {
@@ -867,6 +875,7 @@ object StaticStore {
      * @param iv Initial Vector
      * @param delete If this boolean is true, source file will be deleted
      */
+    @JvmStatic
     @Throws(IOException::class, NoSuchPaddingException::class, NoSuchAlgorithmException::class, InvalidAlgorithmParameterException::class, InvalidKeyException::class, BadPaddingException::class, IllegalBlockSizeException::class)
     fun encryptPNG(path: String, key: String, iv: String, delete: Boolean) {
         val fis = FileInputStream(path)
@@ -976,30 +985,27 @@ object StaticStore {
         return String.format("%32s", str).replace(' ', '0')
     }
 
-    /** Remove whole files in specified path<br></br>It will delete itself too */
-    fun removeAllFiles(f: File) {
-        if (f.isFile) {
-            if (!f.delete()) {
-                Log.e("StaticStore.removeFiles", "Failed to remove file " + f.absolutePath)
-            }
-        } else if (f.isDirectory) {
-            val lit = f.listFiles() ?: return
-            for (fs in lit) {
-                if (fs.isDirectory) {
-                    removeAllFiles(fs)
-                    if (!fs.delete()) {
-                        Log.e("StaticStore.removeFiles", "Failed to remove directory " + fs.absolutePath)
-                    }
-                } else if (fs.isFile) {
-                    if (!fs.delete()) {
-                        Log.e("StaticStore.removeFiles", "Failed to remove file " + fs.absolutePath)
-                    }
-                }
-            }
-            if (!f.delete()) {
-                Log.e("StaticStore.removeFiles", "Failed to remove direcotry " + f.absolutePath)
-            }
+    /**
+     * Get MD5 hash from specified stream
+     *
+     * @param stream Stream which will offer MD5 hash code
+     *
+     * @return returns MD5 hashed codes
+     */
+    @Throws(NoSuchAlgorithmException::class)
+    fun streamToMD5(stream: InputStream) : String {
+        val buffer = ByteArray(65536)
+        val md5 = MessageDigest.getInstance("MD5")
+
+        var len: Int
+
+        while(stream.read(buffer).also { len = it } != -1) {
+            md5.update(buffer, 0, len)
         }
+
+        val i = BigInteger(1, md5.digest()).toString(16)
+
+        return String.format("%32s", i).replace(' ', '0')
     }
 
     /**
@@ -1023,14 +1029,6 @@ object StaticStore {
         }
 
     /**
-     * Get current number of pack including [common.pack.PackData.DefPack]
-     * @return number of packs
-     */
-    fun getPackSize(): Int {
-        return UserProfile.getAllPacks().size
-    }
-
-    /**
      * Generate 3 digit formats
      * @param id ID of specific object
      * @return If id is 1 for example, it will return 001
@@ -1050,14 +1048,6 @@ object StaticStore {
                 id.toString()
             }
         }
-    }
-
-    /**
-     * Get list of pack including [common.pack.PackData.DefPack]
-     * @return returns list of packs
-     */
-    fun getPacks(): List<PackData> {
-        return ArrayList(UserProfile.getAllPacks())
     }
 
     @Suppress("unchecked_cast")
@@ -1080,6 +1070,13 @@ object StaticStore {
         }
     }
 
+    /**
+     * Returns animation type by checking specified mode
+     *
+     * @param mode Mode of animation
+     *
+     * @return Returns [UType] by checking specified [mode]. If [mode] is invalid, it will return [UType.WALK] as default
+     */
     fun getAnimType(mode: Int): UType {
         return when (mode) {
             1 -> UType.IDLE
@@ -1092,6 +1089,13 @@ object StaticStore {
         }
     }
 
+    /**
+     * Get pack name from specified pack id
+     *
+     * @param id ID of pack
+     *
+     * @return If app can't find pack name with offered ID, it will return [id]
+     */
     fun getPackName(id: String): String {
         return if (id == Identifier.DEF) {
             Identifier.DEF
@@ -1101,28 +1105,126 @@ object StaticStore {
     }
 
     /**
-     * Get music file with specified [Music]
+     * This method must be used only to music which is saved in device's storage space
      *
-     * @param m Music
-     * @return return [File] which points to specified music
+     * @param m Music of sound effect
+     *
+     * @return File which leads to ogg file where specified sound effect existing
      */
-    fun getMusicFile(m: Music?): File? {
+    fun getMusicDataSource(m: Music?): File? {
         m ?: return null
 
-        val ctx = CommonStatic.ctx
+        if(CommonStatic.ctx == null || CommonStatic.ctx !is AContext)
+            return null
 
-        return if(ctx is AContext) {
-            ctx.getMusicFile(m)
-        } else {
+        val f = (CommonStatic.ctx as AContext).getMusicFile(m)
+
+        return if(!f.exists()) {
+            Log.e("StaticStore::getMusicFile","Music File not existing : ${f.absolutePath}")
+
             null
+        } else {
+            Log.i("StaticStore::getMusicFile", "Music file found : ${f.absolutePath}")
+            f
         }
     }
 
+    fun extractMusic(m: Music, target: File) : File {
+        try {
+            if(!target.exists()) {
+                target.parentFile?.mkdirs()
+                target.createNewFile()
+            }
+
+            val fos = FileOutputStream(target)
+
+            val b = ByteArray(65536)
+
+            var len: Int
+
+            val inp = m.data.stream
+
+            while(inp.read(b).also { len = it } != -1) {
+                fos.write(b, 0, len)
+            }
+
+            fos.close()
+            inp.close()
+        } catch (e: Exception) {
+            Log.e("StaticStore::extractMusic", "Couldn't extract music")
+            e.printStackTrace()
+        } finally {
+            return target
+        }
+    }
+
+    /**
+     * Generate name with specific format with offered [id]
+     *
+     * @param id ID of specific object
+     * @param c Context to get string
+     *
+     * @return Returns "Pack Name - ID" as format
+     */
     fun generateIdName(id: Identifier<*>, c: Context?) : String {
         return if(id.pack == Identifier.DEF) {
             (c?.getString(R.string.pack_default) ?: "Default") +" - "+ Data.trio(id.id)
         } else {
             getPackName(id.pack)+" - "+Data.trio(id.id)
+        }
+    }
+
+    /**
+     * Generate loading texts by checking message app got
+     *
+     * @param ac Activity to get proper message
+     * @param info Information string which app got
+     *
+     * @return Returns converted message string after checking [info]. If [info] has different format, just return [info]
+     */
+    fun getLoadingText(ac: Activity, info: String) : String {
+        return when(info) {
+            "loading basic images" -> ac.getString(R.string.load_bascimg)
+            "loading enemies" -> ac.getString(R.string.load_enemy)
+            "loading units" -> ac.getString(R.string.load_unit)
+            "loading auxiliary data" -> ac.getString(R.string.load_aux)
+            "loading effects" -> ac.getString(R.string.load_effect)
+            "loading backgrounds" -> ac.getString(R.string.load_bg)
+            "loading cat castles" -> ac.getString(R.string.load_castle)
+            "loading souls" -> ac.getString(R.string.load_soul)
+            "loading stages" -> ac.getString(R.string.load_stage)
+            "loading orbs" -> ac.getString(R.string.load_orb)
+            "loading musics" -> ac.getString(R.string.load_music)
+            "process data" -> ac.getString(R.string.load_process)
+            else -> info
+        }
+    }
+
+    /**
+     * Delete specified file
+     *
+     * @param f Targeted [File]
+     * @param deleteItself If this is true, this method will delete [f] too
+     *
+     */
+    fun deleteFile(f: File, deleteItself: Boolean) {
+        if(f.isFile) {
+            f.delete()
+        } else if(f.isDirectory) {
+            val lit = f.listFiles()
+
+            if(lit != null) {
+                for(g in lit) {
+                    if(g.isFile) {
+                        g.delete()
+                    } else if(g.isDirectory) {
+                        deleteFile(g, deleteItself)
+                    }
+                }
+            }
+
+            if(deleteItself)
+                f.delete()
         }
     }
 }

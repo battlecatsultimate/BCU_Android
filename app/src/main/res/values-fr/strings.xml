@@ -255,8 +255,6 @@
     <string name="def_map_name">Nom_Carte</string>
     <string name="def_map_coount">Nombre_Carte</string>
     <string name="map_list_stages">" Étages"</string>
-    <string name="stg_info_stgd">Chargement Données des Cartes En Cours…</string>
-    <string name="stg_info_enem">Chargement Données des Ennemis En Cours…</string>
     <string name="stg_info_enemimg">Chargement Images des Ennemis En Cours…</string>
     <string name="stg_info_enemname">Chargement Noms des Ennemis En Cours…</string>
     <string name="stg_info_stgs">Filtre Cartes En Cours…</string>
@@ -265,8 +263,6 @@
     <string name="abi_imcri">Imu.Coup Critique</string>
     <string name="stg_list_enemic">Chargement Icônes d\'Ennemis En Cours…</string>
     <string name="def_stage_name">Nom_Étage</string>
-    <string name="stg_list_stl">Chargement Données des Étages En Cours…</string>
-    <string name="unit_list_unitload">Chargement Données des Alliés En Cours…</string>
     <string name="unit_list_unitname">Chargement Noms des Alliés En Cours…</string>
     <string name="unit_list_unitic">Chargement Images des Alliés En Cours…</string>
     <string name="map_list_stage">" Étage"</string>
@@ -529,7 +525,6 @@
     <string name="dev_pass_wrong">Mot de Passe Entré Incorrecte</string>
     <string name="dev_pass_activated">Mode Dévéloppeur Activé</string>
     <string name="main_music">Musique</string>
-    <string name="music_read">Lecture Données du Musique En Cours</string>
     <string name="battle_lost">Bataille Perdue</string>
     <string name="battle_won">Battaile Gagné</string>
     <string name="battle_lost_boss">Battaile Perdue\nHP du Patron : _%</string>
@@ -686,4 +681,23 @@
     <string name="main_file_asset">Asset Update Found</string>
     <string name="main_notif_down">Downloaing Files</string>
     <string name="main_notif_music">Downloading Music</string>
+    <string name="main_file_merge">Merging Files…</string>
+    <string name="main_rev_check">Checking Old Files…</string>
+    <string name="main_rev_remove">Removing Old Files…</string>
+    <string name="main_rev_reformat">Reformtting Pack Files…</string>
+    <string name="unit_inf_pack">Pack</string>
+    <string name="load_bascimg">Loading Basic Images…</string>
+    <string name="load_enemy">Loading Enemy Data…</string>
+    <string name="load_unit">Loading Unit Data…</string>
+    <string name="load_aux">Loading Auxiliary Data…</string>
+    <string name="load_effect">Loading Effect Data…</string>
+    <string name="load_bg">Loading Background Data…</string>
+    <string name="load_castle">Loading Cat Base Data…</string>
+    <string name="load_soul">Loading Soul Data…</string>
+    <string name="load_stage">Loading Stage Data…</string>
+    <string name="load_orb">Loading Orb Data…</string>
+    <string name="load_music">Loading Music Data…</string>
+    <string name="load_process">Processing Data…</string>
+    <string name="load_music_duratoin">Processing Music Data…</string>
+    <string name="load_add">Loading UI Data…</string>
 </resources>

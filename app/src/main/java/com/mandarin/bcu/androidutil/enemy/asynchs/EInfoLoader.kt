@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.enemy.adapters.DynamicEmExplanation
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyRecycle
@@ -31,7 +32,7 @@ import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import java.lang.ref.WeakReference
 
-class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
+class EInfoLoader : AsyncTask<Void, String, Void> {
     private val weakReference: WeakReference<Activity>
     private val data: Identifier<AbEnemy>
     private var multi = -1
@@ -48,6 +49,8 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
         this.amulti = amulti
         this.data = data
     }
+
+    private val done = "done"
 
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
@@ -73,76 +76,109 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
 
-        val recyclerView: RecyclerView = activity.findViewById(R.id.eneminftable)
-        val enemyRecycle: EnemyRecycle
+        Definer.define(activity, this::updateProg, this::updateText)
 
-        enemyRecycle = if (multi != -1 && amulti != -1)
-            EnemyRecycle(activity, multi, amulti, data)
-        else
-            EnemyRecycle(activity, data)
-
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = enemyRecycle
-
-        ViewCompat.setNestedScrollingEnabled(recyclerView, false)
-
-        val explain = DynamicEmExplanation(activity, data)
-
-        val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
-
-        viewPager.adapter = explain
-        viewPager.offscreenPageLimit = 1
-
-        val treasure: FloatingActionButton = activity.findViewById(R.id.enemtreasure)
-        val main: ConstraintLayout = activity.findViewById(R.id.enemmainlayout)
-        val treasurelay: ConstraintLayout = activity.findViewById(R.id.enemtreasuretab)
-
-        val displayMetrics = DisplayMetrics()
-
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        val set = AnimatorSet()
-
-        treasure.setOnClickListener {
-            if (!StaticStore.EisOpen) {
-                val slider = ValueAnimator.ofInt(0, treasurelay.width).setDuration(300)
-                slider.addUpdateListener { animation ->
-                    treasurelay.translationX = -(animation.animatedValue as Int).toFloat()
-                    treasurelay.requestLayout()
-                }
-                set.play(slider)
-                set.interpolator = DecelerateInterpolator()
-                set.start()
-                StaticStore.EisOpen = true
-            } else {
-                val view = activity.currentFocus
-                if (view != null) {
-                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(view.windowToken, 0)
-                    treasurelay.clearFocus()
-                }
-                val slider = ValueAnimator.ofInt(treasurelay.width, 0).setDuration(300)
-                slider.addUpdateListener { animation ->
-                    treasurelay.translationX = -(animation.animatedValue as Int).toFloat()
-                    treasurelay.requestLayout()
-                }
-                set.play(slider)
-                set.interpolator = AccelerateInterpolator()
-                set.start()
-                StaticStore.EisOpen = false
-            }
-        }
-
-        treasurelay.setOnTouchListener { _, _ ->
-            main.isClickable = false
-            true
-        }
+        publishProgress(done)
 
         return null
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onProgressUpdate(vararg values: String) {
+        val activity = weakReference.get() ?: return
+
+        when(values[0]) {
+            StaticStore.TEXT -> {
+                val status = activity.findViewById<TextView>(R.id.status)
+
+                status.text = values[1]
+            }
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(values[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = values[1].toInt()
+            }
+            done -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
+
+                val recyclerView: RecyclerView = activity.findViewById(R.id.eneminftable)
+
+                val enemyRecycle: EnemyRecycle = if (multi != -1 && amulti != -1)
+                    EnemyRecycle(activity, multi, amulti, data)
+                else
+                    EnemyRecycle(activity, data)
+
+                recyclerView.layoutManager = LinearLayoutManager(activity)
+                recyclerView.adapter = enemyRecycle
+
+                ViewCompat.setNestedScrollingEnabled(recyclerView, false)
+
+                val explain = DynamicEmExplanation(activity, data)
+
+                val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
+
+                viewPager.adapter = explain
+                viewPager.offscreenPageLimit = 1
+
+                val treasure: FloatingActionButton = activity.findViewById(R.id.enemtreasure)
+                val main: ConstraintLayout = activity.findViewById(R.id.enemmainlayout)
+                val treasurelay: ConstraintLayout = activity.findViewById(R.id.enemtreasuretab)
+
+                val displayMetrics = DisplayMetrics()
+
+                activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+                val set = AnimatorSet()
+
+                treasure.setOnClickListener {
+                    if (!StaticStore.EisOpen) {
+                        val slider = ValueAnimator.ofInt(0, treasurelay.width).setDuration(300)
+                        slider.addUpdateListener { animation ->
+                            treasurelay.translationX = -(animation.animatedValue as Int).toFloat()
+                            treasurelay.requestLayout()
+                        }
+                        set.play(slider)
+                        set.interpolator = DecelerateInterpolator()
+                        set.start()
+                        StaticStore.EisOpen = true
+                    } else {
+                        val view = activity.currentFocus
+                        if (view != null) {
+                            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(view.windowToken, 0)
+                            treasurelay.clearFocus()
+                        }
+                        val slider = ValueAnimator.ofInt(treasurelay.width, 0).setDuration(300)
+                        slider.addUpdateListener { animation ->
+                            treasurelay.translationX = -(animation.animatedValue as Int).toFloat()
+                            treasurelay.requestLayout()
+                        }
+                        set.play(slider)
+                        set.interpolator = AccelerateInterpolator()
+                        set.start()
+                        StaticStore.EisOpen = false
+                    }
+                }
+
+                treasurelay.setOnTouchListener { _, _ ->
+                    main.isClickable = false
+                    true
+                }
+            }
+        }
     }
 
     override fun onPostExecute(result: Void?) {
@@ -162,9 +198,22 @@ class EInfoLoader : AsyncTask<Void?, Int?, Void?> {
             activity.finish()
         }
         val scrollView = activity.findViewById<ScrollView>(R.id.eneminfscroll)
-        val prog = activity.findViewById<ProgressBar>(R.id.eneminfprog)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
+        val st = activity.findViewById<TextView>(R.id.status)
+
         scrollView.visibility = View.VISIBLE
         eanim.visibility = View.VISIBLE
         prog.visibility = View.GONE
+        st.visibility = View.GONE
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 }

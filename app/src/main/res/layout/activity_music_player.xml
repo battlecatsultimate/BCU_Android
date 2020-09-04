@@ -108,13 +108,13 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"
-            android:tint="?attr/HintPrimary"
             android:tintMode="src_in"
             app:layout_constraintBottom_toTopOf="@+id/musicname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cd" />
+            app:srcCompat="@drawable/ic_cd"
+            app:tint="?attr/HintPrimary" />
 
         <ImageView
             android:id="@+id/musicmute"
@@ -122,12 +122,12 @@
             android:layout_height="16dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:tint="?attr/HintPrimary"
             android:tintMode="src_in"
             app:layout_constraintBottom_toBottomOf="@+id/musicloop"
             app:layout_constraintStart_toEndOf="@+id/musicloop"
             app:layout_constraintTop_toTopOf="@+id/musicloop"
-            app:srcCompat="@drawable/ic_volume_mute_black_24dp" />
+            app:srcCompat="@drawable/ic_volume_mute_black_24dp"
+            app:tint="?attr/HintPrimary" />
 
         <ImageView
             android:id="@+id/musicvol"
@@ -135,12 +135,12 @@
             android:layout_height="16dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@null"
-            android:tint="?attr/HintPrimary"
             android:tintMode="src_in"
             app:layout_constraintBottom_toBottomOf="@+id/musicshuff"
             app:layout_constraintEnd_toStartOf="@+id/musicshuff"
             app:layout_constraintTop_toTopOf="@+id/musicshuff"
-            app:srcCompat="@drawable/ic_volume_up_black_24dp" />
+            app:srcCompat="@drawable/ic_volume_up_black_24dp"
+            app:tint="?attr/HintPrimary" />
 
         <TextView
             android:id="@+id/musiccurrent"
@@ -306,7 +306,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
-        android:id="@+id/musicprogbar"
+        android:id="@+id/prog"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -316,14 +316,14 @@
         app:layout_constraintTop_toBottomOf="@+id/musictool" />
 
     <TextView
-        android:id="@+id/musicloadt"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/music_read"
+        android:text="@string/load_music_duratoin"
         android:textColor="?attr/TextPrimary"
-        app:layout_constraintEnd_toEndOf="@+id/musicprogbar"
-        app:layout_constraintStart_toStartOf="@+id/musicprogbar"
-        app:layout_constraintTop_toBottomOf="@+id/musicprogbar" />
+        app:layout_constraintEnd_toEndOf="@+id/prog"
+        app:layout_constraintStart_toStartOf="@+id/prog"
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

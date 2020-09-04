@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
@@ -22,8 +23,10 @@ import common.pack.UserProfile
 import java.lang.ref.WeakReference
 import kotlin.math.round
 
-class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTask<Void, Int, Void>() {
+class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTask<Void, String, Void>() {
     private val weak = WeakReference(activity)
+
+    private val done = "done"
 
     override fun onPreExecute() {
         val ac = weak.get() ?: return
@@ -35,23 +38,31 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
-        weak.get() ?: return null
+        val ac = weak.get() ?: return null
+
+        Definer.define(ac, this::updateProg, this::updateText)
+
+        publishProgress(StaticStore.TEXT, ac.getString(R.string.load_music_duratoin))
 
         if(StaticStore.musicnames.size != UserProfile.getAllPacks().size || StaticStore.musicData.isEmpty()) {
             StaticStore.musicnames.clear()
             StaticStore.musicData.clear()
+            StaticStore.durations.clear()
 
             for (p in UserProfile.getAllPacks()) {
                 val names = SparseArray<String>()
 
                 for (j in p.musics.list.indices) {
-                    val m = p.musics[j]
+                    val m = p.musics.list[j]
 
-                    val f = StaticStore.getMusicFile(m)
+                    val f = StaticStore.getMusicDataSource(m) ?: continue
 
                     val sp = SoundPlayer()
-                    sp.setDataSource(f.toString())
+
+                    sp.setDataSource(f.absolutePath)
+
                     sp.prepare()
+
                     StaticStore.durations.add(sp.duration)
 
                     var time = sp.duration.toFloat() / 1000f
@@ -77,6 +88,8 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
                     names.append(m.id.id, "$mins:$secs")
 
                     StaticStore.musicData.add(m.id)
+
+                    println(j)
                 }
 
                 if(p is PackData.DefPack) {
@@ -87,42 +100,64 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
             }
         }
 
-        publishProgress(0)
+        publishProgress(done)
 
         return null
     }
 
-    override fun onProgressUpdate(vararg values: Int?) {
+    override fun onProgressUpdate(vararg values: String) {
         val ac = weak.get() ?: return
 
-        val loadt: TextView = ac.findViewById(R.id.mulistloadt)
-        val tab: TabLayout = ac.findViewById(R.id.mulisttab)
-        val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
+        val st = ac.findViewById<TextView>(R.id.status)
 
-        loadt.text = ac.getString(R.string.medal_loading_data)
+        when(values[0]) {
+            StaticStore.TEXT -> st.text = values[1]
+            StaticStore.PROG -> {
+                val prog = ac.findViewById<ProgressBar>(R.id.prog)
 
-        fm ?: return
+                if(values[1].toInt() == -1) {
+                    prog.isIndeterminate = true
 
-        pager.removeAllViewsInLayout()
-        pager.adapter = MusicListTab(fm)
-        pager.offscreenPageLimit = existingPackNumber()
-        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
+                    return
+                }
 
-        tab.setupWithViewPager(pager)
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = values[1].toInt()
+            }
+            done -> {
+                val prog = ac.findViewById<ProgressBar>(R.id.prog)
+                val tab: TabLayout = ac.findViewById(R.id.mulisttab)
+                val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
+
+                st.text = ac.getString(R.string.medal_loading_data)
+
+                prog.isIndeterminate = true
+
+                fm ?: return
+
+                pager.removeAllViewsInLayout()
+                pager.adapter = MusicListTab(fm)
+                pager.offscreenPageLimit = existingPackNumber()
+                pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
+
+                tab.setupWithViewPager(pager)
+            }
+        }
     }
 
     override fun onPostExecute(result: Void?) {
         val ac = weak.get() ?: return
 
-        val loadt: TextView = ac.findViewById(R.id.mulistloadt)
-        val prog: ProgressBar = ac.findViewById(R.id.mulistprog)
+        val loadt: TextView = ac.findViewById(R.id.status)
+        val prog: ProgressBar = ac.findViewById(R.id.prog)
         val tab: TabLayout = ac.findViewById(R.id.mulisttab)
         val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
 
         setAppear(pager)
         setDisappear(loadt, prog)
 
-        if(UserProfile.getAllPacks().size > 1) {
+        if(existingPackNumber() > 1) {
             setAppear(tab)
         }
     }
@@ -150,6 +185,16 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
         }
 
         return res
+    }
+
+    private fun updateText(info: String) {
+        val ac = weak.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     inner class MusicListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -191,7 +236,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
                         weak.get()?.getString(R.string.pack_default) ?: "Default"
                     }
                     is PackData.UserPack -> {
-                        StaticStore.getPackName(pack.desc.id)
+                        StaticStore.getPackName(pack.sid)
                     }
                     else -> {
                         ""
@@ -219,7 +264,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : AsyncTa
                     if(p is PackData.DefPack) {
                         res.add(Identifier.DEF)
                     } else if(p is PackData.UserPack) {
-                        res.add(p.desc.id)
+                        res.add(p.sid)
                     }
                 }
             }

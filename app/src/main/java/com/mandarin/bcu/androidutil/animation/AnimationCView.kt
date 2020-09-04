@@ -61,26 +61,30 @@ class AnimationCView : View {
 
         val value = StaticStore.getAnimType(mode)
 
-        anim = data.get().forms[form].getEAnim(value)
-        anim?.setTime(StaticStore.frame)
-        this.textView = textView
-        this.seekBar = seekBar
-        this.fpsind = fpsind
-        this.gif = gif
-        CommonStatic.getConfig().ref = axis
-        range.style = Paint.Style.STROKE
-        if (night) {
-            p.color = Color.argb(255, 54, 54, 54)
-            range.color = Color.GREEN
-        } else {
-            p.color = Color.argb(255, 255, 255, 255)
-            range.color = Color.RED
+        val u = Identifier.get(data)
+
+        if(u != null) {
+            anim = u.forms[form].getEAnim(value)
+            anim?.setTime(StaticStore.frame)
+            this.textView = textView
+            this.seekBar = seekBar
+            this.fpsind = fpsind
+            this.gif = gif
+            CommonStatic.getConfig().ref = axis
+            range.style = Paint.Style.STROKE
+            if (night) {
+                p.color = Color.argb(255, 54, 54, 54)
+                range.color = Color.GREEN
+            } else {
+                p.color = Color.argb(255, 255, 255, 255)
+                range.color = Color.RED
+            }
+            p1.isFilterBitmap = true
+            p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
+            cv = CVGraphics(Canvas(), p1, bp, night)
+            this.night = night
+            StaticStore.keepDoing = true
         }
-        p1.isFilterBitmap = true
-        p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
-        cv = CVGraphics(Canvas(), p1, bp, night)
-        this.night = night
-        StaticStore.keepDoing = true
     }
 
     constructor(context: Activity?, data: Identifier<AbEnemy>, mode: Int, night: Boolean, axis: Boolean, textView: TextView?, seekBar: SeekBar?, fpsind: TextView?, gif: TextView?) : super(context) {
@@ -92,6 +96,7 @@ class AnimationCView : View {
         this.data = data
 
         if(e is Enemy) {
+            e.anim.load()
             anim = e.getEAnim(value)
             anim?.setTime(StaticStore.frame)
             this.textView = textView
@@ -133,25 +138,47 @@ class AnimationCView : View {
             if (t1 != -1L && t - t1 != 0L) {
                 fps = 1000L / (t - t1)
             }
+
             p2 = P.newP(width.toFloat() / 2 + posx.toDouble(), height.toFloat() * 2 / 3 + posy.toDouble())
+
             cv = CVGraphics(canvas, p1, bp, night)
-            if (fps < 30) sleeptime = (sleeptime * 0.9 - 0.1).toLong() else if (fps > 30)sleeptime = (sleeptime * 0.9+0.1).toLong()
-            if (!trans) canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), p)
+
+            if (fps < 30)
+                sleeptime = (sleeptime * 0.9 - 0.1).toLong()
+            else if (fps > 30)
+                sleeptime = (sleeptime * 0.9+0.1).toLong()
+
+            if (!trans)
+                canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), p)
+
             anim!!.draw(cv, p2, size.toDouble())
             anim!!.update(true)
+
             StaticStore.frame++
+
             t1 = t
+
             P.delete(p2)
         } else {
             if (t1 != -1L && t - t1 != 0L) {
                 fps = 1000L / (t - t1)
             }
+
             p2 = P.newP(width.toFloat() / 2 + posx.toDouble(), height.toFloat() * 2 / 3 + posy.toDouble())
             cv = CVGraphics(canvas, p1, bp, night)
-            if (fps < 30) sleeptime = (sleeptime * 0.9 - 0.1).toLong() else if (fps > 30)sleeptime = (sleeptime * 0.9+0.1).toLong()
-            if (!trans) canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), p)
+
+            if (fps < 30)
+                sleeptime = (sleeptime * 0.9 - 0.1).toLong()
+            else if (fps > 30)
+                sleeptime = (sleeptime * 0.9+0.1).toLong()
+
+            if (!trans)
+                canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), p)
+
             anim!!.draw(cv, p2, size.toDouble())
+
             P.delete(p2)
+
             t1 = t
         }
     }

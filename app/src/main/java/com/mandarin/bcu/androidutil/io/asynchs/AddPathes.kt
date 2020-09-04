@@ -2,31 +2,29 @@ package com.mandarin.bcu.androidutil.io.asynchs
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.mandarin.bcu.MainActivity
+import com.mandarin.bcu.PackConflictSolve
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.pack.asynchs.PackExtract
+import com.mandarin.bcu.androidutil.pack.PackConflict
 import common.io.assets.AssetLoader
 import common.pack.UserProfile
-import common.system.files.VFile
 import java.lang.ref.WeakReference
 
 class AddPathes internal constructor(activity: Activity, private val config: Boolean) : AsyncTask<Void, String, Void>() {
-    companion object {
-        private const val TEXT = "text"
-    }
 
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
 
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
-        val checkstate = activity.findViewById<TextView>(R.id.updatestate)
-        val prog = activity.findViewById<ProgressBar>(R.id.updateprog)
+        val checkstate = activity.findViewById<TextView>(R.id.status)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
 
         checkstate.setText(R.string.main_file_read)
         prog.isIndeterminate = true
@@ -36,19 +34,17 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
         val activity = weakReference.get() ?: return null
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
+        publishProgress(StaticStore.TEXT, activity.getString(R.string.main_file_merge))
+
         AssetLoader.merge()
+
+        publishProgress(StaticStore.TEXT, activity.getString(R.string.main_file_read))
 
         DefineItf().init(activity)
 
         UserProfile.profile()
 
-        AssetLoader.load(this::updateProgress)
-
-        printFileList(VFile.getBCFileTree())
-
-        UserProfile.getBCData().load(this::updateText, this::updateProgress)
-
-        Definer.define(activity)
+        Definer.define(activity, this::updateProgress, this::updateText)
 
         StaticStore.getLang(shared.getInt("Language", 0))
 
@@ -57,18 +53,27 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
         return null
     }
 
-    override fun onProgressUpdate(vararg values: String?) {
+    override fun onProgressUpdate(vararg values: String) {
         val ac = weakReference.get() ?: return
 
-        val array = Array(values.size) {
-            values[it] ?: return
-        }
+        when(values[0]) {
+            StaticStore.TEXT -> {
+                val st = ac.findViewById<TextView>(R.id.status)
 
-        when(array[1]) {
-            TEXT -> {
-                val st = ac.findViewById<TextView>(R.id.updatestate)
+                st.text = values[1]
+            }
+            StaticStore.PROG -> {
+                val prog = ac.findViewById<ProgressBar>(R.id.prog)
 
-                st.text = array[0]
+                if(values[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = values[1].toInt()
             }
         }
     }
@@ -76,41 +81,31 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
     override fun onPostExecute(result: Void?) {
         val activity = weakReference.get() ?: return
 
-        if(!MainActivity.isRunning) {
-            PackExtract(activity, config).execute()
+        StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
+
+        if(PackConflict.conflicts.isEmpty()) {
+            if (!MainActivity.isRunning) {
+                val intent = Intent(activity, MainActivity::class.java)
+                intent.putExtra("config", config)
+                activity.startActivity(intent)
+                activity.finish()
+            }
+        } else {
+            val intent = Intent(activity, PackConflictSolve::class.java)
+            activity.startActivity(intent)
+            activity.finish()
         }
     }
 
     private fun updateText(info: String) {
-        weakReference.get() ?: return
+        val ac = weakReference.get() ?: return
 
-        publishProgress(info, TEXT)
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
     }
 
     private fun updateProgress(progress: Double) {
-        val ac = weakReference.get() ?: return
+        weakReference.get() ?: return
 
-        val prog = ac.findViewById<ProgressBar>(R.id.updateprog)
-
-        prog.isIndeterminate = false
-
-        prog.max = 10000
-
-        prog.progress = (progress*10000).toInt()
-    }
-
-    private fun printFileList(v: VFile) {
-        val lit = v.list()
-
-        if(lit == null) {
-            if(v.path.contains("029.imgcut") && v.path.contains("page")) {
-                println(v.data.readLine())
-            }
-            return
-        }
-
-        for(vf in lit) {
-            printFileList(vf)
-        }
+        publishProgress(StaticStore.PROG, (progress*10000).toInt().toString())
     }
 }

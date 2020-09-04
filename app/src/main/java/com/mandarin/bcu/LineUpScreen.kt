@@ -132,10 +132,14 @@ class LineUpScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+    override fun onResume() {
+        AContext.check()
 
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

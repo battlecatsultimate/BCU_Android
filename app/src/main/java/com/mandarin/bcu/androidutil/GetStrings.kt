@@ -18,15 +18,17 @@ import java.text.DecimalFormat
 import java.util.*
 
 class GetStrings(private val c: Context) {
-    private val abilID = arrayOf("1", "2", "3", "8", "10", "11", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "25", "26", "27", "29", "30", "31", "32", "37", "38", "39", "40", "51")
-    private val talID = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_cr,
-            R.string.sch_abi_zk, R.string.sch_abi_bb, R.string.sch_abi_em, R.string.sch_abi_wv, R.string.talen_we, R.string.talen_fr, R.string.talen_sl, R.string.talen_kb
-            , R.string.talen_wv, R.string.unit_info_cost, R.string.unit_info_cd, R.string.unit_info_spd, R.string.sch_abi_ic, R.string.talen_cu,
-            R.string.unit_info_atk, R.string.unit_info_hp, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_abi_iv)
-    private val talTool = arrayOfNulls<String>(talID.size)
-    private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
-    private val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
-    private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
+    companion object {
+        private val abilID = arrayOf("1", "2", "3", "8", "10", "11", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "25", "26", "27", "29", "30", "31", "32", "37", "38", "39", "40", "51")
+        private val talID = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_cr,
+                R.string.sch_abi_zk, R.string.sch_abi_bb, R.string.sch_abi_em, R.string.sch_abi_wv, R.string.talen_we, R.string.talen_fr, R.string.talen_sl, R.string.talen_kb
+                , R.string.talen_wv, R.string.unit_info_cost, R.string.unit_info_cd, R.string.unit_info_spd, R.string.sch_abi_ic, R.string.talen_cu,
+                R.string.unit_info_atk, R.string.unit_info_hp, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_abi_iv)
+        private val talTool = arrayOfNulls<String>(talID.size)
+        private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
+        val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
+        private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
+    }
     val talList: Unit
         get() {
             for (i in talTool.indices) talTool[i] = c.getString(talID[i])
@@ -182,6 +184,30 @@ class GetStrings(private val c: Context) {
 
             } else
                 DecimalFormat("#.##").format(atkdat[0][1].toDouble() / 30) + "s"
+        }
+    }
+
+    fun getPackName(id: Identifier<*>, isRaw: Boolean) : String {
+        return if(isRaw) {
+            id.pack
+        } else {
+            if(id.pack == Identifier.DEF) {
+                c.getString(R.string.pack_default)
+            } else {
+                StaticStore.getPackName(id.pack)
+            }
+        }
+    }
+
+    fun getPackName(pack: String, isRaw: Boolean) : String {
+        return if(isRaw) {
+            pack
+        } else {
+            if(pack == Identifier.DEF || mapcodes.contains(pack)) {
+                c.getString(R.string.pack_default)
+            } else {
+                StaticStore.getPackName(pack)
+            }
         }
     }
 
@@ -656,15 +682,15 @@ class GetStrings(private val c: Context) {
 
     fun getID(mapcode: String, stid: Int, posit: Int): String {
         return if(mapcode.length == 6) {
-            val index = mapcolcid.indexOf(mapcode)
+            val index = mapcodes.indexOf(mapcode)
 
             if(index != -1) {
-                "${mapcodes[index]}-$stid-$posit"
+                "${mapcolcid[index]}-$stid-$posit"
             } else {
                 "$mapcode-$stid-$posit"
             }
         } else {
-            "${StaticStore.getPackName(mapcode)}-$stid=$posit"
+            "$stid=$posit"
         }
     }
 

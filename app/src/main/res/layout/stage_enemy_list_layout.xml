@@ -192,7 +192,7 @@
             <Button
                 android:id="@+id/enemlistst"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0.375"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
@@ -205,7 +205,7 @@
             <Button
                 android:id="@+id/enemlistres"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0.625"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
@@ -225,7 +225,7 @@
             <TextView
                 android:id="@+id/enemliststr"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0.375"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -237,7 +237,7 @@
             <TextView
                 android:id="@+id/enemlistresr"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0.625"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"

@@ -137,7 +137,7 @@
         app:layout_constraintVertical_bias="1" />
 
     <ProgressBar
-        android:id="@+id/prepareprog"
+        android:id="@+id/prog"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -147,13 +147,13 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar10" />
 
     <TextView
-        android:id="@+id/preparet"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/unit_list_unitload"
+        android:text="@string/load_process"
         android:textColor="?attr/TextPrimary"
-        app:layout_constraintEnd_toEndOf="@+id/prepareprog"
-        app:layout_constraintStart_toStartOf="@+id/prepareprog"
-        app:layout_constraintTop_toBottomOf="@+id/prepareprog" />
+        app:layout_constraintEnd_toEndOf="@+id/prog"
+        app:layout_constraintStart_toStartOf="@+id/prog"
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 </androidx.constraintlayout.widget.ConstraintLayout>

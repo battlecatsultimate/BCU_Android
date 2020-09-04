@@ -33,7 +33,7 @@ object Revalidater {
                 StaticStore.mapcolcname.add(context.getString(i))
             }
 
-            for(i in StaticStore.getPacks()) {
+            for(i in UserProfile.getAllPacks()) {
                 if(i is PackData.DefPack)
                     continue
                 else if(i is PackData.UserPack) {

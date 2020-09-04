@@ -27,7 +27,7 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
                 StatFilterElement.CD, StatFilterElement.BARRIER, StatFilterElement.PREATK,StatFilterElement.ATKCOUNT)
         val enemyType = intArrayOf(R.string.stat_sch_hp, R.string.stat_sch_atk, R.string.stat_sch_hb, R.string.unit_info_rang, R.string.enem_info_drop, R.string.unit_info_spd, R.string.unit_info_cd, R.string.enem_info_barrier, R.string.unit_info_pre, R.string.stat_sch_atkcount)
         val enemyData = intArrayOf(StatFilterElement.HP,StatFilterElement.ATK, StatFilterElement.HB,StatFilterElement.RANGE,StatFilterElement.COSTDROP,StatFilterElement.SPEED,
-                StatFilterElement.BARRIER, StatFilterElement.PREATK, StatFilterElement.ATKCOUNT)
+                StatFilterElement.CD, StatFilterElement.BARRIER, StatFilterElement.PREATK, StatFilterElement.ATKCOUNT)
     }
 
     class ViewHolder constructor(row: View) : RecyclerView.ViewHolder(row) {

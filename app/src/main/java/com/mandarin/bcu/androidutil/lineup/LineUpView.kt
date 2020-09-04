@@ -9,8 +9,8 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.battle.BasisSet
 import common.battle.LineUp
+import common.system.files.VFile
 import common.util.unit.Form
-import java.io.File
 import java.util.*
 
 class LineUpView(context: Context?) : View(context) {
@@ -97,14 +97,9 @@ class LineUpView(context: Context?) : View(context) {
     var yello = false
 
     init {
-        val path = StaticStore.getExternalPath(context)+"org/page/uni.png"
-        val f = File(path)
+        val path = "./org/page/uni.png"
 
-        empty = if (!f.exists()) {
-            StaticStore.empty(context, 10f, 10f)
-        } else {
-            BitmapFactory.decodeFile(path)
-        }
+        empty = VFile.get(path).data.img.bimg() as Bitmap
 
         this.f = StaticStore.dptopx(8f, context).toFloat()
 

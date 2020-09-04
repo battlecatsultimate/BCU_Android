@@ -24,7 +24,6 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MediaPrepare
 import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.battle.BDefinder
 import com.mandarin.bcu.androidutil.battle.BattleView
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
@@ -39,12 +38,11 @@ import common.battle.SBCtrl
 import common.pack.Identifier
 import common.system.P
 import common.util.stage.Stage
-import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.math.ln
 
-class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int) : AsyncTask<Void?, String?, Void?>() {
+class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int) : AsyncTask<Void, String, Void>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var x = 0f
     private var y = 0f
@@ -54,9 +52,6 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
     private var previousScale = 0f
     private var updateScale = false
 
-    private val enemy = "0"
-    private val map = "1"
-    private val battle = "2"
     private val done = "3"
 
     public override fun onPreExecute() {
@@ -71,22 +66,30 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-
-        Definer.define(activity)
-        publishProgress(battle)
-        BDefinder().define(activity)
+        Definer.define(activity, this::updateProg, this::updateText)
         publishProgress(done)
         return null
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg results: String?) {
+    override fun onProgressUpdate(vararg results: String) {
         val activity = weakReference.get() ?: return
-        val loadt = activity.findViewById<TextView>(R.id.battleloadt)
+        val loadt = activity.findViewById<TextView>(R.id.status)
         when (results[0]) {
-            enemy -> loadt.setText(R.string.stg_info_enem)
-            map -> loadt.setText(R.string.stg_list_stl)
-            battle -> loadt.setText(R.string.battle_loading)
+            StaticStore.TEXT -> loadt.text = results[1]
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(results[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = results[1].toInt()
+            }
             done -> {
                 val layout = activity.findViewById<LinearLayout>(R.id.battlelayout)
 
@@ -120,6 +123,9 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                 val slow: FloatingActionButton = activity.findViewById(R.id.battleslow)
                 val reveal: RelativeLayout = activity.findViewById(R.id.battleconfiglayout)
                 val root: ConstraintLayout = activity.findViewById(R.id.battleroot)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
 
                 val t = MaterialContainerTransform().apply {
                     startView = actionButton
@@ -563,62 +569,56 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 if (SoundHandler.twoMusic) {
                     SoundHandler.lop1 = battleView.painter.bf.sb.st.loop1
-                    SoundHandler.mu1 = StaticStore.getMusicFile(Identifier.get(battleView.painter.bf.sb.st.mus1))
+                    SoundHandler.mu1 = StaticStore.getMusicDataSource(Identifier.get(battleView.painter.bf.sb.st.mus1))
                 }
 
                 if(battleView.painter.bf.sb.st.mus0 != null) {
-                    val f = StaticStore.getMusicFile(Identifier.get(battleView.painter.bf.sb.st.mus0))
+                    val f = StaticStore.getMusicDataSource(Identifier.get(battleView.painter.bf.sb.st.mus0))
 
                     if (f != null) {
-                        if (f.exists()) {
-                            try {
-                                SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            }
-                        }
-                    }
+                        SoundHandler.MUSIC.setDataSource(f.absolutePath)
 
-                    SoundHandler.MUSIC.prepareAsync()
+                        SoundHandler.MUSIC.prepareAsync()
 
-                    SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                        override fun prepare(mp: MediaPlayer?) {
-                            if (SoundHandler.musicPlay) {
-                                if(battleView.painter.bf.sb.st.loop0 > 0) {
-                                    if(battleView.painter.bf.sb.st.loop0 < SoundHandler.MUSIC.duration) {
-                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
-                                            override fun onFinish() {
-                                                SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
+                        SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                            override fun prepare(mp: MediaPlayer?) {
+                                if (SoundHandler.musicPlay) {
+                                    if(battleView.painter.bf.sb.st.loop0 > 0) {
+                                        if(battleView.painter.bf.sb.st.loop0 < SoundHandler.MUSIC.duration) {
+                                            SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
+                                                override fun onFinish() {
+                                                    SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
 
-                                                SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, (SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, true) {
-                                                    override fun onFinish() {
-                                                        SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
+                                                    SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, (SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, true) {
+                                                        override fun onFinish() {
+                                                            SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
 
-                                                        SoundHandler.timer?.create()
+                                                            SoundHandler.timer?.create()
+                                                        }
+
+                                                        override fun onTick(millisUntilFinished: Long) {}
+
                                                     }
 
-                                                    override fun onTick(millisUntilFinished: Long) {}
-
+                                                    SoundHandler.timer?.create()
                                                 }
 
-                                                SoundHandler.timer?.create()
+                                                override fun onTick(millisUntilFinished: Long) {}
+
                                             }
 
-                                            override fun onTick(millisUntilFinished: Long) {}
-
+                                            SoundHandler.timer?.create()
                                         }
-
-                                        SoundHandler.timer?.create()
+                                    } else {
+                                        SoundHandler.timer = null
+                                        SoundHandler.MUSIC.isLooping = true
                                     }
-                                } else {
-                                    SoundHandler.timer = null
-                                    SoundHandler.MUSIC.isLooping = true
-                                }
 
-                                SoundHandler.MUSIC.start()
+                                    SoundHandler.MUSIC.start()
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
             }
         }
@@ -628,8 +628,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
         val activity = weakReference.get() ?: return
 
         val battleView: BattleView = activity.findViewById(R.id.battleView)
-        val prog = activity.findViewById<ProgressBar>(R.id.battleprog)
-        val loadt = activity.findViewById<TextView>(R.id.battleloadt)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
+        val loadt = activity.findViewById<TextView>(R.id.status)
         val fab: FloatingActionButton = activity.findViewById(R.id.battlepause)
         val fast: FloatingActionButton = activity.findViewById(R.id.battlefast)
         val slow: FloatingActionButton = activity.findViewById(R.id.battleslow)
@@ -647,6 +647,16 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
         (loadt.parent as ViewManager).removeView(loadt)
 
         battleView.initialized = true
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     private fun setAppear(vararg views: View) {

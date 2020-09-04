@@ -90,15 +90,9 @@ class EnemyListPager : Fragment() {
             nores.visibility = View.GONE
             list.visibility = View.VISIBLE
 
-            val names = ArrayList<Identifier<AbEnemy>>()
-
-            for(i in numbers) {
-                names.add(i)
-            }
-
             val cont = context ?: return
 
-            val adapter = EnemyListAdapter(cont, names, pid)
+            val adapter = EnemyListAdapter(cont, numbers, pid)
 
             list.adapter = adapter
 

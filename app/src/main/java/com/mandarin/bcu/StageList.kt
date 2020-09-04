@@ -72,15 +72,8 @@ class StageList : AppCompatActivity() {
 
         if (extra != null) {
             val data = StaticStore.transformIdentifier<StageMap>(extra.getString("Data")) ?: return
-            val stm = Identifier.get(data) ?: return
-
-            val stname = MultiLangCont.get(stm) ?: stm.name ?: Data.trio(data.id)
 
             custom = extra.getBoolean("custom")
-
-            val name = findViewById<TextView>(R.id.stglistname)
-
-            name.text = stname
 
             val stageLoader = StageLoader(this, data, custom)
 
@@ -122,7 +115,14 @@ class StageList : AppCompatActivity() {
         super.onDestroy()
 
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
+    }
 }

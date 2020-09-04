@@ -69,15 +69,37 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:stretchColumns="*"
+        android:stretchColumns="1,3,5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/talenrow">
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_shape">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/unitinfpack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_inf_pack"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/unitinfpackr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="?attr/TextPrimary" />
 
             <TextView
                 android:id="@+id/unitinfid"
@@ -95,7 +117,7 @@
                 android:id="@+id/unitinfidr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_span="1"
+                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -106,7 +128,9 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/cell_shape">
+                android:layout_span="1"
+                android:background="@drawable/cell_shape"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/unitinficon"
@@ -117,10 +141,16 @@
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp" />
             </TableRow>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
 
             <TextView
                 android:id="@+id/unitinfhp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -132,7 +162,7 @@
 
             <TextView
                 android:id="@+id/unitinfhpr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -143,7 +173,7 @@
 
             <TextView
                 android:id="@+id/unitinfhb"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -155,8 +185,9 @@
 
             <TextView
                 android:id="@+id/unitinfhbr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -167,13 +198,13 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/cell_shape">
 
             <TextView
                 android:id="@+id/unitinflev"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -184,9 +215,8 @@
                 android:textStyle="bold" />
 
             <TableRow
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape">
 
                 <Spinner
@@ -225,7 +255,7 @@
 
             <Button
                 android:id="@+id/unitinfatk"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -237,7 +267,7 @@
 
             <TextView
                 android:id="@+id/unitinfatkr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/cell_shape"
@@ -250,13 +280,13 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/cell_shape">
 
             <Button
                 android:id="@+id/unitinfatktime"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_atktime"
@@ -266,9 +296,8 @@
 
             <TextView
                 android:id="@+id/unitinfatktimer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -278,7 +307,7 @@
 
             <TextView
                 android:id="@+id/unitinfabilt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -290,7 +319,7 @@
 
             <TextView
                 android:id="@+id/unitinfabiltr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/cell_shape"
@@ -303,13 +332,13 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/cell_shape">
 
             <Button
                 android:id="@+id/unitinfpreatk"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_pre"
@@ -319,9 +348,8 @@
 
             <TextView
                 android:id="@+id/unitinfpreatkr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -331,7 +359,7 @@
 
             <Button
                 android:id="@+id/unitinfpost"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -342,7 +370,7 @@
 
             <TextView
                 android:id="@+id/unitinfpostr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -353,7 +381,7 @@
 
             <Button
                 android:id="@+id/unitinftba"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_tba"
@@ -363,7 +391,7 @@
 
             <TextView
                 android:id="@+id/unitinftbar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -375,13 +403,13 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/cell_shape">
 
             <TextView
                 android:id="@+id/unitinftrait"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_span="1"
                 android:background="@drawable/cell_shape"
@@ -394,9 +422,8 @@
 
             <TextView
                 android:id="@+id/unitinftraitr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -406,7 +433,7 @@
 
             <TextView
                 android:id="@+id/unitinfsimu"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -418,7 +445,7 @@
 
             <TextView
                 android:id="@+id/unitinfsimur"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -429,7 +456,7 @@
 
             <TextView
                 android:id="@+id/unitinfcost"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -441,7 +468,7 @@
 
             <TextView
                 android:id="@+id/unitinfcostr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -453,15 +480,14 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/cell_shape">
 
             <TextView
                 android:id="@+id/unitinfrang"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="1"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -472,9 +498,8 @@
 
             <TextView
                 android:id="@+id/unitinfrangr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -484,7 +509,7 @@
 
             <Button
                 android:id="@+id/unitinfcd"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -496,9 +521,8 @@
 
             <TextView
                 android:id="@+id/unitinfcdr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="1"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -508,7 +532,7 @@
 
             <TextView
                 android:id="@+id/unitinfspd"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_span="1"
                 android:background="@drawable/cell_shape"
@@ -521,9 +545,8 @@
 
             <TextView
                 android:id="@+id/unitinfspdr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="1"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingTop="12dp"
@@ -534,13 +557,13 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/cell_shape">
 
             <TextView
                 android:id="@+id/unitinfabil"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center_horizontal|center_vertical"
@@ -553,7 +576,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_span="6"
+                android:layout_span="5"
                 android:gravity="center_horizontal|center_vertical">
 
                 <TextView
@@ -601,7 +624,7 @@
         android:layout_marginStart="18dp"
         android:backgroundTint="?attr/ButtonPrimary"
         android:text="@string/unit_info_fr"
-        android:textAllCaps="true"
+        android:textAllCaps="false"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/unitinfname"
         app:layout_constraintStart_toEndOf="@+id/unitinfname"

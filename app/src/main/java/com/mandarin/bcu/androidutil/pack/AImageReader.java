@@ -33,8 +33,6 @@ public class AImageReader implements CommonStatic.ImgReader {
     public File readFile(InStream is) {
         String path = is.nextString();
 
-        System.out.println(path);
-
         if(path.equals(""))
             return null;
 
@@ -53,12 +51,7 @@ public class AImageReader implements CommonStatic.ImgReader {
         if(str == null || str.equals(""))
             return null;
 
-        try {
-            return FIBM.builder.build(str);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new FIBM(str);
     }
 
     @Override

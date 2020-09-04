@@ -49,6 +49,8 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     private var talents = false
     private var pcoins = intArrayOf(0,0,0,0,0)
 
+    private var isRaw = false
+
     init {
         this.context = context
         this.names = names
@@ -62,6 +64,53 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         color = intArrayOf(
                 StaticStore.getAttributeColor(context, R.attr.TextPrimary)
         )
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val pack: Button = itemView.findViewById(R.id.unitinfpack)
+        val unitpack: TextView = itemView.findViewById(R.id.unitinfpackr)
+        var frse: Button = itemView.findViewById(R.id.unitinffrse)
+        var unitname: TextView = itemView.findViewById(R.id.unitinfname)
+        var unitid: TextView = itemView.findViewById(R.id.unitinfidr)
+        var unithp: TextView = itemView.findViewById(R.id.unitinfhpr)
+        var unithb: TextView = itemView.findViewById(R.id.unitinfhbr)
+        var unitlevel: Spinner = itemView.findViewById(R.id.unitinflevr)
+        var unitlevelp: Spinner = itemView.findViewById(R.id.unitinflevpr)
+        var unitplus: TextView = itemView.findViewById(R.id.unitinfplus)
+        var uniticon: ImageView = itemView.findViewById(R.id.unitinficon)
+        var unitatkb: Button = itemView.findViewById(R.id.unitinfatk)
+        var unitatk: TextView = itemView.findViewById(R.id.unitinfatkr)
+        var unittrait: TextView = itemView.findViewById(R.id.unitinftraitr)
+        var unitcost: TextView = itemView.findViewById(R.id.unitinfcostr)
+        var unitsimu: TextView = itemView.findViewById(R.id.unitinfsimur)
+        var unitspd: TextView = itemView.findViewById(R.id.unitinfspdr)
+        var unitcdb: Button = itemView.findViewById(R.id.unitinfcd)
+        var unitcd: TextView = itemView.findViewById(R.id.unitinfcdr)
+        var unitrang: TextView = itemView.findViewById(R.id.unitinfrangr)
+        var unitpreatkb: Button = itemView.findViewById(R.id.unitinfpreatk)
+        var unitpreatk: TextView = itemView.findViewById(R.id.unitinfpreatkr)
+        var unitpostb: Button = itemView.findViewById(R.id.unitinfpost)
+        var unitpost: TextView = itemView.findViewById(R.id.unitinfpostr)
+        var unittbab: Button = itemView.findViewById(R.id.unitinftba)
+        var unittba: TextView = itemView.findViewById(R.id.unitinftbar)
+        var unitatktb: Button = itemView.findViewById(R.id.unitinfatktime)
+        var unitatkt: TextView = itemView.findViewById(R.id.unitinfatktimer)
+        var unitabilt: TextView = itemView.findViewById(R.id.unitinfabiltr)
+        var none: TextView = itemView.findViewById(R.id.unitabilnone)
+        var unitabil: RecyclerView = itemView.findViewById(R.id.unitinfabilr)
+        var unittalen: CheckBox = itemView.findViewById(R.id.unitinftalen)
+        var npresetrow: TableRow = itemView.findViewById(R.id.talresetrow)
+        var npreset: Button = itemView.findViewById(R.id.unitinftalreset)
+        var nprow: TableRow = itemView.findViewById(R.id.talenrow)
+
+        private var ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
+
+        var pcoins = arrayOfNulls<Spinner>(ids.size)
+
+        init {
+            unitplus.text = " + "
+            for (i in ids.indices) pcoins[i] = itemView.findViewById(ids[i])
+        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -138,6 +187,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
 
         viewHolder.unitname.text = names[i]
+        viewHolder.unitpack.text = s.getPackName(f.unit.id, isRaw)
         viewHolder.unitid.text = s.getID(viewHolder, StaticStore.trio(u.id.id))
         viewHolder.unithp.text = s.getHP(f, t, f.unit.prefLv, false, pcoins)
         viewHolder.unithb.text = s.getHB(f, false, pcoins)
@@ -207,6 +257,11 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         if (levelsp.size == 1) {
             viewHolder.unitlevelp.visibility = View.GONE
             viewHolder.unitplus.visibility = View.GONE
+        }
+        viewHolder.pack.setOnClickListener {
+            isRaw = !isRaw
+
+            viewHolder.unitpack.text = s.getPackName(f.unit.id, isRaw)
         }
         viewHolder.frse.setOnClickListener {
             if (fs == 0) {
@@ -782,51 +837,6 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
     override fun getItemCount(): Int {
         return names.size
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var frse: Button = itemView.findViewById(R.id.unitinffrse)
-        var unitname: TextView = itemView.findViewById(R.id.unitinfname)
-        var unitid: TextView = itemView.findViewById(R.id.unitinfidr)
-        var unithp: TextView = itemView.findViewById(R.id.unitinfhpr)
-        var unithb: TextView = itemView.findViewById(R.id.unitinfhbr)
-        var unitlevel: Spinner = itemView.findViewById(R.id.unitinflevr)
-        var unitlevelp: Spinner = itemView.findViewById(R.id.unitinflevpr)
-        var unitplus: TextView = itemView.findViewById(R.id.unitinfplus)
-        var uniticon: ImageView = itemView.findViewById(R.id.unitinficon)
-        var unitatkb: Button = itemView.findViewById(R.id.unitinfatk)
-        var unitatk: TextView = itemView.findViewById(R.id.unitinfatkr)
-        var unittrait: TextView = itemView.findViewById(R.id.unitinftraitr)
-        var unitcost: TextView = itemView.findViewById(R.id.unitinfcostr)
-        var unitsimu: TextView = itemView.findViewById(R.id.unitinfsimur)
-        var unitspd: TextView = itemView.findViewById(R.id.unitinfspdr)
-        var unitcdb: Button = itemView.findViewById(R.id.unitinfcd)
-        var unitcd: TextView = itemView.findViewById(R.id.unitinfcdr)
-        var unitrang: TextView = itemView.findViewById(R.id.unitinfrangr)
-        var unitpreatkb: Button = itemView.findViewById(R.id.unitinfpreatk)
-        var unitpreatk: TextView = itemView.findViewById(R.id.unitinfpreatkr)
-        var unitpostb: Button = itemView.findViewById(R.id.unitinfpost)
-        var unitpost: TextView = itemView.findViewById(R.id.unitinfpostr)
-        var unittbab: Button = itemView.findViewById(R.id.unitinftba)
-        var unittba: TextView = itemView.findViewById(R.id.unitinftbar)
-        var unitatktb: Button = itemView.findViewById(R.id.unitinfatktime)
-        var unitatkt: TextView = itemView.findViewById(R.id.unitinfatktimer)
-        var unitabilt: TextView = itemView.findViewById(R.id.unitinfabiltr)
-        var none: TextView = itemView.findViewById(R.id.unitabilnone)
-        var unitabil: RecyclerView = itemView.findViewById(R.id.unitinfabilr)
-        var unittalen: CheckBox = itemView.findViewById(R.id.unitinftalen)
-        var npresetrow: TableRow = itemView.findViewById(R.id.talresetrow)
-        var npreset: Button = itemView.findViewById(R.id.unitinftalreset)
-        var nprow: TableRow = itemView.findViewById(R.id.talenrow)
-
-        private var ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
-
-        var pcoins = arrayOfNulls<Spinner>(ids.size)
-
-        init {
-            unitplus.text = " + "
-            for (i in ids.indices) pcoins[i] = itemView.findViewById(ids[i])
-        }
     }
 
     private fun validate(viewHolder: ViewHolder, f: Form, t: Treasure) {

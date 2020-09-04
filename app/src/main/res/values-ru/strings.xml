@@ -228,8 +228,6 @@
     <string name="def_map_name">Имя_Карты</string>
     <string name="def_map_coount">Map_C</string>
     <string name="map_list_stages">" Уровней"</string>
-    <string name="stg_info_stgd">Загрузка информации о карт.…</string>
-    <string name="stg_info_enem">Загрузка данных о врагах…</string>
     <string name="stg_info_enemimg">Загрузка изображений врагов…</string>
     <string name="stg_info_enemname">Загрузка названий врагов…</string>
     <string name="stg_info_stgs">Фильтруем карты…</string>
@@ -238,8 +236,6 @@
     <string name="abi_imcri">Игнорирует Крит. Удар</string>
     <string name="stg_list_enemic">Загружаем иконки врагов…</string>
     <string name="def_stage_name">Название_Уровня</string>
-    <string name="stg_list_stl">Загрузка данных уровня…</string>
-    <string name="unit_list_unitload">Загрузка данных юнитов…</string>
     <string name="unit_list_unitname">Загрузка названий юнитов…</string>
     <string name="unit_list_unitic">Загрузка иконок юнитов…</string>
     <string name="map_list_stage">" Уровень"</string>
@@ -502,7 +498,6 @@
     <string name="dev_pass_wrong">Неверный пароль</string>
     <string name="dev_pass_activated">Режим Разработчика Активирован</string>
     <string name="main_music">Музыка</string>
-    <string name="music_read">Читаем данны музыки…</string>
     <string name="battle_lost">Вы проиграли</string>
     <string name="battle_won">Вы победили</string>
     <string name="battle_lost_boss">Вы проиграли\nЗдоровье Босса : _%</string>
@@ -686,4 +681,23 @@
     <string name="main_file_asset">Asset Update Found</string>
     <string name="main_notif_down">Downloaing Files</string>
     <string name="main_notif_music">Downloading Music</string>
+    <string name="main_file_merge">Merging Files…</string>
+    <string name="main_rev_check">Checking Old Files…</string>
+    <string name="main_rev_remove">Removing Old Files…</string>
+    <string name="main_rev_reformat">Reformtting Pack Files…</string>
+    <string name="unit_inf_pack">Pack</string>
+    <string name="load_bascimg">Loading Basic Images…</string>
+    <string name="load_enemy">Loading Enemy Data…</string>
+    <string name="load_unit">Loading Unit Data…</string>
+    <string name="load_aux">Loading Auxiliary Data…</string>
+    <string name="load_effect">Loading Effect Data…</string>
+    <string name="load_bg">Loading Background Data…</string>
+    <string name="load_castle">Loading Cat Base Data…</string>
+    <string name="load_soul">Loading Soul Data…</string>
+    <string name="load_stage">Loading Stage Data…</string>
+    <string name="load_orb">Loading Orb Data…</string>
+    <string name="load_music">Loading Music Data…</string>
+    <string name="load_process">Processing Data…</string>
+    <string name="load_music_duratoin">Processing Music Data…</string>
+    <string name="load_add">Loading UI Data…</string>
 </resources>

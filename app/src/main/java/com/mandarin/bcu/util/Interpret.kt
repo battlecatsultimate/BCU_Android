@@ -3,6 +3,7 @@ package com.mandarin.bcu.util
 import android.content.Context
 import android.util.Log
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.isEnglish
 import common.battle.BasisSet
 import common.battle.Treasure
@@ -26,21 +27,21 @@ object Interpret : Data() {
     /**
      * enemy traits
      */
-    lateinit var TRAIT: Array<String>
+    var TRAIT = Array(0) {""}
 
     /**
      * star names
      */
-    lateinit var STAR: Array<String>
+    var STAR = Array(0) {""}
 
     /**
      * ability name
      */
-    lateinit var ABIS: Array<String>
+    var ABIS = Array(0) {""}
 
-    lateinit var PROC: Array<String>
+    var PROC = Array(0) {""}
 
-    lateinit var TEXT: Array<String>
+    var TEXT = Array(0) {""}
 
     /**
      * treasure max
@@ -48,9 +49,9 @@ object Interpret : Data() {
     private val TMAX = intArrayOf(30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
             100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 20, 20, 20, 20, 20, 20)
 
-    private val PROCIND = arrayOf("WEAK", "PT", "PT", "PTD", "PTD", "PT", "PT", "STRONG", "PROB", "PM", "PROB", "PM", "WAVE", "VOLC", "IMU", "IMU", "IMU", "IMU", "IMU", "IMU", "IMU", "IMU", "IMU", "PM", "BURROW", "REVIVE", "PT", "PT", "SUMMON", "MOVEWAVE", "THEME", "POISON", "PROB", "ARMOR", "SPEED", "CRITI")
+    private val PROCIND = arrayOf("WEAK", "STOP", "SLOW", "KB", "WARP", "CURSE", "IMUATK", "STRONG", "LETHAL", "CRIT", "BREAK", "SATK", "WAVE", "VOLC", "IMUWEAK", "IMUSTOP", "IMUSLOW", "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK", "POIATK", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME", "POISON", "BOSS", "ARMOR", "SPEED", "CRITI")
 
-    private val immune = listOf(13, 14, 15, 16, 17, 18, 19, 33, 34)
+    private val immune = listOf(14, 15, 16, 17, 18, 20, 21)
 
     fun getTrait(type: Int, star: Int): String {
         val ans = StringBuilder()
@@ -71,42 +72,63 @@ object Interpret : Data() {
         val mr = du.repAtk
         val c = Formatter.Context(true, useSecond)
         for (i in PROCIND.indices) {
-            val f = ProcLang.get().get(PROCIND[i]).format
+            if(isValidProc(i, mr)) {
+                val f = ProcLang.get().get(PROCIND[i]).format
 
-            var ans = Formatter.format(f, getProcObject(i, mr), c)
+                var ans = if(immune.contains(i) && isResist(i, mr)) {
+                    "${StaticStore.pnumber.size - 7 + immune.indexOf(i)}\\" + Formatter.format(f, getProcObject(i, mr), c)
+                } else {
+                    "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
+                }
 
-            if(!l.contains(ans)) {
-                ans = if(isEnglish)
-                    "$ans [${getNumberAttack(numberWithExtension(1, lang), lang)}]"
-                else
-                    "$ans [${TEXT[46].replace("_", 1.toString())}]"
+                if(!l.contains(ans)) {
+                    if(id.contains(i)) {
+                        ans = if(isEnglish)
+                            "$ans [${getNumberAttack(numberWithExtension(1, lang), lang)}]"
+                        else
+                            "$ans [${TEXT[46].replace("_", 1.toString())}]"
+                    }
+                }
+
+                l.add(ans)
+                id.add(i)
             }
-
-            l.add(ans)
-            id.add(i)
         }
 
         for (k in 0 until du.atkCount) {
             val ma = du.getAtkModel(k)
 
             for(i in PROCIND.indices) {
-                val mf = ProcLang.get().get(PROCIND[i]).format
+                if(isValidProc(i, ma)) {
+                    val mf = ProcLang.get().get(PROCIND[i]).format
 
-                var ans = Formatter.format(mf, getProcObject(i, ma), c)
-
-                if(!l.contains(ans)) {
-                    if(id.contains(i)) {
-                        ans = if(isEnglish)
-                            "$ans [${getNumberAttack(numberWithExtension(k + 1, lang), lang)}]"
-                        else
-                            "$ans [${TEXT[46].replace("_", (k + 1).toString())}]"
+                    var ans = if(immune.contains(i) && isResist(i, ma)) {
+                        "${StaticStore.pnumber.size - 7 + immune.indexOf(i)}\\" + Formatter.format(mf, getProcObject(i, ma), c)
+                    } else {
+                        "$i\\" + Formatter.format(mf, getProcObject(i, ma), c)
                     }
 
-                    l.add(ans)
-                    id.add(i)
+                    if(!l.contains(ans)) {
+                        if(id.contains(i)) {
+                            ans = if(isEnglish)
+                                "$ans [${getNumberAttack(numberWithExtension(k + 1, lang), lang)}]"
+                            else
+                                "$ans [${TEXT[46].replace("_", (k + 1).toString())}]"
+                        }
+
+                        println("ANS : "+ans)
+
+                        l.add(ans)
+                        id.add(i)
+                    }
                 }
             }
         }
+
+        for(str in l) {
+            println("CONTENT : $str")
+        }
+
         return l
     }
 
@@ -138,20 +160,80 @@ object Interpret : Data() {
             23 -> atk.proc.POIATK
             24 -> atk.proc.BURROW
             25 -> atk.proc.REVIVE
-            26 -> atk.proc.SEAL
-            27 -> atk.proc.TIME
-            28 -> atk.proc.SUMMON
-            29 -> atk.proc.MOVEWAVE
-            30 -> atk.proc.THEME
-            31 -> atk.proc.POISON
-            32 -> atk.proc.BOSS
-            33 -> atk.proc.ARMOR
-            34 -> atk.proc.SPEED
-            35 -> atk.proc.CRITI
+            26 -> atk.proc.SNIPER
+            27 -> atk.proc.SEAL
+            28 -> atk.proc.TIME
+            29 -> atk.proc.SUMMON
+            30 -> atk.proc.MOVEWAVE
+            31 -> atk.proc.THEME
+            32 -> atk.proc.POISON
+            33 -> atk.proc.BOSS
+            34 -> atk.proc.ARMOR
+            35 -> atk.proc.SPEED
+            36 -> atk.proc.CRITI
             else -> {
                 Log.e("Interpret", "Invalid index : $ind")
                 atk.proc.KB
             }
+        }
+    }
+
+    private fun isValidProc(ind: Int, atk: MaskAtk) : Boolean {
+        return when (ind) {
+            0 -> atk.proc.WEAK.exists()
+            1 -> atk.proc.STOP.exists()
+            2 -> atk.proc.SLOW.exists()
+            3 -> atk.proc.KB.exists()
+            4 -> atk.proc.WARP.exists()
+            5 -> atk.proc.CURSE.exists()
+            6 -> atk.proc.IMUATK.exists()
+            7 -> atk.proc.STRONG.exists()
+            8 -> atk.proc.LETHAL.exists()
+            9 -> atk.proc.CRIT.exists()
+            10 -> atk.proc.BREAK.exists()
+            11 -> atk.proc.SATK.exists()
+            12 -> atk.proc.WAVE.exists()
+            13 -> atk.proc.VOLC.exists()
+            14 -> atk.proc.IMUWEAK.exists()
+            15 -> atk.proc.IMUSTOP.exists()
+            16 -> atk.proc.IMUSLOW.exists()
+            17 -> atk.proc.IMUKB.exists()
+            18 -> atk.proc.IMUWAVE.exists()
+            19 -> atk.proc.IMUVOLC.exists()
+            20 -> atk.proc.IMUWARP.exists()
+            21 -> atk.proc.IMUCURSE.exists()
+            22 -> atk.proc.IMUPOIATK.exists()
+            23 -> atk.proc.POIATK.exists()
+            24 -> atk.proc.BURROW.exists()
+            25 -> atk.proc.REVIVE.exists()
+            26 -> atk.proc.SNIPER.exists()
+            27 -> atk.proc.SEAL.exists()
+            28 -> atk.proc.TIME.exists()
+            29 -> atk.proc.SUMMON.exists()
+            30 -> atk.proc.MOVEWAVE.exists()
+            31 -> atk.proc.THEME.exists()
+            32 -> atk.proc.POISON.exists()
+            33 -> atk.proc.BOSS.exists()
+            34 -> atk.proc.ARMOR.exists()
+            35 -> atk.proc.SPEED.exists()
+            36 -> atk.proc.CRITI.exists()
+            else -> {
+                Log.e("Interpret", "Invalid index : $ind")
+                atk.proc.KB.exists()
+            }
+        }
+    }
+
+    private fun isResist(i: Int, atk: MaskAtk) : Boolean {
+        return when(i) {
+            14 -> atk.proc.IMUWEAK.mult != 100
+            15 -> atk.proc.IMUSTOP.mult != 100
+            16 -> atk.proc.IMUSLOW.mult != 100
+            17 -> atk.proc.IMUKB.mult != 100
+            18 -> atk.proc.IMUWAVE.mult != 100
+            20 -> atk.proc.IMUWARP.mult != 100
+            21 -> atk.proc.IMUCURSE.mult != 100
+            else -> false
         }
     }
 

@@ -73,6 +73,9 @@ class ApkDownload : AppCompatActivity() {
 
         if (ContextCompat.checkSelfPermission(this@ApkDownload, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             val result = intent
+
+            println("TEXT:  "+result.getStringExtra("ver"))
+
             if (result.getStringExtra("ver") != null) {
                 val ver = result.getStringExtra("ver") ?: StaticStore.VER
                 val filestart = "BCU_Android_"
@@ -126,6 +129,14 @@ class ApkDownload : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

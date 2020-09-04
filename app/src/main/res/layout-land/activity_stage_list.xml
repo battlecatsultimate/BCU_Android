@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
 
     <ProgressBar
-        android:id="@+id/stglistprog"
+        android:id="@+id/prog"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,13 +68,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/stglistst"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/stg_list_stl"
+        android:text="@string/load_stage"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stglistprog" />
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 </androidx.constraintlayout.widget.ConstraintLayout>

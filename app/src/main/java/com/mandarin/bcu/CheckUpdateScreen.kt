@@ -5,22 +5,19 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.net.ConnectivityManager
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -37,12 +34,15 @@ import common.system.fake.ImageBuilder
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.File
-import java.lang.ref.WeakReference
 import java.util.*
 
 open class CheckUpdateScreen : AppCompatActivity() {
+    companion object {
+        var mustShow = false
+    }
+
     private var config = false
-    private lateinit var checker: UpdateCheckDownload
+    private lateinit var checker: AsyncTask<*, *, *>
 
     private lateinit var notifyManager: NotificationManager
     private lateinit var notifyBuilder: NotificationCompat.Builder
@@ -164,6 +164,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("Reformat0150")) {
+            ed.putBoolean("Reformat0150", false)
+            ed.apply()
+        }
+
         when {
             shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
@@ -211,14 +216,14 @@ open class CheckUpdateScreen : AppCompatActivity() {
         }
 
         val retry = findViewById<Button>(R.id.retry)
-        val prog = findViewById<ProgressBar>(R.id.updateprog)
+        val prog = findViewById<ProgressBar>(R.id.prog)
 
         retry.visibility = View.GONE
         prog.isIndeterminate = true
 
         ImageBuilder.builder = BMBuilder()
 
-        StaticStore.checkFolders(StaticStore.getExternalPath(this), StaticStore.getExternalLog(this), StaticStore.getExternalPack(this), StaticStore.getExternalRes(this))
+        StaticStore.checkFolders(StaticStore.getExternalPath(this), StaticStore.getExternalLog(this), StaticStore.getExternalPack(this))
 
         notifyManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notifyBuilder = NotificationCompat.Builder(this, UpdateCheckDownload.NOTIF)
@@ -244,7 +249,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
         notifyBuilder.setContentIntent(p)
 
-        checker = UpdateCheckDownload(this, config, false, notifyManager, notifyBuilder)
+        checker = UpdateCheckDownload(this, config, false, notifyManager, notifyBuilder, shared.getBoolean("Reformat0150", true))
 
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q && checkOldFiles() && !shared.getBoolean("Announce_0.13.0",false)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
@@ -332,10 +337,19 @@ open class CheckUpdateScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
         checker.cancel(true)
         notifyBuilder.setOngoing(false)
-        notifyManager.notify(UpdateCheckDownload.NOTIF, R.id.downloadnotification, notifyBuilder.build())
+        if(mustShow)
+            notifyManager.notify(UpdateCheckDownload.NOTIF, R.id.downloadnotification, notifyBuilder.build())
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 
     private fun checkOldFiles() : Boolean {
@@ -382,45 +396,6 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
         if(!f.exists())
             f.mkdirs()
-    }
-
-    class RetryDownload : BroadcastReceiver {
-        private val w: WeakReference<CheckUpdateScreen>?
-
-        constructor() {
-            w = null
-        }
-
-        constructor(ac: CheckUpdateScreen) {
-            w = WeakReference(ac)
-        }
-
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val ac = w?.get()
-
-            if(ac == null) {
-                Log.e("RetryDownload", "Activity is not found!")
-                return
-            }
-
-            val connectivityManager = ac.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-            if (connectivityManager.activeNetwork != null) {
-                val retry = ac.findViewById<TextView>(R.id.retry)
-                val prog = ac.findViewById<ProgressBar>(R.id.updateprog)
-
-                prog.isIndeterminate = true
-                retry.visibility = View.GONE
-
-                ac.checker.cancel(true)
-
-                ac.checker = UpdateCheckDownload(ac, ac.config, true, ac.notifyManager, ac.notifyBuilder)
-
-                ac.checker.execute()
-            } else {
-                StaticStore.showShortMessage(ac, R.string.needconnect)
-            }
-        }
     }
 }
 

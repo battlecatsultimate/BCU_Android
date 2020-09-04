@@ -22,6 +22,7 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import common.CommonStatic
 import common.io.json.JsonEncoder
+import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
 import common.util.unit.Enemy
@@ -93,7 +94,7 @@ class EnemyInfo : AppCompatActivity() {
             val multi = extra.getInt("Multiply")
             val amulti = extra.getInt("AMultiply")
 
-            val e = data.get()
+            val e = Identifier.get(data)
 
             if(e is Enemy) {
                 title.text = MultiLangCont.get(e) ?: e.name
@@ -148,6 +149,14 @@ class EnemyInfo : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

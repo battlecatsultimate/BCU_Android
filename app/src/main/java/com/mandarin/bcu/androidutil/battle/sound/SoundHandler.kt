@@ -22,7 +22,7 @@ object SoundHandler {
     /** SoundPool for base attack sounds **/
     var BASE : SoundPool? = SoundPool.Builder().build()
 
-    var play: BooleanArray = BooleanArray(1)
+    var play: BooleanArray = BooleanArray(0)
 
     var inBattle = false
 
@@ -74,7 +74,7 @@ object SoundHandler {
                     timer?.cancel()
                 }
 
-                val g = StaticStore.getMusicFile(UserProfile.getBCData().musics[ind]) ?: return
+                val g = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[ind]) ?: return
 
                 try {
                     MUSIC.setDataSource(g.absolutePath)
@@ -239,7 +239,7 @@ object SoundHandler {
     }
 
     fun load(type: Int, ind: Int, play: Boolean) : Int {
-        val f = StaticStore.getMusicFile(UserProfile.getBCData().musics[ind]) ?: return -1
+        val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[ind]) ?: return -1
 
         check()
 

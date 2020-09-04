@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
@@ -12,11 +11,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-
 import common.battle.BasisSet
+import common.system.files.VFile
 
 class LUCastleSetting : Fragment() {
 
@@ -74,22 +72,18 @@ class LUCastleSetting : Fragment() {
 
         val result = Bitmap.createBitmap(128, 256, Bitmap.Config.ARGB_8888)
 
-        val path = StaticStore.getExternalPath(context)+"org/castle/"
+        val path = "./org/castle/"
 
         val cannon = path + "000/nyankoCastle_000_0" + data[0] + ".png"
         val label = path + "002/nyankoCastle_002_0" + data[1] + ".png"
         val base = path + "003/nyankoCastle_003_0" + data[2] + ".png"
 
-        val cb = BitmapFactory.decodeFile(cannon)
-        val lb = BitmapFactory.decodeFile(label)
-        val bb = BitmapFactory.decodeFile(base)
+        val cb = VFile.get(cannon).data.img.bimg() as Bitmap
+        val lb = VFile.get(label).data.img.bimg() as Bitmap
+        val bb = VFile.get(base).data.img.bimg() as Bitmap
 
         val c = Canvas(result)
         val p = Paint()
-
-        if(cb == null || lb == null || bb == null) {
-            return
-        }
 
         c.drawBitmap(bb, 0f, 125f, p)
         c.drawBitmap(cb, 0f, 0f, p)

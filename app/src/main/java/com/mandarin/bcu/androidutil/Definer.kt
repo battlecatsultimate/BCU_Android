@@ -2,11 +2,13 @@ package com.mandarin.bcu.androidutil
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.Log
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
@@ -14,12 +16,17 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
+import common.io.assets.AssetLoader
 import common.pack.PackData
 import common.pack.UserProfile
 import common.system.fake.ImageBuilder
 import common.system.files.VFile
+import common.util.lang.ProcLang
+import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.function.Consumer
+import kotlin.collections.ArrayList
 
 object Definer {
     private val colorid = StaticStore.colorid
@@ -28,7 +35,7 @@ object Definer {
     private val abiid = StaticStore.abiid
     private val textid = StaticStore.textid
 
-    fun define(context: Context) {
+    fun define(context: Context, prog: Consumer<Double>, text: Consumer<String>) {
         try {
             if (!StaticStore.init) {
                 StaticStore.clear()
@@ -38,8 +45,44 @@ object Definer {
                 DefineItf().init(context)
                 AContext.check()
                 CommonStatic.ctx.initProfile()
+
+                AssetLoader.load(prog)
+
+                UserProfile.getBCData().load(text, prog)
+
                 StaticStore.init = true
             }
+
+            if(!StaticStore.packRead) {
+                text.accept(context.getString(R.string.main_pack_ext))
+                UserProfile.loadPacks(prog)
+
+                StaticStore.packRead = true
+
+                val f = File(StaticStore.getExternalPath(context)+"pack/")
+
+                if(f.exists()) {
+                    text.accept(context.getString(R.string.main_rev_reformat))
+
+                    StaticStore.deleteFile(f, true)
+                }
+
+                val g = File(StaticStore.getExternalRes(context))
+
+                if(g.exists()) {
+                    text.accept(context.getString(R.string.main_rev_reformat))
+
+                    StaticStore.deleteFile(g, true)
+                }
+
+                handlePacks(context)
+            }
+
+            text.accept(context.getString(R.string.load_add))
+            prog.accept(-1.0/10000.0)
+
+            if (StaticStore.treasure == null)
+                StaticStore.readTreasureIcon()
 
             if(Interpret.TRAIT.isEmpty()) {
                 val colorString = Array(colorid.size) {
@@ -103,15 +146,9 @@ object Definer {
                         , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "datyaitemD_43_f.png", "xp.png")
 
                 StaticStore.fruit = Array(names.size) {i ->
-                    val vf = VFile.get(path1+names[i])
+                    val vf = VFile.get(path1+names[i]) ?: return@Array StaticStore.empty(1, 1)
 
-                    if(vf == null)
-                        StaticStore.empty(1, 1)
-
-                    val icon = vf.data?.img?.bimg()
-
-                    if(icon == null)
-                        StaticStore.empty(1, 1)
+                    val icon = vf.data?.img?.bimg() ?: return@Array StaticStore.empty(1, 1)
 
                     icon as Bitmap
                 }
@@ -125,12 +162,12 @@ object Definer {
                 val number = StaticStore.anumber
                 val files = StaticStore.afiles
 
-                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
+                val iconpath = "./org/page/icons/"
 
                 StaticStore.icons = Array(number.size) {i ->
                     if(number[i] == 227) {
                         if(files[i].isNotEmpty()) {
-                            BitmapFactory.decodeFile(iconpath+files[i])
+                            VFile.get(iconpath+files[i]).data.img.bimg() as Bitmap
                         } else {
                             StaticStore.empty(1, 1)
                         }
@@ -144,12 +181,12 @@ object Definer {
                 val number = StaticStore.pnumber
                 val files = StaticStore.pfiles
 
-                val iconpath = StaticStore.getExternalPath(context)+"org/page/icons/"
+                val iconpath = "./org/page/icons/"
 
                 StaticStore.picons = Array(number.size) {i ->
                     if(number[i] == 227) {
                         if(files[i].isNotEmpty()) {
-                            BitmapFactory.decodeFile(iconpath+files[i])
+                            VFile.get(iconpath+files[i]).data.img.bimg() as Bitmap
                         } else {
                             StaticStore.empty(1, 1)
                         }
@@ -198,6 +235,28 @@ object Definer {
                 }
             }
 
+            if(StaticStore.medalnumber == 0) {
+                val vf = VFile.get("./org/page/medal")
+
+                val lit = vf.list()
+
+                if(lit != null) {
+                    println(lit.size)
+
+                    StaticStore.medalnumber = lit.size
+                }
+            }
+
+            if(StaticStore.medalnumber != 0 && StaticStore.medallang == 1) {
+                LangLoader.readMedalLang(context)
+            }
+
+            if(SoundHandler.play.isEmpty()) {
+                SoundHandler.play = BooleanArray(UserProfile.getBCData().musics.list.size)
+
+                println(SoundHandler.play.size)
+            }
+
         } catch (e: IOException) {
             e.printStackTrace()
 
@@ -209,6 +268,8 @@ object Definer {
         val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
         StaticStore.getLang(shared.getInt("Language", 0))
+
+        ProcLang.clear()
 
         val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_exmon, R.string.unit_info_atkbs, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas)
         StaticStore.addition = Array(addid.size) { i ->
@@ -251,5 +312,183 @@ object Definer {
         val configuration = Configuration(context.resources.configuration)
         configuration.setLocale(locale)
         return context.createConfigurationContext(configuration).resources.getString(id)
+    }
+
+    private fun handlePacks(c: Context) {
+        val shared = c.getSharedPreferences(StaticStore.PACK, Context.MODE_PRIVATE)
+
+        val editor = shared.edit()
+
+        val checked = ArrayList<String>()
+
+        for(p in UserProfile.getAllPacks()) {
+            if(p is PackData.DefPack)
+                continue
+
+            if(p is PackData.UserPack) {
+                if(!shared.contains(p.sid)) {
+                    //New Pack detected
+
+                    editor.putString(p.sid, "${p.desc.time} - ${p.desc.version}")
+
+                    editor.apply()
+
+                    extractMusic(p, shared)
+                } else {
+                    val info = shared.getString(p.sid, "")
+
+                    val newInfo = "${p.desc.time} - ${p.desc.version}"
+
+                    if(info != newInfo) {
+                        //Update detected
+
+                        editor.putString(p.sid, "${p.desc.time} - ${p.desc.version}")
+
+                        editor.apply()
+
+                        extractMusic(p, shared)
+                    }
+                }
+
+                checked.add(p.sid)
+            }
+        }
+
+        //Check if unchecked pack ID in shared preferences
+
+        val notExisting = ArrayList<String>()
+
+        for(any in shared.all) {
+            if(any.value !is String)
+                continue
+
+            val value = any.key
+
+            if(realNotExisting(notExisting, checked, value)) {
+                if(value.contains("-")) {
+                    val info = value.split("-")
+
+                    if(info.size != 2) {
+                        if(info.size != 2) {
+                            Log.w("Definer::extractMusic", "Invalid music file format : $info")
+
+                            continue
+                        }
+
+                        notExisting.add(info[0])
+                    }
+                } else {
+                    notExisting.add(value)
+                }
+            }
+        }
+
+        Log.i("Definer::handlePacks", "Not existing pack list : $notExisting")
+
+        //Then perform removing music files
+
+        for(p in notExisting) {
+            for(key in shared.all.keys) {
+                if(key.startsWith(p)) {
+                    if(key.contains("-")) {
+                        val f = File(StaticStore.dataPath+"music/", key)
+
+                        if(f.exists()) {
+                            f.delete()
+                        } else {
+                            Log.i("Definer::handlePacks", "??? File is not existing : ${f.absolutePath}")
+                        }
+                    }
+
+                    editor.remove(key)
+
+                    editor.apply()
+                }
+            }
+        }
+    }
+
+    private fun extractMusic(p: PackData.UserPack, shared: SharedPreferences) {
+        if(p.musics.list.isEmpty())
+            return
+
+        val editor = shared.edit()
+
+        if(CommonStatic.ctx == null || CommonStatic.ctx !is AContext)
+            return
+
+        for(m in p.musics.list) {
+            val f = (CommonStatic.ctx as AContext).getMusicFile(m)
+
+            if(!f.exists()) {
+                val result = StaticStore.extractMusic(m, f)
+
+                editor.putString(result.name, StaticStore.fileToMD5(result))
+            } else {
+                val md5 = shared.getString(f.name, "")
+
+                val newMD5 = StaticStore.streamToMD5(m.data.stream)
+
+                if(md5 != newMD5) {
+                    Log.i("Deinfer::extractMusic","New MD5 detected : ID = ${m.id}, MD5 = $md5, newMD5 = $newMD5")
+
+                    val result = StaticStore.extractMusic(m, f)
+
+                    editor.putString(result.name, newMD5)
+                }
+            }
+        }
+
+        editor.apply()
+
+        //Handle deleted music
+        //Get music file list of specified pack first
+
+        val mList = ArrayList<File>()
+
+        val fList = File(StaticStore.dataPath+"music/").listFiles() ?: return
+
+        for(f in fList) {
+            if(f.name.startsWith("${p.sid}-"))
+                mList.add(f)
+        }
+
+        //Then compare if specified music file is existing in pack too
+
+        for(m in mList) {
+            val info = m.name.split("-")
+
+            if(info.size != 2) {
+                Log.w("Definer::extractMusic", "Invalid music file format : $info")
+
+                continue
+            }
+
+            val music = p.musics[CommonStatic.parseIntN(info[1])]
+
+            if(music == null) {
+                Log.i("Definer::extractMusic", "Deleted music : ${m.absolutePath}")
+
+                m.delete()
+
+                editor.remove(m.name)
+            }
+        }
+
+        editor.apply()
+    }
+
+    private fun realNotExisting(notExisting: ArrayList<String>, checked: ArrayList<String>, target: String) : Boolean {
+        for(p in checked) {
+            if(target.startsWith(p))
+                return false
+        }
+
+        for(u in notExisting) {
+            if(target.startsWith(u))
+                return false
+        }
+
+        return true
     }
 }

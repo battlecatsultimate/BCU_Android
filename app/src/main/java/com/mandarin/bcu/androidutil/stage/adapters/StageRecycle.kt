@@ -28,7 +28,11 @@ import java.util.*
 class StageRecycle(private val activity: Activity, private val data: Identifier<Stage>) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
     private val s: GetStrings = GetStrings(activity)
 
+    private var isRaw = false
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val pack: Button = itemView.findViewById(R.id.stginfopack)
+        val stgpack: TextView = itemView.findViewById(R.id.stginfopackr)
         val id: TextView = itemView.findViewById(R.id.stginfoidr)
         val star: Spinner = itemView.findViewById(R.id.stginfostarr)
         val energy: TextView = itemView.findViewById(R.id.stginfoengr)
@@ -70,7 +74,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val st = Identifier.get(data) ?: return
         val stm = st.cont ?: return
 
-        viewHolder.id.text = s.getID(st.cont.cont.sid, st.info.map.sm.id.id, data.id)
+        viewHolder.id.text = s.getID(st.cont.cont.sid, stm.id.id, data.id)
         val stars: MutableList<String> = ArrayList()
         for (k in stm.stars.indices) {
             val s: String = (k + 1).toString() + " (" + stm.stars[k] + " %)"
@@ -91,6 +95,14 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                     viewHolder.chanceText.text = activity.getText(R.string.stg_enem_list_num)
                 }
             }
+        }
+
+        viewHolder.stgpack.text = s.getPackName(st.cont.cont.sid, isRaw)
+
+        viewHolder.pack.setOnClickListener {
+            isRaw = !isRaw
+
+            viewHolder.stgpack.text = s.getPackName(st.cont.cont.sid, isRaw)
         }
 
         val arrayAdapter = ArrayAdapter(activity, R.layout.spinneradapter, stars)
@@ -154,7 +166,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         viewHolder.length.text = st.len.toString()
         viewHolder.maxenemy.text = st.max.toString()
-        viewHolder.music.text = st.mus0.toString()
+        viewHolder.music.text = StaticStore.generateIdName(st.mus0, activity)
 
         viewHolder.music.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
@@ -169,8 +181,14 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         })
 
+        viewHolder.music.setOnLongClickListener {
+            StaticStore.showShortMessage(activity, st.mus0.pack)
+
+            true
+        }
+
         viewHolder.castleperc.text = viewHolder.castleperc.text.toString().replace("??", st.mush.toString())
-        viewHolder.music2.text = st.mus1.toString()
+        viewHolder.music2.text = StaticStore.generateIdName(st.mus1, activity)
 
         viewHolder.music2.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
@@ -185,11 +203,18 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         })
 
+        viewHolder.music2.setOnLongClickListener {
+            StaticStore.showShortMessage(activity, st.mus1.pack)
+
+            true
+        }
+
         viewHolder.loop.text = convertTime(st.loop0)
 
         viewHolder.loop1.text = convertTime(st.loop1)
 
-        viewHolder.background.text = st.bg.toString()
+        viewHolder.background.text = StaticStore.generateIdName(st.bg, activity)
+
         viewHolder.background.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, ImageViewer::class.java)
@@ -198,13 +223,22 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 activity.startActivity(intent)
             }
         })
-        viewHolder.castle.text = st.castle.toString()
+
+        viewHolder.background.setOnLongClickListener {
+            StaticStore.showShortMessage(activity, st.bg.pack)
+
+            true
+        }
+
+        viewHolder.castle.text = StaticStore.generateIdName(st.castle, activity)
+
         viewHolder.castle.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 if (st.cont.cont.sid == "000003" && stm.id.id == 11)
                     return
                 else {
                     val intent = Intent(activity, ImageViewer::class.java)
+                    intent.putExtra("Img", 1)
                     intent.putExtra("Data", JsonEncoder.encode(st.castle).toString())
 
                     st.castle.get().img
@@ -213,6 +247,13 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 }
             }
         })
+
+        viewHolder.castle.setOnLongClickListener {
+            StaticStore.showShortMessage(activity, st.castle.pack)
+
+            true
+        }
+
         if (st.info != null) {
             if (st.info.drop.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
@@ -246,7 +287,9 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             viewHolder.scorescroll.visibility = View.GONE
             viewHolder.droptitle.visibility = View.GONE
         }
+
         val l = st.getLim(viewHolder.star.selectedItemPosition)
+
         if (none(l)) {
             viewHolder.limitscroll.visibility = View.GONE
             viewHolder.limitNone.visibility = View.VISIBLE

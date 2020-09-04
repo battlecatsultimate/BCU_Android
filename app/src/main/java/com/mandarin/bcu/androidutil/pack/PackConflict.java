@@ -17,7 +17,7 @@ public class PackConflict {
     public static final int ID_PARENT = 0;
     public static final int ID_CORRUPTED = 1;
     public static final int ID_SAME_ID = 2;
-    public static final int ID_UNSUPPORTED_BCU = 3;
+    public static final int ID_UNSUPPORTED_CORE_VERSION = 3;
 
     public static final int ACTION_NONE = -1;
     public static final int ACTION_IGNORE = 0;
@@ -67,26 +67,6 @@ public class PackConflict {
         }
     }
 
-    public File getFile(Context c) {
-        if(confPack.size() == 0)
-            return null;
-        else {
-            String name = confPack.get(0);
-
-            String path;
-
-            if(name.endsWith(".bcudata")) {
-                path = StaticStore.getExternalRes(c)+"data/";
-            } else if(name.endsWith(".bcupack")) {
-                path = StaticStore.getExternalPack(c);
-            } else {
-                return null;
-            }
-
-            return new File(path, name);
-        }
-    }
-
     public void setAction(int action) {
         this.action = action;
     }
@@ -98,7 +78,7 @@ public class PackConflict {
                     if(confPack.size() < 2)
                         return;
 
-                    String p = confPack.get(0).replace(".bcudata",".bcupack");
+                    String p = confPack.get(0);
                     String path = StaticStore.getExternalPack(c);
 
                     File f = new File(path, p);
@@ -135,11 +115,11 @@ public class PackConflict {
 
                     String path;
 
-                    if(p.endsWith(".bcupack")) {
+                    if(p.endsWith(".pack.bcuzip")) {
                         path = StaticStore.getExternalPack(c);
-                    } else if(p.endsWith(".bcudata")) {
-                        path = StaticStore.getExternalRes(c)+"data/";
                     } else {
+                        Log.e("PackConflict", "Invalid File : "+p);
+
                         return;
                     }
 
@@ -171,7 +151,7 @@ public class PackConflict {
                             continue;
                         }
 
-                        String p = confPack.get(i).replace(".bcudata", ".bcupack");
+                        String p = confPack.get(i);
                         String path = StaticStore.getExternalPack(c);
 
                         File f = new File(path, p);
@@ -191,7 +171,7 @@ public class PackConflict {
                 }
 
                 break;
-            case ID_UNSUPPORTED_BCU:
+            case ID_UNSUPPORTED_CORE_VERSION:
                 if(action == ACTION_DELETE) {
                     if(confPack.isEmpty())
                         return;
@@ -200,11 +180,11 @@ public class PackConflict {
 
                     String path;
 
-                    if(p.endsWith(".bcupack")) {
+                    if(p.endsWith(".pack.bcuzip")) {
                         path = StaticStore.getExternalPack(c);
-                    } else if(p.endsWith(".bcudata")) {
-                        path = StaticStore.getExternalRes(c)+"data/";
                     } else {
+                        Log.e("PackConflict", "Invalid File : "+p);
+
                         return;
                     }
 
@@ -297,7 +277,7 @@ public class PackConflict {
                 return true;
 
             for(PackConflict pc : conflicts) {
-                if(pc.action == ACTION_DELETE && (pc.id == ID_UNSUPPORTED_BCU || pc.id == ID_PARENT)) {
+                if(pc.action == ACTION_DELETE && (pc.id == ID_UNSUPPORTED_CORE_VERSION || pc.id == ID_PARENT)) {
                     if(position[0] >= 0 && position[0] < confPack.size()) {
                         String op = confPack.get(position[0]);
 
@@ -334,7 +314,7 @@ public class PackConflict {
                     } else {
                         return true;
                     }
-                } else if(pc.action == ACTION_DELETE && pc.id == ID_UNSUPPORTED_BCU) {
+                } else if(pc.action == ACTION_DELETE && pc.id == ID_UNSUPPORTED_CORE_VERSION) {
                     if(confPack.isEmpty())
                         return true;
 
@@ -351,7 +331,7 @@ public class PackConflict {
             }
 
             return true;
-        } else if(id == ID_UNSUPPORTED_BCU) {
+        } else if(id == ID_UNSUPPORTED_CORE_VERSION) {
             if(position.length == 0)
                 return true;
 

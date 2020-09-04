@@ -116,7 +116,6 @@ class BattleSimulation : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
     public override fun onPause() {
@@ -132,6 +131,12 @@ class BattleSimulation : AppCompatActivity() {
 
     public override fun onResume() {
         super.onResume()
+
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
         if (SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
             if ((!SoundHandler.MUSIC.isRunning || !SoundHandler.MUSIC.isPlaying) && SoundHandler.musicPlay) {
                 SoundHandler.MUSIC.start()

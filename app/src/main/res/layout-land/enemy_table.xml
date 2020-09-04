@@ -34,18 +34,41 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/cell_shape"
-        android:stretchColumns="*"
+        android:stretchColumns="1,3,5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eneminffrse">
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/eneminfpack"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/unit_inf_pack"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/eneminfpackr"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="?attr/TextPrimary" />
 
             <TextView
                 android:id="@+id/eneminfid"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -57,7 +80,7 @@
 
             <TextView
                 android:id="@+id/eneminfidr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -67,23 +90,30 @@
                 android:textColor="?attr/TextPrimary" />
 
             <TableRow
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@drawable/cell_shape">
+                android:layout_span="2"
+                android:background="@drawable/cell_shape"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/eneminficon"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal|center_vertical"
+                    android:contentDescription="@null"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:contentDescription="@null" />
+                    android:paddingBottom="12dp" />
             </TableRow>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/eneminfhp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -95,7 +125,7 @@
 
             <TextView
                 android:id="@+id/eneminfhpr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -106,7 +136,7 @@
 
             <TextView
                 android:id="@+id/eneminfhb"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -118,8 +148,9 @@
 
             <TextView
                 android:id="@+id/eneminfhbr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -129,13 +160,13 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:weightSum="7">
 
             <TextView
                 android:id="@+id/eneminfmulti"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -146,9 +177,8 @@
                 android:textStyle="bold" />
 
             <TableRow
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="3"
                 android:background="@drawable/cell_shape">
 
                 <EditText
@@ -198,7 +228,7 @@
 
             <Button
                 android:id="@+id/eneminfatk"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_atk"
@@ -208,9 +238,9 @@
 
             <TextView
                 android:id="@+id/eneminfatkr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
+                android:layout_span="3"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -220,12 +250,12 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/eneminfatktime"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_atktime"
@@ -235,9 +265,8 @@
 
             <TextView
                 android:id="@+id/eneminfatktimer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -247,7 +276,7 @@
 
             <TextView
                 android:id="@+id/eneminfabilt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -259,7 +288,7 @@
 
             <TextView
                 android:id="@+id/eneminfabiltr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/cell_shape"
@@ -272,12 +301,12 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <Button
                 android:id="@+id/eneminfpre"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_pre"
@@ -287,9 +316,8 @@
 
             <TextView
                 android:id="@+id/eneminfprer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -299,7 +327,7 @@
 
             <Button
                 android:id="@+id/eneminfpost"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_post"
@@ -309,7 +337,7 @@
 
             <TextView
                 android:id="@+id/eneminfpostr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -320,7 +348,7 @@
 
             <Button
                 android:id="@+id/eneminftba"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
                 android:text="@string/unit_info_tba"
@@ -330,7 +358,7 @@
 
             <TextView
                 android:id="@+id/eneminftbar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -341,12 +369,12 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/eneminftrait"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -358,9 +386,8 @@
 
             <TextView
                 android:id="@+id/eneminftraitr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -370,7 +397,7 @@
 
             <TextView
                 android:id="@+id/eneminfatkt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -382,7 +409,7 @@
 
             <TextView
                 android:id="@+id/eneminfatktr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -393,7 +420,7 @@
 
             <TextView
                 android:id="@+id/eneminfdrop"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -405,7 +432,7 @@
 
             <TextView
                 android:id="@+id/eneminfdropr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -416,12 +443,12 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/eneminfrange"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -433,9 +460,8 @@
 
             <TextView
                 android:id="@+id/eneminfranger"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -445,7 +471,7 @@
 
             <TextView
                 android:id="@+id/eneminfbarrier"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -457,7 +483,7 @@
 
             <TextView
                 android:id="@+id/eneminfbarrierr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -468,7 +494,7 @@
 
             <TextView
                 android:id="@+id/eneminfspd"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -480,7 +506,7 @@
 
             <TextView
                 android:id="@+id/eneminfspdr"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -491,12 +517,12 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/eneminfabil"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
@@ -509,7 +535,7 @@
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_span="6"
+                android:layout_span="5"
                 android:background="@drawable/cell_shape">
 
                 <TextView

@@ -23,6 +23,7 @@ import common.io.InStream;
 import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.system.files.FDByte;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -31,14 +32,12 @@ import common.util.anim.MaModel;
 public class AACLoader implements Source.AnimLoader {
     private String name;
     private FakeImage num;
-    private ImgCut imgcut;
-    private MaModel mamodel;
-    private MaAnim[] anims;
+    private final ImgCut imgcut;
+    private final MaModel mamodel;
+    private final MaAnim[] anims;
     private VImg uni, edi;
 
     public AACLoader(InStream is, String dir, String name) {
-        this.name = "local anim";
-
         String path;
 
         if(!name.equals("")) {
@@ -47,7 +46,9 @@ public class AACLoader implements Source.AnimLoader {
             path = dir+"/res/img/" + findName(dir+"/res/img/","") + "/";
         }
 
-        String nam = findName(path,".png");
+        String nam = findName(path,".png", ".bcuimg");
+
+        this.name = "local anim "+nam;
 
         try {
             num = FakeImage.read(is.nextBytesI());
@@ -76,7 +77,7 @@ public class AACLoader implements Source.AnimLoader {
         }
 
         if(!is.end()) {
-            VImg img = new VImg(is.nextBytesI());
+            VImg img = ImageBuilder.toVImg(is.nextBytesI());
             if(img.getImg().getHeight() == 32) {
                 img.mark(FakeImage.Marker.EDI);
                 edi = img;
@@ -87,7 +88,7 @@ public class AACLoader implements Source.AnimLoader {
         }
 
         if(!is.end())
-            uni = new VImg(is.nextBytesI());
+            uni = ImageBuilder.toVImg(is.nextBytesI());
 
         if(uni != null && uni != CommonStatic.getBCAssets().slot[0]) {
             uni.mark(FakeImage.Marker.UNI);
@@ -187,15 +188,23 @@ public class AACLoader implements Source.AnimLoader {
         return uni;
     }
 
-    private String findName(String path, String extension) {
+    private String findName(String path, String... extension) {
         int i = 0;
 
         while(true) {
-            File f = new File(path+number(i)+extension);
+            boolean numberFound = true;
 
-            if(f.exists()) {
-                i += 1;
-            } else {
+            for(String ex : extension) {
+                File f = new File(path+number(i)+ex);
+
+                if(f.exists()) {
+                    i += 1;
+                    numberFound = false;
+                    break;
+                }
+            }
+
+            if(numberFound) {
                 return number(i);
             }
         }
@@ -240,8 +249,12 @@ public class AACLoader implements Source.AnimLoader {
         }
 
         try {
-            return new String[] {g.getAbsolutePath().replace(".png",".bcuimg"), StaticStore.fileToMD5(g)};
-        } catch (NoSuchAlgorithmException e) {
+            String md5 = StaticStore.fileToMD5(g);
+
+            StaticStore.encryptPNG(g.getAbsolutePath(), md5, StaticStore.IV, false);
+
+            return new String[] {g.getAbsolutePath().replace(".png",".bcuimg"), md5};
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             return new String [] {g.getAbsolutePath().replace(".png",".bcuimg"), ""};
         }

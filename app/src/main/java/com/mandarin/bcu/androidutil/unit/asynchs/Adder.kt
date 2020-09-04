@@ -25,13 +25,10 @@ import common.pack.PackData
 import common.pack.UserProfile
 import java.lang.ref.WeakReference
 
-class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Void?, String?, Void?>() {
+class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Void, String, Void>() {
     private val weakReference: WeakReference<Activity> = WeakReference(context)
 
-    private val image = "3"
-    private val castle = "4"
-    private val bg = "5"
-    private val packext = "6"
+    private val done = "done"
 
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
@@ -50,25 +47,43 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
 
-        Definer.define(activity)
+        Definer.define(activity, this::updateProg, this::updateText)
         
         publishProgress("1")
 
         StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
 
-        publishProgress("2")
+        publishProgress(done)
         return null
     }
 
-    override fun onProgressUpdate(vararg values: String?) {
+    override fun onProgressUpdate(vararg values: String) {
         val activity = weakReference.get() ?: return
-        val ulistst = activity.findViewById<TextView>(R.id.unitinfst)
+
+        val ulistst = activity.findViewById<TextView>(R.id.status)
+
         when (values[0]) {
-            "1" -> ulistst.setText(R.string.main_pack)
-            "2" -> {
+            StaticStore.TEXT -> ulistst.text = values[1]
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(values[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = values[1].toInt()
+            }
+            done -> {
                 val schname: TextInputEditText = activity.findViewById(R.id.animschname)
                 val tab = activity.findViewById<TabLayout>(R.id.unittab)
                 val pager = activity.findViewById<MeasureViewPager>(R.id.unitpager)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
 
                 if(StaticStore.entityname != "") {
                     schname.setText(StaticStore.entityname)
@@ -95,30 +110,6 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
 
                 tab.setupWithViewPager(pager)
             }
-
-            image -> {
-                val name = activity.getString(R.string.main_pack_img)+ (values[1] ?: "")
-
-                ulistst.text = name
-            }
-
-            bg -> {
-                val name = activity.getString(R.string.main_pack_bg) + (values[1] ?: "")
-
-                ulistst.text = name
-            }
-
-            castle -> {
-                val name = activity.getString(R.string.main_pack_castle) + (values[1] ?: "")
-
-                ulistst.text = name
-            }
-
-            packext -> {
-                val name = activity.getString(R.string.main_pack_ext)+ (values[1] ?: "")
-
-                ulistst.text = name
-            }
         }
     }
 
@@ -128,11 +119,11 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
         if (activity == null) return
         val tab = activity.findViewById<TabLayout>(R.id.unittab)
         val pager = activity.findViewById<MeasureViewPager>(R.id.unitpager)
-        val prog = activity.findViewById<ProgressBar>(R.id.unitinfprog)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
         val search: FloatingActionButton = activity.findViewById(R.id.animsch)
         val schname: TextInputEditText = activity.findViewById(R.id.animschname)
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
-        val loadt = activity.findViewById<TextView>(R.id.unitinfst)
+        val loadt = activity.findViewById<TextView>(R.id.status)
         loadt.visibility = View.GONE
         if(UserProfile.getAllPacks().size != 1) {
             tab.visibility = View.VISIBLE
@@ -142,6 +133,16 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
         search.show()
         schname.visibility = View.VISIBLE
         layout.visibility = View.VISIBLE
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     private fun getExistingUnit() : Int {

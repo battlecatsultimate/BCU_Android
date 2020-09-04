@@ -48,6 +48,7 @@ class LUUnitListAdapter(context: Context, private val numbers: ArrayList<Identif
         val icon = u.forms[0].anim.uni?.img?.bimg()
 
         holder.id.text = generateID(numbers[position])
+
         holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].name ?: ""
 
         if(icon != null) {

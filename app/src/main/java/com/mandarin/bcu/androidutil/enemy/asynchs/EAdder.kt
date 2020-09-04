@@ -17,17 +17,17 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListPager
-import com.mandarin.bcu.androidutil.Definer
 import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
 import java.lang.ref.WeakReference
 
-class EAdder(activity: Activity, private val mode: Int, private val fm: FragmentManager?) : AsyncTask<Void?, String?, Void?>() {
+class EAdder(activity: Activity, private val mode: Int, private val fm: FragmentManager?) : AsyncTask<Void, String, Void>() {
     companion object {
         const val MODE_INFO = 0
         const val MODE_SELECTION = 1
@@ -35,11 +35,7 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
 
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     
-    private val pack = "0"
-    private val image = "1"
-    private val castle = "3"
-    private val bg = "4"
-    private val packext = "5"
+    private val done = "2"
 
     override fun onPreExecute() {
         val activity = weakReference.get() ?: return
@@ -65,51 +61,39 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
 
-        publishProgress("6")
-
-        Definer.define(activity)
+        Definer.define(activity, this::updateProg, this::updateText)
         
-        publishProgress("2")
+        publishProgress(done)
 
         return null
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg results: String?) {
+    override fun onProgressUpdate(vararg results: String) {
         val activity = weakReference.get() ?: return
-        val enlistst = activity.findViewById<TextView>(R.id.enlistst)
+        val enlistst = activity.findViewById<TextView>(R.id.status)
         when (results[0]) {
-            pack -> {
-                enlistst.setText(R.string.main_pack)
+            StaticStore.TEXT -> enlistst.text = results[1]
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(results[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = results[1].toInt()
             }
-            
-            image -> {
-                val name = activity.getString(R.string.main_pack_img)+ (results[1] ?: "")
-
-                enlistst.text = name
-            }
-
-            bg -> {
-                val name = activity.getString(R.string.main_pack_bg) + (results[1] ?: "")
-
-                enlistst.text = name
-            }
-
-            castle -> {
-                val name = activity.getString(R.string.main_pack_castle) + (results[1] ?: "")
-
-                enlistst.text = name
-            }
-
-            packext -> {
-                val name = activity.getString(R.string.main_pack_ext)+ (results[1] ?: "")
-
-                enlistst.text = name
-            }
-            "2" -> {
+            done -> {
                 val tab = activity.findViewById<TabLayout>(R.id.enlisttab)
                 val pager = activity.findViewById<MeasureViewPager>(R.id.enlistpager)
                 val schname: TextInputEditText = activity.findViewById(R.id.enemlistschname)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
 
                 if(StaticStore.entityname != "") {
                     schname.setText(StaticStore.entityname)
@@ -136,14 +120,6 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
 
                 tab.setupWithViewPager(pager)
             }
-
-            "6" -> {
-                enlistst.setText(R.string.unit_list_unitload)
-            }
-
-            "7" -> {
-                enlistst.setText(R.string.stg_info_enem)
-            }
         }
     }
 
@@ -156,7 +132,7 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
         }
         val pager = activity.findViewById<MeasureViewPager>(R.id.enlistpager)
         pager.visibility = View.VISIBLE
-        val prog = activity.findViewById<ProgressBar>(R.id.enlistprog)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
         prog.visibility = View.GONE
         val search: FloatingActionButton = activity.findViewById(R.id.enlistsch)
         search.show()
@@ -164,8 +140,18 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
         schname.visibility = View.VISIBLE
         val schnamel: TextInputLayout = activity.findViewById(R.id.enemlistschnamel)
         schnamel.visibility = View.VISIBLE
-        val enlistst: TextView = activity.findViewById(R.id.enlistst)
+        val enlistst: TextView = activity.findViewById(R.id.status)
         enlistst.visibility = View.GONE
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     inner class EnemyListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

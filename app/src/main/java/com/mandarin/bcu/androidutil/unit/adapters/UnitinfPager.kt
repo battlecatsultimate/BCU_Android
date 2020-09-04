@@ -33,6 +33,7 @@ import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
+import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Form
@@ -47,10 +48,9 @@ class UnitinfPager : Fragment() {
 
             val bundle = Bundle()
 
+            bundle.putString("Data", JsonEncoder.encode(data).toString())
             bundle.putInt("Form", form)
             bundle.putStringArray("Names", names)
-
-            pager.setData(data)
 
             pager.arguments = bundle
 
@@ -60,18 +60,20 @@ class UnitinfPager : Fragment() {
 
     private var form = 0
     private var fs = 0
-    private lateinit var data: Identifier<Unit>
-    private var s: GetStrings? = null
+    private lateinit var s: GetStrings
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray = IntArray(1)
     private var talents = false
     private var pcoinlev: IntArray = intArrayOf(0,0,0,0,0)
     private val ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
+    
+    private var isRaw = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.unit_table, container, false)
         val frse = view.findViewById<Button>(R.id.unitinffrse)
+        val unitpack = view.findViewById<TextView>(R.id.unitinfpackr)
         val unitname = view.findViewById<TextView>(R.id.unitinfname)
         val unitid = view.findViewById<TextView>(R.id.unitinfidr)
         val unithp = view.findViewById<TextView>(R.id.unitinfhpr)
@@ -103,15 +105,15 @@ class UnitinfPager : Fragment() {
 
         s = GetStrings(activity)
 
-        s!!.talList
+        s.talList
 
         color = intArrayOf(
                 StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
 
-        arguments ?: return view
+        val arg = arguments ?: return view
 
-        form = arguments!!.getInt("Form")
+        form = arg.getInt("Form")
 
         unitabil.isFocusableInTouchMode = false
         unitabil.isFocusable = false
@@ -148,7 +150,7 @@ class UnitinfPager : Fragment() {
 
         val t = BasisSet.current().t()
 
-        val u = data.get() ?: return view
+        val u = Identifier.get(StaticStore.transformIdentifier<Unit>(arg.getString("Data"))) ?: return view
 
         val f = u.forms[form]
 
@@ -216,21 +218,22 @@ class UnitinfPager : Fragment() {
 
         unitname.text = name
 
-        unitid.text = s!!.getID(form, StaticStore.trio(u.id.id))
-        unithp.text = s!!.getHP(f, t, f.unit.prefLv, false, pcoinlev)
-        unithb.text = s!!.getHB(f, false, pcoinlev)
-        unitatk.text = s!!.getTotAtk(f, t, f.unit.prefLv, false, pcoinlev)
-        unittrait.text = s!!.getTrait(f, false, pcoinlev)
-        unitcost.text = s!!.getCost(f, false, pcoinlev)
-        unitsimu.text = s!!.getSimu(f)
-        unitspd.text = s!!.getSpd(f, false, pcoinlev)
-        unitcd.text = s!!.getCD(f, t, fs, false, pcoinlev)
-        unitrang.text = s!!.getRange(f)
-        unitpreatk.text = s!!.getPre(f, fs)
-        unitpost.text = s!!.getPost(f, fs)
-        unittba.text = s!!.getTBA(f, fs)
-        unitatkt.text = s!!.getAtkTime(f, fs)
-        unitabilt.text = s!!.getAbilT(f)
+        unitpack.text = s.getPackName(f.unit.id, isRaw)
+        unitid.text = s.getID(form, StaticStore.trio(u.id.id))
+        unithp.text = s.getHP(f, t, f.unit.prefLv, false, pcoinlev)
+        unithb.text = s.getHB(f, false, pcoinlev)
+        unitatk.text = s.getTotAtk(f, t, f.unit.prefLv, false, pcoinlev)
+        unittrait.text = s.getTrait(f, false, pcoinlev)
+        unitcost.text = s.getCost(f, false, pcoinlev)
+        unitsimu.text = s.getSimu(f)
+        unitspd.text = s.getSpd(f, false, pcoinlev)
+        unitcd.text = s.getCD(f, t, fs, false, pcoinlev)
+        unitrang.text = s.getRange(f)
+        unitpreatk.text = s.getPre(f, fs)
+        unitpost.text = s.getPost(f, fs)
+        unittba.text = s.getTBA(f, fs)
+        unitatkt.text = s.getAtkTime(f, fs)
+        unitabilt.text = s.getAbilT(f)
 
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
             none.visibility = View.GONE
@@ -262,12 +265,13 @@ class UnitinfPager : Fragment() {
         val healtreat: TextInputEditText = activity.findViewById(R.id.healtreat)
         val reset = activity.findViewById<Button>(R.id.treasurereset)
         val frse = view.findViewById<Button>(R.id.unitinffrse)
+        val pack = view.findViewById<Button>(R.id.unitinfpack)
+        val unitpack = view.findViewById<TextView>(R.id.unitinfpackr)
         val unitname = view.findViewById<TextView>(R.id.unitinfname)
         val unithp = view.findViewById<TextView>(R.id.unitinfhpr)
         val unitlevel = view.findViewById<Spinner>(R.id.unitinflevr)
         val unitlevelp = view.findViewById<Spinner>(R.id.unitinflevpr)
         val unitplus = view.findViewById<TextView>(R.id.unitinfplus)
-        unitplus.text = " + "
         val unitatkb = view.findViewById<Button>(R.id.unitinfatk)
         val unitatk = view.findViewById<TextView>(R.id.unitinfatkr)
         val unitcdb = view.findViewById<Button>(R.id.unitinfcd)
@@ -292,9 +296,13 @@ class UnitinfPager : Fragment() {
 
         val t = BasisSet.current().t()
 
-        val u = data.get() ?: return
+        val arg = arguments ?: return
+
+        val u = Identifier.get(StaticStore.transformIdentifier<Unit>(arg.getString("Data"))) ?: return
 
         val f = u.forms[form]
+
+        unitplus.text = " + "
 
         val levels: MutableList<Int> = ArrayList()
 
@@ -326,19 +334,26 @@ class UnitinfPager : Fragment() {
             unitlevelp.visibility = View.GONE
             unitplus.visibility = View.GONE
         }
+
+        pack.setOnClickListener {
+            isRaw = !isRaw
+
+            unitpack.text = s.getPackName(f.unit.id, isRaw)
+        }
+
         frse.setOnClickListener {
             if (fs == 0) {
                 fs = 1
 
-                unitcd.text = s!!.getCD(f, t, fs, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, fs, talents, pcoinlev)
 
-                unitpreatk.text = s!!.getPre(f, fs)
+                unitpreatk.text = s.getPre(f, fs)
 
-                unitpost.text = s!!.getPost(f, fs)
+                unitpost.text = s.getPost(f, fs)
 
-                unittba.text = s!!.getTBA(f, fs)
+                unittba.text = s.getTBA(f, fs)
 
-                unitatkt.text = s!!.getAtkTime(f, fs)
+                unitatkt.text = s.getAtkTime(f, fs)
 
                 frse.text = activity.getString(R.string.unit_info_sec)
 
@@ -372,15 +387,15 @@ class UnitinfPager : Fragment() {
             } else {
                 fs = 0
 
-                unitcd.text = s!!.getCD(f, t, fs, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, fs, talents, pcoinlev)
 
-                unitpreatk.text = s!!.getPre(f, fs)
+                unitpreatk.text = s.getPre(f, fs)
 
-                unitpost.text = s!!.getPost(f, fs)
+                unitpost.text = s.getPost(f, fs)
 
-                unittba.text = s!!.getTBA(f, fs)
+                unittba.text = s.getTBA(f, fs)
 
-                unitatkt.text = s!!.getAtkTime(f, fs)
+                unitatkt.text = s.getAtkTime(f, fs)
 
                 frse.text = activity.getString(R.string.unit_info_fr)
 
@@ -415,30 +430,30 @@ class UnitinfPager : Fragment() {
         }
         unitcdb.setOnClickListener {
             if (unitcd.text.toString().endsWith("f"))
-                unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
             else
-                unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
         }
 
         unitpreatkb.setOnClickListener {
             if (unitpreatk.text.toString().endsWith("f"))
-                unitpreatk.text = s!!.getPre(f, 1)
+                unitpreatk.text = s.getPre(f, 1)
             else
-                unitpreatk.text = s!!.getPre(f, 0)
+                unitpreatk.text = s.getPre(f, 0)
         }
 
         unitpostb.setOnClickListener {
             if (unitpost.text.toString().endsWith("f"))
-                unitpost.text = s!!.getPost(f, 1)
+                unitpost.text = s.getPost(f, 1)
             else
-                unitpost.text = s!!.getPost(f, 0)
+                unitpost.text = s.getPost(f, 0)
         }
 
         unittbab.setOnClickListener {
             if (unittba.text.toString().endsWith("f"))
-                unittba.text = s!!.getTBA(f, 1)
+                unittba.text = s.getTBA(f, 1)
             else
-                unittba.text = s!!.getTBA(f, 0)
+                unittba.text = s.getTBA(f, 0)
         }
 
         unitatkb.setOnClickListener {
@@ -447,17 +462,17 @@ class UnitinfPager : Fragment() {
 
             if (unitatkb.text == activity.getString(R.string.unit_info_atk)) {
                 unitatkb.text = activity.getString(R.string.unit_info_dps)
-                unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
             } else {
                 unitatkb.text = activity.getString(R.string.unit_info_atk)
-                unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
             }
         }
         unitatktb.setOnClickListener {
             if (unitatkt.text.toString().endsWith("f"))
-                unitatkt.text = s!!.getAtkTime(f, 1)
+                unitatkt.text = s.getAtkTime(f, 1)
             else
-                unitatkt.text = s!!.getAtkTime(f, 0)
+                unitatkt.text = s.getAtkTime(f, 0)
         }
 
         unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
@@ -465,18 +480,18 @@ class UnitinfPager : Fragment() {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
 
-                unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+                unithp.text = s.getHP(f, t, level + levelp, talents, pcoinlev)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
                     else
-                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
                 } else {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s!!.getTotAtk(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getTotAtk(f, t, level + levelp, talents, pcoinlev)
                     else
-                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
                 }
             }
 
@@ -488,18 +503,18 @@ class UnitinfPager : Fragment() {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
 
-                unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+                unithp.text = s.getHP(f, t, level + levelp, talents, pcoinlev)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
                     else
-                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
                 } else {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
                     else
-                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
                 }
             }
 
@@ -549,18 +564,18 @@ class UnitinfPager : Fragment() {
                         t.tech[0] = lev
 
                         if (unitcd.text.toString().endsWith("s")) {
-                            unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
                         } else {
-                            unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
                         }
                     }
                 } else {
                     t.tech[0] = 1
 
                     if (unitcd.text.toString().endsWith("s")) {
-                        unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
                     } else {
-                        unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
                     }
                 }
             }
@@ -601,17 +616,17 @@ class UnitinfPager : Fragment() {
                         val trea = text.toString().toInt()
                         t.trea[2] = trea
                         if (unitcd.text.toString().endsWith("s")) {
-                            unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
                         } else {
-                            unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
                         }
                     }
                 } else {
                     t.trea[2] = 0
                     if (unitcd.text.toString().endsWith("s")) {
-                        unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
                     } else {
-                        unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
                     }
                 }
             }
@@ -654,9 +669,9 @@ class UnitinfPager : Fragment() {
                         val level = unitlevel.selectedItem as Int
                         val levelp = unitlevelp.selectedItem as Int
                         if (unitatkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
-                            unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                            unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
                         } else {
-                            unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                            unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
                         }
                     }
                 } else {
@@ -664,9 +679,9 @@ class UnitinfPager : Fragment() {
                     val level = unitlevel.selectedItem as Int
                     val levelp = unitlevelp.selectedItem as Int
                     if (unitatkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
-                        unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
                     } else {
-                        unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
                     }
                 }
             }
@@ -708,13 +723,13 @@ class UnitinfPager : Fragment() {
                         t.trea[1] = trea
                         val level = unitlevel.selectedItem as Int
                         val levelp = unitlevelp.selectedItem as Int
-                        unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+                        unithp.text = s.getHP(f, t, level + levelp, talents, pcoinlev)
                     }
                 } else {
                     t.trea[1] = 0
                     val level = unitlevel.selectedItem as Int
                     val levelp = unitlevelp.selectedItem as Int
-                    unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+                    unithp.text = s.getHP(f, t, level + levelp, talents, pcoinlev)
                 }
             }
         })
@@ -730,16 +745,16 @@ class UnitinfPager : Fragment() {
             val level = unitlevel.selectedItem as Int
             val levelp = unitlevelp.selectedItem as Int
             if (unitcd.text.toString().endsWith("s")) {
-                unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
             } else {
-                unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
             }
             if (unitatkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
-                unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+                unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
             } else {
-                unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+                unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
             }
-            unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
+            unithp.text = s.getHP(f, t, level + levelp, talents, pcoinlev)
         }
         unittalen.setOnCheckedChangeListener { _, isChecked ->
             talents = true
@@ -825,7 +840,7 @@ class UnitinfPager : Fragment() {
             pcoins[i]!!.setOnLongClickListener {
                 pcoins[i]!!.isClickable = false
 
-                StaticStore.showShortMessage(activity, s!!.getTalentName(i, f))
+                StaticStore.showShortMessage(activity, s.getTalentName(i, f))
                 true
             }
         }
@@ -859,23 +874,23 @@ class UnitinfPager : Fragment() {
         val level = unitlevel.selectedItem as Int
         val levelp = unitlevelp.selectedItem as Int
 
-        unithp.text = s!!.getHP(f, t, level + levelp, talents, pcoinlev)
-        unithb.text = s!!.getHB(f, talents, pcoinlev)
+        unithp.text = s.getHP(f, t, level + levelp, talents, pcoinlev)
+        unithb.text = s.getHB(f, talents, pcoinlev)
 
         if (unitatkb.text.toString() == "DPS")
-            unitatk.text = s!!.getDPS(f, t, level + levelp, talents, pcoinlev)
+            unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoinlev)
         else
-            unitatk.text = s!!.getAtk(f, t, level + levelp, talents, pcoinlev)
+            unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoinlev)
 
-        unitcost.text = s!!.getCost(f, talents, pcoinlev)
+        unitcost.text = s.getCost(f, talents, pcoinlev)
 
         if (unitcd.text.toString().endsWith("s"))
-            unitcd.text = s!!.getCD(f, t, 1, talents, pcoinlev)
+            unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
         else
-            unitcd.text = s!!.getCD(f, t, 0, talents, pcoinlev)
+            unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
 
-        unittrait.text = s!!.getTrait(f, talents, pcoinlev)
-        unitspd.text = s!!.getSpd(f, talents, pcoinlev)
+        unittrait.text = s.getTrait(f, talents, pcoinlev)
+        unitspd.text = s.getSpd(f, talents, pcoinlev)
 
         val du: MaskUnit = if (f.pCoin != null) if (talents) f.pCoin.improve(pcoinlev) else f.du else f.du
 
@@ -909,9 +924,5 @@ class UnitinfPager : Fragment() {
         for (i in 0 until spinner!!.count)
             if (lev == spinner.getItemAtPosition(i) as Int) index = i
         return index
-    }
-
-    private fun setData(data: Identifier<Unit>) {
-        this.data = data
     }
 }

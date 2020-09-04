@@ -2,10 +2,13 @@ package com.mandarin.bcu.androidutil.io
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.media.MediaDataSource
 import android.media.MediaMetadataRetriever
 import android.util.Log
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.fakeandroid.FIBM
+import com.mandarin.bcu.androidutil.music.OggDataSource
 import com.mandarin.bcu.androidutil.pack.AACLoader
 import com.mandarin.bcu.androidutil.pack.AImageReader
 import com.mandarin.bcu.androidutil.pack.AMusicLoader
@@ -51,66 +54,23 @@ class DefineItf : Itf {
 
     override fun exit(save: Boolean) {}
 
-    override fun prog(str: String) {}
-
     override fun getMusicLength(f: Music?): Long {
-        val file = StaticStore.getMusicFile(f) ?: return -1
+        f ?: return -1
 
         val mmr = MediaMetadataRetriever()
-        mmr.setDataSource(file.absolutePath)
+        mmr.setDataSource(OggDataSource(f.data))
 
         return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
     }
 
     override fun readBytes(fi: File): InStream? {
-        try {
-            val bytes = ByteArray(fi.length().toInt())
-            val bis = BufferedInputStream(FileInputStream(fi))
-            bis.read(bytes, 0, bytes.size)
-            bis.close()
-            return InStream.getIns(bytes)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
-    override fun readReal(fi: File): VImg {
-        return VImg(BitmapFactory.decodeFile(fi.absolutePath))
+        return InStream.getIns(fi)
     }
 
     override fun route(path: String?): File {
         val realPath = path?.replace("./",dir) ?: ""
 
         return File(realPath)
-    }
-
-    override fun <T> readSave(path: String, func: Function<Queue<String>, T>): T {
-        println(path)
-
-        val f = VFile.get(path)
-
-        println("File : $f")
-
-        println("Data : ${f.data}")
-
-        val qs = f.data.readLine()
-
-        println("QS : $qs")
-
-        if (qs != null) try {
-            val t: T? = func.apply(qs)
-            if (t != null) return t
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return func.apply(ArrayDeque())
-    }
-
-    override fun writeErrorLog(e: java.lang.Exception) {
-        ErrorLogWriter.writeDriveLog(e)
     }
 
     override fun setSE(ind: Int) {
@@ -142,48 +102,6 @@ class DefineItf : Itf {
                 null
             }
         }
-    }
-
-    override fun writeBytes(os: OutStream, path: String): Boolean {
-        os.terminate()
-
-        val f = if(path.startsWith(".")) {
-            CommonStatic.def.route(path)
-        } else {
-            File(path)
-        }
-
-        val dir = f.parentFile
-
-        if(dir != null) {
-            if(!dir.exists()) {
-                if(!dir.mkdirs()) {
-                    Log.e("ItfWriteBytes","Failed to create directory "+dir.absolutePath)
-                    return false
-                }
-            }
-        }
-
-        if(!f.exists()) {
-            if(!f.createNewFile()) {
-                Log.e("ItfWriteBytes","Faile to create file "+f.absolutePath)
-                return false
-            }
-        }
-
-        var done = false
-
-        try {
-            val fos = FileOutputStream(f)
-            os.flush(fos)
-            fos.close()
-            done = true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return done
-        }
-
-        return done
     }
 
     fun init(c: Context) {

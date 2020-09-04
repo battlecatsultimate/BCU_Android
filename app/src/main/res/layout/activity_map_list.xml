@@ -69,7 +69,7 @@
         app:layout_constraintTop_toTopOf="@+id/stgtool" />
 
     <ProgressBar
-        android:id="@+id/mapprog"
+        android:id="@+id/prog"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,15 +79,15 @@
         app:layout_constraintTop_toTopOf="@+id/maplist" />
 
     <TextView
-        android:id="@+id/mapst"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/unit_list_unitload"
+        android:text="@string/load_stage"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapprog" />
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
     <ListView
         android:id="@+id/maplist"

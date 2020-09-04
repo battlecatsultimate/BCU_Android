@@ -53,7 +53,7 @@ class ImageViewer : AppCompatActivity() {
     private var bgnum = -1
     private var form = -1
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -108,7 +108,7 @@ class ImageViewer : AppCompatActivity() {
         val frame = findViewById<TextView>(R.id.animframe)
         val fpsind = findViewById<TextView>(R.id.imgviewerfps)
         val gif = findViewById<TextView>(R.id.imgviewergiffr)
-        val prog = findViewById<ProgressBar>(R.id.imgviewerprog)
+        val prog = findViewById<ProgressBar>(R.id.prog)
 
         bck.setOnClickListener {
             StaticStore.play = true
@@ -154,6 +154,8 @@ class ImageViewer : AppCompatActivity() {
                 val data = StaticStore.transformIdentifier<Background>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), Identifier::class.java)) ?: return
 
                 val bg = Identifier.get(data) ?: return
+
+                bg.load()
 
                 if(bg.top) {
                     val b1 = getImg(bg, b.height, (height.toFloat() * 2f)/ (height.toFloat() - gh))
@@ -370,6 +372,14 @@ class ImageViewer : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

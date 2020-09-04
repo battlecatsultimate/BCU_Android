@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
@@ -132,7 +133,7 @@ class PackConflictDetail : AppCompatActivity() {
 
                         path.text = getFilePath(pc.confPack[0])
 
-                        sticon.setImageDrawable(getDrawable(R.drawable.ic_approve))
+                        sticon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_approve))
                     }
                     PackConflict.ID_PARENT -> {
                         desc.text = getParentPackList(pc)
@@ -401,7 +402,7 @@ class PackConflictDetail : AppCompatActivity() {
                         }
                     }
 
-                    PackConflict.ID_UNSUPPORTED_BCU -> {
+                    PackConflict.ID_UNSUPPORTED_CORE_VERSION -> {
                         desc.text = getVersions(pc)
 
                         path.text = getFilePath(pc.confPack[0])
@@ -566,7 +567,7 @@ class PackConflictDetail : AppCompatActivity() {
                 }
             } else {
                 action.visibility = View.GONE
-                sticon.setImageDrawable(getDrawable(R.drawable.ic_notsolve))
+                sticon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notsolve))
                 status.setText(R.string.pack_conf_cantsolve)
                 desc.setText(R.string.pack_conf_desc_cantsolve)
                 path.visibility = View.GONE
@@ -590,7 +591,6 @@ class PackConflictDetail : AppCompatActivity() {
         super.onDestroy()
 
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -619,11 +619,8 @@ class PackConflictDetail : AppCompatActivity() {
 
     private fun getFilePath(pack: String) : String {
         return when {
-            pack.endsWith(".bcupack") -> {
+            pack.endsWith(".pack.bcuzip") -> {
                 StaticStore.getExternalPack(this)+pack
-            }
-            pack.endsWith(".bcudata") -> {
-                StaticStore.getExternalRes(this)+"data/$pack"
             }
             else -> {
                 "Invalid File"
@@ -663,12 +660,21 @@ class PackConflictDetail : AppCompatActivity() {
         var anim: AnimatedVectorDrawable
 
         v.apply {
-            setImageDrawable(context.getDrawable(id))
+            setImageDrawable(ContextCompat.getDrawable(context, id))
             anim = drawable as AnimatedVectorDrawable
         }
 
         if(start) {
             anim.start()
         }
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

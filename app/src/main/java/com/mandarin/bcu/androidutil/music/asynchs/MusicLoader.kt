@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.AlphaAnimator
 import com.mandarin.bcu.androidutil.adapters.AnimatorConst
@@ -32,12 +33,14 @@ import common.util.stage.Music
 import java.lang.ref.WeakReference
 import kotlin.math.round
 
-class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
+class MusicLoader(activity: Activity) : AsyncTask<Void, String, Void>() {
     private val weak = WeakReference(activity)
     private var ch = -1
     private var ah = -1
     var destroyed = false
     private var isControlling = false
+
+    private val done = "done"
 
     override fun onPreExecute() {
         val ac = weak.get() ?: return
@@ -80,7 +83,11 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
     }
 
     override fun doInBackground(vararg params: Void?): Void? {
-        weak.get() ?: return null
+        val ac = weak.get() ?: return null
+
+        Definer.define(ac, this::updateProg, this::updateText)
+
+        publishProgress(StaticStore.TEXT, ac.getString(R.string.load_music_duratoin))
 
         if(StaticStore.musicnames.size != UserProfile.getAllPacks().size || StaticStore.musicData.isEmpty()) {
             StaticStore.musicnames.clear()
@@ -90,7 +97,7 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                 val names = SparseArray<String>()
 
                 for (j in p.musics.list.indices) {
-                    val f = StaticStore.getMusicFile(p.musics.list[j]) ?: continue
+                    val f = StaticStore.getMusicDataSource(p.musics.list[j]) ?: continue
 
                     val sp = SoundPlayer()
                     sp.setDataSource(f.absolutePath)
@@ -130,195 +137,155 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             }
         }
 
-        publishProgress(0)
+        publishProgress(done)
 
         return null
     }
 
-    override fun onProgressUpdate(vararg values: Int?) {
+    override fun onProgressUpdate(vararg values: String) {
         val ac = weak.get() ?: return
-        val m0 = MusicPlayer.music ?: return
 
-        StaticStore.musicnames[m0.pack] ?: return
-        
-        if(values[0] == 0) {
-            val name: TextView = ac.findViewById(R.id.musicname)
-            val current: TextView = ac.findViewById(R.id.musiccurrent)
-            val max: TextView = ac.findViewById(R.id.musicmaxdu)
-            val muprog: SeekBar = ac.findViewById(R.id.musicprogress)
-            val mulist: ListView = ac.findViewById(R.id.musiclist)
-            val mumenu: FloatingActionButton = ac.findViewById(R.id.musicmenu)
-            val close: FloatingActionButton = ac.findViewById(R.id.musicclose)
-            val album: ImageView = ac.findViewById(R.id.musicalbum)
-            val playlayout: ConstraintLayout = ac.findViewById(R.id.musicplayerlayout)
-            val loop: FloatingActionButton = ac.findViewById(R.id.musicloop)
-            val play: FloatingActionButton = ac.findViewById(R.id.musicplay)
-            val vol: SeekBar = ac.findViewById(R.id.musicsound)
-            val nextsong: FloatingActionButton = ac.findViewById(R.id.musicshuff)
-            val nex: FloatingActionButton = ac.findViewById(R.id.musicnext)
-            val prev: FloatingActionButton = ac.findViewById(R.id.musicprev)
+        val st = ac.findViewById<TextView>(R.id.status)
 
-            close.hide()
+        when(values[0]) {
+            StaticStore.TEXT -> st.text = values[1]
+            StaticStore.PROG -> {
+                val prog = ac.findViewById<ProgressBar>(R.id.prog)
 
-            val f = StaticStore.getMusicFile(Identifier.get(MusicPlayer.music)) ?: return
+                if(values[1].toInt() == -1) {
+                    prog.isIndeterminate = true
 
-            if (!f.exists())
-                return
-
-            if (!MusicPlayer.sound.isInitialized)
-                MusicPlayer.sound.setDataSource(f.absolutePath)
-
-            if (!MusicPlayer.sound.isPrepared) {
-                MusicPlayer.sound.prepareAsync()
-                MusicPlayer.sound.setOnPreparedListener {
-                    MusicPlayer.sound.isPrepared = true
-                    MusicPlayer.sound.start()
+                    return
                 }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = values[1].toInt()
             }
+            done -> {
+                if(destroyed)
+                    return
 
-            vol.max = 99
-            vol.progress = MusicPlayer.volume
+                val m0 = MusicPlayer.music ?: return
 
-            if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                val display = DisplayMetrics()
-                ac.windowManager.defaultDisplay.getMetrics(display)
+                StaticStore.musicnames[m0.pack] ?: return
 
-                ah = display.widthPixels / 2
+                val name: TextView = ac.findViewById(R.id.musicname)
+                val current: TextView = ac.findViewById(R.id.musiccurrent)
+                val max: TextView = ac.findViewById(R.id.musicmaxdu)
+                val muprog: SeekBar = ac.findViewById(R.id.musicprogress)
+                val mulist: ListView = ac.findViewById(R.id.musiclist)
+                val mumenu: FloatingActionButton = ac.findViewById(R.id.musicmenu)
+                val close: FloatingActionButton = ac.findViewById(R.id.musicclose)
+                val album: ImageView = ac.findViewById(R.id.musicalbum)
+                val playlayout: ConstraintLayout = ac.findViewById(R.id.musicplayerlayout)
+                val loop: FloatingActionButton = ac.findViewById(R.id.musicloop)
+                val play: FloatingActionButton = ac.findViewById(R.id.musicplay)
+                val vol: SeekBar = ac.findViewById(R.id.musicsound)
+                val nextsong: FloatingActionButton = ac.findViewById(R.id.musicshuff)
+                val nex: FloatingActionButton = ac.findViewById(R.id.musicnext)
+                val prev: FloatingActionButton = ac.findViewById(R.id.musicprev)
+                val prog = ac.findViewById<ProgressBar>(R.id.prog)
 
-                val constlay = playlayout.layoutParams
-                val allay = album.layoutParams
-                val mullay = mulist.layoutParams
+                prog.isIndeterminate = true
 
-                constlay.width = display.widthPixels / 2
-                allay.width = display.widthPixels / 2
-                mullay.width = display.widthPixels / 2
+                close.hide()
 
-                playlayout.layoutParams = constlay
-                album.layoutParams = allay
-                mulist.layoutParams = mullay
-            }
+                val f = StaticStore.getMusicDataSource(Identifier.get(MusicPlayer.music)) ?: return
 
-            vol.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    MusicPlayer.volume = progress
+                if (!MusicPlayer.sound.isInitialized)
+                    MusicPlayer.sound.setDataSource(f.absolutePath)
 
-                    val scale = StaticStore.getVolumScaler(progress)
-
-                    MusicPlayer.sound.setVolume(scale, scale)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-                }
-
-            })
-
-            play.setOnClickListener {
-                if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
-                    MusicPlayer.paused = true
-                    MusicPlayer.sound.pause()
-                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
-                } else {
-                    MusicPlayer.paused = false
-                    if (MusicPlayer.completed) {
-                        MusicPlayer.sound.seekTo(0)
-                        MusicPlayer.sound.start()
-                        MusicPlayer.completed = false
-                    } else {
+                if (!MusicPlayer.sound.isPrepared) {
+                    MusicPlayer.sound.prepareAsync()
+                    MusicPlayer.sound.setOnPreparedListener {
+                        MusicPlayer.sound.isPrepared = true
                         MusicPlayer.sound.start()
                     }
-
-                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
                 }
-            }
 
-            nex.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
+                vol.max = 99
+                vol.progress = MusicPlayer.volume
+
+                if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    val display = DisplayMetrics()
+                    ac.windowManager.defaultDisplay.getMetrics(display)
+
+                    ah = display.widthPixels / 2
+
+                    val constlay = playlayout.layoutParams
+                    val allay = album.layoutParams
+                    val mullay = mulist.layoutParams
+
+                    constlay.width = display.widthPixels / 2
+                    allay.width = display.widthPixels / 2
+                    mullay.width = display.widthPixels / 2
+
+                    playlayout.layoutParams = constlay
+                    album.layoutParams = allay
+                    mulist.layoutParams = mullay
+                }
+
+                vol.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        MusicPlayer.volume = progress
+
+                        val scale = StaticStore.getVolumScaler(progress)
+
+                        MusicPlayer.sound.setVolume(scale, scale)
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+                    }
+
+                })
+
+                play.setOnClickListener {
                     if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
+                        MusicPlayer.paused = true
                         MusicPlayer.sound.pause()
-                        MusicPlayer.sound.stop()
+                        play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
+                    } else {
+                        MusicPlayer.paused = false
+                        if (MusicPlayer.completed) {
+                            MusicPlayer.sound.seekTo(0)
+                            MusicPlayer.sound.start()
+                            MusicPlayer.completed = false
+                        } else {
+                            MusicPlayer.sound.start()
+                        }
+
+                        play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
                     }
-
-                    MusicPlayer.completed = false
-
-                    MusicPlayer.sound.reset()
-
-                    var index = StaticStore.musicData.indexOf(MusicPlayer.music) + 1
-
-                    if(index >= StaticStore.musicData.size) {
-                        index = 0
-                    }
-
-                    MusicPlayer.music = StaticStore.musicData[index]
-
-                    val m = MusicPlayer.music ?: return
-
-                    val g = StaticStore.getMusicFile(Identifier.get(MusicPlayer.music)) ?: return
-
-                    if (!g.exists()) {
-                        StaticStore.showShortMessage(ac, "No File Found")
-                        nex.performClick()
-                    }
-
-                    MusicPlayer.sound.setDataSource(g.absolutePath)
-
-                    MusicPlayer.sound.isLooping = MusicPlayer.looping
-
-                    val names = StaticStore.musicnames[m.pack] ?: return
-
-                    name.text = StaticStore.generateIdName(m, ac)
-                    max.text = names[m.id]
-
-                    val mmr = MediaMetadataRetriever()
-                    mmr.setDataSource(g.absolutePath)
-
-                    muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
-
-                    muprog.progress = MusicPlayer.sound.currentPosition
-                    current.text = getTime(MusicPlayer.sound.currentPosition)
-
-                    if (!MusicPlayer.paused)
-                        MusicPlayer.sound.start()
                 }
 
-            })
+                nex.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
+                            MusicPlayer.sound.pause()
+                            MusicPlayer.sound.stop()
+                        }
 
-            prev.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    var ratio = 0
+                        MusicPlayer.completed = false
 
-                    MusicPlayer.completed = false
+                        MusicPlayer.sound.reset()
 
-                    if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized)
-                        ratio = (MusicPlayer.sound.currentPosition.toFloat() / muprog.max.toFloat() * 100).toInt()
+                        var index = indexOf(MusicPlayer.music) + 1
 
-                    if (ratio > 5) {
-                        MusicPlayer.sound.pause()
-                        MusicPlayer.sound.seekTo(0)
-                        MusicPlayer.sound.start()
-                    } else {
-                        var index = StaticStore.musicData.indexOf(MusicPlayer.music) - 1
-
-                        if (index < 0)
+                        if(index >= StaticStore.musicData.size) {
                             index = 0
+                        }
 
                         MusicPlayer.music = StaticStore.musicData[index]
 
                         val m = MusicPlayer.music ?: return
 
-                        val g = StaticStore.getMusicFile(Identifier.get(m)) ?: return
-
-                        if (!g.exists()) {
-                            StaticStore.showShortMessage(ac, "No File Found")
-                            nex.performClick()
-                            return
-                        }
-
-                        MusicPlayer.sound.reset()
+                        val g = StaticStore.getMusicDataSource(Identifier.get(MusicPlayer.music)) ?: return
 
                         MusicPlayer.sound.setDataSource(g.absolutePath)
 
@@ -340,284 +307,326 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
                         if (!MusicPlayer.paused)
                             MusicPlayer.sound.start()
                     }
-                }
 
-            })
+                })
 
-            mulist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                MusicPlayer.completed = false
-                MusicPlayer.paused = false
+                prev.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        var ratio = 0
 
-                if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
-                    MusicPlayer.sound.pause()
-                    MusicPlayer.sound.stop()
-                }
+                        MusicPlayer.completed = false
 
-                MusicPlayer.sound.reset()
+                        if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized)
+                            ratio = (MusicPlayer.sound.currentPosition.toFloat() / muprog.max.toFloat() * 100).toInt()
 
-                MusicPlayer.music = StaticStore.musicData[position]
+                        if (ratio > 5) {
+                            MusicPlayer.sound.pause()
+                            MusicPlayer.sound.seekTo(0)
+                            MusicPlayer.sound.start()
+                        } else {
+                            var index = indexOf(MusicPlayer.music) - 1
 
-                val m = MusicPlayer.music ?: return@OnItemClickListener
+                            if (index < 0)
+                                index = 0
 
-                val g = StaticStore.getMusicFile(Identifier.get(m)) ?: return@OnItemClickListener
+                            MusicPlayer.music = StaticStore.musicData[index]
 
-                if (!g.exists()) {
-                    StaticStore.showShortMessage(ac, "No File Found")
-                    nex.performClick()
-                }
+                            val m = MusicPlayer.music ?: return
 
-                MusicPlayer.sound.setDataSource(g.absolutePath)
+                            val g = StaticStore.getMusicDataSource(Identifier.get(m)) ?: return
 
-                MusicPlayer.sound.isLooping = MusicPlayer.looping
+                            MusicPlayer.sound.reset()
 
-                val names = StaticStore.musicnames[m.pack] ?: return@OnItemClickListener
+                            MusicPlayer.sound.setDataSource(g.absolutePath)
 
-                name.text = StaticStore.generateIdName(m, ac)
-                max.text = names[m.id]
+                            MusicPlayer.sound.isLooping = MusicPlayer.looping
 
-                val mmr = MediaMetadataRetriever()
-                mmr.setDataSource(g.absolutePath)
+                            val names = StaticStore.musicnames[m.pack] ?: return
 
-                muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
-                play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
+                            name.text = StaticStore.generateIdName(m, ac)
+                            max.text = names[m.id]
 
-                MusicPlayer.sound.start()
-            }
+                            val mmr = MediaMetadataRetriever()
+                            mmr.setDataSource(g.absolutePath)
 
-            MusicPlayer.sound.setOnCompletionListener {
-                if (!MusicPlayer.sound.isLooping && !MusicPlayer.next) {
-                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
-                    MusicPlayer.completed = true
-                    MusicPlayer.sound.isRunning = false
-                    MusicPlayer.paused = true
-                }
+                            muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
 
-                if (MusicPlayer.next && !MusicPlayer.sound.isLooping) {
-                    var index = StaticStore.musicData.indexOf(MusicPlayer.music) + 1
+                            muprog.progress = MusicPlayer.sound.currentPosition
+                            current.text = getTime(MusicPlayer.sound.currentPosition)
 
-                    if (index >= StaticStore.musicData.size) {
-                        index = 0
+                            if (!MusicPlayer.paused)
+                                MusicPlayer.sound.start()
+                        }
                     }
 
-                    MusicPlayer.music = StaticStore.musicData[index]
+                })
 
-                    val m = MusicPlayer.music ?: return@setOnCompletionListener
+                mulist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    MusicPlayer.completed = false
+                    MusicPlayer.paused = false
 
-                    val g = StaticStore.getMusicFile(Identifier.get(m)) ?: return@setOnCompletionListener
-
-                    if (!g.exists()) {
-                        play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
-                        StaticStore.showShortMessage(ac, "No File Found")
-                        return@setOnCompletionListener
+                    if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
+                        MusicPlayer.sound.pause()
+                        MusicPlayer.sound.stop()
                     }
 
                     MusicPlayer.sound.reset()
 
+                    MusicPlayer.music = StaticStore.musicData[position]
+
+                    val m = MusicPlayer.music ?: return@OnItemClickListener
+
+                    val g = StaticStore.getMusicDataSource(Identifier.get(m)) ?: return@OnItemClickListener
+
                     MusicPlayer.sound.setDataSource(g.absolutePath)
 
-                    muprog.max = StaticStore.durations[index]
+                    MusicPlayer.sound.isLooping = MusicPlayer.looping
 
-                    val names = StaticStore.musicnames[m.pack] ?: return@setOnCompletionListener
+                    val names = StaticStore.musicnames[m.pack] ?: return@OnItemClickListener
 
                     name.text = StaticStore.generateIdName(m, ac)
                     max.text = names[m.id]
 
+                    val mmr = MediaMetadataRetriever()
+                    mmr.setDataSource(g.absolutePath)
+
+                    muprog.max = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_pause_black_24dp))
+
                     MusicPlayer.sound.start()
                 }
-            }
 
-            val index = StaticStore.musicData.indexOf(MusicPlayer.music)
-
-            val m = MusicPlayer.music ?: return
-
-            muprog.max = StaticStore.durations[index]
-            muprog.progress = MusicPlayer.prog
-
-            val fname = StaticStore.generateIdName(m, ac)
-
-            name.text = fname
-
-            val mnames = StaticStore.musicnames[m.pack] ?: return
-
-            max.text = mnames[m.id]
-
-            val names = ArrayList<Identifier<Music>>()
-
-            for(i in UserProfile.getAllPacks()) {
-                for(j in i.musics.list.indices) {
-                    names.add(i.musics.list[j].id)
-                }
-            }
-
-            val adapter = MusicListAdapter(ac, names, m.pack, true)
-            mulist.adapter = adapter
-
-            loop.setOnClickListener {
-                if (MusicPlayer.sound.isLooping) {
-                    MusicPlayer.looping = false
-                    loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
-                } else {
-                    loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
-                    MusicPlayer.next = false
-                    MusicPlayer.looping = true
-                    nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
-                }
-
-                MusicPlayer.sound.isLooping = !MusicPlayer.sound.isLooping
-            }
-
-            nextsong.setOnClickListener {
-                if (MusicPlayer.next) {
-                    nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
-                } else {
-                    nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
-                    MusicPlayer.sound.isLooping = false
-                    MusicPlayer.looping = false
-                    loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
-                }
-
-                MusicPlayer.next = !MusicPlayer.next
-            }
-
-            muprog.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
-                        current.text = getTime(progress)
+                MusicPlayer.sound.setOnCompletionListener {
+                    if (!MusicPlayer.sound.isLooping && !MusicPlayer.next) {
+                        play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
+                        MusicPlayer.completed = true
+                        MusicPlayer.sound.isRunning = false
+                        MusicPlayer.paused = true
                     }
 
-                    MusicPlayer.completed = false
-                }
+                    if (MusicPlayer.next && !MusicPlayer.sound.isLooping) {
+                        var index = indexOf(MusicPlayer.music) + 1
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    isControlling = true
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized) {
-                        MusicPlayer.sound.seekTo(seekBar?.progress ?: 0)
-                    }
-
-                    isControlling = false
-                }
-
-            })
-
-            mumenu.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    mumenu.hide()
-                    close.show()
-
-                    if (ch == -1) {
-                        ch = if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                            val toolbar: Toolbar = ac.findViewById(R.id.musictool)
-                            val toolh = toolbar.height
-
-                            val rect = Rect()
-
-                            ac.window.decorView.getWindowVisibleDisplayFrame(rect)
-
-                            val sh = rect.top
-
-                            val display = ac.windowManager.defaultDisplay
-                            val p = Point()
-
-                            display.getSize(p)
-
-                            val h = p.y
-
-                            h - toolh - sh
-                        } else {
-                            playlayout.height
+                        if (index >= StaticStore.musicData.size) {
+                            index = 0
                         }
-                    }
 
-                    if (ah == -1) {
-                        ah = album.height
-                    }
+                        MusicPlayer.music = StaticStore.musicData[index]
 
-                    if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.ACCELDECEL, ah, 0)
-                        aanim.start()
+                        val m = MusicPlayer.music ?: return@setOnCompletionListener
 
-                        val aalanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
-                        aalanim.start()
+                        val g = StaticStore.getMusicDataSource(Identifier.get(m)) ?: return@setOnCompletionListener
 
-                        mulist.postDelayed({
-                            val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, 0, ch)
-                            mulanim.start()
+                        MusicPlayer.sound.reset()
 
-                            val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
-                            mulalanim.start()
-                        }, 200)
-                    } else {
-                        val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, ch, StaticStore.dptopx(254f, ac))
-                        canim.start()
+                        MusicPlayer.sound.setDataSource(g.absolutePath)
 
-                        val aanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
-                        aanim.start()
+                        muprog.max = StaticStore.durations[index]
+
+                        val names = StaticStore.musicnames[m.pack] ?: return@setOnCompletionListener
+
+                        name.text = StaticStore.generateIdName(m, ac)
+                        max.text = names[m.id]
+
+                        MusicPlayer.sound.start()
                     }
                 }
 
-            })
+                val index = indexOf(MusicPlayer.music)
 
-            close.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    mumenu.show()
-                    close.hide()
+                println(index)
 
-                    if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, ch, 0)
-                        mulanim.start()
+                val m = MusicPlayer.music ?: return
 
-                        val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
-                        mulalanim.start()
+                muprog.max = StaticStore.durations[index]
+                muprog.progress = MusicPlayer.prog
 
-                        mulist.postDelayed({
-                            val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.ACCELDECEL, 0, ah)
+                val fname = StaticStore.generateIdName(m, ac)
+
+                name.text = fname
+
+                val mnames = StaticStore.musicnames[m.pack] ?: return
+
+                max.text = mnames[m.id]
+
+                val names = ArrayList<Identifier<Music>>()
+
+                for(i in UserProfile.getAllPacks()) {
+                    for(j in i.musics.list.indices) {
+                        names.add(i.musics.list[j].id)
+                    }
+                }
+
+                val adapter = MusicListAdapter(ac, names, m.pack, true)
+                mulist.adapter = adapter
+
+                loop.setOnClickListener {
+                    if (MusicPlayer.sound.isLooping) {
+                        MusicPlayer.looping = false
+                        loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
+                    } else {
+                        loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
+                        MusicPlayer.next = false
+                        MusicPlayer.looping = true
+                        nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
+                    }
+
+                    MusicPlayer.sound.isLooping = !MusicPlayer.sound.isLooping
+                }
+
+                nextsong.setOnClickListener {
+                    if (MusicPlayer.next) {
+                        nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
+                    } else {
+                        nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
+                        MusicPlayer.sound.isLooping = false
+                        MusicPlayer.looping = false
+                        loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.HintPrimary))
+                    }
+
+                    MusicPlayer.next = !MusicPlayer.next
+                }
+
+                muprog.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (fromUser) {
+                            current.text = getTime(progress)
+                        }
+
+                        MusicPlayer.completed = false
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        isControlling = true
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        if (!MusicPlayer.sound.isReleased && MusicPlayer.sound.isInitialized) {
+                            MusicPlayer.sound.seekTo(seekBar?.progress ?: 0)
+                        }
+
+                        isControlling = false
+                    }
+
+                })
+
+                mumenu.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        mumenu.hide()
+                        close.show()
+
+                        if (ch == -1) {
+                            ch = if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                val toolbar: Toolbar = ac.findViewById(R.id.musictool)
+                                val toolh = toolbar.height
+
+                                val rect = Rect()
+
+                                ac.window.decorView.getWindowVisibleDisplayFrame(rect)
+
+                                val sh = rect.top
+
+                                val display = ac.windowManager.defaultDisplay
+                                val p = Point()
+
+                                display.getSize(p)
+
+                                val h = p.y
+
+                                h - toolh - sh
+                            } else {
+                                playlayout.height
+                            }
+                        }
+
+                        if (ah == -1) {
+                            ah = album.height
+                        }
+
+                        if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.ACCELDECEL, ah, 0)
                             aanim.start()
 
-                            val aalanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
+                            val aalanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
                             aalanim.start()
-                        }, 200)
-                    } else {
-                        val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, StaticStore.dptopx(254f, ac), ch)
-                        canim.start()
 
-                        val aanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
-                        aanim.start()
-                    }
-                }
+                            mulist.postDelayed({
+                                val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, 0, ch)
+                                mulanim.start()
 
-            })
+                                val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
+                                mulalanim.start()
+                            }, 200)
+                        } else {
+                            val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, ch, StaticStore.dptopx(254f, ac))
+                            canim.start()
 
-            val handler = Handler()
-
-            val runnable = object : Runnable {
-                override fun run() {
-                    if (MusicPlayer.sound.isInitialized && !MusicPlayer.sound.isReleased && !isControlling) {
-                        if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
-                            muprog.progress = MusicPlayer.sound.currentPosition
-                            current.text = getTime(MusicPlayer.sound.currentPosition)
+                            val aanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
+                            aanim.start()
                         }
                     }
 
-                    if (!destroyed)
-                        handler.postDelayed(this, 10)
+                })
+
+                close.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        mumenu.show()
+                        close.hide()
+
+                        if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            val mulanim = ScaleAnimator(mulist, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, ch, 0)
+                            mulanim.start()
+
+                            val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.ACCELDECEL, 1f, 0f)
+                            mulalanim.start()
+
+                            mulist.postDelayed({
+                                val aanim = ScaleAnimator(album, AnimatorConst.WIDTH, 200, AnimatorConst.ACCELDECEL, 0, ah)
+                                aanim.start()
+
+                                val aalanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
+                                aalanim.start()
+                            }, 200)
+                        } else {
+                            val canim = ScaleAnimator(playlayout, AnimatorConst.HEIGHT, 200, AnimatorConst.ACCELDECEL, StaticStore.dptopx(254f, ac), ch)
+                            canim.start()
+
+                            val aanim = AlphaAnimator(album, 200, AnimatorConst.ACCELDECEL, 0f, 1f)
+                            aanim.start()
+                        }
+                    }
+
+                })
+
+                val handler = Handler()
+
+                val runnable = object : Runnable {
+                    override fun run() {
+                        if (MusicPlayer.sound.isInitialized && !MusicPlayer.sound.isReleased && !isControlling) {
+                            if (MusicPlayer.sound.isPlaying || MusicPlayer.sound.isRunning) {
+                                muprog.progress = MusicPlayer.sound.currentPosition
+                                current.text = getTime(MusicPlayer.sound.currentPosition)
+                            }
+                        }
+
+                        if (!destroyed)
+                            handler.postDelayed(this, 10)
+                    }
                 }
-            }
 
-            handler.postDelayed(runnable, 10)
+                handler.postDelayed(runnable, 10)
 
-            if (MusicPlayer.looping) {
-                loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
-            }
+                if (MusicPlayer.looping) {
+                    loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
+                }
 
-            if (MusicPlayer.next) {
-                nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
-            }
+                if (MusicPlayer.next) {
+                    nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(ac, R.attr.colorAccent))
+                }
 
-            if (MusicPlayer.paused || MusicPlayer.completed) {
-                play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
+                if (MusicPlayer.paused || MusicPlayer.completed) {
+                    play.setImageDrawable(ContextCompat.getDrawable(ac, R.drawable.ic_play_arrow_black_24dp))
+                }
             }
         }
     }
@@ -640,11 +649,21 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
         val nextsong: FloatingActionButton = ac.findViewById(R.id.musicshuff)
         val nex: FloatingActionButton = ac.findViewById(R.id.musicnext)
         val prev: FloatingActionButton = ac.findViewById(R.id.musicprev)
-        val progbar: ProgressBar = ac.findViewById(R.id.musicprogbar)
-        val loadt: TextView = ac.findViewById(R.id.musicloadt)
+        val progbar: ProgressBar = ac.findViewById(R.id.prog)
+        val loadt: TextView = ac.findViewById(R.id.status)
 
         setAppear(name, current, max, muprog, mulist, mumenu, close, album, playlayout, loop, play, vol, nextsong, nex, prev)
         setDisappear(progbar, loadt)
+    }
+
+    private fun updateText(info: String) {
+        val ac = weak.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     private fun setAppear(vararg view: View) {
@@ -681,5 +700,17 @@ class MusicLoader(activity: Activity) : AsyncTask<Void, Int, Void>() {
             "$min:$sec"
 
         return t
+    }
+
+    fun indexOf(id: Identifier<Music>?) : Int {
+        if(id == null)
+            return -1
+        else {
+            for (i in StaticStore.musicData.indices)
+                if (StaticStore.musicData[i].equals(id))
+                    return i
+
+            return -1
+        }
     }
 }

@@ -35,7 +35,11 @@ import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class UAnimationLoader(activity: Activity, private val data: Identifier<Unit>?, private val form: Int) : AsyncTask<Void?, Int?, Void?>() {
+open class UAnimationLoader(activity: Activity, private val data: Identifier<Unit>?, private val form: Int) : AsyncTask<Void, String, Void>() {
+    companion object {
+        const val PROCESS = "process"
+    }
+
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private val animS = intArrayOf(R.string.anim_move, R.string.anim_wait, R.string.anim_atk, R.string.anim_kb, R.string.anim_burrow, R.string.anim_under, R.string.anim_burrowup)
 
@@ -60,28 +64,51 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
         val gif = activity.findViewById<TextView>(R.id.imgviewergiffr)
         val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
         val img = activity.findViewById<ImageView>(R.id.imgviewerimg)
-        val loadst = activity.findViewById<TextView>(R.id.imgviewerst)
-        loadst.setText(R.string.unit_list_unitload)
+        val loadst = activity.findViewById<TextView>(R.id.status)
+
+        loadst.setText(R.string.load_unit)
+
         setDisappear(anims, forms, setting, player, controller, frame, fps, gif, cViewlayout, img)
     }
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        Definer.define(activity)
 
-        publishProgress(2)
+
+
+        Definer.define(activity, this::updateProg, this::updateText)
+
+        publishProgress(PROCESS, "")
+
         return null
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg result: Int?) {
+    override fun onProgressUpdate(vararg result: String) {
         val activity = weakReference.get() ?: return
+
         data ?: return
-        val st = activity.findViewById<TextView>(R.id.imgviewerst)
+
+        if(result.size < 2)
+            return
+
+        val st = activity.findViewById<TextView>(R.id.status)
         when (result[0]) {
-            0 -> st.setText(R.string.unit_list_unitname)
-            1 -> st.setText(R.string.unit_list_unitic)
-            2 -> {
+            StaticStore.TEXT -> st.text = result[1]
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(result[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = result[1].toInt()
+            }
+            PROCESS -> {
                 val anims = activity.findViewById<Spinner>(R.id.animselect)
                 val forms = activity.findViewById<Spinner>(R.id.formselect)
                 val controller = activity.findViewById<SeekBar>(R.id.animframeseek)
@@ -92,9 +119,16 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                 val cViewlayout = activity.findViewById<LinearLayout>(R.id.imgviewerln)
                 val option: FloatingActionButton = activity.findViewById(R.id.imgvieweroption)
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
                 val cView = AnimationCView(activity, data, StaticStore.formposition, 0, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
+
                 cView.size = StaticStore.dptopx(1f, activity).toFloat() / 1.25f
+
                 val detector = ScaleGestureDetector(activity, ScaleListener(cView))
+
+                prog.isIndeterminate = true
+
                 cView.setOnTouchListener(object : OnTouchListener {
                     var preid = -1f
                     var preX = 0f
@@ -105,7 +139,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                         val id = event.getPointerId(0)
                         val x = event.x
                         val y = event.y
-                        if(event.action == MotionEvent.ACTION_DOWN) {
+                        if (event.action == MotionEvent.ACTION_DOWN) {
                             updateScale = true
                         }
                         if (event.action == MotionEvent.ACTION_MOVE) {
@@ -137,8 +171,8 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                 val ids: MutableList<String> = ArrayList()
                 var i = 0
                 while (i < u.forms.size) {
-                    val n = if(data.pack == Identifier.DEF) {
-                        "Default-${data.id }-${StaticStore.trio(i)}"
+                    val n = if (data.pack == Identifier.DEF) {
+                        "Default-${data.id}-${StaticStore.trio(i)}"
                     } else {
                         "${data.pack}-${data.id}-${StaticStore.trio(i)}"
                     }
@@ -174,7 +208,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
 
                             val max = cView.anim?.len() ?: 2
 
-                            controller.max = max -1
+                            controller.max = max - 1
                             controller.progress = 0
                             StaticStore.frame = 0
                         }
@@ -252,7 +286,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name2 = if(data.pack == Identifier.DEF) {
+                            val name2 = if (data.pack == Identifier.DEF) {
                                 dateFormat.format(date) + "-U-" + "Default" + "-" + StaticStore.trio(data.id) + "-" + form
                             } else {
                                 "${dateFormat.format(date)}-U-${data.pack}-${StaticStore.trio(data.id)}-$form"
@@ -261,7 +295,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                             try {
                                 val path = MediaScanner.putImage(activity, b, name2)
 
-                                if(path == MediaScanner.ERRR_WRONG_SDK) {
+                                if (path == MediaScanner.ERRR_WRONG_SDK) {
                                     StaticStore.showShortMessage(activity, R.string.anim_png_fail)
                                 } else {
                                     StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", path))
@@ -283,7 +317,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
 
                             val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
                             val date = Date()
-                            val name1 = if(data.pack == Identifier.DEF) {
+                            val name1 = if (data.pack == Identifier.DEF) {
                                 dateFormat.format(date) + "-U-Trans-" + "Default" + "-" + StaticStore.trio(data.id) + "-" + form
                             } else {
                                 "${dateFormat.format(date)}-U-Trans-${data.pack}-${StaticStore.trio(data.id)}-$form"
@@ -292,7 +326,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                             try {
                                 val path = MediaScanner.putImage(activity, b, name1)
 
-                                if(path == MediaScanner.ERRR_WRONG_SDK) {
+                                if (path == MediaScanner.ERRR_WRONG_SDK) {
                                     StaticStore.showShortMessage(activity, R.string.anim_png_fail)
                                 } else {
                                     StaticStore.showShortMessage(activity, activity.getString(R.string.anim_png_success).replace("-", path))
@@ -372,8 +406,8 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
 
     override fun onPostExecute(result: Void?) {
         val activity = weakReference.get() ?: return
-        val imgprog = activity.findViewById<ProgressBar>(R.id.imgviewerprog)
-        val st = activity.findViewById<TextView>(R.id.imgviewerst)
+        val imgprog = activity.findViewById<ProgressBar>(R.id.prog)
+        val st = activity.findViewById<TextView>(R.id.status)
         setDisappear(imgprog, st)
         val anims = activity.findViewById<Spinner>(R.id.animselect)
         val forms = activity.findViewById<Spinner>(R.id.formselect)
@@ -396,6 +430,16 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
             buttons[1].setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_pause_black_24dp))
         }
         if (!shared.getBoolean("FPS", true)) fps.visibility = View.GONE
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(prog: Double) {
+        publishProgress(StaticStore.PROG, (prog * 10000.0).toInt().toString())
     }
 
     private fun setDisappear(vararg views: View) {

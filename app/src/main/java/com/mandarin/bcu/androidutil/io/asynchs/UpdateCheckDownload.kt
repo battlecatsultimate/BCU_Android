@@ -1,21 +1,23 @@
 package com.mandarin.bcu.androidutil.io.asynchs
 
-import android.app.*
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.AsyncTask
-import android.os.Build
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import com.mandarin.bcu.ApkDownload
-import com.mandarin.bcu.CheckUpdateScreen
+import com.mandarin.bcu.CheckUpdateScreen.Companion.mustShow
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import common.CommonStatic
 import common.io.assets.UpdateCheck
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -26,11 +28,12 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
-class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private val retry: Boolean, private val notifyManager: NotificationManager, private val notifyBuilder: NotificationCompat.Builder) : AsyncTask<Void, String, Void>() {
+class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private val retry: Boolean, private val notifyManager: NotificationManager, private val notifyBuilder: NotificationCompat.Builder, private val reformatRequired: Boolean) : AsyncTask<Void, String, Void>() {
     companion object {
         private const val APK = "apk"
         private const val UPDATE = "update"
         private const val TEXT = "text"
+        private const val PROG = "progress"
         const val NOTIF = "Download_Notif"
     }
 
@@ -42,18 +45,21 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/")
 
     private var canGo = true
-    private var mustShow = false
+
+    private var dontGo = false
 
     override fun onPreExecute() {
         val ac = w.get() ?: return
 
-        val prog = ac.findViewById<ProgressBar>(R.id.updateprog)
+        val prog = ac.findViewById<ProgressBar>(R.id.prog)
         val retry = ac.findViewById<Button>(R.id.retry)
 
         retry.visibility = View.GONE
         prog.visibility = View.VISIBLE
 
-        val state = ac.findViewById<TextView>(R.id.updatestate)
+        prog.isIndeterminate = true
+
+        val state = ac.findViewById<TextView>(R.id.status)
 
         state.setText(R.string.main_check_apk)
     }
@@ -62,6 +68,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         val ac = w.get() ?: return null
 
         val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val langShared = ac.getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
 
         //Check Apk Update, skip apk checking if users are retrying to download assets
         if(!retry) {
@@ -102,6 +109,9 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                         stopper.wait()
                     }
                 }
+
+                if(dontGo)
+                    return null
             } catch (e: Exception) {
                 e.printStackTrace()
 
@@ -126,19 +136,19 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
             langFiles.add("Difficulty.txt")
 
+            CommonStatic.getConfig().localLangMap["Difficulty.txt"] = langShared.getString("Difficulty.txt", "")
+
             for(lang in langFolder) {
                 for(l in StaticStore.langfile) {
                     langFiles.add("$lang$l")
+
+                    CommonStatic.getConfig().localLangMap["$lang$l"] = langShared.getString("$lang$l", "")
                 }
             }
-
-            println(langFiles.toTypedArray().contentDeepToString())
 
             val langList = UpdateCheck.checkLang(langFiles.toTypedArray()).get()
 
             if(!retry && (assetList.isNotEmpty() || musicList.isNotEmpty() || langList.isNotEmpty())) {
-                mustShow = true
-
                 val file = File(StaticStore.getExternalAsset(ac)+"assets/")
 
                 val msg = if(!file.exists())
@@ -152,7 +162,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 else
                     ac.getString(R.string.main_file_x)
 
-                val canContinue = if(assetList.isNotEmpty())
+                val canContinue = if(assetList.isNotEmpty() || musicList.isNotEmpty() || langNeed)
                     "False"
                 else
                     "True"
@@ -166,14 +176,19 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                         stopper.wait()
                     }
                 }
+
+                if(dontGo)
+                    return null
             }
 
             if(assetList.isNotEmpty()) {
+                mustShow = true
+
                 for(asset in assetList) {
                     publishProgress(ac.getString(R.string.down_state_doing)+asset.target.name, TEXT)
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_down))
-                    notifyBuilder.setContentTitle(asset.target.name)
+                    notifyBuilder.setContentText(asset.target.name).setOngoing(true)
 
                     notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
 
@@ -182,11 +197,13 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
 
             if(musicList.isNotEmpty()) {
+                mustShow = true
+
                 for(music in musicList) {
                     publishProgress(ac.getString(R.string.down_state_music)+music.target.name, TEXT)
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_music))
-                    notifyBuilder.setContentTitle(music.target.name)
+                    notifyBuilder.setContentText(music.target.name).setOngoing(true)
 
                     notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
 
@@ -195,21 +212,36 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
 
             if(langList.isNotEmpty()) {
+                mustShow = true
+
+                val editor = langShared.edit()
+
                 for(lang in langList) {
-                    publishProgress(ac.getString(R.string.down_state_doing)+lang.target.name, TEXT)
+                    val fileName = if(langFolder.contains((lang.target.parentFile?.name ?: "")+"/"))
+                        (lang.target.parentFile?.name ?: "") + "/" + lang.target.name
+                    else
+                        lang.target.name
+
+                    publishProgress(ac.getString(R.string.down_state_doing)+fileName, TEXT)
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_down))
-                    notifyBuilder.setContentTitle(lang.target.name)
+                    notifyBuilder.setContentText(fileName).setOngoing(true)
 
                     notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
 
                     lang.run(this::updateText)
+
+                    editor.putString(fileName, CommonStatic.getConfig().localLangMap[fileName])
+
+                    editor.apply()
                 }
+
+                println(CommonStatic.getConfig().localLangMap)
             }
         } catch (e: Exception) {
             e.printStackTrace()
 
-            ErrorLogWriter.writeLog(e, StaticStore.upload, ac)
+            CommonStatic.getConfig().localLangMap.clear()
 
             canGo = false
         }
@@ -233,12 +265,20 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 goToApkDownloadScreen(ac, array[0])
             }
             UPDATE -> {
-                showUpdateNotice(ac, array[2] == "True", array[0])
+                showUpdateNotice(ac, array[2] == "True", array[0], reformatRequired)
             }
             TEXT -> {
-                val state = ac.findViewById<TextView>(R.id.updatestate)
+                val state = ac.findViewById<TextView>(R.id.status)
 
                 state.text = array[0]
+            }
+            PROG -> {
+                val prog = ac.findViewById<ProgressBar>(R.id.prog)
+
+                prog.max = 10000
+                prog.isIndeterminate = false
+
+                prog.progress = array[0].toInt()
             }
         }
     }
@@ -246,24 +286,28 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     override fun onPostExecute(result: Void?) {
         val ac = w.get() ?: return
 
-        println("I'm running")
+        if(dontGo)
+            return
 
         if(canGo) {
+            if(mustShow) {
+                notifyBuilder.setContentText(null).setOngoing(false).setContentIntent(null).setProgress(0, 0, false).setContentTitle(ac.getString(R.string.down_state_ok))
+
+                notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
+            }
+
             AddPathes(ac, fromConfig).execute()
         } else {
             val retry = ac.findViewById<Button>(R.id.retry)
-            val prog = ac.findViewById<ProgressBar>(R.id.updateprog)
-            val state = ac.findViewById<TextView>(R.id.updatestate)
+            val prog = ac.findViewById<ProgressBar>(R.id.prog)
+            val state = ac.findViewById<TextView>(R.id.status)
 
             retry.visibility = View.VISIBLE
             prog.isIndeterminate = false
             prog.progress = 0
 
-            val i = Intent(ac, CheckUpdateScreen.RetryDownload(ac as CheckUpdateScreen)::class.java)
-            val p = PendingIntent.getBroadcast(ac, 1, i, PendingIntent.FLAG_UPDATE_CURRENT)
-
-            notifyBuilder.addAction(R.drawable.ic_refresh_black_24dp, "Retry", p)
-                    .setContentText(ac.getString(R.string.down_state_no))
+            notifyBuilder.setOngoing(false)
+                    .setContentText(ac.getString(R.string.down_state_no)).setAutoCancel(true)
 
             notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
 
@@ -275,7 +319,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 if (connectivityManager.activeNetwork != null) {
                     retry.visibility = View.GONE
                     prog.isIndeterminate = true
-                    val checkApk = UpdateCheckDownload(ac, fromConfig, true, notifyManager, notifyBuilder)
+                    val checkApk = UpdateCheckDownload(ac, fromConfig, true, notifyManager, notifyBuilder, reformatRequired)
                     checkApk.execute()
                 } else {
                     StaticStore.showShortMessage(ac, R.string.needconnect)
@@ -304,25 +348,27 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             apkDialog.setMessage(content)
             apkDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
                 val intent = Intent(ac, ApkDownload::class.java)
+                dontGo = true
 
                 intent.putExtra("ver", thatVersion)
 
                 ac.startActivity(intent)
                 ac.finish()
 
-                cancel(true)
-            }
-
-            val dialog = apkDialog.show()
-
-            apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
-                dialog.dismiss()
-
                 synchronized(stopper) {
                     pause = false
                     stopper.notifyAll()
                 }
             }
+
+            apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
+                synchronized(stopper) {
+                    pause = false
+                    stopper.notifyAll()
+                }
+            }
+
+            apkDialog.show()
         } else {
             synchronized(stopper) {
                 pause = false
@@ -331,7 +377,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         }
     }
 
-    private fun showUpdateNotice(ac: Activity, canContinue: Boolean, title: String) {
+    private fun showUpdateNotice(ac: Activity, canContinue: Boolean, title: String, reformatRequired: Boolean) {
         val updateDialog = AlertDialog.Builder(ac)
 
         updateDialog.setTitle(title)
@@ -340,20 +386,30 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         updateDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
             pause = false
 
+            mustShow = true
+
             synchronized(stopper) {
                 stopper.notifyAll()
             }
         }
 
         updateDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
-            if(canContinue) {
-                AddPathes(ac, fromConfig).execute()
+            dontGo = true
 
-                cancel(true)
+            if(canContinue) {
+                if(reformatRequired) {
+                    ReviveOldFiles(ac, fromConfig).execute()
+                } else {
+                    AddPathes(ac, fromConfig).execute()
+                }
             } else {
                 ac.finish()
+            }
 
-                cancel(true)
+            pause = false
+
+            synchronized(stopper) {
+                stopper.notifyAll()
             }
         }
 
@@ -382,13 +438,9 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     }
 
     private fun updateText(prog: Double) {
-        val ac = w.get() ?: return
+        w.get() ?: return
 
-        val p = ac.findViewById<ProgressBar>(R.id.updateprog)
-
-        p.max = 10000
-        p.isIndeterminate = false
-        p.progress = (prog * 10000.0).toInt()
+        publishProgress((prog * 10000.0).toInt().toString(), PROG)
 
         notifyBuilder.setProgress(10000, (prog * 10000).toInt(), false)
         notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
@@ -411,4 +463,25 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
         return JSONObject(sb.toString())
     }
+
+    private val langNeed: Boolean
+        get() {
+            val ac = w.get() ?: return true
+
+            var f = File(StaticStore.getExternalAsset(ac)+"lang/Difficulty.txt")
+
+            if(!f.exists())
+                return true
+
+            for(lang in langFolder) {
+                for(l in StaticStore.langfile) {
+                    f = File(StaticStore.getExternalAsset(ac)+"lang$lang$l")
+
+                    if(!f.exists())
+                        return true
+                }
+            }
+
+            return false
+        }
 }

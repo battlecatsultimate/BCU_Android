@@ -126,7 +126,6 @@ class MusicPlayer : AppCompatActivity() {
         musicasync = null
         unregisterReceiver(musicreceive)
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
         super.onDestroy()
     }
 
@@ -152,6 +151,15 @@ class MusicPlayer : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 
     class MusicReceiver : BroadcastReceiver {

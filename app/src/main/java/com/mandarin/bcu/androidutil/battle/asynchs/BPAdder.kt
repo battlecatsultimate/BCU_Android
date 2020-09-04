@@ -13,11 +13,11 @@ import com.mandarin.bcu.BattlePrepare
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.LineUpScreen
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import com.mandarin.bcu.androidutil.Definer
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -26,13 +26,12 @@ import common.util.stage.Stage
 import java.lang.ref.WeakReference
 import java.util.*
 
-open class BPAdder : AsyncTask<Void?, String?, Void?> {
+open class BPAdder : AsyncTask<Void, String, Void> {
     private val weakReference: WeakReference<Activity>
     private val data: Identifier<Stage>
     private var selection = 0
     private var item = 0
 
-    private val lu = "0"
     private val done = "1"
 
     constructor(activity: Activity, data: Identifier<Stage>) {
@@ -63,9 +62,12 @@ open class BPAdder : AsyncTask<Void?, String?, Void?> {
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        Definer.define(activity)
 
-        publishProgress(lu)
+
+
+        Definer.define(activity, this::updateProg, this::updateText)
+
+        publishProgress(StaticStore.TEXT, activity.getString(R.string.lineup_reading))
 
         if (!StaticStore.LUread) {
             try {
@@ -106,12 +108,26 @@ open class BPAdder : AsyncTask<Void?, String?, Void?> {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg results: String?) {
+    override fun onProgressUpdate(vararg results: String) {
         val activity = weakReference.get() ?: return
-        val loadt = activity.findViewById<TextView>(R.id.preparet)
+        val loadt = activity.findViewById<TextView>(R.id.status)
         when (results[0]) {
-            lu -> loadt.setText(R.string.lineup_reading)
-            
+            StaticStore.TEXT -> {
+                loadt.text = results[1]
+            }
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(results[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = results[1].toInt()
+            }
             done -> {
                 val line: LineUpView = activity.findViewById(R.id.lineupView)
                 val setname = activity.findViewById<TextView>(R.id.lineupname)
@@ -121,11 +137,15 @@ open class BPAdder : AsyncTask<Void?, String?, Void?> {
                 val rich = activity.findViewById<CheckBox>(R.id.battlerich)
                 val start = activity.findViewById<Button>(R.id.battlestart)
                 val stname = activity.findViewById<TextView>(R.id.battlestgname)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
+
                 line.updateLineUp()
                 setname.text = setLUName
 
                 val st = Identifier.get(data) ?: return
-                val stm = st.info.map.sm ?: return
+                val stm = st.cont ?: return
 
                 stname.text = MultiLangCont.get(st) ?: st.name ?: getStageName(data.id)
                 val stars = ArrayList<String>()
@@ -235,7 +255,7 @@ open class BPAdder : AsyncTask<Void?, String?, Void?> {
                     activity.finish()
                 }
             }
-            else -> StaticStore.showShortMessage(activity, results[0] ?: "BCU")
+            else -> StaticStore.showShortMessage(activity, results[0])
         }
     }
 
@@ -250,8 +270,8 @@ open class BPAdder : AsyncTask<Void?, String?, Void?> {
         val start = activity.findViewById<Button>(R.id.battlestart)
         val layout = activity.findViewById<LinearLayout>(R.id.preparelineup)
         val stname = activity.findViewById<TextView>(R.id.battlestgname)
-        val prog = activity.findViewById<ProgressBar>(R.id.prepareprog)
-        val t = activity.findViewById<TextView>(R.id.preparet)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
+        val t = activity.findViewById<TextView>(R.id.status)
         setAppear(line, setname, star, equip, sniper, rich, start, layout, stname)
         setDisappear(prog, t)
         val v = activity.findViewById<View>(R.id.view)
@@ -267,6 +287,16 @@ open class BPAdder : AsyncTask<Void?, String?, Void?> {
 
     private fun setAppear(vararg views: View) {
         for (v in views) v.visibility = View.VISIBLE
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     private fun getStageName(posit: Int) : String {

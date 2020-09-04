@@ -21,7 +21,7 @@ import kotlin.collections.ArrayList
 class LUUnitList : Fragment() {
     private var line: LineUpView? = null
     private val handler = Handler()
-    private var runnable: Runnable = Runnable {  }
+    private lateinit var runnable: Runnable
 
     private var destroyed = false
     private var numbers = ArrayList<Identifier<Unit>>()
@@ -34,8 +34,7 @@ class LUUnitList : Fragment() {
                 line = activity!!.findViewById(R.id.lineupView)
         }
 
-        if (arguments == null)
-            return view
+        println(StaticStore.ludata)
 
         numbers = FilterEntity.setLuFilter()
 

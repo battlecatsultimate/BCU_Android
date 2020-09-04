@@ -41,7 +41,7 @@ import java.io.File
 import java.lang.ref.WeakReference
 import java.util.*
 
-class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncTask<Void?, String?, Void?>() {
+class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncTask<Void, String, Void>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var prePosit = 0
     private var initialized = false
@@ -51,11 +51,6 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
     
     private val lu = "0"
     private val done = "1"
-    private val pack = "2"
-    private val image = "3"
-    private val castle = "4"
-    private val bg = "5"
-    private val packext = "6"
     
     override fun onPreExecute() {
         StaticStore.LULoading = true
@@ -73,7 +68,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        Definer.define(activity)
+
+        Definer.define(activity, this::updateProg, this::updateText)
 
         if (StaticStore.ludata.isEmpty()) {
             StaticStore.ludata.clear()
@@ -88,6 +84,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
         }
 
         publishProgress(lu)
+
         if (!StaticStore.LUread) {
             val path = StaticStore.getExternalUser(activity)+"/basis.json"
             val f = File(path)
@@ -114,42 +111,31 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onProgressUpdate(vararg results: String?) {
+    override fun onProgressUpdate(vararg results: String) {
         val activity = weakReference.get() ?: return
-        val st = activity.findViewById<TextView>(R.id.lineupst)
+        val st = activity.findViewById<TextView>(R.id.status)
         when(results[0]) {
-            pack -> {
-                st.setText(R.string.main_pack)
+            StaticStore.TEXT -> {
+                st.text = results[1]
             }
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
 
-            image -> {
-                val name = activity.getString(R.string.main_pack_img)+ (results[1] ?: "")
+                if(results[1].toInt() == -1) {
+                    prog.isIndeterminate = true
 
-                st.text = name
-            }
+                    return
+                }
 
-            bg -> {
-                val name = activity.getString(R.string.main_pack_bg) + (results[1] ?: "")
-
-                st.text = name
-            }
-
-            castle -> {
-                val name = activity.getString(R.string.main_pack_castle) + (results[1] ?: "")
-
-                st.text = name
-            }
-
-            packext -> {
-                val name = activity.getString(R.string.main_pack_ext)+ (results[1] ?: "")
-
-                st.text = name
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = results[1].toInt()
             }
             done -> {
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                 var setn = shared.getInt("equip_set", 0)
                 var lun = shared.getInt("equip_lu", 0)
-                val prog = activity.findViewById<ProgressBar>(R.id.lineupprog)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
                 val pager: MeasureViewPager = activity.findViewById(R.id.lineuppager)
                 val tabs: TabLayout = activity.findViewById(R.id.lineuptab)
                 val bck: FloatingActionButton = activity.findViewById(R.id.lineupbck)
@@ -159,6 +145,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
                 val schname: TextInputEditText = activity.findViewById(R.id.animschname)
                 val popupMenu = PopupMenu(activity, option)
                 val menu = popupMenu.menu
+
+                prog.isIndeterminate = true
 
                 popupMenu.menuInflater.inflate(R.menu.lineup_menu, menu)
 
@@ -749,6 +737,16 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : AsyncT
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         val view = activity.findViewById<View>(R.id.view)
         if (view == null) setAppear(tabLayout, measureViewPager, line, row, schname, layout) else setAppear(tabLayout, measureViewPager, line, row, view, schname, layout)
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     private fun setDisappear(vararg view: View) {

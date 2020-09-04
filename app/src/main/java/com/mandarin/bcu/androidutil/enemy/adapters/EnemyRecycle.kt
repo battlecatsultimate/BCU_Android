@@ -43,6 +43,8 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private var color: IntArray
     private val data: Identifier<AbEnemy>
 
+    private var isRaw = false
+
     constructor(activity: Activity, data: Identifier<AbEnemy>) {
         this.activity = activity
         s = GetStrings(activity)
@@ -61,6 +63,38 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
         this.data = data
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val pack: Button = itemView.findViewById(R.id.eneminfpack)
+        val enempack: TextView = itemView.findViewById(R.id.eneminfpackr)
+        val name: TextView = itemView.findViewById(R.id.eneminfname)
+        val frse: Button = itemView.findViewById(R.id.eneminffrse)
+        val enemid: TextView = itemView.findViewById(R.id.eneminfidr)
+        val enemicon: ImageView = itemView.findViewById(R.id.eneminficon)
+        val enemhp: TextView = itemView.findViewById(R.id.eneminfhpr)
+        val enemhb: TextView = itemView.findViewById(R.id.eneminfhbr)
+        val enemmulti: EditText = itemView.findViewById(R.id.eneminfmultir)
+        val enematkb: Button = itemView.findViewById(R.id.eneminfatk)
+        val enematk: TextView = itemView.findViewById(R.id.eneminfatkr)
+        val enematktimeb: Button = itemView.findViewById(R.id.eneminfatktime)
+        val enematktime: TextView = itemView.findViewById(R.id.eneminfatktimer)
+        val enemabilt: TextView = itemView.findViewById(R.id.eneminfabiltr)
+        val enempreb: Button = itemView.findViewById(R.id.eneminfpre)
+        val enempre: TextView = itemView.findViewById(R.id.eneminfprer)
+        val enempostb: Button = itemView.findViewById(R.id.eneminfpost)
+        val enempost: TextView = itemView.findViewById(R.id.eneminfpostr)
+        val enemtbab: Button = itemView.findViewById(R.id.eneminftba)
+        val enemtba: TextView = itemView.findViewById(R.id.eneminftbar)
+        val enemtrait: TextView = itemView.findViewById(R.id.eneminftraitr)
+        val enematkt: TextView = itemView.findViewById(R.id.eneminfatktr)
+        val enemdrop: TextView = itemView.findViewById(R.id.eneminfdropr)
+        val enemrange: TextView = itemView.findViewById(R.id.eneminfranger)
+        val enembarrier: TextView = itemView.findViewById(R.id.eneminfbarrierr)
+        val enemspd: TextView = itemView.findViewById(R.id.eneminfspdr)
+        val none: TextView = itemView.findViewById(R.id.eneminfnone)
+        val emabil: RecyclerView = itemView.findViewById(R.id.eneminfabillist)
+        val enemamulti: EditText = itemView.findViewById(R.id.eneminfamultir)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -121,6 +155,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         if (img != null)
             b = img.bimg() as Bitmap
 
+        viewHolder.enempack.text = s.getPackName(em.id, isRaw)
         viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(b, ac, 85f * ratio, 32f * ratio))
         viewHolder.enemhp.text = s.getHP(em, multi)
         viewHolder.enemhb.text = s.getHB(em)
@@ -180,6 +215,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         val itfcryt: TextInputEditText = activity!!.findViewById(R.id.itfcrytreat)
         val cotccryt: TextInputEditText = activity!!.findViewById(R.id.cotccrytreat)
         val godmaskt = arrayOf<TextInputEditText>(activity!!.findViewById(R.id.godmaskt), activity!!.findViewById(R.id.godmaskt1), activity!!.findViewById(R.id.godmaskt2))
+        viewHolder.pack.setOnClickListener {
+            isRaw = !isRaw
+
+            viewHolder.enempack.text = s.getPackName(em.id, isRaw)
+        }
         viewHolder.name.setOnLongClickListener(OnLongClickListener {
             if (activity == null) return@OnLongClickListener false
             val clipboardManager = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -513,36 +553,6 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
     override fun getItemCount(): Int {
         return 1
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.findViewById(R.id.eneminfname)
-        val frse: Button = itemView.findViewById(R.id.eneminffrse)
-        val enemid: TextView = itemView.findViewById(R.id.eneminfidr)
-        val enemicon: ImageView = itemView.findViewById(R.id.eneminficon)
-        val enemhp: TextView = itemView.findViewById(R.id.eneminfhpr)
-        val enemhb: TextView = itemView.findViewById(R.id.eneminfhbr)
-        val enemmulti: EditText = itemView.findViewById(R.id.eneminfmultir)
-        val enematkb: Button = itemView.findViewById(R.id.eneminfatk)
-        val enematk: TextView = itemView.findViewById(R.id.eneminfatkr)
-        val enematktimeb: Button = itemView.findViewById(R.id.eneminfatktime)
-        val enematktime: TextView = itemView.findViewById(R.id.eneminfatktimer)
-        val enemabilt: TextView = itemView.findViewById(R.id.eneminfabiltr)
-        val enempreb: Button = itemView.findViewById(R.id.eneminfpre)
-        val enempre: TextView = itemView.findViewById(R.id.eneminfprer)
-        val enempostb: Button = itemView.findViewById(R.id.eneminfpost)
-        val enempost: TextView = itemView.findViewById(R.id.eneminfpostr)
-        val enemtbab: Button = itemView.findViewById(R.id.eneminftba)
-        val enemtba: TextView = itemView.findViewById(R.id.eneminftbar)
-        val enemtrait: TextView = itemView.findViewById(R.id.eneminftraitr)
-        val enematkt: TextView = itemView.findViewById(R.id.eneminfatktr)
-        val enemdrop: TextView = itemView.findViewById(R.id.eneminfdropr)
-        val enemrange: TextView = itemView.findViewById(R.id.eneminfranger)
-        val enembarrier: TextView = itemView.findViewById(R.id.eneminfbarrierr)
-        val enemspd: TextView = itemView.findViewById(R.id.eneminfspdr)
-        val none: TextView = itemView.findViewById(R.id.eneminfnone)
-        val emabil: RecyclerView = itemView.findViewById(R.id.eneminfabillist)
-        val enemamulti: EditText = itemView.findViewById(R.id.eneminfamultir)
     }
 
     private fun multiply(viewHolder: ViewHolder, em: Enemy) {

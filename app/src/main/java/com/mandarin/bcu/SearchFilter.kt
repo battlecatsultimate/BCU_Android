@@ -69,7 +69,7 @@ class SearchFilter : AppCompatActivity() {
     private val tgdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 226, 227)
     private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 260, 264, 229, 205, 209, 208, 239, 213, 214, 215, 216, 210, 243, 262, 116, 237, 218, 258, 110, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
     private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
-    private var adapter: SearchAbilityAdapter? = null
+    private lateinit var adapter: SearchAbilityAdapter
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -167,7 +167,7 @@ class SearchFilter : AppCompatActivity() {
         abrec.isNestedScrollingEnabled = false
 
         adapter = SearchAbilityAdapter(this, abtool, abils, abdraw, abdrawf)
-        adapter?.setHasStableIds(true)
+        adapter.setHasStableIds(true)
 
         abrec.layoutManager = LinearLayoutManager(this)
         abrec.adapter = adapter
@@ -221,8 +221,8 @@ class SearchFilter : AppCompatActivity() {
                     target.isChecked = false
             }
 
-            adapter?.updateList()
-            adapter?.notifyDataSetChanged()
+            adapter.updateList()
+            adapter.notifyDataSetChanged()
         }
 
         tggroup.setOnCheckedChangeListener { _, checkedId -> StaticStore.tgorand = checkedId == tgor!!.id }
@@ -369,6 +369,14 @@ class SearchFilter : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

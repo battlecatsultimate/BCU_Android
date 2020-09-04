@@ -22,10 +22,10 @@ object LangLoader {
 
         for (l in lan) {
             for (n in files) {
-                val path = "./lang$l$n"
-                val f = File(path.replace("./", StaticStore.getExternalAsset(c)))
+                val f = File("${StaticStore.getExternalAsset(c)}lang$l$n")
+
                 if (f.exists()) {
-                    val qs = VFile.readLine(path)
+                    val qs = VFile.getFile(f).data.readLine()
                     when (n) {
                         "UnitName.txt" -> {
                             val size = qs.size
@@ -100,16 +100,15 @@ object LangLoader {
 
     fun readEnemyLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
-        val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
+        val files = arrayOf("EnemyName.txt", "EnemyExplanation.txt")
 
         MultiLangCont.getStatic().ENAME.clear()
         MultiLangCont.getStatic().EEXP.clear()
         for (l in lan) {
             for (n in files) {
-                val path = "./lang$l$n"
-                val f = File(path.replace("./", StaticStore.getExternalAsset(c)))
+                val f = File("${StaticStore.getExternalAsset(c)}lang$l$n")
                 if (f.exists()) {
-                    val qs = VFile.readLine(path)
+                    val qs = VFile.getFile(f).data.readLine()
 
                     when (n) {
                         "EnemyName.txt" -> for (str in qs) {
@@ -151,10 +150,9 @@ object LangLoader {
         MultiLangCont.getStatic().RWNAME.clear()
 
         for (l in lan) {
-            val path = "./lang$l$file"
-            val f = File(path.replace("./", StaticStore.getExternalAsset(c)))
+            val f = File("${StaticStore.getExternalAsset(c)}lang$l$file")
             if (f.exists()) {
-                val qs = VFile.readLine(path)
+                val qs = VFile.getFile(f).data.readLine()
 
                 if (qs != null) {
                     for (s in qs) {
@@ -200,10 +198,9 @@ object LangLoader {
             }
         }
         for (l in lan) {
-            val path = "./lang$l$rewa"
-            val f = File(path.replace("./", StaticStore.getExternalAsset(c)))
+            val f = File("${StaticStore.getExternalAsset(c)}lang$l$rewa")
             if (f.exists()) {
-                val qs = VFile.readLine(path)
+                val qs = VFile.getFile(f).data.readLine()
                 if (qs != null) {
                     for (s in qs) {
                         val strs = s.trim { it <= ' ' }.split("\t").toTypedArray()
@@ -221,11 +218,10 @@ object LangLoader {
             }
         }
 
-        val path = "./lang/$diff"
-        val f = File(path.replace("./", StaticStore.getExternalAsset(c)))
+        val f = File("${StaticStore.getExternalAsset(c)}lang/$diff")
 
         if (f.exists()) {
-            val qs = VFile.readLine(path)
+            val qs = VFile.getFile(f).data.readLine()
 
             if (qs != null) {
                 for (s in qs) {
@@ -256,10 +252,59 @@ object LangLoader {
 
                     val st = stm.list[id2]
 
-                    st.info.diff = num.toInt()
+                    if(st.info != null) {
+                        st.info.diff = num.toInt()
+                    }
                 }
             }
         }
         StaticStore.stagelang = 0
+    }
+
+    fun readMedalLang(c: Context) {
+        val medalName = "MedalName.txt"
+        val medalExp = "MedalExplanation.txt"
+
+        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
+
+        for(l in lan) {
+            val f = File("${StaticStore.getExternalAsset(c)}lang$l$medalName")
+
+            if(f.exists()) {
+                val qs = VFile.getFile(f).data.readLine()
+
+                if (qs != null) {
+                    for (str in qs) {
+                        val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                        if (strs.size == 1) {
+                            continue
+                        }
+                        val id = strs[0].trim { it <= ' ' }.toInt()
+                        val name = strs[1].trim { it <= ' ' }
+                        StaticStore.MEDNAME.put(l.substring(1, l.length - 1), id, name)
+                    }
+                }
+            }
+
+            val g = File("${StaticStore.getExternalAsset(c)}lang$l$medalExp")
+
+            if(g.exists()) {
+                val qs = VFile.getFile(g).data.readLine()
+
+                if (qs != null) {
+                    for (str in qs) {
+                        val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                        if (strs.size == 1) {
+                            continue
+                        }
+                        val id = strs[0].trim { it <= ' ' }.toInt()
+                        val name = strs[1].trim { it <= ' ' }
+                        StaticStore.MEDEXP.put(l.substring(1, l.length - 1), id, name)
+                    }
+                }
+            }
+        }
+
+        StaticStore.medallang = 0
     }
 }

@@ -309,7 +309,7 @@ class PackConfListAdapter(context: Context, name: ArrayList<String>) : ArrayAdap
                         holder.action.setSelection(0)
                 }
 
-                PackConflict.ID_UNSUPPORTED_BCU -> {
+                PackConflict.ID_UNSUPPORTED_CORE_VERSION -> {
                     if(pc.confPack.size >= 1)
                         holder.title.text = pc.confPack[0]
                     else {

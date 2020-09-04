@@ -32,12 +32,9 @@ import common.util.stage.StageMap
 import java.lang.ref.WeakReference
 import kotlin.collections.ArrayList
 
-class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
+class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
-    
-    private val unit = "0"
-    private val map = "1"
-    private val enemy = "2"
+
     private val icon = "8"
     private val done = "9"
     
@@ -49,15 +46,15 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
 
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakReference.get() ?: return null
-        publishProgress(unit)
-        Definer.define(activity)
+
+        Definer.define(activity, this::updateProg, this::updateText)
 
         publishProgress(icon)
 
         if (StaticStore.eicons == null) {
             StaticStore.eicons = Array(UserProfile.getBCData().enemies.list.size) { i ->
                 val shortPath = "./org/enemy/" + Data.trio(i) + "/enemy_icon_" + Data.trio(i) + ".png"
-                val vf = VFile.getFile(shortPath)
+                val vf = VFile.get(shortPath)
 
                 if(vf == null) {
                     StaticStore.empty(activity, 18f, 18f)
@@ -78,20 +75,32 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
         return null
     }
 
-    override fun onProgressUpdate(vararg values: String?) {
+    override fun onProgressUpdate(vararg values: String) {
         val activity = weakReference.get() ?: return
-        val mapst = activity.findViewById<TextView>(R.id.mapst)
+        val mapst = activity.findViewById<TextView>(R.id.status)
         when (values[0]) {
-            unit -> mapst.setText(R.string.unit_list_unitload)
-            
-            map -> mapst.setText(R.string.stg_info_stgd)
-            
-            enemy -> mapst.text = activity.getString(R.string.stg_info_enem)
+            StaticStore.TEXT -> mapst.text = values[1]
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(values[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = values[1].toInt()
+            }
             icon -> mapst.setText(R.string.stg_list_enemic)
             done -> {
                 mapst.text = activity.getString(R.string.stg_info_stgs)
                 val stageset = activity.findViewById<Spinner>(R.id.stgspin)
                 val maplist = activity.findViewById<ListView>(R.id.maplist)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
 
                 if(filter == null) {
                     var maxWidth = 0
@@ -187,10 +196,17 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
                     maplist.onItemClickListener = OnItemClickListener { _, _, position, _ ->
                         if (SystemClock.elapsedRealtime() - StaticStore.maplistClick < StaticStore.INTERVAL) return@OnItemClickListener
                         StaticStore.maplistClick = SystemClock.elapsedRealtime()
+
+                        if(maplist.adapter !is MapListAdapter)
+                            return@OnItemClickListener
+
+                        val stm = Identifier.get((maplist.adapter as MapListAdapter).getItem(position)) ?: return@OnItemClickListener
+
                         val intent = Intent(activity, StageList::class.java)
-                        intent.putExtra("mapcode", StaticStore.mapcode[stageset.selectedItemPosition])
-                        intent.putExtra("stid", position)
-                        intent.putExtra("custom", stageset.selectedItemPosition >= StaticStore.BCmaps)
+
+                        intent.putExtra("Data",JsonEncoder.encode(stm.id).toString())
+                        intent.putExtra("custom", stm.id.pack != Identifier.DEF)
+
                         activity.startActivity(intent)
                     }
                 } else {
@@ -325,7 +341,7 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
 
                             val stm = Identifier.get((maplist.adapter as MapListAdapter).getItem(position)) ?: return@OnItemClickListener
 
-                            intent.putExtra("Data", JsonEncoder.encode(stm).toString())
+                            intent.putExtra("Data", JsonEncoder.encode(stm.id).toString())
                             intent.putExtra("custom", stm.id.pack != Identifier.DEF)
 
                             activity.startActivity(intent)
@@ -348,10 +364,20 @@ class MapAdder(activity: Activity) : AsyncTask<Void?, String?, Void?>() {
     override fun onPostExecute(results: Void?) {
         val activity = weakReference.get() ?: return
         val maplist = activity.findViewById<ListView>(R.id.maplist)
-        val mapst = activity.findViewById<TextView>(R.id.mapst)
-        val mapprog = activity.findViewById<ProgressBar>(R.id.mapprog)
+        val mapst = activity.findViewById<TextView>(R.id.status)
+        val mapprog = activity.findViewById<ProgressBar>(R.id.prog)
         maplist.visibility = View.VISIBLE
         mapst.visibility = View.GONE
         mapprog.visibility = View.GONE
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakReference.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 }

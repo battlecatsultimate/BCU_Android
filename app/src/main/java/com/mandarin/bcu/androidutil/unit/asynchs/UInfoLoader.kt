@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
@@ -41,7 +42,7 @@ import common.util.unit.Unit
 import java.lang.ref.WeakReference
 import java.util.*
 
-class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, private val fm: FragmentManager) : AsyncTask<Void?, Int?, Void?>() {
+class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, private val fm: FragmentManager) : AsyncTask<Void, String, Void>() {
     private val weakActivity: WeakReference<Activity> = WeakReference(activity)
     private val names = ArrayList<String>()
     private val nformid = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
@@ -97,8 +98,10 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
     override fun doInBackground(vararg voids: Void?): Void? {
         val activity = weakActivity.get() ?: return null
 
+        Definer.define(activity, this::updateProg, this::updateText)
+
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        val u = data.get() ?: return null
+        val u = Identifier.get(data) ?: return null
 
         for (i in u.forms.indices) {
             var name = MultiLangCont.get(u.forms[i]) ?: u.forms[i].name
@@ -109,7 +112,7 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
             names.add(name)
         }
 
-        publishProgress(1)
+        publishProgress("1")
 
         synchronized(stopper) {
             while(!added) {
@@ -141,7 +144,9 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
                 explain = ExplanationTab(fm, tabs.tabCount, nform.toTypedArray())
             }
         }
-        publishProgress(0)
+
+        publishProgress("0")
+
         val treasure: FloatingActionButton = activity.findViewById(R.id.treabutton)
         val mainLayout: ConstraintLayout = activity.findViewById(R.id.unitinfomain)
         val treasuretab: ConstraintLayout = activity.findViewById(R.id.treasurelayout)
@@ -189,13 +194,36 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
         return null
     }
 
-    override fun onProgressUpdate(vararg results: Int?) {
+    override fun onProgressUpdate(vararg results: String) {
         val activity = weakActivity.get() ?: return
 
         when(results[0]) {
-            0 -> {
+            StaticStore.TEXT -> {
+                val st = activity.findViewById<TextView>(R.id.status)
+
+                st.text = results[1]
+            }
+            StaticStore.PROG -> {
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                if(results[1].toInt() == -1) {
+                    prog.isIndeterminate = true
+
+                    return
+                }
+
+                prog.isIndeterminate = false
+                prog.max = 10000
+                prog.progress = results[1].toInt()
+            }
+            "0" -> {
                 val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+                prog.isIndeterminate = true
+
                 if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     if (shared.getBoolean("Lay_Land", false)) {
                         setUinfo(activity, tabs)
@@ -211,8 +239,12 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
                 }
             }
 
-            1 -> {
+            "1" -> {
                 val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
+                val prog = activity.findViewById<ProgressBar>(R.id.prog)
+
+                prog.isIndeterminate = true
+
                 val u = data.get() ?: return
 
                 for (i in u.forms.indices) {
@@ -259,12 +291,24 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
             treasuretab.requestLayout()
         }
 
-        val prog = activity.findViewById<ProgressBar>(R.id.unitinfprog)
+        val prog = activity.findViewById<ProgressBar>(R.id.prog)
         prog.visibility = View.GONE
+        val st = activity.findViewById<TextView>(R.id.status)
+        st.visibility = View.GONE
         val anim = activity.findViewById<Button>(R.id.animanim)
         anim.visibility = View.VISIBLE
         val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
         tabs.getTabAt(StaticStore.unittabposition)?.select()
+    }
+
+    private fun updateText(info: String) {
+        val ac = weakActivity.get() ?: return
+
+        publishProgress(StaticStore.TEXT, StaticStore.getLoadingText(ac, info))
+    }
+
+    private fun updateProg(p: Double) {
+        publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
     @SuppressLint("ClickableViewAccessibility")

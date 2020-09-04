@@ -255,8 +255,6 @@
     <string name="def_map_name">Map_Name</string>
     <string name="def_map_coount">Map_Coount</string>
     <string name="map_list_stages">" ステージ"</string>
-    <string name="stg_info_stgd">マップ情報を読み込んでいます…</string>
-    <string name="stg_info_enem">敵データを読み込んでいます…</string>
     <string name="stg_info_enemimg">敵の画像を読み込んでいます…</string>
     <string name="stg_info_enemname">敵の名前を読み込んでいます…</string>
     <string name="stg_info_stgs">マップをフィルタリングしています…</string>
@@ -265,8 +263,6 @@
     <string name="abi_imcri">クリティカル無効</string>
     <string name="stg_list_enemic">敵のアイコンを読み込んでいます…</string>
     <string name="def_stage_name">Stage_Name</string>
-    <string name="stg_list_stl">ステージデータを読み込んでいます…</string>
-    <string name="unit_list_unitload">にゃんこデータを読み込んでいます…</string>
     <string name="unit_list_unitname">にゃんこの名前を読み込んでいます…</string>
     <string name="unit_list_unitic">にゃんこの画像を読み込んでいます…</string>
     <string name="map_list_stage">" ステージ"</string>
@@ -529,7 +525,6 @@
     <string name="dev_pass_wrong">入力したパスワードが間違っています</string>
     <string name="dev_pass_activated">開発者モードが有効化されました</string>
     <string name="main_music">音楽</string>
-    <string name="music_read">音楽データを読み込んでいます…</string>
     <string name="battle_lost">敗北…</string>
     <string name="battle_won">完全勝利！！</string>
     <string name="battle_lost_boss">敗北…\nボス残り体力 : _%</string>
@@ -686,4 +681,23 @@
     <string name="main_file_asset">Asset Update Found</string>
     <string name="main_notif_down">Downloaing Files</string>
     <string name="main_notif_music">Downloading Music</string>
+    <string name="main_file_merge">Merging Files…</string>
+    <string name="main_rev_check">Checking Old Files…</string>
+    <string name="main_rev_remove">Removing Old Files…</string>
+    <string name="main_rev_reformat">Reformtting Pack Files…</string>
+    <string name="unit_inf_pack">Pack</string>
+    <string name="load_bascimg">Loading Basic Images…</string>
+    <string name="load_enemy">Loading Enemy Data…</string>
+    <string name="load_unit">Loading Unit Data…</string>
+    <string name="load_aux">Loading Auxiliary Data…</string>
+    <string name="load_effect">Loading Effect Data…</string>
+    <string name="load_bg">Loading Background Data…</string>
+    <string name="load_castle">Loading Cat Base Data…</string>
+    <string name="load_soul">Loading Soul Data…</string>
+    <string name="load_stage">Loading Stage Data…</string>
+    <string name="load_orb">Loading Orb Data…</string>
+    <string name="load_music">Loading Music Data…</string>
+    <string name="load_process">Processing Data…</string>
+    <string name="load_music_duratoin">Processing Music Data…</string>
+    <string name="load_add">Loading UI Data…</string>
 </resources>

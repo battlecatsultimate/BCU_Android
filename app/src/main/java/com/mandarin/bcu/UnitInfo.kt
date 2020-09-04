@@ -26,6 +26,8 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader
 import common.CommonStatic
+import common.io.json.JsonEncoder
+import common.pack.Identifier
 import common.util.unit.Unit
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -153,10 +155,10 @@ class UnitInfo : AppCompatActivity() {
         val result = intent
         val extra = result.extras ?: return
 
-        val data = StaticStore.transformIdentifier<Unit>(extra.getString("Data"))
+        val data = StaticStore.transformIdentifier<Unit>(extra.getString("Data")) ?: return
         val s = GetStrings(this)
 
-        val u = data?.get() ?: return
+        val u = Identifier.get(data) ?: return
 
         unittitle.text = s.getTitle(u.forms[0])
 
@@ -169,6 +171,7 @@ class UnitInfo : AppCompatActivity() {
                 StaticStore.formposition = StaticStore.unittabposition
 
                 intent.putExtra("Img", 2)
+                intent.putExtra("Data", JsonEncoder.encode(data).toString())
                 intent.putExtra("Form", StaticStore.formposition)
 
                 startActivity(intent)
@@ -215,6 +218,14 @@ class UnitInfo : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        (CommonStatic.ctx as AContext).releaseActivity()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }
