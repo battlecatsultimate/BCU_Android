@@ -4,18 +4,26 @@ import android.media.MediaDataSource
 import common.system.files.FileData
 
 class OggDataSource(private val desc: FileData) : MediaDataSource() {
+    private var ins = desc.stream
+
+    private var ind = 0L
 
     override fun close() {
+        ins.close()
     }
 
     override fun readAt(position: Long, buffer: ByteArray, offset: Int, size: Int): Int {
-        val inp = desc.stream
+        if(position != ind) {
+            close()
+            ins = desc.stream
+            ins.skip(position)
+            ind = position
+        }
 
-        inp.skip(position)
+        val result = ins.read(buffer, offset, size)
 
-        val result = inp.read(buffer, offset, size)
-
-        inp.close()
+        if(result != -1)
+            ind += result
 
         return result
     }

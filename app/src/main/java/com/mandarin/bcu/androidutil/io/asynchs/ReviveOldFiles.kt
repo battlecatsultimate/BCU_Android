@@ -117,6 +117,10 @@ class ReviveOldFiles(ac: Activity, private val config: Boolean) : AsyncTask<Void
 
         StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
 
+        val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+        shared.edit().putBoolean("Reformat0150", false).apply()
+
         if(PackConflict.conflicts.isEmpty()) {
             if (!MainActivity.isRunning) {
                 val intent = Intent(ac, MainActivity::class.java)

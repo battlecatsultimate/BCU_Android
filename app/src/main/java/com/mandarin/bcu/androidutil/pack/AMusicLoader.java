@@ -2,10 +2,12 @@ package com.mandarin.bcu.androidutil.pack;
 
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
+import org.jcodec.common.io.IOUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import common.CommonStatic;
 import common.io.InStream;
@@ -24,8 +26,6 @@ public class AMusicLoader implements CommonStatic.ImgReader {
 
     @Override
     public File readFile(InStream is) {
-        byte[] bs = is.subStream().nextBytesI();
-
         String path = "./res/music/"+ Data.hex(pid)+"/";
         String name = Data.trio(mid)+".ogg";
 
@@ -52,11 +52,18 @@ public class AMusicLoader implements CommonStatic.ImgReader {
                 }
             }
 
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(g));
+            InputStream ins = (InputStream) is.subStream().subStream();
+            FileOutputStream fos = new FileOutputStream(g);
 
-            bos.write(bs);
-            bos.flush();
-            bos.close();
+            byte[] b = new byte[65536];
+            int len;
+
+            while((len = ins.read(b)) > 0) {
+                fos.write(b, 0, len);
+            }
+
+            ins.close();
+            fos.close();
 
             return g;
         } catch (IOException e) {

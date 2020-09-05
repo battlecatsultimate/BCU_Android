@@ -114,8 +114,8 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
-        if (!shared.contains("Skip_Text")) {
-            ed.putBoolean("Skip_Text", false)
+        if (shared.contains("Skip_Text")) {
+            ed.remove("Skip_Text")
             ed.apply()
         }
 

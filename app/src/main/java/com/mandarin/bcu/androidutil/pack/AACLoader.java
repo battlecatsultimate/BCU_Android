@@ -1,10 +1,12 @@
 package com.mandarin.bcu.androidutil.pack;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM;
+import com.mandarin.bcu.androidutil.io.AContext;
 import com.mandarin.bcu.androidutil.io.DefferedLoader;
 
 import java.io.File;
@@ -126,10 +128,18 @@ public class AACLoader implements Source.AnimLoader {
 
         num = reader.readImg(numRef);
 
-        try {
-            DefferedLoader.Companion.getPending().add(new DefferedLoader<>("Context", num, num.getClass().getDeclaredField("password"), c -> StaticStore.getPassword(((AImageReader)reader).name, ((FIBM) num).reference, c)));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(CommonStatic.ctx instanceof AContext) {
+            File f = ((AContext) CommonStatic.ctx).extractImage(numRef);
+
+            if(f != null) {
+                try {
+                    num = ImageBuilder.builder.build(f);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("AACLoader", "File is null : "+numRef);
+            }
         }
 
         edi = reader.readImgOptional(is.nextString());

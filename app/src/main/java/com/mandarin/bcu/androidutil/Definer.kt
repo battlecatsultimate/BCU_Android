@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.util.Log
 import com.mandarin.bcu.R
@@ -14,6 +15,7 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
+import com.mandarin.bcu.androidutil.music.OggDataSource
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
 import common.io.assets.AssetLoader
@@ -54,7 +56,7 @@ object Definer {
             }
 
             if(!StaticStore.packRead) {
-                text.accept(context.getString(R.string.main_pack_ext))
+                text.accept(context.getString(R.string.main_pack))
                 UserProfile.loadPacks(prog)
 
                 StaticStore.packRead = true
@@ -253,8 +255,6 @@ object Definer {
 
             if(SoundHandler.play.isEmpty()) {
                 SoundHandler.play = BooleanArray(UserProfile.getBCData().musics.list.size)
-
-                println(SoundHandler.play.size)
             }
 
         } catch (e: IOException) {

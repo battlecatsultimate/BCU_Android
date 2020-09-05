@@ -22,6 +22,7 @@ import com.mandarin.bcu.androidutil.pack.conflict.adapters.PackConfListAdapter
 import com.nhaarman.supertooltips.ToolTip
 import com.nhaarman.supertooltips.ToolTipRelativeLayout
 import common.CommonStatic
+import common.io.assets.AssetLoader
 import common.util.Data
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -410,9 +411,9 @@ class PackConflictDetail : AppCompatActivity() {
                         var d = getString(R.string.pack_conf_guide_unsupp)
 
                         d = if(pc.confPack.size != 2) {
-                            d.replace("-", Data.revVer(MainBCU.ver)).replace("_", "Unknown")
+                            d.replace("-", AssetLoader.CORE_VER).replace("_", "Unknown")
                         } else {
-                            d.replace("-", Data.revVer(MainBCU.ver)).replace("_", pc.confPack[1])
+                            d.replace("-", AssetLoader.CORE_VER).replace("_", pc.confPack[1])
                         }
 
                         detail.text = d
@@ -638,9 +639,9 @@ class PackConflictDetail : AppCompatActivity() {
 
     private fun getVersions(pc: PackConflict) : String {
         return if(pc.confPack.size != 2) {
-            getString(R.string.pack_desc_unsupported).replace("-", Data.revVer(MainBCU.ver)).replace("_", "Unknown")
+            getString(R.string.pack_desc_unsupported).replace("-", AssetLoader.CORE_VER).replace("_", "Unknown")
         } else {
-            getString(R.string.pack_desc_unsupported).replace("-", Data.revVer(MainBCU.ver)).replace("_", pc.confPack[1])
+            getString(R.string.pack_desc_unsupported).replace("-", AssetLoader.CORE_VER).replace("_", pc.confPack[1])
         }
     }
 

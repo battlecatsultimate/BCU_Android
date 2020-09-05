@@ -32,8 +32,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     companion object {
         private const val APK = "apk"
         private const val UPDATE = "update"
-        private const val TEXT = "text"
-        private const val PROG = "progress"
         const val NOTIF = "Download_Notif"
     }
 
@@ -122,7 +120,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         }
 
         try {
-            publishProgress(ac.getString(R.string.main_check_up), TEXT)
+            publishProgress(ac.getString(R.string.main_check_up), StaticStore.TEXT)
 
             val updateJson = UpdateCheck.checkUpdate()
 
@@ -185,7 +183,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 mustShow = true
 
                 for(asset in assetList) {
-                    publishProgress(ac.getString(R.string.down_state_doing)+asset.target.name, TEXT)
+                    publishProgress(ac.getString(R.string.down_state_doing)+asset.target.name, StaticStore.TEXT)
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_down))
                     notifyBuilder.setContentText(asset.target.name).setOngoing(true)
@@ -200,7 +198,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 mustShow = true
 
                 for(music in musicList) {
-                    publishProgress(ac.getString(R.string.down_state_music)+music.target.name, TEXT)
+                    publishProgress(ac.getString(R.string.down_state_music)+music.target.name, StaticStore.TEXT)
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_music))
                     notifyBuilder.setContentText(music.target.name).setOngoing(true)
@@ -222,7 +220,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                     else
                         lang.target.name
 
-                    publishProgress(ac.getString(R.string.down_state_doing)+fileName, TEXT)
+                    publishProgress(ac.getString(R.string.down_state_doing)+fileName, StaticStore.TEXT)
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_down))
                     notifyBuilder.setContentText(fileName).setOngoing(true)
@@ -267,12 +265,12 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             UPDATE -> {
                 showUpdateNotice(ac, array[2] == "True", array[0], reformatRequired)
             }
-            TEXT -> {
+            StaticStore.TEXT -> {
                 val state = ac.findViewById<TextView>(R.id.status)
 
                 state.text = array[0]
             }
-            PROG -> {
+            StaticStore.PROG -> {
                 val prog = ac.findViewById<ProgressBar>(R.id.prog)
 
                 prog.max = 10000
@@ -296,7 +294,11 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
             }
 
-            AddPathes(ac, fromConfig).execute()
+            if(reformatRequired) {
+                ReviveOldFiles(ac, fromConfig).execute()
+            } else {
+                AddPathes(ac, fromConfig).execute()
+            }
         } else {
             val retry = ac.findViewById<Button>(R.id.retry)
             val prog = ac.findViewById<ProgressBar>(R.id.prog)
@@ -440,7 +442,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     private fun updateText(prog: Double) {
         w.get() ?: return
 
-        publishProgress((prog * 10000.0).toInt().toString(), PROG)
+        publishProgress((prog * 10000.0).toInt().toString(), StaticStore.PROG)
 
         notifyBuilder.setProgress(10000, (prog * 10000).toInt(), false)
         notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())

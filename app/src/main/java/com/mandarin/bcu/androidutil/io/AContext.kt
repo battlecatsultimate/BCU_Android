@@ -134,7 +134,18 @@ class AContext : Context {
 
                         PackConflict(PackConflict.ID_SAME_ID, list, true)
                     }
+                } else if(msg.contains(" core version ")) {
+                    val info = msg.replace("Pack ","").replace(" core version (", "\\").replace(") is higher than BCU", "").replace(")", "").split("\\")
+
+                    val list = ArrayList<String>()
+
+                    list.add(info[0])
+                    list.add(info[1])
+
+                    PackConflict(PackConflict.ID_UNSUPPORTED_CORE_VERSION, list, true)
                 }
+
+
 
             } else if(t == Context.ErrType.ERROR || t == Context.ErrType.FATAL) {
                 Log.e("AContext", str ?: "")
@@ -181,5 +192,42 @@ class AContext : Context {
         } else {
             File(StaticStore.dataPath+"music/"+m.id.pack+"-"+Data.trio(m.id.id)+".ogg")
         }
+    }
+
+    fun extractImage(path: String) : File? {
+        synchronized(stopper) {
+            while(c == null) {
+                stopper.wait()
+            }
+        }
+
+        val wac = c ?: return null
+
+        val a = wac.get() ?: return null
+
+        val target = File(path)
+
+        if(!target.exists()) {
+            Log.e("AContext::extractImage", "File not existing : ${target.absolutePath}")
+
+            return null
+        }
+
+        val parent = target.parentFile?.name ?: return null
+
+        val shared = a.getSharedPreferences(parent, android.content.Context.MODE_PRIVATE)
+
+        if(!shared.contains(path)) {
+            Log.e("AContext::extractImage", "Key not existing : $path")
+
+            return null
+        }
+
+        val password = shared.getString(path, "") ?: ""
+
+        if(password.isEmpty())
+            return null
+
+        return File(StaticStore.decryptPNG(path, password, StaticStore.IV))
     }
 }

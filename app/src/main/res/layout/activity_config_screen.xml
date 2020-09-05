@@ -73,7 +73,7 @@
                 android:layout_marginEnd="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/configskiptext">
+                app:layout_constraintTop_toBottomOf="@+id/apktest">
 
                 <TextView
                     android:id="@+id/configdeflev"
@@ -359,17 +359,6 @@
                     android:text="@string/config_lay_slide"
                     android:textColor="?attr/TextPrimary" />
             </RadioGroup>
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/configskiptext"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/config_skip_text"
-                android:textColor="?attr/TextPrimary"
-                app:layout_constraintEnd_toEndOf="@+id/apktest"
-                app:layout_constraintStart_toStartOf="@+id/apktest"
-                app:layout_constraintTop_toBottomOf="@+id/apktest" />
 
             <Button
                 android:id="@+id/configcheckup"

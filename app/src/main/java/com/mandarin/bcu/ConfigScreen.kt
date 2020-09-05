@@ -297,16 +297,6 @@ open class ConfigScreen : AppCompatActivity() {
             ed1.apply()
         }
 
-        val skiptext = findViewById<SwitchCompat>(R.id.configskiptext)
-
-        skiptext.isChecked = shared.getBoolean("Skip_Text", false)
-
-        skiptext.setOnCheckedChangeListener { _, isChecked ->
-            val ed1 = shared.edit()
-            ed1.putBoolean("Skip_Text", isChecked)
-            ed1.apply()
-        }
-
         val checkupdate = findViewById<Button>(R.id.configcheckup)
 
         checkupdate.setOnClickListener(object : SingleClick() {
