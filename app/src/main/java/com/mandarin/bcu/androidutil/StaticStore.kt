@@ -42,9 +42,7 @@ import common.util.anim.AnimU.UType
 import common.util.anim.ImgCut
 import common.util.lang.MultiLangCont
 import common.util.stage.Music
-import common.util.unit.Combo
-import common.util.unit.Enemy
-import common.util.unit.Form
+import common.util.unit.*
 import common.util.unit.Unit
 import java.io.*
 import java.math.BigInteger
@@ -220,7 +218,7 @@ object StaticStore {
     var stageSpinner = -1
     private var bgnumber = 0
     var bglistClick = SystemClock.elapsedRealtime()
-    var stgenem: ArrayList<Enemy> = ArrayList()
+    var stgenem: ArrayList<Identifier<AbEnemy>> = ArrayList()
     var stgenemorand = true
     var stgmusic = ""
     var stgbg = ""

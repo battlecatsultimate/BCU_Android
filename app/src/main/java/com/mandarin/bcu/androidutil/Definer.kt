@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.util.Log
 import com.mandarin.bcu.R
@@ -15,7 +14,6 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
-import com.mandarin.bcu.androidutil.music.OggDataSource
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
 import common.io.assets.AssetLoader
@@ -23,6 +21,7 @@ import common.pack.PackData
 import common.pack.UserProfile
 import common.system.fake.ImageBuilder
 import common.system.files.VFile
+import common.util.Data
 import common.util.lang.ProcLang
 import java.io.File
 import java.io.IOException
@@ -255,6 +254,25 @@ object Definer {
 
             if(SoundHandler.play.isEmpty()) {
                 SoundHandler.play = BooleanArray(UserProfile.getBCData().musics.list.size)
+            }
+
+            if (StaticStore.eicons == null) {
+                StaticStore.eicons = Array(UserProfile.getBCData().enemies.list.size) { i ->
+                    val shortPath = "./org/enemy/" + Data.trio(i) + "/enemy_icon_" + Data.trio(i) + ".png"
+                    val vf = VFile.get(shortPath)
+
+                    if(vf == null) {
+                        StaticStore.empty(context, 18f, 18f)
+                    }
+
+                    val icon = vf.data.img.bimg()
+
+                    if(icon == null) {
+                        StaticStore.empty(context, 18f, 18f)
+                    }
+
+                    StaticStore.getResizeb(icon as Bitmap, context, 36f)
+                }
             }
 
         } catch (e: IOException) {

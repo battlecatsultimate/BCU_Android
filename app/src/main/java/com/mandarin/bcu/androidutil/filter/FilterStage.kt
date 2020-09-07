@@ -10,12 +10,12 @@ import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
 import common.util.stage.Stage
-import common.util.unit.Enemy
+import common.util.unit.AbEnemy
 import java.util.*
 import kotlin.collections.ArrayList
 
 object FilterStage {
-    fun setFilter(name: String, stmname: String, enemies: List<Enemy>, enemorand: Boolean, music: String, bg: String, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
+    fun setFilter(name: String, stmname: String, enemies: ArrayList<Identifier<AbEnemy>>, enemorand: Boolean, music: String, bg: String, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
         val result = HashMap<String, SparseArray<ArrayList<Int>>>()
 
         for(n in 0 until StaticStore.mapcode.size) {
@@ -25,7 +25,7 @@ object FilterStage {
             val stresult = SparseArray<ArrayList<Int>>()
 
             for(j in m.maps.list.indices) {
-                val stm = m.maps[j] ?: continue
+                val stm = m.maps.list[j] ?: continue
 
                 val sresult = ArrayList<Int>()
 
@@ -45,17 +45,27 @@ object FilterStage {
                         (MultiLangCont.get(s) ?: s.name ?: "").toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))
                     }
 
-                    val enem = containEnemy(enemies, s.data.allEnemy, enemorand)
+                    val es = ArrayList<Identifier<AbEnemy>>()
+
+                    for(d in s.data.datas) {
+                        val e = d.enemy
+
+                        if(!es.contains(e)) {
+                            es.add(e)
+                        }
+                    }
+
+                    val enem = containEnemy(enemies, es, enemorand)
 
                     var mus = music.isEmpty()
 
-                    if(!mus && Identifier.get(s.mus0) != null) {
+                    if(!mus && s.mus0 != null && s.mus0.id != -1) {
                         val m0 = s.mus0.pack + " - " + Data.trio(s.mus0.id)
 
                         mus = mus || m0 == music
                     }
 
-                    if(!mus && Identifier.get(s.mus1) != null) {
+                    if(!mus && s.mus1 != null && s.mus1.id != -1) {
                         val m1 = s.mus1.pack + " - " + Data.trio(s.mus1.id)
 
                         mus = mus || m1 == music
@@ -63,7 +73,7 @@ object FilterStage {
 
                     var backg = bg.isEmpty()
 
-                    if(!backg && Identifier.get(s.bg) != null) {
+                    if(!backg && s.bg != null && s.bg.id != -1) {
                         val b = s.bg.pack + " - " + Data.trio(s.bg.id)
 
                         backg = backg || bg == b
@@ -112,15 +122,15 @@ object FilterStage {
         return result
     }
 
-    private fun containEnemy(src: List<Enemy>, target: Set<Enemy>, orand: Boolean) : Boolean {
+    private fun containEnemy(src: ArrayList<Identifier<AbEnemy>>, target: List<Identifier<AbEnemy>>, orand: Boolean) : Boolean {
         if(src.isEmpty()) return true
 
         if(target.isEmpty()) return false
 
-        val targetid = ArrayList<Enemy>()
+        val targetid = ArrayList<Identifier<AbEnemy>>()
 
         for(ten in target) {
-            if (!targetid.contains(ten)) {
+            if (!contains(ten, targetid)) {
                 targetid.add(ten)
             }
         }
@@ -129,13 +139,13 @@ object FilterStage {
 
         if(orand) {
             for(i in src) {
-                if(targetid.contains(i))
+                if(contains(i, targetid))
                     return true
             }
 
             return false
         } else {
-            return targetid.containsAll(src)
+            return containsAll(src, targetid)
         }
     }
 
@@ -153,5 +163,25 @@ object FilterStage {
         }
 
         return false
+    }
+
+    private fun contains(src: Identifier<AbEnemy>, target: ArrayList<Identifier<AbEnemy>>) : Boolean {
+        for(id in target) {
+            if(id.equals(src)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private fun containsAll(src: ArrayList<Identifier<AbEnemy>>, target: ArrayList<Identifier<AbEnemy>>) : Boolean {
+        for(id in src) {
+            if(!contains(id, target)) {
+                return false
+            }
+        }
+
+        return true
     }
 }

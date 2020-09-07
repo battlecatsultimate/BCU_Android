@@ -81,8 +81,20 @@ class StageLoader(activity: Activity, private val data: Identifier<StageMap>, pr
 
                 val stageListAdapter: Any
 
-                val stages = Array<Identifier<Stage>>(stm.list.list.size) { i ->
-                    stm.list.list[i].id
+                val stages = if(StaticStore.filter != null) {
+                    val f = StaticStore.filter ?: return
+
+                    val stmList = f[stm.cont.sid] ?: return
+
+                    val stList = stmList[stm.id.id] ?: return
+
+                    Array<Identifier<Stage>>(stList.size) {
+                        stm.list.list[stList[it]].id
+                    }
+                } else {
+                    Array<Identifier<Stage>>(stm.list.list.size) { i ->
+                        stm.list.list[i].id
+                    }
                 }
 
                 stageListAdapter = if(custom) {

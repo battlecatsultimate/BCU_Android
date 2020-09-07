@@ -175,6 +175,9 @@ class AContext : Context {
     }
 
     override fun preload(desc: PackLoader.ZipDesc.FileDesc): Boolean {
+        if(desc.path.contains(".ogg"))
+            return false
+
         return Admin.preload(desc)
     }
 

@@ -220,10 +220,12 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
             val res = ArrayList<String>()
 
             for(p in packs) {
-                if(p is PackData.DefPack) {
-                    res.add(Identifier.DEF)
-                } else if(p is PackData.UserPack) {
-                    res.add(p.desc.id)
+                if(p.units.list.isNotEmpty()) {
+                    if(p is PackData.DefPack) {
+                        res.add(Identifier.DEF)
+                    } else if(p is PackData.UserPack) {
+                        res.add(p.sid)
+                    }
                 }
             }
 

@@ -170,7 +170,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         viewHolder.music.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                if(st.mus0 == null)
+                if(st.mus0 == null || st.mus0.id == -1)
                     return
 
                 val intent = Intent(activity, MusicPlayer::class.java)
@@ -192,7 +192,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         viewHolder.music2.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                if(st.mus1 == null)
+                if(st.mus1 == null || st.mus1.id == -1)
                     return
 
                 val intent = Intent(activity, MusicPlayer::class.java)

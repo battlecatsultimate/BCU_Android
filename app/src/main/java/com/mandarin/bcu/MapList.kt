@@ -1,5 +1,6 @@
 package com.mandarin.bcu
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -39,6 +40,7 @@ class MapList : AppCompatActivity() {
         const val REQUEST_CODE = 100
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -102,6 +104,8 @@ class MapList : AppCompatActivity() {
 
             val keys = f.keys.toMutableList()
 
+            keys.sort()
+
             val stageset = findViewById<Spinner>(R.id.stgspin)
             val maplist = findViewById<ListView>(R.id.maplist)
             val loadt = findViewById<TextView>(R.id.status)
@@ -118,9 +122,8 @@ class MapList : AppCompatActivity() {
                 loadt.visibility = View.GONE
 
                 val resmc = ArrayList<String>()
-                val resposition = ArrayList<Int>()
 
-                for (i in f.keys) {
+                for (i in keys) {
                     val index = StaticStore.mapcode.indexOf(i)
 
                     if (index != -1) {
@@ -180,8 +183,6 @@ class MapList : AppCompatActivity() {
 
                             val resmapname = ArrayList<Identifier<StageMap>>()
 
-                            resposition.clear()
-
                             val resmaplist = f[keys[position]] ?: return
 
                             val mc = MapColc.get(StaticStore.mapcode[index]) ?: return
@@ -190,7 +191,6 @@ class MapList : AppCompatActivity() {
                                 val stm = mc.maps[resmaplist.keyAt(i)]
 
                                 resmapname.add(stm.id)
-                                resposition.add(resmaplist.keyAt(i))
                             }
 
                             val mapListAdapter = MapListAdapter(this@MapList, resmapname)
@@ -218,10 +218,9 @@ class MapList : AppCompatActivity() {
                 val mc = MapColc.get(keys[stageset.selectedItemPosition])
 
                 for(i in 0 until resmaplist.size()) {
-                    val stm = mc.maps[i]
+                    val stm = mc.maps.list[resmaplist.keyAt(i)]
 
                     resmapname.add(stm.id)
-                    resposition.add(resmaplist.keyAt(i))
                 }
 
                 val mapListAdapter = MapListAdapter(this, resmapname)

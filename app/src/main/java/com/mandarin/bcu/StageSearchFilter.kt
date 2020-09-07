@@ -114,9 +114,14 @@ class StageSearchFilter : AppCompatActivity() {
         scroll.isHorizontalScrollBarEnabled = false
 
         for (id in StaticStore.stgenem) {
+            val e = Identifier.get(id) ?: continue
+
+            if(e !is Enemy)
+                continue
+
             val chip = Chip(this)
-            chip.id = R.id.enemychip + id.id.pack.hashCode() + id.id.id
-            chip.text = getEnemyName(id)
+            chip.id = R.id.enemychip + id.pack.hashCode() + id.id
+            chip.text = getEnemyName(e)
             chip.isCloseIconVisible = true
             chip.setOnCloseIconClickListener {
                 StaticStore.stgenem.remove(id)
@@ -477,8 +482,8 @@ class StageSearchFilter : AppCompatActivity() {
                 if(e !is Enemy)
                     return
 
-                if (!StaticStore.stgenem.contains(e)) {
-                    StaticStore.stgenem.add(e)
+                if (!StaticStore.stgenem.contains(e.id)) {
+                    StaticStore.stgenem.add(e.id)
 
                     val enemygroup = findViewById<ChipGroup>(R.id.enemygroup)
 
@@ -487,7 +492,7 @@ class StageSearchFilter : AppCompatActivity() {
                     chip.text = getEnemyName(e)
                     chip.isCloseIconVisible = true
                     chip.setOnCloseIconClickListener {
-                        StaticStore.stgenem.remove(e)
+                        StaticStore.stgenem.remove(e.id)
                         enemygroup.removeView(chip)
                     }
 

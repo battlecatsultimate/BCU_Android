@@ -190,9 +190,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
-                            <entry key="outputName" value="ic_baseline_arrow_downward_24" />
-                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\BCU\my_unit\approve.svg" />
+                            <entry key="outputName" value="ic_pack" />
+                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\Plan\Pack.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.stage.asynchs
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.os.SystemClock
 import android.view.View
@@ -16,26 +15,21 @@ import com.mandarin.bcu.MapList
 import com.mandarin.bcu.R
 import com.mandarin.bcu.StageList
 import com.mandarin.bcu.StageSearchFilter
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.filter
 import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
-import com.mandarin.bcu.androidutil.Definer
 import common.io.json.JsonEncoder
 import common.pack.Identifier
-import common.pack.UserProfile
-import common.system.files.VFile
-import common.util.Data
 import common.util.stage.MapColc
 import common.util.stage.StageMap
 import java.lang.ref.WeakReference
-import kotlin.collections.ArrayList
 
 class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
 
-    private val icon = "8"
     private val done = "9"
     
     override fun onPreExecute() {
@@ -48,27 +42,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
         val activity = weakReference.get() ?: return null
 
         Definer.define(activity, this::updateProg, this::updateText)
-
-        publishProgress(icon)
-
-        if (StaticStore.eicons == null) {
-            StaticStore.eicons = Array(UserProfile.getBCData().enemies.list.size) { i ->
-                val shortPath = "./org/enemy/" + Data.trio(i) + "/enemy_icon_" + Data.trio(i) + ".png"
-                val vf = VFile.get(shortPath)
-
-                if(vf == null) {
-                    StaticStore.empty(activity, 18f, 18f)
-                }
-
-                val icon = vf.data.img.bimg()
-
-                if(icon == null) {
-                    StaticStore.empty(activity, 18f, 18f)
-                }
-
-                StaticStore.getResizeb(icon as Bitmap, activity, 36f)
-            }
-        }
 
         publishProgress(done)
 
@@ -93,7 +66,6 @@ class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
                 prog.max = 10000
                 prog.progress = values[1].toInt()
             }
-            icon -> mapst.setText(R.string.stg_list_enemic)
             done -> {
                 mapst.text = activity.getString(R.string.stg_info_stgs)
                 val stageset = activity.findViewById<Spinner>(R.id.stgspin)
@@ -221,9 +193,13 @@ class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
 
                         val resmc = ArrayList<String>()
 
-                        val keys = f.keys
+                        val keys = f.keys.toMutableList()
+
+                        keys.sort()
 
                         for (i in keys) {
+                            println(i)
+
                             val index = StaticStore.mapcode.indexOf(i)
 
                             if (index != -1) {
@@ -233,7 +209,7 @@ class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
 
                         var maxWidth = 0
 
-                        val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(activity, R.layout.spinneradapter, StaticStore.mapcolcname) {
+                        val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(activity, R.layout.spinneradapter, resmc) {
                             override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
                                 val v = super.getView(position, converView, parent)
 
@@ -284,17 +260,14 @@ class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
 
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 try {
-                                    val fi = filter ?: return
-                                    val key = f.keys.toMutableList()
-
                                     val resmapname = ArrayList<Identifier<StageMap>>()
 
-                                    val resmaplist = fi[key[position]] ?: return
+                                    val resmaplist = f[keys[position]] ?: return
 
-                                    val mc = MapColc.get(key[position]) ?: return
+                                    val mc = MapColc.get(keys[position]) ?: return
 
                                     for(i in 0 until resmaplist.size()) {
-                                        val stm = mc.maps[resmaplist.keyAt(i)]
+                                        val stm = mc.maps.list[resmaplist.keyAt(i)]
                                         
                                         resmapname.add(stm.id)
                                     }
@@ -313,14 +286,11 @@ class MapAdder(activity: Activity) : AsyncTask<Void, String, Void>() {
 
                         stageset.adapter = adapter
 
-                        val fi = filter ?: return
-                        val key = fi.keys.toMutableList()
-
-                        val mc = MapColc.get(key[stageset.selectedItemPosition]) ?: return
+                        val mc = MapColc.get(keys[stageset.selectedItemPosition]) ?: return
 
                         val resmapname = ArrayList<Identifier<StageMap>>()
 
-                        val resmaplist = fi[key[stageset.selectedItemPosition]] ?: return
+                        val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return
 
                         for(i in 0 until resmaplist.size()) {
                             val stm = mc.maps[resmaplist.keyAt(i)]
