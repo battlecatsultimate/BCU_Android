@@ -70,7 +70,7 @@ public class StaticStore {
     //System & IO variables
 
     /**Version of Application**/
-    public static final String VER = "0.14.20";
+    public static final String VER = "0.14.21";
     /**Fild ID of google drive log folder**/
     public static final String ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK";
     /**Required libraries list**/

@@ -50,13 +50,11 @@ class StageList : AppCompatActivity() {
             shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
-        if (!shared.getBoolean("DEV_MODE", false)) {
-            AppWatcher.config = AppWatcher.config.copy(enabled = false)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
-        } else {
-            AppWatcher.config = AppWatcher.config.copy(enabled = true)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
-        }
+        val devMode = shared.getBoolean("DEV_MOE", false)
+
+        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
+        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
+        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
 
         DefineItf.check(this)
 

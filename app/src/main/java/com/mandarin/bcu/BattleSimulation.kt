@@ -45,13 +45,11 @@ class BattleSimulation : AppCompatActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        if (!shared.getBoolean("DEV_MODE", false)) {
-            AppWatcher.config = AppWatcher.config.copy(enabled = false)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
-        } else {
-            AppWatcher.config = AppWatcher.config.copy(enabled = true)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
-        }
+        val devMode = shared.getBoolean("DEV_MOE", false)
+
+        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
+        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
+        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
 
         DefineItf.check(this)
 
