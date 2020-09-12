@@ -1,0 +1,1 @@
+C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\src\main\jni\CMakeLists.txt

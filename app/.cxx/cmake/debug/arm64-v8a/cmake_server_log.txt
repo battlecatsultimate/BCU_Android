@@ -1,5 +1,3 @@
-CMAKE SERVER: Trying to locate CMake in local SDK repository.
-CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'
 CMAKE SERVER: 
 
 CMAKE SERVER: [== "CMake Server" ==[
@@ -337,10 +335,6 @@ CMAKE SERVER: {"buildFiles":[{"isCMake":true,"isTemporary":false,"sources":["C:/
 
 CMAKE SERVER: ]== "CMake Server" ==]
 
-CMAKE SERVER: Trying to locate CMake in local SDK repository.
-CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'
-CMAKE SERVER: Trying to locate CMake in local SDK repository.
-CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'
 CMAKE SERVER: [== "CMake Server" ==[
 
 CMAKE SERVER: {"type":"codemodel"}
@@ -355,5 +349,3 @@ CMAKE SERVER: {"configurations":[{"name":"Debug","projects":[{"buildDirectory":"
 
 CMAKE SERVER: ]== "CMake Server" ==]
 
-CMAKE SERVER: Trying to locate CMake in local SDK repository.
-CMAKE SERVER: - CMake found in SDK at 'C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404' had version '3.10.2'

@@ -1,4 +1,4 @@
-                Executable : C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
+                    Executable : C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
 arguments : 
 -HC:\Users\user\AndroidStudioProjects\BCU_Android_json\app\src\main\jni
 -DCMAKE_FIND_ROOT_PATH=C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\.cxx\cmake\debug\prefab\armeabi-v7a\prefab
@@ -19,4 +19,6 @@ arguments :
 -GNinja
 jvmArgs : 
 
-Build command args:
+
+                    Build command args: []
+                    Version: 1

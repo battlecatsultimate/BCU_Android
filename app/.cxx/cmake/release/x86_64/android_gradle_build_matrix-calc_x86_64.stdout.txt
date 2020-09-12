@@ -1,0 +1,2 @@
+ninja: Entering directory `C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\.cxx\cmake\release\x86_64'
+ninja: no work to do.
