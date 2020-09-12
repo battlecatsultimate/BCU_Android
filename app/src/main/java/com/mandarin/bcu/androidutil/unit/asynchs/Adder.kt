@@ -125,7 +125,7 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         val loadt = activity.findViewById<TextView>(R.id.status)
         loadt.visibility = View.GONE
-        if(UserProfile.getAllPacks().size != 1) {
+        if(getExistingUnit() != 1) {
             tab.visibility = View.VISIBLE
         }
         pager.visibility = View.VISIBLE
@@ -228,6 +228,8 @@ class Adder(context: Activity, private val fm : FragmentManager?) : AsyncTask<Vo
                     }
                 }
             }
+
+            println(res)
 
             return res
         }

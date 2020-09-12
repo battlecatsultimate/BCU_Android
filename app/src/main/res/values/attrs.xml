@@ -17,4 +17,5 @@
     <attr name="TILtheme" format="reference"/>
     <attr name="ErrorPrimary" format="color"/>
     <attr name="SemiBackgroundPrimary" format="color"/>
+    <attr name="BorderPrimary" format="color"/>
 </resources>

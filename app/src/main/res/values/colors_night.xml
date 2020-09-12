@@ -15,4 +15,5 @@
     <color name="HintPrimaryN">#80eeeeee</color>
     <color name="ErrorPrimaryN">#f44336</color>
     <color name="SemiBackgroundPrimaryN">#7D363636</color>
+    <color name="BorderPrimaryN">#33212121</color>
 </resources>

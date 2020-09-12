@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/pack_manage_share"
+        android:id="@+id/packshare"/>
+    <item android:title="@string/pack_manage_remove"
+        android:id="@+id/packremove"/>
+</menu>

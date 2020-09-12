@@ -71,13 +71,7 @@ class GIFAsync : AsyncTask<Void?, Void?, Void?> {
         AddGIF.encoder = AnimatedGifEncoder()
         AddGIF.bos = ByteArrayOutputStream()
 
-        val shared = c.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-
-        when {
-            shared.getInt("Orientation", 0) == 1 -> c.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> c.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> c.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
+        c.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         done = true
 

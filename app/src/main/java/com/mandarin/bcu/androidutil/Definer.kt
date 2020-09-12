@@ -47,6 +47,7 @@ object Definer {
                 AContext.check()
                 CommonStatic.ctx.initProfile()
 
+                text.accept(context.getString(R.string.main_file_read))
                 AssetLoader.load(prog)
 
                 UserProfile.getBCData().load(text, prog)

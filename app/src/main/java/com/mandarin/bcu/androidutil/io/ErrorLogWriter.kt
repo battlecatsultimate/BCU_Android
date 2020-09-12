@@ -47,7 +47,6 @@ class ErrorLogWriter(private val path: String?, private val upload: Boolean) : T
                 val dfileWriter = FileWriter(df)
                 dfileWriter.append("VERSION : ").append(StaticStore.VER).append("\r\n")
                 dfileWriter.append("MODEL : ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL.toString()).append("\r\n")
-                dfileWriter.append("ID : ").append()
                 dfileWriter.append("IS EMULATOR : ").append((Build.MODEL.contains("Emulator") || Build.MODEL.contains("Android SDK")).toString()).append("\r\n")
                 dfileWriter.append("ANDROID_VER : ").append("API ").append(Build.VERSION.SDK_INT.toString()).append(" (").append(Build.VERSION.RELEASE).append(")").append("\r\n").append("\r\n")
                 dfileWriter.append(current)

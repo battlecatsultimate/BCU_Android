@@ -30,7 +30,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
-            android:text="Unit_Rairty_Name"
             android:textColor="?attr/UnitinfoName"
             android:textSize="14sp"
             android:textStyle="bold"

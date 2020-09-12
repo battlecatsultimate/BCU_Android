@@ -427,7 +427,7 @@
     <string name="combo_sl">Slow Time</string>
     <string name="combo_st">Stop Time</string>
     <string name="combo_wea">Weak Time</string>
-    <string name="combo_inc">Increase Damge</string>
+    <string name="combo_inc">Increase Damage</string>
     <string name="combo_wit">Witch Kill</string>
     <string name="combo_eva">EVA Kill</string>
     <string name="combo_crit">Critical</string>
@@ -700,4 +700,19 @@
     <string name="load_process">Processing Data…</string>
     <string name="load_music_duratoin">Processing Music Data…</string>
     <string name="load_add">Loading UI Data…</string>
+    <string name="pack_manage_remove">Remove pack</string>
+    <string name="pack_manage_share">Share pack</string>
+    <string name="pack_manage_remove_sure">Removing Pack</string>
+    <string name="pack_manage_remove_msg">Are you sure you want to remove pack? This cannot be undone</string>
+    <string name="remove">Remove</string>
+    <string name="pack_remove_result">Pack Removed</string>
+    <string name="main_packs">Packs</string>
+    <string name="pack_share_notfound">Can\'t find pack file</string>
+    <string name="pack_import_invalid">You can import only pack.bcuzip files</string>
+    <string name="pack_import_exist">Pack Existing</string>
+    <string name="pack_import_exist_msg">This pack file is already existing in your application. Will you replace file?</string>
+    <string name="replace">Replace</string>
+    <string name="pack_import_importing">Importing _…</string>
+    <string name="pack_reload">Reloading Packs…</string>
+    <string name="pack_manage_warn">Pack Conflict happened, you will need to solve it</string>
 </resources>

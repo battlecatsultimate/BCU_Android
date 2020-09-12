@@ -29,7 +29,6 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.asynchs.UploadLogs
 import common.CommonStatic
-import common.pack.UserProfile
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.File
@@ -73,19 +72,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
+        val devMode = shared.getBoolean("DEV_MOE", false)
 
-        if (!shared.getBoolean("DEV_MODE", false)) {
-            AppWatcher.config = AppWatcher.config.copy(enabled = false)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
-        } else {
-            AppWatcher.config = AppWatcher.config.copy(enabled = true)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
-        }
+        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
+        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
+        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
 
         DefineItf.check(this)
 
@@ -218,11 +209,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 dialog.setOnDismissListener {
-                    when {
-                        shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                        shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                        shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                    }
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
                     StaticStore.dialogisShowed = true
                 }
@@ -243,6 +230,7 @@ class MainActivity : AppCompatActivity() {
         val bgbtn = findViewById<Button>(R.id.bgbtn)
         val config = findViewById<FloatingActionButton>(R.id.mainconfig)
         val musbtn = findViewById<Button>(R.id.mubtn)
+        val pmbtn = findViewById<Button>(R.id.pmbtn)
 
         animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_kasa_jizo), null, null, null)
         stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_castle), null, null, null)
@@ -253,6 +241,7 @@ class MainActivity : AppCompatActivity() {
         bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_bg), null, null, null)
         bgbtn.compoundDrawablePadding = StaticStore.dptopx(16f, this)
         musbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_music), null, null, null)
+        pmbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_pack), null, null, null)
 
         animbtn.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
@@ -304,7 +293,15 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this@MainActivity, MusicList::class.java)
                 startActivity(intent)
             }
+        })
 
+        pmbtn.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@MainActivity, PackManagement::class.java)
+                startActivity(intent)
+
+                finish()
+            }
         })
     }
 
@@ -381,8 +378,6 @@ class MainActivity : AppCompatActivity() {
 
         if(CommonStatic.ctx is AContext)
             (CommonStatic.ctx as AContext).updateActivity(this)
-
-        println("UPDATED")
 
         super.onResume()
     }

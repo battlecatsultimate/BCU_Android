@@ -60,19 +60,11 @@ open class ConfigScreen : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
+        val devMode = shared.getBoolean("DEV_MOE", false)
 
-        if (!shared.getBoolean("DEV_MODE", false)) {
-            AppWatcher.config = AppWatcher.config.copy(enabled = false)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
-        } else {
-            AppWatcher.config = AppWatcher.config.copy(enabled = true)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
-        }
+        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
+        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
+        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
 
         DefineItf.check(this)
 
@@ -251,21 +243,6 @@ open class ConfigScreen : AppCompatActivity() {
         language.post {
             started = true
         }
-
-        val orientation = findViewById<RadioGroup>(R.id.configorirg)
-
-        val oris = arrayOf(findViewById(R.id.configoriauto), findViewById(R.id.configoriland), findViewById<RadioButton>(R.id.configoriport))
-
-        orientation.setOnCheckedChangeListener { _, checkedId ->
-            if (started) for (i in 0..2) if (i != shared.getInt("Orientation", 0) && checkedId == oris[i].id) {
-                val ed1 = shared.edit()
-                ed1.putInt("Orientation", i)
-                ed1.apply()
-                restart()
-            }
-        }
-
-        oris[shared.getInt("Orientation", 0)].isChecked = true
 
         val unitinfland = findViewById<RadioGroup>(R.id.configinfland)
         val unitinflandlist = findViewById<RadioButton>(R.id.configlaylandlist)

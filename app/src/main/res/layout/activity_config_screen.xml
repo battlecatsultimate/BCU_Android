@@ -61,8 +61,8 @@
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/configori"
-                app:layout_constraintTop_toBottomOf="@+id/configorirg" />
+                app:layout_constraintStart_toStartOf="@+id/tableRow2"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow2" />
 
             <TableRow
                 android:id="@+id/tableRow2"
@@ -237,54 +237,6 @@
             </TableRow>
 
             <TextView
-                android:id="@+id/configori"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/config_ori"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/tableRow2"
-                app:layout_constraintTop_toBottomOf="@+id/tableRow2" />
-
-            <RadioGroup
-                android:id="@+id/configorirg"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@+id/tableRow2"
-                app:layout_constraintStart_toStartOf="@+id/configori"
-                app:layout_constraintTop_toBottomOf="@+id/configori">
-
-                <RadioButton
-                    android:id="@+id/configoriauto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/lang_auto"
-                    android:textColor="?attr/TextPrimary" />
-
-                <RadioButton
-                    android:id="@+id/configoriland"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/config_land"
-                    android:textColor="?attr/TextPrimary" />
-
-                <RadioButton
-                    android:id="@+id/configoriport"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/config_port"
-                    android:textColor="?attr/TextPrimary" />
-
-            </RadioGroup>
-
-            <TextView
                 android:id="@+id/configunitinfland"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -301,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@+id/configorirg"
+                app:layout_constraintEnd_toEndOf="@+id/tableRow2"
                 app:layout_constraintStart_toStartOf="@+id/configunitinfland"
                 app:layout_constraintTop_toBottomOf="@+id/configunitinfland">
 

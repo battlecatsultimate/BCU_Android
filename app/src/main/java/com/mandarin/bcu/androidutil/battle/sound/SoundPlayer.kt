@@ -54,7 +54,7 @@ class SoundPlayer : MediaPlayer() {
         super.release()
     }
 
-    @Throws(IOException::class)
+    @Throws(Exception::class)
     override fun setDataSource(path: String) {
         if(isReleased) {
             Log.e("SoundPlayerIllegal", "This SoundPlayer is already released")

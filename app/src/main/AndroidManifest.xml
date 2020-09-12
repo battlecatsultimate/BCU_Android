@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
@@ -28,11 +27,35 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".StatSearchFilter"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".PackConflictDetail" />
-        <activity android:name=".PackConflictSolve" />
-        <activity android:name=".StageSearchFilter" />
+        <activity
+            android:name=".PackManagement"
+            android:configChanges="locale"
+            android:screenOrientation="locked">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.pack.bcuzip"
+                    android:scheme="file"
+                    android:host="*"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".StatSearchFilter"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".PackConflictDetail"
+            android:configChanges="locale"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".PackConflictSolve"
+            android:configChanges="locale"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".StageSearchFilter"
+            android:configChanges="locale"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".MusicPlayer"
             android:configChanges="locale"

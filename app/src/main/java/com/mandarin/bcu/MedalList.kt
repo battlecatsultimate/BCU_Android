@@ -38,19 +38,11 @@ class MedalList : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
+        val devMode = shared.getBoolean("DEV_MOE", false)
 
-        if (!shared.getBoolean("DEV_MODE", false)) {
-            AppWatcher.config = AppWatcher.config.copy(enabled = false)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(false)
-        } else {
-            AppWatcher.config = AppWatcher.config.copy(enabled = true)
-            LeakCanary.showLeakDisplayActivityLauncherIcon(true)
-        }
+        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
+        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
+        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
 
         DefineItf.check(this)
 

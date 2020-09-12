@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
@@ -28,6 +29,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StatFilterElement.Companion.statFilter
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter.Companion.writeDriveLog
+import com.mandarin.bcu.androidutil.pack.PackConflict
 import common.CommonStatic
 import common.battle.BasisLU
 import common.battle.BasisSet
@@ -368,6 +370,17 @@ object StaticStore {
 
         filterReset()
         stgFilterReset()
+        resetUserPacks()
+    }
+
+    fun resetUserPacks() {
+        UserProfile.unloadAllUserPacks()
+
+        mapcode = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027"))
+        mapcolcname.clear()
+        PackConflict.conflicts.clear()
+
+        packRead = false
     }
 
     fun getResize(drawable: Drawable, context: Context, dp: Float): Bitmap {
@@ -695,10 +708,18 @@ object StaticStore {
         val g = File(direct)
         if (!g.exists()) if (!g.mkdirs()) {
             Log.e("SaveLineUp", "Failed to create directory " + g.absolutePath)
+
+            showShortMessage(c, "Failed to create directory " + g.absolutePath)
+
+            return
         }
         val f = File(path)
         if (!f.exists()) if (!f.createNewFile()) {
             Log.e("SaveLineUp", "Failed to create file " + f.absolutePath)
+
+            showShortMessage(c, "Failed to create file " + f.absolutePath)
+
+            return
         }
 
         BasisSet.write()
@@ -1224,5 +1245,13 @@ object StaticStore {
             if(deleteItself)
                 f.delete()
         }
+    }
+
+    fun fixOrientation(ac: Activity) {
+        ac.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+    }
+
+    fun unfixOrientation(ac: Activity) {
+        ac.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 }

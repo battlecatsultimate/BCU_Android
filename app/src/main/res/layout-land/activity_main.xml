@@ -64,7 +64,8 @@
                         android:text="@string/main_unitinfo"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        style="?android:attr/buttonBarButtonStyle" />
 
                     <Button
                         android:id="@+id/eninfbtn"
@@ -75,7 +76,8 @@
                         android:text="@string/main_enemy_info"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        style="?android:attr/buttonBarButtonStyle" />
 
                     <Button
                         android:id="@+id/mubtn"
@@ -87,7 +89,8 @@
                         android:text="@string/main_music"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        style="?android:attr/buttonBarButtonStyle" />
                 </TableRow>
 
                 <TableRow
@@ -106,7 +109,8 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        app:layout_constraintHeight_percent="0.175" />
+                        app:layout_constraintHeight_percent="0.175"
+                        style="?android:attr/buttonBarButtonStyle" />
 
                     <Button
                         android:id="@+id/medalbtn"
@@ -118,7 +122,21 @@
                         android:text="@string/main_medal"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        style="?android:attr/buttonBarButtonStyle" />
+
+                    <Button
+                        android:id="@+id/pmbtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="10dp"
+                        android:text="@string/main_packs"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp"
+                        tools:ignore="ButtonStyle" />
                 </TableRow>
 
                 <TableRow
@@ -136,7 +154,8 @@
                         android:text="@string/main_equip"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        style="?android:attr/buttonBarButtonStyle" />
 
                     <Button
                         android:id="@+id/bgbtn"
@@ -148,7 +167,8 @@
                         android:text="@string/main_bg"
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        style="?android:attr/buttonBarButtonStyle" />
                 </TableRow>
 
             </TableLayout>
