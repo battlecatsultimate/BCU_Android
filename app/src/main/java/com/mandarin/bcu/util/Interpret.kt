@@ -116,17 +116,11 @@ object Interpret : Data() {
                                 "$ans [${TEXT[46].replace("_", (k + 1).toString())}]"
                         }
 
-                        println("ANS : "+ans)
-
                         l.add(ans)
                         id.add(i)
                     }
                 }
             }
-        }
-
-        for(str in l) {
-            println("CONTENT : $str")
         }
 
         return l
@@ -257,7 +251,18 @@ object Interpret : Data() {
                 if (ABIS[i].startsWith("Imu.")) {
                     imu.append(ABIS[i].substring(4))
                 } else {
-                    if (i == 0) l.add(ABIS[i] + addition[0]) else if (i == 1) l.add(ABIS[i] + addition[1]) else if (i == 2) l.add(ABIS[i] + addition[2]) else if (i == 4) l.add(ABIS[i] + addition[3]) else if (i == 5) l.add(ABIS[i] + addition[4]) else if (i == 14) l.add(ABIS[i] + addition[5]) else if (i == 17) l.add(ABIS[i] + addition[6]) else if (i == 20) l.add(ABIS[i] + addition[7]) else if (i == 21) l.add(ABIS[i] + addition[8]) else l.add(ABIS[i])
+                    when (i) {
+                        0 -> l.add(ABIS[i] + addition[0])
+                        1 -> l.add(ABIS[i] + addition[1])
+                        2 -> l.add(ABIS[i] + addition[2])
+                        4 -> l.add(ABIS[i] + addition[3])
+                        5 -> l.add(ABIS[i] + addition[4])
+                        14 -> l.add(ABIS[i] + addition[5])
+                        17 -> l.add(ABIS[i] + addition[6])
+                        20 -> l.add(ABIS[i] + addition[7])
+                        21 -> l.add(ABIS[i] + addition[8])
+                        else -> l.add(ABIS[i])
+                    }
                 }
             }
             if (imu.toString().isNotEmpty() && imu.toString() != frag[lang][0]) l.add(imu.toString())

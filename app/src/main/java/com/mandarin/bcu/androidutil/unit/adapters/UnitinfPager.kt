@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -28,7 +29,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.AdapterAbil
+import com.mandarin.bcu.androidutil.supports.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
@@ -101,17 +102,20 @@ class UnitinfPager : Fragment() {
         for (i in ids.indices)
             pcoins[i] = view.findViewById(ids[i])
 
-        val activity: Activity = activity!!
+        val activity = requireActivity()
 
         s = GetStrings(activity)
-
-        s.talList
 
         color = intArrayOf(
                 StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
         )
 
-        val arg = arguments ?: return view
+        val arg = arguments
+
+        if(arg == null) {
+            Log.e("UnitinfPager", "Arguments is null")
+            return view
+        }
 
         form = arg.getInt("Form")
 
@@ -150,7 +154,13 @@ class UnitinfPager : Fragment() {
 
         val t = BasisSet.current().t()
 
-        val u = Identifier.get(StaticStore.transformIdentifier<Unit>(arg.getString("Data"))) ?: return view
+        val u = Identifier.get(StaticStore.transformIdentifier<Unit>(arg.getString("Data")))
+
+        if(u == null) {
+            Log.e("UnitinfPager", "Identifier is null\nArgument : ${arg.getString("Data")}")
+
+            return view
+        }
 
         val f = u.forms[form]
 
@@ -313,7 +323,7 @@ class UnitinfPager : Fragment() {
         val arrayAdapterp = ArrayAdapter(activity, R.layout.spinneradapter, levelsp)
         unitname.setOnLongClickListener(OnLongClickListener {
             if (getActivity() == null) return@OnLongClickListener false
-            val clipboardManager = getActivity()!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipboardManager = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, unitname.text)
             clipboardManager.setPrimaryClip(data)
             StaticStore.showShortMessage(activity, R.string.unit_info_copied)

@@ -33,7 +33,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/musictool"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_button" />
+        app:srcCompat="@drawable/back_button"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/musicclose"
@@ -50,7 +51,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/musictool"
         app:layout_constraintEnd_toEndOf="@+id/musictool"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close_black_24dp" />
+        app:srcCompat="@drawable/ic_close_black_24dp"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/musicmenu"
@@ -69,7 +71,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/musictool"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_menu_black_24dp" />
+        app:srcCompat="@drawable/ic_menu_black_24dp"
+        android:contentDescription="@null" />
 
     <LinearLayout
         android:id="@+id/listlayout"
@@ -162,15 +165,18 @@
             app:layout_constraintBottom_toTopOf="@+id/musicprogress"
             app:layout_constraintEnd_toEndOf="@+id/constraintLayout3" />
 
-        <TextView
+        <com.mandarin.bcu.androidutil.supports.AutoMarquee
             android:id="@+id/musicname"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
             android:textColor="?attr/TextPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/musiccurrent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/constraintLayout3" />
 
         <SeekBar
@@ -200,7 +206,8 @@
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_loop_black_24dp" />
+            app:srcCompat="@drawable/ic_loop_black_24dp"
+            android:contentDescription="@null" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/musicshuff"
@@ -219,7 +226,8 @@
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_trending_flat_black_24dp" />
+            app:srcCompat="@drawable/ic_trending_flat_black_24dp"
+            android:contentDescription="@null" />
 
         <SeekBar
             android:id="@+id/musicsound"
@@ -260,7 +268,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/musicplay"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/musicplay"
-                app:srcCompat="@drawable/ic_skip_previous_black_24dp" />
+                app:srcCompat="@drawable/ic_skip_previous_black_24dp"
+                android:contentDescription="@null" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/musicplay"
@@ -279,7 +288,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_pause_black_24dp" />
+                app:srcCompat="@drawable/ic_pause_black_24dp"
+                android:contentDescription="@null" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/musicnext"
@@ -299,7 +309,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/musicplay"
                 app:layout_constraintTop_toTopOf="@+id/musicplay"
                 app:srcCompat="@drawable/ic_skip_next_black_24dp"
-                app:tint="?attr/TextPrimary" />
+                app:tint="?attr/TextPrimary"
+                android:contentDescription="@null" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

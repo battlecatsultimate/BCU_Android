@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -16,8 +15,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
@@ -76,6 +75,7 @@ open class EnemyList : AppCompatActivity() {
 
         back.setOnClickListener {
             StaticStore.filterReset()
+            StaticStore.entityname = ""
             finish()
         }
 
@@ -142,6 +142,7 @@ open class EnemyList : AppCompatActivity() {
 
     override fun onBackPressed() {
         StaticStore.filterReset()
+        StaticStore.entityname = ""
         super.onBackPressed()
     }
 

@@ -24,7 +24,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.AdapterAbil
+import com.mandarin.bcu.androidutil.supports.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.pack.Identifier

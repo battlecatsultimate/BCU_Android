@@ -671,7 +671,7 @@
     <string name="lineup_orb">본능옥</string>
     <string name="def_zero_time">0:00.000</string>
     <string name="stg_info_loop">루프</string>
-    <string name="stg_info_loop1">루프1</string>
+    <string name="stg_info_loop1">루프 1</string>
     <string name="pack_conf_guide_unsupp">앱이 해당 팩의 버전 (_) 이 지원할 수 있는 버전 (-) 과 달라 처리할 수 없었습니다. 정보를 불러오는데 성공했을 수도 있지만, 상단의 메뉴에서 선택해 주세요.</string>
     <string name="pack_conf_unsupported">해당 팩을 지원하지 않습니다</string>
     <string name="pack_desc_unsupported">지원하지 않는 팩 버전 _ (현재 지원하는 버전 : -)</string>
@@ -691,7 +691,7 @@
     <string name="load_enemy">적 데이터 로딩 중…</string>
     <string name="load_unit">유닛 데이터 로딩 중…</string>
     <string name="load_aux">보조 데이터 로딩 중…</string>
-    <string name="load_effect">이펙트 데이터 로딩 중…</string>
+    <string name="load_effect">이팩트 데이터 로딩 중…</string>
     <string name="load_bg">배경 데이터 로딩 중…</string>
     <string name="load_castle">냥코 성 데이터 로딩 중…</string>
     <string name="load_soul">영혼 데이터 로딩 중…</string>
@@ -704,9 +704,9 @@
     <string name="pack_manage_remove">팩 제거</string>
     <string name="pack_manage_share">팩 공유</string>
     <string name="pack_manage_remove_sure">팩 제거</string>
-    <string name="pack_manage_remove_msg">정말로 펙을 제거하시겠습니까? 이 작업은 되돌릴 수 없습니다</string>
+    <string name="pack_manage_remove_msg">정말로 팩을 제거하시겠습니까? 이 작업은 되돌릴 수 없습니다</string>
     <string name="remove">제거</string>
-    <string name="pack_remove_result">펙 제거됨</string>
+    <string name="pack_remove_result">팩 제거됨</string>
     <string name="main_packs">팩 관리</string>
     <string name="pack_share_notfound">팩 파일을 찾을 수 없습니다</string>
     <string name="pack_import_invalid">pack.bcuzip 파일만 가져올 수 있습니다</string>
@@ -716,4 +716,7 @@
     <string name="pack_import_importing">_ 가져오는 중…</string>
     <string name="pack_reload">팩 다시 불러오는 중…</string>
     <string name="pack_manage_warn">팩 충돌이 발생하여 해결이 필요합니다.</string>
+    <string name="fruit14">무지개 개다래 씨앗</string>
+    <string name="fruit15">황금 개다래 열매</string>
+    <string name="main_castle">성</string>
 </resources>

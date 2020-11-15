@@ -19,20 +19,79 @@ import java.util.*
 
 class GetStrings(private val c: Context) {
     companion object {
-        private val abilID = arrayOf("1", "2", "3", "8", "10", "11", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "25", "26", "27", "29", "30", "31", "32", "37", "38", "39", "40", "51")
-        private val talID = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_cr,
-                R.string.sch_abi_zk, R.string.sch_abi_bb, R.string.sch_abi_em, R.string.sch_abi_wv, R.string.talen_we, R.string.talen_fr, R.string.talen_sl, R.string.talen_kb
-                , R.string.talen_wv, R.string.unit_info_cost, R.string.unit_info_cd, R.string.unit_info_spd, R.string.sch_abi_ic, R.string.talen_cu,
-                R.string.unit_info_atk, R.string.unit_info_hp, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_abi_iv)
-        private val talTool = arrayOfNulls<String>(talID.size)
+        private val talData = intArrayOf(
+                -1, //0: ??
+                R.string.sch_abi_we, //1: Weaken
+                R.string.sch_abi_fr, //2: Freeze
+                R.string.sch_abi_sl, //3: Slow
+                R.string.sch_abi_ao, //4: Attacks Only
+                R.string.sch_abi_st, //5: Strong
+                R.string.sch_abi_re, //6: Resistant
+                R.string.sch_abi_md, //7: Massive Damage
+                R.string.sch_abi_kb, //8: Knockback
+                R.string.sch_abi_wa, //9: Warp
+                R.string.sch_abi_str, //10: Strengthen
+                R.string.sch_abi_su, //11: Survive
+                R.string.sch_abi_bd, //12: Base Destroyer
+                R.string.sch_abi_cr, //13: Critical
+                R.string.sch_abi_zk, //14: Zombie Killer
+                R.string.sch_abi_bb, //15: Barrier Breaker
+                R.string.sch_abi_em, //16: Extra Money
+                R.string.sch_abi_wv, //17: Wave
+                R.string.talen_we, //18: Res. Weaken
+                R.string.talen_fr, //19: Res. Freeze
+                R.string.talen_sl, //20: Res. Slow
+                R.string.talen_kb, //21: Res. Knockback
+                R.string.talen_wv, //22: Res. Wave
+                R.string.sch_abi_ws, //23: Wave Shield
+                R.string.talen_warp, //24: Res. Warp
+                R.string.unit_info_cost, //25: Cost
+                R.string.unit_info_cd, //26: Cooldown
+                R.string.unit_info_spd, //27: Speed
+                -1, //28: ??
+                R.string.sch_abi_ic, //29: Imu. Curse
+                R.string.talen_cu, //30: Res. Curse
+                R.string.unit_info_atk, //31: Attack Damage
+                R.string.unit_info_hp, //32: HP
+                R.string.sch_red, //33: Red Trait
+                R.string.sch_fl, //34: Float Trait
+                R.string.sch_bla, //35: Black Trait
+                R.string.sch_me, //36: Metal Trait
+                R.string.sch_an, //37: Angel Trait
+                R.string.sch_al, //38: Alien Trait
+                R.string.sch_zo, //39: Zombie Trait
+                R.string.sch_re, //40: Relic Trait
+                R.string.sch_wh, //41: White Trait
+                -1, //42: ??
+                -1, //43: ??
+                R.string.sch_abi_iw, //44: Imu. Weaken
+                R.string.sch_abi_if, //45: Imu. Freeze
+                R.string.sch_abi_is, //46: Imu. Slow
+                R.string.sch_abi_ik, //47: Imu. Knockback
+                R.string.sch_abi_iwv, //48: Imu. Wave
+                R.string.sch_abi_iwa, //49: Imu. Warp
+                R.string.sch_abi_sb, //50: Savage Blow
+                R.string.sch_abi_iv, //51: Invincibility
+                R.string.talen_poi, //52: Res. Poison
+                R.string.abi_ipoi, //53: Imu. Poison
+                R.string.talen_sur, //54: Res. Surge
+                R.string.sch_abi_imsu, //55: Imu. Surge
+                R.string.sch_abi_surge, //56: Surge Attack
+        )
+        private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
         val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
         private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
     }
-    val talList: Unit
-        get() {
-            for (i in talTool.indices) talTool[i] = c.getString(talID[i])
+
+    init {
+        talTool = Array(talData.size) { i ->
+            if(talData[i] == -1)
+                return@Array "Invalid"
+
+            c.getString(talData[i])
         }
+    }
 
     fun getTitle(f: Form?): String {
         if (f == null)
@@ -652,15 +711,17 @@ class GetStrings(private val c: Context) {
 
         val info = f.pCoin.info
 
-        val abil = listOf(*abilID)
+        val trait = listOf(37, 38, 39, 40)
+        val basic = listOf(25, 26, 27, 31, 32)
 
-        val trait = listOf("37", "38", "39", "40")
-        val basic = listOf("25", "26", "27", "31", "32")
+        if(talData[info[index][0]] == -1) {
+            return "Invalid Data"
+        }
 
         ans = when {
-            trait.contains(info[index][0].toString()) -> c.getString(R.string.talen_trait) + talTool[abil.indexOf(info[index][0].toString())]
-            basic.contains(info[index][0].toString()) -> talTool[abil.indexOf(info[index][0].toString())]
-            else -> c.getString(R.string.talen_abil) + talTool[abil.indexOf(info[index][0].toString())]
+            trait.contains(info[index][0]) -> c.getString(R.string.talen_trait) + talTool[info[index][0]]
+            basic.contains(info[index][0]) -> talTool[info[index][0]]
+            else -> c.getString(R.string.talen_abil) + talTool[info[index][0]]
         }
 
         return ans
@@ -830,9 +891,5 @@ class GetStrings(private val c: Context) {
             "" + (xp * t.xpMult * 9).toInt()
         else
             "" + (xp * t.xpMult).toInt()
-    }
-
-    init {
-        talList
     }
 }

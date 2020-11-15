@@ -2,22 +2,17 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader
+import com.mandarin.bcu.androidutil.stage.coroutine.StageLoader
 import common.CommonStatic
-import common.pack.Identifier
-import common.util.Data
-import common.util.lang.MultiLangCont
 import common.util.stage.StageMap
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary

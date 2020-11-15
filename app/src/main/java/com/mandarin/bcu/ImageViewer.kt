@@ -3,7 +3,6 @@ package com.mandarin.bcu
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.*
@@ -20,9 +19,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.animation.asynchs.EAnimationLoader
-import com.mandarin.bcu.androidutil.animation.asynchs.UAnimationLoader
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.animation.coroutine.EAnimationLoader
+import com.mandarin.bcu.androidutil.animation.coroutine.UAnimationLoader
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
@@ -125,13 +124,8 @@ class ImageViewer : AppCompatActivity() {
                 prog.visibility = View.GONE
                 forms.visibility = View.GONE
 
-                val display = windowManager.defaultDisplay
-                val size = Point()
-
-                display.getSize(size)
-
-                val width = size.x
-                val height = size.y
+                val width = StaticStore.getScreenWidth(this)
+                val height = StaticStore.getScreenHeight(this)
                 val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
                 paint.isFilterBitmap = true

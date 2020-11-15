@@ -669,7 +669,7 @@
     <string name="orb_res_desc">ターゲットからのダメージを_%軽減する</string>
     <string name="lineup_orb">本能玉</string>
     <string name="stg_info_loop">ループ</string>
-    <string name="stg_info_loop1">ループ1</string>
+    <string name="stg_info_loop1">ループ 1</string>
     <string name="def_zero_time">0:00.000</string>
     <string name="pack_conf_guide_unsupp">現在使用可能なバージョン (-) でサポートされていないバージョン (_) があるため、このパックを処理できません。アプリはそれを読むのに成功するかもしれませんが、上で行動を選択しなければなりません。</string>
     <string name="pack_conf_unsupported">パックはサポートされていないバージョンです</string>
@@ -715,4 +715,7 @@
     <string name="pack_import_importing">Importing _…</string>
     <string name="pack_reload">Reloading Packs…</string>
     <string name="pack_manage_warn">Pack Conflict happened, you will need to solve it</string>
+    <string name="fruit14">Epic Catfruit Seed</string>
+    <string name="fruit15">Gold Catfruit</string>
+    <string name="main_castle">Castles</string>
 </resources>

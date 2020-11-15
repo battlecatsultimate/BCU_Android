@@ -16,6 +16,8 @@ import com.mandarin.bcu.R
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile
+import common.util.Data
+import common.util.pack.Background
 
 class BGListPager : Fragment() {
     private var pid = Identifier.DEF
@@ -47,9 +49,11 @@ class BGListPager : Fragment() {
             nores.visibility = View.GONE
 
             val names = ArrayList<String>()
+            val data = ArrayList<Identifier<Background>>()
 
             for(i in p.bgs.list.indices) {
-                names.add(StaticStore.trio(p.bgs.list[i].id.id))
+                names.add(generateName(p.bgs.list[i].id))
+                data.add(p.bgs.list[i].id)
             }
 
             val c = activity ?: return view
@@ -70,7 +74,7 @@ class BGListPager : Fragment() {
                     intent.putExtra("BGNum", position)
                 }
 
-                intent.putExtra("Data", JsonEncoder.encode(p.bgs.list[position].id).toString())
+                intent.putExtra("Data", JsonEncoder.encode(data[position]).toString())
                 intent.putExtra("Img", 0)
 
                 c.startActivity(intent)
@@ -80,5 +84,13 @@ class BGListPager : Fragment() {
         }
 
         return view
+    }
+
+    private fun generateName(id: Identifier<Background>) : String {
+        return if(id.pack == Identifier.DEF) {
+            "${context?.getString(R.string.pack_default) ?: "Default"} - ${Data.trio(id.id)}"
+        } else {
+            "${StaticStore.getPackName(id.pack)} - ${Data.trio(id.id)}"
+        }
     }
 }

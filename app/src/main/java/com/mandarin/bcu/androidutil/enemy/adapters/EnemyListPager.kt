@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +16,11 @@ import androidx.fragment.app.Fragment
 import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
+import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
 import com.mandarin.bcu.androidutil.filter.FilterEntity
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile
-import common.util.unit.AbEnemy
 
 class EnemyListPager : Fragment() {
 
@@ -57,7 +57,7 @@ class EnemyListPager : Fragment() {
 
         validate(nores, list)
 
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
 
         val runnable = object : Runnable {
             override fun run() {
@@ -66,7 +66,6 @@ class EnemyListPager : Fragment() {
 
                 if(StaticStore.filterEntityList[position]) {
                     validate(nores,list)
-                    println(position)
                     StaticStore.filterEntityList[position] = false
                 }
 

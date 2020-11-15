@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -22,8 +21,8 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
@@ -44,7 +43,7 @@ import kotlin.collections.ArrayList
 class StageSearchFilter : AppCompatActivity() {
     companion object {
         const val REQUEST_CODE = 200
-        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120,122,123,125)
+        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120,122,123,125,126,127)
     }
 
     private val radioid = intArrayOf(R.id.lessthan, R.id.same, R.id.greaterthan)

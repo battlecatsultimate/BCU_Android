@@ -198,6 +198,7 @@ class AContext : Context {
     }
 
     fun extractImage(path: String) : File? {
+        Log.i("Acontext::extractImage","Extract start : $path")
         synchronized(stopper) {
             while(c == null) {
                 stopper.wait()

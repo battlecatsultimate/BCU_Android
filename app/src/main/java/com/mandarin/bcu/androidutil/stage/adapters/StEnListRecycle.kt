@@ -16,7 +16,7 @@ import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile

@@ -4,7 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.MediaPrepare
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import common.pack.UserProfile
 import java.io.File
 

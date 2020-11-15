@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -24,7 +23,7 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
-import com.mandarin.bcu.androidutil.stage.asynchs.MapAdder
+import com.mandarin.bcu.androidutil.stage.coroutine.MapAdder
 import common.CommonStatic
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -78,6 +77,8 @@ class MapList : AppCompatActivity() {
 
         back.setOnClickListener {
             StaticStore.stgFilterReset()
+            StaticStore.filterReset()
+            StaticStore.entityname = ""
             finish()
         }
 
@@ -234,7 +235,7 @@ class MapList : AppCompatActivity() {
                     val intent = Intent(this@MapList, StageList::class.java)
 
                     intent.putExtra("Data", JsonEncoder.encode(stm).toString())
-                    intent.putExtra("custom", stm.pack.length != 6)
+                    intent.putExtra("custom", !StaticStore.BCMapCode.contains(stm.cont.sid))
 
                     startActivity(intent)
                 }

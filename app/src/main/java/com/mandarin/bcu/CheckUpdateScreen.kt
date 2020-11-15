@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,12 +22,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.io.asynchs.UpdateCheckDownload
+import com.mandarin.bcu.androidutil.io.coroutine.UpdateCheckDownload
+import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.CommonStatic
 import common.system.fake.ImageBuilder
 import leakcanary.AppWatcher
@@ -42,7 +42,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
     }
 
     private var config = false
-    private lateinit var checker: AsyncTask<*, *, *>
+    private lateinit var checker: CoroutineTask<*>
 
     private lateinit var notifyManager: NotificationManager
     private lateinit var notifyBuilder: NotificationCompat.Builder
@@ -325,7 +325,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        checker.cancel(true)
+        checker.cancel()
         notifyBuilder.setOngoing(false)
         if(mustShow)
             notifyManager.notify(UpdateCheckDownload.NOTIF, R.id.downloadnotification, notifyBuilder.build())

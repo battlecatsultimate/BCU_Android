@@ -210,7 +210,7 @@
                 app:tabMode="scrollable"
                 app:tabTextAppearance="@style/CounterStyle" />
 
-            <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+            <com.mandarin.bcu.androidutil.supports.MeasureViewPager
                 android:id="@+id/lineuppager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -9,7 +9,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import java.util.*
 
 class MedalListAdapter(private val activity: Activity, private val num: Int, width: Int, private val imgwh: Float, lines: Array<String?>) : ArrayAdapter<String?>(activity, R.layout.medal_layout, lines) {

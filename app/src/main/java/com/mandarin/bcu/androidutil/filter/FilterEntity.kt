@@ -441,7 +441,7 @@ object FilterEntity {
 
                         name = Data.trio(j) + "-" + name.toLowerCase(Locale.ROOT)
 
-                        if(name.contains(StaticStore.entityname))
+                        if(name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT)))
                             added = true
                     }
 

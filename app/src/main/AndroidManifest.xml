@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mandarin.bcu">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -27,18 +31,24 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <activity android:name=".CastleList"/>
         <activity
             android:name=".PackManagement"
-            android:configChanges="locale"
-            android:screenOrientation="locked">
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+            android:configChanges="locale">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data
+                    android:host="*"
                     android:mimeType="*/*"
-                    android:pathPattern=".*\\.pack.bcuzip"
-                    android:scheme="file"
-                    android:host="*"/>
+                    android:pathPattern=".*\\.bcuzip"
+                    android:scheme="file" />
             </intent-filter>
         </activity>
         <activity
@@ -46,28 +56,22 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PackConflictDetail"
-            android:configChanges="locale"
-            android:screenOrientation="locked"/>
+            android:configChanges="locale" />
         <activity
             android:name=".PackConflictSolve"
-            android:configChanges="locale"
-            android:screenOrientation="locked"/>
+            android:configChanges="locale" />
         <activity
             android:name=".StageSearchFilter"
-            android:configChanges="locale"
-            android:screenOrientation="locked"/>
+            android:configChanges="locale" />
         <activity
             android:name=".MusicPlayer"
-            android:configChanges="locale"
-            android:screenOrientation="locked" />
+            android:configChanges="locale" />
         <activity
             android:name=".MusicList"
-            android:configChanges="locale"
-            android:screenOrientation="locked" />
+            android:configChanges="locale" />
         <activity
             android:name=".BattlePrepare"
-            android:configChanges="locale"
-            android:screenOrientation="locked" />
+            android:configChanges="locale" />
         <activity
             android:name=".BattleSimulation"
             android:configChanges="locale"
@@ -75,68 +79,40 @@
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".BackgroundList"
-            android:configChanges="locale"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".MedalList"
-            android:screenOrientation="locked" />
+            android:configChanges="locale" />
+        <activity android:name=".MedalList" />
         <activity
             android:name=".LineUpScreen"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="locked" />
+            android:hardwareAccelerated="true" />
         <activity
             android:name=".ImageViewer"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".StageInfo"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".StageList"
-            android:screenOrientation="locked" />
+            android:hardwareAccelerated="true" />
+        <activity android:name=".StageInfo" />
+        <activity android:name=".StageList" />
         <activity
             android:name=".CheckUpdateScreen"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:launchMode="singleTop"
-            android:screenOrientation="locked">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".EnemySearchFilter"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".EnemyInfo"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".EnemyList"
-            android:screenOrientation="locked" />
+        <activity android:name=".EnemySearchFilter" />
+        <activity android:name=".EnemyInfo" />
+        <activity android:name=".EnemyList" />
         <activity
             android:name=".ConfigScreen"
-            android:configChanges="locale"
-            android:screenOrientation="locked" />
+            android:configChanges="locale" />
         <activity
             android:name=".ApkDownload"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".UnitInfo"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".SearchFilter"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".MapList"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".AnimationViewer"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="locked" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name=".UnitInfo" />
+        <activity android:name=".SearchFilter" />
+        <activity android:name=".MapList" />
+        <activity android:name=".AnimationViewer" />
+        <activity android:name=".MainActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

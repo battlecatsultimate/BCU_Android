@@ -10,20 +10,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.mandarin.bcu.androidutil.BGListPager
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.MeasureViewPager
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import common.CommonStatic
 import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
-import common.util.pack.Background
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.util.*
@@ -66,9 +67,6 @@ class BackgroundList : AppCompatActivity() {
 
         setContentView(R.layout.activity_background_list)
 
-        if(StaticStore.bgread == 0)
-            Background.read()
-
         val tab = findViewById<TabLayout>(R.id.bglisttab)
         val pager = findViewById<MeasureViewPager>(R.id.bglistpager)
 
@@ -79,11 +77,19 @@ class BackgroundList : AppCompatActivity() {
 
         tab.setupWithViewPager(pager)
 
-        if(getExistingBGPack() == 1)
+        if(getExistingBGPack() == 1) {
             tab.visibility = View.GONE
 
-        val bck = findViewById<FloatingActionButton>(R.id.bgbck)
+            val collapse = findViewById<CollapsingToolbarLayout>(R.id.bgcollapse)
 
+            val param = collapse.layoutParams as AppBarLayout.LayoutParams
+
+            param.scrollFlags = 0
+
+            collapse.layoutParams = param
+        }
+
+        val bck = findViewById<FloatingActionButton>(R.id.bgbck)
 
         bck.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
@@ -141,7 +147,7 @@ class BackgroundList : AppCompatActivity() {
         return res
     }
 
-    class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val keys: ArrayList<String>
 
         init {
@@ -167,7 +173,7 @@ class BackgroundList : AppCompatActivity() {
 
         override fun getPageTitle(position: Int): CharSequence? {
             return if (position == 0) {
-                "Default"
+                getString(R.string.pack_default)
             } else {
                 val pack = UserProfile.getUserPack(keys[position])
 

@@ -192,8 +192,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="dddddd" />
-                            <entry key="outputName" value="ic_resource_import" />
-                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\Plan\Import.svg" />
+                            <entry key="outputName" value="ic_castles" />
+                            <entry key="sourceFile" value="C:\Users\user\Desktop\Utility\Plan\Icons\Castle.svg" />
                           </map>
                         </option>
                       </PersistentState>

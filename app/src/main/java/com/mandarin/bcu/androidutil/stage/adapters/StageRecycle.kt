@@ -16,7 +16,7 @@ import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -166,7 +166,11 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         viewHolder.length.text = st.len.toString()
         viewHolder.maxenemy.text = st.max.toString()
-        viewHolder.music.text = StaticStore.generateIdName(st.mus0, activity)
+        viewHolder.music.text = if(st.mus0 == null || st.mus0.id == -1) {
+            activity.getString(R.string.unit_info_t_none)
+        } else {
+            StaticStore.generateIdName(st.mus0, activity)
+        }
 
         viewHolder.music.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
@@ -188,7 +192,11 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         }
 
         viewHolder.castleperc.text = viewHolder.castleperc.text.toString().replace("??", st.mush.toString())
-        viewHolder.music2.text = StaticStore.generateIdName(st.mus1, activity)
+        viewHolder.music2.text = if(st.mus1 == null || st.mus1.id == -1) {
+            activity.getString(R.string.unit_info_t_none)
+        } else {
+            StaticStore.generateIdName(st.mus1, activity)
+        }
 
         viewHolder.music2.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {

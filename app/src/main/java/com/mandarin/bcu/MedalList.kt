@@ -2,7 +2,6 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,7 +11,7 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.medal.asynchs.MedalAdder
+import com.mandarin.bcu.androidutil.medal.coroutine.MedalAdder
 import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary

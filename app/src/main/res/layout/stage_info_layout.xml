@@ -19,11 +19,12 @@
 
     <TableLayout
         android:id="@+id/tableLayout2"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/cell_shape"
-        android:stretchColumns="*"
+        android:shrinkColumns="1,3"
+        android:stretchColumns="1,3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stginfotitle">
@@ -38,7 +39,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_shape"
-                android:gravity="center"
+                android:gravity="center|top"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/unit_inf_pack"
@@ -47,12 +50,13 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.mandarin.bcu.androidutil.supports.AutoMarquee
                 android:id="@+id/stginfopackr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:maxWidth="108dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textColor="?attr/TextPrimary"
@@ -61,9 +65,11 @@
             <TextView
                 android:id="@+id/stginfoid"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_id"
@@ -74,7 +80,7 @@
             <TextView
                 android:id="@+id/stginfoidr"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -91,14 +97,16 @@
             <TextView
                 android:id="@+id/stginfoeng"
                 android:layout_width="wrap_content"
-                android:textSize="12sp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_energy"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -118,6 +126,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_star"
@@ -136,6 +146,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="?attr/TextPrimary"
+                    android:minWidth="96dp"
                     android:popupBackground="?attr/backgroundPrimary" />
             </TableRow>
 
@@ -151,6 +162,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bh"
@@ -175,6 +188,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_xp"
@@ -202,13 +217,15 @@
                 android:id="@+id/stginfodif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_inf_diff"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -228,6 +245,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_cont"
@@ -254,14 +273,16 @@
             <TextView
                 android:id="@+id/stginfolen"
                 android:layout_width="wrap_content"
-                android:textSize="12sp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_len"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -281,6 +302,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_maxen"
@@ -310,11 +333,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:textSize="12sp"
                 android:text="@string/stg_info_music"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <Button
@@ -323,7 +348,7 @@
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/button_shape"
-                android:gravity="center"
+                android:gravity="center|top"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textAllCaps="false"
@@ -334,7 +359,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/stginfomusic2"
@@ -342,6 +367,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/def_music2"
@@ -355,7 +382,7 @@
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/button_shape"
-                android:gravity="center"
+                android:gravity="center|top"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textAllCaps="false"
@@ -401,6 +428,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_loop1"
@@ -432,6 +461,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bg"
@@ -445,7 +476,7 @@
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/button_shape"
-                android:gravity="center"
+                android:gravity="center|top"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textAllCaps="false"
@@ -456,7 +487,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/stginfoct"
@@ -464,6 +495,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_ct"
@@ -477,7 +510,7 @@
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:background="@drawable/button_shape"
-                android:gravity="center"
+                android:gravity="center|top"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:textAllCaps="false"
@@ -493,13 +526,15 @@
                 android:id="@+id/stginfolimit"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="12sp"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_limit"
                 android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TableRow
@@ -513,11 +548,11 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/cell_shape"
                     android:gravity="center"
-                    android:textSize="12sp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:text="@string/unit_info_t_none"
-                    android:textColor="?attr/TextPrimary" />
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
 
                 <androidx.core.widget.NestedScrollView
                     android:id="@+id/limitscroll"

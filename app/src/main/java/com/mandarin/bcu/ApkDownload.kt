@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.io.asynchs.DownloadApk
+import com.mandarin.bcu.androidutil.io.coroutine.DownloadApk
 import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary

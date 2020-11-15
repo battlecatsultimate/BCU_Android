@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Unit
@@ -17,7 +18,7 @@ import common.util.unit.Unit
 class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<Unit>>) : ArrayAdapter<Identifier<Unit>>(context, R.layout.listlayout, name.toTypedArray()) {
 
     private class ViewHolder constructor(row: View) {
-        var id: TextView = row.findViewById(R.id.unitID)
+        var id: AutoMarquee = row.findViewById(R.id.unitID)
         var title: TextView = row.findViewById(R.id.unitname)
         var image: ImageView = row.findViewById(R.id.uniticon)
     }
@@ -39,7 +40,9 @@ class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<U
         val u = Identifier.get(name[position]) ?: return row
 
         holder.id.text = StaticStore.generateIdName(name[position], context)
+        holder.id.isSelected = true
         holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].name ?: ""
+        holder.title.isSelected = true
 
         holder.image.setImageBitmap(StaticStore.makeIcon(context, u.forms[0].anim.uni.img.bimg() as Bitmap, 48f))
 

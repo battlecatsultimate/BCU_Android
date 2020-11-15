@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.unit.adapters
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +50,7 @@ class UnitListPager : Fragment() {
 
         validate(nores, list)
 
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
 
         val runnable = object : Runnable {
             override fun run() {
@@ -58,7 +59,6 @@ class UnitListPager : Fragment() {
 
                 if(StaticStore.filterEntityList[position]) {
                     validate(nores,list)
-                    println(position)
                     StaticStore.filterEntityList[position] = false
                 }
 

@@ -1,134 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/unitlistlayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/backgroundPrimary"
-    tools:context=".AnimationViewer">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/animtool"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.075"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/animsch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:contentDescription="@string/def_animsch"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:tint="?attr/UnitinfoName"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/animtool"
-        app:layout_constraintEnd_toEndOf="@+id/animtool"
-        app:layout_constraintTop_toTopOf="@+id/animtool"
-        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/animschnamel"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:textColorHint="?attr/HintPrimary"
-        app:endIconCheckable="true"
-        app:endIconDrawable="@drawable/ic_close_black_24dp"
-        app:endIconMode="clear_text"
-        app:endIconTint="?attr/TextPrimary"
-        app:hintEnabled="false"
-        app:layout_constraintBottom_toBottomOf="@+id/animtool"
-        app:layout_constraintEnd_toStartOf="@+id/animsch"
-        app:layout_constraintStart_toEndOf="@+id/animbck"
-        app:layout_constraintTop_toTopOf="@+id/animtool"
-        app:startIconDrawable="@drawable/search"
-        app:startIconTint="?attr/UnitinfoName">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/animschname"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/animcollapse"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="?attr/TextPrimary"
-            android:hint="@string/unit_list_sch"
-            android:imeOptions="actionDone|flagNoExtractUi"
-            android:singleLine="true"
-            android:textColor="?attr/TextPrimary"
-            android:textColorHint="?attr/HintPrimary" />
-    </com.google.android.material.textfield.TextInputLayout>
+            app:contentScrim="?attr/colorPrimary"
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/animbck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:contentDescription="@string/def_animbck"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:tint="?attr/UnitinfoName"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/animtool"
-        app:layout_constraintStart_toStartOf="@+id/animtool"
-        app:layout_constraintTop_toTopOf="@+id/animtool"
-        app:srcCompat="@drawable/back_button" />
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:toolbarId="@+id/cstool">
 
-    <ProgressBar
-        android:id="@+id/prog"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animtool" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/animtool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_constraintHeight_percent="0.075">
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/load_process"
-        android:textColor="?attr/TextPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/prog" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout_editor_absoluteY="8dp">
 
-    <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-        android:id="@+id/unitpager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unittab" />
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/animbck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:contentDescription="@string/def_animbck"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:tint="?attr/UnitinfoName"
+                        app:borderWidth="0dp"
+                        app:elevation="0dp"
+                        app:fabSize="mini"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/back_button" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/unittab"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/animschnamel"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColorHint="?attr/HintPrimary"
+                        app:endIconCheckable="true"
+                        app:endIconDrawable="@drawable/ic_close_black_24dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="?attr/TextPrimary"
+                        app:hintEnabled="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/animsch"
+                        app:layout_constraintStart_toEndOf="@+id/animbck"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:startIconDrawable="@drawable/search"
+                        app:startIconTint="?attr/UnitinfoName">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/animschname"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:backgroundTint="?attr/TextPrimary"
+                            android:hint="@string/unit_list_sch"
+                            android:imeOptions="actionDone|flagNoExtractUi"
+                            android:singleLine="true"
+                            android:textColor="?attr/UnitinfoName"
+                            android:textColorHint="?attr/HintPrimary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/animsch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:contentDescription="@string/def_animsch"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:tint="?attr/UnitinfoName"
+                        app:borderWidth="0dp"
+                        app:elevation="0dp"
+                        app:fabSize="mini"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/unittab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:tabGravity="fill"
+            app:tabMaxWidth="0dp"
+            app:tabMode="auto"
+            app:tabTextAppearance="@style/CounterStyle"
+            app:tabTextColor="?attr/UnitinfoName" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animtool"
-        app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
-        app:tabMode="auto"
-        app:tabTextAppearance="@style/CounterStyle"
-        app:tabTextColor="?attr/TextPrimary" />
+        android:layout_height="match_parent"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/unitlistlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundPrimary"
+            tools:context=".AnimationViewer">
+
+            <ProgressBar
+                android:id="@+id/prog"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/load_process"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/prog" />
+
+            <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+                android:id="@+id/unitpager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

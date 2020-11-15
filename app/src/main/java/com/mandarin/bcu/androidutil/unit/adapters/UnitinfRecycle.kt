@@ -26,7 +26,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.AdapterAbil
+import com.mandarin.bcu.androidutil.supports.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
@@ -58,8 +58,6 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         this.data = data
 
         s = GetStrings(this.context)
-
-        s.talList
 
         color = intArrayOf(
                 StaticStore.getAttributeColor(context, R.attr.TextPrimary)

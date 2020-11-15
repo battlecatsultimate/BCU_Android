@@ -14,11 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.unit.asynchs.Adder
+import com.mandarin.bcu.androidutil.unit.coroutine.Adder
 import common.CommonStatic
 import common.system.fake.ImageBuilder
 import leakcanary.AppWatcher
@@ -69,6 +69,7 @@ class AnimationViewer : AppCompatActivity() {
         back.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 StaticStore.filterReset()
+                StaticStore.entityname = ""
                 finish()
             }
         })
@@ -78,6 +79,8 @@ class AnimationViewer : AppCompatActivity() {
                 gotoFilter()
             }
         })
+
+        println("EEEEEEEEEEEEEEEee")
 
         Adder(this, supportFragmentManager).execute()
     }
@@ -150,6 +153,7 @@ class AnimationViewer : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         StaticStore.filterReset()
+        StaticStore.entityname = ""
     }
 
     companion object {

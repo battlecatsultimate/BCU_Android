@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.pack.conflict.asynchs
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -11,14 +10,15 @@ import com.mandarin.bcu.MainActivity
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.pack.PackConflict
+import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import java.lang.ref.WeakReference
 
-class PackConfSolver(c: Activity) : AsyncTask<Void, String, Void>() {
+class PackConfSolver(c: Activity) : CoroutineTask<String>() {
     private val weak = WeakReference(c)
 
     private var canDo = false
 
-    override fun onPreExecute() {
+    override fun prepare() {
         val ac = weak.get() ?: return
 
         val solve = ac.findViewById<Button>(R.id.packconfsolve)
@@ -28,14 +28,14 @@ class PackConfSolver(c: Activity) : AsyncTask<Void, String, Void>() {
         prog.visibility = View.GONE
     }
 
-    override fun doInBackground(vararg params: Void?): Void? {
-        val ac = weak.get() ?: return null
+    override fun doSomething() {
+        val ac = weak.get() ?: return
 
         val c = check()
 
         if(c.isNotEmpty()) {
             publishProgress(ac.getString(R.string.pack_conf_solve_solve).replace("_", c))
-            return null
+            return
         }
 
         for(pc in PackConflict.conflicts) {
@@ -56,17 +56,15 @@ class PackConfSolver(c: Activity) : AsyncTask<Void, String, Void>() {
         PackConflict.conflicts.clear()
 
         canDo = true
-
-        return null
     }
 
-    override fun onProgressUpdate(vararg values: String?) {
+    override fun progressUpdate(vararg data: String) {
         val ac = weak.get() ?: return
 
-        StaticStore.showShortMessage(ac, values[0])
+        StaticStore.showShortMessage(ac, data[0])
     }
 
-    override fun onPostExecute(result: Void?) {
+    override fun finish() {
         val ac = weak.get() ?: return
 
         if(canDo) {

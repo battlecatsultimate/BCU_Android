@@ -2,8 +2,7 @@ package com.mandarin.bcu.androidutil.battle.sound
 
 import android.media.MediaPlayer
 import android.util.Log
-import com.mandarin.bcu.androidutil.adapters.MediaPrepare
-import java.io.IOException
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
 
 /**
  * This class extends MediaPlayer.

@@ -54,6 +54,7 @@ object MediaScanner {
         return "$path/$name.png"
     }
 
+    @Suppress("DEPRECATION")
     private fun putImageP(c: Context, b: Bitmap, name: String) : String {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Log.e("Bitmap Extracting", "MediaScanner.putImageP requires API level P or lower!")
@@ -120,6 +121,7 @@ object MediaScanner {
         return "$relativePath/$name.gif"
     }
 
+    @Suppress("DEPRECATION")
     private fun writeGIFP(c: Context, buffer: ByteArray, name: String) : String {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Log.e("Bitmap Extracting", "MediaScanner.putImageP requires API level P or lower!")
@@ -127,6 +129,11 @@ object MediaScanner {
         }
 
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()+"/BCU Image"
+
+        val d = File(dir)
+
+        if(!d.exists())
+            d.mkdirs()
 
         val g = File(dir, "$name.gif")
 

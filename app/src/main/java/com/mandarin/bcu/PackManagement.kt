@@ -10,10 +10,9 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.ListView
@@ -29,10 +28,13 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.adapters.PackManagementAdapter
-import com.mandarin.bcu.androidutil.pack.asynchs.PackManager
+import com.mandarin.bcu.androidutil.pack.coroutine.PackManager
 import common.CommonStatic
 import common.pack.PackData
 import common.pack.UserProfile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import java.io.File
@@ -100,8 +102,15 @@ class PackManagement : AppCompatActivity() {
         val bck = findViewById<FloatingActionButton>(R.id.pmanbck)
 
         bck.setOnClickListener {
-            if(!handlingPacks && !needReload)
+            if(!handlingPacks && !needReload) {
+                val intent = Intent(this, MainActivity::class.java)
+
+                startActivity(intent)
+
                 finish()
+
+                return@setOnClickListener
+            }
 
             val dialog = Dialog(this)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -148,7 +157,9 @@ class PackManagement : AppCompatActivity() {
                 needReload = false
             }
 
-            AsyncTask.execute(run)
+            GlobalScope.launch(Dispatchers.Default) {
+                run.run()
+            }
         }
     }
 
@@ -200,6 +211,8 @@ class PackManagement : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode == RESULT_OK) {
             val path = data?.data ?: return
+
+            Log.i("PackManagement", "Got URI : $path")
 
             val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
 
@@ -349,7 +362,9 @@ class PackManagement : AppCompatActivity() {
             }
         }
 
-        AsyncTask.execute(run)
+        GlobalScope.launch(Dispatchers.Default) {
+            run.run()
+        }
     }
 
     private fun reloadPack(swipe: SwipeRefreshLayout?, list: ListView) {
@@ -402,7 +417,9 @@ class PackManagement : AppCompatActivity() {
             }
         }
 
-        AsyncTask.execute(run)
+        GlobalScope.launch(Dispatchers.Default) {
+            run.run()
+        }
     }
 
     private fun byteToKB(bytes: Long, df: DecimalFormat) : String {

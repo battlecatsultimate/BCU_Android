@@ -12,13 +12,16 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Environment
 import android.os.SystemClock
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.SparseArray
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.WindowInsets
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -27,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonParser
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StatFilterElement.Companion.statFilter
+import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter.Companion.writeDriveLog
 import com.mandarin.bcu.androidutil.pack.PackConflict
@@ -71,9 +75,6 @@ object StaticStore {
     /**Fild ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
 
-    /**Required libraries list */
-    val LIBREQ = arrayOf("000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010", "090900", "090901")
-
     /**Locale codes list */
     val lang = arrayOf("", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es")
 
@@ -101,9 +102,6 @@ object StaticStore {
      * Used when preventing animation working incorrectly
      */
     const val INFO_INTERVAL: Long = 350
-
-    /** Value which tells if Background data is loaded  */
-    var bgread = 0
 
     /** Value which tells if Unit language data is loaded  */
     var unitlang = 1
@@ -211,6 +209,7 @@ object StaticStore {
     var mapcolcname: ArrayList<String> = ArrayList()
     var mapcode: ArrayList<String> = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027"))
     var BCmaps = mapcode.size
+    val BCMapCode = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
     var eicons: Array<Bitmap>? = null
     var maplistClick = SystemClock.elapsedRealtime()
     var stglistClick = SystemClock.elapsedRealtime()
@@ -220,6 +219,7 @@ object StaticStore {
     var stageSpinner = -1
     private var bgnumber = 0
     var bglistClick = SystemClock.elapsedRealtime()
+    var cslistClick = SystemClock.elapsedRealtime()
     var stgenem: ArrayList<Identifier<AbEnemy>> = ArrayList()
     var stgenemorand = true
     var stgmusic = ""
@@ -301,7 +301,6 @@ object StaticStore {
      * It will also reset whole data of BCU
      */
     fun clear() {
-        bgread = 0
         unitlang = 1
         enemeylang = 1
         stagelang = 1
@@ -367,6 +366,8 @@ object StaticStore {
         gifisSaving = false
         enableGIF = false
         keepDoing = true
+
+        AnimationCView.gifTask.clear()
 
         filterReset()
         stgFilterReset()
@@ -912,7 +913,7 @@ object StaticStore {
         val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         val parameter = IvParameterSpec(v)
         cipher.init(Cipher.ENCRYPT_MODE, sks, parameter)
-        val input = ByteArray(64)
+        val input = ByteArray(65536)
         var i: Int
         while (fis.read(input).also { i = it } != -1) {
             val output = cipher.update(input, 0, i)
@@ -1186,7 +1187,7 @@ object StaticStore {
      * @return Returns "Pack Name - ID" as format
      */
     fun generateIdName(id: Identifier<*>, c: Context?) : String {
-        return if(id.pack == Identifier.DEF) {
+        return if(id.pack == Identifier.DEF || id.pack == "000001" || id.pack == "000002" || id.pack == "000003") {
             (c?.getString(R.string.pack_default) ?: "Default") +" - "+ Data.trio(id.id)
         } else {
             getPackName(id.pack)+" - "+Data.trio(id.id)
@@ -1253,5 +1254,37 @@ object StaticStore {
 
     fun unfixOrientation(ac: Activity) {
         ac.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+    }
+
+    @Suppress("DEPRECATION")
+    fun getScreenWidth(ac: Activity) : Int {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val m = ac.windowManager.currentWindowMetrics
+            val i = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+
+            m.bounds.width() - i.left - i.right
+        } else {
+            val d = DisplayMetrics()
+
+            ac.windowManager.defaultDisplay.getMetrics(d)
+
+            d.widthPixels
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    fun getScreenHeight(ac: Activity) : Int {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val m = ac.windowManager.currentWindowMetrics
+            val i = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+
+            m.bounds.height() - i.top - i.bottom
+        } else {
+            val d = DisplayMetrics()
+
+            ac.windowManager.defaultDisplay.getMetrics(d)
+
+            d.heightPixels
+        }
     }
 }

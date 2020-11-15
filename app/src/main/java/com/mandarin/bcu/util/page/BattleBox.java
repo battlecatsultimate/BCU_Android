@@ -5,6 +5,8 @@ import android.graphics.Point;
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
 import com.mandarin.bcu.util.PP;
 
+import java.text.DecimalFormat;
+
 import common.CommonStatic;
 import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
@@ -21,9 +23,9 @@ import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
 import common.util.stage.CastleImg;
-import common.util.stage.CastleList;
 import common.util.unit.Form;
 
+@SuppressWarnings("All")
 public interface BattleBox {
 
     static class BBPainter implements BattleConst {
@@ -37,6 +39,7 @@ public interface BattleBox {
         private static final int[] cany = new int[]{-134, -134, -134, -250, -250, -134, -134, -134};
         private static final int[] canx = new int[]{0, 0, 0, 64, 64, 0, 0, 0};
 
+        //32dp
         public int dpi = 1;
 
         public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
@@ -77,6 +80,9 @@ public interface BattleBox {
         private PP pp = new PP(0, 0);
         private SymCoord sc = new SymCoord(null, 0, 0, 0, 0);
 
+        private DecimalFormat df = new DecimalFormat("00.00");
+        private final CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
+
         public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
             page = bip;
             bf = bas;
@@ -112,6 +118,8 @@ public interface BattleBox {
             drawEntity(g);
             drawBtm(g);
             drawTop(g);
+            if(sb.st.trail)
+                drawTime(g);
             sb = null;
         }
 
@@ -301,12 +309,11 @@ public interface BattleBox {
             posx -= castw * siz / 2;
             posy -= casth * siz;
             setSym(gra, siz, posx, posy, 0);
-            Res.getBase(sb.ebase, sc);
+            Res.getBase(sb.ebase, new SymCoord(gra, siz, posx, posy, 0), bf.sb.st.trail);
             posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
             drawNyCast(gra, (int) (midh - road_h * siz), posx, siz, sb.nyc);
             posx += castw * siz / 2;
-            setSym(gra, siz, posx, posy, 1);
-            Res.getBase(sb.ubase, sc);
+            Res.getBase(sb.ubase, new SymCoord(gra, siz, posx, posy, 1), false);
             gra.delete(at);
         }
 
@@ -421,6 +428,66 @@ public interface BattleBox {
             if(((CVGraphics)g).neg) {
                 g.setComposite(FakeGraphics.GRAY, 0, 0);
             }
+        }
+
+        private void drawTime(FakeGraphics g) {
+            P p = P.newP(dpi * 16.0 / 32.0, dpi * 60.0 / 32.0);
+            double ratio = (double) dpi / aux.timer[0].getImg().getHeight();
+
+            double timeLeft = bf.sb.st.timeLimit * 60.0 - bf.sb.time / 30.0;
+
+            int min = (int) timeLeft / 60;
+
+            timeLeft -= min * 60.0;
+
+            FakeImage separator = aux.timer[10].getImg();
+            FakeImage zero = aux.timer[0].getImg();
+
+            if(timeLeft < 0) {
+                for(int i = 0; i < 3; i ++) {
+                    g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
+                    p.x += zero.getWidth() * ratio;
+                    g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
+                    p.x += zero.getWidth() * ratio;
+                    if(i != 2) {
+                        g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
+                        p.x += separator.getWidth() * ratio;
+                    }
+                }
+
+                return;
+            }
+
+            if(min < 10) {
+                FakeImage m = aux.timer[min].getImg();
+
+                g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
+                p.x += zero.getWidth() * ratio;
+
+                g.drawImage(m, p.x, p.y, m.getWidth()*ratio, m.getHeight()*ratio);
+                p.x += m.getWidth() * ratio;
+            }
+
+            g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
+            p.x += separator.getWidth() * ratio;
+
+            FakeImage m;
+
+            String time = df.format(timeLeft);
+
+            for(int i = 0; i < time.length(); i++) {
+                if((time.charAt(i)) == '.') {
+                    g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
+                    p.x += separator.getWidth() * ratio;
+                } else {
+                    m = aux.timer[Character.getNumericValue(time.charAt(i))].getImg();
+
+                    g.drawImage(m, p.x, p.y, m.getWidth()*ratio, m.getHeight()*ratio);
+                    p.x += m.getWidth() * ratio;
+                }
+            }
+
+            P.delete(p);
         }
 
         private synchronized void press(Point p) {

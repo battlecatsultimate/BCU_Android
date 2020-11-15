@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
@@ -22,12 +21,12 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.io.asynchs.UploadLogs
+import com.mandarin.bcu.androidutil.io.coroutine.UploadLogs
 import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -203,7 +202,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 yes.setOnClickListener {
-                    UploadLogs(this@MainActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                    UploadLogs(this@MainActivity).execute()
                     StaticStore.showShortMessage(this@MainActivity, R.string.main_err_start)
                     dialog.dismiss()
                 }
@@ -216,7 +215,7 @@ class MainActivity : AppCompatActivity() {
             } else if (shared.getBoolean("upload", false)) {
                 StaticStore.showShortMessage(this, R.string.main_err_upload)
 
-                UploadLogs(this@MainActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                UploadLogs(this@MainActivity).execute()
             }
         }
 
@@ -228,6 +227,7 @@ class MainActivity : AppCompatActivity() {
         val basisbtn = findViewById<Button>(R.id.basisbtn)
         val medalbtn = findViewById<Button>(R.id.medalbtn)
         val bgbtn = findViewById<Button>(R.id.bgbtn)
+        val csbtn = findViewById<Button>(R.id.csbtn)
         val config = findViewById<FloatingActionButton>(R.id.mainconfig)
         val musbtn = findViewById<Button>(R.id.mubtn)
         val pmbtn = findViewById<Button>(R.id.pmbtn)
@@ -239,6 +239,7 @@ class MainActivity : AppCompatActivity() {
         basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_basis), null, null, null)
         medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_medal), null, null, null)
         bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_bg), null, null, null)
+        csbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_castles), null, null, null)
         bgbtn.compoundDrawablePadding = StaticStore.dptopx(16f, this)
         musbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_music), null, null, null)
         pmbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_pack), null, null, null)
@@ -284,6 +285,13 @@ class MainActivity : AppCompatActivity() {
         bgbtn.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@MainActivity, BackgroundList::class.java)
+                startActivity(intent)
+            }
+        })
+
+        csbtn.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@MainActivity, CastleList::class.java)
                 startActivity(intent)
             }
         })

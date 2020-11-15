@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
@@ -59,14 +60,14 @@ class LUTreasureSetting : Fragment() {
     private val tilid = intArrayOf(R.id.statschmulti, R.id.canatklev, R.id.canrangelev, R.id.eoctrea, R.id.eocitftrea, R.id.itffruittrea, R.id.cotctrea, R.id.itfcrytrea, R.id.cotccrytrea)
     private val tilsid = arrayOf(techid, eocid, eocitfid, itfid, cotcid, maskid)
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     private var color: IntArray? = null
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_treasure_set, group, false)
 
-        color = intArrayOf(StaticStore.getAttributeColor(Objects.requireNonNull<Context>(context), R.attr.TextPrimary))
+        color = intArrayOf(StaticStore.getAttributeColor(requireContext(), R.attr.TextPrimary))
 
         listeners(view)
 
@@ -709,7 +710,10 @@ class LUTreasureSetting : Fragment() {
                                         cotc.helperText = helperss[i]
                                     }
                                     5 -> {
+                                        println("$j : $`val`")
                                         t.gods[j] = `val`
+                                        println("Temp : ${t.gods.contentToString()}")
+                                        println("Real : ${BasisSet.current().t().gods.contentToString()}")
                                     }
                                 }
                             }

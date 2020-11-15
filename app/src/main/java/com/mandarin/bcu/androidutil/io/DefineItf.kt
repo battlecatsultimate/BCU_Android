@@ -1,13 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.mandarin.bcu.androidutil.io
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.media.MediaDataSource
 import android.media.MediaMetadataRetriever
-import android.util.Log
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
-import com.mandarin.bcu.androidutil.fakeandroid.FIBM
 import com.mandarin.bcu.androidutil.music.OggDataSource
 import com.mandarin.bcu.androidutil.pack.AACLoader
 import com.mandarin.bcu.androidutil.pack.AImageReader
@@ -15,14 +13,10 @@ import com.mandarin.bcu.androidutil.pack.AMusicLoader
 import common.CommonStatic
 import common.CommonStatic.Itf
 import common.io.InStream
-import common.io.OutStream
 import common.pack.Source
-import common.system.VImg
-import common.system.files.VFile
 import common.util.stage.Music
-import java.io.*
+import java.io.File
 import java.util.*
-import java.util.function.Function
 
 class DefineItf : Itf {
     companion object {
@@ -60,7 +54,7 @@ class DefineItf : Itf {
         val mmr = MediaMetadataRetriever()
         mmr.setDataSource(OggDataSource(f.data))
 
-        return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+        return mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: -1
     }
 
     override fun readBytes(fi: File): InStream? {

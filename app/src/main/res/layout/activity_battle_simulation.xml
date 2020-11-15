@@ -43,8 +43,8 @@
         android:id="@+id/battleslow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
         android:focusable="true"
@@ -55,7 +55,8 @@
         app:fabSize="mini"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/iconPrimaryN" />
+        app:tint="@color/iconPrimaryN"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/battlefast"
@@ -72,14 +73,15 @@
         app:fabSize="mini"
         app:layout_constraintStart_toEndOf="@+id/battleslow"
         app:layout_constraintTop_toTopOf="@+id/battleslow"
-        app:tint="@color/iconPrimaryN" />
+        app:tint="@color/iconPrimaryN"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/battlepause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
         android:focusable="true"
@@ -91,7 +93,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_pause_black_24dp"
-        app:tint="@color/iconPrimaryN" />
+        app:tint="@color/iconPrimaryN"
+        android:contentDescription="@null" />
 
 
     <RelativeLayout
@@ -102,7 +105,9 @@
         android:theme="@style/AppTheme.designDay"
         android:transitionName="Battle"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TableRow
             android:layout_width="wrap_content"
@@ -146,8 +151,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:backgroundTint="@color/colorAccent"
             android:clickable="true"
             android:focusable="true"
@@ -156,7 +161,8 @@
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:fabSize="mini"
-            app:tint="@color/iconPrimaryN" />
+            app:tint="@color/iconPrimaryN"
+            android:contentDescription="@null" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/battlenextframe"
@@ -164,7 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/battleplay"
             android:backgroundTint="@color/colorAccent"
             android:clickable="true"
@@ -174,7 +180,8 @@
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:fabSize="mini"
-            app:tint="@color/iconPrimaryN" />
+            app:tint="@color/iconPrimaryN"
+            android:contentDescription="@null" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/showunit"
@@ -183,9 +190,9 @@
             android:layout_below="@+id/battleplay"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/battle_show_unit"
             android:textColor="?attr/TextPrimary"
             android:textSize="12sp" />

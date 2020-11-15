@@ -3,7 +3,6 @@ package com.mandarin.bcu
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.stage.asynchs.StageAdder
+import com.mandarin.bcu.androidutil.stage.coroutine.StageAdder
 import common.CommonStatic
 import common.util.stage.Stage
 import leakcanary.AppWatcher

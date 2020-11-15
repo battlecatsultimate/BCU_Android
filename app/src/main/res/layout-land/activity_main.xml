@@ -65,7 +65,7 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/eninfbtn"
@@ -77,7 +77,7 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/mubtn"
@@ -90,7 +90,7 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
                 </TableRow>
 
                 <TableRow
@@ -110,7 +110,7 @@
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
                         app:layout_constraintHeight_percent="0.175"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/medalbtn"
@@ -123,7 +123,7 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/pmbtn"
@@ -155,7 +155,7 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/bgbtn"
@@ -168,7 +168,20 @@
                         android:textAllCaps="false"
                         android:textColor="?attr/TextPrimary"
                         android:textSize="30sp"
-                        style="?android:attr/buttonBarButtonStyle" />
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:id="@+id/csbtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:backgroundTint="?attr/ButtonPrimary"
+                        android:drawablePadding="10dp"
+                        android:text="@string/main_castle"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="30sp"
+                        tools:ignore="ButtonStyle" />
                 </TableRow>
 
             </TableLayout>

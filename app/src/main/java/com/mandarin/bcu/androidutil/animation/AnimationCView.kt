@@ -10,7 +10,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.animation.asynchs.AddGIF
+import com.mandarin.bcu.androidutil.animation.coroutine.AddGIF
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import common.CommonStatic
 import common.pack.Identifier
@@ -23,6 +23,16 @@ import common.util.unit.Unit
 
 @SuppressLint("ViewConstructor")
 class AnimationCView : View {
+    companion object {
+        val gifTask = ArrayList<AddGIF>()
+
+        fun trigger() {
+            if(gifTask.isNotEmpty()) {
+                gifTask[0].execute()
+            }
+        }
+    }
+
     @JvmField
     var anim: EAnimU? = null
     val activity: Activity?
@@ -131,7 +141,10 @@ class AnimationCView : View {
         }
         if (StaticStore.enableGIF) {
             animP = P.newP((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
-            AddGIF(activity, width, height, animP, size, night, data, form != -1).execute()
+            val empty = gifTask.isEmpty()
+            gifTask.add(AddGIF(activity, width, height, animP, size, night, data, form != -1))
+            if(empty)
+                trigger()
             StaticStore.gifFrame++
         }
         if (StaticStore.play) {

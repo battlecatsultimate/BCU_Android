@@ -133,6 +133,19 @@
                     android:textSize="24sp" />
 
                 <Button
+                    android:id="@+id/csbtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="?attr/ButtonPrimary"
+                    android:drawablePadding="10dp"
+                    android:text="@string/main_castle"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="24sp" />
+
+                <Button
                     android:id="@+id/mubtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

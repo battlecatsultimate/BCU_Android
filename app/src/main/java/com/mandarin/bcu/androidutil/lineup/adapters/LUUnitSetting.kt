@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.UnitInfo
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
@@ -38,7 +39,7 @@ class LUUnitSetting : Fragment() {
 
     private var fid = 0
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     var f: Form? = null
 
@@ -106,7 +107,7 @@ class LUUnitSetting : Fragment() {
 
             setAppear(spinners[0], spinners[1], plus, row, t, tal, chform, levt)
 
-            val s = GetStrings(context!!)
+            val s = GetStrings(requireContext())
 
             fid = f?.fid ?: 0
 
@@ -134,7 +135,7 @@ class LUUnitSetting : Fragment() {
                     for (j in 0 until (max?.get(i) ?: 0) + 1)
                         list.add(j)
 
-                    val adapter = ArrayAdapter(context!!, R.layout.spinneradapter, list)
+                    val adapter = ArrayAdapter(requireContext(), R.layout.spinneradapter, list)
 
                     talents[i - 1]?.adapter = adapter
 
@@ -161,8 +162,8 @@ class LUUnitSetting : Fragment() {
             for (i in 0 until (f?.unit?.maxp ?: -1) + 1)
                 levp.add(i)
 
-            val adapter = ArrayAdapter(context!!, R.layout.spinneradapter, levs)
-            val adapter1 = ArrayAdapter(context!!, R.layout.spinneradapter, levp)
+            val adapter = ArrayAdapter(requireContext(), R.layout.spinneradapter, levs)
+            val adapter1 = ArrayAdapter(requireContext(), R.layout.spinneradapter, levp)
 
             spinners[0].adapter = adapter
             spinners[1].adapter = adapter1
@@ -286,7 +287,7 @@ class LUUnitSetting : Fragment() {
 
             t.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    val anim = ValueAnimator.ofInt(0, StaticStore.dptopx(64f, context!!))
+                    val anim = ValueAnimator.ofInt(0, StaticStore.dptopx(64f, requireContext()))
                     anim.addUpdateListener { animation ->
                         val `val` = animation.animatedValue as Int
                         val params = tal.layoutParams
@@ -309,7 +310,7 @@ class LUUnitSetting : Fragment() {
                     atk.text = s.getAtk(f, BasisSet.current().t(), lev + levp1, f?.pCoin != null && t.isChecked, pcoin)
 
                 } else {
-                    val anim = ValueAnimator.ofInt(StaticStore.dptopx(64f, context!!), 0)
+                    val anim = ValueAnimator.ofInt(StaticStore.dptopx(64f, requireContext()), 0)
                     anim.addUpdateListener { animation ->
                         val `val` = animation.animatedValue as Int
                         val params = tal.layoutParams
@@ -381,7 +382,7 @@ class LUUnitSetting : Fragment() {
                         for (j in 0 until max[i] + 1)
                             list.add(j)
 
-                        val adapter2 = ArrayAdapter(context!!, R.layout.spinneradapter, list)
+                        val adapter2 = ArrayAdapter(requireContext(), R.layout.spinneradapter, list)
 
                         talents[i - 1]?.adapter = adapter2
 

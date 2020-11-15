@@ -669,7 +669,7 @@
     <string name="orb_res_desc">Takes _% less damage from target</string>
     <string name="lineup_orb">Orb</string>
     <string name="stg_info_loop">Loop</string>
-    <string name="stg_info_loop1">Loop1</string>
+    <string name="stg_info_loop1">Loop 1</string>
     <string name="def_zero_time">0:00.000</string>
     <string name="pack_conf_guide_unsupp">App can\'t handle this pack because it has unsupported version (_) from currently available version (-). App might success to read it, but you have to select action above.</string>
     <string name="pack_conf_unsupported">Pack has unsupported version</string>
@@ -715,4 +715,8 @@
     <string name="pack_import_importing">Importing _…</string>
     <string name="pack_reload">Reloading Packs…</string>
     <string name="pack_manage_warn">Pack Conflict happened, you will need to solve it</string>
+    <string name="fruit14">Epic Catfruit Seed</string>
+    <string name="fruit15">Gold Catfruit</string>
+    <string name="main_castle">Castles</string>
+
 </resources>

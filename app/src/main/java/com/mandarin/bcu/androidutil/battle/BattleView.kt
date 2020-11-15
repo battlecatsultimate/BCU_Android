@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.MediaPrepare
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics

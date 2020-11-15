@@ -3,12 +3,9 @@ package com.mandarin.bcu
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Point
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +15,7 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder
+import com.mandarin.bcu.androidutil.lineup.coroutine.LUAdder
 import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -64,12 +61,8 @@ class LineUpScreen : AppCompatActivity() {
         line.id = R.id.lineupView
 
         val layout = findViewById<LinearLayout>(R.id.lineuplayout)
-        val display = windowManager.defaultDisplay
-        val size = Point()
 
-        display.getSize(size)
-
-        val w = size.x.toFloat()
+        val w = StaticStore.getScreenWidth(this)
         val h = w / 5.0f * 3
 
         line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
@@ -113,6 +106,7 @@ class LineUpScreen : AppCompatActivity() {
 
         StaticStore.updateList = false
         StaticStore.filterReset()
+        StaticStore.entityname = ""
         StaticStore.set = null
         StaticStore.lu = null
 

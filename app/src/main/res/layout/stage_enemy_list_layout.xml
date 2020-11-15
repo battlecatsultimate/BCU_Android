@@ -26,7 +26,7 @@
         <ImageView
             android:id="@+id/stgenlisticon"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.175"
             android:background="@drawable/cell_shape"
             android:contentDescription="@string/def_description"
@@ -42,16 +42,17 @@
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.5">
 
             <TextView
                 android:id="@+id/stgenlistmultir"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:minHeight="48dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/def_minus"

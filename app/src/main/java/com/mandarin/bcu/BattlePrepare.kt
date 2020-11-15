@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Point
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -15,7 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.battle.asynchs.BPAdder
+import com.mandarin.bcu.androidutil.battle.coroutine.BPAdder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.lineup.LineUpView
@@ -72,17 +70,10 @@ class BattlePrepare : AppCompatActivity() {
 
         val layout = findViewById<LinearLayout>(R.id.preparelineup)
 
-        val display = windowManager.defaultDisplay
-        val size = Point()
-
-        display.getSize(size)
-
-        val w: Float
-
-        w = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            size.x / 2.0f
+        val w: Float = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            StaticStore.getScreenWidth(this).toFloat() / 2.0f
         else
-            size.x.toFloat()
+            StaticStore.getScreenWidth(this).toFloat()
 
         val h = w / 5.0f * 3
 

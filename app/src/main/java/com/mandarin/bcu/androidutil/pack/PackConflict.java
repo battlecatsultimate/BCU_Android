@@ -90,6 +90,8 @@ public class PackConflict {
                             msg = "Failed to remove file "+f.getAbsolutePath();
                             return;
                         }
+                    } else {
+                        Log.e("PackConflict", "File not existing, ID : "+confPack.get(0));
                     }
 
                     solved = true;
@@ -162,6 +164,8 @@ public class PackConflict {
                                 err = ERR_FILE;
                                 msg = "Failed to remove file "+f.getAbsolutePath();
                             }
+                        } else {
+                            Log.e("PackConflict","File not existing, ID : "+confPack.get(i));
                         }
                     }
                 } else {

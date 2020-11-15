@@ -2,7 +2,6 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,7 +11,7 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.music.asynchs.MusicAdder
+import com.mandarin.bcu.androidutil.music.coroutine.MusicAdder
 import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -53,7 +52,7 @@ class MusicList : AppCompatActivity() {
 
         setContentView(R.layout.activity_music_list)
 
-        val bck: FloatingActionButton = findViewById(R.id.mulistbck)
+        val bck: FloatingActionButton = findViewById(R.id.cslistbck)
 
         bck.setOnClickListener {
             finish()

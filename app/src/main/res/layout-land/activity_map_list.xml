@@ -53,18 +53,23 @@
         app:layout_constraintBottom_toBottomOf="@+id/stgtool"
         app:layout_constraintEnd_toEndOf="@+id/stgtool"
         app:layout_constraintTop_toTopOf="@+id/stgtool"
-        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
+        app:srcCompat="@drawable/ic_filter_list_black_24dp"
+        android:contentDescription="@null" />
 
     <Spinner
         android:id="@+id/stgspin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@color/stageSelect"
         android:minWidth="196dp"
         android:popupBackground="?attr/stageSelect"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/stgtool"
         app:layout_constraintEnd_toStartOf="@+id/stgfilter"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@+id/stgbck"
         app:layout_constraintTop_toTopOf="@+id/stgtool" />
 
     <ProgressBar

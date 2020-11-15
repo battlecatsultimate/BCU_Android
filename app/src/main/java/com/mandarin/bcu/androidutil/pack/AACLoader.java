@@ -1,13 +1,11 @@
 package com.mandarin.bcu.androidutil.pack;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM;
 import com.mandarin.bcu.androidutil.io.AContext;
-import com.mandarin.bcu.androidutil.io.DefferedLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,9 +41,9 @@ public class AACLoader implements Source.AnimLoader {
         String path;
 
         if(!name.equals("")) {
-            path = dir+"/res/img/" + name + "/";
+            path = dir+"res/img/" + name + "/";
         } else {
-            path = dir+"/res/img/" + findName(dir+"/res/img/","") + "/";
+            path = dir+"res/img/" + findName(dir+"res/img/","") + "/";
         }
 
         String nam = findName(path,".png", ".bcuimg");
@@ -121,6 +119,7 @@ public class AACLoader implements Source.AnimLoader {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public AACLoader(InStream is, CommonStatic.ImgReader reader) {
         is.nextString();
 
@@ -260,8 +259,7 @@ public class AACLoader implements Source.AnimLoader {
 
         try {
             String md5 = StaticStore.fileToMD5(g);
-
-            StaticStore.encryptPNG(g.getAbsolutePath(), md5, StaticStore.IV, false);
+            StaticStore.encryptPNG(g.getAbsolutePath(), md5, StaticStore.IV, true);
 
             return new String[] {g.getAbsolutePath().replace(".png",".bcuimg"), md5};
         } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {

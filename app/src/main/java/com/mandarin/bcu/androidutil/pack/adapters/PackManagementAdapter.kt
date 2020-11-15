@@ -16,7 +16,7 @@ import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.pack.PackData
 import common.pack.Source
 import common.pack.UserProfile
@@ -174,7 +174,7 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
 
         editor.apply()
 
-        p.unregister()
+        UserProfile.unloadPack(p)
     }
 
     private fun cantDelete(p: PackData.UserPack) : Boolean {
