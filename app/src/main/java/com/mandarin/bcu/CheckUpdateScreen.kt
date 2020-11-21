@@ -169,6 +169,16 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("UI")) {
+            ed.putBoolean("UI", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("ui_vol")) {
+            ed.putInt("ui_vol", 99)
+            ed.apply()
+        }
+
         val devMode = shared.getBoolean("DEV_MOE", false)
 
         AppWatcher.config = AppWatcher.config.copy(enabled = devMode)

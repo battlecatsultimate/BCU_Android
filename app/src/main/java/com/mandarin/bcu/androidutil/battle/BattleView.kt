@@ -63,12 +63,15 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         SoundHandler.SE = SoundPool.Builder().setMaxStreams(50).setAudioAttributes(aa).build()
         SoundHandler.ATK = SoundPool.Builder().setAudioAttributes(aa).build()
         SoundHandler.BASE = SoundPool.Builder().setAudioAttributes(aa).build()
+        SoundHandler.TOUCH = SoundPool.Builder().setAudioAttributes(aa).build()
+        SoundHandler.SPAWN_FAIL = SoundPool.Builder().setAudioAttributes(aa).build()
 
         //Preparing ferequntly used SE
 
         loadSE(SoundHandler.SE_SE, 25, 26)
         loadSE(SoundHandler.SE_ATK, 20, 21)
         loadSE(SoundHandler.SE_BASE, 22)
+        loadSE(SoundHandler.SE_UI, 10, 15, 19, 27, 28)
 
         for (fs in painter.bf.sb.b.lu.fs) {
             for (f in fs) {
@@ -388,8 +391,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         for(i in ind) {
             val result = SoundHandler.load(type, i, play = false)
 
+            println("RESULT : $result | IND : $i")
+
             if(result != -1) {
-                println("ID : $i\nRESULT : $result")
                 SoundHandler.map[i] = result
             }
         }

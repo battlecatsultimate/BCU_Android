@@ -561,6 +561,53 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
 
+                val ui = activity.findViewById<SwitchMaterial>(R.id.switchui)
+                val seekui = activity.findViewById<SeekBar>(R.id.seekui)
+
+                ui.isChecked = SoundHandler.uiPlay
+                seekui.isEnabled = SoundHandler.uiPlay
+                seekui.max = 99
+                seekui.progress = shared.getInt("ui_vol", 99)
+
+                ui.setOnCheckedChangeListener { _, c ->
+                    ui.isClickable = false
+                    ui.postDelayed({ui.isClickable = true}, 1000)
+
+                    val editor = shared.edit()
+
+                    editor.putBoolean("UI", c)
+                    editor.apply()
+
+                    SoundHandler.uiPlay = c
+                    SoundHandler.ui_vol = if(c) {
+                        StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+                    } else {
+                        0f
+                    }
+
+                    seekui.isEnabled = true
+                }
+
+                seekui.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (fromUser) {
+                            if (progress >= 100 || progress < 0)
+                                return
+
+                            val editor = shared.edit()
+
+                            editor.putInt("ui_vol", progress)
+                            editor.apply()
+
+                            SoundHandler.ui_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+                        }
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {}
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {}
+                })
+
                 SoundHandler.MUSIC = SoundPlayer()
 
                 val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)

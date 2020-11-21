@@ -12,6 +12,7 @@ object SoundHandler {
     const val SE_SE = 0
     const val SE_ATK = 1
     const val SE_BASE = 2
+    const val SE_UI = 3
 
     var MUSIC = SoundPlayer()
 
@@ -21,6 +22,9 @@ object SoundHandler {
     var ATK : SoundPool? = SoundPool.Builder().build()
     /** SoundPool for base attack sounds **/
     var BASE : SoundPool? = SoundPool.Builder().build()
+
+    var SPAWN_FAIL : SoundPool? = SoundPool.Builder().build()
+    var TOUCH : SoundPool? = SoundPool.Builder().build()
 
     var play: BooleanArray = BooleanArray(0)
 
@@ -48,19 +52,29 @@ object SoundHandler {
 
     var mu_vol = 1f
 
+    var uiPlay = true
+
+    var ui_vol = 1f
+
     var speed = 0
 
     var map = HashMap<Int, Int>()
 
     private val atk = listOf(20, 21)
+    private val ui = listOf(10, 15, 19, 27, 28)
 
     var timer: PauseCountDown? = null
 
     @JvmStatic
     fun setSE(ind: Int) {
-        if (speed > 3) return
-        if (play[ind]) return
-        if (battleEnd) return
+        if (speed > 3)
+            return
+
+        if (play[ind])
+            return
+
+        if (battleEnd)
+            return
 
         if(ind == 45 && twoMusic && haveToChange) {
             if(!Changed) {
@@ -161,6 +175,9 @@ object SoundHandler {
 
         if(id == null) {
             val result = when {
+                ui.contains(ind) -> {
+                    load(SE_UI, ind, play = true)
+                }
                 atk.contains(ind) -> {
                     load(SE_ATK, ind, play = true)
                 }
@@ -184,6 +201,19 @@ object SoundHandler {
                 ind == 22 -> {
                     BASE?.play(id, se_vol, se_vol, 0, 0, 1f)
                 }
+                ui.contains(ind) -> {
+                    when (ind) {
+                        10 -> {
+                            TOUCH?.play(id, ui_vol, ui_vol, 0, 0, 1f)
+                        }
+                        15 -> {
+                            SPAWN_FAIL?.play(id, ui_vol, ui_vol, 0, 0, 1f)
+                        }
+                        else -> {
+                            SE?.play(id, ui_vol, ui_vol, 0, 0, 1f)
+                        }
+                    }
+                }
                 else -> {
                     SE?.play(id, se_vol, se_vol, 0, 0, 1f)
                 }
@@ -201,6 +231,10 @@ object SoundHandler {
         SE = null
         ATK?.release()
         ATK = null
+        TOUCH?.release()
+        TOUCH = null
+        SPAWN_FAIL?.release()
+        SPAWN_FAIL = null
     }
 
     @JvmStatic
@@ -236,6 +270,18 @@ object SoundHandler {
 
             BASE = SoundPool.Builder().setAudioAttributes(aa).build()
         }
+
+        if(TOUCH == null) {
+            val aa = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_GAME).build()
+
+            TOUCH = SoundPool.Builder().setAudioAttributes(aa).build()
+        }
+
+        if(SPAWN_FAIL == null) {
+            val aa = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_GAME).build()
+
+            SPAWN_FAIL = SoundPool.Builder().setAudioAttributes(aa).build()
+        }
     }
 
     fun load(type: Int, ind: Int, play: Boolean) : Int {
@@ -245,6 +291,9 @@ object SoundHandler {
 
         return when(type) {
             SE_SE -> {
+                if(!sePlay)
+                    return -1
+
                 SE?.setOnLoadCompleteListener {
                     s, i, _ ->
                     val id = map[ind] ?: return@setOnLoadCompleteListener
@@ -258,6 +307,9 @@ object SoundHandler {
             }
 
             SE_ATK -> {
+                if(!sePlay)
+                    return -1
+
                 ATK?.setOnLoadCompleteListener {
                     s, i, _ ->
                     val id = map[ind] ?: return@setOnLoadCompleteListener
@@ -271,6 +323,9 @@ object SoundHandler {
             }
 
             SE_BASE -> {
+                if(!sePlay)
+                    return -1
+
                 BASE?.setOnLoadCompleteListener {
                     s, i, _ ->
                     val id = map[ind] ?: return@setOnLoadCompleteListener
@@ -281,6 +336,55 @@ object SoundHandler {
                 }
 
                 BASE?.load(f.absolutePath, 0) ?: return -1
+            }
+
+            SE_UI -> {
+                if(!uiPlay)
+                    return -1
+
+                when(ind) {
+                    10 -> {
+                        TOUCH?.setOnLoadCompleteListener { s, i, _ ->
+                            val id = map[ind] ?: return@setOnLoadCompleteListener
+
+                            if(play && id == i) {
+                                s.play(i, ui_vol, ui_vol, 0, 0, 1f)
+                            }
+                        }
+
+                        TOUCH?.load(f.absolutePath, 0) ?: return -1
+                    }
+
+                    15 -> {
+                        SPAWN_FAIL?.setOnLoadCompleteListener { s, i, _ ->
+                            val id = map[ind] ?: return@setOnLoadCompleteListener
+
+                            if(play && id == i) {
+                                s.play(i, ui_vol, ui_vol, 0, 0, 1f)
+                            }
+                        }
+
+                        setSE(10)
+
+                        SPAWN_FAIL?.load(f.absolutePath, 0) ?: return -1
+                    }
+
+                    else -> {
+                        SE?.setOnLoadCompleteListener {
+                            s, i, _ ->
+                            val id = map[ind] ?: return@setOnLoadCompleteListener
+
+                            if(play && id == i) {
+                                s.play(i, se_vol, se_vol, 0, 0, 1f)
+                            }
+                        }
+
+                        if(ind == 19)
+                            setSE(10)
+
+                        SE?.load(f.absolutePath, 0) ?: return -1
+                    }
+                }
             }
 
             else -> {

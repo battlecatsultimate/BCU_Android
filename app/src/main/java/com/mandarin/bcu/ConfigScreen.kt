@@ -20,10 +20,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.Revalidater
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -387,6 +387,48 @@ open class ConfigScreen : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+
+        val ui = findViewById<SwitchCompat>(R.id.configui)
+        val uivol = findViewById<SeekBar>(R.id.configuivol)
+
+        ui.setOnCheckedChangeListener { _, c ->
+            val editor = shared.edit()
+
+            editor.putBoolean("UI", c)
+            editor.apply()
+
+            SoundHandler.uiPlay = c
+            SoundHandler.ui_vol = if(c) {
+                StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+            } else {
+                0f
+            }
+
+            uivol.isEnabled = c
+        }
+
+        uivol.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    if (progress >= 100 || progress < 0) return
+                    val editor = shared.edit()
+                    editor.putInt("ui_vol", progress)
+                    editor.apply()
+                    SoundHandler.ui_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+
+                    println(SoundHandler.ui_vol)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
+        ui.isChecked = shared.getBoolean("UI", true)
+        uivol.isEnabled = shared.getBoolean("UI", true)
+        uivol.max = 99
+        uivol.progress = shared.getInt("ui_vol", 99)
 
         val build = findViewById<TextView>(R.id.configbuildver)
 

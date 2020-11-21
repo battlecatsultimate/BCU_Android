@@ -101,6 +101,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             0f
         }
+        SoundHandler.uiPlay = shared.getBoolean("UI", true)
+        SoundHandler.ui_vol = if(SoundHandler.uiPlay)
+            StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+        else
+            0f
         StaticStore.upload = shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)
 
         val result = intent

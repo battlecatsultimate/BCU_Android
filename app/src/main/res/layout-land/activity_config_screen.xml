@@ -253,6 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/tableRow2"
                 app:layout_constraintStart_toStartOf="@+id/configunitinfland"
                 app:layout_constraintTop_toBottomOf="@+id/configunitinfland">
 
@@ -416,6 +417,26 @@
                 app:layout_constraintStart_toStartOf="@+id/configmusvol"
                 app:layout_constraintTop_toBottomOf="@+id/configse" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configui"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/ui_sound"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configse"
+                app:layout_constraintStart_toStartOf="@+id/configse"
+                app:layout_constraintTop_toBottomOf="@+id/configsevol" />
+
+            <SeekBar
+                android:id="@+id/configuivol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/configsevol"
+                app:layout_constraintStart_toStartOf="@+id/configsevol"
+                app:layout_constraintTop_toBottomOf="@+id/configui" />
+
             <TextView
                 android:id="@+id/configappname"
                 android:layout_width="wrap_content"
@@ -424,7 +445,7 @@
                 android:text="@string/config_app_name"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintStart_toStartOf="@+id/configse"
-                app:layout_constraintTop_toBottomOf="@+id/configsevol" />
+                app:layout_constraintTop_toBottomOf="@+id/configuivol" />
 
             <TextView
                 android:id="@+id/configbuildver"
