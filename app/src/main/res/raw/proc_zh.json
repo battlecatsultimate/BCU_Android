@@ -1,0 +1,757 @@
+{
+    "KB": {
+        "abbr_name": "打飛",
+        "full_name": "打飛",
+        "tooltip": null,
+        "format": [
+            "(prob)% 打飛目標",
+            "[(dis==0){預設的距離}(dis!=0){(dis)個單位的距離}]，",
+            "持續[(time==0){預設的時間}(time>0){(_dispTime(time))}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": "輸入0取得預設值"
+            },
+            "dis": {
+                "name": "距離",
+                "tooltip": "輸入0取得預設值"
+            }
+        }
+    },
+    "STOP": {
+        "abbr_name": "暫停",
+        "full_name": "暫停",
+        "tooltip": null,
+        "format": "(prob)%暫停目標(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": "真正的持續時間會被寶物和敵人種類影響"
+            }
+        }
+    },
+    "SLOW": {
+        "abbr_name": "緩速",
+        "full_name": "緩速",
+        "tooltip": null,
+        "format": "(prob)%緩速目標(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": "真正的持續時間會被寶物和敵人種類影響"
+            }
+        }
+    },
+    "CRIT": {
+        "abbr_name": "會心",
+        "full_name": "會心一擊",
+        "tooltip": "對所有目標造成更多傷害(包括鋼鐵)。看倍率的注釋來了解如何設置倍率",
+        "format": [
+            "(prob)%會心一擊",
+            "[(mult>0&mult!=200){，給非鋼鐵敵人(mult)%本身攻擊力的傷害}",
+            "(mult<0){，給鋼鐵敵人該敵人剩餘血量(_abs(mult))%的傷害}]."
+        ],
+        "class": {
+            "prob": {
+                "name": "距離",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "倍率",
+                "tooltip": "預設值是200，輸入負數的時候可以變成水砲那樣的削減鋼鐵敵人百分比血量"
+            }
+        }
+    },
+    "WAVE": {
+        "abbr_name": "波動",
+        "full_name": "波動",
+        "tooltip": null,
+        "format": "(prob)%發射Lv.(lv)的波動",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "lv": {
+                "name": "等級",
+                "tooltip": null
+            }
+        }
+    },
+    "WEAK": {
+        "abbr_name": "降攻",
+        "full_name": "降低攻擊力",
+        "tooltip": null,
+        "format": "(prob)%把目標的攻擊力降到(mult)%，持續(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "降攻幅度",
+                "tooltip": "目標的攻擊力會被降到多少%"
+            }
+        }
+    },
+    "BREAK": {
+        "abbr_name": "破盾",
+        "full_name": "破壞護盾",
+        "tooltip": null,
+        "format": "(prob)%破壞護盾",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            }
+        }
+    },
+    "WARP": {
+        "abbr_name": "傳送",
+        "full_name": "傳送",
+        "tooltip": null,
+        "format": "(prob)%花(_dispTime(time))把目標傳送到(dis)距離",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": "不包含傳送動畫時間"
+            },
+            "dis": {
+                "name": "距離",
+                "tooltip": null
+            }
+        }
+    },
+    "CURSE": {
+        "abbr_name": "詛咒",
+        "full_name": "古代詛咒",
+        "tooltip": "封印目標的效果",
+        "format": "(prob)%古代詛咒目標(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            }
+        }
+    },
+    "STRONG": {
+        "abbr_name": "加攻",
+        "full_name": "攻擊力增加",
+        "tooltip": null,
+        "format": "血量剩下(health)%時，攻擊力增加(mult)%",
+        "class": {
+            "health": {
+                "name": "剩餘血量",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "幅度",
+                "tooltip": null
+            }
+        }
+    },
+    "LETHAL": {
+        "abbr_name": "死前復活",
+        "full_name": "死前復活",
+        "tooltip": null,
+        "format": "(prob)%死亡時以一滴血復活",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            }
+        }
+    },
+    "BURROW": {
+        "abbr_name": "鑽地",
+        "full_name": "鑽地",
+        "tooltip": null,
+        "format": "鑽地[(count<0){無限}(count>=0){(count)}]次到(dis)個單位的距離",
+        "class": {
+            "count": {
+                "name": "次數",
+                "tooltip": "輸入-1表示無限次"
+            },
+            "dis": {
+                "name": "距離",
+                "tooltip": "時間是用這個角色的速度走這距離所需的時間"
+            }
+        }
+    },
+    "REVIVE": {
+        "abbr_name": "復活",
+        "full_name": "復活",
+        "tooltip": "基本的復活只會用到前3個參數，後面的是拿來用範圍性的復活的",
+        "format": [
+            "死後(_dispTime(time))以(health)%血量復活",
+            "[(count<0){無限次}(count>=0){(count)次}]",
+            "[(type.imu_zkill){終結不死無效}]",
+            "[(type.range_type==0){自己是正常狀態（前進，攻擊，等待）時，}]，",
+            "[(type.range_type==1){當該實體在場上時，}]",
+            "[(type.range_type==2){只要該實體在場上就能}]",
+            "[(type.range_type==3){無條件}]",
+            "在(dis_0)~(dis_1)的單位範圍內，",
+            "[(type.revive_others){復活}]",
+            "[(type.revive_non_zombie){隊友}]",
+            "[(!type.revive_non_zombie){有不死能力的隊友}] "
+        ],
+        "class": {
+            "count": {
+                "name": "復活次數",
+                "tooltip": "-1代表無限次"
+            },
+            "time": {
+                "name": "等待時間",
+                "tooltip": null
+            },
+            "health": {
+                "name": "血量",
+                "tooltip": "復活時留下的血量"
+            },
+            "dis_0": {
+                "name": "距離1",
+                "tooltip": "進階:範圍復活的第一個點，只有在能復活他人時有用"
+            },
+            "dis_1": {
+                "name": "距離2",
+                "tooltip": "進階:範圍復活的第二個點，只有在能復活他人時有用"
+            },
+            "type.range_type": {
+                "name": "種類",
+                "tooltip": [
+                    "只有在能復活他人時有用",
+                    "0指的是只有自己是正常狀態（前進，攻擊，等待）時才會復活周圍的同伴",
+                    "1是只要自己活著就可以復活周圍的同伴",
+                    "2是只要自己活著，任何經過自己復活區間的同伴都會被復活",
+                    "3是任何經過自己復活區間的同伴都會被復活，自己死了也持續有效"
+                ]
+            },
+            "type.imu_zkill": {
+                "name": "終結不死無效",
+                "tooltip": "終結不死無效"
+            },
+            "type.revive_non_zombie": {
+                "name": "復活非不死",
+                "tooltip": "能復活沒有不死能力的角色，只有在能復活他人時有用"
+            },
+            "type.revive_others": {
+                "name": "復活不死",
+                "tooltip": "只能復活有不死能力的角色，只有在能復活他人時有用"
+            }
+        }
+    },
+    "IMUKB": {
+        "abbr_name": "打飛無效",
+        "full_name": "打飛無效/抗性",
+        "tooltip": null,
+        "format": "打飛[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUSTOP": {
+        "abbr_name": "暫停無效",
+        "full_name": "暫停無效/抗性",
+        "tooltip": null,
+        "format": "暫停[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUSLOW": {
+        "abbr_name": "緩速無效",
+        "full_name": "緩速無效/抗性",
+        "tooltip": null,
+        "format": "緩速[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUWAVE": {
+        "abbr_name": "波動無效",
+        "full_name": "波動無效/抗性",
+        "tooltip": null,
+        "format": "波動[(mult==100){無效}(mult<100){傷害減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUWEAK": {
+        "abbr_name": "降攻無效",
+        "full_name": "攻擊力下降無效/抗性",
+        "tooltip": null,
+        "format": "攻擊力下降[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUWARP": {
+        "abbr_name": "傳送無效",
+        "full_name": "傳送無效/抗性",
+        "tooltip": null,
+        "format": "傳送[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUCURSE": {
+        "abbr_name": "詛咒無效",
+        "full_name": "古代詛咒無效/抗性",
+        "tooltip": null,
+        "format": "古代詛咒[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "抗性",
+                "tooltip": null
+            }
+        }
+    },
+    "SNIPER": {
+        "abbr_name": "狙擊",
+        "full_name": "狙擊手貓的擊退",
+        "tooltip": "該能力無視打飛無效",
+        "format": "(prob)%用狙擊手的方式擊退目標",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            }
+        }
+    },
+    "TIME": {
+        "abbr_name": "時間暫停",
+        "full_name": "時間暫停",
+        "tooltip": "跟暫停不一樣，這個能力暫停所有事物包含波動、錢的增加、還有冷卻等等",
+        "format": "(prob)%暫停時間(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            }
+        }
+    },
+    "SEAL": {
+        "abbr_name": "封印",
+        "full_name": "封印",
+        "tooltip": "這能力會封印住除了鑽地、鋼鐵、一次攻擊、只能攻擊和基本復活以外的所有能力",
+        "format": "(prob)%封印目標(_dispTime(time))的能力",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            }
+        }
+    },
+    "SUMMON": {
+        "abbr_name": "召喚",
+        "full_name": "召喚",
+        "tooltip": null,
+        "format": [
+            "(prob)%在攻擊完(_dispTime(time))之後，在",
+            "[(type.on_hit){所有被打的角色那}",
+            "(type.on_kill&!type.on_hit){所有被殺的角色那}",
+            "(!type.on_kill&!type.on_hit){攻擊點}]，距離",
+            "[(type.on_kill|type.on_hit){目標}",
+            "(!type.on_hit&!type.on_kill){這個實體}](dis)個單位的地方",
+            "召喚 (_entity(id))、能力值(mult)%[(!type.fix_buff){*召喚者的強化程度}]的角色。",
+            "召喚的實體[(type.ignore_limit){不}]會受關卡出擊上限限制",
+            "召喚的實體會[(!type.random_layer){跟召喚者在同樣的圖層}",
+            "(type.random_layer){隨機的圖層}]. ",
+            "被招喚的實體召喚出來時[(type.anim_type==0){沒有特效}(type.anim_type==1){會以傳送特效出現}(type.anim_type>=2){會鑽出來}]",
+            "[(type.anim_type==3){，被召喚的實體無法鑽地}]",
+            "[(type.same_health){被召喚的實體跟召喚者有同樣的血量}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "id": {
+                "name": "ID",
+                "tooltip": null
+            },
+            "dis": {
+                "name": "距離",
+                "tooltip": "預設值是跟該實體的距離，如果開啟召喚在被打或被殺的角色，那就是跟目標的距離"
+            },
+            "mult": {
+                "name": "倍率",
+                "tooltip": "被召喚角色的倍率，預設會跟著召喚者的倍率，如果開啟固定倍率，就會是固定的"
+            },
+            "type.anim_type": {
+                "name": "召喚動畫",
+                "tooltip": [
+                    "召喚的動畫 0:沒有動畫 1:傳送效果 ",
+                    "2:挖出來的效果 3:挖出來的效果，然後被召喚的不能鑽地 ",
+                    "用2或3的話該角色必須要有鑽地動畫"
+                ]
+            },
+            "type.ignore_limit": {
+                "name": "無視上限",
+                "tooltip": "無視關卡的初級上限。小心一點，不要召喚太多。這樣做可能會破壞BCU"
+            },
+            "type.fix_buff": {
+                "name": "固定倍率",
+                "tooltip": [
+                    "用固定倍率而不是可變倍率<br>",
+                    "例如:200%召喚師召喚300%的怪，怪會變600%，如果開啟固定倍率，就會是300%"
+                ]
+            },
+            "type.same_health": {
+                "name": "同血量",
+                "tooltip": "讓被召喚的實體召喚出來的血量跟召喚師一樣"
+            },
+            "type.random_layer": {
+                "name": "隨機圖層",
+                "tooltip": "原本被召喚的實體會在跟召喚師一樣的圖層，開啟這個讓被召喚的實體在隨機的圖層"
+            },
+            "type.on_hit": {
+                "name": "打到時",
+                "tooltip": [
+                    "在打到目標時才會召喚。",
+                    "在每個被打到的目標的地方召喚，出現的地方預設在目標的位置。",
+                    "召喚多隻在範圍攻擊是可能的"
+                ]
+            },
+            "type.on_kill": {
+                "name": "殺掉時",
+                "tooltip": [
+                    "在殺掉目標時才會召喚。",
+                    "在每個被殺掉的目標的地方召喚，出現的地方預設在目標的位置。",
+                    "召喚多隻在範圍攻擊是可能的"
+                ]
+            },
+            "time": {
+                "name": "延遲",
+                "tooltip": "召喚的延遲時間"
+            }
+        }
+    },
+    "MOVEWAVE": {
+        "abbr_name": "移動攻擊",
+        "full_name": "移動攻擊",
+        "tooltip": null,
+        "format": [
+            "(prob)%",
+            "在該實體前面(dis)個單位製造一個",
+            "之造一個寬度(width)、",
+            "移速(speed)、持續(_dispTime(time))",
+            "每間隔(_dispTime(itv))攻擊一次的攻擊碰撞箱"
+        ],
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "speed": {
+                "name": "速度",
+                "tooltip": "每禎移動的單位"
+            },
+            "width": {
+                "name": "寬度",
+                "tooltip": "碰撞箱的寬度，從左到右,"
+            },
+            "time": {
+                "name": "時間",
+                "tooltip": null
+            },
+            "dis": {
+                "name": "距離",
+                "tooltip": "描述碰裝箱出現時中間的位置"
+            },
+            "itv": {
+                "name": "間隔時間",
+                "tooltip": null
+            }
+        }
+    },
+    "THEME": {
+        "abbr_name": "主題",
+        "full_name": "切換背景",
+        "tooltip": null,
+        "format": [
+            "(prob)%把背景改變成ID (_bg(id))的背景(_dispTime(time)).",
+            "[(type.kill){，並殺掉所有實體}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "時間",
+                "tooltip": "切換成該背景的持續時間"
+            },
+            "id": {
+                "name": "BG ID",
+                "tooltip": null
+            },
+            "type.kill": {
+                "name": "kill",
+                "tooltip": "把所有實體殺掉，包括隊友"
+            }
+        }
+    },
+    "POISON": {
+        "abbr_name": "BCU毒",
+        "full_name": "自定義毒",
+        "tooltip": null,
+        "format": [
+            "(prob)%使目標中毒(_dispTime(time)). ",
+            "每(_dispTime(itv))給目標[(type.damage_type==0){(damage)點傷害}",
+            "[(type.damage_type==1){所有血量}(type.damage_type==2){剩餘血量}",
+            "(type.damage_type==3){失去的血量}]",
+            "}(type.damage_type>0){(damage)%的傷害]",
+            "這個效果[(type.unstackable){不}]會疊加"
+        ],
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "時間",
+                "tooltip": null
+            },
+            "damage": {
+                "name": "傷害",
+                "tooltip": "這是%數或是真實傷害取決於這個效果的類型"
+            },
+            "itv": {
+                "name": "間隔時間",
+                "tooltip": null
+            },
+            "type.damage_type": {
+                "name": "類型",
+                "tooltip": "傷害會是 0:固定傷害 1:目標總血量的比例 2:目標剩餘血量的比例 3:目標失去血量的比例"
+            },
+            "type.unstackable": {
+                "name": "不可疊加",
+                "tooltip": null
+            }
+        }
+    },
+    "BOSS": {
+        "abbr_name": "boss",
+        "full_name": "Boss波",
+        "tooltip": null,
+        "format": "(prob)%製造一個Boss波",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            }
+        }
+    },
+    "CRITI": {
+        "abbr_name": "會心無效",
+        "full_name": "會心一擊無效",
+        "tooltip": null,
+        "format": [
+            "[(type==0){沒有啟用}(type==1){會心一擊無效}",
+            "(type==2){使會心亦即功能消失，像阻擋波動那樣}]"
+        ],
+        "class": {
+            "type": {
+                "name": "類型",
+                "tooltip": "1:自身無效 2:阻擋會心一擊，直接令它消失"
+            }
+        }
+    },
+    "SATK": {
+        "abbr_name": "渾身",
+        "full_name": "渾身一擊",
+        "tooltip": null,
+        "format": "(prob)%造成本身攻擊力增加(mult)%的渾身一擊",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "幅度",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUATK": {
+        "abbr_name": "攻擊無效",
+        "full_name": "攻擊無效",
+        "tooltip": null,
+        "format": "(prob)%令對手攻擊無效，持續(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            }
+        }
+    },
+    "POIATK": {
+        "abbr_name": "毒擊",
+        "full_name": "毒擊",
+        "tooltip": null,
+        "format": "(prob)%造成目標總血量(mult)%的傷害",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "總血量傷害比例",
+                "tooltip": null
+            }
+        }
+    },
+    "VOLC": {
+        "abbr_name": "烈波",
+        "full_name": "烈波",
+        "tooltip": null,
+        "format": "(prob)%在(dis_0)~(dis_1)單位中隨機製造一個持續(_dispTime(time))的烈波",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": "前方隨機點",
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": "後方隨機點",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUPOIATK": {
+        "abbr_name": "毒擊無效",
+        "full_name": "毒擊無效/抗性",
+        "tooltip": null,
+        "format": "毒擊[(mult==100){無效}(mult<100){效果減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "幅度",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUVOLC": {
+        "abbr_name": "列波無效",
+        "full_name": "列波無效/抗性",
+        "tooltip": null,
+        "format": "烈波[(mult==100){無效}(mult<100){傷害減少(mult)%}]",
+        "class": {
+            "mult": {
+                "name": "幅度",
+                "tooltip": null
+            }
+        }
+    },
+    "ARMOR": {
+        "abbr_name": "破防",
+        "full_name": "破防",
+        "tooltip": null,
+        "format": "(prob)%讓目標受到的傷害變成(mult)%，持續(_dispTime(time))",
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "防禦力",
+                "tooltip": null
+            }
+        }
+    },
+    "SPEED": {
+        "abbr_name": "加速",
+        "full_name": "加速",
+        "tooltip": null,
+        "format": [
+            "(prob)%讓目標的速度",
+            "[(type==0){增加}(type==1){增加}(type==2){變成}]",
+            "(speed)[(type==1){%}]",
+            "，持續(_dispTime(time))"
+        ],
+        "class": {
+            "prob": {
+                "name": "機率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "持續時間",
+                "tooltip": null
+            },
+            "speed": {
+                "name": "速度",
+                "tooltip": null
+            },
+            "type": {
+                "name": "類型",
+                "tooltip": "速度的值會是0:增加速度為固定值 1:增加一定比率的速度 2:速度變成的數值"
+            }
+        }
+    }
+}

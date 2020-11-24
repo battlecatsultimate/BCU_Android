@@ -1,0 +1,74 @@
+{
+    "BarEneEff": {
+        "DESTR": "Destroy",
+        "BREAK": "Break"
+    },
+    "KBEff": {
+        "SW": "Shock Wave",
+        "ASS": "Sniper",
+        "KB": "Knock Back"
+    },
+    "UType": {
+        "BURROW_UP": "Burrow up",
+        "BURROW_MOVE": "Burrow move",
+        "IDLE": "Idle",
+        "HB": "Hit Back",
+        "BURROW_DOWN": "Burrow Down",
+        "ENTER": "Enter",
+        "ATK": "Attack",
+        "WALK": "Walk"
+    },
+    "VolcEff": {
+        "DURING": "On",
+        "START": "Start",
+        "END": "End"
+    },
+    "ArmorEff": {
+        "BUFF": "Buff",
+        "DEBUFF": "Debuff"
+    },
+    "SpeedEff": {
+        "UP": "Increase",
+        "DOWN": "Decrease"
+    },
+    "WaveType": {
+        "DEF": "Default"
+    },
+    "WeakUpEff": {
+        "UP": "Increase"
+    },
+    "WarpEff": {
+        "ENTER": "Enter",
+        "EXIT": "Exit"
+    },
+    "NyType": {
+        "BASE": "Base",
+        "ATK": "Attack",
+        "EXT": "Extra"
+    },
+    "BarrierEff": {
+        "DURING": "On",
+        "END": "End",
+        "DESTR": "Destroy",
+        "BREAK": "Break",
+        "START": "Start"
+    },
+    "BGWvType": {
+        "ENEMY": "Enemy Wave",
+        "UNIT": "Unit Wave"
+    },
+    "ZombieEff": {
+        "DOWN": "Knock Down",
+        "REVIVE": "Revive"
+    },
+    "SoulType": {
+        "DEF": "Default"
+    },
+    "SniperEff": {
+        "IDLE": "Idle",
+        "ATK": "Attack"
+    },
+    "DefEff": {
+        "DEF": "Default"
+    }
+}
