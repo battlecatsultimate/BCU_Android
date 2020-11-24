@@ -703,7 +703,7 @@ class GetStrings(private val c: Context) {
             c.getString(R.string.sch_atk_si)
     }
 
-    fun getTalentName(index: Int, f: Form?): String? {
+    fun getTalentName(index: Int, f: Form?): String {
         if (f == null)
             return ""
 

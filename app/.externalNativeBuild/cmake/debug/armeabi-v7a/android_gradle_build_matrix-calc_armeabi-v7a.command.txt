@@ -1,8 +1,0 @@
-Executable : C:\Users\user\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
-arguments : 
---build
-C:\Users\user\AndroidStudioProjects\BCU_Android\app\.externalNativeBuild\cmake\debug\armeabi-v7a
---target
-matrix-calc
-jvmArgs : 
-

@@ -718,6 +718,6 @@
     <string name="pack_manage_warn">팩 충돌이 발생하여 해결이 필요합니다.</string>
     <string name="fruit14">무지개 개다래 씨앗</string>
     <string name="fruit15">황금 개다래 열매</string>
-    <string name="main_castle">성</string>
+    <string name="main_castle">성 리스트</string>
     <string name="ui_sound">UI 사운드</string>
 </resources>

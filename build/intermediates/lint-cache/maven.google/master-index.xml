@@ -23,6 +23,7 @@
   <androidx.collection/>
   <androidx.compose/>
   <androidx.compose.animation/>
+  <androidx.compose.compiler/>
   <androidx.compose.foundation/>
   <androidx.compose.material/>
   <androidx.compose.runtime/>
@@ -138,9 +139,11 @@
   <com.google.android.ads/>
   <com.google.android.ads.consent/>
   <com.google.android.datatransport/>
+  <com.google.android.games/>
   <com.google.android.gms/>
   <com.google.android.instantapps/>
   <com.google.android.instantapps.thirdpartycompat/>
+  <com.google.android.libraries.car/>
   <com.google.android.libraries.maps/>
   <com.google.android.libraries.places/>
   <com.google.android.material/>
@@ -153,6 +156,8 @@
   <com.google.ar/>
   <com.google.ar.sceneform/>
   <com.google.ar.sceneform.ux/>
+  <com.google.devtools.ksp/>
+  <com.google.fhir/>
   <com.google.firebase/>
   <com.google.gms/>
   <com.google.mlkit/>

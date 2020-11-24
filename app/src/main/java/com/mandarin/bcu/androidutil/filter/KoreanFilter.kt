@@ -1,5 +1,7 @@
 package com.mandarin.bcu.androidutil.filter
 
+import java.util.*
+
 object KoreanFilter {
     private const val BEGIN = 44032
     private const val END = 55203
@@ -44,9 +46,9 @@ object KoreanFilter {
 
     fun filter(name: String, sch: String) : Boolean {
         return if(isSegments(sch)) {
-            extractSegment(name).contains(sch)
+            extractSegment(name).contains(sch.toLowerCase(Locale.ROOT))
         } else {
-            name.contains(sch)
+            name.contains(sch.toLowerCase(Locale.ROOT))
         }
     }
 }

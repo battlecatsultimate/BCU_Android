@@ -1,5 +1,0 @@
-# ninja log v5
-0	121	600582842	CMakeFiles/MatrixCalc.dir/MatrixCalc.cpp.o	4c783461de4aa491
-122	218	600582842	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/arm64-v8a/libMatrixCalc.so	75d073eaccf6e083
-2	656	600673837	CMakeFiles/matrix-calc.dir/MatrixCalc.cpp.o	130ee2be6683d523
-656	1019	600673838	C:/Users/user/AndroidStudioProjects/BCU_Android/app/build/intermediates/cmake/debug/obj/arm64-v8a/libmatrix-calc.so	fe1c81d5c08703f1

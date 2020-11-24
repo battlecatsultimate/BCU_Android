@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<androidx.wear>
+  <wear versions="1.0.0-alpha1,1.0.0-alpha3,1.0.0-beta01,1.0.0-rc01,1.0.0-rc02,1.0.0,1.1.0-alpha01,1.1.0-beta01,1.1.0-rc01,1.1.0-rc02,1.1.0-rc03,1.1.0,1.2.0-alpha01,1.2.0-alpha02"/>
+  <wear-complications-data versions="1.0.0-alpha01,1.0.0-alpha02"/>
+  <wear-complications-provider versions="1.0.0-alpha01,1.0.0-alpha02"/>
+  <wear-input versions="1.0.0-alpha01,1.0.0-beta01,1.0.0-rc01"/>
+  <wear-input-testing versions="1.0.0-alpha01,1.0.0-beta01,1.0.0-rc01"/>
+  <wear-watchface versions="1.0.0-alpha01,1.0.0-alpha02"/>
+  <wear-watchface-client versions="1.0.0-alpha02"/>
+  <wear-watchface-complications-rendering versions="1.0.0-alpha01,1.0.0-alpha02"/>
+  <wear-watchface-data versions="1.0.0-alpha01,1.0.0-alpha02"/>
+  <wear-watchface-style versions="1.0.0-alpha01,1.0.0-alpha02"/>
+</androidx.wear>

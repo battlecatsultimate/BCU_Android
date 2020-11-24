@@ -585,7 +585,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                         0f
                     }
 
-                    seekui.isEnabled = true
+                    seekui.isEnabled = c
                 }
 
                 seekui.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {

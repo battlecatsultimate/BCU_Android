@@ -1,1 +1,0 @@
-C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\build\intermediates\cmake\debug\obj\armeabi-v7a

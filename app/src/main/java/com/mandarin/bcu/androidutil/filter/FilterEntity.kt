@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.filter
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.util.Interpret
+import common.CommonStatic
 import common.battle.data.MaskEntity
 import common.pack.Identifier
 import common.pack.UserProfile
@@ -98,6 +99,8 @@ object FilterEntity {
 
         val result = ArrayList<Identifier<Unit>>()
 
+        val lang = Locale.getDefault().language
+
         for (i in p.units.list.indices) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
             val u = p.units.list[i]
 
@@ -115,8 +118,11 @@ object FilterEntity {
 
                     name = Data.trio(i) + " - " + name.toLowerCase(Locale.ROOT)
 
-                    if (name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT)))
-                        added = true
+                    added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                        KoreanFilter.filter(name, StaticStore.entityname)
+                    } else {
+                        name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT))
+                    }
                 }
 
                 if (added)
@@ -279,6 +285,8 @@ object FilterEntity {
 
         val result = ArrayList<Identifier<AbEnemy>>()
 
+        val lang = Locale.getDefault().language
+
         for (i in p.enemies.list.indices)
             if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
                 val e = p.enemies.list[i]
@@ -291,7 +299,13 @@ object FilterEntity {
 
                     name = Data.trio(i) + " - " + name.toLowerCase(Locale.ROOT)
 
-                    if (name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT)))
+                    val added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                        KoreanFilter.filter(name, StaticStore.entityname)
+                    } else {
+                        name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT))
+                    }
+
+                    if (added)
                         result.add(e.id)
                 } else {
                     result.add(e.id)
@@ -423,6 +437,8 @@ object FilterEntity {
 
         val result = ArrayList<Identifier<Unit>>()
 
+        val lang = Locale.getDefault().language
+
         for(i in StaticStore.ludata.indices) {
             if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
                 val u = Identifier.get(StaticStore.ludata[i]) ?: continue
@@ -441,8 +457,11 @@ object FilterEntity {
 
                         name = Data.trio(j) + "-" + name.toLowerCase(Locale.ROOT)
 
-                        if(name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT)))
-                            added = true
+                        added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                            KoreanFilter.filter(name, StaticStore.entityname)
+                        } else {
+                            name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT))
+                        }
                     }
 
                     if(added)
