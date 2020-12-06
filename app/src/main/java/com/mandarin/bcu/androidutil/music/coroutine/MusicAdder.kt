@@ -90,8 +90,6 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : Corouti
                     names.append(m.id.id, "$mins:$secs")
 
                     StaticStore.musicData.add(m.id)
-
-                    println(j)
                 }
 
                 if(p is PackData.DefPack) {
@@ -229,7 +227,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : Corouti
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             return if(position == 0) {
                 "Default"
             } else {

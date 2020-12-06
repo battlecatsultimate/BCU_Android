@@ -80,8 +80,6 @@ class AnimationViewer : AppCompatActivity() {
             }
         })
 
-        println("EEEEEEEEEEEEEEEee")
-
         Adder(this, supportFragmentManager).execute()
     }
 

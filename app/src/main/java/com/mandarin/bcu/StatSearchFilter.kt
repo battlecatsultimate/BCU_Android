@@ -356,7 +356,6 @@ class StatSearchFilter : AppCompatActivity() {
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            println("INDEX : $t | TYPE : ${StatFilterAdapter.unitData[t]} | OPT : $o | LEV : $l")
                             StatFilterElement(StatFilterAdapter.unitData[t], o, l)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)

@@ -233,8 +233,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
                     editor.apply()
                 }
-
-                println(CommonStatic.getConfig().localLangMap)
             }
         } catch (e: Exception) {
             e.printStackTrace()

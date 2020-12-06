@@ -141,7 +141,7 @@ class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<St
             return CsListPager.newInstance(keys[position])
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             val def = w.get()?.getString(R.string.pack_default) ?: "Default"
 
             return when(position) {
@@ -169,8 +169,6 @@ class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<St
                         res.add(k.desc.id)
                 }
             }
-
-            println(res)
 
             return res
         }

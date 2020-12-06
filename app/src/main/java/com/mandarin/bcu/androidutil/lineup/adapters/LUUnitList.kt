@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ import kotlin.collections.ArrayList
 
 class LUUnitList : Fragment() {
     private var line: LineUpView? = null
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
 
     private var destroyed = false
@@ -31,14 +32,12 @@ class LUUnitList : Fragment() {
 
         if (line == null) {
             if (activity != null)
-                line = activity!!.findViewById(R.id.lineupView)
+                line = requireActivity().findViewById(R.id.lineupView)
         }
-
-        println(StaticStore.ludata)
 
         numbers = FilterEntity.setLuFilter()
 
-        val adapter = LUUnitListAdapter(activity!!, numbers)
+        val adapter = LUUnitListAdapter(requireActivity(), numbers)
 
         val ulist = view.findViewById<ListView>(R.id.lineupunitlist)
 

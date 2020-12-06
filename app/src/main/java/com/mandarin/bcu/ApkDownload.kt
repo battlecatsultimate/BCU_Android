@@ -65,8 +65,6 @@ class ApkDownload : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this@ApkDownload, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             val result = intent
 
-            println("TEXT:  "+result.getStringExtra("ver"))
-
             if (result.getStringExtra("ver") != null) {
                 val ver = result.getStringExtra("ver") ?: StaticStore.VER
                 val filestart = "BCU_Android_"

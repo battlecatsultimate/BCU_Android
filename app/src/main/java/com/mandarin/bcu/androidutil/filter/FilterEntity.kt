@@ -29,27 +29,33 @@ object FilterEntity {
             for (i in p.units.list.indices)
                 b0.add(true)
         }
+
         if (StaticStore.empty) {
             for (i in p.units.list.indices)
                 b1.add(true)
         }
+
         if (StaticStore.attack.isEmpty()) {
             for (i in p.units.list.indices)
                 b2.add(true)
         }
+
         if (StaticStore.tg.isEmpty()) {
             for (i in p.units.list.indices)
                 b3.add(true)
         }
+
         if (StaticStore.ability.isEmpty()) {
             for (i in p.units.list.indices)
                 b4.add(true)
         }
+
         if (StatFilterElement.statFilter.isEmpty()) {
             for(i in p.units.list.indices) {
                 b5.add(true)
             }
         }
+
         for (u in p.units.list) {
             if(StaticStore.rare.isNotEmpty()) b0.add(StaticStore.rare.contains(u.rarity.toString()))
 
@@ -137,42 +143,9 @@ object FilterEntity {
 
     private fun getChance(data: Int, du: MaskEntity) : Boolean {
         return when(data) {
-            Data.P_WEAK -> du.proc.WEAK.exists()
-            Data.P_STOP -> du.proc.STOP.exists()
-            Data.P_SLOW -> du.proc.SLOW.exists()
-            Data.P_KB -> du.proc.KB.exists()
-            Data.P_WARP -> du.proc.WARP.exists()
-            Data.P_CURSE -> du.proc.CURSE.exists()
-            Data.P_IMUATK -> du.proc.IMUATK.exists()
-            Data.P_STRONG -> du.proc.STRONG.exists()
-            Data.P_LETHAL -> du.proc.LETHAL.exists()
-            Data.P_CRIT -> du.proc.CRIT.exists()
-            Data.P_BREAK -> du.proc.BREAK.exists()
-            Data.P_SATK -> du.proc.SATK.exists()
-            Data.P_WAVE -> du.proc.WAVE.exists()
-            Data.P_VOLC -> du.proc.VOLC.exists()
-            Data.P_IMUWEAK -> du.proc.IMUWEAK.exists()
-            Data.P_IMUSTOP -> du.proc.IMUSTOP.exists()
-            Data.P_IMUSLOW -> du.proc.IMUSLOW.exists()
-            Data.P_IMUKB -> du.proc.IMUKB.exists()
-            Data.P_IMUWAVE -> du.proc.IMUWAVE.exists()
-            Data.P_IMUVOLC -> du.proc.IMUVOLC.exists()
-            Data.P_IMUWARP -> du.proc.IMUWARP.exists()
-            Data.P_IMUCURSE -> du.proc.IMUCURSE.exists()
-            Data.P_IMUPOIATK -> du.proc.IMUPOIATK.exists()
-            Data.P_POIATK -> du.proc.POIATK.exists()
-            Data.P_BURROW -> du.proc.BURROW.exists()
-            Data.P_REVIVE -> du.proc.REVIVE.exists()
-            Data.P_SEAL -> du.proc.SEAL.exists()
-            Data.P_TIME -> du.proc.TIME.exists()
-            Data.P_SUMMON -> du.proc.SUMMON.exists()
-            Data.P_MOVEWAVE -> du.proc.MOVEWAVE.exists()
-            Data.P_THEME -> du.proc.THEME.exists()
-            Data.P_POISON -> du.proc.POISON.exists()
-            Data.P_BOSS -> du.proc.BOSS.exists()
-            Data.P_ARMOR -> du.proc.ARMOR.exists()
-            Data.P_SPEED -> du.proc.SPEED.exists()
-            Data.P_CRITI -> du.proc.CRITI.exists()
+            in 0 until Data.PROC_TOT -> {
+               du.proc.getArr(data).exists()
+            }
             else -> false
         }
     }
@@ -321,6 +294,7 @@ object FilterEntity {
         val b2 = ArrayList<Boolean>()
         val b3 = ArrayList<Boolean>()
         val b4 = ArrayList<Boolean>()
+        val b5 = ArrayList<Boolean>()
 
         if(StaticStore.rare.isEmpty()) {
             for(i in 0 until StaticStore.ludata.size)
@@ -347,6 +321,12 @@ object FilterEntity {
                 b4.add(true)
         }
 
+        if (StatFilterElement.statFilter.isEmpty()) {
+            for(i in 0 until StaticStore.ludata.size) {
+                b5.add(true)
+            }
+        }
+
         for(info in StaticStore.ludata) {
             val u = Identifier.get(info)
 
@@ -365,6 +345,7 @@ object FilterEntity {
             val b20 = ArrayList<Boolean>()
             val b30 = ArrayList<Boolean>()
             val b40 = ArrayList<Boolean>()
+            val b50 = ArrayList<Boolean>()
 
             for(f in u.forms) {
                 val du = if(StaticStore.talents)
@@ -427,12 +408,14 @@ object FilterEntity {
                 b20.add(b21)
                 b30.add(b31)
                 b40.add(b41)
+                b50.add(StatFilterElement.performFilter(f, StatFilterElement.orand))
             }
 
             b1.add(!StaticStore.empty && b10.contains(true))
             b2.add(b20.contains(true))
             b3.add(b30.contains(true))
             b4.add(b40.contains(true))
+            b5.add(b50.contains(true))
         }
 
         val result = ArrayList<Identifier<Unit>>()
@@ -440,7 +423,7 @@ object FilterEntity {
         val lang = Locale.getDefault().language
 
         for(i in StaticStore.ludata.indices) {
-            if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
+            if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
                 val u = Identifier.get(StaticStore.ludata[i]) ?: continue
 
                 if(StaticStore.entityname.isNotEmpty()) {

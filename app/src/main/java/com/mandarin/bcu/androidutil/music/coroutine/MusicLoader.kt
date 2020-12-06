@@ -429,8 +429,6 @@ class MusicLoader(activity: Activity) : CoroutineTask<String>() {
 
                 val index = indexOf(MusicPlayer.music)
 
-                println(index)
-
                 val m = MusicPlayer.music ?: return
 
                 muprog.max = StaticStore.durations[index]

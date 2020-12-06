@@ -710,10 +710,7 @@ class LUTreasureSetting : Fragment() {
                                         cotc.helperText = helperss[i]
                                     }
                                     5 -> {
-                                        println("$j : $`val`")
                                         t.gods[j] = `val`
-                                        println("Temp : ${t.gods.contentToString()}")
-                                        println("Real : ${BasisSet.current().t().gods.contentToString()}")
                                     }
                                 }
                             }

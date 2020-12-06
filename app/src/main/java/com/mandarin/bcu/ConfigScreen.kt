@@ -212,8 +212,6 @@ open class ConfigScreen : AppCompatActivity() {
 
         language.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                println("Started : $started")
-
                 if (started) {
                     changed = true
 
@@ -378,8 +376,6 @@ open class ConfigScreen : AppCompatActivity() {
                     editor.putInt("se_vol", progress)
                     editor.apply()
                     SoundHandler.se_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
-
-                    println(SoundHandler.se_vol)
                 }
             }
 
@@ -415,8 +411,6 @@ open class ConfigScreen : AppCompatActivity() {
                     editor.putInt("ui_vol", progress)
                     editor.apply()
                     SoundHandler.ui_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
-
-                    println(SoundHandler.ui_vol)
                 }
             }
 

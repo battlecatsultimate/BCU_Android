@@ -27,21 +27,30 @@ object Interpret : Data() {
     /**
      * enemy traits
      */
-    var TRAIT = Array(0) {""}
+    var TRAIT = Array(0) { "" }
 
     /**
      * star names
      */
-    var STAR = Array(0) {""}
+    var STAR = Array(0) { "" }
 
     /**
      * ability name
      */
-    var ABIS = Array(0) {""}
+    var ABIS = Array(0) { "" }
 
-    var PROC = Array(0) {""}
+    var PROC = Array(0) { "" }
 
-    var TEXT = Array(0) {""}
+    var TEXT = Array(0) { "" }
+
+    /**
+     * Converts Data Proc index to BCU Android Proc Index
+     */
+    private val P_INDEX = intArrayOf(P_WEAK, P_STOP, P_SLOW, P_KB, P_WARP, P_CURSE, P_IMUATK,
+            P_STRONG, P_LETHAL, P_CRIT, P_BREAK, P_SATK, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK,
+            P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK,
+            P_POIATK, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE, P_THEME,
+            P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_CRITI)
 
     /**
      * treasure max
@@ -49,9 +58,13 @@ object Interpret : Data() {
     private val TMAX = intArrayOf(30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
             100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 20, 20, 20, 20, 20, 20)
 
-    private val PROCIND = arrayOf("WEAK", "STOP", "SLOW", "KB", "WARP", "CURSE", "IMUATK", "STRONG", "LETHAL", "CRIT", "BREAK", "SATK", "WAVE", "VOLC", "IMUWEAK", "IMUSTOP", "IMUSLOW", "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK", "POIATK", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME", "POISON", "BOSS", "ARMOR", "SPEED", "CRITI")
+    private val PROCIND = arrayOf("WEAK", "STOP", "SLOW", "KB", "WARP", "CURSE", "IMUATK",
+            "STRONG", "LETHAL", "CRIT", "BREAK", "SATK", "MINIWAVE", "WAVE", "VOLC", "IMUWEAK",
+            "IMUSTOP", "IMUSLOW", "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK",
+            "POIATK", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME",
+            "POISON", "BOSS", "ARMOR", "SPEED", "CRITI")
 
-    private val immune = listOf(14, 15, 16, 17, 18, 20, 21)
+    private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE)
 
     fun getTrait(type: Int, star: Int): String {
         val ans = StringBuilder()
@@ -72,18 +85,18 @@ object Interpret : Data() {
         val mr = du.repAtk
         val c = Formatter.Context(true, useSecond)
         for (i in PROCIND.indices) {
-            if(isValidProc(i, mr)) {
+            if (isValidProc(i, mr)) {
                 val f = ProcLang.get().get(PROCIND[i]).format
 
-                var ans = if(immune.contains(i) && isResist(i, mr)) {
-                    "${StaticStore.pnumber.size - 7 + immune.indexOf(i)}\\" + Formatter.format(f, getProcObject(i, mr), c)
+                var ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], mr)) {
+                    "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
                 } else {
                     "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
                 }
 
-                if(!l.contains(ans)) {
-                    if(id.contains(i)) {
-                        ans = if(isEnglish)
+                if (!l.contains(ans)) {
+                    if (id.contains(i)) {
+                        ans = if (isEnglish)
                             "$ans [${getNumberAttack(numberWithExtension(1, lang), lang)}]"
                         else
                             "$ans [${TEXT[46].replace("_", 1.toString())}]"
@@ -98,19 +111,19 @@ object Interpret : Data() {
         for (k in 0 until du.atkCount) {
             val ma = du.getAtkModel(k)
 
-            for(i in PROCIND.indices) {
-                if(isValidProc(i, ma)) {
+            for (i in PROCIND.indices) {
+                if (isValidProc(i, ma)) {
                     val mf = ProcLang.get().get(PROCIND[i]).format
 
-                    var ans = if(immune.contains(i) && isResist(i, ma)) {
-                        "${StaticStore.pnumber.size - 7 + immune.indexOf(i)}\\" + Formatter.format(mf, getProcObject(i, ma), c)
+                    var ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], ma)) {
+                        "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(mf, getProcObject(i, ma), c)
                     } else {
                         "$i\\" + Formatter.format(mf, getProcObject(i, ma), c)
                     }
 
-                    if(!l.contains(ans)) {
-                        if(id.contains(i)) {
-                            ans = if(isEnglish)
+                    if (!l.contains(ans)) {
+                        if (id.contains(i)) {
+                            ans = if (isEnglish)
                                 "$ans [${getNumberAttack(numberWithExtension(k + 1, lang), lang)}]"
                             else
                                 "$ans [${TEXT[46].replace("_", (k + 1).toString())}]"
@@ -128,43 +141,9 @@ object Interpret : Data() {
 
     private fun getProcObject(ind: Int, atk: MaskAtk): Any {
         return when (ind) {
-            0 -> atk.proc.WEAK
-            1 -> atk.proc.STOP
-            2 -> atk.proc.SLOW
-            3 -> atk.proc.KB
-            4 -> atk.proc.WARP
-            5 -> atk.proc.CURSE
-            6 -> atk.proc.IMUATK
-            7 -> atk.proc.STRONG
-            8 -> atk.proc.LETHAL
-            9 -> atk.proc.CRIT
-            10 -> atk.proc.BREAK
-            11 -> atk.proc.SATK
-            12 -> atk.proc.WAVE
-            13 -> atk.proc.VOLC
-            14 -> atk.proc.IMUWEAK
-            15 -> atk.proc.IMUSTOP
-            16 -> atk.proc.IMUSLOW
-            17 -> atk.proc.IMUKB
-            18 -> atk.proc.IMUWAVE
-            19 -> atk.proc.IMUVOLC
-            20 -> atk.proc.IMUWARP
-            21 -> atk.proc.IMUCURSE
-            22 -> atk.proc.IMUPOIATK
-            23 -> atk.proc.POIATK
-            24 -> atk.proc.BURROW
-            25 -> atk.proc.REVIVE
-            26 -> atk.proc.SNIPER
-            27 -> atk.proc.SEAL
-            28 -> atk.proc.TIME
-            29 -> atk.proc.SUMMON
-            30 -> atk.proc.MOVEWAVE
-            31 -> atk.proc.THEME
-            32 -> atk.proc.POISON
-            33 -> atk.proc.BOSS
-            34 -> atk.proc.ARMOR
-            35 -> atk.proc.SPEED
-            36 -> atk.proc.CRITI
+            in P_INDEX.indices -> {
+                atk.proc.getArr(P_INDEX[ind])
+            }
             else -> {
                 Log.e("Interpret", "Invalid index : $ind")
                 atk.proc.KB
@@ -172,45 +151,11 @@ object Interpret : Data() {
         }
     }
 
-    private fun isValidProc(ind: Int, atk: MaskAtk) : Boolean {
+    private fun isValidProc(ind: Int, atk: MaskAtk): Boolean {
         return when (ind) {
-            0 -> atk.proc.WEAK.exists()
-            1 -> atk.proc.STOP.exists()
-            2 -> atk.proc.SLOW.exists()
-            3 -> atk.proc.KB.exists()
-            4 -> atk.proc.WARP.exists()
-            5 -> atk.proc.CURSE.exists()
-            6 -> atk.proc.IMUATK.exists()
-            7 -> atk.proc.STRONG.exists()
-            8 -> atk.proc.LETHAL.exists()
-            9 -> atk.proc.CRIT.exists()
-            10 -> atk.proc.BREAK.exists()
-            11 -> atk.proc.SATK.exists()
-            12 -> atk.proc.WAVE.exists()
-            13 -> atk.proc.VOLC.exists()
-            14 -> atk.proc.IMUWEAK.exists()
-            15 -> atk.proc.IMUSTOP.exists()
-            16 -> atk.proc.IMUSLOW.exists()
-            17 -> atk.proc.IMUKB.exists()
-            18 -> atk.proc.IMUWAVE.exists()
-            19 -> atk.proc.IMUVOLC.exists()
-            20 -> atk.proc.IMUWARP.exists()
-            21 -> atk.proc.IMUCURSE.exists()
-            22 -> atk.proc.IMUPOIATK.exists()
-            23 -> atk.proc.POIATK.exists()
-            24 -> atk.proc.BURROW.exists()
-            25 -> atk.proc.REVIVE.exists()
-            26 -> atk.proc.SNIPER.exists()
-            27 -> atk.proc.SEAL.exists()
-            28 -> atk.proc.TIME.exists()
-            29 -> atk.proc.SUMMON.exists()
-            30 -> atk.proc.MOVEWAVE.exists()
-            31 -> atk.proc.THEME.exists()
-            32 -> atk.proc.POISON.exists()
-            33 -> atk.proc.BOSS.exists()
-            34 -> atk.proc.ARMOR.exists()
-            35 -> atk.proc.SPEED.exists()
-            36 -> atk.proc.CRITI.exists()
+            in P_INDEX.indices -> {
+                atk.proc.getArr(P_INDEX[ind]).exists()
+            }
             else -> {
                 Log.e("Interpret", "Invalid index : $ind")
                 atk.proc.KB.exists()
@@ -218,15 +163,15 @@ object Interpret : Data() {
         }
     }
 
-    private fun isResist(i: Int, atk: MaskAtk) : Boolean {
-        return when(i) {
-            14 -> atk.proc.IMUWEAK.mult != 100
-            15 -> atk.proc.IMUSTOP.mult != 100
-            16 -> atk.proc.IMUSLOW.mult != 100
-            17 -> atk.proc.IMUKB.mult != 100
-            18 -> atk.proc.IMUWAVE.mult != 100
-            20 -> atk.proc.IMUWARP.mult != 100
-            21 -> atk.proc.IMUCURSE.mult != 100
+    private fun isResist(i: Int, atk: MaskAtk): Boolean {
+        return when (i) {
+            P_IMUWEAK -> atk.proc.IMUWEAK.mult != 100
+            P_IMUSTOP -> atk.proc.IMUSTOP.mult != 100
+            P_IMUSLOW -> atk.proc.IMUSLOW.mult != 100
+            P_IMUKB -> atk.proc.IMUKB.mult != 100
+            P_IMUWAVE -> atk.proc.IMUWAVE.mult != 100
+            P_IMUWARP -> atk.proc.IMUWARP.mult != 100
+            P_IMUCURSE -> atk.proc.IMUCURSE.mult != 100
             else -> false
         }
     }
@@ -282,33 +227,36 @@ object Interpret : Data() {
         return l
     }
 
-    fun getValue(ind: Int, t: Treasure): Int {
-        if (ind == 0) return t.tech[LV_RES] else if (ind == 1) return t.tech[LV_ACC] else if (ind == 2) return t.trea[T_ATK] else if (ind == 3) return t.trea[T_DEF] else if (ind == 4) return t.trea[T_RES] else if (ind == 5) return t.trea[T_ACC] else if (ind == 6) return t.fruit[T_RED] else if (ind == 7) return t.fruit[T_FLOAT] else if (ind == 8) return t.fruit[T_BLACK] else if (ind == 9) return t.fruit[T_ANGEL] else if (ind == 10) return t.fruit[T_METAL] else if (ind == 11) return t.fruit[T_ZOMBIE] else if (ind == 12) return t.fruit[T_ALIEN] else if (ind == 13) return t.alien else if (ind == 14) return t.star else if (ind == 15) return t.gods[0] else if (ind == 16) return t.gods[1] else if (ind == 17) return t.gods[2] else if (ind == 18) return t.tech[LV_BASE] else if (ind == 19) return t.tech[LV_WORK] else if (ind == 20) return t.tech[LV_WALT] else if (ind == 21) return t.tech[LV_RECH] else if (ind == 22) return t.tech[LV_CATK] else if (ind == 23) return t.tech[LV_CRG] else if (ind == 24) return t.trea[T_WORK] else if (ind == 25) return t.trea[T_WALT] else if (ind == 26) return t.trea[T_RECH] else if (ind == 27) return t.trea[T_CATK] else if (ind == 28) return t.trea[T_BASE] else if (ind == 29) return t.bslv[BASE_H] else if (ind == 30) return t.bslv[BASE_SLOW] else if (ind == 31) return t.bslv[BASE_WALL] else if (ind == 32) return t.bslv[BASE_STOP] else if (ind == 33) return t.bslv[BASE_WATER] else if (ind == 34) return t.bslv[BASE_GROUND] else if (ind == 35) return t.bslv[BASE_BARRIER] else if (ind == 36) return t.bslv[BASE_CURSE]
-        return -1
-    }
-
     fun isType(de: MaskUnit, type: Int): Boolean {
         val raw = de.rawAtkData()
-        if (type == 0) return !de.isRange else if (type == 1) return de.isRange else if (type == 2) return de.isLD else if (type == 3) return raw.size > 1 else if (type == 4) return de.isOmni else if (type == 5) return de.tba + raw[0][1] < de.itv / 2
-        return false
+        return when (type) {
+            0 -> !de.isRange
+            1 -> de.isRange
+            2 -> de.isLD
+            3 -> raw.size > 1
+            4 -> de.isOmni
+            5 -> de.tba + raw[0][1] < de.itv / 2
+            else -> false
+        }
     }
 
     fun isType(de: MaskEnemy, type: Int): Boolean {
         val raw = de.rawAtkData()
-        if (type == 0) return !de.isRange else if (type == 1) return de.isRange else if (type == 2) return de.isLD else if (type == 3) return raw.size > 1 else if (type == 4) return de.isOmni else if (type == 5) return de.tba + raw[0][1] < de.itv / 2
+
+        if (type == 0)
+            return !de.isRange
+        else if (type == 1)
+            return de.isRange
+        else if (type == 2)
+            return de.isLD
+        else if (type == 3)
+            return raw.size > 1
+        else if (type == 4)
+            return de.isOmni
+        else if (type == 5)
+            return de.tba + raw[0][1] < de.itv / 2
+
         return false
-    }
-
-    fun setValue(ind: Int, v: Int, b: BasisSet) {
-        setVal(ind, v, b.t())
-        for (bl in b.lb) setVal(ind, v, bl.t())
-    }
-
-    private fun setVal(ind: Int, vi: Int, t: Treasure) {
-        var v = vi
-        if (v < 0) v = 0
-        if (v > TMAX[ind]) v = TMAX[ind]
-        if (ind == 0) t.tech[LV_RES] = v else if (ind == 1) t.tech[LV_ACC] = v else if (ind == 2) t.trea[T_ATK] = v else if (ind == 3) t.trea[T_DEF] = v else if (ind == 4) t.trea[T_RES] = v else if (ind == 5) t.trea[T_ACC] = v else if (ind == 6) t.fruit[T_RED] = v else if (ind == 7) t.fruit[T_FLOAT] = v else if (ind == 8) t.fruit[T_BLACK] = v else if (ind == 9) t.fruit[T_ANGEL] = v else if (ind == 10) t.fruit[T_METAL] = v else if (ind == 11) t.fruit[T_ZOMBIE] = v else if (ind == 12) t.fruit[T_ALIEN] = v else if (ind == 13) t.alien = v else if (ind == 14) t.star = v else if (ind == 15) t.gods[0] = v else if (ind == 16) t.gods[1] = v else if (ind == 17) t.gods[2] = v else if (ind == 18) t.tech[LV_BASE] = v else if (ind == 19) t.tech[LV_WORK] = v else if (ind == 20) t.tech[LV_WALT] = v else if (ind == 21) t.tech[LV_RECH] = v else if (ind == 22) t.tech[LV_CATK] = v else if (ind == 23) t.tech[LV_CRG] = v else if (ind == 24) t.trea[T_WORK] = v else if (ind == 25) t.trea[T_WALT] = v else if (ind == 26) t.trea[T_RECH] = v else if (ind == 27) t.trea[T_CATK] = v else if (ind == 28) t.trea[T_BASE] = v else if (ind == 29) t.bslv[BASE_H] = v else if (ind == 30) t.bslv[BASE_SLOW] = v else if (ind == 31) t.bslv[BASE_WALL] = v else if (ind == 32) t.bslv[BASE_STOP] = v else if (ind == 33) t.bslv[BASE_WATER] = v else if (ind == 34) t.bslv[BASE_GROUND] = v else if (ind == 35) t.bslv[BASE_BARRIER] = v else t.bslv[BASE_CURSE] = v
     }
 
     fun numberWithExtension(n: Int, lang: String?): String {

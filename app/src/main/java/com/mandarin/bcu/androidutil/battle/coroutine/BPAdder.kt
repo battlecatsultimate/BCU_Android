@@ -180,7 +180,6 @@ open class BPAdder : CoroutineTask<String> {
                         item -= 2
                     }
                     BattlePrepare.sniper = isChecked
-                    println(item)
                 }
                 rich.isChecked = BattlePrepare.rich
                 rich.setOnCheckedChangeListener { _, isChecked ->
@@ -190,7 +189,6 @@ open class BPAdder : CoroutineTask<String> {
                         item -= 1
                     }
                     BattlePrepare.rich = isChecked
-                    println(item)
                 }
                 start.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {

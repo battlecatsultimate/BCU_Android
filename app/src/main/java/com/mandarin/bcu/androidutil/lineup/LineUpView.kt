@@ -520,7 +520,10 @@ class LineUpView(context: Context?) : View(context) {
     fun toFormArray() {
         for (i in BasisSet.current().sele.lu.fs.indices) {
             for (j in BasisSet.current().sele.lu.fs[i].indices) {
-                if (i * 5 + j < StaticStore.currentForms.size) BasisSet.current().sele.lu.fs[i][j] = StaticStore.currentForms[i * 5 + j] else BasisSet.current().sele.lu.fs[i][j] = null
+                if (i * 5 + j < StaticStore.currentForms.size)
+                    BasisSet.current().sele.lu.fs[i][j] = StaticStore.currentForms[i * 5 + j]
+                else
+                    BasisSet.current().sele.lu.fs[i][j] = null
             }
         }
     }

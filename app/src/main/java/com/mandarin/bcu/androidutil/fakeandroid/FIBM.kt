@@ -86,6 +86,18 @@ class FIBM : FakeImage {
         bit.recycle()
     }
 
+    override fun cloneImage(): FakeImage {
+        val copy = if(bit.isRecycled)
+            StaticStore.empty(1, 1)
+        else
+            bit.copy(bit.config, true)
+
+        if(bit.isRecycled)
+            copy.recycle()
+
+        return FIBM(copy)
+    }
+
     companion object {
         @JvmField
         val builder: ImageBuilder<Bitmap> = BMBuilder()

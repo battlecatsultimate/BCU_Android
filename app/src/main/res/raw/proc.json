@@ -755,5 +755,25 @@
                 "tooltip": "0 for adding speed by a value, 1 for increasing the speed by a percentage, 2 for setting speed to a value"
             }
         }
+    },
+    "MINIWAVE" : {
+        "abbr_name" : "mini wave",
+        "full_name" : "Mini Wave",
+        "tooltip" : null,
+        "format" : "(prob)% chance to create a Lv.(lv) mini wave (_left)Gives target (multi)% of activator's damage(_right)",
+        "class" : {
+            "prob" : {
+                "name" : "chance",
+                "tooltip" : null
+            },
+            "lv" : {
+                "name" : "level",
+                "tooltip" : null
+            },
+            "multi" : {
+                "name" : "multi",
+                "tooltip" : "Percentage of activator's damage.<br>If multi is 20, it will have 20% of activator's damage. Negative values are allowed"
+            }
+        }
     }
 }

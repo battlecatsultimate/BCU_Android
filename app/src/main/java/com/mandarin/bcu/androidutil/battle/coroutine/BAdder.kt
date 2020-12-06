@@ -428,12 +428,9 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             }
 
                             if(lop != 0L) {
-                                println((SoundHandler.MUSIC.duration - 1).toLong())
                                 SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration - 1).toLong(), (SoundHandler.MUSIC.duration - 1).toLong(), true) {
                                     override fun onFinish() {
                                         SoundHandler.MUSIC.seekTo(lop.toInt(), true)
-
-                                        println((SoundHandler.MUSIC.duration - 1).toLong() - lop)
 
                                         SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration - 1).toLong() - lop, (SoundHandler.MUSIC.duration - 1).toLong() - lop, true) {
                                             override fun onFinish() {

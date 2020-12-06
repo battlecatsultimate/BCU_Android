@@ -71,14 +71,12 @@ class DefineItf : Itf {
         SoundHandler.setSE(ind)
     }
 
-    override fun getMusicReader(pid: Int, mid: Int): CommonStatic.ImgReader? {
+    override fun getMusicReader(pid: Int, mid: Int): CommonStatic.ImgReader {
         return AMusicLoader(pid, mid)
     }
 
     override fun getReader(f: File?): CommonStatic.ImgReader? {
         val path = f?.absolutePath ?: ""
-
-        println(f?.name)
 
         return when {
 

@@ -181,8 +181,6 @@ class MapAdder(activity: Activity) : CoroutineTask<String>() {
                         keys.sort()
 
                         for (i in keys) {
-                            println(i)
-
                             val index = StaticStore.mapcode.indexOf(i)
 
                             if (index != -1) {

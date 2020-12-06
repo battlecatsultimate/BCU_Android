@@ -72,8 +72,6 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
     }
 
     private fun handleDrops() : List<String> {
-        println(st.info.rand)
-
         val res = ArrayList<String>()
 
         val data = st.info.drop

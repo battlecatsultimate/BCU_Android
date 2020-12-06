@@ -34,7 +34,6 @@ object Definer {
     private val starid = StaticStore.starid
     private val procid = StaticStore.procid
     private val abiid = StaticStore.abiid
-    private val textid = StaticStore.textid
 
     fun define(context: Context, prog: Consumer<Double>, text: Consumer<String>) {
         try {
@@ -119,14 +118,6 @@ object Definer {
                 }
 
                 Interpret.ABIS = abiString
-            }
-
-            if(Interpret.TEXT.isEmpty()) {
-                val textString = Array(textid.size) {
-                    context.getString(textid[it])
-                }
-
-                Interpret.TEXT = textString
             }
 
             if (StaticStore.unitlang == 1) {
@@ -243,8 +234,6 @@ object Definer {
                 val lit = vf.list()
 
                 if(lit != null) {
-                    println(lit.size)
-
                     StaticStore.medalnumber = lit.size
                 }
             }
@@ -307,15 +296,10 @@ object Definer {
             context.getString(abiid[it])
         }
 
-        val textString = Array(textid.size) {
-            context.getString(textid[it])
-        }
-
         Interpret.TRAIT = colorString
         Interpret.STAR = startString
         Interpret.PROC = procString
         Interpret.ABIS = abiString
-        Interpret.TEXT = textString
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

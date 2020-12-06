@@ -187,7 +187,7 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             return if(position == 0) {
                 weakReference.get()?.getString(R.string.pack_default) ?: "Default"
             } else {
@@ -235,8 +235,6 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
                     }
                 }
             }
-
-            println(res)
 
             return res
         }
