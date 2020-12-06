@@ -67,7 +67,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         SoundHandler.TOUCH = SoundPool.Builder().setAudioAttributes(aa).build()
         SoundHandler.SPAWN_FAIL = SoundPool.Builder().setAudioAttributes(aa).build()
 
-        //Preparing ferequntly used SE
+        //Preparing frequently used SE
 
         loadSE(SoundHandler.SE_SE, 25, 26)
         loadSE(SoundHandler.SE_ATK, 20, 21)
@@ -177,6 +177,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
                     if (f != null) {
                         this@BattleView.postDelayed({
+                            if(battleEnd)
+                                return@postDelayed
+
                             SoundHandler.MUSIC.setDataSource(f.absolutePath)
                             SoundHandler.MUSIC.prepareAsync()
                             SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
