@@ -26,13 +26,12 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.MediaScanner
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.io.json.JsonDecoder
 import common.pack.Identifier
 import common.util.pack.Background
 import common.util.stage.CastleImg
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -72,11 +71,7 @@ class ImageViewer : AppCompatActivity() {
             }
         }
 
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 

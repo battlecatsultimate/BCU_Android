@@ -24,10 +24,9 @@ import com.mandarin.bcu.androidutil.supports.SearchAbilityAdapter
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.util.Data
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.util.*
 
 open class EnemySearchFilter : AppCompatActivity() {
@@ -78,11 +77,7 @@ open class EnemySearchFilter : AppCompatActivity() {
             }
         }
 
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 

@@ -29,14 +29,13 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.adapters.PackManagementAdapter
 import com.mandarin.bcu.androidutil.pack.coroutine.PackManager
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.pack.PackData
 import common.pack.UserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -71,11 +70,7 @@ class PackManagement : AppCompatActivity() {
             }
         }
 
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 

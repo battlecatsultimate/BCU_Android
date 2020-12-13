@@ -12,7 +12,7 @@ import common.system.fake.FakeImage;
 import common.util.unit.Form;
 
 public class BBCtrl extends BattleBox.BBPainter {
-    private SBCtrl ctrl;
+    private final SBCtrl ctrl;
     public static final int ACTION_LONG = 100;
 
     private final float dpi;
@@ -25,28 +25,31 @@ public class BBCtrl extends BattleBox.BBPainter {
 
     @Override
     public void click(Point p, int action) {
+        CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
+
         if (action == MotionEvent.ACTION_UP) {
             int w = box.getWidth();
             int h = box.getHeight();
             double hr = unir;
+            double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
 
-            for (int i = 0; i < 10; i++) {
-                Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
+            for (int i = 0; i < 5; i++) {
+                Form f = ctrl.sb.b.lu.fs[ctrl.sb.frontLineup][i % 5];
 
-                FakeImage img = f == null ? CommonStatic.getBCAssets().slot[0].getImg() : f.anim.getUni().getImg();
+                FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 
                 int iw = (int) (hr * img.getWidth());
                 int ih = (int) (hr * img.getHeight());
-                int x = (w - iw * 5) / 2 + iw * (i % 5);
-                int y = h - ih * (2 - i / 5);
+                int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
+                int y = h - (int) (ih * 1.1);
 
                 if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
-                    ctrl.action.add(i);
+                    ctrl.action.add(i+ctrl.sb.frontLineup*5);
             }
 
             hr = corr;
-            FakeImage left = CommonStatic.getBCAssets().battle[0][0].getImg();
-            FakeImage right = CommonStatic.getBCAssets().battle[1][0].getImg();
+            FakeImage left = aux.battle[0][0].getImg();
+            FakeImage right = aux.battle[1][0].getImg();
 
             float ratio = dpi/58f;
 
@@ -71,22 +74,24 @@ public class BBCtrl extends BattleBox.BBPainter {
 
             reset();
         } else if (action == ACTION_LONG) {
+
             int w = box.getWidth();
             int h = box.getHeight();
             double hr = unir;
+            double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
 
-            for (int i = 0; i < 10; i++) {
-                Form f = ctrl.sb.b.lu.fs[i / 5][i % 5];
+            for (int i = 0; i < 5; i++) {
+                Form f = ctrl.sb.b.lu.fs[ctrl.sb.frontLineup][i % 5];
 
-                FakeImage img = f == null ? CommonStatic.getBCAssets().slot[0].getImg() : f.anim.getUni().getImg();
+                FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 
                 int iw = (int) (hr * img.getWidth());
                 int ih = (int) (hr * img.getHeight());
-                int x = (w - iw * 5) / 2 + iw * (i % 5);
-                int y = h - ih * (2 - i / 5);
+                int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
+                int y = h - (int) (ih * 1.1);
 
                 if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
-                    ctrl.action.add(i);
+                    ctrl.action.add(i+ctrl.sb.frontLineup*5);
 
                 ctrl.action.add(10);
             }

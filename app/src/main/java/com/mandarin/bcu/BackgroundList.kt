@@ -21,12 +21,11 @@ import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -53,11 +52,7 @@ class BackgroundList : AppCompatActivity() {
             }
         }
 
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 
@@ -171,7 +166,7 @@ class BackgroundList : AppCompatActivity() {
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             return if (position == 0) {
                 getString(R.string.pack_default)
             } else {

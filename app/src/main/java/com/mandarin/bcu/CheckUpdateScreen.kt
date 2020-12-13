@@ -29,10 +29,9 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.coroutine.UpdateCheckDownload
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.system.fake.ImageBuilder
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.io.File
 import java.util.*
 
@@ -179,11 +178,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         if(!shared.getBoolean("PackReset0137", false)) {
             ed.putBoolean("PackReset0137", true)

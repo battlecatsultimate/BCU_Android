@@ -32,27 +32,35 @@ import common.battle.entity.EEnemy
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile
+import common.system.P
 import common.util.Data
 import common.util.anim.ImgCut
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.round
 
 @SuppressLint("ViewConstructor")
 class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity) : View(context), BattleBox, OuterBox {
     @JvmField
-    var painter: BBPainter = if (type == 0) BBPainter(this, field, this) else BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat())
+    var painter: BBPainter = if (type == 0)
+        BBPainter(this, field, this)
+    else
+        BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat())
 
-    @JvmField
     var initialized = false
-    @JvmField
     var paused = false
     var battleEnd = false
     var musicChanged = false
-    @JvmField
     var spd = 0
     private var upd = 0
     private val cv: CVGraphics
     private val updater: Updater
+
+    var initPoint: P? = null
+    var endPoint: P? = null
+    var dragFrame = 0
+    var isSliding = false
+    var performed = false
 
     init {
         painter.dpi = StaticStore.dptopx(32f, context)
@@ -230,6 +238,11 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     musicChanged = true
                 }
             }
+
+            if(isSliding) {
+                dragFrame++
+            }
+
             if (!battleEnd) {
                 checkWin()
                 checkLose()
@@ -396,6 +409,41 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
 
         for (e in painter.bf.sb.st.data.allEnemy) e?.anim?.unload()
+    }
+
+    fun checkSlideUpDown() {
+        val e = endPoint ?: return
+        val i = initPoint ?: return
+
+        if(battleEnd || painter.bf.sb.lineupChanging || painter.bf.sb.isOneLineup || painter.bf.sb.ubase.health == 0.toLong() || dragFrame == 0 || performed)
+            return
+
+        val minDistance = this.height * 0.2
+        val velocity = minDistance / 30
+
+        if(isInSlideRange(minDistance)) {
+            val dy = e.y - i.y
+            val v = dy / dragFrame
+
+            if(abs(v) >= velocity && abs(dy) >= minDistance) {
+                performed = true
+
+                painter.bf.sb.lineupChanging = true
+                painter.bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME
+                painter.bf.sb.changeDivision = painter.bf.sb.changeFrame / 2
+
+                painter.up = v < 0
+            }
+        }
+    }
+
+    private fun isInSlideRange(d: Double) : Boolean {
+        val e = endPoint ?: return false
+        val i = initPoint ?: return false
+
+        val dx = e.x - i.x
+
+        return d >= abs(dx)
     }
 
     private fun loadSE(type: Int, vararg ind: Int) {

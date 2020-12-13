@@ -218,13 +218,39 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             updateScale = true
                             x = event.x
                             y = event.y
+                            if(event.pointerCount == 1) {
+                                if(battleView.initPoint == null)
+                                    battleView.initPoint = P.newP(0.0, 0.0)
+
+                                battleView.dragFrame = 1
+
+                                battleView.initPoint?.x = x.toDouble()
+                                battleView.initPoint?.y = y.toDouble()
+                                battleView.isSliding = true
+                            }
                         } else if (action == MotionEvent.ACTION_UP) {
+                            battleView.endPoint = null
+                            battleView.initPoint = null
+                            battleView.isSliding = false
+                            battleView.dragFrame = 0
+                            battleView.performed = false
+
                             if (battleView.painter.bf.sb.ubase.health > 0 && battleView.painter.bf.sb.ebase.health > 0) {
                                 battleView.getPainter().click(Point(event.x.toInt(), event.y.toInt()), action)
                             }
                         } else if (action == MotionEvent.ACTION_MOVE) {
                             if (event.pointerCount == 1 && id == preid) {
                                 battleView.painter.pos += x2 - preX
+
+                                if(event.pointerCount == 1) {
+                                    if(battleView.endPoint == null)
+                                        battleView.endPoint = P.newP(0.0, 0.0)
+
+                                    battleView.endPoint?.x = event.x.toDouble()
+                                    battleView.endPoint?.y = event.y.toDouble()
+
+                                    battleView.checkSlideUpDown()
+                                }
 
                                 if (battleView.paused) {
                                     battleView.invalidate()

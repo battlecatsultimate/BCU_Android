@@ -24,13 +24,12 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
 import com.mandarin.bcu.androidutil.stage.coroutine.MapAdder
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.util.stage.MapColc
 import common.util.stage.StageMap
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -59,11 +58,7 @@ class MapList : AppCompatActivity() {
             }
         }
 
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 
