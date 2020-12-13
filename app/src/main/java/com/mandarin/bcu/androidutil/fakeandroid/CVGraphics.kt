@@ -125,7 +125,7 @@ class CVGraphics : FakeGraphics {
     }
 
     override fun gradRect(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, c: IntArray, d: Int, e: Int, f: IntArray) {
-        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (x + h).toFloat(), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
+        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (y + h).toFloat(), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
 
         gp.shader = s
 
