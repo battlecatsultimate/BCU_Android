@@ -71,6 +71,10 @@ public interface BattleBox {
 
         private StageBasis sb;
         private final int maxW;
+        @SuppressWarnings("FieldCanBeLocal")
+        private final int minH = 510;
+        @SuppressWarnings("FieldCanBeLocal")
+        private final int maxH = 510 * 3;
         public int pos, midh, prew, preh; // in pix
 
         private double minSiz = -1;
@@ -118,7 +122,7 @@ public interface BattleBox {
 
             ImgCore.set(g);
             setP(box.getWidth(), box.getHeight());
-            sb.bg.draw(g, p, pos, midh, siz);
+            sb.bg.draw(g, p, pos, midh, siz, (int) groundHeight);
             drawCastle(g);
             if(sb.can == sb.max_can && sb.canon.id == 0) {
                 drawCannonRange(g);
@@ -156,15 +160,12 @@ public interface BattleBox {
             minSiz = getReulatedSiz(minSiz, w, h);
             maxSiz = getReulatedSiz(maxSiz, w, h);
 
-            groundHeight = (h * 2 / 10.0) * (maxSiz - minSiz);
+            groundHeight = (h * 2 / 10.0) * (1 - minSiz / maxSiz);
         }
 
         private double getReulatedSiz(double siz, int w, int h) {
-            // in p
-            int minH = 510;
             if (siz * minH > h)
                 siz = 1.0 * h / minH;
-            int maxH = 510 * 3;
             if (siz * maxH < h)
                 siz = 1.0 * h / maxH;
             if (siz * maxW < w)
