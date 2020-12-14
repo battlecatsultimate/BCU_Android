@@ -35,10 +35,7 @@ import common.pack.UserProfile
 import common.system.P
 import common.util.Data
 import common.util.anim.ImgCut
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.round
-import kotlin.math.sqrt
+import kotlin.math.*
 
 @SuppressLint("ViewConstructor")
 class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity) : View(context), BattleBox, OuterBox {
@@ -423,49 +420,37 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             return
 
         val minDistance = height * 0.15
-        val velocity = minDistance / 30
 
-        if(isInSlideRange(minDistance)) {
-            val dy = e.y - i.y
-            val v = dy / dragFrame
+        val dy = e.y - i.y
+        val v = dy / dragFrame
 
-            if(abs(v) >= velocity && abs(dy) >= minDistance) {
-                performed = true
+        if(abs(dy) >= minDistance) {
+            performed = true
 
-                if(painter is BBCtrl) {
-                    if(v < 0) {
-                        (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_UP)
-                    } else {
-                        (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_DOWN)
-                    }
+            if(painter is BBCtrl) {
+                if(v < 0) {
+                    (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_UP)
                 } else {
-                    painter.bf.sb.lineupChanging = true
-                    painter.bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME
-                    painter.bf.sb.changeDivision = painter.bf.sb.changeFrame / 2
-
-                    painter.bf.sb.goingUp = v < 0
+                    (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_DOWN)
                 }
+            } else {
+                painter.bf.sb.lineupChanging = true
+                painter.bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME
+                painter.bf.sb.changeDivision = painter.bf.sb.changeFrame / 2
+
+                painter.bf.sb.goingUp = v < 0
             }
         }
     }
 
-    fun isInSlideRange(d: Double) : Boolean {
+    fun isInSlideRange() : Boolean {
+        val d = height * 0.15
         val e = endPoint ?: return false
         val i = initPoint ?: return false
 
         val dx = e.x - i.x
 
-        return d >= abs(dx)
-    }
-
-    fun isHorizontal() : Boolean {
-        val e = endPoint ?: return false
-        val i = initPoint ?: return false
-
-        val dx = abs(e.x - i.x)
-        val dy = abs(e.y - i.y)
-
-        return dy/dx < 1/ sqrt(3.0)
+        return tan(Math.toRadians(50.0)) >= abs(dx) / d
     }
 
     private fun loadSE(type: Int, vararg ind: Int) {

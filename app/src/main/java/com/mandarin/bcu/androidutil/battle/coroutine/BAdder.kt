@@ -43,6 +43,7 @@ import common.system.P
 import common.util.stage.Stage
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.ln
 
 class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int) : CoroutineTask<String>() {
@@ -203,6 +204,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                     var preX = 0
                     var velocity: VelocityTracker? = null
                     var horizontal = false
+                    var vertical = false
+                    var twentyFour = StaticStore.dptopx(24f, activity)
 
                     @SuppressLint("Recycle")
                     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -252,11 +255,10 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                             if (horizontal) {
                                 battleView.velocity = (velocity?.xVelocity?.toDouble() ?: 0.0) * 0.5
-
-                                println(battleView.velocity)
                             }
 
                             horizontal = false
+                            vertical = false
 
                             velocity?.recycle()
                             velocity = null
@@ -268,14 +270,20 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 battleView.endPoint?.x = event.x.toDouble()
                                 battleView.endPoint?.y = event.y.toDouble()
 
-                                if(horizontal || battleView.isHorizontal() || (!battleView.isInSlideRange(battleView.height*0.15) && battleView.dragFrame > 3)) {
+                                velocity?.addMovement(event)
+                                velocity?.computeCurrentVelocity(1000/30)
+
+                                println(velocity?.xVelocity)
+                                println(twentyFour)
+
+                                if(!vertical && (horizontal || !battleView.isInSlideRange() || abs(velocity?.xVelocity ?: 0f) > twentyFour)) {
                                     battleView.painter.pos += x2 - preX
                                     horizontal = true
-
-                                    velocity?.addMovement(event)
-                                    velocity?.computeCurrentVelocity(1000/30)
                                 } else {
                                     battleView.checkSlideUpDown()
+
+                                    if(battleView.performed)
+                                        vertical = true
                                 }
 
                                 if (battleView.paused) {
