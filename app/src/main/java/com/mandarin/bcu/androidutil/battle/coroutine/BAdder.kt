@@ -202,10 +202,14 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                 battleView.setOnTouchListener(object : OnTouchListener {
                     var preid = -1
                     var preX = 0
+
                     var velocity: VelocityTracker? = null
+
                     var horizontal = false
                     var vertical = false
-                    var twentyFour = StaticStore.dptopx(24f, activity)
+                    var twoTouched = false
+
+                    val six = StaticStore.dptopx(6f, activity)
 
                     @SuppressLint("Recycle")
                     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -241,7 +245,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 battleView.isSliding = true
 
                                 velocity?.addMovement(event)
-                            }
+                            } else if(event.pointerCount == 2)
+                                twoTouched = true
                         } else if (action == MotionEvent.ACTION_UP) {
                             battleView.endPoint = null
                             battleView.initPoint = null
@@ -253,12 +258,13 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 battleView.getPainter().click(Point(event.x.toInt(), event.y.toInt()), action)
                             }
 
-                            if (horizontal) {
+                            if (!twoTouched && horizontal) {
                                 battleView.velocity = (velocity?.xVelocity?.toDouble() ?: 0.0) * 0.5
                             }
 
                             horizontal = false
                             vertical = false
+                            twoTouched = false
 
                             velocity?.recycle()
                             velocity = null
@@ -274,9 +280,9 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 velocity?.computeCurrentVelocity(1000/30)
 
                                 println(velocity?.xVelocity)
-                                println(twentyFour)
+                                println(six)
 
-                                if(!vertical && (horizontal || !battleView.isInSlideRange() || abs(velocity?.xVelocity ?: 0f) > twentyFour)) {
+                                if(!twoTouched && !vertical && (horizontal || (!battleView.isInSlideRange() && abs(velocity?.xVelocity ?: 0f) > abs(velocity?.yVelocity ?: 0f) && abs(velocity?.xVelocity ?: 0f) > six))) {
                                     battleView.painter.pos += x2 - preX
                                     horizontal = true
                                 } else {

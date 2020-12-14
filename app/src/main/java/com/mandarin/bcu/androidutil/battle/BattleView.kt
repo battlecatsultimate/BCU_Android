@@ -444,13 +444,13 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     }
 
     fun isInSlideRange() : Boolean {
-        val d = height * 0.15
         val e = endPoint ?: return false
         val i = initPoint ?: return false
 
         val dx = e.x - i.x
+        val dy = e.y - i.y
 
-        return tan(Math.toRadians(50.0)) >= abs(dx) / d
+        return tan(Math.toRadians(50.0)) >= abs(dx) / abs(dy)
     }
 
     private fun loadSE(type: Int, vararg ind: Int) {
