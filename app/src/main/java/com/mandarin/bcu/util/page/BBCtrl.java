@@ -14,6 +14,8 @@ import common.util.unit.Form;
 public class BBCtrl extends BattleBox.BBPainter {
     private final SBCtrl ctrl;
     public static final int ACTION_LONG = 100;
+    public static final int ACTION_LINEUP_CHANGE_UP = 10;
+    public static final int ACTION_LINEUP_CHANGE_DOWN = 20;
 
     private final float dpi;
 
@@ -71,8 +73,6 @@ public class BBCtrl extends BattleBox.BBPainter {
                 if (!new PP(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
                     ctrl.action.add(-3);
             }
-
-            reset();
         } else if (action == ACTION_LONG) {
 
             int w = box.getWidth();
@@ -95,8 +95,18 @@ public class BBCtrl extends BattleBox.BBPainter {
 
                 ctrl.action.add(10);
             }
-
-            reset();
         }
+
+        reset();
+    }
+
+    public void perform(int action) {
+        if (action == ACTION_LINEUP_CHANGE_UP) {
+            ctrl.action.add(-4);
+        } else if(action == ACTION_LINEUP_CHANGE_DOWN) {
+            ctrl.action.add(-5);
+        }
+
+        reset();
     }
 }

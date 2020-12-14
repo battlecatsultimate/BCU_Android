@@ -82,8 +82,6 @@ public interface BattleBox {
 
         private double groundHeight = -1;
 
-        public boolean up = false;
-
         public int dpi = -1;
 
         private final BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -296,13 +294,13 @@ public interface BattleBox {
                 //Check if lineup is changing
                 if(sb.changeFrame != -1) {
                     if(sb.changeFrame >= sb.changeDivision) {
-                        double dis = isBehind ? ih * 0.5 : up ? ih * 0.4 : ih * 0.6;
+                        double dis = isBehind ? ih * 0.5 : sb.goingUp ? ih * 0.4 : ih * 0.6;
 
-                        y += (dis / sb.changeDivision) * (sb.changeDivision * 2 - sb.changeFrame) * (isBehind ? 1 : -1) * (up ? 1 : -1);
+                        y += (dis / sb.changeDivision) * (sb.changeDivision * 2 - sb.changeFrame) * (isBehind ? 1 : -1) * (sb.goingUp ? 1 : -1);
                     } else {
-                        double dis = isBehind ? ih * 0.5 : up ? ih * 0.6 : ih * 0.4;
+                        double dis = isBehind ? ih * 0.5 : sb.goingUp ? ih * 0.6 : ih * 0.4;
 
-                        y +=  (dis - (dis / sb.changeDivision) * (sb.changeDivision - sb.changeFrame)) * (isBehind ? -1 : 1) * (up ? 1 : -1);
+                        y +=  (dis - (dis / sb.changeDivision) * (sb.changeDivision - sb.changeFrame)) * (isBehind ? -1 : 1) * (sb.goingUp ? 1 : -1);
                     }
                 }
 

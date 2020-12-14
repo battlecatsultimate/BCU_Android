@@ -38,6 +38,7 @@ import common.util.anim.ImgCut
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.round
+import kotlin.math.sqrt
 
 @SuppressLint("ViewConstructor")
 class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity) : View(context), BattleBox, OuterBox {
@@ -52,6 +53,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     var battleEnd = false
     var musicChanged = false
     var spd = 0
+    var velocity = 0.0
     private var upd = 0
     private val cv: CVGraphics
     private val updater: Updater
@@ -157,6 +159,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     painter.bf.update()
                     resetSE()
                 }
+
+                painter.pos += velocity.toInt()
             }
         }
     }
@@ -418,7 +422,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         if(battleEnd || painter.bf.sb.lineupChanging || painter.bf.sb.isOneLineup || painter.bf.sb.ubase.health == 0.toLong() || dragFrame == 0 || performed)
             return
 
-        val minDistance = this.height * 0.2
+        val minDistance = height * 0.15
         val velocity = minDistance / 30
 
         if(isInSlideRange(minDistance)) {
@@ -428,22 +432,40 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             if(abs(v) >= velocity && abs(dy) >= minDistance) {
                 performed = true
 
-                painter.bf.sb.lineupChanging = true
-                painter.bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME
-                painter.bf.sb.changeDivision = painter.bf.sb.changeFrame / 2
+                if(painter is BBCtrl) {
+                    if(v < 0) {
+                        (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_UP)
+                    } else {
+                        (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_DOWN)
+                    }
+                } else {
+                    painter.bf.sb.lineupChanging = true
+                    painter.bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME
+                    painter.bf.sb.changeDivision = painter.bf.sb.changeFrame / 2
 
-                painter.up = v < 0
+                    painter.bf.sb.goingUp = v < 0
+                }
             }
         }
     }
 
-    private fun isInSlideRange(d: Double) : Boolean {
+    fun isInSlideRange(d: Double) : Boolean {
         val e = endPoint ?: return false
         val i = initPoint ?: return false
 
         val dx = e.x - i.x
 
         return d >= abs(dx)
+    }
+
+    fun isHorizontal() : Boolean {
+        val e = endPoint ?: return false
+        val i = initPoint ?: return false
+
+        val dx = abs(e.x - i.x)
+        val dy = abs(e.y - i.y)
+
+        return dy/dx < 1/ sqrt(3.0)
     }
 
     private fun loadSE(type: Int, vararg ind: Int) {

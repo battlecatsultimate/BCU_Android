@@ -20,9 +20,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MediaPrepare
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.battle.BattleView
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
@@ -30,8 +29,9 @@ import com.mandarin.bcu.androidutil.battle.sound.SoundHandler.resetHandler
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics.Companion.clear
-import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.util.page.BBCtrl
 import common.battle.BasisSet
 import common.battle.SBCtrl
@@ -201,7 +201,10 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                 battleView.setOnTouchListener(object : OnTouchListener {
                     var preid = -1
                     var preX = 0
+                    var velocity: VelocityTracker? = null
+                    var horizontal = false
 
+                    @SuppressLint("Recycle")
                     override fun onTouch(v: View, event: MotionEvent): Boolean {
                         detector.onTouchEvent(event)
 
@@ -216,9 +219,15 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                         if (action == MotionEvent.ACTION_DOWN) {
                             updateScale = true
+                            battleView.velocity = 0.0
                             x = event.x
                             y = event.y
                             if(event.pointerCount == 1) {
+                                if(velocity == null)
+                                    velocity = VelocityTracker.obtain()
+                                else
+                                    velocity?.clear()
+
                                 if(battleView.initPoint == null)
                                     battleView.initPoint = P.newP(0.0, 0.0)
 
@@ -227,6 +236,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 battleView.initPoint?.x = x.toDouble()
                                 battleView.initPoint?.y = y.toDouble()
                                 battleView.isSliding = true
+
+                                velocity?.addMovement(event)
                             }
                         } else if (action == MotionEvent.ACTION_UP) {
                             battleView.endPoint = null
@@ -238,17 +249,32 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             if (battleView.painter.bf.sb.ubase.health > 0 && battleView.painter.bf.sb.ebase.health > 0) {
                                 battleView.getPainter().click(Point(event.x.toInt(), event.y.toInt()), action)
                             }
+
+                            if (horizontal) {
+                                battleView.velocity = (velocity?.xVelocity?.toDouble() ?: 0.0) * 0.5
+
+                                println(battleView.velocity)
+                            }
+
+                            horizontal = false
+
+                            velocity?.recycle()
+                            velocity = null
                         } else if (action == MotionEvent.ACTION_MOVE) {
                             if (event.pointerCount == 1 && id == preid) {
-                                battleView.painter.pos += x2 - preX
+                                if(battleView.endPoint == null)
+                                    battleView.endPoint = P.newP(0.0, 0.0)
 
-                                if(event.pointerCount == 1) {
-                                    if(battleView.endPoint == null)
-                                        battleView.endPoint = P.newP(0.0, 0.0)
+                                battleView.endPoint?.x = event.x.toDouble()
+                                battleView.endPoint?.y = event.y.toDouble()
 
-                                    battleView.endPoint?.x = event.x.toDouble()
-                                    battleView.endPoint?.y = event.y.toDouble()
+                                if(horizontal || battleView.isHorizontal() || (!battleView.isInSlideRange(battleView.height*0.15) && battleView.dragFrame > 3)) {
+                                    battleView.painter.pos += x2 - preX
+                                    horizontal = true
 
+                                    velocity?.addMovement(event)
+                                    velocity?.computeCurrentVelocity(1000/30)
+                                } else {
                                     battleView.checkSlideUpDown()
                                 }
 
@@ -256,6 +282,9 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                     battleView.invalidate()
                                 }
                             }
+                        } else if(action == MotionEvent.ACTION_CANCEL) {
+                            velocity?.recycle()
+                            velocity = null
                         }
 
                         preX = x2
