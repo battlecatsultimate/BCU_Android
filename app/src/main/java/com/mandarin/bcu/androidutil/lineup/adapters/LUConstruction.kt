@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.lineup.adapters
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -30,7 +31,7 @@ class LUConstruction : Fragment() {
 
     private var color: IntArray? = null
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private var runnable = Runnable { }
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
@@ -38,7 +39,7 @@ class LUConstruction : Fragment() {
 
         if (context == null) return view
 
-        color = intArrayOf(StaticStore.getAttributeColor(context!!, R.attr.TextPrimary))
+        color = intArrayOf(StaticStore.getAttributeColor(requireContext(), R.attr.TextPrimary))
 
         listeners(view)
 

@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,7 @@ class LUCastleSetting : Fragment() {
             buttons[i].setOnClickListener { setNyb(i, castle) }
         }
 
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         val runnable = object : Runnable {
             override fun run() {
                 if (StaticStore.updateCastle) {
