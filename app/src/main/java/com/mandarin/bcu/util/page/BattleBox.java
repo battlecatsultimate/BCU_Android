@@ -566,8 +566,6 @@ public interface BattleBox {
                     p.x += m.getWidth() * ratio;
                 }
             }
-
-            P.delete(p);
         }
     }
 
