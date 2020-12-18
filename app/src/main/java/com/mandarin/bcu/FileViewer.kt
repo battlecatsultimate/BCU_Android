@@ -4,19 +4,30 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.Bundle
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.ScrollView
+import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.music.coroutine.MusicAdder
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
+import common.system.files.VFile
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.StringBuilder
+import java.nio.charset.StandardCharsets
 import java.util.*
 
-class MusicList : AppCompatActivity() {
+class FileViewer : AppCompatActivity() {
+    lateinit var path: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,15 +56,75 @@ class MusicList : AppCompatActivity() {
 
         (CommonStatic.ctx as AContext).updateActivity(this)
 
-        setContentView(R.layout.activity_music_list)
+        setContentView(R.layout.activity_file_viewer)
 
-        val bck: FloatingActionButton = findViewById(R.id.musicbck)
+        val extra = intent.extras ?: return
+
+        path = extra.getString("path", "")
+
+        if(path == "")
+            return
+
+        val scroll = findViewById<ScrollView>(R.id.fileviewscroll)
+        val img = findViewById<ImageView>(R.id.fileviewimg)
+        val text = findViewById<TextView>(R.id.fileviewtext)
+        val bck = findViewById<FloatingActionButton>(R.id.fileviewbck)
+        val title = findViewById<AutoMarquee>(R.id.fileviewtitle)
+
+        val f = VFile.get(path) ?: return
+
+        title.text = f.path
+
+        if(path.endsWith("png")) {
+            scroll.visibility = View.GONE
+
+            val image = f.data.img.bimg() as Bitmap
+
+            img.setImageBitmap(image)
+        } else {
+            img.visibility = View.GONE
+
+            text.text = loadText(f)
+        }
 
         bck.setOnClickListener {
             finish()
         }
+    }
 
-        MusicAdder(this, supportFragmentManager).execute()
+    private fun loadText(f: VFile) : String {
+        val ins = f.data.stream ?: return ""
+
+        val isr = InputStreamReader(ins, StandardCharsets.UTF_8)
+        val b = BufferedReader(isr)
+
+        val sb = StringBuilder()
+        var t: String?
+
+        while(true) {
+            t = b.readLine()
+
+            if(t == null)
+                break
+
+            sb.append(t.replace("\t","    ")).append("\n")
+        }
+
+        return sb.toString()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
+    }
+
+    public override fun onDestroy() {
+        super.onDestroy()
+        StaticStore.toast = null
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -78,19 +149,5 @@ class MusicList : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        StaticStore.toast = null
-    }
-
-    override fun onResume() {
-        AContext.check()
-
-        if(CommonStatic.ctx is AContext)
-            (CommonStatic.ctx as AContext).updateActivity(this)
-
-        super.onResume()
     }
 }

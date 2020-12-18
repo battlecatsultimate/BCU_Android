@@ -446,7 +446,7 @@ public interface BattleBox {
             sb.canon.drawAtk(gra, p, psiz);
             gra.setTransform(at);
             if (sb.sniper != null && sb.sniper.enabled) {
-                setP(sb.sniper.getPos(), midh-road_h*siz);
+                setP(getX(sb.sniper.getPos()), midh-road_h*siz);
                 sb.sniper.drawBase(gra, p, psiz);
                 gra.setTransform(at);
             }

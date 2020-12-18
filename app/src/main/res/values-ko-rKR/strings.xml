@@ -721,4 +721,10 @@
     <string name="main_castle">성 리스트</string>
     <string name="ui_sound">UI 사운드</string>
     <string name="sch_abi_mw">소형 파동</string>
+    <string name="main_asset">에셋 브라우저</string>
+    <string name="file_extract">파일 추출</string>
+    <string name="file_share">파일 공유</string>
+    <string name="file_extract_success">_ 추출 성공 : -</string>
+    <string name="file_extract_cant">추출 불가능</string>
+    <string name="file_extract_semi">_ 추출 성공</string>
 </resources>

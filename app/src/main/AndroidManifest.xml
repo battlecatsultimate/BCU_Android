@@ -27,11 +27,13 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".FileViewer" />
+        <activity android:name=".AssetBrowser" />
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
-        <activity android:name=".CastleList"/>
+        <activity android:name=".CastleList" />
         <activity
             android:name=".PackManagement"
             android:configChanges="locale">
@@ -108,7 +110,7 @@
         <activity android:name=".SearchFilter" />
         <activity android:name=".MapList" />
         <activity android:name=".AnimationViewer" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

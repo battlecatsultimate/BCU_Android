@@ -84,7 +84,7 @@ class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<St
                     collapse.layoutParams = param
                 }
 
-                val bck = activity.findViewById<FloatingActionButton>(R.id.cslistbck)
+                val bck = activity.findViewById<FloatingActionButton>(R.id.csbck)
 
                 bck.setOnClickListener {
                     activity.finish()

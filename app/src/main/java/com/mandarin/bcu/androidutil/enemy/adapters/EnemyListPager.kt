@@ -91,7 +91,7 @@ class EnemyListPager : Fragment() {
 
             val cont = context ?: return
 
-            val adapter = EnemyListAdapter(cont, numbers, pid)
+            val adapter = EnemyListAdapter(cont, numbers)
 
             list.adapter = adapter
 

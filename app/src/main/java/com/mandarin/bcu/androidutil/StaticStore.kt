@@ -842,6 +842,10 @@ object StaticStore {
         }
     }
 
+    fun getExternalTemp(c: Context?) : String {
+        return getExternalPath(c) + "temp/"
+    }
+
     fun getExternalAsset(c: Context?): String {
         return getExternalPath(c) + "assets/"
     }

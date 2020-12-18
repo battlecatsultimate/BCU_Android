@@ -11,15 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.battle.data.CustomEnemy
 import common.pack.Identifier
-import common.pack.UserProfile
 import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 
-class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<AbEnemy>>, private val pid: String) : ArrayAdapter<Identifier<AbEnemy>>(context, R.layout.listlayout, name.toTypedArray()) {
+class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<AbEnemy>>) : ArrayAdapter<Identifier<AbEnemy>>(context, R.layout.listlayout, name.toTypedArray()) {
 
     private class ViewHolder constructor(row: View) {
         var id: TextView = row.findViewById(R.id.unitID)

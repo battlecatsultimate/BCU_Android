@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
@@ -106,7 +107,7 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
                     }
 
 
-                    val uri = Uri.fromFile(f)
+                    val uri = FileProvider.getUriForFile(context,"com.mandarin.bcu.provider",f)
 
                     val intent = Intent()
 
