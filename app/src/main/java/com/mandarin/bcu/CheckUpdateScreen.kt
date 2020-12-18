@@ -330,7 +330,8 @@ open class CheckUpdateScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
-        checker.cancel()
+        if(checker.getStatus() != CoroutineTask.Status.DONE)
+            checker.cancel()
         notifyBuilder.setOngoing(false)
         if(mustShow)
             notifyManager.notify(UpdateCheckDownload.NOTIF, R.id.downloadnotification, notifyBuilder.build())
