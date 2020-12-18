@@ -510,7 +510,7 @@
     <string name="main_err_always">Always send error logs to server</string>
     <string name="main_err_start">Start uploading log files…</string>
     <string name="config_send_err">Always send error logs to server</string>
-    <string name="down_state_music">Downloading Musics… : </string>
+    <string name="down_state_music">Downloading Music… : </string>
     <string name="err_send_log">Sending Log… : -/_</string>
     <string name="err_send_result">Sent Log | Succeeded : - / Failed : _</string>
     <string name="config_sound">Sound</string>
