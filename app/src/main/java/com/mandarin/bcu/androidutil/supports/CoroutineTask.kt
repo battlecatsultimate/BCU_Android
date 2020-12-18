@@ -18,8 +18,10 @@ abstract class CoroutineTask<Data> {
     }
 
     private var status = Status.READY
+
     private var index = -1
     var cancelled = false
+    var out = false
 
     abstract fun prepare()
 
@@ -81,6 +83,9 @@ abstract class CoroutineTask<Data> {
     }
 
     fun getOut() {
+        if(out)
+            return
+
         tasks.remove(this)
 
         for(i in tasks.indices) {
@@ -89,9 +94,15 @@ abstract class CoroutineTask<Data> {
 
         if(tasks.isNotEmpty())
             tasks[0].execute()
+
+        out = true
+    }
+
+    fun getStatus() : Status {
+        return status
     }
 
     override fun toString(): String {
-        return "TASK $index, Status : $status"
+        return "TASK $index | Status : $status"
     }
 }
