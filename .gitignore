@@ -7,3 +7,4 @@ local.properties
 /app/.cxx/*
 /app/.externalNativeBuild/*
 /app/release/*
+/build/*
