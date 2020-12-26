@@ -1,10 +1,7 @@
-package com.mandarin.bcu.androidutil.supports
+package com.mandarin.bcu.androidutil.supports.adapter
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +14,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.AssetBrowser
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.system.files.VFile
 import java.io.File
 import java.io.FileOutputStream

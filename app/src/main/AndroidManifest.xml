@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-feature
@@ -27,8 +28,10 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".EffectList" />
         <activity android:name=".FileViewer" />
         <activity android:name=".AssetBrowser" />
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -122,7 +125,8 @@
                 android:resource="@xml/provider_path" />
         </provider>
 
-        <receiver android:name=".MusicPlayer$MusicReceiver">
+        <receiver android:name=".MusicPlayer$MusicReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.HEADSET_PLUG" />
             </intent-filter>

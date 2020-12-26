@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.supports
+package com.mandarin.bcu.androidutil.supports.adapter
 
 import android.content.Context
 import android.content.res.Configuration

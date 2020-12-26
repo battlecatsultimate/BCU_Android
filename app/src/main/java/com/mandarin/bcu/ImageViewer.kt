@@ -19,6 +19,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.JsonParser
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.animation.AnimationCView
+import com.mandarin.bcu.androidutil.animation.coroutine.AnimationLoader
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.animation.coroutine.EAnimationLoader
 import com.mandarin.bcu.androidutil.animation.coroutine.UAnimationLoader
@@ -37,10 +39,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ImageViewer : AppCompatActivity() {
-    private val bg = 0
-    private val castle = 1
-    private val animu = 2
-    private val anime = 3
+    companion object {
+        const val BG = 0
+        const val CASTLE = 1
+        const val ANIMU = 2
+        const val ANIME = 3
+        const val EFFECT = 4
+        const val SOUL = 5
+        const val CANNON = 6
+    }
 
     private val skyUpper = 0
     private val skyBelow = 1
@@ -50,6 +57,7 @@ class ImageViewer : AppCompatActivity() {
     private var img = -1
     private var bgnum = -1
     private var form = -1
+    private var index = -1
 
     @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +93,7 @@ class ImageViewer : AppCompatActivity() {
         val extra = result.extras ?: return
 
         img = extra.getInt("Img")
+        index = extra.getInt("Index")
         bgnum = extra.getInt("BGNum")
         form = extra.getInt("Form")
 
@@ -109,7 +118,7 @@ class ImageViewer : AppCompatActivity() {
         val option = findViewById<FloatingActionButton>(R.id.imgvieweroption)
 
         when (img) {
-            bg -> {
+            BG -> {
                 row.visibility = View.GONE
                 seekBar.visibility = View.GONE
                 frame.visibility = View.GONE
@@ -222,7 +231,7 @@ class ImageViewer : AppCompatActivity() {
                 })
             }
 
-            castle -> {
+            CASTLE -> {
                 anims.visibility = View.GONE
                 row.visibility = View.GONE
                 seekBar.visibility = View.GONE
@@ -262,8 +271,11 @@ class ImageViewer : AppCompatActivity() {
                 img.setImageBitmap(castle)
             }
 
-            animu -> UAnimationLoader(this, StaticStore.transformIdentifier(extra.getString("Data")), form).execute()
-            anime -> EAnimationLoader(this, StaticStore.transformIdentifier(extra.getString("Data"))).execute()
+            ANIMU -> UAnimationLoader(this, StaticStore.transformIdentifier(extra.getString("Data")), form).execute()
+            ANIME -> EAnimationLoader(this, StaticStore.transformIdentifier(extra.getString("Data"))).execute()
+            EFFECT -> AnimationLoader(this, AnimationCView.EFFECT, index).execute()
+            SOUL -> AnimationLoader(this, AnimationCView.SOUL, index).execute()
+            CANNON -> AnimationLoader(this, AnimationCView.CANNON, index).execute()
         }
     }
 

@@ -7,34 +7,89 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import com.mandarin.bcu.androidutil.AnimatedGifEncoder
+import com.mandarin.bcu.androidutil.StaticJava
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.pack.Identifier
 import common.system.P
-import common.util.anim.EAnimU
+import common.util.Data
+import common.util.anim.EAnimD
 import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
 import java.lang.ref.WeakReference
 
-class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val data: Identifier<*>, private val unit: Boolean) : CoroutineTask<Void>() {
+class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val data: Any, private val type: Int, private val index: Int) : CoroutineTask<Void>() {
     companion object {
         var frame = 0
         var bos = ByteArrayOutputStream()
         var encoder = AnimatedGifEncoder()
     }
 
-    private var animU: EAnimU? = null
+    private var animU: EAnimD<*>
     private val w: Int
     private val h: Int
     private val siz: Float
     private val p: P?
     private val night: Boolean
     private val c: WeakReference<Activity?>
+
+    init {
+        when(type) {
+            AnimationCView.UNIT -> {
+                val d = StaticStore.transformIdentifier<Unit>(data as Identifier<*>)
+
+                if(d != null) {
+                    val u = d.get()
+
+                    this.animU = u.forms[StaticStore.formposition].getEAnim(StaticStore.getAnimType(StaticStore.animposition))
+                    this.animU.setTime(StaticStore.frame)
+                } else {
+                    throw IllegalStateException("Not an unit! : $data")
+                }
+            }
+            AnimationCView.ENEMY -> {
+                val d = StaticStore.transformIdentifier<AbEnemy>(data as Identifier<*>)
+
+                if(d != null) {
+                    val e = d.get()
+
+                    if(e != null && e is Enemy) {
+                        this.animU = e.getEAnim(StaticStore.getAnimType(StaticStore.animposition))
+                        this.animU.setTime(StaticStore.frame)
+                    } else {
+                        throw IllegalStateException("Not an enemy! : $data")
+                    }
+                } else {
+                    throw IllegalStateException("Not an enemy! : $data")
+                }
+            }
+            AnimationCView.EFFECT,
+            AnimationCView.SOUL,
+            AnimationCView.CANNON -> {
+                this.animU = StaticJava.generateEAnimD(data, StaticStore.animposition)
+            }
+            else -> throw IllegalStateException("Incorrect type value : $type in AddGIF")
+        }
+
+        this.w = w
+        this.h = h
+        this.siz = siz
+        this.p = p
+        this.night = night
+        this.c = WeakReference(c)
+
+        if(encoder.frameRate != 30f) {
+            encoder.frameRate = 30f
+            encoder.start(bos)
+        }
+
+        if(c?.requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LOCKED)
+            c?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+    }
 
     override fun prepare() {
     }
@@ -62,7 +117,7 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
         val c2 = CVGraphics(c, p1, bp, night)
         c2.independent = true
         c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), back)
-        animU!!.draw(c2, p, siz.toDouble())
+        animU.draw(c2, p, siz.toDouble())
         encoder.addFrame(b)
 
         frame++
@@ -81,51 +136,19 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
     override fun finish() {
         if(frame == StaticStore.gifFrame) {
             encoder.finish()
-            if(unit) {
-                GIFAsync(this.c.get(), data, StaticStore.formposition).execute()
-            } else {
-                GIFAsync(this.c.get(), data).execute()
-            }
-        }
-    }
-
-    init {
-        if (unit) {
-            val d = StaticStore.transformIdentifier<Unit>(data)
-
-            if(d != null) {
-                val u = d.get()
-
-                if(u != null) {
-                    this.animU = u.forms[StaticStore.formposition].getEAnim(StaticStore.getAnimType(StaticStore.animposition))
-                    this.animU?.setTime(StaticStore.frame)
+            when(type) {
+                AnimationCView.UNIT -> {
+                    GIFAsync(this.c.get(), data as Identifier<*>, StaticStore.formposition).execute()
                 }
-            }
-        } else {
-            val d = StaticStore.transformIdentifier<AbEnemy>(data)
-
-            if(d != null) {
-                val e = d.get()
-
-                if(e != null && e is Enemy) {
-                    this.animU = e.getEAnim(StaticStore.getAnimType(StaticStore.animposition))
-                    this.animU?.setTime(StaticStore.frame)
+                AnimationCView.ENEMY -> {
+                    GIFAsync(this.c.get(), data as Identifier<*>).execute()
+                }
+                AnimationCView.EFFECT,
+                AnimationCView.SOUL,
+                AnimationCView.CANNON -> {
+                    GIFAsync(this.c.get(), type, Data.trio(index)).execute()
                 }
             }
         }
-        this.w = w
-        this.h = h
-        this.siz = siz
-        this.p = p
-        this.night = night
-        this.c = WeakReference(c)
-
-        if(encoder.frameRate != 30f) {
-            encoder.frameRate = 30f
-            encoder.start(bos)
-        }
-
-        if(c?.requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LOCKED)
-            c?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
     }
 }

@@ -28,6 +28,7 @@ import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.pack.Identifier
+import common.util.anim.EAnimU
 import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -185,7 +186,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                             StaticStore.formposition = position
                             cView.anim = u.forms[position].getEAnim(StaticStore.getAnimType(anims.selectedItemPosition))
 
-                            val max = cView.anim?.len() ?: 2
+                            val max = cView.anim.len()
 
                             controller.max = max - 1
                             controller.progress = 0
@@ -200,9 +201,9 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
-                            cView.anim!!.changeAnim(StaticStore.getAnimType(position))
+                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position))
 
-                            val max = cView.anim?.len() ?: 2
+                            val max = cView.anim.len()
 
                             controller.max = max - 1
                             controller.progress = 0
@@ -216,7 +217,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                 buttons[0].setOnClickListener {
                     if (StaticStore.frame > 0) {
                         StaticStore.frame--
-                        cView.anim!!.setTime(StaticStore.frame)
+                        cView.anim.setTime(StaticStore.frame)
                     } else {
                         frame.setTextColor(Color.rgb(227, 66, 66))
                         StaticStore.showShortMessage(activity, R.string.anim_warn_frame)
@@ -239,14 +240,14 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                 }
                 buttons[2].setOnClickListener {
                     StaticStore.frame++
-                    cView.anim!!.setTime(StaticStore.frame)
+                    cView.anim.setTime(StaticStore.frame)
                     frame.setTextColor(StaticStore.getAttributeColor(activity, R.attr.TextPrimary))
                 }
                 controller.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         if (fromUser) {
                             StaticStore.frame = progress
-                            cView.anim!!.setTime(StaticStore.frame)
+                            cView.anim.setTime(StaticStore.frame)
                         }
                     }
 
@@ -254,10 +255,10 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
-                cView.anim!!.changeAnim(StaticStore.getAnimType(StaticStore.animposition))
-                cView.anim!!.setTime(StaticStore.frame)
+                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition))
+                cView.anim.setTime(StaticStore.frame)
 
-                val max = cView.anim?.len() ?: 2
+                val max = cView.anim.len()
 
                 controller.max = max - 1
                 val popup = PopupMenu(activity, option)

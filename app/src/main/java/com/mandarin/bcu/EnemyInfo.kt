@@ -91,7 +91,7 @@ class EnemyInfo : AppCompatActivity() {
             eanim.setOnClickListener(object : SingleClick() {
                 override fun onSingleClick(v: View?) {
                     val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
-                    intent.putExtra("Img", 3)
+                    intent.putExtra("Img", ImageViewer.ANIME)
                     intent.putExtra("Data", JsonEncoder.encode(data).toString())
                     startActivity(intent)
                 }

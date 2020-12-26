@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.supports
+package com.mandarin.bcu.androidutil.supports.adapter
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

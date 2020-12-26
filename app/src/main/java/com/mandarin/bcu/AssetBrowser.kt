@@ -7,8 +7,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.ParcelFileDescriptor
-import android.provider.MediaStore
 import android.widget.AdapterView
 import android.widget.ListView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,14 +14,13 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.supports.AssetListAdapter
+import com.mandarin.bcu.androidutil.supports.adapter.AssetListAdapter
 import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.system.files.VFile
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.ArrayList
 

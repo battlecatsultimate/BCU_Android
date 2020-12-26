@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil
+package com.mandarin.bcu.androidutil.supports.adapter
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.StaticStore
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile
@@ -75,7 +76,7 @@ class BGListPager : Fragment() {
                 }
 
                 intent.putExtra("Data", JsonEncoder.encode(data[position]).toString())
-                intent.putExtra("Img", 0)
+                intent.putExtra("Img", ImageViewer.BG)
 
                 c.startActivity(intent)
             }

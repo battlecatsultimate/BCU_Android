@@ -89,7 +89,7 @@ class CsListPager : Fragment() {
                 val intent = Intent(c, ImageViewer::class.java)
 
                 intent.putExtra("Data", JsonEncoder.encode(data[posit]).toString())
-                intent.putExtra("Img", 1)
+                intent.putExtra("Img", ImageViewer.CASTLE)
 
                 c.startActivity(intent)
             }
@@ -119,7 +119,7 @@ class CsListPager : Fragment() {
                 val intent = Intent(c, ImageViewer::class.java)
 
                 intent.putExtra("Data", JsonEncoder.encode(data[posit]).toString())
-                intent.putExtra("Img", 1)
+                intent.putExtra("Img", ImageViewer.CASTLE)
 
                 c.startActivity(intent)
             }

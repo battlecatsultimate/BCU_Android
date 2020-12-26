@@ -23,7 +23,7 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.SingleClick
-import com.mandarin.bcu.androidutil.supports.StatFilterAdapter
+import com.mandarin.bcu.androidutil.supports.adapter.StatFilterAdapter
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager

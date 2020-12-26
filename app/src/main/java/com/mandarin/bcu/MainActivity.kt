@@ -229,18 +229,18 @@ class MainActivity : AppCompatActivity() {
 
         val drawables = intArrayOf(R.drawable.ic_kasa_jizo, R.drawable.ic_enemy, R.drawable.ic_castle,
                 R.drawable.ic_medal, R.drawable.ic_basis, R.drawable.ic_bg, R.drawable.ic_castles,
-                R.drawable.ic_music, R.drawable.ic_pack, R.drawable.ic_baseline_folder_24)
+                R.drawable.ic_music, R.drawable.ic_effect, R.drawable.ic_pack, R.drawable.ic_baseline_folder_24)
 
         val classes = arrayOf(AnimationViewer::class.java, EnemyList::class.java, MapList::class.java,
                 MedalList::class.java, LineUpScreen::class.java, BackgroundList::class.java, CastleList::class.java,
-                MusicList::class.java, PackManagement::class.java, AssetBrowser::class.java)
+                MusicList::class.java, EffectList::class.java, PackManagement::class.java, AssetBrowser::class.java)
 
         val texts = intArrayOf(R.string.main_unitinfo,R.string.main_enemy_info, R.string.stg_inf,
                 R.string.main_medal, R.string.main_equip, R.string.main_bg, R.string.main_castle,
-                R.string.main_music, R.string.main_packs, R.string.main_asset)
+                R.string.main_music, R.string.main_effect, R.string.main_packs, R.string.main_asset)
 
-        val row = 6
-        val col = 2 // unit/enem | stage,medal | basis | bg,castles | music,pack | asset
+        val row = 7
+        val col = 2 // unit/enem | stage,medal | basis | bg,castles | music,effect | pack | asset
 
         val gap = StaticStore.dptopx(4f, this)
 
@@ -250,10 +250,13 @@ class MainActivity : AppCompatActivity() {
         grid.columnCount = col
 
         for(i in 0 until row) {
-            if(i == 2 || i == 5) {
+            if(i == 2 || i == 5 || i == 6) {
                 var index = i * 2
 
                 if(i > 2)
+                    index--
+
+                if(i > 5)
                     index--
 
                 val card = CardView(this)
@@ -306,6 +309,9 @@ class MainActivity : AppCompatActivity() {
 
                     if(i > 2)
                         index --
+
+                    if(i > 5)
+                        index--
 
                     val card = CardView(this)
 

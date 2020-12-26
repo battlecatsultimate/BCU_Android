@@ -130,7 +130,8 @@
                     android:layout_height="32dp"
                     android:text="@string/battle_show_unit"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="invisible" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/showenemy"
@@ -141,7 +142,8 @@
                     android:layout_marginEnd="0dp"
                     android:text="@string/battle_show_enem"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="invisible" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switchmus"

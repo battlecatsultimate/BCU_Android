@@ -158,7 +158,7 @@ class UnitInfo : AppCompatActivity() {
 
                 StaticStore.formposition = StaticStore.unittabposition
 
-                intent.putExtra("Img", 2)
+                intent.putExtra("Img", ImageViewer.ANIMU)
                 intent.putExtra("Data", JsonEncoder.encode(data).toString())
                 intent.putExtra("Form", StaticStore.formposition)
 
