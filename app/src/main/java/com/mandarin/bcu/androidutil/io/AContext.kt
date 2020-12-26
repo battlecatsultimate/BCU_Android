@@ -158,6 +158,9 @@ class AContext : Context {
 
         val a = wac.get() ?: return null
 
+        if(file == "animation_type.json")
+            return a.resources.openRawResource(R.raw.animation_type)
+
         return when(CommonStatic.getConfig().lang) {
             0 -> {
                 a.resources.openRawResource(R.raw.proc)

@@ -1,74 +1,74 @@
 {
     "BarEneEff": {
-        "DESTR": "Destroy",
-        "BREAK": "Break"
+        "DESTR": "destroy",
+        "BREAK": "break"
     },
     "KBEff": {
-        "SW": "Shock Wave",
-        "ASS": "Sniper",
-        "KB": "Knock Back"
+        "SW": "shock wave",
+        "ASS": "sniper",
+        "KB": "knock back"
     },
     "UType": {
-        "BURROW_UP": "Burrow up",
-        "BURROW_MOVE": "Burrow move",
-        "IDLE": "Idle",
-        "HB": "Hit Back",
-        "BURROW_DOWN": "Burrow Down",
-        "ENTER": "Enter",
-        "ATK": "Attack",
-        "WALK": "Walk"
+        "BURROW_UP": "burrow up",
+        "BURROW_MOVE": "burrow move",
+        "IDLE": "idle",
+        "HB": "hit back",
+        "BURROW_DOWN": "burrow down",
+        "ENTER": "enter",
+        "ATK": "attack",
+        "WALK": "walk"
     },
     "VolcEff": {
-        "DURING": "On",
-        "START": "Start",
-        "END": "End"
+        "DURING": "on",
+        "START": "start",
+        "END": "end"
     },
     "ArmorEff": {
-        "BUFF": "Buff",
-        "DEBUFF": "Debuff"
+        "BUFF": "buff",
+        "DEBUFF": "debuff"
     },
     "SpeedEff": {
-        "UP": "Increase",
-        "DOWN": "Decrease"
+        "UP": "increase",
+        "DOWN": "decrease"
     },
     "WaveType": {
-        "DEF": "Default"
+        "DEF": "default"
     },
     "WeakUpEff": {
-        "UP": "Increase"
+        "UP": "increase"
     },
     "WarpEff": {
-        "ENTER": "Enter",
-        "EXIT": "Exit"
+        "ENTER": "enter",
+        "EXIT": "exit"
     },
     "NyType": {
-        "BASE": "Base",
-        "ATK": "Attack",
-        "EXT": "Extra"
+        "BASE": "base",
+        "ATK": "attack",
+        "EXT": "extra"
     },
     "BarrierEff": {
-        "DURING": "On",
-        "END": "End",
-        "DESTR": "Destroy",
-        "BREAK": "Break",
-        "START": "Start"
+        "DURING": "on",
+        "END": "end",
+        "DESTR": "destroy",
+        "BREAK": "break",
+        "START": "start"
     },
     "BGWvType": {
-        "ENEMY": "Enemy Wave",
-        "UNIT": "Unit Wave"
+        "ENEMY": "enemy wave",
+        "UNIT": "unit wave"
     },
     "ZombieEff": {
-        "DOWN": "Knock Down",
-        "REVIVE": "Revive"
+        "DOWN": "knock down",
+        "REVIVE": "revive"
     },
     "SoulType": {
-        "DEF": "Default"
+        "DEF": "default"
     },
     "SniperEff": {
-        "IDLE": "Idle",
-        "ATK": "Attack"
+        "IDLE": "idle",
+        "ATK": "attack"
     },
     "DefEff": {
-        "DEF": "Default"
+        "DEF": "default"
     }
 }

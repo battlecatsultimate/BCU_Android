@@ -484,16 +484,16 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
 
         when(content) {
             is EffAnim<*> -> {
-                for(t in content.types) {
-                    seekName(t.name)
+                for(t in content.names()) {
+                    res.add(seekName(t))
                 }
             }
             is Soul -> {
                 res.add(seekName("default"))
             }
             is NyCastle -> {
-                for(t in content.types()) {
-                    res.add(seekName(t.name))
+                for(t in content.names()) {
+                    res.add(seekName(t))
                 }
             }
         }
