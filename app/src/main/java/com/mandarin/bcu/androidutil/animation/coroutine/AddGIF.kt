@@ -71,6 +71,7 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
             AnimationCView.SOUL,
             AnimationCView.CANNON -> {
                 this.animU = StaticJava.generateEAnimD(data, StaticStore.animposition)
+                animU.setTime(StaticStore.frame)
             }
             else -> throw IllegalStateException("Incorrect type value : $type in AddGIF")
         }

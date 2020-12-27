@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.mandarin.bcu.androidutil.supports.AutoMarquee
             android:id="@+id/unitinfrarname"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -8,12 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.view.MotionEvent
-import android.view.ScaleGestureDetector
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.AnimatedGifEncoder
@@ -24,6 +23,7 @@ import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.GIFRangeRecycle
 import common.CommonStatic
 import common.pack.UserProfile
 import common.util.pack.EffAnim
@@ -242,7 +242,8 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
                 val popup = PopupMenu(activity, option)
                 val menu = popup.menu
                 popup.menuInflater.inflate(R.menu.animation_menu, menu)
-                if (StaticStore.enableGIF) popup.menu.getItem(3).setTitle(R.string.anim_option_gifstop)
+
+                popup.menu.getItem(3).isEnabled = StaticStore.enableGIF
 
                 popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                     when (item.itemId) {
@@ -333,19 +334,77 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
                             }
                             return@OnMenuItemClickListener true
                         }
-                        R.id.anim_option_gif -> {
+                        R.id.anim_gif_normal -> {
                             if (!StaticStore.gifisSaving) {
-                                if (!StaticStore.enableGIF) {
-                                    gif.visibility = View.VISIBLE
-                                    item.setTitle(R.string.anim_option_gifstop)
-                                } else {
-                                    item.setTitle(R.string.anim_option_gifstart)
-                                    StaticStore.gifisSaving = true
-                                }
+                                gif.visibility = View.VISIBLE
+                                popup.menu.getItem(3).isEnabled = true
+                                popup.menu.getItem(2).isEnabled = false
+
                                 StaticStore.enableGIF = !StaticStore.enableGIF
                             } else {
                                 StaticStore.showShortMessage(activity, R.string.gif_saving)
                             }
+
+                            return@OnMenuItemClickListener true
+                        }
+                        R.id.anim_option_gif_finish -> {
+                            StaticStore.enableGIF = !StaticStore.enableGIF
+                            StaticStore.gifisSaving = true
+                            item.isEnabled = false
+                            popup.menu.getItem(2).isEnabled = true
+
+                            return@OnMenuItemClickListener true
+                        }
+                        R.id.anim_gif_range -> {
+                            if(!StaticStore.gifisSaving) {
+                                StaticStore.fixOrientation(activity)
+
+                                val builder = AlertDialog.Builder(activity)
+                                val inflater = LayoutInflater.from(activity)
+                                val v = inflater.inflate(R.layout.gif_range_dialog, null)
+
+                                builder.setView(v)
+
+                                val list = v.findViewById<RecyclerView>(R.id.gifrecycle)
+                                val gen = v.findViewById<Button>(R.id.gifgen)
+                                val can = v.findViewById<Button>(R.id.gifcancel)
+
+                                val gifAdapter = GIFRangeRecycle(name, activity, type, content, -1)
+
+                                list.adapter = gifAdapter
+
+                                list.layoutManager = LinearLayoutManager(activity)
+                                list.isNestedScrollingEnabled = false
+
+                                val dialog = builder.create()
+
+                                dialog.show()
+
+                                dialog.setOnDismissListener {
+                                    StaticStore.unfixOrientation(activity)
+                                }
+
+                                gen.setOnClickListener(object : SingleClick() {
+                                    override fun onSingleClick(v: View?) {
+                                        StaticStore.gifisSaving = true
+
+                                        gif.visibility = View.VISIBLE
+
+                                        GIFRange(activity, content, type, index, cView, !shared.getBoolean("theme", false), gifAdapter.getData(), gifAdapter.getEnables()).execute()
+
+                                        dialog.dismiss()
+                                    }
+                                })
+
+                                can.setOnClickListener(object : SingleClick() {
+                                    override fun onSingleClick(v: View?) {
+                                        dialog.dismiss()
+                                    }
+                                })
+                            } else {
+                                StaticStore.showShortMessage(activity, R.string.gif_saving)
+                            }
+
                             return@OnMenuItemClickListener true
                         }
                     }

@@ -19,7 +19,7 @@
 
     <Button
         android:id="@+id/anncomfirm"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scrollView4"
@@ -27,9 +27,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="16dp"
+        android:backgroundTint="?attr/colorAccent"
         android:text="@string/main_confirm"
         android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary"
+        android:textColor="@color/TextPrimaryN"
         android:textSize="14sp" />
 
     <ScrollView

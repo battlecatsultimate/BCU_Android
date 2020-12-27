@@ -37,24 +37,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/setluedit"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="0dp"
-        android:layout_toStartOf="@+id/setlucancel"
-        android:background="@android:color/transparent"
-        android:text="@string/done"
-        android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary" />
-
-    <Button
-        android:id="@+id/setlucancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/setluedit"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:backgroundTint="?attr/colorAccent"
+        android:text="@string/lineup_create"
+        android:textAllCaps="false"
+        android:textColor="@color/TextPrimaryN" />
+
+    <Button
+        android:id="@+id/setlucancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setluedit"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
-        android:background="@android:color/transparent"
+        android:layout_toStartOf="@+id/setludone"
         android:text="@string/main_file_cancel"
         android:textAllCaps="false"
         android:textColor="?attr/TextPrimary" />

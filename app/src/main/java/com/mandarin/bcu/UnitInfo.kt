@@ -22,6 +22,7 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.unit.coroutine.UInfoLoader
@@ -129,7 +130,7 @@ class UnitInfo : AppCompatActivity() {
             }
         }
 
-        val unittitle = findViewById<TextView>(R.id.unitinfrarname)
+        val unittitle = findViewById<AutoMarquee>(R.id.unitinfrarname)
         val back = findViewById<FloatingActionButton>(R.id.unitinfback)
 
         treasure = findViewById(R.id.treabutton)

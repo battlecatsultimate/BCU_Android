@@ -818,4 +818,7 @@
     <string name="eff_zombc">Zombie Cannon</string>
     <string name="eff_breackc">Breaker Cannon</string>
     <string name="eff_cursec">Curse Cannon</string>
+    <string name="gif_generate">Generate</string>
+    <string name="gif_range">With Range</string>
+    <string name="gif_range_warn">* Decide position of viewer before generating</string>
 </resources>

@@ -43,13 +43,13 @@
 
     <Button
         android:id="@+id/battlecancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/battledexit"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/battledexit"
-        android:backgroundTint="?attr/backgroundPrimary"
         android:stateListAnimator="@null"
         android:text="@string/main_file_cancel"
         android:textAllCaps="false"
@@ -57,6 +57,7 @@
 
     <Button
         android:id="@+id/battledexit"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/donotshowcheck"
@@ -64,9 +65,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="?attr/backgroundPrimary"
+        android:backgroundTint="?attr/colorAccent"
         android:stateListAnimator="@null"
         android:text="@string/battle_exit"
         android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary" />
+        android:textColor="@color/TextPrimaryN" />
 </RelativeLayout>

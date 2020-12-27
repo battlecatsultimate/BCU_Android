@@ -93,6 +93,7 @@ dependencies {
     annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2-native-mt'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2-native-mt'
+    implementation 'com.appyvet:materialrangebar:1.4.8'
 }
 repositories {
     mavenCentral()
