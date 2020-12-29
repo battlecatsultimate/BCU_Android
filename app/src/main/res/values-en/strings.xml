@@ -822,4 +822,6 @@
     <string name="gif_generate">Generate</string>
     <string name="gif_range">With Range</string>
     <string name="gif_range_warn">* Decide position of viewer before generating</string>
+    <string name="config_gif">GIF Exporting Size</string>
+    <string name="config_gifsize">_% relative to viewer size</string>
 </resources>

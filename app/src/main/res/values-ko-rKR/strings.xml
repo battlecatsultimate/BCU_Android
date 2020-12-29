@@ -822,4 +822,6 @@
     <string name="gif_generate">생성</string>
     <string name="gif_range_warn">* 생성하기 전에 뷰어의 위치를 미리 정해주세요</string>
     <string name="gif_range">범위</string>
+    <string name="config_gif">GIF 추출 크기</string>
+    <string name="config_gifsize">뷰어 크기의 _%</string>
 </resources>
