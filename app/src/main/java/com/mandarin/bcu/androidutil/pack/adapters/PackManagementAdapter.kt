@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +52,14 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
 
         val p = pList[position]
 
-        holder.id.text = p.sid
+        val title = if(p.desc.author == null || p.desc.author.isBlank()) {
+            p.sid
+        } else {
+            p.sid + "[${p.desc.author}]"
+        }
+
+        holder.id.text = title
+
         holder.name.text = StaticStore.getPackName(p.sid)
 
         val f = (p.source as Source.ZipSource).packFile
