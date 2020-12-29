@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.animation.coroutine
 
 import android.app.Activity
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -22,7 +23,7 @@ import common.util.unit.Unit
 import java.io.ByteArrayOutputStream
 import java.lang.ref.WeakReference
 
-class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, private val data: Any, private val type: Int, private val index: Int) : CoroutineTask<Void>() {
+class AddGIF(c: Activity?, w: Int, h: Int, p: P, siz: Float, night: Boolean, private val data: Any, private val type: Int, private val index: Int) : CoroutineTask<Void>() {
     companion object {
         var frame = 0
         var bos = ByteArrayOutputStream()
@@ -33,7 +34,7 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
     private val w: Int
     private val h: Int
     private val siz: Float
-    private val p: P?
+    private val p: P
     private val night: Boolean
     private val c: WeakReference<Activity?>
 
@@ -76,16 +77,27 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P?, siz: Float, night: Boolean, pr
             else -> throw IllegalStateException("Incorrect type value : $type in AddGIF")
         }
 
-        this.w = w
-        this.h = h
-        this.siz = siz
+        val ratio = if(c != null) {
+            val shared = c.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+            shared.getInt("gif", 100).toDouble() / 100
+        } else {
+            1.0
+        }
+
+        this.w = (w * ratio).toInt()
+        this.h = (h * ratio).toInt()
+        this.siz = (siz * ratio).toFloat()
         this.p = p
+        this.p.x *= ratio
+        this.p.y *= ratio
         this.night = night
         this.c = WeakReference(c)
 
         if(encoder.frameRate != 30f) {
             encoder.frameRate = 30f
             encoder.start(bos)
+            encoder.setRepeat(0)
         }
 
         if(c?.requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LOCKED)

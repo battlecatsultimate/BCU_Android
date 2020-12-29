@@ -178,6 +178,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("gif")) {
+            ed.putInt("gif", 100)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         if(!shared.getBoolean("PackReset0137", false)) {
@@ -242,7 +247,8 @@ open class CheckUpdateScreen : AppCompatActivity() {
         }
 
         val i = Intent(applicationContext, CheckUpdateScreen::class.java)
-        val p = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val p = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         notifyBuilder.setContentIntent(p)
 

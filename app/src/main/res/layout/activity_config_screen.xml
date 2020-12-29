@@ -353,12 +353,44 @@
                 android:id="@+id/configfps"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/config_fps"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintEnd_toEndOf="@+id/configaxis"
                 app:layout_constraintStart_toStartOf="@+id/configaxis"
                 app:layout_constraintTop_toBottomOf="@+id/configaxis" />
+
+            <TextView
+                android:id="@+id/configgif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/config_gif"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="@+id/configfps"
+                app:layout_constraintTop_toBottomOf="@+id/configfps" />
+
+            <TextView
+                android:id="@+id/configgifsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/config_gifsize"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@+id/configgif"
+                app:layout_constraintTop_toBottomOf="@+id/configgif" />
+
+            <SeekBar
+                android:id="@+id/configgifseek"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/configgifsize" />
 
             <TextView
                 android:id="@+id/sound"
@@ -370,7 +402,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/configmus"
-                app:layout_constraintTop_toBottomOf="@+id/configfps" />
+                app:layout_constraintTop_toBottomOf="@+id/configgifseek" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configmus"

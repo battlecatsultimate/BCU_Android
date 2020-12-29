@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil.animation.coroutine
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -48,10 +49,16 @@ class GIFRange : CoroutineTask<String> {
         this.type = AnimationCView.UNIT
         this.index = -1
 
-        this.w = view.width
-        this.h = view.height
-        this.siz = view.size.toDouble()
-        this.p = P.newP((w.toFloat() / 2 + view.posx).toDouble(), (h.toFloat() * 2 / 3 + view.posy).toDouble())
+        val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+        val ratio = shared.getInt("gif", 100).toDouble() / 100.0
+
+        this.w = (view.width * ratio).toInt()
+        this.h = (view.height * ratio).toInt()
+        this.siz = view.size.toDouble() * ratio
+        this.p = P.newP((view.width.toFloat() / 2 + view.posx).toDouble(), (view.height.toFloat() * 2 / 3 + view.posy).toDouble())
+        this.p.x *= ratio
+        this.p.y *= ratio
         this.night = night
 
         this.frames = frames
@@ -60,6 +67,7 @@ class GIFRange : CoroutineTask<String> {
         if(AddGIF.encoder.frameRate != 30f) {
             AddGIF.encoder.frameRate = 30f
             AddGIF.encoder.start(AddGIF.bos)
+            AddGIF.encoder.setRepeat(0)
         }
 
         StaticStore.fixOrientation(ac)
@@ -73,10 +81,16 @@ class GIFRange : CoroutineTask<String> {
         this.type = AnimationCView.ENEMY
         this.index = -1
 
-        this.w = view.width
-        this.h = view.height
-        this.siz = view.size.toDouble()
-        this.p = P.newP((w.toFloat() / 2 + view.posx).toDouble(), (h.toFloat() * 2 / 3 + view.posy).toDouble())
+        val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+        val ratio = shared.getInt("gif", 100).toDouble() / 100.0
+
+        this.w = (view.width * ratio).toInt()
+        this.h = (view.height * ratio).toInt()
+        this.siz = view.size.toDouble() * ratio
+        this.p = P.newP((view.width.toFloat() / 2 + view.posx).toDouble(), (view.height.toFloat() * 2 / 3 + view.posy).toDouble())
+        this.p.x *= ratio
+        this.p.y *= ratio
         this.night = night
 
         this.frames = frames
@@ -85,6 +99,7 @@ class GIFRange : CoroutineTask<String> {
         if(AddGIF.encoder.frameRate != 30f) {
             AddGIF.encoder.frameRate = 30f
             AddGIF.encoder.start(AddGIF.bos)
+            AddGIF.encoder.setRepeat(0)
         }
 
         StaticStore.fixOrientation(ac)
@@ -98,10 +113,16 @@ class GIFRange : CoroutineTask<String> {
         this.type = type
         this.index = index
 
-        this.w = view.width
-        this.h = view.height
-        this.siz = view.size.toDouble()
-        this.p = P.newP((w.toFloat() / 2 + view.posx).toDouble(), (h.toFloat() * 2 / 3 + view.posy).toDouble())
+        val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+        val ratio = shared.getInt("gif", 100).toDouble() / 100.0
+
+        this.w = (view.width * ratio).toInt()
+        this.h = (view.height * ratio).toInt()
+        this.siz = view.size.toDouble() * ratio
+        this.p = P.newP((view.width.toFloat() / 2 + view.posx).toDouble(), (view.height.toFloat() * 2 / 3 + view.posy).toDouble())
+        this.p.x *= ratio
+        this.p.y *= ratio
         this.night = night
 
         this.frames = frames
@@ -112,6 +133,7 @@ class GIFRange : CoroutineTask<String> {
         if(AddGIF.encoder.frameRate != 30f) {
             AddGIF.encoder.frameRate = 30f
             AddGIF.encoder.start(AddGIF.bos)
+            AddGIF.encoder.setRepeat(0)
         }
 
         StaticStore.fixOrientation(ac)

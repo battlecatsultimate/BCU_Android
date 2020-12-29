@@ -63,7 +63,7 @@ class AnimationCView : View {
     private val range = Paint()
     private var cv: CVGraphics? = null
     private var p2: P? = null
-    private var animP: P? = null
+    private var animP = P(0.0, 0.0)
     private var t: Long = -1
     private var t1: Long = -1
     var fps: Long = 0

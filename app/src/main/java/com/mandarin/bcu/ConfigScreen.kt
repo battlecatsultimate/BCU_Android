@@ -297,6 +297,32 @@ open class ConfigScreen : AppCompatActivity() {
             ed1.apply()
         }
 
+        val gifseek = findViewById<SeekBar>(R.id.configgifseek)
+        val gif = findViewById<TextView>(R.id.configgifsize)
+
+        gif.text = getString(R.string.config_gifsize).replace("_", shared.getInt("gif", 100).toString())
+        gifseek.max = 80
+
+        gifseek.progress = shared.getInt("gif", 100) - 20
+
+        gifseek.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if(p2) {
+                    val prog = p1 + 20
+
+                    val editor = shared.edit()
+                    editor.putInt("gif", prog)
+                    editor.apply()
+
+                    gif.text = getString(R.string.config_gifsize).replace("_", prog.toString())
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+        })
+
         val mus = findViewById<SwitchCompat>(R.id.configmus)
         val musvol = findViewById<SeekBar>(R.id.configmusvol)
 
