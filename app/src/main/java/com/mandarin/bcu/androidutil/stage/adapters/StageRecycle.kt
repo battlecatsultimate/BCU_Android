@@ -246,7 +246,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                     return
                 else {
                     val intent = Intent(activity, ImageViewer::class.java)
-                    intent.putExtra("Img", ImageViewer.BG)
+                    intent.putExtra("Img", ImageViewer.CASTLE)
                     intent.putExtra("Data", JsonEncoder.encode(st.castle).toString())
 
                     st.castle.get().img
