@@ -726,7 +726,7 @@
     <string name="file_extract_success">- : _ を解凍しました</string>
     <string name="file_extract_cant">ファイルを解凍出来ませんでした</string>
     <string name="file_extract_semi">_を解凍しました</string>
-    <string name="main_effect">Effects</string>
+    <string name="main_effect">エフェクト</string>
     <string name="eff_weak">Weaken</string>
     <string name="eff_str">Strengthen</string>
     <string name="eff_weake">Weaken Enemy Side</string>
