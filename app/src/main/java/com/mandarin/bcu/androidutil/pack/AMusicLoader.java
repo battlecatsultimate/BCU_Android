@@ -62,7 +62,6 @@ public class AMusicLoader implements CommonStatic.ImgReader {
                 fos.write(b, 0, len);
             }
 
-            ins.close();
             fos.close();
 
             return g;
