@@ -1046,7 +1046,6 @@ object StaticStore {
         return shared.getString(ref, "")
     }
 
-    @JvmStatic
     val isEnglish: Boolean
         get() {
             val lang = Locale.getDefault().language

@@ -93,6 +93,10 @@ object Definer {
                 Interpret.TRAIT = colorString
             }
 
+            if(Interpret.ATK.isEmpty()) {
+                Interpret.ATK = context.getString(R.string.unit_info_atks)
+            }
+
             if(Interpret.STAR.isEmpty()) {
                 val startString = Array(5) {
                     if(it == 0)
@@ -296,6 +300,7 @@ object Definer {
             context.getString(abiid[it])
         }
 
+        Interpret.ATK = context.getString(R.string.unit_info_atks)
         Interpret.TRAIT = colorString
         Interpret.STAR = startString
         Interpret.PROC = procString

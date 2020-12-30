@@ -5,8 +5,6 @@ import android.util.Log
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.isEnglish
-import common.battle.BasisSet
-import common.battle.Treasure
 import common.battle.data.MaskAtk
 import common.battle.data.MaskEnemy
 import common.battle.data.MaskEntity
@@ -41,7 +39,7 @@ object Interpret : Data() {
 
     var PROC = Array(0) { "" }
 
-    var TEXT = Array(0) { "" }
+    var ATK = ""
 
     /**
      * Converts Data Proc index to BCU Android Proc Index
@@ -99,7 +97,7 @@ object Interpret : Data() {
                         ans = if (isEnglish)
                             "$ans [${getNumberAttack(numberWithExtension(1, lang), lang)}]"
                         else
-                            "$ans [${TEXT[46].replace("_", 1.toString())}]"
+                            "$ans [${ATK.replace("_", 1.toString())}]"
                     }
                 }
 
@@ -126,7 +124,7 @@ object Interpret : Data() {
                             ans = if (isEnglish)
                                 "$ans [${getNumberAttack(numberWithExtension(k + 1, lang), lang)}]"
                             else
-                                "$ans [${TEXT[46].replace("_", (k + 1).toString())}]"
+                                "$ans [${ATK.replace("_", (k + 1).toString())}]"
                         }
 
                         l.add(ans)
@@ -243,20 +241,16 @@ object Interpret : Data() {
     fun isType(de: MaskEnemy, type: Int): Boolean {
         val raw = de.rawAtkData()
 
-        if (type == 0)
-            return !de.isRange
-        else if (type == 1)
-            return de.isRange
-        else if (type == 2)
-            return de.isLD
-        else if (type == 3)
-            return raw.size > 1
-        else if (type == 4)
-            return de.isOmni
-        else if (type == 5)
-            return de.tba + raw[0][1] < de.itv / 2
+        return when (type) {
+            0 -> !de.isRange
+            1 -> de.isRange
+            2 -> de.isLD
+            3 -> raw.size > 1
+            4 -> de.isOmni
+            5 -> de.tba + raw[0][1] < de.itv / 2
+            else -> false
+        }
 
-        return false
     }
 
     fun numberWithExtension(n: Int, lang: String?): String {
@@ -318,7 +312,7 @@ object Interpret : Data() {
             } else {
                 " $n раза"
             }
-            else -> TEXT[7].replace("_", "" + n)
+            else -> ATK.replace("_", "" + n)
         }
     }
 }
