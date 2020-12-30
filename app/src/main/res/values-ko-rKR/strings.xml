@@ -589,7 +589,7 @@
     <string name="unit_info_text43">" 각 킬마다"</string>
     <string name="unit_info_text44">" 타겟의 거리 _ 앞에서 소환)"</string>
     <string name="unit_info_text45">" _% 버프로"</string>
-    <string name="unit_info_text46">_번째 공격</string>
+    <string name="unit_info_atks">_번째 공격</string>
     <string name="def_hundred">100</string>
     <string name="sch_abi_imsu">열파 공격 무효</string>
     <string name="talen_poi">독 데미지 내성</string>

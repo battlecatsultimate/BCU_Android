@@ -589,7 +589,7 @@
     <string name="unit_info_text43">" Summoned on every kill in front of target"</string>
     <string name="unit_info_text44">" at _ distance)"</string>
     <string name="unit_info_text45">" with _% buffed stats"</string>
-    <string name="unit_info_text46">"_ "</string>
+    <string name="unit_info_atks">"_ "</string>
     <string name="def_hundred">100</string>
     <string name="sch_abi_imsu">Imu.Surge Attack</string>
     <string name="talen_poi">Res.Poison</string>

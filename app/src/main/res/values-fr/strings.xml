@@ -588,7 +588,7 @@
     <string name="unit_info_text43">" Convoqué pour chaque mise à mort"</string>
     <string name="unit_info_text44">" à une distance de _)"</string>
     <string name="unit_info_text45">" avec une puissance de _%"</string>
-    <string name="unit_info_text46">"_ "</string>
+    <string name="unit_info_atks">"_ "</string>
     <string name="def_hundred">100</string>
     <string name="sch_abi_imsu">Imu.Vague Volcanique</string>
     <string name="talen_poi">Rés.Poison</string>

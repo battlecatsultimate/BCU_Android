@@ -588,7 +588,7 @@
     <string name="unit_info_text43">"相手を倒すたびに"</string>
     <string name="unit_info_text44">"距離_の位置で召喚)"</string>
     <string name="unit_info_text45">"_%のバフされた統計で"</string>
-    <string name="unit_info_text46">"_回目の攻撃"</string>
+    <string name="unit_info_atks">"_回目の攻撃"</string>
     <string name="def_hundred">100</string>
     <string name="sch_abi_imsu">烈波ダメージ無効</string>
     <string name="talen_poi">毒撃耐性</string>

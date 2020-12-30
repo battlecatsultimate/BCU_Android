@@ -561,7 +561,7 @@
     <string name="unit_info_text43">" Вызванно на каждое убийство впереди цели"</string>
     <string name="unit_info_text44">" на дистанции _ )"</string>
     <string name="unit_info_text45">" с усиленными на _% стат."</string>
-    <string name="unit_info_text46">"_"</string>
+    <string name="unit_info_atks">"_"</string>
     <string name="def_hundred">100</string>
     <string name="sch_abi_imsu">Игнор. Конц. Волну</string>
     <string name="talen_poi">Защищ. от Отравлен.</string>

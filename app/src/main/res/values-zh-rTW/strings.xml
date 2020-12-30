@@ -589,7 +589,7 @@
     <string name="unit_info_text43">" 召喚於每個終結的目標前"</string>
     <string name="unit_info_text44">" 於 _ 距離)"</string>
     <string name="unit_info_text45">" 有著 _% 強化"</string>
-    <string name="unit_info_text46">"第 _ 次攻擊"</string>
+    <string name="unit_info_atks">"第 _ 次攻擊"</string>
     <string name="def_hundred">100</string>
     <string name="sch_abi_imsu">烈波傷害無效</string>
     <string name="talen_poi">抗毒擊耐性</string>
