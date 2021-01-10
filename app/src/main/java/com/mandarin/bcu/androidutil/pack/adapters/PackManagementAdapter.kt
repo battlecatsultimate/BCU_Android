@@ -55,7 +55,7 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
         val title = if(p.desc.author == null || p.desc.author.isBlank()) {
             p.sid
         } else {
-            p.sid + "[${p.desc.author}]"
+            p.sid + " [${p.desc.author}]"
         }
 
         holder.id.text = title
