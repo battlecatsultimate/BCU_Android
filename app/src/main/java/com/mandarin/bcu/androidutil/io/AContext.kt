@@ -114,6 +114,10 @@ class AContext : Context {
         return true
     }
 
+    override fun confirmDelete(f: File?): Boolean {
+        return true
+    }
+
     override fun printErr(t: Context.ErrType?, str: String?) {
         if(t != null) {
             if(t == Context.ErrType.DEBUG || t == Context.ErrType.INFO || t == Context.ErrType.NEW) {
