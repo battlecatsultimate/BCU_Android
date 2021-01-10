@@ -40,16 +40,17 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 , R.string.eff_freezee, R.string.eff_surv, R.string.eff_surve, R.string.eff_imwp
                 , R.string.eff_imwpe, R.string.eff_imwv, R.string.eff_imwve, R.string.eff_wvsh
                 , R.string.eff_wvshe, R.string.eff_wvgu, R.string.eff_wvgue, R.string.eff_imm
-                , R.string.eff_imdef, R.string.eff_zk, R.string.eff_barriere, R.string.eff_brbreake
+                , R.string.eff_imdef, R.string.eff_zk, R.string.eff_barrier, R.string.eff_barriere
                 , R.string.eff_warp, R.string.eff_warpe, R.string.eff_cu, R.string.eff_zde
                 , R.string.eff_bw, R.string.eff_cr, R.string.eff_kb, R.string.eff_sn
-                , R.string.eff_zd, R.string.eff_barrier, R.string.eff_brbreak, R.string.eff_seal
+                , R.string.eff_zd, R.string.eff_seal
                 , R.string.eff_vdef, R.string.eff_vt1, R.string.eff_vt2, R.string.eff_vt3
                 , R.string.eff_vdefn, R.string.eff_vt1n, R.string.eff_vt2n, R.string.eff_vt3n
                 , R.string.eff_svb , R.string.eff_inv, R.string.eff_tox, R.string.eff_vol, R.string.eff_vole
                 , R.string.eff_cursee, R.string.eff_wv, R.string.eff_wve, R.string.eff_arm
                 , R.string.eff_arme, R.string.eff_has, R.string.eff_hase, R.string.eff_weau
-                , R.string.eff_weaue, R.string.eff_minwv, R.string.eff_minwve)
+                , R.string.eff_weaue, R.string.eff_minwv, R.string.eff_minwve, R.string.eff_atksmoke
+                , R.string.eff_whitesmok)
 
         val canonID = intArrayOf(R.string.eff_defc, R.string.eff_slowc, R.string.eff_wallc
                 , R.string.eff_stopc, R.string.eff_waterc, R.string.eff_zombc, R.string.eff_breackc
@@ -86,6 +87,7 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
         when(type) {
             AnimationCView.EFFECT -> {
                 for(id in data.indices) {
+                    println(data[id].types().contentToString())
                     name.add(generateEffName(id, effID[id]))
                 }
             }

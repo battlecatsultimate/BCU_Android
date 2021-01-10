@@ -1,8 +1,4 @@
 {
-    "BarEneEff": {
-        "DESTR": "destroy",
-        "BREAK": "break"
-    },
     "KBEff": {
         "SW": "shock wave",
         "ASS": "sniper",
@@ -47,11 +43,9 @@
         "EXT": "extra"
     },
     "BarrierEff": {
-        "DURING": "on",
-        "END": "end",
         "DESTR": "destroy",
         "BREAK": "break",
-        "START": "start"
+        "NONE": "default"
     },
     "BGWvType": {
         "ENEMY": "enemy wave",

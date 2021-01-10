@@ -586,6 +586,7 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
             "castle" -> a.getString(R.string.eff_castle)
             "atk" -> a.getString(R.string.eff_catk)
             "ext" -> a.getString(R.string.eff_ext)
+            "none" -> a.getString(R.string.eff_none)
             else -> name
         }
     }
