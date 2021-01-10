@@ -44,20 +44,15 @@ import common.pack.UserProfile
 import common.system.fake.FakeImage
 import common.system.files.VFile
 import common.util.Data
-import common.util.anim.AnimI
 import common.util.anim.AnimU.UType
-import common.util.anim.EAnimD
-import common.util.anim.EAnimI
 import common.util.anim.ImgCut
 import common.util.lang.MultiLangCont
-import common.util.pack.EffAnim
-import common.util.pack.NyCastle
-import common.util.pack.Soul
 import common.util.stage.Music
-import common.util.unit.*
+import common.util.unit.AbEnemy
+import common.util.unit.Combo
+import common.util.unit.Form
 import common.util.unit.Unit
 import java.io.*
-import java.lang.IllegalStateException
 import java.math.BigInteger
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
@@ -77,9 +72,9 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.15.0"
+    const val VER = "0.14.1"
 
-    /**Fild ID of google drive log folder */
+    /**File ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
 
     /**Locale codes list */
@@ -1190,7 +1185,10 @@ object StaticStore {
      *
      * @return Returns "Pack Name - ID" as format
      */
-    fun generateIdName(id: Identifier<*>, c: Context?) : String {
+    fun generateIdName(id: Identifier<*>?, c: Context?) : String {
+        if(id == null)
+            return c?.getString(R.string.unit_info_t_none) ?: "None"
+
         return if(id.pack == Identifier.DEF || id.pack == "000001" || id.pack == "000002" || id.pack == "000003") {
             (c?.getString(R.string.pack_default) ?: "Default") +" - "+ Data.trio(id.id)
         } else {
