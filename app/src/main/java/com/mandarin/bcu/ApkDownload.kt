@@ -66,9 +66,8 @@ class ApkDownload : AppCompatActivity() {
                 val filestart = "BCU_Android_"
                 val apk = ".apk"
                 val realpath = path + filestart + ver + apk
-                val raw = "?raw=true"
-                val url = "https://github.com/battlecatsultimate/bcu-resources/blob/master/resources/android/"
-                val realurl = url + filestart + ver + apk + raw
+                val url = "https://github.com/battlecatsultimate/bcu-assets/raw/master/apk/BCU_Android_"
+                val realurl = url + ver + apk
                 val retry = findViewById<Button>(R.id.apkretry)
                 retry.visibility = View.GONE
                 val prog = findViewById<ProgressBar>(R.id.apkprog)

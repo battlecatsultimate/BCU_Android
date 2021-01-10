@@ -19,14 +19,8 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.CommonStatic
 import common.io.assets.UpdateCheck
-import org.json.JSONObject
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 import java.lang.ref.WeakReference
-import java.net.HttpURLConnection
-import java.net.URL
-import java.nio.charset.StandardCharsets
 
 class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private val retry: Boolean, private val notifyManager: NotificationManager, private val notifyBuilder: NotificationCompat.Builder, private val reformatRequired: Boolean) : CoroutineTask<String>() {
     companion object {
@@ -65,70 +59,33 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     override fun doSomething() {
         val ac = w.get() ?: return
 
-        val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val langShared = ac.getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
-
-        //Check Apk Update, skip apk checking if users are retrying to download assets
-        if(!retry) {
-            try {
-                val apkLink = "https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json"
-                val apkURL = URL(apkLink)
-
-                val ins = apkURL.openStream()
-
-                val isr = InputStreamReader(ins, StandardCharsets.UTF_8)
-
-                val sb = StringBuilder()
-
-                var len: Int
-
-                while(isr.read().also { len = it } != -1) {
-                    sb.append(len.toChar())
-                }
-
-                val result = sb.toString()
-
-                val ans = JSONObject(result)
-
-                ins.close()
-
-                val thatVersion = if(shared.getBoolean("apktest", false)) {
-                    ans.getString("android_test")
-                } else {
-                    ans.getString("android_ver")
-                }
-
-                publishProgress(thatVersion, APK)
-
-                pause = true
-
-                synchronized(stopper) {
-                    while(pause) {
-                        stopper.wait()
-                    }
-                }
-
-                if(dontGo)
-                    return
-            } catch (e: Exception) {
-                e.printStackTrace()
-
-                ErrorLogWriter.writeLog(e, StaticStore.upload, ac)
-
-                canGo = false
-            }
-        }
 
         try {
             publishProgress(ac.getString(R.string.main_check_up), StaticStore.TEXT)
 
             val updateJson = UpdateCheck.checkUpdate()
 
-            val assetJson = getAssetJson()
+            val apk : UpdateCheck.UpdateJson.ApkJson? = if(updateJson.apk_update != null)
+                checkApk(updateJson.apk_update)
+            else
+                null
+
+            if(apk != null && !retry) {
+                publishProgress(apk.ver, APK)
+
+                pause = true
+
+                synchronized(stopper) {
+                    while (pause) {
+                        stopper.wait()
+                    }
+                }
+            }
 
             val assetList = UpdateCheck.checkAsset(updateJson, "android")
 
-            val musicList = UpdateCheck.checkMusic(assetJson.getInt("music"))
+            val musicList = UpdateCheck.checkMusic(updateJson.music)
 
             val langFiles = ArrayList<String>()
 
@@ -235,6 +192,8 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 }
             }
         } catch (e: Exception) {
+            ErrorLogWriter.writeLog(e, StaticStore.upload, ac)
+
             e.printStackTrace()
 
             CommonStatic.getConfig().localLangMap.clear()
@@ -323,52 +282,38 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     }
 
     private fun goToApkDownloadScreen(ac: Activity, thatVersion: String) {
-        val thisVersion = ac.packageManager.getPackageInfo(ac.packageName, 0).versionName
+        val apkDialog = AlertDialog.Builder(ac)
 
-        val thisNum = thisVersion.split(".")
-        val thatNum = thatVersion.split(".")
+        apkDialog.setCancelable(false)
 
-        val update = check(thisNum, thatNum)
+        apkDialog.setTitle(R.string.apk_down_title)
 
-        if(update) {
-            val apkDialog = AlertDialog.Builder(ac)
+        val content = ac.getString(R.string.apk_down_content) + thatVersion
 
-            apkDialog.setCancelable(false)
+        apkDialog.setMessage(content)
+        apkDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
+            val intent = Intent(ac, ApkDownload::class.java)
+            dontGo = true
 
-            apkDialog.setTitle(R.string.apk_down_title)
+            intent.putExtra("ver", thatVersion)
 
-            val content = ac.getString(R.string.apk_down_content) + thatVersion
+            ac.startActivity(intent)
+            ac.finish()
 
-            apkDialog.setMessage(content)
-            apkDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
-                val intent = Intent(ac, ApkDownload::class.java)
-                dontGo = true
-
-                intent.putExtra("ver", thatVersion)
-
-                ac.startActivity(intent)
-                ac.finish()
-
-                synchronized(stopper) {
-                    pause = false
-                    stopper.notifyAll()
-                }
-            }
-
-            apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
-                synchronized(stopper) {
-                    pause = false
-                    stopper.notifyAll()
-                }
-            }
-
-            apkDialog.show()
-        } else {
             synchronized(stopper) {
                 pause = false
                 stopper.notifyAll()
             }
         }
+
+        apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
+            synchronized(stopper) {
+                pause = false
+                stopper.notifyAll()
+            }
+        }
+
+        apkDialog.show()
     }
 
     private fun showUpdateNotice(ac: Activity, canContinue: Boolean, title: String, reformatRequired: Boolean) {
@@ -440,24 +385,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
     }
 
-    private fun getAssetJson() : JSONObject {
-        val url = URL("https://raw.githubusercontent.com/battlecatsultimate/bcu-page/master/api/getUpdate.json")
-
-        val connection = url.openConnection() as HttpURLConnection
-
-        val bfr = BufferedReader(InputStreamReader(connection.inputStream, StandardCharsets.UTF_8))
-
-        val sb = StringBuilder()
-
-        var len: Int
-
-        while(bfr.read().also { len = it } != -1) {
-            sb.append(len.toChar())
-        }
-
-        return JSONObject(sb.toString())
-    }
-
     private val langNeed: Boolean
         get() {
             val ac = w.get() ?: return true
@@ -478,4 +405,22 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
             return false
         }
+
+    private fun checkApk(apks: Array<UpdateCheck.UpdateJson.ApkJson>) : UpdateCheck.UpdateJson.ApkJson? {
+        val ac = w.get() ?: return null
+        val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
+        val ver = ac.packageManager.getPackageInfo(ac.packageName, 0).versionName
+        val allowTest = shared.getBoolean("apktest", false)
+
+        for(apk in apks.reversedArray()) {
+            if(!apk.isTest || allowTest) {
+                println("${apk.ver} : ${check(ver.split("."), apk.ver.split("."))}")
+                if(check(ver.split("."), apk.ver.split(".")))
+                    return apk
+            }
+        }
+
+        return null
+    }
 }
