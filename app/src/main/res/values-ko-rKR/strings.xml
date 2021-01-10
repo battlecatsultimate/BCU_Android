@@ -760,8 +760,6 @@
     <string name="eff_kb">날려버린다</string>
     <string name="eff_sn">스냥이퍼</string>
     <string name="eff_zd">좀비 죽음</string>
-    <string name="eff_brbreake">베리어 파괴 적 측면</string>
-    <string name="eff_brbreak">베리어 파괴</string>
     <string name="eff_seal">봉인</string>
     <string name="eff_vdef">맹동 (타입 0 &amp; 양수 데미지)</string>
     <string name="eff_vdefn">맹동 (타입 0 &amp; 음수 데미지)</string>
@@ -824,4 +822,9 @@
     <string name="gif_range">범위</string>
     <string name="config_gif">GIF 추출 크기</string>
     <string name="config_gifsize">뷰어 크기의 _%</string>
+    <string name="eff_atksmoke">공격 먼지</string>
+    <string name="eff_whitesmok">공격 먼지 (원거리 / 전방위)</string>
+    <string name="eff_none">일반</string>
+    <string name="max_respawn">최대 리스폰</string>
+    <string name="min_respawn">최소 리스폰</string>
 </resources>

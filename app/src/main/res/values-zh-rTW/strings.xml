@@ -760,8 +760,6 @@
     <string name="eff_kb">打飛敵人</string>
     <string name="eff_sn">狙擊手</string>
     <string name="eff_zd">不死生物假死</string>
-    <string name="eff_brbreake">破壞護盾 敵方</string>
-    <string name="eff_brbreak">破壞護盾</string>
     <string name="eff_seal">禁咒</string>
     <string name="eff_vdef">毒素 (類型 0  &amp; 正向傷害)</string>
     <string name="eff_vdefn">毒素 (類型 0 &amp; 負向傷害)</string>
@@ -824,4 +822,9 @@
     <string name="gif_range_warn">*選擇錄製橋段</string>
     <string name="config_gif">GIF Exporting Size</string>
     <string name="config_gifsize">_% relative to viewer size</string>
+    <string name="eff_atksmoke">Attack Smoke</string>
+    <string name="eff_whitesmok">Attack Smoke (LD / Omni)</string>
+    <string name="eff_none">None</string>
+    <string name="max_respawn">Max Respawn</string>
+    <string name="min_respawn">Min Respawn</string>
 </resources>
