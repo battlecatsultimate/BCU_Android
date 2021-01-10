@@ -23,6 +23,7 @@ import common.pack.Identifier
 import common.util.stage.Limit
 import common.util.stage.Stage
 import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
 
 class StageRecycle(private val activity: Activity, private val data: Identifier<Stage>) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
@@ -60,7 +61,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val chanceText: TextView = itemView.findViewById(R.id.stfinfochance)
         val loop: TextView = itemView.findViewById(R.id.stginfoloopt)
         val loop1: TextView = itemView.findViewById(R.id.stginfoloop1t)
-
+        val minres: TextView = itemView.findViewById(R.id.stginfominrest)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -105,7 +106,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             viewHolder.stgpack.text = s.getPackName(st.cont.cont.sid, isRaw)
         }
 
-        val arrayAdapter = ArrayAdapter(activity, R.layout.spinneradapter, stars)
+        val arrayAdapter = ArrayAdapter(activity, R.layout.spinnerdefault, stars)
         viewHolder.star.adapter = arrayAdapter
         viewHolder.star.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -186,6 +187,8 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         })
 
         viewHolder.music.setOnLongClickListener {
+            st.mus0 ?: return@setOnLongClickListener true
+
             StaticStore.showShortMessage(activity, st.mus0.pack)
 
             true
@@ -212,6 +215,8 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         })
 
         viewHolder.music2.setOnLongClickListener {
+            st.mus1 ?: return@setOnLongClickListener true
+
             StaticStore.showShortMessage(activity, st.mus1.pack)
 
             true
@@ -225,6 +230,8 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         viewHolder.background.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
+                st.bg ?: return
+
                 val intent = Intent(activity, ImageViewer::class.java)
                 intent.putExtra("Data", JsonEncoder.encode(st.bg).toString())
 
@@ -233,15 +240,23 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         })
 
         viewHolder.background.setOnLongClickListener {
+            st.bg ?: return@setOnLongClickListener true
+
             StaticStore.showShortMessage(activity, st.bg.pack)
 
             true
         }
 
-        viewHolder.castle.text = StaticStore.generateIdName(st.castle, activity)
+        viewHolder.castle.text = if(st.castle == null) {
+            "None"
+        } else {
+            StaticStore.generateIdName(st.castle, activity)
+        }
 
         viewHolder.castle.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
+                st.castle ?: return
+
                 if (st.cont.cont.sid == "000003" && stm.id.id == 11)
                     return
                 else {
@@ -257,10 +272,14 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         })
 
         viewHolder.castle.setOnLongClickListener {
+            st.castle ?: return@setOnLongClickListener true
+
             StaticStore.showShortMessage(activity, st.castle.pack)
 
             true
         }
+
+        viewHolder.minres.text = toFrame(st.minSpawn, st.maxSpawn)
 
         if (st.info != null) {
             if (st.info.drop.isNotEmpty()) {
@@ -335,7 +354,8 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         var time = (t.toDouble() - min * 60.0 * 1000.0) / 1000.0
 
-        val df = DecimalFormat("#.###")
+        val df = NumberFormat.getInstance(Locale.US) as DecimalFormat
+        df.applyPattern("#.###")
 
         time = df.format(time).toDouble()
 
@@ -348,6 +368,14 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             "$min:0${df.format(time)}"
         } else {
             "$min:${df.format(time)}"
+        }
+    }
+
+    private fun toFrame(min: Int, max: Int) : String {
+        return if(min == max) {
+            "${min}f"
+        } else {
+            "${min}f ~ ${max}f"
         }
     }
 }
