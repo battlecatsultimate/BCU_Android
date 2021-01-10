@@ -298,8 +298,11 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this@MainActivity, classes[index])
 
                         startActivity(intent)
-                    }
 
+                        if(classes[index] == PackManagement::class.java) {
+                            finish()
+                        }
+                    }
                 })
 
                 grid.addView(card, gParam)
