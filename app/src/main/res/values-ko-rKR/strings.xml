@@ -827,4 +827,5 @@
     <string name="eff_none">일반</string>
     <string name="max_respawn">최대 리스폰</string>
     <string name="min_respawn">최소 리스폰</string>
+    <string name="down_need_asset">필수 데이터를 찾을 수 없음</string>
 </resources>

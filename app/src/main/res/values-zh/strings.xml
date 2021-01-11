@@ -827,4 +827,5 @@
     <string name="eff_none">None</string>
     <string name="max_respawn">Max Respawn</string>
     <string name="min_respawn">Min Respawn</string>
+    <string name="down_need_asset">Required assets not found</string>
 </resources>
