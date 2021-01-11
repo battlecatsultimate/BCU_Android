@@ -18,7 +18,9 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.CommonStatic
+import common.io.assets.AssetLoader
 import common.io.assets.UpdateCheck
+import common.pack.UserProfile
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -37,6 +39,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/")
 
     private var canGo = true
+    private var downloadStarted = false
 
     private var dontGo = false
 
@@ -137,6 +140,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
 
             if(assetList.isNotEmpty()) {
+                downloadStarted = true
                 mustShow = true
 
                 for(asset in assetList) {
@@ -152,6 +156,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
 
             if(musicList.isNotEmpty()) {
+                downloadStarted = true
                 mustShow = true
 
                 for(music in musicList) {
@@ -167,6 +172,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
 
             if(langList.isNotEmpty()) {
+                downloadStarted = true
                 mustShow = true
 
                 val editor = langShared.edit()
@@ -239,18 +245,22 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             return
 
         if(canGo) {
-            if(mustShow) {
-                notifyBuilder.setContentText(null).setOngoing(false).setContentIntent(null).setProgress(0, 0, false).setContentTitle(ac.getString(R.string.down_state_ok))
-
-                notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
-            }
-
             if(reformatRequired) {
                 ReviveOldFiles(ac, fromConfig).execute()
             } else {
                 AddPathes(ac, fromConfig).execute()
             }
         } else {
+            if(hasAllAsset) {
+                if(reformatRequired) {
+                    ReviveOldFiles(ac, fromConfig).execute()
+                } else {
+                    AddPathes(ac, fromConfig).execute()
+                }
+
+                return
+            }
+
             val retry = ac.findViewById<Button>(R.id.retry)
             val prog = ac.findViewById<ProgressBar>(R.id.prog)
             val state = ac.findViewById<TextView>(R.id.status)
@@ -259,12 +269,16 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             prog.isIndeterminate = false
             prog.progress = 0
 
-            notifyBuilder.setOngoing(false)
-                    .setContentText(ac.getString(R.string.down_state_no)).setAutoCancel(true)
+            if(downloadStarted) {
+                notifyBuilder.setOngoing(false)
+                        .setContentText(ac.getString(R.string.down_state_no)).setAutoCancel(true)
 
-            notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
+                notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
 
-            state.setText(R.string.down_state_no)
+                state.setText(R.string.down_state_no)
+            } else {
+                state.setText(R.string.down_need_asset)
+            }
 
             val connectivityManager = ac.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -423,4 +437,18 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
         return null
     }
+
+    private val hasAllAsset : Boolean
+        get() {
+            val assets = AssetLoader.previewAssets()
+            val require = UserProfile.getPool("required_asset", String::class.java)
+
+            for(asset in require) {
+                if(!assets.contains("asset_$asset")) {
+                    return false
+                }
+            }
+
+            return true
+        }
 }
