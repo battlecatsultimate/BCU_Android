@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil.io
 
 import android.app.Activity
 import android.util.Log
+import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.pack.PackConflict
@@ -154,6 +155,19 @@ class AContext : Context {
             } else if(t == Context.ErrType.ERROR || t == Context.ErrType.FATAL) {
                 Log.e("AContext", str ?: "")
             }
+        }
+    }
+
+    override fun loadProg(str: String?) {
+        val con = c ?: return
+        val a = con.get() ?: return
+
+        try {
+            val text = a.findViewById<TextView>(R.id.status)
+
+            text.text = str
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
