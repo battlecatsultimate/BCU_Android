@@ -84,6 +84,9 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                         stopper.wait()
                     }
                 }
+
+                if(dontGo)
+                    return
             }
 
             val assetList = UpdateCheck.checkAsset(updateJson, "android")
@@ -245,6 +248,16 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             return
 
         if(canGo) {
+            if(mustShow) {
+                notifyBuilder.setContentText(null)
+                        .setOngoing(false)
+                        .setContentIntent(null)
+                        .setProgress(0, 0, false)
+                        .setContentTitle(ac.getString(R.string.down_state_ok))
+
+                notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
+            }
+
             if(reformatRequired) {
                 ReviveOldFiles(ac, fromConfig).execute()
             } else {
@@ -252,6 +265,16 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
         } else {
             if(hasAllAsset) {
+                if(mustShow) {
+                    notifyBuilder.setContentText(null)
+                            .setOngoing(false)
+                            .setContentIntent(null)
+                            .setProgress(0, 0, false)
+                            .setContentTitle(ac.getString(R.string.down_state_ok))
+
+                    notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
+                }
+
                 if(reformatRequired) {
                     ReviveOldFiles(ac, fromConfig).execute()
                 } else {
