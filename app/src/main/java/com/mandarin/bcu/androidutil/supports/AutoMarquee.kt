@@ -38,13 +38,5 @@ class AutoMarquee : AppCompatTextView {
             super.onWindowFocusChanged(true)
     }
 
-    override fun isFocused(): Boolean {
-        return if(needFocus) {
-            super.isFocused()
-        } else {
-            true
-        }
-    }
-
     var needFocus = false
 }
