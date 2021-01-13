@@ -389,7 +389,8 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             }
         }
 
-        updateDialog.show()
+        if(!dontGo)
+            updateDialog.show()
     }
 
     private fun check(thisNum: List<String>, thatNum: List<String>) : Boolean {
