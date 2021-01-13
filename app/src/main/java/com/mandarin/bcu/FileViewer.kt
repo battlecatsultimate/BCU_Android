@@ -85,6 +85,7 @@ class FileViewer : AppCompatActivity() {
             img.visibility = View.GONE
 
             text.text = loadText(f)
+            text.setTextIsSelectable(true)
         }
 
         bck.setOnClickListener {
