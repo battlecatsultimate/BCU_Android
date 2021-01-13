@@ -13,7 +13,9 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.medal.adapters.MedalListAdapter
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.system.files.VFile
+import org.json.JSONObject
 import java.lang.ref.WeakReference
+import java.nio.charset.StandardCharsets
 
 class MedalAdder(activity: Activity) : CoroutineTask<String>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
@@ -33,18 +35,34 @@ class MedalAdder(activity: Activity) : CoroutineTask<String>() {
 
         publishProgress(StaticStore.TEXT, activity.getString(R.string.medal_reading_icon))
 
+        val order = getMedalWithOrder()
+
         val path = "./org/page/medal/"
 
         if (StaticStore.medals.isEmpty()) {
-            for (i in 0 until StaticStore.medalnumber) {
-                val name = "medal_" + number(i) + ".png"
+            if(order.isEmpty() || order.size != StaticStore.medalnumber) {
+                for (i in 0 until StaticStore.medalnumber) {
+                    val name = "medal_" + number(i) + ".png"
 
-                val medal = VFile.get("$path$name").data.img.bimg()
+                    val medal = VFile.get("$path$name").data.img.bimg()
 
-                if (medal == null) {
-                    StaticStore.medals.add(StaticStore.empty(1, 1))
-                } else {
-                    StaticStore.medals.add(medal as Bitmap)
+                    if (medal == null) {
+                        StaticStore.medals.add(StaticStore.empty(1, 1))
+                    } else {
+                        StaticStore.medals.add(medal as Bitmap)
+                    }
+                }
+            } else {
+                for(i in 0 until StaticStore.medalnumber) {
+                    val name = "medal_"+number(order[i]) +".png"
+
+                    val medal = VFile.get("$path$name").data.img.bimg()
+
+                    if (medal == null) {
+                        StaticStore.medals.add(StaticStore.empty(1, 1))
+                    } else {
+                        StaticStore.medals.add(medal as Bitmap)
+                    }
                 }
             }
         }
@@ -70,7 +88,7 @@ class MedalAdder(activity: Activity) : CoroutineTask<String>() {
 
                 prog.isIndeterminate = true
 
-                val width = StaticStore.getScreenWidth(activity)
+                val width = StaticStore.getScreenWidth(activity, false)
                 val wh: Float = if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 72f else 90f
                 val num = (width - StaticStore.dptopx(16f, activity)) / StaticStore.dptopx(wh, activity)
                 var line = StaticStore.medalnumber / num
@@ -128,4 +146,53 @@ class MedalAdder(activity: Activity) : CoroutineTask<String>() {
         }
     }
 
+    private fun getMedalWithOrder() : ArrayList<Int> {
+        val res = ArrayList<Int>()
+        val compare = ArrayList<Int>()
+
+        val vfile = VFile.get("./org/data/medallist.json") ?: return res
+
+        val json = String(vfile.data.bytes, StandardCharsets.UTF_8)
+
+        val jsonObj = JSONObject(json)
+
+        if(jsonObj.has("iconID")) {
+            val array = jsonObj.getJSONArray("iconID")
+
+            for(i in 0 until array.length()) {
+                if(array.isNull(i)) {
+                    res.clear()
+                    return res
+                }
+
+                val arr = array.getJSONObject(i)
+
+                if(!arr.has("line")) {
+                    res.clear()
+                    return res
+                }
+
+                val line = arr.getInt("line")
+
+                inject(res, compare, line, i)
+            }
+
+            return res
+        } else {
+            return res
+        }
+    }
+
+    private fun inject(res: ArrayList<Int>, compare: ArrayList<Int>, data: Int, index: Int) {
+        for(i in res.indices) {
+            if(data <= compare[i]) {
+                compare.add(i, data)
+                res.add(i, index)
+                return
+            }
+        }
+
+        compare.add(data)
+        res.add(index)
+    }
 }
