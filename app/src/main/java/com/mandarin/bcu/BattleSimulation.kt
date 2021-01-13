@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -42,13 +43,6 @@ class BattleSimulation : AppCompatActivity() {
             }
         }
 
-        @Suppress("DEPRECATION")
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }
-
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
@@ -58,6 +52,23 @@ class BattleSimulation : AppCompatActivity() {
         (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_battle_simulation)
+
+        val att = window.attributes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            att.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+
+        @Suppress("DEPRECATION")
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val controller = window.insetsController
+
+            if(controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
 
         SoundHandler.inBattle = true
 
