@@ -39,7 +39,7 @@ object Revalidater {
                 else if(i is PackData.UserPack) {
                     var k = i.desc.name
 
-                    if(k.isEmpty()) {
+                    if(k == null || k.isEmpty()) {
                         k = i.desc.id
                     }
 
