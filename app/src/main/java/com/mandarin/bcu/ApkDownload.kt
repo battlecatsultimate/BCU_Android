@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -58,7 +59,7 @@ class ApkDownload : AppCompatActivity() {
 
         requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 786)
 
-        if (ContextCompat.checkSelfPermission(this@ApkDownload, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || ContextCompat.checkSelfPermission(this@ApkDownload, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             val result = intent
 
             if (result.getStringExtra("ver") != null) {
@@ -66,8 +67,9 @@ class ApkDownload : AppCompatActivity() {
                 val filestart = "BCU_Android_"
                 val apk = ".apk"
                 val realpath = path + filestart + ver + apk
-                val url = "https://github.com/battlecatsultimate/bcu-assets/raw/master/apk/BCU_Android_"
-                val realurl = url + ver + apk
+                val url = "https://github.com/battlecatsultimate/bcu-assets/blob/master/apk/BCU_Android_"
+                val end = "?raw=true"
+                val realurl = url + ver + apk + end
                 val retry = findViewById<Button>(R.id.apkretry)
                 retry.visibility = View.GONE
                 val prog = findViewById<ProgressBar>(R.id.apkprog)
