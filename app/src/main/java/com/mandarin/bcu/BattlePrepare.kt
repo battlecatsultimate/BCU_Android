@@ -66,9 +66,9 @@ class BattlePrepare : AppCompatActivity() {
         val layout = findViewById<LinearLayout>(R.id.preparelineup)
 
         val w: Float = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            StaticStore.getScreenWidth(this).toFloat() / 2.0f
+            StaticStore.getScreenWidth(this, false).toFloat() / 2.0f
         else
-            StaticStore.getScreenWidth(this).toFloat()
+            StaticStore.getScreenWidth(this, false).toFloat()
 
         val h = w / 5.0f * 3
 

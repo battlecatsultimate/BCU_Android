@@ -9,9 +9,7 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Environment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -244,7 +242,7 @@ class MainActivity : AppCompatActivity() {
 
         val gap = StaticStore.dptopx(4f, this)
 
-        val w = StaticStore.getScreenWidth(this) - StaticStore.dptopx(32f, this) - gap * 4
+        val w = StaticStore.getScreenWidth(this, false) - StaticStore.dptopx(32f, this) - gap * 4
 
         grid.rowCount = row
         grid.columnCount = col

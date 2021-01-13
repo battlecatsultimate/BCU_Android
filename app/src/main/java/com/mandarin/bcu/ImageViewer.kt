@@ -7,9 +7,12 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -128,8 +131,8 @@ class ImageViewer : AppCompatActivity() {
                 prog.visibility = View.GONE
                 forms.visibility = View.GONE
 
-                val width = StaticStore.getScreenWidth(this)
-                val height = StaticStore.getScreenHeight(this)
+                val width = StaticStore.getScreenWidth(this, false)
+                val height = StaticStore.getScreenHeight(this, false)
                 val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
                 paint.isFilterBitmap = true

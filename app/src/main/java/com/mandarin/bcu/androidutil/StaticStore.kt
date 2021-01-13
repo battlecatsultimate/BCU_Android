@@ -72,7 +72,7 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.15.1"
+    const val VER = "0.15.2"
 
     /**File ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
@@ -1259,34 +1259,72 @@ object StaticStore {
     }
 
     @Suppress("DEPRECATION")
-    fun getScreenWidth(ac: Activity) : Int {
+    fun getScreenWidth(ac: Activity, stretch: Boolean) : Int {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val m = ac.windowManager.currentWindowMetrics
             val i = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
-            m.bounds.width() - i.left - i.right
+            if(stretch) {
+                m.bounds.width() - i.left - i.right
+            } else {
+                val cutout = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout())
+
+                m.bounds.width() - i.left - i.right - cutout.left - cutout.right
+            }
         } else {
             val d = DisplayMetrics()
 
             ac.windowManager.defaultDisplay.getMetrics(d)
 
-            d.widthPixels
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val cutout = ac.windowManager.defaultDisplay.cutout
+
+                if(cutout != null) {
+                    val rectl = cutout.boundingRectLeft
+                    val rectr = cutout.boundingRectRight
+
+                    d.widthPixels - rectl.width() - rectr.width()
+                } else {
+                    d.widthPixels
+                }
+            } else {
+                d.widthPixels
+            }
         }
     }
 
     @Suppress("DEPRECATION")
-    fun getScreenHeight(ac: Activity) : Int {
+    fun getScreenHeight(ac: Activity, stretch: Boolean) : Int {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val m = ac.windowManager.currentWindowMetrics
             val i = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
-            m.bounds.height() - i.top - i.bottom
+            if(stretch) {
+                m.bounds.height() - i.top - i.bottom
+            } else {
+                val cutout = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout())
+
+                m.bounds.height() - i.top - i.bottom - cutout.top - cutout.bottom
+            }
         } else {
             val d = DisplayMetrics()
 
             ac.windowManager.defaultDisplay.getMetrics(d)
 
-            d.heightPixels
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val cutout = ac.windowManager.defaultDisplay.cutout
+
+                if(cutout != null) {
+                    val rectt = cutout.boundingRectTop
+                    val rectb = cutout.boundingRectBottom
+
+                    d.heightPixels - rectt.height() - rectb.height()
+                } else {
+                    d.heightPixels
+                }
+            } else {
+                d.heightPixels
+            }
         }
     }
 }

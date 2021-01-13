@@ -57,7 +57,7 @@ class LineUpScreen : AppCompatActivity() {
 
         val layout = findViewById<LinearLayout>(R.id.lineuplayout)
 
-        val w = StaticStore.getScreenWidth(this)
+        val w = StaticStore.getScreenWidth(this, false)
         val h = w / 5.0f * 3
 
         line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())

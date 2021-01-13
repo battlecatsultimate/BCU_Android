@@ -204,7 +204,7 @@ class MusicLoader(activity: Activity) : CoroutineTask<String>() {
                 vol.progress = MusicPlayer.volume
 
                 if (ac.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    val w = StaticStore.getScreenWidth(ac)
+                    val w = StaticStore.getScreenWidth(ac, false)
 
                     ah = w / 2
 
