@@ -40,7 +40,7 @@
 
         <ProgressBar
             android:id="@+id/prog"
-            style="?android:attr/progressBarStyle"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -59,127 +59,159 @@
             app:layout_constraintStart_toStartOf="@+id/prog"
             app:layout_constraintTop_toBottomOf="@+id/prog" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/unitinfscroll"
-            android:layout_width="0dp"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/unitcoord"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/animanim"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:backgroundTint="?attr/ButtonPrimary"
-                    android:text="@string/anim_anim"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/TextPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/unitinfrec"
+                android:layout_height="wrap_content"
+                android:background="?attr/backgroundPrimary">
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/animanim">
+                    app:layout_scrollFlags="scroll|enterAlways">
 
-                </androidx.recyclerview.widget.RecyclerView>
+                    <androidx.appcompat.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:contentInsetStart="0dp"
+                        app:contentInsetStartWithNavigation="0dp"
+                        app:titleMargin="0dp">
 
-                <com.mandarin.bcu.androidutil.supports.MeasureViewPager
-                    android:id="@+id/unitinfpager"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/unitinfexplain"
+                            <Button
+                                android:id="@+id/animanim"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp"
+                                android:backgroundTint="?attr/ButtonPrimary"
+                                android:text="@string/anim_anim"
+                                android:textAllCaps="false"
+                                android:textColor="?attr/TextPrimary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.appcompat.widget.Toolbar>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/unitinfscroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfexp"
-                    app:tabGravity="fill"
-                    app:tabMaxWidth="0dp"
-                    app:tabPaddingEnd="24dp"
-                    app:tabPaddingStart="24dp"
-                    app:tabTextColor="?attr/TextPrimary" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/unitinfexp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/unit_info_extitle"
-                    android:textColor="?attr/TextPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfrec" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/unitinfrec"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/cfinftext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/unit_info_catfruit"
-                    android:textColor="?attr/TextPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view" />
+                    </androidx.recyclerview.widget.RecyclerView>
 
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/TableBorder"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfpager" />
+                    <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+                        android:id="@+id/unitinfpager"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
 
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/TableBorder"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/unitinfexplain" />
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/unitinfexplain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinfexp"
+                        app:tabGravity="fill"
+                        app:tabMaxWidth="0dp"
+                        app:tabPaddingEnd="24dp"
+                        app:tabPaddingStart="24dp"
+                        app:tabTextColor="?attr/TextPrimary" />
 
-                <com.mandarin.bcu.androidutil.supports.MeasureViewPager
-                    android:id="@+id/catfruitpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cfinftext">
+                    <TextView
+                        android:id="@+id/unitinfexp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/unit_info_extitle"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinfrec" />
 
-                </com.mandarin.bcu.androidutil.supports.MeasureViewPager>
+                    <TextView
+                        android:id="@+id/cfinftext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/unit_info_catfruit"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/TableBorder"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinfpager" />
+
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/TableBorder"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/unitinfexplain" />
+
+                    <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+                        android:id="@+id/catfruitpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cfinftext">
+
+                    </com.mandarin.bcu.androidutil.supports.MeasureViewPager>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/unitinfback"
@@ -225,12 +257,12 @@
             android:theme="?attr/TILtheme"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/unitinfscroll"
+            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar2"
             app:layout_constraintVertical_bias="0.0"
             tools:context=".UnitInfo">
 
-            <ScrollView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/tab_border"
@@ -442,7 +474,7 @@
                         app:layout_constraintTop_toTopOf="@+id/treasurename" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
