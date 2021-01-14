@@ -43,6 +43,9 @@ class AContext : Context {
         Log.e("AContext", str)
         e.printStackTrace()
 
+        if(str.contains("err during formatting"))
+            return
+
         if(str.contains("failed to load external pack")) {
             val path = str.split("/")
 
