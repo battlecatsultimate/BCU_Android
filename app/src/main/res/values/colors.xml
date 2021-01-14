@@ -20,4 +20,5 @@
     <color name="status_warning">#ffc400</color>
     <color name="status_approve">#4caf50</color>
     <color name="BorderPrimary">#33999999</color>
+    <color name="Transparent">#00000000</color>
 </resources>

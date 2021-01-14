@@ -32,11 +32,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar8"
         app:layout_constraintStart_toStartOf="@+id/toolbar8"
         app:layout_constraintTop_toTopOf="@+id/toolbar8"
-        app:srcCompat="@drawable/back_button" />
+        app:srcCompat="@drawable/back_button"
+        android:contentDescription="@null" />
 
     <ProgressBar
         android:id="@+id/prog"
-        style="?android:attr/progressBarStyle"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

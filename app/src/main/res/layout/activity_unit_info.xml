@@ -40,7 +40,7 @@
 
         <ProgressBar
             android:id="@+id/prog"
-            style="?android:attr/progressBarStyle"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     app:tabGravity="fill"
                     app:tabMaxWidth="0dp"
-                    app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+                    app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
                     app:tabTextColor="?attr/TextPrimary" />
 
             </com.google.android.material.appbar.AppBarLayout>
