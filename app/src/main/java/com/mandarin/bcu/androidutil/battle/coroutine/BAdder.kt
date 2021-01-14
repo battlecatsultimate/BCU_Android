@@ -279,9 +279,6 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 velocity?.addMovement(event)
                                 velocity?.computeCurrentVelocity(1000/30)
 
-                                println(velocity?.xVelocity)
-                                println(six)
-
                                 if(!twoTouched && !vertical && (horizontal || (!battleView.isInSlideRange() && abs(velocity?.xVelocity ?: 0f) > abs(velocity?.yVelocity ?: 0f) && abs(velocity?.xVelocity ?: 0f) > six))) {
                                     battleView.painter.pos += x2 - preX
                                     horizontal = true

@@ -87,7 +87,6 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
         when(type) {
             AnimationCView.EFFECT -> {
                 for(id in data.indices) {
-                    println(data[id].types().contentToString())
                     name.add(generateEffName(id, effID[id]))
                 }
             }
