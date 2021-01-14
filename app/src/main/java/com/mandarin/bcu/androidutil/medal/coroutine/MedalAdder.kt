@@ -21,6 +21,7 @@ class MedalAdder(activity: Activity) : CoroutineTask<String>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
 
     private val done = "done"
+    private var order = ArrayList<Int>()
 
     override fun prepare() {
         val activity = weakReference.get() ?: return
@@ -35,7 +36,7 @@ class MedalAdder(activity: Activity) : CoroutineTask<String>() {
 
         publishProgress(StaticStore.TEXT, activity.getString(R.string.medal_reading_icon))
 
-        val order = getMedalWithOrder()
+        order = getMedalWithOrder()
 
         val path = "./org/page/medal/"
 
@@ -89,12 +90,27 @@ class MedalAdder(activity: Activity) : CoroutineTask<String>() {
                 prog.isIndeterminate = true
 
                 val width = StaticStore.getScreenWidth(activity, false)
-                val wh: Float = if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 72f else 90f
+                val wh: Float = if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                    72f
+                else
+                    90f
+
                 val num = (width - StaticStore.dptopx(16f, activity)) / StaticStore.dptopx(wh, activity)
+
                 var line = StaticStore.medalnumber / num
-                if (StaticStore.medalnumber % num != 0) line++
+
+                if (StaticStore.medalnumber % num != 0)
+                    line++
+
                 val lines = arrayOfNulls<String>(line)
-                val adapter = MedalListAdapter(activity, num, width, wh, lines)
+
+                if(order.isEmpty()) {
+                    for(i in 0 until StaticStore.medalnumber) {
+                        order.add(i)
+                    }
+                }
+
+                val adapter = MedalListAdapter(activity, num, width, wh, lines, order)
                 medallist.adapter = adapter
                 medallist.isClickable = false
             }
