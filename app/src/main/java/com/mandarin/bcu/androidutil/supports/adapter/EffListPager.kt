@@ -1,4 +1,4 @@
-package com.mandarin.bcu.androidutil.animation.adapter
+package com.mandarin.bcu.androidutil.supports.adapter
 
 import android.content.Intent
 import android.os.Bundle
@@ -50,7 +50,7 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 , R.string.eff_cursee, R.string.eff_wv, R.string.eff_wve, R.string.eff_arm
                 , R.string.eff_arme, R.string.eff_has, R.string.eff_hase, R.string.eff_weau
                 , R.string.eff_weaue, R.string.eff_minwv, R.string.eff_minwve, R.string.eff_atksmoke
-                , R.string.eff_whitesmok)
+                , R.string.eff_whitesmok, R.string.eff_heal)
 
         val canonID = intArrayOf(R.string.eff_defc, R.string.eff_slowc, R.string.eff_wallc
                 , R.string.eff_stopc, R.string.eff_waterc, R.string.eff_zombc, R.string.eff_breackc
@@ -87,7 +87,10 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
         when(type) {
             AnimationCView.EFFECT -> {
                 for(id in data.indices) {
-                    name.add(generateEffName(id, effID[id]))
+                    name.add(if(id >= effID.size)
+                        generateEffName(id)
+                    else
+                        generateEffName(id, effID[id]))
                 }
             }
             AnimationCView.SOUL -> {
@@ -142,5 +145,9 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
 
     private fun generateEffName(index: Int, id: Int) : String {
         return requireContext().getString(R.string.eff_eff) + " - " + Data.trio(index) + " : "+requireContext().getString(id)
+    }
+
+    private fun generateEffName(index: Int) : String {
+        return requireContext().getString(R.string.eff_eff) + " - " + Data.trio(index)
     }
 }

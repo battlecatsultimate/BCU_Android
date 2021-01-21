@@ -14,7 +14,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
-import com.mandarin.bcu.androidutil.animation.adapter.EffListPager
+import com.mandarin.bcu.androidutil.supports.adapter.EffListPager
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import com.mandarin.bcu.androidutil.supports.SingleClick
