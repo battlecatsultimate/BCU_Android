@@ -72,7 +72,7 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.15.6"
+    const val VER = "0.15.7"
 
     /**File ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
@@ -181,9 +181,7 @@ object StaticStore {
             R.string.talen_sl, R.string.talen_wv, R.string.talen_we, R.string.talen_warp, R.string.talen_cu, R.string.talen_poi, R.string.talen_sur)
 
     /** String ID list of abilities  */
-    var abiid = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.abi_imvatk, R.string.sch_abi_ws,
-            R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.abi_ipoi, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva,
-            R.string.abi_iseal, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id)
+    var abiid = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.abi_imvatk, R.string.sch_abi_ws, R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.abi_ipoi, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva, R.string.abi_iseal, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id)
 
     //Variables for Unit
 

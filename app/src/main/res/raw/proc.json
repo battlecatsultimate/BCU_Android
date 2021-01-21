@@ -614,7 +614,7 @@
         "abbr_name": "Strong Hit",
         "full_name": "Strong Hit",
         "tooltip": null,
-        "format": "(prob)% chance to deal a string hit with (mult)% damage",
+        "format": "(prob)% chance to deal a strong hit with (mult)% damage",
         "class": {
             "prob": {
                 "name": "chance",
