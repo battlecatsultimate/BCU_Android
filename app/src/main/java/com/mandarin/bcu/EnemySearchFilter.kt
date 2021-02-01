@@ -33,7 +33,7 @@ open class EnemySearchFilter : AppCompatActivity() {
     private val attacks = arrayOfNulls<CheckBox>(3)
     private val trid = intArrayOf(R.id.eschchrd, R.id.eschchfl, R.id.eschchbla, R.id.eschchme, R.id.eschchan, R.id.eschchal, R.id.eschchzo, R.id.eschchre, R.id.eschchwh, R.id.eschwit, R.id.escheva, R.id.eschnone)
     private val traits = arrayOfNulls<CheckBox>(trid.size)
-    private val colors = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "0", "10", "9", "")
+    private val colors = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "10", "9", "")
     private val atkid = intArrayOf(R.id.eschchld, R.id.eschchom, R.id.eschchmu)
     private val atks = arrayOf("2", "4", "3")
     private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr,

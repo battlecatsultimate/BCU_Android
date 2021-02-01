@@ -31,7 +31,7 @@ import java.util.*
 
 class SearchFilter : AppCompatActivity() {
     private val tgid = intArrayOf(R.id.schchrd, R.id.schchfl, R.id.schchbla, R.id.schchme, R.id.schchan, R.id.schchal, R.id.schchzo, R.id.schchre, R.id.schchwh)
-    private val colors = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "0")
+    private val colors = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8")
     private val rareid = intArrayOf(R.id.schchba, R.id.schchex, R.id.schchr, R.id.schchsr, R.id.schchur, R.id.schchlr)
     private val rarity = arrayOf("0", "1", "2", "3", "4", "5")
     private val atkid = intArrayOf(R.id.schchld, R.id.schchom, R.id.schchmu)
