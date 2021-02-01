@@ -72,7 +72,7 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.15.8"
+    const val VER = "0.15.9"
 
     /**File ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
@@ -169,7 +169,7 @@ object StaticStore {
     var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison.png", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "CritX.png", "", "", "", "", "", "", "")
 
     /** String ID list of traits  */
-    var colorid = intArrayOf(R.string.sch_wh, R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.esch_eva, R.string.esch_witch)
+    var colorid = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_wh, R.string.esch_eva, R.string.esch_witch)
 
     /** String ID list of star and mask treasure  */
     var starid = intArrayOf(R.string.unit_info_starred, R.string.unit_info_god1, R.string.unit_info_god2, R.string.unit_info_god3)
@@ -1170,9 +1170,9 @@ object StaticStore {
         } catch (e: Exception) {
             Log.e("StaticStore::extractMusic", "Couldn't extract music")
             e.printStackTrace()
-        } finally {
-            return target
         }
+
+        return target
     }
 
     /**
