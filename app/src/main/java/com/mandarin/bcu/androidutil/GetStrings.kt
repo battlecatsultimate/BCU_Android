@@ -8,7 +8,6 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.CustomEntity
 import common.battle.data.MaskUnit
-import common.battle.data.PCoin
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.stage.Limit
@@ -722,13 +721,15 @@ class GetStrings(private val c: Context) {
         ans = when {
             trait.contains(info[index][0]) -> c.getString(R.string.talen_trait) + talTool[info[index][0]]
             basic.contains(info[index][0]) -> talTool[info[index][0]]
-            else -> c.getString(R.string.talen_abil) + when(info[index][10]) {
-                PCoin.FLAG_RELIC_SLOW,
-                PCoin.FLAG_RELIC_WEAK -> c.getString(R.string.sch_re) + " "
-                PCoin.FLAG_ZOMBIE_KB -> c.getString(R.string.sch_zo) + " "
-                PCoin.FLAG_METAL_SLOW -> c.getString(R.string.sch_me) + " "
-                else -> " "
-            } + talTool[info[index][0]]
+            f.pCoin.type != 0 && index == 0 -> {
+                val tr = Interpret.getTrait(f.pCoin.type, 0)
+
+                if(tr.endsWith(", "))
+                    c.getString(R.string.talen_abil) + tr.substring(0, tr.length - 2) + " " + talTool[info[index][0]]
+                else
+                    c.getString(R.string.talen_abil) + tr + " " + talTool[info[index][0]]
+            }
+            else -> c.getString(R.string.talen_abil) + " " + talTool[info[index][0]]
         }
 
         return ans
