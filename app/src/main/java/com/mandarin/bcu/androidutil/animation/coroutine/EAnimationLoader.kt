@@ -166,7 +166,7 @@ class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
-                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position))
+                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position), false)
                             controller.max = cView.anim.len()
                             controller.progress = 0
                             StaticStore.frame = 0
@@ -218,7 +218,7 @@ class EAnimationLoader(activity: Activity, private val data: Identifier<AbEnemy>
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
                 controller.progress = StaticStore.frame
                 anims.setSelection(StaticStore.animposition)
-                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition))
+                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition), false)
                 cView.anim.setTime(StaticStore.frame)
                 controller.max = cView.anim.len()
                 val popup = PopupMenu(activity, option)

@@ -201,7 +201,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
-                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position))
+                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position), false)
 
                             val max = cView.anim.len()
 
@@ -255,7 +255,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
-                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition))
+                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition), false)
                 cView.anim.setTime(StaticStore.frame)
 
                 val max = cView.anim.len()
