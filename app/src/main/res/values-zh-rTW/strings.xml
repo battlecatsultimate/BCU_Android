@@ -829,4 +829,5 @@
     <string name="min_respawn">Min Respawn</string>
     <string name="down_need_asset">Required assets not found</string>
     <string name="eff_heal">Heal</string>
+    <string name="anim_entry">Enter</string>
 </resources>
