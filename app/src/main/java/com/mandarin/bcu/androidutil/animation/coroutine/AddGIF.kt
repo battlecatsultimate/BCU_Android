@@ -46,7 +46,7 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P, siz: Float, night: Boolean, pri
                 if(d != null) {
                     val u = d.get()
 
-                    this.animU = u.forms[StaticStore.formposition].getEAnim(StaticStore.getAnimType(StaticStore.animposition))
+                    this.animU = u.forms[StaticStore.formposition].getEAnim(StaticStore.getAnimType(StaticStore.animposition, u.forms[StaticStore.formposition].anim.anims.size))
                     this.animU.setTime(StaticStore.frame)
                 } else {
                     throw IllegalStateException("Not an unit! : $data")
@@ -59,7 +59,7 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P, siz: Float, night: Boolean, pri
                     val e = d.get()
 
                     if(e != null && e is Enemy) {
-                        this.animU = e.getEAnim(StaticStore.getAnimType(StaticStore.animposition))
+                        this.animU = e.getEAnim(StaticStore.getAnimType(StaticStore.animposition, e.anim.anims.size))
                         this.animU.setTime(StaticStore.frame)
                     } else {
                         throw IllegalStateException("Not an enemy! : $data")

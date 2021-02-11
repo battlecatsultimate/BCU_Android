@@ -100,7 +100,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
                 if(u !is Unit)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return u.forms[form].getEAnim(StaticStore.getAnimType(ind))
+                return u.forms[form].getEAnim(StaticStore.getAnimType(ind, u.forms[form].anim.anims.size))
             }
             AnimationCView.ENEMY -> {
                 if(content !is Identifier<*>)
@@ -111,7 +111,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
                 if(e !is Enemy)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return e.getEAnim(StaticStore.getAnimType(ind))
+                return e.getEAnim(StaticStore.getAnimType(ind, e.anim.anims.size))
             }
             AnimationCView.EFFECT -> {
                 if(content !is EffAnim<*>)

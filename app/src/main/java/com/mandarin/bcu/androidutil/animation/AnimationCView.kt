@@ -82,8 +82,6 @@ class AnimationCView : View {
         this.form = form
         this.data = data
 
-        val value = StaticStore.getAnimType(mode)
-
         val u = Identifier.get(data)
 
         type = UNIT
@@ -95,7 +93,12 @@ class AnimationCView : View {
         this.gif = gif
 
         if(u != null) {
+            u.forms[form].anim.load()
+
+            val value = StaticStore.getAnimType(mode, u.forms[form].anim.anims.size)
+
             anim = u.forms[form].getEAnim(value)
+
             anim.setTime(StaticStore.frame)
             CommonStatic.getConfig().ref = axis
             range.style = Paint.Style.STROKE
@@ -120,8 +123,6 @@ class AnimationCView : View {
         val e = data.get() ?: UserProfile.getBCData().enemies[0]
         activity = context
 
-        val value = StaticStore.getAnimType(mode)
-
         this.data = data
 
         type = ENEMY
@@ -134,6 +135,9 @@ class AnimationCView : View {
 
         if(e is Enemy) {
             e.anim.load()
+
+            val value = StaticStore.getAnimType(mode, e.anim.anims.size)
+
             anim = e.getEAnim(value)
             anim.setTime(StaticStore.frame)
             CommonStatic.getConfig().ref = axis

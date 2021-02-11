@@ -1094,12 +1094,15 @@ object StaticStore {
      *
      * @return Returns [UType] by checking specified [mode]. If [mode] is invalid, it will return [UType.WALK] as default
      */
-    fun getAnimType(mode: Int): UType {
+    fun getAnimType(mode: Int, max: Int): UType {
         return when (mode) {
             1 -> UType.IDLE
             2 -> UType.ATK
             3 -> UType.HB
-            4 -> UType.BURROW_DOWN
+            4 -> if(max == 5)
+                UType.ENTER
+            else
+                UType.BURROW_DOWN
             5 -> UType.BURROW_MOVE
             6 -> UType.BURROW_UP
             else -> UType.WALK

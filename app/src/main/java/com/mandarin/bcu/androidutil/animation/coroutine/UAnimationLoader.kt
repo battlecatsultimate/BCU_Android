@@ -161,7 +161,10 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                 run {
                     var i = 0
                     while (i < u.forms[0].anim.anims.size) {
-                        name.add(activity.getString(animS[i]))
+                        if(i == 4 && u.forms[0].anim.anims.size == 5)
+                            name.add(activity.getString(R.string.anim_entry))
+                        else
+                            name.add(activity.getString(animS[i]))
                         i++
                     }
                 }
@@ -184,7 +187,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, ids: Long) {
                         if (StaticStore.formposition != position) {
                             StaticStore.formposition = position
-                            cView.anim = u.forms[position].getEAnim(StaticStore.getAnimType(anims.selectedItemPosition))
+                            cView.anim = u.forms[position].getEAnim(StaticStore.getAnimType(anims.selectedItemPosition, u.forms[position].anim.anims.size))
 
                             val max = cView.anim.len()
 
@@ -201,7 +204,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (StaticStore.animposition != position) {
                             StaticStore.animposition = position
-                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position), false)
+                            (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position, (cView.anim as EAnimU).anim().anims.size), false)
 
                             val max = cView.anim.len()
 
@@ -255,7 +258,7 @@ open class UAnimationLoader(activity: Activity, private val data: Identifier<Uni
                     override fun onStopTrackingTouch(seekBar: SeekBar) {}
                 })
                 frame.text = activity.getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
-                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition), false)
+                (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(StaticStore.animposition, (cView.anim as EAnimU).anim().anims.size), false)
                 cView.anim.setTime(StaticStore.frame)
 
                 val max = cView.anim.len()

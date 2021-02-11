@@ -241,12 +241,12 @@ class GIFRange : CoroutineTask<String> {
             AnimationCView.UNIT -> {
                 val u = Identifier.get(data as Identifier<*>)
 
-                return (u as Unit).forms[form].getEAnim(StaticStore.getAnimType(ind))
+                return (u as Unit).forms[form].getEAnim(StaticStore.getAnimType(ind, u.forms[form].anim.anims.size))
             }
             AnimationCView.ENEMY -> {
                 val e = Identifier.get(data as Identifier<*>)
 
-                return (e as Enemy).getEAnim(StaticStore.getAnimType(ind))
+                return (e as Enemy).getEAnim(StaticStore.getAnimType(ind, e.anim.anims.size))
             }
             AnimationCView.EFFECT -> {
                 val d = data as EffAnim<*>
