@@ -13,6 +13,7 @@ import common.CommonStatic.BCAuxAssets;
 import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
 import common.battle.StageBasis;
+import common.battle.attack.ContWaveAb;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
 import common.battle.entity.WaprCont;
@@ -375,7 +376,7 @@ public interface BattleBox {
             FakeTransform at = gra.getTransform();
             boolean drawCast = sb.ebase instanceof Entity;
             int posy = (int) (midh - road_h * siz);
-            int posx = (int) ((800 * ratio + off) * siz + pos);
+            int posx = (int) ((sb.ebase.pos * ratio + off) * siz + pos);
             double shake = 0.0;
 
             if(sb.ebase.health <= 0)
@@ -440,7 +441,11 @@ public interface BattleBox {
                 for (int j = 0; j < sb.lw.size(); j++)
                     if (sb.lw.get(j).layer == i) {
                         gra.setTransform(at);
-                        double p = (sb.lw.get(j).pos * ratio + off - wave) * siz + pos;
+                        double p = (sb.lw.get(j).pos * ratio + off ) * siz + pos;
+
+                        if(sb.lw.get(j) instanceof ContWaveAb)
+                            p -= wave * siz;
+
                         double y = midh - (road_h - DEP * sb.lw.get(j).layer) * siz;
                         setP(p, y);
                         sb.lw.get(j).draw(gra, this.p, psiz);
