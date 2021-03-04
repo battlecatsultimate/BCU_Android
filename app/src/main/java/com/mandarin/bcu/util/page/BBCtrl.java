@@ -55,8 +55,8 @@ public class BBCtrl extends BattleBox.BBPainter {
 
             float ratio = dpi/58f;
 
-            int ih = (int) (hr * left.getHeight()*ratio);
-            int iw = (int) (hr * left.getWidth()*ratio);
+            int ih = (int) (hr * left.getHeight());
+            int iw = (int) (hr * left.getWidth());
             if (!new PP(p).out(new P(0, h - ih), new P(iw, h), 0))
                 ctrl.action.add(-1);
 

@@ -185,6 +185,7 @@ public interface BattleBox {
         public void regulate() {
             int w = box.getWidth();
             int h = box.getHeight();
+            double oldSiz = siz;
             if (siz < minSiz)
                 siz = minSiz;
             if (siz >= maxSiz)
@@ -194,7 +195,9 @@ public interface BattleBox {
             if (maxW * siz + pos < w)
                 pos = (int) (w - maxW * siz);
             midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
-
+            if(oldSiz != siz) {
+                System.out.println("Size Different ! : "+oldSiz+" | "+siz);
+            }
         }
 
         public void reset() {
