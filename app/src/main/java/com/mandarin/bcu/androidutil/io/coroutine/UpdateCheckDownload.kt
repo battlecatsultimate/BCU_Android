@@ -453,7 +453,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
         for(apk in apks.reversedArray()) {
             if(!apk.isTest || allowTest) {
-                println("${apk.ver} : ${check(ver.split("."), apk.ver.split("."))}")
                 if(check(ver.split("."), apk.ver.split(".")))
                     return apk
             }
