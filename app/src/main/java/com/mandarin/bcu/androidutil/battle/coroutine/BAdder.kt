@@ -213,7 +213,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                     @SuppressLint("Recycle")
                     override fun onTouch(v: View, event: MotionEvent): Boolean {
-                        detector.onTouchEvent(event)
+                        if(event.pointerCount > 1)
+                            detector.onTouchEvent(event)
 
                         if (preid == -1)
                             preid = event.getPointerId(0)
