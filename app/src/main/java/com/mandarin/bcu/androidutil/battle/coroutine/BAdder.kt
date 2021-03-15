@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Point
 import android.media.MediaPlayer
+import android.os.Build
 import android.view.*
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import android.view.View.OnTouchListener
@@ -33,6 +34,7 @@ import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.util.page.BBCtrl
+import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.SBCtrl
 import common.battle.Treasure
@@ -46,7 +48,7 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.ln
 
-class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int) : CoroutineTask<String>() {
+class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int, private val siz: Double, private val pos: Int) : CoroutineTask<String>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var x = 0f
     private var y = 0f
@@ -110,7 +112,11 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 val axis = shared.getBoolean("Axis", true)
 
-                val view = BattleView(activity, ctrl, 1, axis,activity)
+                val view = BattleView(activity, ctrl, 1, axis,activity, getCutoutWidth(activity))
+
+                view.painter.siz = siz
+                view.painter.pos = pos
+                view.painter.cutout = getCutoutWidth(activity)
 
                 view.initialized = false
                 view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -131,6 +137,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                 val reveal: RelativeLayout = activity.findViewById(R.id.battleconfiglayout)
                 val root: ConstraintLayout = activity.findViewById(R.id.battleroot)
                 val prog = activity.findViewById<ProgressBar>(R.id.prog)
+                val row = activity.findViewById<SwitchMaterial>(R.id.switchrow)
 
                 prog.isIndeterminate = true
 
@@ -194,6 +201,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                         actionButton.visibility = View.VISIBLE
                         reveal.visibility = View.GONE
                         battleView.paused = false
+
+                        battleView.invalidate()
 
                         fast.show()
                         slow.show()
@@ -674,9 +683,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 SoundHandler.MUSIC = SoundPlayer()
 
-                val preferences = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-
-                val muvol = (1 - ln(100 - preferences.getInt("mus_vol", 99).toDouble()) / ln(100.0)).toFloat()
+                val muvol = (1 - ln(100 - shared.getInt("mus_vol", 99).toDouble()) / ln(100.0)).toFloat()
 
                 SoundHandler.MUSIC.setVolume(muvol, muvol)
 
@@ -736,6 +743,28 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             }
                         })
                     }
+                }
+
+                row.isChecked = shared.getBoolean("rowlayout", true)
+                row.text = if(CommonStatic.getConfig().twoRow)
+                    activity.getString(R.string.battle_tworow)
+                else
+                    activity.getString(R.string.battle_onerow)
+
+                row.setOnCheckedChangeListener {_, isChecked ->
+                    val editor = shared.edit()
+
+                    CommonStatic.getConfig().twoRow = isChecked
+                    editor.putBoolean("rowlayout", isChecked)
+
+                    editor.apply()
+
+                    row.text = if(isChecked)
+                        activity.getText(R.string.battle_tworow)
+                    else
+                        activity.getText(R.string.battle_onerow)
+
+                    battleView.invalidate()
                 }
             }
         }
@@ -807,6 +836,25 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
             }
 
             return super.onScaleBegin(detector)
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun getCutoutWidth(ac: Activity) : Double {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val m = ac.windowManager.currentWindowMetrics
+
+            val cutout = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout())
+
+            return cutout.left.coerceAtLeast(cutout.right).toDouble()
+        } else {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val cutout = ac.windowManager.defaultDisplay.cutout ?: return 0.0
+
+                return cutout.boundingRectLeft.width().coerceAtLeast(cutout.boundingRectRight.width()).toDouble()
+            } else {
+                0.0
+            }
         }
     }
 }

@@ -44,6 +44,7 @@ public interface BattleBox {
         private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0, 0 };
         private static final DecimalFormat df;
         private static final double bar = 8;
+        protected static final int BOTTOM_GAP = 48;
 
         static {
             NumberFormat nf = NumberFormat.getInstance(Locale.US);
@@ -93,6 +94,7 @@ public interface BattleBox {
         private double groundHeight = -1;
 
         public int dpi = -1;
+        public double cutout = 0;
 
         private final BCAuxAssets aux = CommonStatic.getBCAssets();
 
@@ -130,7 +132,7 @@ public interface BattleBox {
 
             ImgCore.set(g);
             setP(box.getWidth(), box.getHeight());
-            sb.bg.draw(g, p, pos, midh, siz, (int) groundHeight);
+            sb.bg.draw(g, p, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
             drawCastle(g);
             if(sb.can == sb.max_can && sb.canon.id == 0) {
                 drawCannonRange(g);
@@ -185,18 +187,23 @@ public interface BattleBox {
         public void regulate() {
             int w = box.getWidth();
             int h = box.getHeight();
-            double oldSiz = siz;
+
             if (siz < minSiz)
                 siz = minSiz;
+
             if (siz >= maxSiz)
                 siz = maxSiz;
+
             if (pos > 0)
                 pos = 0;
+
             if (maxW * siz + pos < w)
                 pos = (int) (w - maxW * siz);
+
             midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
-            if(oldSiz != siz) {
-                System.out.println("Size Different ! : "+oldSiz+" | "+siz);
+
+            if(CommonStatic.getConfig().twoRow) {
+                midh -= h * 0.75 / 10.0;
             }
         }
 
@@ -233,13 +240,15 @@ public interface BattleBox {
             corr = hr = Math.min(r, hr);
             int ih = (int) (hr * left.getHeight());
             int iw = (int) (hr * left.getWidth());
-            g.drawImage(left, 0, h - ih, iw, ih);
+            g.drawImage(left, cutout - BOTTOM_GAP * hr, h - ih, iw, ih);
             iw = (int) (hr * right.getWidth());
             ih = (int) (hr * right.getHeight());
-            g.drawImage(right, w - iw, h - ih, iw, ih);
-            setSym(g, hr,  hr*5, h-hr*5, 2);
+            g.drawImage(right, w - iw - cutout + BOTTOM_GAP * hr, h - ih, iw, ih);
+            double text;
+
+            setSym(g, hr,  hr * 5 + cutout, h-hr*5, 2);
             Res.getCost(sb.next_lv, mtype > 0, sym);
-            setSym(g, hr, hr * 5, h-hr*130, 0);
+            setSym(g, hr, hr * 5 + cutout, h-hr*130, 0);
             Res.getWorkerLv(sb.work_lv, mtype > 0, sym);
             int hi = h;
             double marg = 0;
@@ -254,7 +263,7 @@ public interface BattleBox {
                         ih++;
                     }
                     hi -= ih;
-                    g.drawImage(img, w - iw, hi, iw, ih);
+                    g.drawImage(img, w - iw - cutout + BOTTOM_GAP * hr, hi, iw, ih);
                 }
             if(sb.can == sb.max_can) {
                 FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
@@ -262,19 +271,33 @@ public interface BattleBox {
                 int fw = (int) (hr * fire.getWidth());
                 int fh = (int) (hr * fire.getHeight());
 
-                g.drawImage(fire, w - fw - 4 * hr, h - fh - 4 * hr, fw, fh);
+                double fir;
+
+                if(cutout != 0) {
+                    fir = w - fw - 4 * hr - cutout;
+                } else {
+                    fir = w - fw - 4 * hr;
+                }
+
+                g.drawImage(fire, fir, h - fh - 4 * hr, fw, fh);
             }
             //Decide lineup icon's size, 0.675 is guessed value by comparing BC and BCU
             hr = avah * 0.675 / aux.slot[0].getImg().getHeight();
             //Make lineup won't cover cannon button and money upgrade button
-            hr = Math.min(hr, (box.getWidth()-iw*2.0)/aux.slot[0].getImg().getWidth()/5.9);
+            hr = Math.min(hr, (box.getWidth()-iw*2.0-cutout*2)/aux.slot[0].getImg().getWidth()/5.9);
             double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
 
-            if(sb.isOneLineup) {
-                drawLineup(g, w, h, hr, term, false, 0);
+            if(CommonStatic.getConfig().twoRow) {
+                double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
+
+                drawLineupWithTwoRows(g, w, h, hr, term, termh);
             } else {
-                drawLineup(g, w, h, hr, term, true, 1-sb.frontLineup);
-                drawLineup(g, w, h, hr, term, false, sb.frontLineup);
+                if(sb.isOneLineup) {
+                    drawLineup(g, w, h, hr, term, false, 0);
+                } else {
+                    drawLineup(g, w, h, hr, term, true, 1-sb.frontLineup);
+                    drawLineup(g, w, h, hr, term, false, sb.frontLineup);
+                }
             }
 
             unir = hr;
@@ -293,9 +316,54 @@ public interface BattleBox {
             }
         }
 
+        private void drawLineupWithTwoRows(FakeGraphics g, int w, int h, double hr, double term, double termh) {
+            int iw;
+            int ih;
+
+            for (int i = 0; i < 2; i++) {
+                for(int j = 0; j < 5; j++) {
+                    Form f = sb.b.lu.fs[i][j];
+                    FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+
+                    iw = (int) (hr * img.getWidth());
+                    ih = (int) (hr * img.getHeight());
+
+                    int x = (w - iw * 5) / 2 + iw * (j % 5) + (int) (term * ((j % 5) - 2));
+                    int y = (int) (h - (2 - i) * (ih + termh));
+
+                    g.drawImage(img, x, y, iw, ih);
+
+                    if(f == null)
+                        continue;
+
+                    int pri = sb.elu.price[i][j];
+                    if (pri == -1)
+                        g.colRect(x, y, iw, ih, 255, 0, 0, 100);
+                    int cool = sb.elu.cool[i][j];
+                    boolean b = pri > sb.mon || cool > 0;
+                    if (b)
+                        g.colRect(x, y, iw, ih, 0, 0, 0, 100);
+                    if (sb.locks[i][j])
+                        g.colRect(x, y, iw, ih, 0, 255, 0, 100);
+                    if (cool > 0) {
+                        int dw = (int) (hr * 10);
+                        int dh = (int) (hr * 12);
+                        double cd = 1.0 * cool / sb.elu.maxC[i][j];
+                        int xw = (int) (cd * (iw - dw * 2));
+                        g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
+                        g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
+                    } else {
+                        setSym(g, hr, x + iw, y + ih, 3);
+                        Res.getCost(pri, !b, sym);
+                    }
+                }
+            }
+        }
+
         private void drawLineup(FakeGraphics g, int w, int h, double hr, double term, boolean isBehind, int index) {
             int iw;
             int ih;
+
             for (int i = 0; i < 5; i++) {
                 Form f = sb.b.lu.fs[index][i];
                 FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
@@ -358,6 +426,8 @@ public interface BattleBox {
             for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++) {
                 rang -= 405;
             }
+
+            rang = Math.max(rang, sb.ebase.pos * ratio - off / 2.0);
 
             rang = getX(rang);
 
@@ -542,7 +612,7 @@ public interface BattleBox {
             g.setComposite(CVGraphics.POSITIVE, 0, 0);
             int w = box.getWidth();
             double ratio = dpi / 42.0;
-            setSym(g, ratio, w-aux.num[0][0].getImg().getWidth()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
+            setSym(g, ratio, w-aux.num[0][0].getImg().getWidth()*0.2 - cutout, aux.num[0][0].getImg().getHeight()*0.2, 1);
             P p = Res.getMoney((int) sb.mon, sb.max_mon, sym);
             int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
             int n = 0;
@@ -550,17 +620,17 @@ public interface BattleBox {
             int cw = (int) (bimg.getWidth() * ratio);
             if ((sb.conf[0] & 2) > 0 && sb.sniper != null) {
                 bimg = aux.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
-                g.drawImage(bimg, w - cw, ih, dpi, dpi);
+                g.drawImage(bimg, w - cw - cutout, ih, dpi, dpi);
                 n++;
             }
             bimg = aux.battle[2][1].getImg();
             if ((sb.conf[0] & 1) > 0) {
-                g.drawImage(bimg, w - cw * (n + 1), ih, dpi, dpi);
+                g.drawImage(bimg, w - cw * (n + 1) - cutout, ih, dpi, dpi);
                 n++;
             }
             bimg = aux.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
             for (int i = 0; i < Math.abs(page.getSpeed()); i++)
-                g.drawImage(bimg, w - cw * (i + 1 + n), ih, dpi, dpi);
+                g.drawImage(bimg, w - cw * (i + 1 + n) - cutout, ih, dpi, dpi);
 
             if(((CVGraphics)g).neg) {
                 g.setComposite(FakeGraphics.GRAY, 0, 0);

@@ -8,6 +8,7 @@
     android:background="?attr/backgroundPrimary"
     android:backgroundTint="?attr/backgroundPrimary"
     android:theme="?attr/TILtheme"
+    tools:ignore="TouchTargetSizeCheck"
     tools:context=".BattleSimulation">
 
     <ProgressBar
@@ -84,6 +85,7 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
+        android:contentDescription="@null"
         android:focusable="true"
         android:transitionName="Battle"
         app:backgroundTint="@color/colorAccent"
@@ -94,7 +96,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_pause_black_24dp"
         app:tint="@color/iconPrimaryN"
-        android:contentDescription="@null" />
+        tools:ignore="DuplicateClickableBoundsCheck,ImageContrastCheck,ImageContrastCheck" />
 
 
     <RelativeLayout
@@ -131,7 +133,7 @@
                     android:text="@string/battle_show_unit"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="12sp"
-                    android:visibility="invisible" />
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/showenemy"
@@ -143,7 +145,19 @@
                     android:text="@string/battle_show_enem"
                     android:textColor="?attr/TextPrimary"
                     android:textSize="12sp"
-                    android:visibility="invisible" />
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/battle_tworow"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switchmus"
@@ -154,7 +168,8 @@
                     android:layout_marginEnd="0dp"
                     android:text="@string/config_music"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <SeekBar
                     android:id="@+id/seekmus"
@@ -171,7 +186,8 @@
                     android:layout_marginEnd="0dp"
                     android:text="@string/config_se"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <SeekBar
                     android:id="@+id/seekse"
@@ -187,7 +203,8 @@
                     android:layout_height="32dp"
                     android:text="@string/ui_sound"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <SeekBar
                     android:id="@+id/seekui"

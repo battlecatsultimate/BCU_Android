@@ -830,4 +830,7 @@
     <string name="down_need_asset">필수 데이터를 찾을 수 없음</string>
     <string name="eff_heal">치유</string>
     <string name="anim_entry">입장</string>
+    <string name="battle_tworow">레이아웃 : 두 줄</string>
+    <string name="battle_onerow">레이아웃 : 한 줄</string>
+    <string name="config_battle">전투</string>
 </resources>

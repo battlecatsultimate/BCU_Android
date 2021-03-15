@@ -830,4 +830,7 @@
     <string name="down_need_asset">Required assets not found</string>
     <string name="eff_heal">Heal</string>
     <string name="anim_entry">Enter</string>
+    <string name="battle_tworow">Battle layout : Two rows</string>
+    <string name="battle_onerow">Battle layout : One row</string>
+    <string name="config_battle">Battle</string>
 </resources>

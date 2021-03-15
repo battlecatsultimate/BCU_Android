@@ -445,6 +445,22 @@ open class ConfigScreen : AppCompatActivity() {
         uivol.max = 99
         uivol.progress = shared.getInt("ui_vol", 99)
 
+        val row = findViewById<SwitchCompat>(R.id.configrow)
+
+        row.isChecked = shared.getBoolean("rowlayout", true)
+        row.text = if(CommonStatic.getConfig().twoRow) {
+            getString(R.string.battle_tworow)
+        } else {
+            getString(R.string.battle_onerow)
+        }
+
+        row.setOnCheckedChangeListener {_, isChecked ->
+            val editor = shared.edit()
+            editor.putBoolean("rowlayout", isChecked)
+            CommonStatic.getConfig().twoRow = isChecked
+            editor.apply()
+        }
+
         val build = findViewById<TextView>(R.id.configbuildver)
 
         val text = getString(R.string.config_build_ver).replace("-", if (shared.getBoolean("DEV_MODE", false)) BuildConfig.VERSION_NAME + "_DEV_MODE" else BuildConfig.VERSION_NAME)

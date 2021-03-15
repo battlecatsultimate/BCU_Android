@@ -38,12 +38,12 @@ import common.util.anim.ImgCut
 import kotlin.math.*
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity) : View(context), BattleBox, OuterBox {
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double) : View(context), BattleBox, OuterBox {
     @JvmField
     var painter: BBPainter = if (type == 0)
         BBPainter(this, field, this)
     else
-        BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat())
+        BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat(), cutout)
 
     var initialized = false
     var paused = false
@@ -383,6 +383,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         intent.putExtra("Data", JsonEncoder.encode(painter.bf.sb.st.id).toString())
         intent.putExtra("star",painter.bf.sb.est.star)
         intent.putExtra("item",painter.bf.sb.conf[0])
+        intent.putExtra("size", painter.siz)
+        intent.putExtra("pos", painter.pos)
 
         if(SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
             if(SoundHandler.MUSIC.isRunning || SoundHandler.MUSIC.isPlaying) {

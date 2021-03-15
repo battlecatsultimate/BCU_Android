@@ -181,6 +181,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("rowlayout")) {
+            ed.putBoolean("rowlayout", true)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         if(!shared.getBoolean("PackReset0137", false)) {

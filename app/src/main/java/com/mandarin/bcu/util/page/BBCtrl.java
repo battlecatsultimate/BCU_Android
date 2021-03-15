@@ -18,11 +18,13 @@ public class BBCtrl extends BattleBox.BBPainter {
     public static final int ACTION_LINEUP_CHANGE_DOWN = 20;
 
     private final float dpi;
+    private final double cutout;
 
-    public BBCtrl(BattleBox.OuterBox bip, SBCtrl bas, BattleBox bb, float dpi) {
+    public BBCtrl(BattleBox.OuterBox bip, SBCtrl bas, BattleBox bb, float dpi, double cutout) {
         super(bip, bas, bb);
         ctrl = bas;
         this.dpi = dpi;
+        this.cutout = cutout;
     }
 
     @Override
@@ -35,18 +37,40 @@ public class BBCtrl extends BattleBox.BBPainter {
             double hr = unir;
             double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
 
-            for (int i = 0; i < 5; i++) {
-                Form f = ctrl.sb.b.lu.fs[ctrl.sb.frontLineup][i % 5];
+            if(CommonStatic.getConfig().twoRow) {
+                double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
 
-                FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+                for(int i = 0; i < 2; i++) {
+                    for(int j = 0; j < 5; j++) {
+                        Form f = ctrl.sb.b.lu.fs[i][j];
 
-                int iw = (int) (hr * img.getWidth());
-                int ih = (int) (hr * img.getHeight());
-                int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
-                int y = h - (int) (ih * 1.1);
+                        FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 
-                if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
-                    ctrl.action.add(i+ctrl.sb.frontLineup*5);
+                        int iw = (int) (hr * img.getWidth());
+                        int ih = (int) (hr * img.getHeight());
+
+                        int x = (w - iw * 5) / 2 + iw * j + (int) (term * (j -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
+                        int y = (int) (h - (2 - i) * (ih + termh));
+
+                        if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+                            ctrl.action.add(j + i * 5);
+                    }
+                }
+            } else {
+                for (int i = 0; i < 5; i++) {
+                    Form f = ctrl.sb.b.lu.fs[ctrl.sb.frontLineup][i];
+
+                    FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+
+                    int iw = (int) (hr * img.getWidth());
+                    int ih = (int) (hr * img.getHeight());
+
+                    int x = (w - iw * 5) / 2 + iw * i + (int) (term * (i -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
+                    int y = h - (int) (ih * 1.1);
+
+                    if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+                        ctrl.action.add(i+ctrl.sb.frontLineup*5);
+                }
             }
 
             hr = corr;
@@ -57,12 +81,12 @@ public class BBCtrl extends BattleBox.BBPainter {
 
             int ih = (int) (hr * left.getHeight());
             int iw = (int) (hr * left.getWidth());
-            if (!new PP(p).out(new P(0, h - ih), new P(iw, h), 0))
+            if (!new PP(p).out(new P(cutout - BOTTOM_GAP * hr, h - ih), new P(cutout - BOTTOM_GAP * hr + iw, h), 0))
                 ctrl.action.add(-1);
 
-            iw = (int) (hr * right.getWidth()*ratio);
-            ih = (int) (hr * right.getHeight()*ratio);
-            if (!new PP(p).out(new P(w - iw, h - ih), new P(w, h), 0))
+            iw = (int) (hr * right.getWidth());
+            ih = (int) (hr * right.getHeight());
+            if (!new PP(p).out(new P(w - iw - cutout + BOTTOM_GAP * hr, h - ih), new P(w - cutout + BOTTOM_GAP * hr, h), 0))
                 ctrl.action.add(-2);
 
             if ((ctrl.sb.conf[0] & 2) > 0) {
@@ -74,26 +98,50 @@ public class BBCtrl extends BattleBox.BBPainter {
                     ctrl.action.add(-3);
             }
         } else if (action == ACTION_LONG) {
-
             int w = box.getWidth();
             int h = box.getHeight();
+
             double hr = unir;
             double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
 
-            for (int i = 0; i < 5; i++) {
-                Form f = ctrl.sb.b.lu.fs[ctrl.sb.frontLineup][i % 5];
+            if(CommonStatic.getConfig().twoRow) {
+                double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
 
-                FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+                for(int i = 0; i < 2; i++) {
+                    for(int j = 0; j < 5; j++) {
+                        Form f = ctrl.sb.b.lu.fs[i][j];
 
-                int iw = (int) (hr * img.getWidth());
-                int ih = (int) (hr * img.getHeight());
-                int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
-                int y = h - (int) (ih * 1.1);
+                        FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 
-                if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
-                    ctrl.action.add(i+ctrl.sb.frontLineup*5);
+                        int iw = (int) (hr * img.getWidth());
+                        int ih = (int) (hr * img.getHeight());
 
-                ctrl.action.add(10);
+                        int x = (w - iw * 5) / 2 + iw * j + (int) (term * (j -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
+                        int y = (int) (h - (2 - i) * (ih + termh));
+
+                        if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+                            ctrl.action.add(j + i * 5);
+
+                        ctrl.action.add(10);
+                    }
+                }
+            } else {
+                for (int i = 0; i < 5; i++) {
+                    Form f = ctrl.sb.b.lu.fs[ctrl.sb.frontLineup][i];
+
+                    FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+
+                    int iw = (int) (hr * img.getWidth());
+                    int ih = (int) (hr * img.getHeight());
+
+                    int x = (w - iw * 5) / 2 + iw * i + (int) (term * (i -2) + (ctrl.sb.frontLineup == 0 ? 0 : term/2));
+                    int y = h - (int) (ih * 1.1);
+
+                    if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+                        ctrl.action.add(i+ctrl.sb.frontLineup*5);
+
+                    ctrl.action.add(10);
+                }
             }
         }
 

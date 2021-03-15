@@ -829,4 +829,7 @@
     <string name="down_need_asset">Требуемые ресурсы не найдены</string>
     <string name="eff_heal">Лечение</string>
     <string name="anim_entry">Войти</string>
+    <string name="battle_tworow">Battle layout : Two rows</string>
+    <string name="battle_onerow">Battle layout : One row</string>
+    <string name="config_battle">Battle</string>
 </resources>
