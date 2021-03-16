@@ -846,7 +846,15 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
             val cutout = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout())
 
-            return cutout.left.coerceAtLeast(cutout.right).toDouble()
+            val result = cutout.left.coerceAtLeast(cutout.right).toDouble()
+
+            if(result == 0.0) {
+                val cut = m.windowInsets.displayCutout ?: return result
+
+                return cut.boundingRectLeft.width().coerceAtLeast(cut.boundingRectRight.width()).toDouble()
+            } else {
+                result
+            }
         } else {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val cutout = ac.windowManager.defaultDisplay.cutout ?: return 0.0
