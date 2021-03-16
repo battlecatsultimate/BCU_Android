@@ -16,7 +16,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
-        versionName "0.15.15"
+        versionName "0.15.16"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "YOU_CANT_FIND_PASSWORD", "\"" + getPassword() + "\""
@@ -94,8 +94,8 @@ dependencies {
     }
     implementation 'com.google.api-client:google-api-client:1.31.1'
     implementation 'com.google.auth:google-auth-library-oauth2-http:0.22.2'
-    implementation "androidx.core:core-ktx:1.5.0-beta02"
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.30'
+    implementation "androidx.core:core-ktx:1.5.0-beta03"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.31'
     implementation 'com.nhaarman.supertooltips:library:3.0.0'
     implementation 'org.jcodec:jcodec:0.2.5'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2-native-mt'
