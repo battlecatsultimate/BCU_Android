@@ -47,7 +47,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private val color: IntArray
     private var talents = false
-    private var pcoins = intArrayOf(0,0,0,0,0)
+    private var pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
 
     private var isRaw = false
 
@@ -149,11 +149,12 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             viewHolder.unittalen.visibility = View.GONE
             viewHolder.npreset.visibility = View.GONE
             viewHolder.nprow.visibility = View.GONE
-            pcoins = intArrayOf(0,0,0,0,0)
+            pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
         } else {
             val max = f.pCoin.max
+
             pcoins = IntArray(max.size)
-            pcoins[0] = 0
+
             for (j in viewHolder.pcoins.indices) {
                 val plev: MutableList<Int> = ArrayList()
                 for (k in 0 until max[j + 1] + 1) plev.add(k)
@@ -163,12 +164,16 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 pcoins[j + 1] = max[j + 1]
             }
         }
+
+        pcoins[0] = f.unit.prefLv
+
         val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(f.du)
         val cdlevt: TextInputEditText = context.findViewById(R.id.cdlevt)
         val cdtreat: TextInputEditText = context.findViewById(R.id.cdtreat)
         val atktreat: TextInputEditText = context.findViewById(R.id.atktreat)
         val healtreat: TextInputEditText = context.findViewById(R.id.healtreat)
+
         cdlevt.setText(t.tech[0].toString())
         cdtreat.setText(t.trea[2].toString())
         atktreat.setText(t.trea[0].toString())
@@ -187,9 +192,9 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         viewHolder.unitname.text = names[i]
         viewHolder.unitpack.text = s.getPackName(f.unit.id, isRaw)
         viewHolder.unitid.text = s.getID(viewHolder, StaticStore.trio(u.id.id))
-        viewHolder.unithp.text = s.getHP(f, t, f.unit.prefLv, false, pcoins)
+        viewHolder.unithp.text = s.getHP(f, t, false, pcoins)
         viewHolder.unithb.text = s.getHB(f, false, pcoins)
-        viewHolder.unitatk.text = s.getTotAtk(f, t, f.unit.prefLv, false, pcoins)
+        viewHolder.unitatk.text = s.getTotAtk(f, t, false, pcoins)
         viewHolder.unittrait.text = s.getTrait(f, false, pcoins)
         viewHolder.unitcost.text = s.getCost(f, false, pcoins)
         viewHolder.unitsimu.text = s.getSimu(f)
@@ -201,6 +206,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         viewHolder.unittba.text = s.getTBA(f, fs)
         viewHolder.unitatkt.text = s.getAtkTime(f, fs)
         viewHolder.unitabilt.text = s.getAbilT(f)
+
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
             val linearLayoutManager = LinearLayoutManager(context)
@@ -212,6 +218,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         } else {
             viewHolder.unitabil.visibility = View.GONE
         }
+
         listeners(viewHolder)
     }
 
@@ -226,6 +233,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         val atktreat: TextInputEditText = context.findViewById(R.id.atktreat)
         val healtreat: TextInputEditText = context.findViewById(R.id.healtreat)
         val reset = context.findViewById<Button>(R.id.treasurereset)
+
         viewHolder.unitname.setOnLongClickListener {
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, viewHolder.unitname.text)
@@ -233,6 +241,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             StaticStore.showShortMessage(context, R.string.unit_info_copied)
             true
         }
+
         val t = BasisSet.current().t()
         val f = forms[viewHolder.adapterPosition]
         val levels: MutableList<Int> = ArrayList()
@@ -241,26 +250,36 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         for (j in 0 until f.unit.maxp + 1) levelsp.add(j)
         val arrayAdapter = ArrayAdapter(context, R.layout.spinneradapter, levels)
         val arrayAdapterp = ArrayAdapter(context, R.layout.spinneradapter, levelsp)
-        val currentlev: Int
+
         val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        currentlev = if (shared.getInt("default_level", 50) > f.unit.max) f.unit.max else if (f.unit.rarity != 0) shared.getInt("default_level", 50) else f.unit.max
+
+        pcoins[0] = when {
+            shared.getInt("default_level", 50) > f.unit.max -> f.unit.max
+            f.unit.rarity != 0 -> shared.getInt("default_level", 50)
+            else -> f.unit.max
+        }
+
         viewHolder.unitlevel.adapter = arrayAdapter
-        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel, currentlev))
+        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel, pcoins[0]))
         viewHolder.unitlevelp.adapter = arrayAdapterp
+
         if (f.unit.prefLv - f.unit.max < 0) {
             viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, 0))
         } else {
             viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, f.unit.prefLv - f.unit.max))
         }
+
         if (levelsp.size == 1) {
             viewHolder.unitlevelp.visibility = View.GONE
             viewHolder.unitplus.visibility = View.GONE
         }
+
         viewHolder.pack.setOnClickListener {
             isRaw = !isRaw
 
             viewHolder.unitpack.text = s.getPackName(f.unit.id, isRaw)
         }
+
         viewHolder.frse.setOnClickListener {
             if (fs == 0) {
                 fs = 1
@@ -368,17 +387,14 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         }
 
         viewHolder.unitatkb.setOnClickListener {
-            val level = viewHolder.unitlevel.selectedItem as Int
-            val levelp = viewHolder.unitlevelp.selectedItem as Int
-
             if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) {
                 viewHolder.unitatkb.text = context.getString(R.string.unit_info_dps)
 
-                viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
             } else {
                 viewHolder.unitatkb.text = context.getString(R.string.unit_info_atk)
 
-                viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
             }
         }
 
@@ -394,18 +410,20 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
 
-                viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+                pcoins[0] = level + levelp
+
+                viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
                 } else {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getTotAtk(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getTotAtk(f, t, talents, pcoins)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
                 }
             }
 
@@ -417,17 +435,19 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
 
-                viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+                pcoins[0] = level + levelp
+
+                viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
                 if (f.du.rawAtkData().size > 1) {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
                 } else {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
                 }
             }
 
@@ -583,29 +603,21 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             override fun afterTextChanged(text: Editable) {
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 300) {
-                        val trea = text.toString().toInt()
-
-                        t.trea[0] = trea
-
-                        val level = viewHolder.unitlevel.selectedItem as Int
-                        val levelp = viewHolder.unitlevelp.selectedItem as Int
+                        t.trea[0] = text.toString().toInt()
 
                         if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                            viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                            viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
                         } else {
-                            viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                            viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
                         }
                     }
                 } else {
                     t.trea[0] = 0
 
-                    val level = viewHolder.unitlevel.selectedItem as Int
-                    val levelp = viewHolder.unitlevelp.selectedItem as Int
-
                     if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                        viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
                     } else {
-                        viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
                     }
                 }
             }
@@ -644,22 +656,14 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             override fun afterTextChanged(text: Editable) {
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 300) {
-                        val trea = text.toString().toInt()
+                        t.trea[1] = text.toString().toInt()
 
-                        t.trea[1] = trea
-
-                        val level = viewHolder.unitlevel.selectedItem as Int
-                        val levelp = viewHolder.unitlevelp.selectedItem as Int
-
-                        viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+                        viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
                     }
                 } else {
                     t.trea[1] = 0
 
-                    val level = viewHolder.unitlevel.selectedItem as Int
-                    val levelp = viewHolder.unitlevelp.selectedItem as Int
-
-                    viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+                    viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
                 }
             }
         })
@@ -675,9 +679,6 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             atktreat.setText(t.trea[1].toString())
             healtreat.setText(t.trea[2].toString())
 
-            val level = viewHolder.unitlevel.selectedItem as Int
-            val levelp = viewHolder.unitlevelp.selectedItem as Int
-
             if (viewHolder.unitcd.text.toString().endsWith("s")) {
                 viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
             } else {
@@ -685,12 +686,12 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
             }
 
             if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+                viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
             } else {
-                viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+                viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
             }
 
-            viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+            viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
         }
 
         viewHolder.unittalen.setOnCheckedChangeListener { _, isChecked ->
@@ -841,14 +842,16 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
         val level = viewHolder.unitlevel.selectedItem as Int
         val levelp = viewHolder.unitlevelp.selectedItem as Int
 
-        viewHolder.unithp.text = s.getHP(f, t, level + levelp, talents, pcoins)
+        pcoins[0] = level + levelp
+
+        viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
 
         viewHolder.unithb.text = s.getHB(f, talents, pcoins)
 
         if (viewHolder.unitatkb.text.toString() == "DPS")
-            viewHolder.unitatk.text = s.getDPS(f, t, level + levelp, talents, pcoins)
+            viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
         else
-            viewHolder.unitatk.text = s.getAtk(f, t, level + levelp, talents, pcoins)
+            viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
 
         viewHolder.unitcost.text = s.getCost(f, talents, pcoins)
 
