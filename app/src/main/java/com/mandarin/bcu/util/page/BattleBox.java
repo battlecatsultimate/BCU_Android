@@ -244,8 +244,6 @@ public interface BattleBox {
             iw = (int) (hr * right.getWidth());
             ih = (int) (hr * right.getHeight());
             g.drawImage(right, w - iw - cutout + BOTTOM_GAP * hr, h - ih, iw, ih);
-            double text;
-
             setSym(g, hr,  hr * 5 + cutout, h-hr*5, 2);
             Res.getCost(sb.next_lv, mtype > 0, sym);
             setSym(g, hr, hr * 5 + cutout, h-hr*130, 0);
