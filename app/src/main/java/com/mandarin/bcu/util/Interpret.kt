@@ -5,14 +5,13 @@ import android.util.Log
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.isEnglish
-import common.battle.data.MaskAtk
-import common.battle.data.MaskEnemy
-import common.battle.data.MaskEntity
-import common.battle.data.MaskUnit
+import common.battle.data.*
 import common.util.Data
 import common.util.lang.Formatter
 import common.util.lang.ProcLang
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object Interpret : Data() {
     const val EN = "en"
@@ -74,61 +73,92 @@ object Interpret : Data() {
 
     fun getProc(du: MaskEntity, useSecond: Boolean): List<String> {
         val res: MutableList<Int> = ArrayList()
+
         val lang = Locale.getDefault().language
+
+        val common = if(du is CustomEntity)
+            du.common
+        else
+            true
+
         for (i in immune.indices.reversed()) {
             res.add(PROC.size - i)
         }
+
+
         val l: MutableList<String> = ArrayList()
-        val id: MutableList<Int> = ArrayList()
-        val mr = du.repAtk
+
         val c = Formatter.Context(true, useSecond)
-        for (i in PROCIND.indices) {
-            if (isValidProc(i, mr)) {
-                val f = ProcLang.get().get(PROCIND[i]).format
 
-                var ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], mr)) {
-                    "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
-                } else {
-                    "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
-                }
-
-                if (!l.contains(ans)) {
-                    if (id.contains(i)) {
-                        ans = if (isEnglish)
-                            "$ans [${getNumberAttack(numberWithExtension(1, lang), lang)}]"
-                        else
-                            "$ans [${ATK.replace("_", 1.toString())}]"
-                    }
-                }
-
-                l.add(ans)
-                id.add(i)
-            }
-        }
-
-        for (k in 0 until du.atkCount) {
-            val ma = du.getAtkModel(k)
+        if(common) {
+            val mr = du.repAtk
 
             for (i in PROCIND.indices) {
-                if (isValidProc(i, ma)) {
-                    val mf = ProcLang.get().get(PROCIND[i]).format
+                if (isValidProc(i, mr)) {
+                    val f = ProcLang.get().get(PROCIND[i]).format
 
-                    var ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], ma)) {
-                        "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(mf, getProcObject(i, ma), c)
+                    val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], mr)) {
+                        "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
                     } else {
-                        "$i\\" + Formatter.format(mf, getProcObject(i, ma), c)
+                        "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
                     }
 
-                    if (!l.contains(ans)) {
-                        if (id.contains(i)) {
-                            ans = if (isEnglish)
-                                "$ans [${getNumberAttack(numberWithExtension(k + 1, lang), lang)}]"
-                            else
-                                "$ans [${ATK.replace("_", (k + 1).toString())}]"
+                    l.add(ans)
+                }
+            }
+        } else {
+            val atkMap = HashMap<String, ArrayList<Int>>()
+
+            val mr = du.repAtk
+
+            for (i in PROCIND.indices) {
+                if (isValidProc(i, mr) && mr.proc.sharable(P_INDEX[i])) {
+                    val f = ProcLang.get().get(PROCIND[i]).format
+
+                    val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], mr)) {
+                        "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
+                    } else {
+                        "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
+                    }
+
+                    l.add(ans)
+                }
+            }
+
+            for (k in 0 until du.atkCount) {
+                val ma = du.getAtkModel(k)
+
+                for (i in PROCIND.indices) {
+                    if (isValidProc(i, ma)) {
+                        val mf = ProcLang.get().get(PROCIND[i]).format
+
+                        val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], ma)) {
+                            "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(mf, getProcObject(i, ma), c)
+                        } else {
+                            "$i\\" + Formatter.format(mf, getProcObject(i, ma), c)
                         }
 
-                        l.add(ans)
-                        id.add(i)
+                        val inds = atkMap[ans] ?: ArrayList()
+
+                        inds.add(i)
+
+                        atkMap[ans] = inds
+                    }
+                }
+            }
+
+            for(key in atkMap.keys) {
+                val inds = atkMap[key] ?: ArrayList()
+
+                when {
+                    inds.isEmpty() -> {
+                        l.add(key)
+                    }
+                    inds.size == du.atkCount -> {
+                        l.add(key)
+                    }
+                    else -> {
+                        l.add(getFullExplanationWithAtk(key, inds, lang))
                     }
                 }
             }
@@ -158,6 +188,32 @@ object Interpret : Data() {
                 Log.e("Interpret", "Invalid index : $ind")
                 atk.proc.KB.exists()
             }
+        }
+    }
+
+    private fun getFullExplanationWithAtk(explanation: String, inds: ArrayList<Int>, lang: String) : String {
+        if(isEnglish) {
+            val builder = StringBuilder("[")
+
+            for(i in inds.indices) {
+                builder.append(numberWithExtension(inds[i], lang))
+
+                if(i < inds.size - 1)
+                    builder.append(", ")
+            }
+
+            return explanation + " " + builder.append(getNumberAttack(lang)).append("]").toString()
+        } else {
+            val builder = StringBuilder()
+
+            for(i in inds.indices) {
+                builder.append(inds[i])
+
+                if(i < inds.size - 1)
+                    builder.append(", ")
+            }
+
+            return explanation + " " + ATK.replace("_", builder.toString())
         }
     }
 
@@ -218,7 +274,18 @@ object Interpret : Data() {
         for (i in ABIS.indices) {
             val imu = StringBuilder(frag[lang][0])
             if (me.abi shr i and 1 > 0) if (ABIS[i].startsWith("Imu.")) imu.append(ABIS[i].substring(4)) else {
-                if (i == 0) l.add(ABIS[i] + addition[0]) else if (i == 1) l.add(ABIS[i] + addition[1]) else if (i == 2) l.add(ABIS[i] + addition[2]) else if (i == 4) l.add(ABIS[i] + addition[3]) else if (i == 5) l.add(ABIS[i] + addition[4]) else if (i == 14) l.add(ABIS[i] + addition[5]) else if (i == 17) l.add(ABIS[i] + addition[6]) else if (i == 20) l.add(ABIS[i] + addition[7]) else if (i == 21) l.add(ABIS[i] + addition[8]) else l.add(ABIS[i])
+                when (i) {
+                    0 -> l.add(ABIS[i] + addition[0])
+                    1 -> l.add(ABIS[i] + addition[1])
+                    2 -> l.add(ABIS[i] + addition[2])
+                    4 -> l.add(ABIS[i] + addition[3])
+                    5 -> l.add(ABIS[i] + addition[4])
+                    14 -> l.add(ABIS[i] + addition[5])
+                    17 -> l.add(ABIS[i] + addition[6])
+                    20 -> l.add(ABIS[i] + addition[7])
+                    21 -> l.add(ABIS[i] + addition[8])
+                    else -> l.add(ABIS[i])
+                }
             }
             if (imu.toString().isNotEmpty() && imu.toString() != frag[lang][0]) l.add(imu.toString())
         }
@@ -253,13 +320,13 @@ object Interpret : Data() {
 
     }
 
-    fun numberWithExtension(n: Int, lang: String?): String {
+    fun numberWithExtension(n: Int, lang: String): String {
         val f = n % 10
         return when (lang) {
             EN -> when (f) {
-                1 -> n.toString() + "st"
-                2 -> n.toString() + "nd"
-                3 -> n.toString() + "rd"
+                1 -> n.toString() + if(n != 11) "st" else "th"
+                2 -> n.toString() + if(n != 12) "nd" else "th"
+                3 -> n.toString() + if(n != 13) "rd" else "th"
                 else -> n.toString() + "th"
             }
             RU -> {
@@ -276,12 +343,12 @@ object Interpret : Data() {
         }
     }
 
-    private fun getNumberAttack(pre: String, lang: String): String {
+    private fun getNumberAttack(lang: String): String {
         return when (lang) {
-            EN -> "$pre Attack"
-            RU -> "$pre Аттака"
-            FR -> "$pre Attaque"
-            else -> pre
+            EN -> "Attack"
+            RU -> "Аттака"
+            FR -> "Attaque"
+            else -> ""
         }
     }
 
