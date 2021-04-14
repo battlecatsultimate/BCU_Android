@@ -54,7 +54,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
         if (!shared.contains("initial")) {
             initializeAsset()
             ed.putBoolean("initial", true)
-            ed.putBoolean("theme", true)
+            ed.putBoolean("theme", false)
             ed.putBoolean("frame", true)
             ed.putBoolean("apktest", false)
             ed.putInt("default_level", 50)
