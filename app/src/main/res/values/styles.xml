@@ -26,6 +26,7 @@
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
         <item name="actionOverflowMenuStyle">@style/OptionMenu</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.night" parent="Theme.AppCompat.Light.NoActionBar">
@@ -53,6 +54,7 @@
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
         <item name="actionOverflowMenuStyle">@style/OptionMenuN</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryN</item>
     </style>
 
     <style name="AppTheme.designNight" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -80,6 +82,7 @@
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
         <item name="actionOverflowMenuStyle">@style/OptionMenuN</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryN</item>
     </style>
 
     <style name="AppTheme.day" parent="Theme.AppCompat.Light.NoActionBar">
@@ -107,6 +110,7 @@
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
         <item name="actionOverflowMenuStyle">@style/OptionMenu</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.designDay" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -134,6 +138,7 @@
         <item name="android:fastScrollPreviewBackgroundRight">@drawable/scroll_selector</item>
         <item name="android:fastScrollTrackDrawable">@null</item>
         <item name="actionOverflowMenuStyle">@style/OptionMenu</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
