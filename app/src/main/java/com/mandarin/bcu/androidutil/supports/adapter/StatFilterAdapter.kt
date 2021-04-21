@@ -60,7 +60,7 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
         }
 
         holder.layout.suffixText = if(unit) {
-            (stat.lev+1).toString() + " lv."
+            (stat.lev).toString() + " lv."
         } else {
             (stat.lev).toString() + "%"
         }

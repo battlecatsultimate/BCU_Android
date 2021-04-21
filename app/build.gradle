@@ -94,7 +94,7 @@ dependencies {
     }
     implementation 'com.google.api-client:google-api-client:1.31.1'
     implementation 'com.google.auth:google-auth-library-oauth2-http:0.22.2'
-    implementation "androidx.core:core-ktx:1.6.0-alpha01"
+    implementation "androidx.core:core-ktx:1.6.0-alpha02"
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32'
     implementation 'com.nhaarman.supertooltips:library:3.0.0'
     implementation 'org.jcodec:jcodec:0.2.5'

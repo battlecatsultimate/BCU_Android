@@ -110,16 +110,18 @@ class StatSearchFilter : AppCompatActivity() {
                 StatFilterElement.show = false
                 select.hide()
 
+                val size = StatFilterElement.statFilter.size
+
                 StatFilterElement.statFilter.removeIf {
                     it.delete
                 }
 
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeRemoved(0, size)
             } else {
                 StatFilterElement.show = true
                 select.show()
 
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeChanged(0, StatFilterElement.statFilter.size)
             }
         }
 
@@ -128,7 +130,7 @@ class StatSearchFilter : AppCompatActivity() {
                 element.delete = true
             }
 
-            adapter.notifyDataSetChanged()
+            adapter.notifyItemRangeChanged(0, StatFilterElement.statFilter.size)
         }
 
         add.setOnClickListener(object : SingleClick() {
@@ -219,7 +221,7 @@ class StatSearchFilter : AppCompatActivity() {
                                     l = 0
                                 }
 
-                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
+                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l+1)) {
                                     levspin.setSelection(l, false)
                                     break
                                 } else {
@@ -284,7 +286,7 @@ class StatSearchFilter : AppCompatActivity() {
                         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                             val v1 = super.getView(position, convertView, parent)
 
-                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position)) {
+                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position+1)) {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.TextPrimary))
                             } else {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.HintPrimary))
@@ -296,7 +298,7 @@ class StatSearchFilter : AppCompatActivity() {
                         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                             val v1 = super.getView(position, convertView, parent)
 
-                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position)) {
+                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position+1)) {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.TextPrimary))
                             } else {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.HintPrimary))
@@ -306,7 +308,7 @@ class StatSearchFilter : AppCompatActivity() {
                         }
 
                         override fun isEnabled(position: Int): Boolean {
-                            return StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position)
+                            return StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position+1)
                         }
                     }
 
@@ -351,7 +353,7 @@ class StatSearchFilter : AppCompatActivity() {
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            StatFilterElement(StatFilterAdapter.unitData[t], o, l)
+                            StatFilterElement(StatFilterAdapter.unitData[t], o, l+1)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)
                             dialog.dismiss()
@@ -537,7 +539,7 @@ class StatSearchFilter : AppCompatActivity() {
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            StatFilterElement(StatFilterAdapter.enemyData[t], o, l)
+                            StatFilterElement(StatFilterAdapter.enemyData[t], o, l+1)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)
                             dialog.dismiss()
