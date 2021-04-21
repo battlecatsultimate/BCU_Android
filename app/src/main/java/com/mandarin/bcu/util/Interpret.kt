@@ -71,7 +71,7 @@ object Interpret : Data() {
         return ans.toString()
     }
 
-    fun getProc(du: MaskEntity, useSecond: Boolean): List<String> {
+    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean): List<String> {
         val res: MutableList<Int> = ArrayList()
 
         val lang = Locale.getDefault().language
@@ -88,7 +88,7 @@ object Interpret : Data() {
 
         val l: MutableList<String> = ArrayList()
 
-        val c = Formatter.Context(true, useSecond)
+        val c = Formatter.Context(isEnemy, useSecond)
 
         if(common) {
             val mr = du.repAtk
@@ -129,7 +129,7 @@ object Interpret : Data() {
                 val ma = du.getAtkModel(k)
 
                 for (i in PROCIND.indices) {
-                    if (isValidProc(i, ma)) {
+                    if (isValidProc(i, ma) && !ma.proc.sharable(P_INDEX[i])) {
                         val mf = ProcLang.get().get(PROCIND[i]).format
 
                         val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], ma)) {

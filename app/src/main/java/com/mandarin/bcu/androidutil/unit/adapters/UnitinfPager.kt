@@ -206,7 +206,7 @@ class UnitinfPager : Fragment() {
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1)
+        val proc = Interpret.getProc(f.du, fs == 1, true)
 
         var name = MultiLangCont.get(f) ?: f.name
 
@@ -401,7 +401,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1)
+                    val proc = Interpret.getProc(du, fs == 1, true)
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -443,7 +443,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1)
+                    val proc = Interpret.getProc(du, fs == 1, true)
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -930,7 +930,7 @@ class UnitinfPager : Fragment() {
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val proc = Interpret.getProc(du, fs == 1)
+        val proc = Interpret.getProc(du, fs == 1, true)
 
         val abilityicon = Interpret.getAbiid(du)
 

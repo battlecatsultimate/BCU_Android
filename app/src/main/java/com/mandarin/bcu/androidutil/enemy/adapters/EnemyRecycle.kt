@@ -174,7 +174,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
         val proc: List<String>
-        proc = Interpret.getProc(em.de, fs == 1)
+        proc = Interpret.getProc(em.de, fs == 1, false)
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(em.de)
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
@@ -565,7 +565,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempre.text = s.getPre(em, fs)
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1)
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false)
 
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
 
