@@ -61,7 +61,7 @@ object Interpret : Data() {
             "POIATK", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME",
             "POISON", "BOSS", "ARMOR", "SPEED", "CRITI")
 
-    private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE)
+    private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK)
 
     fun getTrait(type: Int, star: Int): String {
         val ans = StringBuilder()
@@ -98,7 +98,7 @@ object Interpret : Data() {
                     val f = ProcLang.get().get(PROCIND[i]).format
 
                     val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], mr)) {
-                        "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
+                        "${StaticStore.pnumber.size - immune.size + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
                     } else {
                         "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
                     }
@@ -116,7 +116,7 @@ object Interpret : Data() {
                     val f = ProcLang.get().get(PROCIND[i]).format
 
                     val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], mr)) {
-                        "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
+                        "${StaticStore.pnumber.size - immune.size + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(f, getProcObject(i, mr), c)
                     } else {
                         "$i\\" + Formatter.format(f, getProcObject(i, mr), c)
                     }
@@ -133,7 +133,7 @@ object Interpret : Data() {
                         val mf = ProcLang.get().get(PROCIND[i]).format
 
                         val ans = if (immune.contains(P_INDEX[i]) && isResist(P_INDEX[i], ma)) {
-                            "${StaticStore.pnumber.size - 7 + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(mf, getProcObject(i, ma), c)
+                            "${StaticStore.pnumber.size - immune.size + immune.indexOf(P_INDEX[i])}\\" + Formatter.format(mf, getProcObject(i, ma), c)
                         } else {
                             "$i\\" + Formatter.format(mf, getProcObject(i, ma), c)
                         }
@@ -226,6 +226,7 @@ object Interpret : Data() {
             P_IMUWAVE -> atk.proc.IMUWAVE.mult != 100
             P_IMUWARP -> atk.proc.IMUWARP.mult != 100
             P_IMUCURSE -> atk.proc.IMUCURSE.mult != 100
+            P_IMUPOIATK -> atk.proc.IMUPOIATK.mult != 100
             else -> false
         }
     }
