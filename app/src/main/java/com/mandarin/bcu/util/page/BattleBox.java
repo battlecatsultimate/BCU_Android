@@ -496,53 +496,52 @@ public interface BattleBox {
             FakeTransform at = gra.getTransform();
             double psiz = siz * sprite;
             CommonStatic.getConfig().battle = true;
-            for (int i = 0; i < 10; i++) {
-                int dep = i * DEP;
-                for (int j = 0; j < sb.le.size(); j++)
-                    if (sb.le.get(j).layer == i && (sb.s_stop == 0 || (sb.le.get(j).getAbi() & Data.AB_TIMEI) == 0)) {
-                        gra.setTransform(at);
-                        double p = getX(sb.le.get(j).pos);
-                        double y = midh - (road_h - dep) * siz;
-                        setP(p, y);
-                        sb.le.get(j).anim.draw(gra, this.p, psiz);
-                        gra.setTransform(at);
-                        setP(p, y);
-                        sb.le.get(j).anim.drawEff(gra, this.p, siz);
-                    }
-                for (int j = 0; j < sb.lw.size(); j++)
-                    if (sb.lw.get(j).layer == i) {
-                        gra.setTransform(at);
-                        double p = (sb.lw.get(j).pos * ratio + off ) * siz + pos;
 
-                        if(sb.lw.get(j) instanceof ContWaveAb)
-                            p -= wave * siz;
+            for (int j = 0; j < sb.le.size(); j++)
+                if ((sb.s_stop == 0 || (sb.le.get(j).getAbi() & Data.AB_TIMEI) == 0)) {
+                    int dep = sb.le.get(j).layer * DEP;
 
-                        double y = midh - (road_h - DEP * sb.lw.get(j).layer) * siz;
-                        setP(p, y);
-                        sb.lw.get(j).draw(gra, this.p, psiz);
-                    }
+                    gra.setTransform(at);
+                    double p = getX(sb.le.get(j).pos);
+                    double y = midh - (road_h - dep) * siz;
+                    setP(p, y);
+                    sb.le.get(j).anim.draw(gra, this.p, psiz);
+                    gra.setTransform(at);
+                    setP(p, y);
+                    sb.le.get(j).anim.drawEff(gra, this.p, siz);
+                }
+
+            for (int j = 0; j < sb.lw.size(); j++) {
+                gra.setTransform(at);
+                double p = (sb.lw.get(j).pos * ratio + off ) * siz + pos;
+
+                if(sb.lw.get(j) instanceof ContWaveAb)
+                    p -= wave * siz;
+
+                double y = midh - (road_h - DEP * sb.lw.get(j).layer) * siz;
+                setP(p, y);
+                sb.lw.get(j).draw(gra, this.p, psiz);
             }
 
-            for(int i = 0; i < 10; i++) {
-                for (int j = 0; j < sb.lea.size(); j++)
-                    if (sb.lea.get(j).layer == i) {
-                        gra.setTransform(at);
-                        double p = getX(sb.lea.get(j).pos);
-                        double y = midh - (road_h - DEP * sb.lea.get(j).layer) * siz;
+            for (int j = 0; j < sb.lea.size(); j++) {
+                gra.setTransform(at);
+                double p = getX(sb.lea.get(j).pos);
+                double y = midh - (road_h - DEP * sb.lea.get(j).layer) * siz;
 
-                        if (sb.lea.get(j) instanceof WaprCont) {
-                            double dx = ((WaprCont) sb.lea.get(j)).dire == -1 ? -27 * siz : -24 * siz;
-                            setP(p+dx, y-24*siz);
-                        } else {
-                            setP(p, y);
-                        }
+                if (sb.lea.get(j) instanceof WaprCont) {
+                    double dx = ((WaprCont) sb.lea.get(j)).dire == -1 ? -27 * siz : -24 * siz;
+                    setP(p+dx, y-24*siz);
+                } else {
+                    setP(p, y);
+                }
 
-                        sb.lea.get(j).draw(gra, this.p, psiz);
-                    }
+                sb.lea.get(j).draw(gra, this.p, psiz);
             }
 
             if(sb.ebase.health <= 0) {
-                for(EAnimCont eac : sb.ebaseSmoke) {
+                for(int i = 0; i < sb.ebaseSmoke.size(); i++) {
+                    EAnimCont eac = sb.ebaseSmoke.get(i);
+
                     gra.setTransform(at);
                     double p = getX(eac.pos);
                     double y = midh - (road_h - DEP * eac.layer) * siz;
@@ -553,7 +552,9 @@ public interface BattleBox {
             }
 
             if(sb.ubase.health <= 0) {
-                for(EAnimCont eac : sb.ubaseSmoke) {
+                for(int i = 0; i < sb.ubaseSmoke.size(); i++) {
+                    EAnimCont eac = sb.ubaseSmoke.get(i);
+
                     gra.setTransform(at);
                     double p = getX(eac.pos);
                     double y = midh - (road_h - DEP * eac.layer) * siz;
@@ -579,28 +580,28 @@ public interface BattleBox {
             }
 
             if (sb.s_stop > 0) {
-                for (int i = 0; i < 10; i++) {
-                    int dep = i * DEP;
-                    for (int j = 0; j < sb.le.size(); j++)
-                        if (sb.le.get(j).layer == i && (sb.le.get(j).getAbi() & Data.AB_TIMEI) > 0) {
-                            if(((CVGraphics)gra).neg) {
-                                gra.setComposite(CVGraphics.POSITIVE, 0, 0);
-                            }
-                            gra.setTransform(at);
-                            double p = getX(sb.le.get(j).pos);
-                            double y = midh - (road_h - dep) * siz;
-                            setP(p, y);
-                            sb.le.get(j).anim.draw(gra, this.p, psiz);
-                            gra.setTransform(at);
-                            setP(p, y);
-                            sb.le.get(j).anim.drawEff(gra, this.p, siz);
+                for (int j = 0; j < sb.le.size(); j++)
+                    if ((sb.le.get(j).getAbi() & Data.AB_TIMEI) > 0) {
+                        int dep = sb.le.get(j).layer * DEP;
 
-                            if(((CVGraphics)gra).neg) {
-                                gra.setComposite(FakeGraphics.GRAY, 0, 0);
-                            }
+                        if(((CVGraphics)gra).neg) {
+                            gra.setComposite(CVGraphics.POSITIVE, 0, 0);
                         }
-                }
+                        gra.setTransform(at);
+                        double p = getX(sb.le.get(j).pos);
+                        double y = midh - (road_h - dep) * siz;
+                        setP(p, y);
+                        sb.le.get(j).anim.draw(gra, this.p, psiz);
+                        gra.setTransform(at);
+                        setP(p, y);
+                        sb.le.get(j).anim.drawEff(gra, this.p, siz);
+
+                        if(((CVGraphics)gra).neg) {
+                            gra.setComposite(FakeGraphics.GRAY, 0, 0);
+                        }
+                    }
             }
+
             gra.setTransform(at);
             gra.delete(at);
             CommonStatic.getConfig().battle = false;
