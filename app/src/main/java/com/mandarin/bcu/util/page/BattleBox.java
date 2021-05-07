@@ -649,7 +649,7 @@ public interface BattleBox {
             FakeImage separator = aux.timer[10].getImg();
             FakeImage zero = aux.timer[0].getImg();
 
-            if(timeLeft < 0) {
+            if(timeLeft < 0 || min < 0) {
                 for(int i = 0; i < 3; i ++) {
                     g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
                     p.x += zero.getWidth() * ratio;
