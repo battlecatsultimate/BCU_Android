@@ -72,7 +72,7 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.15.20"
+    const val VER = "0.15.21"
 
     /**File ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"

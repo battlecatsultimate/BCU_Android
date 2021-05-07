@@ -16,7 +16,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
-        versionName "0.15.20"
+        versionName "0.15.21"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "YOU_CANT_FIND_PASSWORD", "\"" + getPassword() + "\""
@@ -77,31 +77,31 @@ android {
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.wear:wear:1.1.0'
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'pub.devrel:easypermissions:0.2.0'
+    implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android:flexbox:1.0.0'
     implementation ('com.google.apis:google-api-services-drive:v3-rev99-1.23.0') {
         exclude group:'com.google.guava'
     }
-    implementation 'com.google.api-client:google-api-client:1.31.1'
-    implementation 'com.google.auth:google-auth-library-oauth2-http:0.22.2'
-    implementation "androidx.core:core-ktx:1.6.0-alpha02"
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32'
+    implementation 'com.google.api-client:google-api-client:1.31.4'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:0.25.5'
+    implementation "androidx.core:core-ktx:1.6.0-alpha03"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0'
     implementation 'com.nhaarman.supertooltips:library:3.0.0'
     implementation 'org.jcodec:jcodec:0.2.5'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-RC-native-mt'
     annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2-native-mt'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-RC-native-mt'
     implementation 'com.appyvet:materialrangebar:1.4.8'
 }
 repositories {
