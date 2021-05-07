@@ -79,7 +79,7 @@ class BattleSimulation : AppCompatActivity() {
             val data = StaticStore.transformIdentifier<Stage>(bundle.getString("Data")) ?: return
             val star = bundle.getInt("star")
             val item = bundle.getInt("item")
-            val siz = bundle.getDouble("siz", 1.0)
+            val siz = bundle.getDouble("size", 1.0)
             val pos = bundle.getInt("pos", 0)
 
             BAdder(this, data, star, item, siz, pos).execute()

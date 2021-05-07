@@ -114,14 +114,17 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 val view = BattleView(activity, ctrl, 1, axis,activity, getCutoutWidth(activity))
 
-                view.painter.siz = siz
-                view.painter.pos = pos
                 view.painter.cutout = getCutoutWidth(activity)
 
                 view.initialized = false
                 view.setLayerType(View.LAYER_TYPE_HARDWARE, null)
                 view.id = R.id.battleView
                 view.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+                view.post {
+                    view.painter.preSiz = siz
+                    view.painter.prePos = pos
+                }
 
                 layout.addView(view)
 
@@ -208,6 +211,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                         slow.show()
                     }
                 })
+
                 battleView.setOnTouchListener(object : OnTouchListener {
                     var preid = -1
                     var preX = 0

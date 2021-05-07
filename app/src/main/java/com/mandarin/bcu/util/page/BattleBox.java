@@ -101,6 +101,9 @@ public interface BattleBox {
         public SymCoord sym = new SymCoord(null, 0, 0, 0, 0);
         public P p = new P(0, 0);
 
+        public double preSiz = 1.0;
+        public int prePos = 0;
+
         public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
             page = bip;
             bf = bas;
@@ -118,11 +121,15 @@ public interface BattleBox {
             calculateSiz(w, h);
 
             sb = bf.sb;
+
             if (prew != w || preh != h) {
                 clear();
                 prew = w;
                 preh = h;
+                siz = preSiz;
+                pos = prePos;
             }
+
             regulate();
 
             if(sb.s_stop == 0 && ((CVGraphics)g).neg) {
