@@ -5,7 +5,7 @@ import com.google.api.client.http.FileContent
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
-import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.auth.http.HttpCredentialsAdapter
@@ -21,7 +21,7 @@ object DriveUtil {
         val credential = GoogleCredentials.fromStream(`in`).createScoped(listOf(DriveScopes.DRIVE))
         val request = HttpCredentialsAdapter(credential)
         val transport: HttpTransport = NetHttpTransport()
-        val factory: JsonFactory = JacksonFactory.getDefaultInstance()
+        val factory: JsonFactory = GsonFactory.getDefaultInstance()
         val service = Drive.Builder(transport, factory, request).setApplicationName("BCU").build()
         Log.i("uploadDrive", "-*****- Uploading Log File to Drive -> File Name : " + file.name + " | File Size : " + file.length() + " -*****-")
         val target = com.google.api.services.drive.model.File()
