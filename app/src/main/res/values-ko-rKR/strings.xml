@@ -417,7 +417,7 @@
     <string name="combo_cd">연구력</string>
     <string name="combo_crit">크리티컬</string>
     <string name="combo_env">전투효과</string>
-    <string name="combo_eva">마녀 킬러 효과</string>
+    <string name="combo_eva">사도 킬러 효과</string>
     <string name="combo_hp">캐릭터의 체력</string>
     <string name="combo_atk">캐릭터의 공격력</string>
     <string name="combo_inc">공격력 업 효과</string>
