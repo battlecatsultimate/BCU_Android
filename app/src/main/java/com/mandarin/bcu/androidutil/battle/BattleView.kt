@@ -378,6 +378,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     }
 
     fun retry() {
+        battleEnd = true
+
         val intent = Intent(activity,BattleSimulation::class.java)
 
         intent.putExtra("Data", JsonEncoder.encode(painter.bf.sb.st.id).toString())
