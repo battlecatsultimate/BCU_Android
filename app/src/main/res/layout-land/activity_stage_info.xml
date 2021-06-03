@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stginfolayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
@@ -24,11 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:tint="?attr/UnitinfoName"
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/def_description"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        android:tint="?attr/UnitinfoName"
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
@@ -36,6 +37,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar6"
         app:srcCompat="@drawable/back_button" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/stginfotrea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:clickable="true"
+        android:contentDescription="@string/def_description"
+        android:focusable="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:tint="?attr/UnitinfoName"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_menu_black_24dp"
+        tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
 
     <ScrollView
         android:id="@+id/stginfoscroll"
@@ -124,5 +146,190 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/prog" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/treasurelayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:outlineProvider="bounds"
+        android:theme="?attr/TILtheme"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stginfolayout"
+        app:layout_constraintTop_toBottomOf="@id/toolbar6"
+        app:layout_constraintVertical_bias="0.0"
+        tools:context=".UnitInfo">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/tab_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/treasurename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:maxLines="1"
+                    android:text="@string/treasure_level"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/stlev"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="196dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:hint="@string/treasure_st_lev"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:helperText="1~30"
+                    app:helperTextEnabled="true"
+                    app:helperTextTextColor="?attr/TextPrimary"
+                    app:hintTextColor="?attr/TextPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/treasurename"
+                    app:suffixText="@string/def_treasure_lv"
+                    app:suffixTextColor="?attr/HintPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/stlevt"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="2"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/sttrea"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="196dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:hint="@string/treasure_st_trea"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:helperText="0~300"
+                    app:helperTextEnabled="true"
+                    app:helperTextTextColor="?attr/TextPrimary"
+                    app:hintTextColor="?attr/TextPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stlev"
+                    app:suffixText="@string/def_treasure_perc"
+                    app:suffixTextColor="?attr/HintPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/sttreat"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/sttrea2"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="196dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:hint="@string/treasure_st_trea"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:helperText="0~300"
+                    app:helperTextEnabled="true"
+                    app:helperTextTextColor="?attr/TextPrimary"
+                    app:hintTextColor="?attr/TextPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sttrea"
+                    app:suffixText="@string/def_treasure_perc"
+                    app:suffixTextColor="?attr/HintPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/sttreat2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/treasurereset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:backgroundTint="?attr/ButtonPrimary"
+                    android:text="@string/treasure_reset"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/TextPrimary"
+                    app:layout_constraintBottom_toBottomOf="@+id/treasurename"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/treasurename"
+                    app:layout_constraintTop_toTopOf="@+id/treasurename" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

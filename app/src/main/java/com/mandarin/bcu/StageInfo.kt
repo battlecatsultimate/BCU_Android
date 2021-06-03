@@ -100,9 +100,15 @@ class StageInfo : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
+        if(StaticStore.SisOpen) {
+            val treasure = findViewById<FloatingActionButton>(R.id.stginfotrea)
 
-        bck.performClick()
+            treasure.performClick()
+        } else {
+            val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
+
+            bck.performClick()
+        }
     }
 
     override fun onResume() {

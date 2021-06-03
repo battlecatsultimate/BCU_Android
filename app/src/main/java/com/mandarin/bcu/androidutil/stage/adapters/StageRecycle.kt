@@ -2,6 +2,9 @@ package com.mandarin.bcu.androidutil.stage.adapters
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +14,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.MusicPlayer
 import com.mandarin.bcu.R
@@ -20,6 +25,7 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.pack.Identifier
+import common.util.Data
 import common.util.stage.Limit
 import common.util.stage.Stage
 import java.text.DecimalFormat
@@ -30,6 +36,11 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
     private val s: GetStrings = GetStrings(activity)
 
     private var isRaw = false
+
+    private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
+    private val color: IntArray = intArrayOf(
+        StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
+    )
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pack: Button = itemView.findViewById(R.id.stginfopack)
@@ -76,9 +87,12 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val stm = st.cont ?: return
 
         viewHolder.id.text = s.getID(st.cont.cont.sid, stm.id.id, data.id)
+
         val stars: MutableList<String> = ArrayList()
+
         for (k in stm.stars.indices) {
             val s: String = (k + 1).toString() + " (" + stm.stars[k] + " %)"
+
             stars.add(s)
         }
 
@@ -107,27 +121,40 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         }
 
         val arrayAdapter = ArrayAdapter(activity, R.layout.spinnerdefault, stars)
+
         viewHolder.star.adapter = arrayAdapter
+
         viewHolder.star.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val enrec: RecyclerView = activity.findViewById(R.id.stginfoenrec)
+
                 enrec.layoutManager = LinearLayoutManager(activity)
+
                 ViewCompat.setNestedScrollingEnabled(enrec, false)
+
                 val listRecycle = EnemyListRecycle(activity, st, stm.stars[position])
+
                 enrec.adapter = listRecycle
+
                 StaticStore.stageSpinner = position
+
                 val l = st.getLim(position)
+
                 if (none(l)) {
                     viewHolder.limitNone.visibility = View.VISIBLE
                     viewHolder.limitscroll.visibility = View.GONE
                 } else {
                     viewHolder.limitscroll.visibility = View.VISIBLE
                     viewHolder.limitNone.visibility = View.GONE
+
                     if (data.id == l.sid || l.sid == -1) {
                         if (viewHolder.star.selectedItemPosition == l.star || l.star == -1) {
                             viewHolder.limitrec.layoutManager = LinearLayoutManager(activity)
+
                             ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec, false)
+
                             val limitRecycle = LimitRecycle(activity, l)
+
                             viewHolder.limitrec.adapter = limitRecycle
                         }
                     }
@@ -136,9 +163,11 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
         if (StaticStore.stageSpinner != -1) {
             viewHolder.star.setSelection(StaticStore.stageSpinner)
         }
+
         if (st.info != null) {
             if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
                 viewHolder.xp.text = s.getXP(st.info.xp, t, true)
@@ -166,7 +195,9 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             activity.getString(R.string.stg_info_poss)
 
         viewHolder.length.text = st.len.toString()
+
         viewHolder.maxenemy.text = st.max.toString()
+
         viewHolder.music.text = if(st.mus0 == null || st.mus0.id == -1) {
             activity.getString(R.string.unit_info_t_none)
         } else {
@@ -179,6 +210,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                     return
 
                 val intent = Intent(activity, MusicPlayer::class.java)
+
                 intent.putExtra("Data", JsonEncoder.encode(st.mus0).toString())
 
                 activity.startActivity(intent)
@@ -195,6 +227,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         }
 
         viewHolder.castleperc.text = viewHolder.castleperc.text.toString().replace("??", st.mush.toString())
+
         viewHolder.music2.text = if(st.mus1 == null || st.mus1.id == -1) {
             activity.getString(R.string.unit_info_t_none)
         } else {
@@ -207,6 +240,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                     return
 
                 val intent = Intent(activity, MusicPlayer::class.java)
+
                 intent.putExtra("Data", JsonEncoder.encode(st.mus1).toString())
 
                 activity.startActivity(intent)
@@ -233,6 +267,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 st.bg ?: return
 
                 val intent = Intent(activity, ImageViewer::class.java)
+
                 intent.putExtra("Data", JsonEncoder.encode(st.bg).toString())
 
                 activity.startActivity(intent)
@@ -261,6 +296,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                     return
                 else {
                     val intent = Intent(activity, ImageViewer::class.java)
+
                     intent.putExtra("Img", ImageViewer.CASTLE)
                     intent.putExtra("Data", JsonEncoder.encode(st.castle).toString())
 
@@ -284,9 +320,13 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         if (st.info != null) {
             if (st.info.drop.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
+
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
                 viewHolder.drop.layoutManager = linearLayoutManager
+
                 val dropRecycle = DropRecycle(st, activity)
+
                 viewHolder.drop.adapter = dropRecycle
                 ViewCompat.setNestedScrollingEnabled(viewHolder.drop, false)
             } else {
@@ -295,9 +335,13 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             }
             if (st.info.time.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
+
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
                 viewHolder.score.layoutManager = linearLayoutManager
+
                 val scoreRecycle = ScoreRecycle(st, activity)
+
                 viewHolder.score.adapter = scoreRecycle
                 ViewCompat.setNestedScrollingEnabled(viewHolder.score, false)
             } else {
@@ -323,13 +367,218 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         } else {
             viewHolder.limitscroll.visibility = View.VISIBLE
             viewHolder.limitNone.visibility = View.GONE
+
             if (data.id == l.sid || l.sid == -1) {
                 if (viewHolder.star.selectedItemPosition == l.star || l.star == -1) {
                     viewHolder.limitrec.layoutManager = LinearLayoutManager(activity)
+
                     ViewCompat.setNestedScrollingEnabled(viewHolder.limitrec, false)
+
                     val limitRecycle = LimitRecycle(activity, l)
+
                     viewHolder.limitrec.adapter = limitRecycle
                 }
+            }
+        }
+
+        val stlev: TextInputLayout = activity.findViewById(R.id.stlev)
+        val sttrea: TextInputLayout = activity.findViewById(R.id.sttrea)
+        val sttrea2: TextInputLayout = activity.findViewById(R.id.sttrea2)
+
+        val stlevt: TextInputEditText = activity.findViewById(R.id.stlevt)
+        val sttreat: TextInputEditText = activity.findViewById(R.id.sttreat)
+        val sttreat2: TextInputEditText = activity.findViewById(R.id.sttreat2)
+
+        val reset: Button = activity.findViewById(R.id.treasurereset)
+
+        stlev.isCounterEnabled = true
+        stlev.counterMaxLength = 2
+        stlev.setHelperTextColor(ColorStateList(states, color))
+
+        sttrea.isCounterEnabled = true
+        sttrea.counterMaxLength = 3
+        sttrea.setHelperTextColor(ColorStateList(states, color))
+
+        sttrea2.isCounterEnabled = true
+        sttrea2.counterMaxLength = 3
+        sttrea2.setHelperTextColor(ColorStateList(states, color))
+
+        stlevt.setText(t.tech[Data.LV_XP].toString())
+
+        sttreat.setText(t.trea[Data.T_XP1].toString())
+
+        sttreat2.setText(t.trea[Data.T_XP2].toString())
+
+        stlevt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if(s.toString().isNotEmpty()) {
+                    if(s.toString().toInt() > 30 || s.toString().toInt() <= 0) {
+                        if(stlev.isHelperTextEnabled) {
+                            stlev.isHelperTextEnabled = false
+                            stlev.isErrorEnabled = true
+                            stlev.error = activity.getString(R.string.treasure_invalid)
+                        }
+                    } else {
+                        if(stlev.isErrorEnabled) {
+                            stlev.error = null
+                            stlev.isErrorEnabled = false
+                            stlev.isHelperTextEnabled = true
+                            stlev.setHelperTextColor(ColorStateList(states, color))
+                            stlev.helperText = "1~30 Lv."
+                        }
+                    }
+                } else {
+                    if(stlev.isErrorEnabled) {
+                        stlev.error = null
+                        stlev.isErrorEnabled = false
+                        stlev.isHelperTextEnabled = true
+                        stlev.setHelperTextColor(ColorStateList(states, color))
+                        stlev.helperText = "1~30 Lv."
+                    }
+                }
+            }
+
+            override fun afterTextChanged(text: Editable) {
+                if(text.toString().isNotEmpty()) {
+                    if(text.toString().toInt() in 1..30) {
+                        val lev = text.toString().toInt()
+
+                        t.tech[Data.LV_XP] = lev
+
+                        if (st.info != null) {
+                            if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
+                                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                            else
+                                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                        } else {
+                            viewHolder.xp.text = "0"
+                        }
+                    }
+                }
+            }
+
+        })
+
+        sttreat.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if(s.toString().isNotEmpty()) {
+                    if(s.toString().toInt() > 300 || s.toString().toInt() < 0) {
+                        if(sttrea.isHelperTextEnabled) {
+                            sttrea.isHelperTextEnabled = false
+                            sttrea.isErrorEnabled = true
+                            sttrea.error = activity.getString(R.string.treasure_invalid)
+                        }
+                    } else {
+                        if(sttrea.isErrorEnabled) {
+                            sttrea.error = null
+                            sttrea.isErrorEnabled = false
+                            sttrea.isHelperTextEnabled = true
+                            sttrea.setHelperTextColor(ColorStateList(states, color))
+                            sttrea.helperText = "0~300 %"
+                        }
+                    }
+                } else {
+                    if(sttrea.isErrorEnabled) {
+                        sttrea.error = null
+                        sttrea.isErrorEnabled = false
+                        sttrea.isHelperTextEnabled = true
+                        sttrea.setHelperTextColor(ColorStateList(states, color))
+                        sttrea.helperText = "0~300 %"
+                    }
+                }
+            }
+
+            override fun afterTextChanged(text: Editable) {
+                if(text.toString().isNotEmpty()) {
+                    if(text.toString().toInt() in 0..300) {
+                        val lev = text.toString().toInt()
+
+                        t.trea[Data.T_XP1] = lev
+
+                        if (st.info != null) {
+                            if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
+                                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                            else
+                                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                        } else {
+                            viewHolder.xp.text = "0"
+                        }
+                    }
+                }
+            }
+        })
+
+        sttreat2.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if(s.toString().isNotEmpty()) {
+                    if(s.toString().toInt() > 300 || s.toString().toInt() < 0) {
+                        if(sttrea2.isHelperTextEnabled) {
+                            sttrea2.isHelperTextEnabled = false
+                            sttrea2.isErrorEnabled = true
+                            sttrea2.error = activity.getString(R.string.treasure_invalid)
+                        }
+                    } else {
+                        if(sttrea2.isErrorEnabled) {
+                            sttrea2.error = null
+                            sttrea2.isErrorEnabled = false
+                            sttrea2.isHelperTextEnabled = true
+                            sttrea2.setHelperTextColor(ColorStateList(states, color))
+                            sttrea2.helperText = "0~300 %"
+                        }
+                    }
+                } else {
+                    if(sttrea2.isErrorEnabled) {
+                        sttrea2.error = null
+                        sttrea2.isErrorEnabled = false
+                        sttrea2.isHelperTextEnabled = true
+                        sttrea2.setHelperTextColor(ColorStateList(states, color))
+                        sttrea2.helperText = "0~300 %"
+                    }
+                }
+            }
+
+            override fun afterTextChanged(text: Editable) {
+                if(text.toString().isNotEmpty()) {
+                    if(text.toString().toInt() in 0..300) {
+                        val lev = text.toString().toInt()
+
+                        t.trea[Data.T_XP2] = lev
+
+                        if (st.info != null) {
+                            if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
+                                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                            else
+                                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                        } else {
+                            viewHolder.xp.text = "0"
+                        }
+                    }
+                }
+            }
+        })
+
+        reset.setOnClickListener {
+            t.tech[Data.LV_XP] = 30
+            t.trea[Data.T_XP1] = 300
+            t.trea[Data.T_XP2] = 300
+
+            stlevt.setText(t.tech[Data.LV_XP].toString())
+            sttreat.setText(t.trea[Data.T_XP1].toString())
+            sttreat2.setText(t.trea[Data.T_XP2].toString())
+
+            if (st.info != null) {
+                if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
+                    viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                else
+                    viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+            } else {
+                viewHolder.xp.text = "0"
             }
         }
     }

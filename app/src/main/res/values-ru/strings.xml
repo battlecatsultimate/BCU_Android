@@ -852,4 +852,7 @@
     <string name="datareset_lineupreset">Resetting lineup data…</string>
     <string name="datareset_logreset">Resetting log files…</string>
     <string name="datareset_packreset">Restting pack data…</string>
+    <string name="treasure_st_trea">Study Treasure (EoC)</string>
+    <string name="treasure_st_lev">Study Level</string>
+    <string name="treasure_st_trea2">Study Treasure (CotC)</string>
 </resources>
