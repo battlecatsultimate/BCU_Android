@@ -575,7 +575,7 @@ class UnitinfPager : Fragment() {
                             cdlev.isErrorEnabled = false
                             cdlev.isHelperTextEnabled = true
                             cdlev.setHelperTextColor(ColorStateList(states, color))
-                            cdlev.helperText = "1~30"
+                            cdlev.helperText = "1~30 Lv."
                         }
                     }
                 } else {
@@ -584,7 +584,7 @@ class UnitinfPager : Fragment() {
                         cdlev.isErrorEnabled = false
                         cdlev.isHelperTextEnabled = true
                         cdlev.setHelperTextColor(ColorStateList(states, color))
-                        cdlev.helperText = "1~30"
+                        cdlev.helperText = "1~30 Lv."
                     }
                 }
             }
@@ -629,7 +629,7 @@ class UnitinfPager : Fragment() {
                             cdtrea.isErrorEnabled = false
                             cdtrea.isHelperTextEnabled = true
                             cdtrea.setHelperTextColor(ColorStateList(states, color))
-                            cdtrea.helperText = "0~300"
+                            cdtrea.helperText = "0~300 %"
                         }
                     }
                 } else {
@@ -638,7 +638,7 @@ class UnitinfPager : Fragment() {
                         cdtrea.isErrorEnabled = false
                         cdtrea.isHelperTextEnabled = true
                         cdtrea.setHelperTextColor(ColorStateList(states, color))
-                        cdtrea.helperText = "0~300"
+                        cdtrea.helperText = "0~300 %"
                     }
                 }
             }
@@ -680,7 +680,7 @@ class UnitinfPager : Fragment() {
                             atktrea.isErrorEnabled = false
                             atktrea.isHelperTextEnabled = true
                             atktrea.setHelperTextColor(ColorStateList(states, color))
-                            atktrea.helperText = "0~300"
+                            atktrea.helperText = "0~300 %"
                         }
                     }
                 } else {
@@ -689,7 +689,7 @@ class UnitinfPager : Fragment() {
                         atktrea.isErrorEnabled = false
                         atktrea.isHelperTextEnabled = true
                         atktrea.setHelperTextColor(ColorStateList(states, color))
-                        atktrea.helperText = "0~300"
+                        atktrea.helperText = "0~300 %"
                     }
                 }
             }
@@ -732,7 +732,7 @@ class UnitinfPager : Fragment() {
                             healtrea.isErrorEnabled = false
                             healtrea.isHelperTextEnabled = true
                             healtrea.setHelperTextColor(ColorStateList(states, color))
-                            healtrea.helperText = "0~300"
+                            healtrea.helperText = "0~300 %"
                         }
                     }
                 } else {
@@ -741,7 +741,7 @@ class UnitinfPager : Fragment() {
                         healtrea.isErrorEnabled = false
                         healtrea.isHelperTextEnabled = true
                         healtrea.setHelperTextColor(ColorStateList(states, color))
-                        healtrea.helperText = "0~300"
+                        healtrea.helperText = "0~300 %"
                     }
                 }
             }

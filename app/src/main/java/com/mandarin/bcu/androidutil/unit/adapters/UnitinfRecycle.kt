@@ -36,33 +36,21 @@ import common.util.unit.Form
 import common.util.unit.Unit
 import java.util.*
 
-class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<Form>, data: Identifier<Unit>) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
-    private val context: Activity?
-    private val names: ArrayList<String>
-    private val forms: Array<Form>
-    private val data: Identifier<Unit>
+class UnitinfRecycle(private val context: Activity,
+                     private val names: ArrayList<String>, private val forms: Array<Form>,
+                     private val data: Identifier<Unit>
+) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
     private var fs = 0
-    private val s: GetStrings
+    private val s: GetStrings = GetStrings(this.context)
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
-    private val color: IntArray
+    private val color: IntArray = intArrayOf(
+            StaticStore.getAttributeColor(context, R.attr.TextPrimary)
+    )
     private var talents = false
     private var pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
 
     private var isRaw = false
-
-    init {
-        this.context = context
-        this.names = names
-        this.forms = forms
-        this.data = data
-
-        s = GetStrings(this.context)
-
-        color = intArrayOf(
-                StaticStore.getAttributeColor(context, R.attr.TextPrimary)
-        )
-    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pack: Button = itemView.findViewById(R.id.unitinfpack)
@@ -119,10 +107,11 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val u = data.get() ?: return
 
-        val cdlev: TextInputLayout = context!!.findViewById(R.id.cdlev)
+        val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
         val healtrea: TextInputLayout = context.findViewById(R.id.healtrea)
+
         cdlev.isCounterEnabled = true
         cdlev.counterMaxLength = 2
         cdtrea.isCounterEnabled = true
@@ -224,7 +213,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
     @SuppressLint("ClickableViewAccessibility")
     private fun listeners(viewHolder: ViewHolder) {
-        val cdlev: TextInputLayout = context!!.findViewById(R.id.cdlev)
+        val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
         val healtrea: TextInputLayout = context.findViewById(R.id.healtrea)
@@ -476,7 +465,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                             cdlev.isErrorEnabled = false
                             cdlev.isHelperTextEnabled = true
                             cdlev.setHelperTextColor(ColorStateList(states, color))
-                            cdlev.helperText = "1~30"
+                            cdlev.helperText = "1~30 Lv."
                         }
                     }
                 } else {
@@ -485,7 +474,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
                         cdlev.isErrorEnabled = false
                         cdlev.isHelperTextEnabled = true
                         cdlev.setHelperTextColor(ColorStateList(states, color))
-                        cdlev.helperText = "1~30"
+                        cdlev.helperText = "1~30 Lv."
                     }
                 }
             }
@@ -884,7 +873,7 @@ class UnitinfRecycle(context: Activity, names: ArrayList<String>, forms: Array<F
 
             viewHolder.unitabil.layoutManager = linearLayoutManager
 
-            val adapterAbil = AdapterAbil(abil, proc, abilityicon, context!!)
+            val adapterAbil = AdapterAbil(abil, proc, abilityicon, context)
 
             viewHolder.unitabil.adapter = adapterAbil
 
