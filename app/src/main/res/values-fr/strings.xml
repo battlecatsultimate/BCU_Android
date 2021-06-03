@@ -832,4 +832,24 @@
     <string name="battle_tworow">Battle layout : Two rows</string>
     <string name="battle_onerow">Battle layout : One row</string>
     <string name="config_battle">Battle</string>
+    <string name="datareset_selected">Reset selected data</string>
+    <string name="datareset_warning">Are you sure that you want to delete selected data? This cannot be undone</string>
+    <string name="datareset_reset">Reset</string>
+    <string name="datareset_restart">Reset was successful. Please restart application</string>
+    <string name="datareset_asset">Reset asset _AAA_</string>
+    <string name="datareset_assetbc">" (BC _VVV_.x asset)"</string>
+    <string name="datareset_fail">Failed to reset some data…</string>
+    <string name="datareset_lineup">Reset lineup data</string>
+    <string name="datareset_pack">Reset pack data</string>
+    <string name="datareset_lang">Reset language file data</string>
+    <string name="datareset_music">Reset music data</string>
+    <string name="datareset_log">Reset log file data</string>
+    <string name="datareset_prebc">" (Pre 9.0 BC asset)"</string>
+    <string name="config_reset">Reset Data</string>
+    <string name="datareset_assetreset">Resetting _…</string>
+    <string name="datareset_langreset">Resetting language file data…</string>
+    <string name="datareset_musicreset">Resetting music data…</string>
+    <string name="datareset_lineupreset">Resetting lineup data…</string>
+    <string name="datareset_logreset">Resetting log files…</string>
+    <string name="datareset_packreset">Restting pack data…</string>
 </resources>

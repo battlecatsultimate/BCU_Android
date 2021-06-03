@@ -1228,27 +1228,32 @@ object StaticStore {
      *
      * @param f Targeted [File]
      * @param deleteItself If this is true, this method will delete [f] too
+     * @return Return result whether it successfully deleted all files or not
      *
      */
-    fun deleteFile(f: File, deleteItself: Boolean) {
+    fun deleteFile(f: File, deleteItself: Boolean) : Boolean {
+        var result = true
+
         if(f.isFile) {
-            f.delete()
+            result = result and f.delete()
         } else if(f.isDirectory) {
             val lit = f.listFiles()
 
             if(lit != null) {
                 for(g in lit) {
                     if(g.isFile) {
-                        g.delete()
+                        result = result and g.delete()
                     } else if(g.isDirectory) {
-                        deleteFile(g, deleteItself)
+                        result = result and deleteFile(g, deleteItself)
                     }
                 }
             }
 
             if(deleteItself)
-                f.delete()
+                result = result and f.delete()
         }
+
+        return result
     }
 
     fun fixOrientation(ac: Activity) {

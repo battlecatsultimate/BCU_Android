@@ -833,4 +833,24 @@
     <string name="battle_tworow">레이아웃 : 두 줄</string>
     <string name="battle_onerow">레이아웃 : 한 줄</string>
     <string name="config_battle">전투</string>
+    <string name="datareset_warning">정말로 선택된 데이터를 초기화 하시겠습니까? 해당 작업은 되돌릴 수 없습니다</string>
+    <string name="datareset_selected">선택된 데이터 초기화</string>
+    <string name="datareset_reset">초기화</string>
+    <string name="datareset_restart">초기화 성공. 앱을 재시작 해주세요</string>
+    <string name="datareset_asset">에셋 파일 _AAA_ 초기화</string>
+    <string name="datareset_assetbc">" (냥코 버전 _VVV_.x 에셋)"</string>
+    <string name="datareset_fail">일부 데이터 초기화에 실패했습니다…</string>
+    <string name="datareset_lineup">라인업 데이터 초기화</string>
+    <string name="datareset_pack">팩 데이터 초기화</string>
+    <string name="datareset_lang">언어 파일 데이터 초기화</string>
+    <string name="datareset_music">음악 데이터 초기화</string>
+    <string name="datareset_log">로그 파일 데이터 초기화</string>
+    <string name="datareset_prebc">" (버전 9.0 이하 냥코 에셋)"</string>
+    <string name="config_reset">데이터 초기화</string>
+    <string name="datareset_assetreset">에셋 _ 초기화 중…</string>
+    <string name="datareset_langreset">언어 파일 데이터 초기화 중…</string>
+    <string name="datareset_musicreset">음악 데이터 초기화 중…</string>
+    <string name="datareset_lineupreset">라인업 데이터 초기화 중…</string>
+    <string name="datareset_logreset">로그 파일 초기화 중…</string>
+    <string name="datareset_packreset">팩 데이터 초기화 중…</string>
 </resources>

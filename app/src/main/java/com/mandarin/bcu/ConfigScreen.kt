@@ -16,6 +16,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.Revalidater
@@ -512,6 +513,17 @@ open class ConfigScreen : AppCompatActivity() {
                 return@OnLongClickListener true
             }
             false
+        })
+
+        val reset = findViewById<MaterialButton>(R.id.configreset)
+
+        reset.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@ConfigScreen, DataResetManager::class.java)
+
+                startActivity(intent)
+                finish()
+            }
         })
     }
 

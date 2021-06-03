@@ -23,7 +23,7 @@ import java.text.DecimalFormat
 
 class AssetListAdapter(private val ac: Activity, private val files: ArrayList<VFile>) : ArrayAdapter<VFile>(ac, R.layout.file_list_layout, files){
 
-    val extension = arrayOf("png", "csv", "tsv", "json", "imgcut", "mamodel", "maanim", "ini")
+    private val extension = arrayOf("png", "csv", "tsv", "json", "imgcut", "mamodel", "maanim", "ini")
     val icon = arrayOf(R.drawable.ic_png, R.drawable.ic_csv, R.drawable.ic_tsv, R.drawable.ic_json, R.drawable.ic_imgcut, R.drawable.ic_mamodel, R.drawable.ic_maanim, R.drawable.ic_ini)
 
     val size = arrayOf("B", "KB", "MB", "GB")

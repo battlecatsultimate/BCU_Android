@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
+    android:theme="?attr/TILtheme"
     tools:context=".ConfigScreen">
 
     <androidx.appcompat.widget.Toolbar
@@ -28,6 +29,7 @@
         android:contentDescription="@string/def_schbck"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        app:tint="?attr/UnitinfoName"
         android:tint="?attr/UnitinfoName"
         app:borderWidth="0dp"
         app:elevation="0dp"
@@ -439,23 +441,23 @@
 
             <TextView
                 android:id="@+id/configappname"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="@string/config_app_name"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintStart_toStartOf="@+id/configse"
-                app:layout_constraintTop_toBottomOf="@+id/configrow" />
+                app:layout_constraintTop_toTopOf="@+id/configreset" />
 
             <TextView
                 android:id="@+id/configbuildver"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/config_build_ver"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/configreset"
+                app:layout_constraintEnd_toStartOf="@+id/configreset"
                 app:layout_constraintStart_toStartOf="@+id/configappname"
                 app:layout_constraintTop_toBottomOf="@+id/configappname" />
 
@@ -514,6 +516,22 @@
                 app:layout_constraintEnd_toEndOf="@+id/configse"
                 app:layout_constraintStart_toStartOf="@+id/configse"
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/configreset"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/config_reset"
+                android:textAllCaps="false"
+                android:textColor="?attr/ErrorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/configrow"
+                app:strokeColor="?attr/ErrorPrimary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
