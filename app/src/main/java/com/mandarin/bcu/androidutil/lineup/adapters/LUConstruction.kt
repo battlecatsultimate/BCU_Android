@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.battle.BasisSet
+import common.battle.Treasure
 import common.util.Data
 
 class LUConstruction : Fragment() {
@@ -113,7 +114,7 @@ class LUConstruction : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
-                    if (Integer.parseInt(s.toString()) > 20 || Integer.parseInt(s.toString()) < 1) {
+                    if (Integer.parseInt(s.toString()) > 30 || Integer.parseInt(s.toString()) < 1) {
                         if (construction.isHelperTextEnabled) {
                             construction.isHelperTextEnabled = false
                             construction.isErrorEnabled = true
@@ -125,7 +126,7 @@ class LUConstruction : Fragment() {
                             construction.isErrorEnabled = false
                             construction.isHelperTextEnabled = true
                             construction.setHelperTextColor(ColorStateList(states, color))
-                            construction.helperText = "1~20 Lv."
+                            construction.helperText = "1~30 Lv."
                         }
                     }
                 } else {
@@ -134,7 +135,7 @@ class LUConstruction : Fragment() {
                         construction.isErrorEnabled = false
                         construction.isHelperTextEnabled = true
                         construction.setHelperTextColor(ColorStateList(states, color))
-                        construction.helperText = "1~20 Lv."
+                        construction.helperText = "1~30 Lv."
                     }
                 }
             }
@@ -145,7 +146,7 @@ class LUConstruction : Fragment() {
 
                     editable = false
 
-                    if (Integer.parseInt(s.toString()) in 1..20) {
+                    if (Integer.parseInt(s.toString()) in 1..30) {
                         val `val` = Integer.parseInt(s.toString())
 
                         for (i in texts.indices) {
@@ -154,8 +155,8 @@ class LUConstruction : Fragment() {
                         }
                     } else {
                         for (i in texts.indices) {
-                            t.bslv[i] = 20
-                            texts[i]?.setText(20.toString())
+                            t.bslv[i] = 30
+                            texts[i]?.setText(30.toString())
                         }
                     }
 
@@ -176,9 +177,20 @@ class LUConstruction : Fragment() {
     }
 
     private fun setListenersFortextInputEditText(construction: TextInputLayout, text: TextInputEditText?, constructions: Array<TextInputLayout?>, texts: Array<TextInputEditText?>) {
-        if (context == null) return
+        if (context == null)
+            return
 
         for (i in texts.indices) {
+
+            val max = if(i == 0)
+                30
+            else {
+                val curve = Treasure.curveData[i]
+
+                curve?.max ?: 30
+            }
+
+            constructions[i]?.helperText = "1~$max Lv."
 
             texts[i]?.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -187,7 +199,7 @@ class LUConstruction : Fragment() {
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (s.toString().isNotEmpty()) {
-                        if (Integer.parseInt(s.toString()) > 20 || Integer.parseInt(s.toString()) < 1) {
+                        if (Integer.parseInt(s.toString()) > max || Integer.parseInt(s.toString()) < 1) {
                             if (constructions[i]?.isHelperTextEnabled == true) {
                                 constructions[i]?.isHelperTextEnabled = false
                                 constructions[i]?.isErrorEnabled = true
@@ -199,7 +211,7 @@ class LUConstruction : Fragment() {
                                 constructions[i]?.isErrorEnabled = false
                                 constructions[i]?.isHelperTextEnabled = true
                                 constructions[i]?.setHelperTextColor(ColorStateList(states, color))
-                                constructions[i]?.helperText = "1~20 Lv."
+                                constructions[i]?.helperText = "1~$max Lv."
                             }
                         }
                     } else {
@@ -208,7 +220,7 @@ class LUConstruction : Fragment() {
                             constructions[i]?.isErrorEnabled = false
                             constructions[i]?.isHelperTextEnabled = true
                             constructions[i]?.setHelperTextColor(ColorStateList(states, color))
-                            constructions[i]?.helperText = "1~20 Lv."
+                            constructions[i]?.helperText = "1~$max Lv."
                         }
                     }
                 }
@@ -219,14 +231,14 @@ class LUConstruction : Fragment() {
                     if (s.toString().isNotEmpty()) {
                         val t = BasisSet.current().t()
 
-                        if (editable && Integer.parseInt(s.toString()) <= 20 && Integer.parseInt(s.toString()) >= 1) {
+                        if (editable && Integer.parseInt(s.toString()) <= max && Integer.parseInt(s.toString()) >= 1) {
                             val `val` = Integer.parseInt(s.toString())
 
                             t.bslv[i] = `val`
 
                             text?.setText("")
                             construction.isHelperTextEnabled = true
-                            construction.helperText = "1~20 Lv."
+                            construction.helperText = "1~$max Lv."
                         }
 
                         val c = context ?: return
