@@ -54,7 +54,7 @@ class MusicListAdapter(context: Context, private val name: ArrayList<Identifier<
             if(ms == null)
                 ""
             else {
-                ms[position] ?: ""
+                ms[name[position].id] ?: ""
             }
         }
 
