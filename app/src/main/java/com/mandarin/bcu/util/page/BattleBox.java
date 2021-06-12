@@ -6,6 +6,7 @@ import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import common.CommonStatic;
@@ -13,6 +14,7 @@ import common.CommonStatic.BCAuxAssets;
 import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
 import common.battle.StageBasis;
+import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
@@ -97,6 +99,8 @@ public interface BattleBox {
         public double cutout = 0;
 
         private final BCAuxAssets aux = CommonStatic.getBCAssets();
+
+        private final ArrayList<ContAb> efList = new ArrayList<>();
 
         public SymCoord sym = new SymCoord(null, 0, 0, 0, 0);
         public P p = new P(0, 0);
@@ -499,35 +503,49 @@ public interface BattleBox {
             gra.delete(at);
         }
 
+        @SuppressWarnings("UseBulkOperation")
         private void drawEntity(FakeGraphics gra) {
+            for(int i = 0; i < sb.lw.size(); i++) {
+                efList.add(sb.lw.get(i));
+            }
+
             FakeTransform at = gra.getTransform();
+
             double psiz = siz * sprite;
+
             CommonStatic.getConfig().battle = true;
 
             for (int j = 0; j < sb.le.size(); j++)
                 if ((sb.s_stop == 0 || (sb.le.get(j).getAbi() & Data.AB_TIMEI) == 0)) {
                     int dep = sb.le.get(j).layer * DEP;
 
+                    while(efList.size() > 0) {
+                        ContAb wc = efList.get(0);
+
+                        if(wc.layer + 1 <= sb.le.get(j).layer) {
+                            drawEff(gra, wc, at, psiz);
+                            efList.remove(0);
+                        } else
+                            break;
+                    }
+
                     gra.setTransform(at);
+
                     double p = getX(sb.le.get(j).pos);
                     double y = midh - (road_h - dep) * siz;
+
                     setP(p, y);
                     sb.le.get(j).anim.draw(gra, this.p, psiz);
+
                     gra.setTransform(at);
+
                     setP(p, y);
                     sb.le.get(j).anim.drawEff(gra, this.p, siz);
                 }
 
-            for (int j = 0; j < sb.lw.size(); j++) {
-                gra.setTransform(at);
-                double p = (sb.lw.get(j).pos * ratio + off ) * siz + pos;
-
-                if(sb.lw.get(j) instanceof ContWaveAb)
-                    p -= wave * siz;
-
-                double y = midh - (road_h - DEP * sb.lw.get(j).layer) * siz;
-                setP(p, y);
-                sb.lw.get(j).draw(gra, this.p, psiz);
+            while(efList.size() > 0) {
+                drawEff(gra, efList.get(0), at, psiz);
+                efList.remove(0);
             }
 
             for (int j = 0; j < sb.lea.size(); j++) {
@@ -612,6 +630,22 @@ public interface BattleBox {
             gra.setTransform(at);
             gra.delete(at);
             CommonStatic.getConfig().battle = false;
+        }
+
+        private void drawEff(FakeGraphics g, ContAb wc, FakeTransform at, double pSiz) {
+            int dep = wc.layer * DEP;
+
+            g.setTransform(at);
+
+            double p = (wc.pos * ratio + off) * siz + pos;
+
+            if(wc instanceof ContWaveAb)
+                p -= wave * siz;
+
+            double y = midh - (road_h - dep) * siz;
+
+            setP(p, y);
+            wc.draw(g, this.p, pSiz);
         }
 
         private void drawTop(FakeGraphics g) {
