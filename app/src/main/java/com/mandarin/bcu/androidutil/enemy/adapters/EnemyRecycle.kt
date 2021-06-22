@@ -110,7 +110,9 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             return
 
         val t = BasisSet.current().t()
+
         val shared = activity!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+
         if (shared.getBoolean("frame", true)) {
             fs = 0
             viewHolder.frse.text = activity!!.getString(R.string.unit_info_fr)
@@ -118,6 +120,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             fs = 1
             viewHolder.frse.text = activity!!.getString(R.string.unit_info_sec)
         }
+
         val aclev: TextInputLayout = activity!!.findViewById(R.id.aclev)
         val actrea: TextInputLayout = activity!!.findViewById(R.id.actrea)
         val itfcry: TextInputLayout = activity!!.findViewById(R.id.itfcrytrea)
@@ -128,28 +131,39 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         val itfcryt: TextInputEditText = activity!!.findViewById(R.id.itfcrytreat)
         val cotccryt: TextInputEditText = activity!!.findViewById(R.id.cotccrytreat)
         val godmaskt = arrayOf<TextInputEditText>(activity!!.findViewById(R.id.godmaskt), activity!!.findViewById(R.id.godmaskt1), activity!!.findViewById(R.id.godmaskt2))
+
         aclev.isCounterEnabled = true
         aclev.counterMaxLength = 2
         aclev.setHelperTextColor(ColorStateList(states, color))
+
         actrea.isCounterEnabled = true
         actrea.counterMaxLength = 3
         actrea.setHelperTextColor(ColorStateList(states, color))
+
         itfcry.isCounterEnabled = true
         itfcry.counterMaxLength = 3
         itfcry.setHelperTextColor(ColorStateList(states, color))
+
         cotccry.isCounterEnabled = true
         cotccry.counterMaxLength = 4
         cotccry.setHelperTextColor(ColorStateList(states, color))
+
         for (til in godmask) {
             til.isCounterEnabled = true
             til.counterMaxLength = 3
             til.setHelperTextColor(ColorStateList(states, color))
         }
+
         viewHolder.name.text = MultiLangCont.get(em) ?: em.name
+
         val name = StaticStore.trio(em.id.id)
+
         viewHolder.enemid.text = name
+
         val ratio = 32f / 32f
+
         val img = em.anim?.edi?.img
+
         var b: Bitmap? = null
 
         if (img != null)
@@ -173,26 +187,37 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enemrange.text = s.getRange(em)
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
-        val proc: List<String>
-        proc = Interpret.getProc(em.de, fs == 1, false)
+
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false)
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(em.de)
+
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
+
             val linearLayoutManager = LinearLayoutManager(activity)
+
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
             viewHolder.emabil.layoutManager = linearLayoutManager
+
             val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
+
             viewHolder.emabil.adapter = adapterAbil
+
             ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false)
         } else {
             viewHolder.emabil.visibility = View.GONE
         }
+
         aclevt.setText(t.tech[1].toString())
         actreat.setText(t.trea[3].toString())
         itfcryt.setText(t.alien.toString())
         cotccryt.setText(t.star.toString())
-        for (j in godmaskt.indices) godmaskt[j].setText(t.gods[j].toString())
+
+        for (j in godmaskt.indices)
+            godmaskt[j].setText(t.gods[j].toString())
+
         listeners(viewHolder)
     }
 
@@ -205,6 +230,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         val ac = activity ?: return
 
         val t = BasisSet.current().t()
+
         val aclev: TextInputLayout = activity!!.findViewById(R.id.aclev)
         val actrea: TextInputLayout = activity!!.findViewById(R.id.actrea)
         val itfcry: TextInputLayout = activity!!.findViewById(R.id.itfcrytrea)
@@ -215,48 +241,70 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         val itfcryt: TextInputEditText = activity!!.findViewById(R.id.itfcrytreat)
         val cotccryt: TextInputEditText = activity!!.findViewById(R.id.cotccrytreat)
         val godmaskt = arrayOf<TextInputEditText>(activity!!.findViewById(R.id.godmaskt), activity!!.findViewById(R.id.godmaskt1), activity!!.findViewById(R.id.godmaskt2))
+
         viewHolder.pack.setOnClickListener {
             isRaw = !isRaw
 
             viewHolder.enempack.text = s.getPackName(em.id, isRaw)
         }
+
         viewHolder.name.setOnLongClickListener(OnLongClickListener {
-            if (activity == null) return@OnLongClickListener false
+            if (activity == null)
+                return@OnLongClickListener false
+
             val clipboardManager = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
             val data = ClipData.newPlainText(null, viewHolder.name.text)
+
             clipboardManager.setPrimaryClip(data)
+
             StaticStore.showShortMessage(ac, R.string.enem_info_copied)
+
             true
         })
+
         val reset = activity!!.findViewById<Button>(R.id.enemtreareset)
+
         viewHolder.enemmulti.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (viewHolder.enemmulti.text.toString() == "") {
                     multi = 100
                     multiply(viewHolder, em)
                 } else {
-                    multi = if (viewHolder.enemmulti.text.toString().toDouble() > Int.MAX_VALUE) Int.MAX_VALUE else Integer.valueOf(viewHolder.enemmulti.text.toString())
+                    multi = if (viewHolder.enemmulti.text.toString().toDouble() > Int.MAX_VALUE)
+                        Int.MAX_VALUE
+                    else
+                        Integer.valueOf(viewHolder.enemmulti.text.toString())
+
                     multiply(viewHolder, em)
                 }
             }
 
             override fun afterTextChanged(s: Editable) {}
         })
+
         viewHolder.enemamulti.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (viewHolder.enemamulti.text.toString() == "") {
                     amulti = 100
                     multiply(viewHolder, em)
                 } else {
-                    amulti = if (viewHolder.enemmulti.text.toString().toDouble() > Int.MAX_VALUE) Int.MAX_VALUE else Integer.valueOf(viewHolder.enemamulti.text.toString())
+                    amulti = if (viewHolder.enemamulti.text.toString().toDouble() > Int.MAX_VALUE)
+                        Int.MAX_VALUE
+                    else
+                        Integer.valueOf(viewHolder.enemamulti.text.toString())
+
                     multiply(viewHolder, em)
                 }
             }
 
             override fun afterTextChanged(s: Editable) {}
         })
+
         viewHolder.frse.setOnClickListener {
             if (fs == 0) {
                 fs = 1
@@ -268,6 +316,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 viewHolder.frse.text = activity!!.getString(R.string.unit_info_fr)
             }
         }
+
         viewHolder.enematkb.setOnClickListener {
             if (viewHolder.enematkb.text == activity!!.getString(R.string.unit_info_atk)) {
                 viewHolder.enematk.text = s.getDPS(em, amulti)
@@ -277,17 +326,48 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 viewHolder.enematkb.text = activity!!.getString(R.string.unit_info_atk)
             }
         }
-        viewHolder.enempreb.setOnClickListener { if (viewHolder.enempre.text.toString().endsWith("f")) viewHolder.enempre.text = s.getPre(em, 1) else viewHolder.enempre.text = s.getPre(em, 0) }
-        viewHolder.enematktimeb.setOnClickListener { if (viewHolder.enematktime.text.toString().endsWith("f")) viewHolder.enematktime.text = s.getAtkTime(em, 1) else viewHolder.enematktime.text = s.getAtkTime(em, 0) }
-        viewHolder.enempostb.setOnClickListener { if (viewHolder.enempost.text.toString().endsWith("f")) viewHolder.enempost.text = s.getPost(em, 1) else viewHolder.enempost.text = s.getPost(em, 0) }
-        viewHolder.enemtbab.setOnClickListener { if (viewHolder.enemtba.text.toString().endsWith("f")) viewHolder.enemtba.text = s.getTBA(em, 1) else viewHolder.enemtba.text = s.getTBA(em, 0) }
+
+        viewHolder.enempreb.setOnClickListener {
+            if (viewHolder.enempre.text.toString().endsWith("f"))
+                viewHolder.enempre.text = s.getPre(em, 1)
+            else
+                viewHolder.enempre.text = s.getPre(em, 0)
+        }
+
+        viewHolder.enematktimeb.setOnClickListener {
+            if (viewHolder.enematktime.text.toString().endsWith("f"))
+            viewHolder.enematktime.text = s.getAtkTime(em, 1)
+            else
+                viewHolder.enematktime.text = s.getAtkTime(em, 0)
+        }
+
+        viewHolder.enempostb.setOnClickListener {
+            if (viewHolder.enempost.text.toString().endsWith("f"))
+                viewHolder.enempost.text = s.getPost(em, 1)
+            else
+                viewHolder.enempost.text = s.getPost(em, 0)
+        }
+
+        viewHolder.enemtbab.setOnClickListener {
+            if (viewHolder.enemtba.text.toString().endsWith("f"))
+                viewHolder.enemtba.text = s.getTBA(em, 1)
+            else
+                viewHolder.enemtba.text = s.getTBA(em, 0)
+        }
+
         aclevt.setSelection(aclevt.text?.length ?: 0)
         actreat.setSelection(actreat.text?.length ?: 0)
+
         itfcryt.setSelection(itfcryt.text?.length ?: 0)
+
         cotccryt.setSelection(cotccryt.text?.length ?: 0)
-        for (tiet in godmaskt) tiet.setSelection(tiet.text?.length ?: 0)
+
+        for (tiet in godmaskt)
+            tiet.setSelection(tiet.text?.length ?: 0)
+
         aclevt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 30 || s.toString().toInt() <= 0) {
@@ -331,6 +411,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         })
         actreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 300) {
@@ -372,6 +453,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 }
             }
         })
+
         itfcryt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -424,8 +506,10 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 }
             }
         })
+
         cotccryt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     if (s.toString().toInt() > 1500) {
@@ -476,9 +560,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 }
             }
         })
+
         for (i in godmaskt.indices) {
             godmaskt[i].addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (s.toString().isNotEmpty()) {
                         if (s.toString().toInt() > 100) {
@@ -530,23 +616,34 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 }
             })
         }
+
         reset.setOnClickListener {
             t.tech[1] = 30
             t.trea[3] = 300
             t.alien = 600
             t.star = 1500
-            for (i in t.gods.indices) t.gods[i] = 100
+
+            for (i in t.gods.indices)
+                t.gods[i] = 100
+
             aclevt.setText(t.tech[1].toString())
             actreat.setText(t.trea[3].toString())
+
             itfcryt.setText(t.alien.toString())
+
             cotccryt.setText(t.star.toString())
-            for (i in t.gods.indices) godmaskt[i].setText(t.gods[i].toString())
+
+            for (i in t.gods.indices)
+                godmaskt[i].setText(t.gods[i].toString())
+
             viewHolder.enemhp.text = s.getHP(em, multi)
+
             if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
                 viewHolder.enematk.text = s.getDPS(em, amulti)
             } else {
                 viewHolder.enematk.text = s.getAtk(em, amulti)
             }
+
             viewHolder.enemdrop.text = s.getDrop(em, t)
         }
     }
@@ -565,6 +662,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempre.text = s.getPre(em, fs)
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
+
         val proc: List<String> = Interpret.getProc(em.de, fs == 1, false)
 
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
@@ -573,11 +671,17 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
+
             val linearLayoutManager = LinearLayoutManager(activity)
+
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
             viewHolder.emabil.layoutManager = linearLayoutManager
+
             val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
+
             viewHolder.emabil.adapter = adapterAbil
+
             ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false)
         }
     }
