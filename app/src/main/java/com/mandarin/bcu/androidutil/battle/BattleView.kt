@@ -276,19 +276,26 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.MUSIC.stop()
             SoundHandler.MUSIC.reset()
             SoundHandler.MUSIC.isLooping = false
-            val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[8])
-            if (f != null) {
-                SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                SoundHandler.MUSIC.prepareAsync()
-                SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                    override fun prepare(mp: MediaPlayer?) {
-                        SoundHandler.MUSIC.start()
+
+            if(SoundHandler.sePlay) {
+                val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[8])
+
+                if (f != null) {
+                    SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                    SoundHandler.MUSIC.prepareAsync()
+
+                    SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                        override fun prepare(mp: MediaPlayer?) {
+                            SoundHandler.MUSIC.start()
+                        }
+                    })
+                    
+                    SoundHandler.MUSIC.setOnCompletionListener {
+                        SoundHandler.MUSIC.release()
                     }
-                })
-                SoundHandler.MUSIC.setOnCompletionListener {
-                    SoundHandler.MUSIC.release()
                 }
             }
+
             battleEnd = true
             SoundHandler.battleEnd = true
 
@@ -303,19 +310,26 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.MUSIC.stop()
             SoundHandler.MUSIC.reset()
             SoundHandler.MUSIC.isLooping = false
-            val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[9])
-            if (f != null) {
-                SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                SoundHandler.MUSIC.prepareAsync()
-                SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                    override fun prepare(mp: MediaPlayer?) {
-                        SoundHandler.MUSIC.start()
+
+            if(SoundHandler.sePlay) {
+                val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[9])
+
+                if (f != null) {
+                    SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                    SoundHandler.MUSIC.prepareAsync()
+
+                    SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                        override fun prepare(mp: MediaPlayer?) {
+                            SoundHandler.MUSIC.start()
+                        }
+                    })
+
+                    SoundHandler.MUSIC.setOnCompletionListener {
+                        SoundHandler.MUSIC.release()
                     }
-                })
-                SoundHandler.MUSIC.setOnCompletionListener {
-                    SoundHandler.MUSIC.release()
                 }
             }
+
             battleEnd = true
             SoundHandler.battleEnd = true
 
@@ -325,14 +339,17 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
             if(bh == -1) {
                 val snack = Snackbar.make(parentlay,R.string.battle_lost,BaseTransientBottomBar.LENGTH_LONG)
+
                 snack.setAction(R.string.battle_retry) {
                     retry()
                 }
+
                 snack.setActionTextColor(StaticStore.getAttributeColor(activity,R.attr.colorAccent))
 
                 snack.show()
             } else {
                 val snack = Snackbar.make(parentlay, context.getString(R.string.battle_lost_boss).replace("_", bh.toString()), BaseTransientBottomBar.LENGTH_LONG)
+
                 snack.setAction(R.string.battle_retry) {
                     retry()
                 }
