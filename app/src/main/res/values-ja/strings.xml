@@ -855,4 +855,5 @@
     <string name="treasure_st_trea">お宝(日本編)</string>
     <string name="treasure_st_lev">お宝レベル</string>
     <string name="treasure_st_trea2">お宝(宇宙編)</string>
+    <string name="eff_heale">Heal Enemy Side</string>
 </resources>

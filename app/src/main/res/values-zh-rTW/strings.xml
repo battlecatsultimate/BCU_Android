@@ -856,4 +856,5 @@
     <string name="treasure_st_trea">賢者之石(世界篇)</string>
     <string name="treasure_st_lev">學習力</string>
     <string name="treasure_st_trea2">微中子(宇宙篇)</string>
+    <string name="eff_heale">Heal Enemy Side</string>
 </resources>

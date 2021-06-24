@@ -50,7 +50,7 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 , R.string.eff_cursee, R.string.eff_wv, R.string.eff_wve, R.string.eff_arm
                 , R.string.eff_arme, R.string.eff_has, R.string.eff_hase, R.string.eff_weau
                 , R.string.eff_weaue, R.string.eff_minwv, R.string.eff_minwve, R.string.eff_atksmoke
-                , R.string.eff_whitesmok, R.string.eff_heal)
+                , R.string.eff_whitesmok, R.string.eff_heal, R.string.eff_heale)
 
         val canonID = intArrayOf(R.string.eff_defc, R.string.eff_slowc, R.string.eff_wallc
                 , R.string.eff_stopc, R.string.eff_waterc, R.string.eff_zombc, R.string.eff_breackc

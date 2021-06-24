@@ -855,4 +855,5 @@
     <string name="treasure_st_trea">Study Treasure (EoC)</string>
     <string name="treasure_st_lev">Study Level</string>
     <string name="treasure_st_trea2">Study Treasure (CotC)</string>
+    <string name="eff_heale">Heal Enemy Side</string>
 </resources>

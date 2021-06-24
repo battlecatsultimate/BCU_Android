@@ -856,4 +856,5 @@
     <string name="treasure_st_trea">현자의 돌</string>
     <string name="treasure_st_lev">공부력 레벨</string>
     <string name="treasure_st_trea2">뉴트리노</string>
+    <string name="eff_heale">치유 적 측면</string>
 </resources>
