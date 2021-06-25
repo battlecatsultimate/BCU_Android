@@ -179,7 +179,7 @@
         "abbr_name": "lethal",
         "full_name": "Lethal Strike",
         "tooltip": null,
-        "format": "(prob)% chance to survive lethal damage",
+        "format": "(prob)% chance to survive lethal strike",
         "class": {
             "prob": {
                 "name": "chance",
