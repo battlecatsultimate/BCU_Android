@@ -34,8 +34,8 @@ open class ConfigScreen : AppCompatActivity() {
         var revalidate: Boolean = false
     }
 
-    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr)
-    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr")
+    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr, R.string.def_lang_it, R.string.def_lang_es, R.string.def_lang_de)
+    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr","it","es","de")
     private var started = false
     private var changed = false
 

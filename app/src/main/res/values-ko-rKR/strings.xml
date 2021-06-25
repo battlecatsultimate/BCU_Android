@@ -857,4 +857,7 @@
     <string name="treasure_st_lev">공부력 레벨</string>
     <string name="treasure_st_trea2">뉴트리노</string>
     <string name="eff_heale">치유 적 측면</string>
+    <string name="def_lang_it">Italiano</string>
+    <string name="def_lang_es">Español</string>
+    <string name="def_lang_de">Deutsche</string>
 </resources>

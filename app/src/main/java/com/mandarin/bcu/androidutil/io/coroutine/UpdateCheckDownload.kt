@@ -37,6 +37,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     private var stopper = Object()
 
     private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/")
+    private val langExtra = arrayOf("fr/StageName.txt", "it/StageName.txt", "es/StageName.txt", "de/StageName.txt")
 
     private var canGo = true
     private var downloadStarted = false
@@ -105,6 +106,11 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
                     CommonStatic.getConfig().localLangMap["$lang$l"] = langShared.getString("$lang$l", "")
                 }
+            }
+
+            for(extra in langExtra) {
+                langFiles.add(extra)
+                CommonStatic.getConfig().localLangMap[extra] = langShared.getString(extra, "")
             }
 
             val langList = UpdateCheck.checkLang(langFiles.toTypedArray()).get()
@@ -181,10 +187,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 val editor = langShared.edit()
 
                 for(lang in langList) {
-                    val fileName = if(langFolder.contains((lang.target.parentFile?.name ?: "")+"/"))
-                        (lang.target.parentFile?.name ?: "") + "/" + lang.target.name
-                    else
-                        lang.target.name
+                    val fileName = (lang.target.parentFile?.name ?: "") + "/" + lang.target.name
 
                     publishProgress(ac.getString(R.string.down_state_doing)+fileName, StaticStore.TEXT)
 
@@ -434,11 +437,18 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
             for(lang in langFolder) {
                 for(l in StaticStore.langfile) {
-                    f = File(StaticStore.getExternalAsset(ac)+"lang$lang$l")
+                    f = File(StaticStore.getExternalAsset(ac)+"lang/$lang$l")
 
                     if(!f.exists())
                         return true
                 }
+            }
+
+            for(extra in langExtra) {
+                f = File(StaticStore.getExternalAsset(ac)+"lang/$extra")
+
+                if(!f.exists())
+                    return true
             }
 
             return false

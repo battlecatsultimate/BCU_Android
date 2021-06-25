@@ -78,10 +78,11 @@ object StaticStore {
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
 
     /**Locale codes list */
-    val lang = arrayOf("", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es")
+    val lang = arrayOf("", "en", "zh", "ko", "ja", "ru", "de", "fr", "nl", "es", "it")
 
     /**List of language files */
     val langfile = arrayOf("EnemyName.txt", "StageName.txt", "UnitName.txt", "UnitExplanation.txt", "EnemyExplanation.txt", "CatFruitExplanation.txt", "RewardName.txt", "ComboName.txt", "MedalName.txt", "MedalExplanation.txt")
+
 
     /**Shared preferences name */
     const val CONFIG = "configuration"
@@ -548,7 +549,9 @@ object StaticStore {
             CommonStatic.getConfig().lang = lan - 1
         }
         println(CommonStatic.getConfig().lang)
-        if (CommonStatic.getConfig().lang >= 4 || CommonStatic.getConfig().lang < 0) CommonStatic.getConfig().lang = 0
+
+        if (CommonStatic.getConfig().lang >= 9 || CommonStatic.getConfig().lang < 0)
+            CommonStatic.getConfig().lang = 0
     }
 
     /**

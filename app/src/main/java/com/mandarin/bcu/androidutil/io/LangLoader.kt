@@ -140,7 +140,7 @@ object LangLoader {
     }
 
     fun readStageLang(c: Context) {
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
+        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/","/fr/","/it/","/es/","/de/")
         val file = "StageName.txt"
         val diff = "Difficulty.txt"
         val rewa = "RewardName.txt"
