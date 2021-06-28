@@ -147,7 +147,7 @@
     <string name="def_unit_s_icon">Unit\'s Icon</string>
     <string name="unit_info_exmon">" (Money get x2)"</string>
     <string name="unit_info_atkbs">" (Give damage x4 to Base)"</string>
-    <string name="unit_info_wkill">" (Takes damge x0.1 / Gives damage x5)"</string>
+    <string name="unit_info_wkill">" (Takes damage x0.1 / Gives damage x5)"</string>
     <string name="unit_info_evakill">" (Takes damage x0.2 / Gives damage x5)"</string>
     <string name="unit_info_text0">"_% chance to "</string>
     <string name="unit_info_text1">" for _f"</string>
@@ -762,12 +762,12 @@
     <string name="eff_seal">Seal</string>
     <string name="eff_vdef">Venom (Type 0  &amp; Positive Damage)</string>
     <string name="eff_vdefn">Venom (Type 0 &amp; Negative Damage)</string>
-    <string name="eff_vt1">Venom (Type 1 &amp; Positive Damge)</string>
+    <string name="eff_vt1">Venom (Type 1 &amp; Positive Damage)</string>
     <string name="eff_vt1n">Venom (Type 1 &amp; Negative Damage)</string>
-    <string name="eff_vt2">Venom (Type 2 &amp; Positive Damge)</string>
+    <string name="eff_vt2">Venom (Type 2 &amp; Positive Damage)</string>
     <string name="eff_vt2n">Venom (Type 2 &amp; Negative Damage)</string>
-    <string name="eff_vt3">Venom (Type 3 &amp; Positive Damge)</string>
-    <string name="eff_vt3n">Venom (Type 3 &amp; Negative Damge)</string>
+    <string name="eff_vt3">Venom (Type 3 &amp; Positive Damage)</string>
+    <string name="eff_vt3n">Venom (Type 3 &amp; Negative Damage)</string>
     <string name="eff_svb">Savage Blow</string>
     <string name="eff_inv">Invincibility</string>
     <string name="eff_tox">Toxic</string>
