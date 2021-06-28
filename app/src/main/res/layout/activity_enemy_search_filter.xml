@@ -308,7 +308,7 @@
 
                     android:text="@string/sch_atk_si"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:id="@+id/eschrdatkmu"
@@ -318,7 +318,7 @@
 
                     android:text="@string/sch_atk_ra"
                     android:textColor="?attr/TextPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </RadioGroup>
 
             <CheckBox
@@ -330,7 +330,7 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/sch_atk_ld"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/eschrgatk" />
 
@@ -341,7 +341,7 @@
 
                 android:text="@string/sch_atk_om"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/eschchmu"
                 app:layout_constraintStart_toEndOf="@+id/eschchld"
                 app:layout_constraintTop_toTopOf="@+id/eschchld" />
@@ -354,7 +354,7 @@
 
                 android:text="@string/sch_atk_mu"
                 android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/eschchom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/eschchom" />
