@@ -29,8 +29,8 @@
     <string name="sch_rare_lr">Rare Légende</string>
     <string name="sch_atk_si">Cible Unique</string>
     <string name="sch_atk_ra">Attaque de Zone</string>
-    <string name="sch_atk_ld">Longue Portée</string>
-    <string name="sch_atk_om">Devant-Derrière</string>
+    <string name="sch_atk_ld">LP</string>
+    <string name="sch_atk_om">Devant-Derr.</string>
     <string name="sch_atk_mu">Multi-Attaque</string>
     <string name="sch_abil">Abilités</string>
     <string name="sch_abi_we">Affaiblissement</string>
