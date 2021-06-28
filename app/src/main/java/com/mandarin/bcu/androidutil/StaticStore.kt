@@ -550,7 +550,7 @@ object StaticStore {
         }
         println(CommonStatic.getConfig().lang)
 
-        if (CommonStatic.getConfig().lang >= 9 || CommonStatic.getConfig().lang < 0)
+        if (CommonStatic.getConfig().lang >= CommonStatic.Lang.LOC_CODE.size || CommonStatic.getConfig().lang < 0)
             CommonStatic.getConfig().lang = 0
     }
 
