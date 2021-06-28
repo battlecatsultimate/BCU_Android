@@ -181,7 +181,10 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 val editor = langShared.edit()
 
                 for(lang in langList) {
-                    val fileName = (lang.target.parentFile?.name ?: "") + "/" + lang.target.name
+                    var fileName = (lang.target.parentFile?.name ?: "") + "/" + lang.target.name
+
+                    if(fileName.startsWith("lang"))
+                        fileName = lang.target.name
 
                     publishProgress(ac.getString(R.string.down_state_doing)+fileName, StaticStore.TEXT)
 
