@@ -12,7 +12,7 @@ import java.io.File
 
 object LangLoader {
     fun readUnitLang(c: Context) {
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
+        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/")
         val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
 
         MultiLangCont.getStatic().FNAME.clear()
@@ -99,7 +99,7 @@ object LangLoader {
     }
 
     fun readEnemyLang(c: Context) {
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
+        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/")
         val files = arrayOf("EnemyName.txt", "EnemyExplanation.txt")
 
         MultiLangCont.getStatic().ENAME.clear()
@@ -265,7 +265,7 @@ object LangLoader {
         val medalName = "MedalName.txt"
         val medalExp = "MedalExplanation.txt"
 
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/")
+        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/")
 
         for(l in lan) {
             val f = File("${StaticStore.getExternalAsset(c)}lang$l$medalName")

@@ -36,8 +36,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
     private var pause = false
     private var stopper = Object()
 
-    private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/")
-    private val langExtra = arrayOf("fr/StageName.txt", "it/StageName.txt", "es/StageName.txt", "de/StageName.txt")
+    private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/", "fr/", "it/", "es/", "de/")
 
     private var canGo = true
     private var downloadStarted = false
@@ -106,11 +105,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
                     CommonStatic.getConfig().localLangMap["$lang$l"] = langShared.getString("$lang$l", "")
                 }
-            }
-
-            for(extra in langExtra) {
-                langFiles.add(extra)
-                CommonStatic.getConfig().localLangMap[extra] = langShared.getString(extra, "")
             }
 
             val langList = UpdateCheck.checkLang(langFiles.toTypedArray()).get()
@@ -442,13 +436,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                     if(!f.exists())
                         return true
                 }
-            }
-
-            for(extra in langExtra) {
-                f = File(StaticStore.getExternalAsset(ac)+"lang/$extra")
-
-                if(!f.exists())
-                    return true
             }
 
             return false
