@@ -663,10 +663,8 @@
     <string name="stat_sch_multi">Multiplication</string>
     <string name="sch_stat_empty">This field cannot be empty</string>
     <string name="sch_stat_exist">This multiplication already exists</string>
-    <string name="orb_atk">Attack</string>
-    <string name="orb_res">Resistant</string>
     <string name="orb_atk_desc">Gives _% more damage with base atk</string>
-    <string name="orb_res_desc">Takes _% less damage from target</string>
+    <string name="orb_def_desc">Takes _% less damage from target</string>
     <string name="lineup_orb">Orb</string>
     <string name="stg_info_loop">Loop</string>
     <string name="stg_info_loop1">Loop 1</string>
@@ -859,4 +857,12 @@
     <string name="def_lang_it">Italiano</string>
     <string name="def_lang_es">Español</string>
     <string name="def_lang_de">Deutsche</string>
+    <string name="orb_atk">Attack Up</string>
+    <string name="orb_def">Defense Up</string>
+    <string name="orb_str">Strong Against</string>
+    <string name="orb_mas">Massive Damage</string>
+    <string name="orb_res">Resistant</string>
+    <string name="orb_str_desc">Add x_ to damage multiplier, decrease defense multiplier by -%</string>
+    <string name="orb_mas_desc">Add x_ to damage multiplier</string>
+    <string name="orb_res_desc">Decrease defense multiplier by _%</string>
 </resources>

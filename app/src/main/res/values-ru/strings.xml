@@ -662,10 +662,8 @@
     <string name="stat_sch_multi">Увеличение</string>
     <string name="sch_stat_empty">Это поле не может быть пустым</string>
     <string name="sch_stat_exist">Это увеличение уже существует</string>
-    <string name="orb_atk">Атака</string>
-    <string name="orb_res">Сопротив.</string>
     <string name="orb_atk_desc">Наносит на _% больше урона, относительно базового уровня</string>
-    <string name="orb_res_desc">Получает на _% меньше урона от цвета</string>
+    <string name="orb_def_desc">Получает на _% меньше урона от цвета</string>
     <string name="lineup_orb">Сфера</string>
     <string name="stg_info_loop">Петля</string>
     <string name="stg_info_loop1">Петля 1</string>
@@ -859,4 +857,12 @@
     <string name="def_lang_it">Italiano</string>
     <string name="def_lang_es">Español</string>
     <string name="def_lang_de">Deutsche</string>
+    <string name="orb_atk">Attack Up</string>
+    <string name="orb_def">Defense Up</string>
+    <string name="orb_str">Strong Against</string>
+    <string name="orb_mas">Massive Damage</string>
+    <string name="orb_res">Resistant</string>
+    <string name="orb_str_desc">Add x_ to damage multiplier, decrease defense multiplier by -%</string>
+    <string name="orb_mas_desc">Add x_ to damage multiplier</string>
+    <string name="orb_res_desc">Decrease defense multiplier by _%</string>
 </resources>

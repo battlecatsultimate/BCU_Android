@@ -51,6 +51,7 @@ class LUOrbSetting : Fragment() {
     private val grades = arrayOf("D", "C", "B", "A", "S")
 
     private val traitData = ArrayList<Int>()
+    private val typeData = ArrayList<Int>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_orb_setting, container, false)
@@ -132,9 +133,9 @@ class LUOrbSetting : Fragment() {
                 generateImage(orb[position], image)
 
                 if(orb[position].isNotEmpty() && orb[position][0] == 0) {
-                    generateTraitData(CommonStatic.getBCAssets().ATKORB)
-                } else if(orb[position].isNotEmpty()) {
-                    generateTraitData(CommonStatic.getBCAssets().RESORB)
+                    val orbMap = CommonStatic.getBCAssets().ORB[orb[position][Data.ORB_TYPE]] ?: return
+
+                    generateTraitData(orbMap)
                 }
             }
         }
@@ -245,7 +246,7 @@ class LUOrbSetting : Fragment() {
                             data = orb[orbs.selectedItemPosition]
                         }
 
-                        data[0] = position-1
+                        data[0] = typeData[position-1]
 
                         trait.isEnabled = true
                         grade.isEnabled = true
@@ -253,16 +254,12 @@ class LUOrbSetting : Fragment() {
                         orb[orbs.selectedItemPosition] = data
                     }
                 } else {
-                    data[0] = position
+                    data[0] = typeData[position]
                 }
 
                 setAppear(image, trait, grade)
 
-                val od = if(data[0] == 0) {
-                    CommonStatic.getBCAssets().ATKORB
-                } else {
-                    CommonStatic.getBCAssets().RESORB
-                }
+                val od = CommonStatic.getBCAssets().ORB[data[Data.ORB_TYPE]] ?: return
 
                 generateTraitData(od)
 
@@ -335,11 +332,7 @@ class LUOrbSetting : Fragment() {
                     return
                 }
 
-                val od = if(data[0] == 0) {
-                    CommonStatic.getBCAssets().ATKORB
-                } else {
-                    CommonStatic.getBCAssets().RESORB
-                }
+                val od = CommonStatic.getBCAssets().ORB[data[Data.ORB_TYPE]] ?: return
 
                 if(position >= traitData.size) {
                     return
@@ -569,15 +562,48 @@ class LUOrbSetting : Fragment() {
     private fun updateSpinners(v: Spinner, v1: Spinner, v2: Spinner, slot: Boolean, data: IntArray) {
         val c = context ?: return
 
+        val u = f?.unit ?: return
+
+        var str = false
+        var mas = false
+        var res = false
+
+        if (slot) {
+            str = (f?.du?.abi ?: 0 and Data.AB_GOOD) != 0
+            mas = (f?.du?.abi ?: 0 and Data.AB_MASSIVE) != 0
+            res = (f?.du?.abi ?: 0 and Data.AB_RESIST) != 0
+        } else {
+            for(form in u.forms) {
+                str = str or ((form.du.abi and Data.AB_GOOD) != 0)
+                mas = mas or ((form.du.abi and Data.AB_MASSIVE) != 0)
+                res = res or ((form.du.abi and Data.AB_RESIST) != 0)
+            }
+        }
+
         val types = ArrayList<String>()
 
         if(slot) {
             types.add(c.getString(R.string.unit_info_t_none))
-            types.add(c.getString(R.string.orb_atk))
+        }
+
+        types.add(c.getString(R.string.orb_atk))
+        typeData.add(Data.ORB_ATK)
+        types.add(c.getString(R.string.orb_def))
+        typeData.add(Data.ORB_RES)
+
+        if(str) {
+            types.add(c.getString(R.string.orb_str))
+            typeData.add(Data.ORB_STRONG)
+        }
+
+        if(mas) {
+            types.add(c.getString(R.string.orb_mas))
+            typeData.add(Data.ORB_MASSIVE)
+        }
+
+        if(res) {
             types.add(c.getString(R.string.orb_res))
-        } else {
-            types.add(c.getString(R.string.orb_atk))
-            types.add(c.getString(R.string.orb_res))
+            typeData.add(Data.ORB_RESISTANT)
         }
 
         val a0 = ArrayAdapter(c, R.layout.spinnersmall, types.toTypedArray())
@@ -603,19 +629,15 @@ class LUOrbSetting : Fragment() {
             v2.isEnabled = true
 
             if(slot) {
-                v.setSelection(data[0]+1, false)
+                v.setSelection(typeData.indexOf(data[0])+1, false)
             } else {
-                v.setSelection(data[0], false)
+                v.setSelection(typeData.indexOf(data[0]), false)
             }
         }
 
         setAppear(v1, v2)
 
-        val od = if(data[0] == 0) {
-            CommonStatic.getBCAssets().ATKORB
-        } else {
-            CommonStatic.getBCAssets().RESORB
-        }
+        val od = CommonStatic.getBCAssets().ORB[data[Data.ORB_TYPE]] ?: return
 
         val t = ArrayList<String>()
 
@@ -763,6 +785,15 @@ class LUOrbSetting : Fragment() {
                 c.getString(R.string.orb_atk)
             }
             1 -> {
+                c.getString(R.string.orb_def)
+            }
+            2 -> {
+                c.getString(R.string.orb_str)
+            }
+            3 -> {
+                c.getString(R.string.orb_mas)
+            }
+            4 -> {
                 c.getString(R.string.orb_res)
             }
             else -> {
@@ -840,7 +871,7 @@ class LUOrbSetting : Fragment() {
 
         p.alpha = (255 * 0.75).toInt()
 
-        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TYPES[data[0]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TYPES[typeData.indexOf(data[0])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         p.alpha = 255
 
@@ -904,10 +935,24 @@ class LUOrbSetting : Fragment() {
             return
         }
 
-        val s = if(data[0] == 0)
-            c.getString(R.string.orb_atk_desc).replace("_",Data.ORB_ATK_MULTI[data[2]].toString())
-        else
-            c.getString(R.string.orb_res_desc).replace("_",Data.ORB_RES_MULTI[data[2]].toString())
+        val s = when(data[Data.ORB_TYPE]) {
+            Data.ORB_ATK -> c.getString(R.string.orb_atk_desc)
+                .replace("_",Data.ORB_ATK_MULTI[data[2]].toString())
+
+            Data.ORB_RES -> c.getString(R.string.orb_def_desc)
+                .replace("_",Data.ORB_RES_MULTI[data[2]].toString())
+
+            Data.ORB_STRONG -> c.getString(R.string.orb_str_desc)
+                .replace("_", Data.ORB_STR_ATK_MULTI[data[Data.ORB_GRADE]].toString())
+                .replace("-", Data.ORB_STR_DEF_MULTI[data[Data.ORB_GRADE]].toString())
+
+            Data.ORB_MASSIVE -> c.getString(R.string.orb_mas_desc)
+                .replace("_", Data.ORB_MASSIVE_MULTI[data[Data.ORB_GRADE]].toString())
+
+            else -> c.getString(R.string.orb_res_desc)
+                .replace("_", Data.ORB_RESISTANT_MULTI[data[Data.ORB_GRADE]].toString())
+        }
+
 
         text.visibility = View.VISIBLE
         text.text = s

@@ -664,10 +664,8 @@
     <string name="stat_sch_multi">배율</string>
     <string name="sch_stat_empty">입력란을 비워둘 수 없습니다</string>
     <string name="sch_stat_exist">해당 배율은 이미 리스트에 존재합니다</string>
-    <string name="orb_atk">공격</string>
-    <string name="orb_res">방어</string>
     <string name="orb_atk_desc">기본 공격력의 _% 만큼 추가로 공격</string>
-    <string name="orb_res_desc">타겟으로부터 _% 만큼 데미지 경감</string>
+    <string name="orb_def_desc">타겟으로부터 _% 만큼 데미지 경감</string>
     <string name="lineup_orb">본능옥</string>
     <string name="def_zero_time">0:00.000</string>
     <string name="stg_info_loop">루프</string>
@@ -860,4 +858,12 @@
     <string name="def_lang_it">Italiano</string>
     <string name="def_lang_es">Español</string>
     <string name="def_lang_de">Deutsche</string>
+    <string name="orb_atk">공격력 업</string>
+    <string name="orb_def">공격력 경감</string>
+    <string name="orb_str">강해진다</string>
+    <string name="orb_mas">초데미지</string>
+    <string name="orb_res">맷집이 좋다</string>
+    <string name="orb_str_desc">공격 배율값 x_ 추가, 방어 배율 -% 감소</string>
+    <string name="orb_mas_desc">공격 배율값 x_ 추가</string>
+    <string name="orb_res_desc">방어 배율 _% 감소</string>
 </resources>
