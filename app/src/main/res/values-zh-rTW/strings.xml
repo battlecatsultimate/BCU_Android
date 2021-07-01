@@ -188,11 +188,11 @@
     <string name="config_testapk">更新至測試版本</string>
     <string name="def_treasure_set">打開寶物等級設定</string>
     <string name="treasure_reset">重設</string>
-    <string name="config_lang">Language|語言</string>
-    <string name="def_lang_en">English|英</string>
-    <string name="def_lang_ko">한국어|韓</string>
+    <string name="config_lang">語言 | Language</string>
+    <string name="def_lang_en">英 | English</string>
+    <string name="def_lang_ko">韓 | 한국어</string>
     <string name="def_lang_zh">中文</string>
-    <string name="lang_auto">Auto|自動</string>
+    <string name="lang_auto">自動 | Auto</string>
     <string name="def_lang_ja">日本語</string>
     <string name="config_auto_mes">Language will be applied after you leave the settings.</string>
     <string name="talen_cu">抗古代詛咒耐性</string>
@@ -646,10 +646,10 @@
     <string name="unit_info_text48">" 使目標移動加快 _%)"</string>
     <string name="unit_info_text49">" 使目標移動保持 _ 速度)"</string>
     <string name="unit_info_text50">" (使目標受到額外 _% 傷害)"</string>
-    <string name="def_lang_ru">Русский|俄</string>
+    <string name="def_lang_ru">俄 | Русский</string>
     <string name="png_normal">一般</string>
     <string name="png_transp">透明背景</string>
-    <string name="def_lang_fr">Français|法</string>
+    <string name="def_lang_fr">法 | Français</string>
     <string name="stat_sch_type">"類型 : "</string>
     <string name="stat_sch_option">"選項 : "</string>
     <string name="stat_sch_add">新增</string>
@@ -857,7 +857,7 @@
     <string name="treasure_st_lev">學習力</string>
     <string name="treasure_st_trea2">微中子(宇宙篇)</string>
     <string name="eff_heale">治療 敵方</string>
-    <string name="def_lang_it">Italiano|義</string>
-    <string name="def_lang_es">Español|西</string>
-    <string name="def_lang_de">Deutsche|德</string>
+    <string name="def_lang_it">義 | Italiano</string>
+    <string name="def_lang_es">西 | Español</string>
+    <string name="def_lang_de">德 | Deutsche</string>
 </resources>
