@@ -104,6 +104,10 @@ class LUUnitSetting : Fragment() {
             if (context == null)
                 return
 
+            if(f?.unit != null) {
+                BasisSet.synchronizeOrb(f!!.unit)
+            }
+
             setAppear(spinners[0], spinners[1], plus, row, t, tal, chform, levt)
 
             val s = GetStrings(requireContext())

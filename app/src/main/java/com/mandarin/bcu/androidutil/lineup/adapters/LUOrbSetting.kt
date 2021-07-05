@@ -569,9 +569,11 @@ class LUOrbSetting : Fragment() {
         var res = false
 
         if (slot) {
-            str = (f?.du?.abi ?: 0 and Data.AB_GOOD) != 0
-            mas = (f?.du?.abi ?: 0 and Data.AB_MASSIVE) != 0
-            res = (f?.du?.abi ?: 0 and Data.AB_RESIST) != 0
+            val abi = f?.du?.abi ?: 0
+
+            str = (abi and Data.AB_GOOD) != 0
+            mas = (abi and Data.AB_MASSIVE) != 0
+            res = (abi and Data.AB_RESIST) != 0
         } else {
             for(form in u.forms) {
                 str = str or ((form.du.abi and Data.AB_GOOD) != 0)
@@ -867,15 +869,15 @@ class LUOrbSetting : Fragment() {
 
         val p = Paint()
 
-        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TRAITS[Orb.reverse(data[1])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TRAITS[Orb.reverse(data[Data.ORB_TRAIT])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         p.alpha = (255 * 0.75).toInt()
 
-        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TYPES[typeData.indexOf(data[0])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TYPES[data[Data.ORB_TYPE]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         p.alpha = 255
 
-        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().GRADES[data[2]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().GRADES[data[Data.ORB_GRADE]].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         v.setImageBitmap(b)
     }
