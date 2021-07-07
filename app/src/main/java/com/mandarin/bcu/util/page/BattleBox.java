@@ -363,7 +363,7 @@ public interface BattleBox {
                         g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, 255);
                     } else {
                         setSym(g, hr, x + iw, y + ih, 3);
-                        Res.getCost(pri, !b, sym);
+                        Res.getCost(pri / 100, !b, sym);
                     }
                 }
             }
@@ -416,7 +416,7 @@ public interface BattleBox {
                         g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, 255);
                     } else {
                         setSym(g, hr, x + iw, y + ih, 3);
-                        Res.getCost(pri, !b, sym);
+                        Res.getCost(pri / 100, !b, sym);
                     }
                 }
             }
