@@ -92,14 +92,42 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         } else if(sum == 100) {
             for(i in data)
                 res.add(i[0].toString())
-        } else if(sum > 100 && st.info.rand == 0) {
+        } else if(sum > 100 && (st.info.rand == 0 || st.info.rand == 1)) {
             var rest = 100.0
 
-            for(i in data) {
-                val filter = rest * i[0].toDouble() / 100.0
-                rest -= filter
+            if(data[0][0] == 100) {
+                res.add("100")
 
-                res.add(df.format(filter))
+                for(i in 1 until data.size) {
+                    val filter = rest * data[i][0].toDouble() / 100.0
+                    rest -= filter
+
+                    res.add(df.format(filter))
+                }
+            } else {
+                for(i in data) {
+                    val filter = rest * i[0].toDouble() / 100.0
+                    rest -= filter
+
+                    res.add(df.format(filter))
+                }
+            }
+        } else if(st.info.rand == -4) {
+            var total = 0
+
+            for(i in data) {
+                total += i[0]
+            }
+
+            if(total == 0) {
+                for(i in data)
+                    res.add(i[0].toString())
+
+                return res
+            }
+
+            for(i in data) {
+                res.add(df.format(i[0] * 100.0 / total))
             }
         } else {
             for(i in data)
