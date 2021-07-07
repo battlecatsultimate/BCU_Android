@@ -638,7 +638,7 @@ class GetStrings(private val c: Context) {
         if (em == null)
             return ""
 
-        return (em.de.drop * t.dropMulti).toInt().toString()
+        return (em.de.drop * t.dropMulti / 100).toInt().toString()
     }
 
     private fun getAtks(f: Form?, t: Treasure?, talent: Boolean, lvs: IntArray): String {
@@ -898,9 +898,7 @@ class GetStrings(private val c: Context) {
                 }
             }
 
-            val result: String
-
-            result = if (l.group.type == 0)
+            val result: String = if (l.group.type == 0)
                 c.getString(R.string.limit_chra) + " : " + c.getString(R.string.limit_chra1).replace("_", units.toString())
             else
                 c.getString(R.string.limit_chra) + " : " + c.getString(R.string.limit_chra2).replace("_", units.toString())
