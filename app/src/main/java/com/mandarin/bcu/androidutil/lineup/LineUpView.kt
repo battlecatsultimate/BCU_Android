@@ -3,17 +3,31 @@ package com.mandarin.bcu.androidutil.lineup
 import android.content.Context
 import android.graphics.*
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
+import androidx.viewpager2.widget.ViewPager2
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.lineup.adapters.*
+import com.mandarin.bcu.androidutil.lineup.coroutine.LUAdder
 import common.battle.BasisSet
 import common.battle.LineUp
 import common.system.files.VFile
 import common.util.unit.Form
 import java.util.*
 
-class LineUpView(context: Context?) : View(context) {
+class LineUpView : View {
+    val pager: ViewPager2?
+
+    constructor(context: Context?) : super(context) {
+        this.pager = null
+    }
+
+    constructor(context: Context?, pager: ViewPager2) : super(context) {
+        this.pager = pager
+    }
+
     private val postionReplace = 600
 
     /**
@@ -144,7 +158,10 @@ class LineUpView(context: Context?) : View(context) {
         drawDeleteBox(c)
         drawReplaceBox(c)
         drawSelectedOutLine(c)
-        if (drawFloating) drawFloatingImage(c)
+
+        if (drawFloating)
+            drawFloatingImage(c)
+
         if (touched) {
             invalidate()
         }
@@ -166,6 +183,7 @@ class LineUpView(context: Context?) : View(context) {
     private fun getPosition() {
         val w = width.toFloat()
         val h = height.toFloat()
+
         if (w != 0f && h != 0f) {
             bw = w / 5.0f
             for (i in position.indices) {
@@ -185,15 +203,20 @@ class LineUpView(context: Context?) : View(context) {
             toFormList()
         }
 
-        if (posit[0] * 5 + posit[1] >= StaticStore.currentForms.size || posit[0] * 5 + posit[1] < 0) if (posit[0] != 100) return
+        if (posit[0] * 5 + posit[1] >= StaticStore.currentForms.size || posit[0] * 5 + posit[1] < 0) if (posit[0] != 100)
+            return
+
         if (posit[0] != 100) {
             if (posit[0] * 5 + posit[1] < StaticStore.currentForms.size) {
                 StaticStore.currentForms.removeAt(posit[0] * 5 + posit[1])
                 StaticStore.currentForms.add(null)
+
                 units.removeAt(posit[0] * 5 + posit[1])
                 units.add(empty)
             }
+
             lastPosit--
+
             toFormArray()
         } else {
             repform = null
@@ -219,7 +242,10 @@ class LineUpView(context: Context?) : View(context) {
             c.drawBitmap(replace, bw / 2 - replace.width.toFloat() / 2, bw * 2.5f - replace.height.toFloat() / 2, icon)
         } else {
             var icon = repform!!.anim.uni.img.bimg() as Bitmap
-            if (icon.width != icon.height) icon = StaticStore.makeIcon(context, icon, 48f)
+
+            if (icon.width != icon.height)
+                icon = StaticStore.makeIcon(context, icon, 48f)
+
             c.drawBitmap(StaticStore.getResizebp(icon, bw, bw), 0f, bw * 2, p)
         }
     }
@@ -229,6 +255,7 @@ class LineUpView(context: Context?) : View(context) {
      */
     private fun drawUnits(c: Canvas) {
         var k = 0
+
         for (floats in position) {
             for (aFloat in floats) {
                 if (k >= units.size) {
@@ -240,6 +267,7 @@ class LineUpView(context: Context?) : View(context) {
 
                     c.drawBitmap(StaticStore.getResizebp(u, bw, bw), aFloat[0], aFloat[1], p)
                 }
+
                 k += 1
             }
         }
@@ -261,10 +289,12 @@ class LineUpView(context: Context?) : View(context) {
 
         if(StaticStore.position[0] == -1) {
             p.color = color
+
             return
         } else if(StaticStore.position[0] == 100) {
             if(repform == null) {
                 p.color = color
+
                 return
             }
 
@@ -309,11 +339,17 @@ class LineUpView(context: Context?) : View(context) {
      * Changes 2 units' position using 2 ints. from is first unit's position, and to is second unit's position
      */
     private fun changeUnitPosition(from: Int, to: Int) {
-        if (from < 0 || from >= units.size || to < 0 || to >= units.size) return
+        if (from < 0 || from >= units.size || to < 0 || to >= units.size)
+            return
+
         val b = units[from]
         val b2 = units[to]
-        if (b == empty) return
+
+        if (b == empty)
+            return
+
         val f = StaticStore.currentForms[from]
+
         if (b2 != empty) {
             units.removeAt(from)
             StaticStore.currentForms.removeAt(from)
@@ -446,6 +482,7 @@ class LineUpView(context: Context?) : View(context) {
      */
     fun checkChange() {
         val posit = getTouchedUnit(posx, posy) ?: return
+
         if (posit[0] == -100 && posit[1] == -100) {
             removeUnit(prePosit)
         } else if (posit[0] == 100 || prePosit[0] == 100) {
@@ -453,6 +490,7 @@ class LineUpView(context: Context?) : View(context) {
         } else {
             changeUnitPosition(5 * prePosit[0] + prePosit[1], 5 * posit[0] + posit[1])
         }
+
         BasisSet.current().sele.lu.renew()
 
         try {
@@ -482,12 +520,21 @@ class LineUpView(context: Context?) : View(context) {
      * Gets unit's icon using position vlaues
      */
     fun getUnitImage(x: Int, y: Int): Bitmap? {
-        if (x == 100) return if (repform != null) {
-            var b = repform!!.anim.uni.img.bimg() as Bitmap
-            if (b.height != b.width) b = StaticStore.makeIcon(context, b, 48f)
-            b
-        } else empty
-        return if (5 * x + y >= units.size || 5 * x + y < 0) empty else units[5 * x + y]
+        if (x == 100)
+            return if (repform != null) {
+                var b = repform!!.anim.uni.img.bimg() as Bitmap
+
+                if (b.height != b.width)
+                    b = StaticStore.makeIcon(context, b, 48f)
+
+                b
+            } else
+                empty
+
+        return if (5 * x + y >= units.size || 5 * x + y < 0)
+            empty
+        else
+            units[5 * x + y]
     }
 
     /**
@@ -496,11 +543,18 @@ class LineUpView(context: Context?) : View(context) {
     fun getTouchedUnit(x: Float, y: Float): IntArray? {
         for (i in position.indices) {
             for (j in position[i].indices) {
-                if (x - position[i][j][0] >= 0 && y - position[i][j][1] > 0 && x - bw - position[i][j][0] < 0 && y - bw - position[i][j][1] < 0) return intArrayOf(i, j)
+                if (x - position[i][j][0] >= 0 && y - position[i][j][1] > 0 && x - bw - position[i][j][0] < 0 && y - bw - position[i][j][1] < 0)
+                    return intArrayOf(i, j)
             }
         }
-        if (y > bw * 2 && y <= bw * 3 && x >= bw) return intArrayOf(-100, -100)
-        return if (y > bw * 2 && y <= bw * 3 && x <= bw) intArrayOf(100, 100) else null
+
+        if (y > bw * 2 && y <= bw * 3 && x >= bw)
+            return intArrayOf(-100, -100)
+
+        return if (y > bw * 2 && y <= bw * 3 && x <= bw)
+            intArrayOf(100, 100)
+        else
+            null
     }
 
     /**
@@ -508,7 +562,9 @@ class LineUpView(context: Context?) : View(context) {
      */
     private fun toFormList() {
         val forms = BasisSet.current().sele.lu.fs
+
         StaticStore.currentForms = ArrayList()
+
         for (form in forms) {
             StaticStore.currentForms.addAll(listOf(*form))
         }
@@ -534,19 +590,25 @@ class LineUpView(context: Context?) : View(context) {
     fun updateLineUp() {
         clearAllUnit()
         toFormList()
+
         lastPosit = 0
+
         for (i in BasisSet.current().sele.lu.fs.indices) {
             for (j in BasisSet.current().sele.lu.fs[i].indices) {
                 val f = BasisSet.current().sele.lu.fs[i][j]
+
                 if (f != null) {
                     if (repform != null) {
                         if (f.unit === repform!!.unit) {
                             repform = null
+
                             StaticStore.position = intArrayOf(-1, -1)
-                            StaticStore.updateForm = true
-                            StaticStore.updateOrb = true
+
+                            updateUnitSetting()
+                            updateUnitOrb()
                         }
                     }
+
                     var b = f.anim.uni.img.bimg() as Bitmap
                     if (b.width != b.height) b = StaticStore.makeIcon(context, b, 48f)
                     changeUnitImage(i * 5 + j, b)
@@ -570,5 +632,59 @@ class LineUpView(context: Context?) : View(context) {
     override fun onDetachedFromWindow() {
         timer.cancel()
         super.onDetachedFromWindow()
+    }
+
+    fun updateUnitList() {
+        Log.i("LineupView", "Updating unit list...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[0] as LUUnitList).update()
+    }
+
+    fun updateUnitSetting() {
+        Log.i("LineupView", "Updating unit setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[1] as LUUnitSetting).update()
+    }
+
+    fun updateUnitOrb() {
+        Log.i("LineupView", "Updating unit orb setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[2] as LUOrbSetting).update()
+    }
+
+    fun updateCastleSetting() {
+        Log.i("LineupView", "Updating castle setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[3] as LUCastleSetting).update()
+    }
+
+    fun updateTreasureSetting() {
+        Log.i("LineupView", "Updating treasure setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[4] as LUTreasureSetting).update()
+    }
+
+    fun updateConstructionSetting() {
+        Log.i("LineupView", "Updating construction setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[5] as LUConstruction).update()
     }
 }

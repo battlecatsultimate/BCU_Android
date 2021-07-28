@@ -26,6 +26,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.mandarin.bcu.LineUpScreen
 import com.mandarin.bcu.R
 import com.mandarin.bcu.SearchFilter
 import com.mandarin.bcu.androidutil.Definer
@@ -33,7 +34,6 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.adapters.*
-import com.mandarin.bcu.androidutil.lineup.adapters.LUCatCombo.Companion.newInstance
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.battle.BasisSet
 import common.pack.UserProfile
@@ -165,7 +165,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                 sch.setOnClickListener {
                     val intent = Intent(activity, SearchFilter::class.java)
 
-                    activity.startActivity(intent)
+                    (activity as LineUpScreen).resultLauncher.launch(intent)
                 }
 
                 tab = LUTab(manager, lifecycle, line)
@@ -205,12 +205,12 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                             if (deleted != null) {
                                 if (deleted[0] == -100) {
                                     StaticStore.position = intArrayOf(-1, -1)
-                                    StaticStore.updateForm = true
-                                    StaticStore.updateOrb = true
+                                    line.updateUnitSetting()
+                                    line.updateUnitOrb()
                                 } else {
                                     StaticStore.position = deleted
-                                    StaticStore.updateForm = true
-                                    StaticStore.updateOrb = true
+                                    line.updateUnitSetting()
+                                    line.updateUnitOrb()
                                 }
                             }
 
@@ -262,11 +262,11 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                         val adapter1 = ArrayAdapter(activity, R.layout.spinneradapter, luname)
 
                         luspin.adapter = adapter1
-                        StaticStore.updateForm = true
-                        StaticStore.updateTreasure = true
-                        StaticStore.updateConst = true
-                        StaticStore.updateCastle = true
-                        StaticStore.updateOrb = true
+                        line.updateUnitSetting()
+                        line.updateTreasureSetting()
+                        line.updateConstructionSetting()
+                        line.updateCastleSetting()
+                        line.updateUnitOrb()
 
                         if (position == 0) {
                             menu.getItem(5).subMenu.getItem(0).isEnabled = false
@@ -313,8 +313,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
 
                         line.changeFroms(BasisSet.current().sele.lu)
 
-                        StaticStore.updateForm = true
-                        StaticStore.updateOrb = true
+                        line.updateUnitSetting()
+                        line.updateUnitOrb()
 
                         menu.getItem(5).subMenu.getItem(1).isEnabled = BasisSet.current().lb.size != 1
                         menu.getItem(5).isEnabled = !(!menu.getItem(5).subMenu.getItem(0).isEnabled && !menu.getItem(5).subMenu.getItem(1).isEnabled)
@@ -338,7 +338,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
 
                     override fun afterTextChanged(s: Editable) {
                         StaticStore.entityname = s.toString()
-                        StaticStore.updateList = true
+                        line.updateUnitList()
                     }
                 })
 
@@ -382,11 +382,11 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 setspin.adapter = adapter2
                                 setspin.setSelection(setspin.count - 1)
 
-                                StaticStore.updateForm = true
-                                StaticStore.updateTreasure = true
-                                StaticStore.updateConst = true
-                                StaticStore.updateCastle = true
-                                StaticStore.updateOrb = true
+                                line.updateUnitSetting()
+                                line.updateTreasureSetting()
+                                line.updateConstructionSetting()
+                                line.updateCastleSetting()
+                                line.updateUnitOrb()
 
                                 StaticStore.saveLineUp(activity)
 
@@ -436,8 +436,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 luspin.adapter = adapter2
                                 luspin.setSelection(luspin.count - 1)
 
-                                StaticStore.updateForm = true
-                                StaticStore.updateOrb = true
+                                line.updateUnitSetting()
+                                line.updateUnitOrb()
                                 StaticStore.saveLineUp(activity)
 
                                 dialog.dismiss()
@@ -763,7 +763,14 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
         for (v in view) v.visibility = View.VISIBLE
     }
 
-    private inner class LUTab(fm: FragmentManager, lc: Lifecycle, private val lineup: LineUpView) : FragmentStateAdapter(fm, lc) {
+    inner class LUTab(fm: FragmentManager, lc: Lifecycle, private val lineup: LineUpView) : FragmentStateAdapter(fm, lc) {
+        val fragments = arrayOf(
+            LUUnitList.newInstance(lineup), LUUnitSetting.newInstance(lineup),
+            LUOrbSetting.newInstance(lineup), LUCastleSetting.newInstance(),
+            LUTreasureSetting.newInstance(lineup), LUConstruction.newInstance(),
+            LUCatCombo.newInstance(lineup)
+        )
+
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
@@ -780,17 +787,10 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
         }
 
         override fun createFragment(i: Int): Fragment {
-            when (i) {
-                0 -> return LUUnitList.newInstance(lineup)
-                1 -> return LUUnitSetting.newInstance(lineup)
-                2 -> return LUOrbSetting.newInstance(lineup)
-                3 -> return LUCastleSetting.newInstance()
-                4 -> return LUTreasureSetting.newInstance()
-                5 -> return LUConstruction.newInstance()
-                6 -> return newInstance(lineup)
-            }
-
-            return LUUnitList.newInstance(lineup)
+            return if(i < fragments.size)
+                fragments[i]
+            else
+                LUUnitList.newInstance(lineup)
         }
     }
 }

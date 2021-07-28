@@ -8,7 +8,9 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
@@ -21,6 +23,12 @@ import common.CommonStatic
 import java.util.*
 
 class LineUpScreen : AppCompatActivity() {
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val line = findViewById<LineUpView>(R.id.lineupView)
+
+        line.updateUnitList()
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +59,9 @@ class LineUpScreen : AppCompatActivity() {
 
         setContentView(R.layout.activity_line_up_screen)
 
-        val line = LineUpView(this)
+        val lineupPager = findViewById<ViewPager2>(R.id.lineuppager)
+
+        val line = LineUpView(this, lineupPager)
 
         line.id = R.id.lineupView
 
@@ -99,7 +109,6 @@ class LineUpScreen : AppCompatActivity() {
             StaticStore.showShortMessage(this, R.string.err_lusave_fail)
         }
 
-        StaticStore.updateList = false
         StaticStore.filterReset()
         StaticStore.entityname = ""
         StaticStore.set = null

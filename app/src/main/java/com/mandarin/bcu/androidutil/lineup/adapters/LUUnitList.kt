@@ -20,7 +20,7 @@ import common.util.unit.Unit
 import kotlin.collections.ArrayList
 
 class LUUnitList : Fragment() {
-    private var line: LineUpView? = null
+    private lateinit var line: LineUpView
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
 
@@ -30,11 +30,6 @@ class LUUnitList : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_unit_list, group, false)
 
-        if (line == null) {
-            if (activity != null)
-                line = requireActivity().findViewById(R.id.lineupView)
-        }
-
         numbers = FilterEntity.setLuFilter()
 
         val adapter = LUUnitListAdapter(requireActivity(), numbers)
@@ -42,25 +37,6 @@ class LUUnitList : Fragment() {
         val ulist = view.findViewById<ListView>(R.id.lineupunitlist)
 
         ulist.adapter = adapter
-
-        runnable = object : Runnable {
-            override fun run() {
-                if (StaticStore.updateList) {
-                    numbers.clear()
-                    numbers = FilterEntity.setLuFilter()
-                    val adapter1 = LUUnitListAdapter(activity!!, numbers)
-
-                    ulist.adapter = adapter1
-
-                    StaticStore.updateList = false
-                }
-
-                if (!destroyed)
-                    handler.postDelayed(this, 50)
-            }
-        }
-
-        handler.postDelayed(runnable, 50)
 
         ulist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             if(position < 0 || position >= numbers.size)
@@ -78,14 +54,26 @@ class LUUnitList : Fragment() {
             if (posit[0] != 100)
                 BasisSet.current().sele.lu.fs[posit[0]][posit[1]] = f
             else
-                line!!.repform = f
+                line.repform = f
 
-            line!!.updateLineUp()
-            line!!.toFormArray()
-            line!!.invalidate()
+            line.updateLineUp()
+            line.toFormArray()
+            line.invalidate()
         }
 
         return view
+    }
+
+    fun update() {
+        val v = view ?: return
+
+        val ulist = v.findViewById<ListView>(R.id.lineupunitlist)
+
+        numbers.clear()
+        numbers = FilterEntity.setLuFilter()
+        val adapter1 = LUUnitListAdapter(requireActivity(), numbers)
+
+        ulist.adapter = adapter1
     }
 
     private fun alreadyExist(form: Form): Boolean {
@@ -95,10 +83,10 @@ class LUUnitList : Fragment() {
             for (j in BasisSet.current().sele.lu.fs[i].indices) {
 
                 if (BasisSet.current().sele.lu.fs[i][j] == null) {
-                    return if (line!!.repform == null)
+                    return if (line.repform == null)
                         false
                     else
-                        u == line!!.repform!!.unit
+                        u == line.repform!!.unit
 
                 }
 

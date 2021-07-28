@@ -3,8 +3,6 @@ package com.mandarin.bcu.androidutil.lineup.adapters
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +13,8 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.UnitInfo
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.lineup.LineUpView
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.util.unit.Form
@@ -32,44 +30,24 @@ class LUUnitSetting : Fragment() {
         }
     }
 
-    private var line: LineUpView? = null
+    private lateinit var line: LineUpView
     private var pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
-    private var destroyed = false
 
     private var fid = 0
 
-    private val handler = Handler(Looper.getMainLooper())
-
     var f: Form? = null
 
-    override fun onDestroy() {
-        destroyed = true
-        super.onDestroy()
-    }
+    lateinit var v: View
 
-    override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
-        val v = inflater.inflate(R.layout.lineup_unit_set, group, false)
+    override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View {
+        v = inflater.inflate(R.layout.lineup_unit_set, group, false)
 
-        update(v)
-
-        val runnable = object : Runnable {
-            override fun run() {
-                if(StaticStore.updateForm) {
-                    update(v)
-                    StaticStore.updateForm = false
-                }
-
-                if(!destroyed)
-                    handler.postDelayed(this,50)
-            }
-        }
-
-        handler.postDelayed(runnable, 50)
+        update()
 
         return v
     }
 
-    private fun update(v: View) {
+    fun update() {
         val spinners = arrayOf(v.findViewById(R.id.lineuplevspin), v.findViewById<Spinner>(R.id.lineuplevpspin))
         val plus = v.findViewById<TextView>(R.id.lineuplevplus)
         val row = v.findViewById<TableRow>(R.id.lineupunittable)
@@ -80,17 +58,10 @@ class LUUnitSetting : Fragment() {
         val chform = v.findViewById<Button>(R.id.lineupchform)
         val levt = v.findViewById<TextView>(R.id.lineupunitlevt)
 
-        if (line == null) {
-            if (activity == null)
-                return
-
-            line = activity?.findViewById(R.id.lineupView)
-        }
-
         f = if (StaticStore.position[0] == -1)
             null
         else if (StaticStore.position[0] == 100)
-            line?.repform
+            line.repform
         else {
             if (StaticStore.position[0] * 5 + StaticStore.position[1] >= StaticStore.currentForms.size)
                 null
@@ -344,12 +315,12 @@ class LUUnitSetting : Fragment() {
                 if (StaticStore.position[0] != 100 && StaticStore.position[1] != 100 && StaticStore.position[0] != -1 && StaticStore.position[1] != -1)
                     BasisSet.current().sele.lu.fs[StaticStore.position[0]][StaticStore.position[1]] = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
                 else
-                    line?.repform = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
+                    line.repform = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
 
                 f = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
 
-                line?.updateLineUp()
-                line?.toFormArray()
+                line.updateLineUp()
+                line.toFormArray()
 
                 val lev = spinners[0].selectedItem as Int
                 val levp1 = spinners[1].selectedItem as Int
@@ -401,9 +372,9 @@ class LUUnitSetting : Fragment() {
                     }
                 }
 
-                line?.invalidate()
+                line.invalidate()
 
-                StaticStore.updateOrb = true
+                line.updateUnitOrb()
             }
         }
     }

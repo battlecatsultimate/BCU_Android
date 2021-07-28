@@ -31,27 +31,18 @@ class LUCastleSetting : Fragment() {
         val buttons = arrayOf(view.findViewById(R.id.lineupchcannon), view.findViewById(R.id.lineupchlabel), view.findViewById<Button>(R.id.lineupchbase))
 
         for (i in buttons.indices) {
-
             buttons[i].setOnClickListener { setNyb(i, castle) }
         }
 
-        val handler = Handler(Looper.getMainLooper())
-        val runnable = object : Runnable {
-            override fun run() {
-                if (StaticStore.updateCastle) {
-                    drawCastle(castle)
-
-                    StaticStore.updateCastle = false
-                }
-
-                if (!destroyed)
-                    handler.postDelayed(this, 50)
-            }
-        }
-
-        handler.postDelayed(runnable, 50)
-
         return view
+    }
+
+    fun update() {
+        val v = view ?: return
+
+        val castle = v.findViewById<ImageView>(R.id.lineupcastle)
+
+        drawCastle(castle)
     }
 
     private fun setNyb(index: Int, img: ImageView) {

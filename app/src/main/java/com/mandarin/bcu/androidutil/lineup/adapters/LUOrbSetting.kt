@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +14,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
 import common.battle.BasisSet
@@ -36,14 +34,11 @@ class LUOrbSetting : Fragment() {
         }
     }
 
-    private var destroyed = false
     private var f: Form? = null
     private var orb = ArrayList<IntArray>()
-    private var line: LineUpView? = null
+    private lateinit var line: LineUpView
 
     private var isUpdating = false
-
-    private val h = Handler(Looper.getMainLooper())
 
     private val obj = Object()
 
@@ -54,53 +49,58 @@ class LUOrbSetting : Fragment() {
     private val typeData = ArrayList<Int>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.lineup_orb_setting, container, false)
+        val v = inflater.inflate(R.layout.lineup_orb_setting, container, false)
 
-        val const = view.findViewById<ConstraintLayout>(R.id.orbconst)
+        val c = context ?: return v
 
         val obj = Object()
 
-        val c = context ?: return view
+        val const = v.findViewById<ConstraintLayout>(R.id.orbconst)
 
-        val r = object : Runnable {
-            override fun run() {
-                if(StaticStore.updateOrb) {
-                    isUpdating = true
+        const.visibility = View.INVISIBLE
 
-                    const.visibility = View.INVISIBLE
+        update(v)
 
-                    update(view)
-
-                    synchronized(obj) {
-                        while(isUpdating) {
-                            try{
-                                obj.wait()
-                            } catch (e: InterruptedException) {
-                                ErrorLogWriter.writeLog(e, StaticStore.upload, c)
-                            }
-                        }
-                    }
-
-                    const.visibility = View.VISIBLE
-
-                    StaticStore.updateOrb = false
-                }
-
-                if(!destroyed) {
-                    h.postDelayed(this, 50)
+        synchronized(obj) {
+            while(isUpdating) {
+                try{
+                    obj.wait()
+                } catch (e: InterruptedException) {
+                    ErrorLogWriter.writeLog(e, StaticStore.upload, c)
                 }
             }
-
         }
 
-        h.postDelayed(r, 50)
+        const.visibility = View.VISIBLE
 
-        return view
+        return v
     }
 
-    override fun onDestroy() {
-        destroyed = true
-        super.onDestroy()
+    fun update() {
+        val v = view ?: return
+        val c = context ?: return
+
+        val obj = Object()
+
+        val const = v.findViewById<ConstraintLayout>(R.id.orbconst)
+
+        const.visibility = View.INVISIBLE
+
+        update(v)
+
+        synchronized(obj) {
+            while(isUpdating) {
+                try{
+                    obj.wait()
+                } catch (e: InterruptedException) {
+                    ErrorLogWriter.writeLog(e, StaticStore.upload, c)
+                }
+            }
+        }
+
+        const.visibility = View.VISIBLE
+
+
     }
 
     private fun listeners(v: View) {
@@ -405,7 +405,7 @@ class LUOrbSetting : Fragment() {
         f = if (StaticStore.position[0] == -1)
             null
         else if (StaticStore.position[0] == 100)
-            line?.repform
+            line.repform
         else {
             if (StaticStore.position[0] * 5 + StaticStore.position[1] >= StaticStore.currentForms.size)
                 null

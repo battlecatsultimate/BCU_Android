@@ -262,12 +262,6 @@ object StaticStore {
     var currentForms: ArrayList<Form?> = ArrayList()
     var position = intArrayOf(-1, -1)
     var combos: ArrayList<Combo> = ArrayList()
-    var updateList = false
-    var updateForm = true
-    var updateOrb = true
-    var updateTreasure = false
-    var updateConst = false
-    var updateCastle = false
     var set: BasisSet? = null
     var lu: BasisLU? = null
 
@@ -345,11 +339,8 @@ object StaticStore {
         LUread = false
         LUtabPosition = 0
         currentForms.clear()
-        updateForm = true
-        updateOrb = true
         position = intArrayOf(-1, -1)
         combos.clear()
-        updateList = false
         set = null
         lu = null
         play = true

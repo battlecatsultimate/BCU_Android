@@ -44,38 +44,49 @@ class LUConstruction : Fragment() {
 
         listeners(view)
 
-        runnable = object : Runnable {
-            override fun run() {
-                if (StaticStore.updateConst) {
-                    initialized = false
+        initialized = false
 
-                    val texts = arrayOfNulls<TextInputEditText>(Data.BASE_TOT)
-
-                    val text = view.findViewById<TextInputEditText>(R.id.constlevt)
-
-                    if (valuesAllSame())
-                        text.setText(BasisSet.current().t().bslv[0].toString())
-
-                    val vals = BasisSet.current().t().bslv
-
-                    for (i in vals.indices) {
-                        texts[i] = view.findViewById(textid[i])
-                        texts[i]?.setText(vals[i].toString())
-                    }
-
-                    initialized = true
-
-                    StaticStore.updateConst = false
-                }
-
-                if (!destroyed)
-                    handler.postDelayed(this, 50)
-            }
+        val texts = Array<TextInputEditText>(Data.BASE_TOT) {
+            view.findViewById(textid[it])
         }
 
-        handler.postDelayed(runnable, 50)
+        val text = view.findViewById<TextInputEditText>(R.id.constlevt)
+
+        if (valuesAllSame())
+            text.setText(BasisSet.current().t().bslv[0].toString())
+
+        val vals = BasisSet.current().t().bslv
+
+        for (i in vals.indices) {
+            texts[i].setText(vals[i].toString())
+        }
+
+        initialized = true
 
         return view
+    }
+
+    fun update() {
+        val view = view ?: return
+
+        initialized = false
+
+        val texts = Array<TextInputEditText>(Data.BASE_TOT) {
+            view.findViewById(textid[it])
+        }
+
+        val text = view.findViewById<TextInputEditText>(R.id.constlevt)
+
+        if (valuesAllSame())
+            text.setText(BasisSet.current().t().bslv[0].toString())
+
+        val vals = BasisSet.current().t().bslv
+
+        for (i in vals.indices) {
+            texts[i].setText(vals[i].toString())
+        }
+
+        initialized = true
     }
 
     override fun onDestroy() {

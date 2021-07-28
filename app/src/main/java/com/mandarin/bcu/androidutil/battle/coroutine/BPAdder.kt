@@ -234,12 +234,12 @@ open class BPAdder : CoroutineTask<String> {
                             if (deleted != null) {
                                 if (deleted[0] == -100) {
                                     StaticStore.position = intArrayOf(-1, -1)
-                                    StaticStore.updateForm = true
-                                    StaticStore.updateOrb = true
+                                    line.updateUnitSetting()
+                                    line.updateUnitOrb()
                                 } else {
                                     StaticStore.position = deleted
-                                    StaticStore.updateForm = true
-                                    StaticStore.updateOrb = true
+                                    line.updateUnitSetting()
+                                    line.updateUnitOrb()
                                 }
                             }
                             line.drawFloating = false

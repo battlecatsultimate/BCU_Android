@@ -167,7 +167,7 @@ class SearchFilter : AppCompatActivity() {
         listeners()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
     private fun listeners() {
         val back = findViewById<FloatingActionButton>(R.id.schbck)
         val reset = findViewById<FloatingActionButton>(R.id.schreset)
@@ -268,9 +268,11 @@ class SearchFilter : AppCompatActivity() {
     private fun returner() {
         val atkgroup = findViewById<RadioGroup>(R.id.schrgatk)
         val result = Intent()
+
         StaticStore.empty = atkgroup!!.checkedRadioButtonId == -1
+
         setResult(Activity.RESULT_OK, result)
-        StaticStore.updateList = true
+
         finish()
     }
 
