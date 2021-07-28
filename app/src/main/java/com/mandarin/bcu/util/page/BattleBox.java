@@ -139,6 +139,8 @@ public interface BattleBox {
             if(sb.s_stop == 0 && ((CVGraphics)g).neg) {
                 //Set p0 to 1 to change negative effect
                 g.setComposite(CVGraphics.POSITIVE, 1, 0);
+            } else if(sb.s_stop > 0) {
+                g.setComposite(CVGraphics.GRAY, 0, 0);
             }
 
             ImgCore.set(g);
@@ -232,10 +234,11 @@ public interface BattleBox {
 
         private void drawBtm(FakeGraphics g) {
             g.setComposite(CVGraphics.POSITIVE, 0, 0);
+
             int w = box.getWidth();
             int h = box.getHeight();
             int cw = 0;
-            int time = (sb.time / 5) % 2;
+            int time = sb.s_stop == 0 ? (sb.time / 5) % 2 : 1;
             int mtype = sb.money < sb.upgradeCost ? 0 : time == 0 ? 1 : 2;
             if (sb.work_lv == 8)
                 mtype = 2;
@@ -612,6 +615,7 @@ public interface BattleBox {
                         if(((CVGraphics)gra).neg) {
                             gra.setComposite(CVGraphics.POSITIVE, 0, 0);
                         }
+
                         gra.setTransform(at);
                         double p = getX(sb.le.get(j).pos);
                         double y = midh - (road_h - dep) * siz;
@@ -650,6 +654,7 @@ public interface BattleBox {
 
         private void drawTop(FakeGraphics g) {
             g.setComposite(CVGraphics.POSITIVE, 0, 0);
+
             int w = box.getWidth();
             double ratio = dpi / 42.0;
             setSym(g, ratio, w-aux.num[0][0].getImg().getWidth()*0.2 - cutout, aux.num[0][0].getImg().getHeight()*0.2, 1);
