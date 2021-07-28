@@ -1,5 +1,6 @@
 package com.mandarin.bcu.androidutil
 
+import android.app.Activity
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
@@ -781,8 +782,11 @@ class GetStrings(private val c: Context) {
         }
     }
 
-    fun getDifficulty(diff: Int): String {
-        return "★$diff"
+    fun getDifficulty(diff: Int, ac: Activity): String {
+        return if(diff < 0)
+            ac.getString(R.string.unit_info_t_none)
+        else
+            "★$diff"
     }
 
     fun getLayer(data: SCDef.Line): String {

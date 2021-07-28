@@ -185,7 +185,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         viewHolder.health.text = st.health.toString()
 
         if (st.info != null)
-            viewHolder.difficulty.text = s.getDifficulty(st.info.diff)
+            viewHolder.difficulty.text = s.getDifficulty(st.info.diff, activity)
         else
             viewHolder.difficulty.setText(R.string.unit_info_t_none)
 
