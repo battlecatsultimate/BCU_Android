@@ -22,6 +22,7 @@ import common.pack.UserProfile
 import common.system.fake.ImageBuilder
 import common.system.files.VFile
 import common.util.Data
+import common.util.anim.ImgCut
 import common.util.lang.ProcLang
 import java.io.File
 import java.io.IOException
@@ -148,6 +149,22 @@ object Definer {
                     val icon = vf.data?.img?.bimg() ?: return@Array StaticStore.empty(1, 1)
 
                     icon as Bitmap
+                }
+            }
+
+            if(StaticStore.starDifficulty == null) {
+                val starPath = "./org/page/img102"
+
+                val starVF = VFile.get("$starPath.png")
+
+                if(starVF != null) {
+                    val starImg = ImgCut.newIns("$starPath.imgcut")
+
+                    val starPng = starVF.data.img
+
+                    val images = starImg.cut(starPng)
+
+                    StaticStore.starDifficulty = arrayOf(images[33].bimg() as Bitmap, images[34].bimg() as Bitmap)
                 }
             }
 

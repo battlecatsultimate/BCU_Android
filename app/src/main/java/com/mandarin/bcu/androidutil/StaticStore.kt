@@ -153,6 +153,9 @@ object StaticStore {
     /** Cat fruit icons  */
     var fruit: Array<Bitmap>? = null
 
+    /** Star used for difficulty **/
+    var starDifficulty: Array<Bitmap>? = null
+
     /** Additional ability explanation texts  */
     var addition: Array<String> = Array(0) {""}
 

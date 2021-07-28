@@ -82,7 +82,6 @@ class GetStrings(private val c: Context) {
         private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
         val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
-        private val diffid = intArrayOf(R.string.stg_info_easy, R.string.stg_info_norm, R.string.stg_info_hard, R.string.stg_info_vete, R.string.stg_info_expe, R.string.stg_info_insa, R.string.stg_info_dead, R.string.stg_info_merc)
     }
 
     init {
@@ -783,14 +782,7 @@ class GetStrings(private val c: Context) {
     }
 
     fun getDifficulty(diff: Int): String {
-        return if (diff >= diffid.size || diff < 0) {
-            if (diff == -1)
-                c.getString(R.string.unit_info_t_none)
-            else
-                diff.toString()
-        } else {
-            c.getString(diffid[diff])
-        }
+        return "★$diff"
     }
 
     fun getLayer(data: SCDef.Line): String {
