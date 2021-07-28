@@ -918,6 +918,8 @@ class LUOrbSetting : Fragment() {
     }
 
     private fun setLevel() {
+        f ?: return
+
         val o = Array(orb.size) { i -> orb[i]}
 
         val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return
