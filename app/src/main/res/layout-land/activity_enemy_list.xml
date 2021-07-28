@@ -144,7 +144,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/enlistpager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

@@ -10,12 +10,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -96,7 +96,7 @@ class UnitInfo : AppCompatActivity() {
 
                 scrollView.visibility = View.GONE
 
-                val unittable = findViewById<ViewPager>(R.id.unitinftable)
+                val unittable = findViewById<ViewPager2>(R.id.unitinftable)
 
                 unittable.isFocusable = false
                 unittable.requestFocusFromTouch()
@@ -115,7 +115,7 @@ class UnitInfo : AppCompatActivity() {
 
                 scrollView.visibility = View.GONE
 
-                val unittable = findViewById<ViewPager>(R.id.unitinftable)
+                val unittable = findViewById<ViewPager2>(R.id.unitinftable)
 
                 unittable.isFocusable = false
                 unittable.requestFocusFromTouch()
@@ -167,7 +167,7 @@ class UnitInfo : AppCompatActivity() {
             }
         })
 
-        UInfoLoader(this, data, supportFragmentManager).execute()
+        UInfoLoader(this, data, supportFragmentManager, lifecycle).execute()
     }
 
     override fun onBackPressed() {

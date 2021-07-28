@@ -4,24 +4,23 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
-import com.mandarin.bcu.androidutil.supports.adapter.BGListPager
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MeasureViewPager
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.BGListPager
 import common.CommonStatic
 import common.pack.Identifier
 import common.pack.PackData
@@ -63,14 +62,32 @@ class BackgroundList : AppCompatActivity() {
         setContentView(R.layout.activity_background_list)
 
         val tab = findViewById<TabLayout>(R.id.bglisttab)
-        val pager = findViewById<MeasureViewPager>(R.id.bglistpager)
+        val pager = findViewById<ViewPager2>(R.id.bglistpager)
 
-        pager.removeAllViewsInLayout()
-        pager.adapter = BGListTab(supportFragmentManager)
+        pager.adapter = BGListTab()
         pager.offscreenPageLimit = getExistingBGPack()
-        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-        tab.setupWithViewPager(pager)
+        val keys = getExistingPack()
+
+        TabLayoutMediator(tab, pager) { t, position ->
+            t.text = if (position == 0) {
+                getString(R.string.pack_default)
+            } else {
+                val pack = UserProfile.getUserPack(keys[position])
+
+                if (pack == null) {
+                    keys[position]
+                }
+
+                val name = pack?.desc?.name ?: ""
+
+                if (name.isEmpty()) {
+                    keys[position]
+                } else {
+                    name
+                }
+            }
+        }.attach()
 
         if(getExistingBGPack() == 1) {
             tab.visibility = View.GONE
@@ -142,68 +159,31 @@ class BackgroundList : AppCompatActivity() {
         return res
     }
 
-    inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val keys: ArrayList<String>
+    private fun getExistingPack(): ArrayList<String> {
+        val list = UserProfile.getAllPacks()
 
-        init {
-            val lit = fm.fragments
-            val trans = fm.beginTransaction()
+        val res = ArrayList<String>()
 
-            for (f in lit) {
-                trans.remove(f)
+        for(k in list) {
+            if(k is PackData.DefPack) {
+                res.add(Identifier.DEF)
+            } else if(k is PackData.UserPack && k.bgs.size() != 0) {
+                res.add(k.desc.id)
             }
-
-            trans.commitAllowingStateLoss()
-
-            keys = getExistingPack()
         }
 
-        override fun getItem(position: Int): Fragment {
-            return BGListPager.newInstance(keys[position])
-        }
+        return res
+    }
 
-        override fun getCount(): Int {
+    inner class BGListTab : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        private val keys = getExistingPack()
+
+        override fun getItemCount(): Int {
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence {
-            return if (position == 0) {
-                getString(R.string.pack_default)
-            } else {
-                val pack = UserProfile.getUserPack(keys[position])
-
-                if (pack == null) {
-                    keys[position]
-                }
-
-                val name = pack?.desc?.name ?: ""
-
-                if (name.isEmpty()) {
-                    keys[position]
-                } else {
-                    name
-                }
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            return null
-        }
-
-        private fun getExistingPack(): ArrayList<String> {
-            val list = UserProfile.getAllPacks()
-
-            val res = ArrayList<String>()
-
-            for(k in list) {
-                if(k is PackData.DefPack) {
-                    res.add(Identifier.DEF)
-                } else if(k is PackData.UserPack && k.bgs.size() != 0) {
-                    res.add(k.desc.id)
-                }
-            }
-
-            return res
+        override fun createFragment(position: Int): Fragment {
+            return BGListPager.newInstance(keys[position])
         }
     }
 }

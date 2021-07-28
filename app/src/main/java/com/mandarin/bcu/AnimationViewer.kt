@@ -95,7 +95,7 @@ class AnimationViewer : AppCompatActivity() {
             }
         })
 
-        Adder(this, supportFragmentManager).execute()
+        Adder(this, supportFragmentManager, lifecycle).execute()
     }
 
     private fun gotoFilter() {

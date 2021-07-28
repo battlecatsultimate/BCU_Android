@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -18,22 +17,23 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.android.material.tabs.TabLayout.TabLayoutOnPageChangeListener
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.SearchFilter
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.lineup.adapters.*
 import com.mandarin.bcu.androidutil.lineup.adapters.LUCatCombo.Companion.newInstance
-import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.battle.BasisSet
 import common.pack.UserProfile
@@ -41,7 +41,7 @@ import java.io.File
 import java.lang.ref.WeakReference
 import java.util.*
 
-class LUAdder(activity: Activity, private val manager: FragmentManager) : CoroutineTask<String>() {
+class LUAdder(activity: Activity, private val manager: FragmentManager, private val lifecycle: Lifecycle) : CoroutineTask<String>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
     private var prePosit = 0
     private var initialized = false
@@ -56,14 +56,14 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
         StaticStore.LULoading = true
         val activity = weakReference.get() ?: return
         val tabLayout: TabLayout = activity.findViewById(R.id.lineuptab)
-        val measureViewPager: MeasureViewPager = activity.findViewById(R.id.lineuppager)
+        val lineupPager: ViewPager2 = activity.findViewById(R.id.lineuppager)
         val line: LineUpView = activity.findViewById(R.id.lineupView)
         val row = activity.findViewById<TableRow>(R.id.lineupsetrow)
         val schname: TextInputEditText = activity.findViewById(R.id.animschname)
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         val view = activity.findViewById<View>(R.id.view)
         for (i in ids.indices) names[i] = activity.getString(ids[i])
-        if (view == null) setDisappear(tabLayout, measureViewPager, line, row, schname, layout) else setDisappear(tabLayout, measureViewPager, line, row, view, schname, layout)
+        if (view == null) setDisappear(tabLayout, lineupPager, line, row, schname, layout) else setDisappear(tabLayout, lineupPager, line, row, view, schname, layout)
     }
 
     override fun doSomething() {
@@ -134,7 +134,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
                 var setn = shared.getInt("equip_set", 0)
                 var lun = shared.getInt("equip_lu", 0)
                 val prog = activity.findViewById<ProgressBar>(R.id.prog)
-                val pager: MeasureViewPager = activity.findViewById(R.id.lineuppager)
+                val pager: ViewPager2 = activity.findViewById(R.id.lineuppager)
                 val tabs: TabLayout = activity.findViewById(R.id.lineuptab)
                 val bck: FloatingActionButton = activity.findViewById(R.id.lineupbck)
                 val sch: FloatingActionButton = activity.findViewById(R.id.linesch)
@@ -168,7 +168,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
                     activity.startActivity(intent)
                 }
 
-                tab = LUTab(manager, line)
+                tab = LUTab(manager, lifecycle, line)
 
                 line.setOnTouchListener { _: View?, event: MotionEvent ->
                     val posit: IntArray?
@@ -698,11 +698,13 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
 
                 option.setOnClickListener { popupMenu.show() }
 
-                pager.removeAllViewsInLayout()
                 pager.adapter = tab
                 pager.offscreenPageLimit = 5
-                pager.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabs))
-                tabs.setupWithViewPager(pager)
+
+                TabLayoutMediator(tabs, pager) { tab, position ->
+                    tab.text = names[position]
+                }.attach()
+
                 tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
                     override fun onTabSelected(tab: TabLayout.Tab) {
                         pager.currentItem = tab.position
@@ -713,6 +715,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
                     override fun onTabUnselected(tab: TabLayout.Tab) {}
                     override fun onTabReselected(tab: TabLayout.Tab) {}
                 })
+
                 tabs.getTabAt(StaticStore.LUtabPosition)?.select()
                 setspin.setSelection(setn)
                 luspin.setSelection(lun)
@@ -729,13 +732,17 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
     override fun finish() {
         val activity = weakReference.get() ?: return
         val tabLayout: TabLayout = activity.findViewById(R.id.lineuptab)
-        val measureViewPager: MeasureViewPager = activity.findViewById(R.id.lineuppager)
+        val lineupPager: ViewPager2 = activity.findViewById(R.id.lineuppager)
         val line: LineUpView = activity.findViewById(R.id.lineupView)
         val row = activity.findViewById<TableRow>(R.id.lineupsetrow)
         val schname: TextInputEditText = activity.findViewById(R.id.animschname)
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         val view = activity.findViewById<View>(R.id.view)
-        if (view == null) setAppear(tabLayout, measureViewPager, line, row, schname, layout) else setAppear(tabLayout, measureViewPager, line, row, view, schname, layout)
+
+        if (view == null)
+            setAppear(tabLayout, lineupPager, line, row, schname, layout)
+        else
+            setAppear(tabLayout, lineupPager, line, row, view, schname, layout)
     }
 
     private fun updateText(info: String) {
@@ -756,21 +763,23 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
         for (v in view) v.visibility = View.VISIBLE
     }
 
-    private inner class LUTab(fm: FragmentManager?, private val lineup: LineUpView) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private inner class LUTab(fm: FragmentManager, lc: Lifecycle, private val lineup: LineUpView) : FragmentStateAdapter(fm, lc) {
         init {
-            val lit = fm?.fragments
-            val trans = fm?.beginTransaction()
+            val lit = fm.fragments
+            val trans = fm.beginTransaction()
 
-            if(lit != null) {
-                for(f in lit) {
-                    trans?.remove(f)
-                }
-
-                trans?.commitAllowingStateLoss()
+            for(f in lit) {
+                trans.remove(f)
             }
+
+            trans.commitAllowingStateLoss()
         }
 
-        override fun getItem(i: Int): Fragment {
+        override fun getItemCount(): Int {
+            return 7
+        }
+
+        override fun createFragment(i: Int): Fragment {
             when (i) {
                 0 -> return LUUnitList.newInstance(lineup)
                 1 -> return LUUnitSetting.newInstance(lineup)
@@ -782,18 +791,6 @@ class LUAdder(activity: Activity, private val manager: FragmentManager) : Corout
             }
 
             return LUUnitList.newInstance(lineup)
-        }
-
-        override fun getCount(): Int {
-            return 7
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return names[position]
-        }
-
-        override fun saveState(): Parcelable? {
-            return null
         }
     }
 }

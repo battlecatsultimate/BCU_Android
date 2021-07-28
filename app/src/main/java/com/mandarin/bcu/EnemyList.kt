@@ -100,7 +100,7 @@ open class EnemyList : AppCompatActivity() {
             }
         })
 
-        EAdder(this,mode,supportFragmentManager).execute()
+        EAdder(this, mode, supportFragmentManager, lifecycle).execute()
     }
 
     protected fun gotoFilter() {

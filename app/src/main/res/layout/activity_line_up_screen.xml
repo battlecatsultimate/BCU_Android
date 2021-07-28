@@ -149,7 +149,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineuplayout"
         app:tabMode="scrollable"
-        app:tabTextAppearance="@style/CounterStyle" />
+        app:tabTextAppearance="@style/CounterStyle"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TableRow
         android:id="@+id/lineupsetrow"
@@ -191,7 +192,7 @@
             android:textAlignment="center" />
     </TableRow>
 
-    <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/lineuppager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

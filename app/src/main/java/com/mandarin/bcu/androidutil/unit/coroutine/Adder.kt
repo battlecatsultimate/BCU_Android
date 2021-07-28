@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.unit.coroutine
 
 import android.app.Activity
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -9,17 +8,19 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import com.mandarin.bcu.androidutil.Definer
+import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.unit.adapters.UnitListPager
 import common.pack.Identifier
@@ -27,7 +28,7 @@ import common.pack.PackData
 import common.pack.UserProfile
 import java.lang.ref.WeakReference
 
-class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTask<String>() {
+class Adder(context: Activity, private val fm : FragmentManager, private val lc: Lifecycle) : CoroutineTask<String>() {
     private val weakReference: WeakReference<Activity> = WeakReference(context)
 
     private val done = "done"
@@ -35,7 +36,7 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
     override fun prepare() {
         val activity = weakReference.get() ?: return
         val tab = activity.findViewById<TabLayout>(R.id.unittab)
-        val pager = activity.findViewById<MeasureViewPager>(R.id.unitpager)
+        val pager = activity.findViewById<ViewPager2>(R.id.unitpager)
         val search: FloatingActionButton = activity.findViewById(R.id.animsch)
         val schname: TextInputEditText = activity.findViewById(R.id.animschname)
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
@@ -81,7 +82,7 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
             done -> {
                 val schname: TextInputEditText = activity.findViewById(R.id.animschname)
                 val tab = activity.findViewById<TabLayout>(R.id.unittab)
-                val pager = activity.findViewById<MeasureViewPager>(R.id.unitpager)
+                val pager = activity.findViewById<ViewPager2>(R.id.unitpager)
                 val prog = activity.findViewById<ProgressBar>(R.id.prog)
 
                 prog.isIndeterminate = true
@@ -102,28 +103,57 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
                     }
                 })
 
-                fm ?: return
-
-                pager.removeAllViewsInLayout()
-                pager.adapter = UnitListTab(fm)
+                pager.adapter = UnitListTab()
                 pager.offscreenPageLimit = getExistingUnit()
-                pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-                tab.setupWithViewPager(pager)
+                val keys = getExistingPack()
+
+                TabLayoutMediator(tab, pager) { t, position ->
+                    t.text = if(position == 0) {
+                        weakReference.get()?.getString(R.string.pack_default) ?: "Default"
+                    } else {
+                        val pack = PackData.getPack(keys[position])
+
+                        if(pack == null) {
+                            keys[position]
+                        }
+
+                        val name = when (pack) {
+                            is PackData.DefPack -> {
+                                weakReference.get()?.getString(R.string.pack_default) ?: "Default"
+                            }
+                            is PackData.UserPack -> {
+                                StaticStore.getPackName(pack.desc.id)
+                            }
+                            else -> {
+                                ""
+                            }
+                        }
+
+                        if(name.isEmpty()) {
+                            keys[position]
+                        } else {
+                            name
+                        }
+                    }
+                }.attach()
             }
         }
     }
 
     override fun finish() {
         val activity = weakReference.get() ?: return
+
         val tab = activity.findViewById<TabLayout>(R.id.unittab)
-        val pager = activity.findViewById<MeasureViewPager>(R.id.unitpager)
+        val pager = activity.findViewById<ViewPager2>(R.id.unitpager)
         val prog = activity.findViewById<ProgressBar>(R.id.prog)
         val search: FloatingActionButton = activity.findViewById(R.id.animsch)
         val schname: TextInputEditText = activity.findViewById(R.id.animschname)
         val layout: TextInputLayout = activity.findViewById(R.id.animschnamel)
         val loadt = activity.findViewById<TextView>(R.id.status)
+
         loadt.visibility = View.GONE
+
         if(getExistingUnit() != 1) {
             tab.visibility = View.VISIBLE
         } else {
@@ -135,10 +165,15 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
 
             collapse.layoutParams = param
         }
+
         pager.visibility = View.VISIBLE
+
         prog.visibility = View.GONE
+
         search.show()
+
         schname.visibility = View.VISIBLE
+
         layout.visibility = View.VISIBLE
     }
 
@@ -163,14 +198,32 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
         return i
     }
 
-    inner class UnitListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private fun getExistingPack() : ArrayList<String> {
+        val packs = UserProfile.getAllPacks()
+
+        val res = ArrayList<String>()
+
+        for(p in packs) {
+            if(p.units.list.isNotEmpty()) {
+                if(p is PackData.DefPack) {
+                    res.add(Identifier.DEF)
+                } else if(p is PackData.UserPack) {
+                    res.add(p.sid)
+                }
+            }
+        }
+
+        return res
+    }
+
+    inner class UnitListTab : FragmentStateAdapter(fm, lc) {
         private val keys: ArrayList<String>
 
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
 
-            for(f in lit) {
+            for (f in lit) {
                 trans.remove(f)
             }
 
@@ -179,64 +232,12 @@ class Adder(context: Activity, private val fm : FragmentManager?) : CoroutineTas
             keys = getExistingPack()
         }
 
-        override fun getItem(position: Int): Fragment {
-            return UnitListPager.newInstance(keys[position], position)
-        }
-
-        override fun getCount(): Int {
+        override fun getItemCount(): Int {
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence {
-            return if(position == 0) {
-                weakReference.get()?.getString(R.string.pack_default) ?: "Default"
-            } else {
-                val pack = PackData.getPack(keys[position])
-
-                if(pack == null) {
-                    keys[position]
-                }
-
-                val name = when (pack) {
-                    is PackData.DefPack -> {
-                        weakReference.get()?.getString(R.string.pack_default) ?: "Default"
-                    }
-                    is PackData.UserPack -> {
-                        StaticStore.getPackName(pack.desc.id)
-                    }
-                    else -> {
-                        ""
-                    }
-                }
-
-                if(name.isEmpty()) {
-                    keys[position]
-                } else {
-                    name
-                }
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            return null
-        }
-
-        private fun getExistingPack() : ArrayList<String> {
-            val packs = UserProfile.getAllPacks()
-
-            val res = ArrayList<String>()
-
-            for(p in packs) {
-                if(p.units.list.isNotEmpty()) {
-                    if(p is PackData.DefPack) {
-                        res.add(Identifier.DEF)
-                    } else if(p is PackData.UserPack) {
-                        res.add(p.sid)
-                    }
-                }
-            }
-
-            return res
+        override fun createFragment(position: Int): Fragment {
+            return UnitListPager.newInstance(keys[position], position)
         }
     }
 }

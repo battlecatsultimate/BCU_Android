@@ -1,21 +1,22 @@
 package com.mandarin.bcu.androidutil.music.coroutine
 
 import android.app.Activity
-import android.os.Parcelable
 import android.util.SparseArray
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.music.adapters.MusicListPager
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
@@ -25,7 +26,7 @@ import common.pack.UserProfile
 import java.lang.ref.WeakReference
 import kotlin.math.round
 
-class MusicAdder(activity: Activity, private val fm: FragmentManager?) : CoroutineTask<String>() {
+class MusicAdder(activity: Activity, private val fm: FragmentManager, private val lc: Lifecycle) : CoroutineTask<String>() {
     private val weak = WeakReference(activity)
 
     private val done = "done"
@@ -34,7 +35,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : Corouti
         val ac = weak.get() ?: return
 
         val tab: TabLayout = ac.findViewById(R.id.mulisttab)
-        val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
+        val pager: ViewPager2 = ac.findViewById(R.id.mulistpager)
 
         setDisappear(tab, pager)
     }
@@ -126,20 +127,46 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : Corouti
             done -> {
                 val prog = ac.findViewById<ProgressBar>(R.id.prog)
                 val tab: TabLayout = ac.findViewById(R.id.mulisttab)
-                val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
+                val pager: ViewPager2 = ac.findViewById(R.id.mulistpager)
 
                 st.text = ac.getString(R.string.medal_loading_data)
 
                 prog.isIndeterminate = true
 
-                fm ?: return
-
-                pager.removeAllViewsInLayout()
-                pager.adapter = MusicListTab(fm)
+                pager.adapter = MusicListTab()
                 pager.offscreenPageLimit = existingPackNumber()
-                pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-                tab.setupWithViewPager(pager)
+                val keys = getExistingPack()
+
+                TabLayoutMediator(tab, pager) { t, position ->
+                    t.text = if(position == 0) {
+                        "Default"
+                    } else {
+                        val pack = UserProfile.getPack(keys[position])
+
+                        if(pack == null) {
+                            keys[position]
+                        }
+
+                        val name = when (pack) {
+                            is PackData.DefPack -> {
+                                weak.get()?.getString(R.string.pack_default) ?: "Default"
+                            }
+                            is PackData.UserPack -> {
+                                StaticStore.getPackName(pack.sid)
+                            }
+                            else -> {
+                                ""
+                            }
+                        }
+
+                        if(name.isEmpty()) {
+                            keys[position]
+                        } else {
+                            name
+                        }
+                    }
+                }.attach()
             }
         }
     }
@@ -150,7 +177,7 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : Corouti
         val loadt: TextView = ac.findViewById(R.id.status)
         val prog: ProgressBar = ac.findViewById(R.id.prog)
         val tab: TabLayout = ac.findViewById(R.id.mulisttab)
-        val pager: MeasureViewPager = ac.findViewById(R.id.mulistpager)
+        val pager: ViewPager2 = ac.findViewById(R.id.mulistpager)
 
         setAppear(pager)
         setDisappear(loadt, prog)
@@ -203,79 +230,32 @@ class MusicAdder(activity: Activity, private val fm: FragmentManager?) : Corouti
         publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
-    inner class MusicListTab internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val keys: ArrayList<String>
+    private fun getExistingPack() : ArrayList<String> {
+        val packs = UserProfile.getAllPacks()
+        val res = ArrayList<String>()
 
-        init {
-            val lit = fm.fragments
-            val trans = fm.beginTransaction()
-
-            for(f in lit) {
-                trans.remove(f)
+        for(p in packs) {
+            if(p.musics.list.isNotEmpty()) {
+                if(p is PackData.DefPack) {
+                    res.add(Identifier.DEF)
+                } else if(p is PackData.UserPack) {
+                    res.add(p.sid)
+                }
             }
-
-            trans.commitAllowingStateLoss()
-
-            keys = getExistingPack()
         }
 
-        override fun getItem(position: Int): Fragment {
-            return MusicListPager.newIntance(keys[position])
-        }
+        return res
+    }
 
-        override fun getCount(): Int {
+    inner class MusicListTab : FragmentStateAdapter(fm, lc) {
+        private val keys = getExistingPack()
+
+        override fun getItemCount(): Int {
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence {
-            return if(position == 0) {
-                "Default"
-            } else {
-                val pack = UserProfile.getPack(keys[position])
-
-                if(pack == null) {
-                    keys[position]
-                }
-
-                val name = when (pack) {
-                    is PackData.DefPack -> {
-                        weak.get()?.getString(R.string.pack_default) ?: "Default"
-                    }
-                    is PackData.UserPack -> {
-                        StaticStore.getPackName(pack.sid)
-                    }
-                    else -> {
-                        ""
-                    }
-                }
-
-                if(name.isEmpty()) {
-                    keys[position]
-                } else {
-                    name
-                }
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            return null
-        }
-
-        private fun getExistingPack() : ArrayList<String> {
-            val packs = UserProfile.getAllPacks()
-            val res = ArrayList<String>()
-
-            for(p in packs) {
-                if(p.musics.list.isNotEmpty()) {
-                    if(p is PackData.DefPack) {
-                        res.add(Identifier.DEF)
-                    } else if(p is PackData.UserPack) {
-                        res.add(p.sid)
-                    }
-                }
-            }
-
-            return res
+        override fun createFragment(position: Int): Fragment {
+            return MusicListPager.newIntance(keys[position])
         }
     }
 }

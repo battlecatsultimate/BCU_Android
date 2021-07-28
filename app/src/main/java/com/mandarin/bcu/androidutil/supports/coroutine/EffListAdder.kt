@@ -1,36 +1,37 @@
 package com.mandarin.bcu.androidutil.supports.coroutine
 
 import android.app.Activity
-import android.os.Parcelable
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
-import com.mandarin.bcu.androidutil.supports.adapter.EffListPager
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
-import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.EffListPager
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
 import common.util.pack.Soul
 import java.lang.ref.WeakReference
 
-class EffListAdder(activity: Activity, private val fm: FragmentManager) : CoroutineTask<String>() {
+class EffListAdder(activity: Activity, private val fm: FragmentManager, private val lc: Lifecycle) : CoroutineTask<String>() {
     private val w = WeakReference(activity)
 
     private val done = "done"
 
     override fun prepare() {
         val ac = w.get() ?: return
-        val sc = ac.findViewById<MeasureViewPager>(R.id.effpager)
+        val sc = ac.findViewById<ViewPager2>(R.id.effpager)
 
         sc.visibility = View.GONE
     }
@@ -66,14 +67,21 @@ class EffListAdder(activity: Activity, private val fm: FragmentManager) : Corout
                 st.setText(R.string.load_process)
 
                 val tab = a.findViewById<TabLayout>(R.id.efftab)
-                val pager = a.findViewById<MeasureViewPager>(R.id.effpager)
+                val pager = a.findViewById<ViewPager2>(R.id.effpager)
 
-                pager.removeAllViewsInLayout()
-                pager.adapter = EffListTab(fm)
+                pager.adapter = EffListTab()
                 pager.offscreenPageLimit = 3
-                pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-                tab.setupWithViewPager(pager)
+                TabLayoutMediator(tab, pager) { t, position ->
+                    val ac = w.get() ?: return@TabLayoutMediator
+
+                    t.text = when(position) {
+                        0 -> ac.getString(R.string.eff_eff)
+                        1 -> ac.getString(R.string.eff_soul)
+                        2 -> ac.getString(R.string.eff_cannon)
+                        else -> ac.getString(R.string.eff_eff)
+                    }
+                }.attach()
 
                 val bck = a.findViewById<FloatingActionButton>(R.id.effbck)
 
@@ -91,7 +99,7 @@ class EffListAdder(activity: Activity, private val fm: FragmentManager) : Corout
         val activity = w.get() ?: return
         val prog = activity.findViewById<ProgressBar>(R.id.prog)
         val st = activity.findViewById<TextView>(R.id.status)
-        val pager = activity.findViewById<MeasureViewPager>(R.id.effpager)
+        val pager = activity.findViewById<ViewPager2>(R.id.effpager)
 
         prog.visibility = View.GONE
         st.visibility = View.GONE
@@ -108,7 +116,7 @@ class EffListAdder(activity: Activity, private val fm: FragmentManager) : Corout
         publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
-    inner class EffListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    inner class EffListTab : FragmentStateAdapter(fm, lc) {
         init {
             val lit = fm.fragments
             val trans = fm.beginTransaction()
@@ -120,31 +128,16 @@ class EffListAdder(activity: Activity, private val fm: FragmentManager) : Corout
             trans.commitAllowingStateLoss()
         }
 
-        override fun getCount(): Int {
+        override fun getItemCount(): Int {
             return 3
         }
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             return when(position) {
                 0 -> EffListPager.newInstance<EffAnim<*>>(AnimationCView.EFFECT)
                 1 -> EffListPager.newInstance<Soul>(AnimationCView.SOUL)
                 2 -> EffListPager.newInstance<NyCastle>(AnimationCView.CANNON)
                 else -> EffListPager.newInstance<EffAnim<*>>(AnimationCView.EFFECT)
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            return null
-        }
-
-        override fun getPageTitle(position: Int): CharSequence {
-            val ac = w.get() ?: return "NULL"
-
-            return when(position) {
-                0 -> ac.getString(R.string.eff_eff)
-                1 -> ac.getString(R.string.eff_soul)
-                2 -> ac.getString(R.string.eff_cannon)
-                else -> ac.getString(R.string.eff_eff)
             }
         }
     }

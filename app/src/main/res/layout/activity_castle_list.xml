@@ -42,6 +42,7 @@
                         android:layout_marginStart="8dp"
                         android:backgroundTint="?attr/colorPrimary"
                         android:clickable="true"
+                        android:contentDescription="@null"
                         android:focusable="true"
                         app:backgroundTint="?attr/colorPrimary"
                         app:borderWidth="0dp"
@@ -51,7 +52,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/back_button"
-                        android:contentDescription="@null" />
+                        tools:ignore="TouchTargetSizeCheck" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 
@@ -84,7 +85,7 @@
             android:layout_height="match_parent"
             tools:context=".CastleList">
 
-            <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/cslistpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

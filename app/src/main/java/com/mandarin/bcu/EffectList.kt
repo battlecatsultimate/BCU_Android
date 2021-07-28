@@ -47,7 +47,7 @@ class EffectList : AppCompatActivity() {
 
         setContentView(R.layout.activity_effect_list)
 
-        EffListAdder(this, supportFragmentManager).execute()
+        EffListAdder(this, supportFragmentManager, lifecycle).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {

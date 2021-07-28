@@ -3,8 +3,8 @@ package com.mandarin.bcu
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.castle.coroutine.CsLoader
@@ -47,7 +47,7 @@ class CastleList : AppCompatActivity() {
 
         setContentView(R.layout.activity_castle_list)
 
-        CsLoader(this, supportFragmentManager).execute()
+        CsLoader(this, supportFragmentManager, lifecycle).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {

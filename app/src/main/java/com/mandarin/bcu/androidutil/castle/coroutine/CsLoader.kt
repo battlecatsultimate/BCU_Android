@@ -7,23 +7,25 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.castle.CsListPager
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
-import com.mandarin.bcu.androidutil.supports.MeasureViewPager
 import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
 import java.lang.ref.WeakReference
 
-class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<String>() {
+class CsLoader(ac: Activity, private val fm: FragmentManager, private val lc: Lifecycle) : CoroutineTask<String>() {
     private val done = "done"
     private val w = WeakReference(ac)
 
@@ -63,14 +65,24 @@ class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<St
             }
             done -> {
                 val tab = activity.findViewById<TabLayout>(R.id.cslisttab)
-                val pager = activity.findViewById<MeasureViewPager>(R.id.cslistpager)
+                val pager = activity.findViewById<ViewPager2>(R.id.cslistpager)
 
-                pager.removeAllViewsInLayout()
-                pager.adapter = CsListTab(fm)
+                pager.adapter = CsListTab()
                 pager.offscreenPageLimit = getExistingCastle()
-                pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
 
-                tab.setupWithViewPager(pager)
+                val keys = getExistingPack()
+
+                TabLayoutMediator(tab, pager) { t, position ->
+                    val def = w.get()?.getString(R.string.pack_default) ?: "Default"
+
+                    t.text = when(position) {
+                        0 -> "$def - RC"
+                        1 -> "$def - EC"
+                        2 -> "$def - WC"
+                        3 -> "$def - SC"
+                        else -> StaticStore.getPackName(keys[position])
+                    }
+                }.attach()
 
                 if(getExistingCastle() == 1) {
                     tab.visibility = View.GONE
@@ -117,7 +129,7 @@ class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<St
         publishProgress(StaticStore.PROG, (p * 10000.0).toInt().toString())
     }
 
-    inner class CsListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    inner class CsListTab : FragmentStateAdapter(fm, lc) {
         private val keys: ArrayList<String>
 
         init {
@@ -133,45 +145,33 @@ class CsLoader(ac: Activity, private val fm: FragmentManager) : CoroutineTask<St
             keys = getExistingPack()
         }
 
-        override fun getCount(): Int {
+        override fun getItemCount(): Int {
             return keys.size
         }
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             return CsListPager.newInstance(keys[position])
         }
+    }
 
-        override fun getPageTitle(position: Int): CharSequence {
-            val def = w.get()?.getString(R.string.pack_default) ?: "Default"
+    private fun getExistingPack() : ArrayList<String> {
+        val list = UserProfile.getAllPacks()
 
-            return when(position) {
-                0 -> "$def - RC"
-                1 -> "$def - EC"
-                2 -> "$def - WC"
-                3 -> "$def - SC"
-                else -> StaticStore.getPackName(keys[position])
+        val res = ArrayList<String>()
+
+        for(k in list) {
+            if(k is PackData.DefPack) {
+                res.add(Identifier.DEF+"-0")
+                res.add(Identifier.DEF+"-1")
+                res.add(Identifier.DEF+"-2")
+                res.add(Identifier.DEF+"-3")
+            } else if(k is PackData.UserPack) {
+                if(k.castles.list.isNotEmpty())
+                    res.add(k.desc.id)
             }
         }
 
-        private fun getExistingPack() : ArrayList<String> {
-            val list = UserProfile.getAllPacks()
-
-            val res = ArrayList<String>()
-
-            for(k in list) {
-                if(k is PackData.DefPack) {
-                    res.add(Identifier.DEF+"-0")
-                    res.add(Identifier.DEF+"-1")
-                    res.add(Identifier.DEF+"-2")
-                    res.add(Identifier.DEF+"-3")
-                } else if(k is PackData.UserPack) {
-                    if(k.castles.list.isNotEmpty())
-                        res.add(k.desc.id)
-                }
-            }
-
-            return res
-        }
+        return res
     }
 
     private fun getExistingCastle() : Int {

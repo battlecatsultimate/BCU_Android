@@ -64,7 +64,7 @@ class LineUpScreen : AppCompatActivity() {
 
         layout.addView(line)
 
-        LUAdder(this, supportFragmentManager).execute()
+        LUAdder(this, supportFragmentManager, lifecycle).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
