@@ -19,8 +19,6 @@ import common.system.files.VFile
 
 class LUCastleSetting : Fragment() {
 
-    private var destroyed = false
-
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_castle_set, group, false)
 
@@ -82,11 +80,6 @@ class LUCastleSetting : Fragment() {
         c.drawBitmap(lb, 0f, 128f, p)
 
         img.setImageBitmap(result)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyed = true
     }
 
     companion object {

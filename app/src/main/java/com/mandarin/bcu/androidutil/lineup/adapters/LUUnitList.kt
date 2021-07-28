@@ -21,10 +21,6 @@ import kotlin.collections.ArrayList
 
 class LUUnitList : Fragment() {
     private lateinit var line: LineUpView
-    private val handler = Handler(Looper.getMainLooper())
-    private lateinit var runnable: Runnable
-
-    private var destroyed = false
     private var numbers = ArrayList<Identifier<Unit>>()
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
@@ -98,12 +94,6 @@ class LUUnitList : Fragment() {
         }
 
         return false
-    }
-
-    override fun onDestroy() {
-        destroyed = !destroyed
-        handler.removeCallbacks(runnable)
-        super.onDestroy()
     }
 
     private fun setArguments(line: LineUpView) {

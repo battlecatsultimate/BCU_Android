@@ -27,7 +27,6 @@ class LUTreasureSetting(private val line: LineUpView) : Fragment() {
 
     private var canbeEdited = true
     private var initialized = false
-    private var destroyed = false
 
     private val techid = intArrayOf(R.id.cdlev, R.id.aclev, R.id.basehlev, R.id.worklev, R.id.walletlev, R.id.rechargelev)
     private val eocid = intArrayOf(R.id.atktrea, R.id.healtrea, R.id.cdtrea, R.id.actrea, R.id.worktrea, R.id.wallettrea)
@@ -780,11 +779,6 @@ class LUTreasureSetting(private val line: LineUpView) : Fragment() {
                 })
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyed = true
     }
 
     companion object {

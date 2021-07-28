@@ -22,7 +22,6 @@ class LUConstruction : Fragment() {
 
     private var initialized = false
     private var editable = true
-    private var destroyed = false
 
     private val layoutid = intArrayOf(R.id.castlelev, R.id.slowlev, R.id.walllev, R.id.stoplev, R.id.waterlev, R.id.zombielev, R.id.breakerlev, R.id.curselev)
 
@@ -31,9 +30,6 @@ class LUConstruction : Fragment() {
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
 
     private var color: IntArray? = null
-
-    private val handler = Handler(Looper.getMainLooper())
-    private var runnable = Runnable { }
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_construction, group, false)
@@ -87,12 +83,6 @@ class LUConstruction : Fragment() {
         }
 
         initialized = true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyed = true
-        handler.removeCallbacks(runnable)
     }
 
     private fun listeners(view: View) {
