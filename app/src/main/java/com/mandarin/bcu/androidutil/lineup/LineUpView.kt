@@ -616,6 +616,7 @@ class LineUpView : View {
                 }
             }
         }
+
         BasisSet.current().sele.lu.renew()
     }
 
@@ -626,6 +627,7 @@ class LineUpView : View {
         for (i in lu.fs.indices) {
             System.arraycopy(lu.fs[i], 0, BasisSet.current().sele.lu.fs[i], 0, lu.fs[i].size)
         }
+
         updateLineUp()
     }
 

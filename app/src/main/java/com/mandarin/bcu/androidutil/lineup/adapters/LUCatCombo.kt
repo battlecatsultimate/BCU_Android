@@ -123,7 +123,10 @@ class LUCatCombo : Fragment() {
             use.isClickable = false
 
             comboListAdapter?.notifyDataSetChanged()
+
             line.invalidate()
+            line.updateUnitSetting()
+            line.updateUnitOrb()
         })
 
         return view
