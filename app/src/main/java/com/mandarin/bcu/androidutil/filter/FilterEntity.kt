@@ -122,12 +122,12 @@ object FilterEntity {
                     if (name == null)
                         name = ""
 
-                    name = Data.trio(i) + " - " + name.toLowerCase(Locale.ROOT)
+                    name = Data.trio(i) + " - " + name.lowercase()
 
                     added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
                         KoreanFilter.filter(name, StaticStore.entityname)
                     } else {
-                        name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT))
+                        name.contains(StaticStore.entityname.lowercase())
                     }
                 }
 
@@ -270,12 +270,12 @@ object FilterEntity {
                     if (name == null)
                         name = ""
 
-                    name = Data.trio(i) + " - " + name.toLowerCase(Locale.ROOT)
+                    name = Data.trio(i) + " - " + name.lowercase()
 
                     val added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
                         KoreanFilter.filter(name, StaticStore.entityname)
                     } else {
-                        name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT))
+                        name.contains(StaticStore.entityname.lowercase())
                     }
 
                     if (added)
@@ -438,12 +438,12 @@ object FilterEntity {
                         if(name == null)
                             name = ""
 
-                        name = Data.trio(j) + "-" + name.toLowerCase(Locale.ROOT)
+                        name = Data.trio(j) + "-" + name.lowercase()
 
                         added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
                             KoreanFilter.filter(name, StaticStore.entityname)
                         } else {
-                            name.contains(StaticStore.entityname.toLowerCase(Locale.ROOT))
+                            name.contains(StaticStore.entityname.lowercase())
                         }
                     }
 
