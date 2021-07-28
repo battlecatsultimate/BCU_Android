@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ListView
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
@@ -28,9 +29,54 @@ class AssetBrowser : AppCompatActivity() {
     companion object {
         var path = "./org"
 
-        const val EXTRACT_FILE = 0
-
         var current: VFile? = null
+    }
+
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == RESULT_OK) {
+            val data = result.data
+
+            if(data != null) {
+                val file = current
+                val uri = data.data
+
+                if(uri == null || file == null) {
+                    StaticStore.showShortMessage(this, getString(R.string.file_extract_cant))
+                } else {
+                    val pfd = contentResolver.openFileDescriptor(uri, "w")
+
+                    if(pfd != null) {
+                        val fos = FileOutputStream(pfd.fileDescriptor)
+                        val ins = file.data.stream
+
+                        val b = ByteArray(65536)
+                        var len: Int
+
+                        while(ins.read(b).also { len = it } != -1) {
+                            fos.write(b, 0, len)
+                        }
+
+                        ins.close()
+                        fos.close()
+
+                        val path = uri.path
+
+                        if(path == null) {
+                            StaticStore.showShortMessage(this, getString(R.string.file_extract_semi).replace("_",file.name))
+                            return@registerForActivityResult
+                        }
+
+                        val f = File(path)
+
+                        val p = f.absolutePath.split(":")[1]
+
+                        StaticStore.showShortMessage(this, getString(R.string.file_extract_success).replace("_",file.name).replace("-",p))
+                    } else {
+                        StaticStore.showShortMessage(this, getString(R.string.file_extract_cant))
+                    }
+                }
+            }
+        }
     }
 
     val list = ArrayList<VFile>()
@@ -193,53 +239,6 @@ class AssetBrowser : AppCompatActivity() {
 
             bck.performClick()
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == RESULT_OK && requestCode == EXTRACT_FILE) {
-            if(data != null) {
-                val file = current
-                val uri = data.data
-
-                if(uri == null || file == null) {
-                    StaticStore.showShortMessage(this, getString(R.string.file_extract_cant))
-                } else {
-                    val pfd = contentResolver.openFileDescriptor(uri, "w")
-
-                    if(pfd != null) {
-                        val fos = FileOutputStream(pfd.fileDescriptor)
-                        val ins = file.data.stream
-
-                        val b = ByteArray(65536)
-                        var len: Int
-
-                        while(ins.read(b).also { len = it } != -1) {
-                            fos.write(b, 0, len)
-                        }
-
-                        ins.close()
-                        fos.close()
-
-                        val path = uri.path
-
-                        if(path == null) {
-                            StaticStore.showShortMessage(this, getString(R.string.file_extract_semi).replace("_",file.name))
-                            return
-                        }
-
-                        val f = File(path)
-
-                        val p = f.absolutePath.split(":")[1]
-
-                        StaticStore.showShortMessage(this, getString(R.string.file_extract_success).replace("_",file.name).replace("-",p))
-                    } else {
-                        StaticStore.showShortMessage(this, getString(R.string.file_extract_cant))
-                    }
-                }
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun isFile(f: VFile) : Boolean {

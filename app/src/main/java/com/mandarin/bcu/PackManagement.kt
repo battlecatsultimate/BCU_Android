@@ -17,6 +17,7 @@ import android.view.View
 import android.view.Window
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -33,6 +34,7 @@ import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.pack.PackData
 import common.pack.UserProfile
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,10 +44,72 @@ import java.io.InputStream
 import java.text.DecimalFormat
 import java.util.*
 
+@DelicateCoroutinesApi
 class PackManagement : AppCompatActivity() {
     companion object {
         var handlingPacks = false
         var needReload = false
+    }
+
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == RESULT_OK) {
+            val path = result.data?.data ?: return@registerForActivityResult
+
+            Log.i("PackManagement", "Got URI : $path")
+
+            val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
+
+            val resolver = applicationContext.contentResolver
+            val cursor = resolver.query(path, projection, null, null, null)
+
+            if(cursor != null) {
+                if(cursor.moveToFirst()) {
+                    val name = cursor.getString(0)
+
+                    if(!name.endsWith(".pack.bcuzip")) {
+                        StaticStore.showShortMessage(this, R.string.pack_import_invalid)
+
+                        return@registerForActivityResult
+                    }
+
+                    val pack = File(StaticStore.getExternalPack(this), name)
+
+                    if(!pack.exists()) {
+                        pack.createNewFile()
+
+                        val ins = resolver.openInputStream(path) ?: return@registerForActivityResult
+                        val fos = FileOutputStream(pack)
+
+                        showWritingDialog(ins, fos, pack)
+
+                    } else {
+                        StaticStore.fixOrientation(this)
+
+                        val dialog = AlertDialog.Builder(this)
+
+                        dialog.setTitle(R.string.pack_import_exist)
+                        dialog.setMessage(R.string.pack_import_exist_msg)
+
+                        dialog.setPositiveButton(R.string.replace) { _, _ ->
+                            val ins = resolver.openInputStream(path) ?: return@setPositiveButton
+                            val fos = FileOutputStream(pack)
+
+                            showWritingDialog(ins, fos, pack)
+                        }
+
+                        dialog.setNegativeButton(R.string.main_file_cancel) {_, _ ->
+                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                        }
+
+                        dialog.show()
+                    }
+
+
+                }
+
+                cursor.close()
+            }
+        }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -201,69 +265,6 @@ class PackManagement : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == RESULT_OK) {
-            val path = data?.data ?: return
-
-            Log.i("PackManagement", "Got URI : $path")
-
-            val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
-
-            val resolver = applicationContext.contentResolver
-            val cursor = resolver.query(path, projection, null, null, null)
-
-            if(cursor != null) {
-                if(cursor.moveToFirst()) {
-                    val name = cursor.getString(0)
-
-                    if(!name.endsWith(".pack.bcuzip")) {
-                        StaticStore.showShortMessage(this, R.string.pack_import_invalid)
-
-                        return
-                    }
-
-                    val pack = File(StaticStore.getExternalPack(this), name)
-
-                    if(!pack.exists()) {
-                        pack.createNewFile()
-
-                        val ins = resolver.openInputStream(path) ?: return
-                        val fos = FileOutputStream(pack)
-
-                        showWritingDialog(ins, fos, pack)
-
-                    } else {
-                        StaticStore.fixOrientation(this)
-
-                        val dialog = AlertDialog.Builder(this)
-
-                        dialog.setTitle(R.string.pack_import_exist)
-                        dialog.setMessage(R.string.pack_import_exist_msg)
-
-                        dialog.setPositiveButton(R.string.replace) { _, _ ->
-                            val ins = resolver.openInputStream(path) ?: return@setPositiveButton
-                            val fos = FileOutputStream(pack)
-
-                            showWritingDialog(ins, fos, pack)
-                        }
-
-                        dialog.setNegativeButton(R.string.main_file_cancel) {_, _ ->
-                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                        }
-
-                        dialog.show()
-                    }
-
-
-                }
-
-                cursor.close()
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun showWritingDialog(ins: InputStream, fos: FileOutputStream, pack: File) {

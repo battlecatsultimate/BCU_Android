@@ -8,6 +8,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mandarin.bcu.PackManagement
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
@@ -16,6 +17,7 @@ import com.mandarin.bcu.androidutil.pack.adapters.PackManagementAdapter
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import common.pack.PackData
 import common.pack.UserProfile
+import kotlinx.coroutines.DelicateCoroutinesApi
 import java.lang.ref.WeakReference
 
 class PackManager(ac: Activity) : CoroutineTask<String>() {
@@ -41,6 +43,7 @@ class PackManager(ac: Activity) : CoroutineTask<String>() {
         publishProgress(done)
     }
 
+    @DelicateCoroutinesApi
     override fun progressUpdate(vararg data: String) {
         val ac = w.get() ?: return
 
@@ -73,7 +76,8 @@ class PackManager(ac: Activity) : CoroutineTask<String>() {
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         intent.type = "*/*"
 
-                        ac.startActivityForResult(Intent.createChooser(intent, "Choose Directory"), 100)
+                        if(ac is PackManagement)
+                            ac.resultLauncher.launch(Intent.createChooser(intent, "Choose Directory"))
                     }
                 })
 

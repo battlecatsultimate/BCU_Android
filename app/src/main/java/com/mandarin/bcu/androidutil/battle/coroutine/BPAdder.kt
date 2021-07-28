@@ -160,7 +160,10 @@ open class BPAdder : CoroutineTask<String> {
                 equip.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(activity, LineUpScreen::class.java)
-                        activity.startActivityForResult(intent, 0)
+
+                        if(activity is BattlePrepare) {
+                            activity.resultLauncher.launch(intent)
+                        }
                     }
                 })
                 sniper.isChecked = BattlePrepare.sniper

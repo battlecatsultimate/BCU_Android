@@ -283,7 +283,9 @@ class MapAdder(activity: Activity) : CoroutineTask<String>() {
                 stgfilter.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(activity,StageSearchFilter::class.java)
-                        activity.startActivityForResult(intent, MapList.REQUEST_CODE)
+
+                        if(activity is MapList)
+                            activity.resultLauncher.launch(intent)
                     }
                 })
             }

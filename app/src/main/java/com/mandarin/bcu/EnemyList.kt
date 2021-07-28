@@ -1,6 +1,5 @@
 package com.mandarin.bcu
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
@@ -10,23 +9,44 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import common.system.fake.ImageBuilder
 import java.util.*
 
 open class EnemyList : AppCompatActivity() {
     private var mode = EAdder.MODE_INFO
+
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val schname: TextInputEditText = findViewById(R.id.enemlistschname)
+
+        for(i in StaticStore.filterEntityList.indices) {
+            StaticStore.filterEntityList[i] = true
+        }
+
+        schname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                StaticStore.entityname = s.toString()
+
+                for(i in StaticStore.filterEntityList.indices) {
+                    StaticStore.filterEntityList[i] = true
+                }
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,30 +105,8 @@ open class EnemyList : AppCompatActivity() {
 
     protected fun gotoFilter() {
         val intent = Intent(this@EnemyList, EnemySearchFilter::class.java)
-        startActivityForResult(intent, 1)
-    }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        val schname: TextInputEditText = findViewById(R.id.enemlistschname)
-
-        for(i in StaticStore.filterEntityList.indices) {
-            StaticStore.filterEntityList[i] = true
-        }
-
-        schname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                StaticStore.entityname = s.toString()
-
-                for(i in StaticStore.filterEntityList.indices) {
-                    StaticStore.filterEntityList[i] = true
-                }
-            }
-        })
+        resultLauncher.launch(intent)
     }
 
     override fun attachBaseContext(newBase: Context) {

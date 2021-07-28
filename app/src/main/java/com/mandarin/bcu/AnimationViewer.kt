@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -25,6 +26,25 @@ import common.system.fake.ImageBuilder
 import java.util.*
 
 class AnimationViewer : AppCompatActivity() {
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        for(i in StaticStore.filterEntityList.indices) {
+            StaticStore.filterEntityList[i] = true
+        }
+
+        val schname = findViewById<EditText>(R.id.animschname)
+
+        schname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                StaticStore.entityname = s.toString()
+
+                for(i in StaticStore.filterEntityList.indices) {
+                    StaticStore.filterEntityList[i] = true
+                }
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,29 +100,8 @@ class AnimationViewer : AppCompatActivity() {
 
     private fun gotoFilter() {
         val intent = Intent(this@AnimationViewer, SearchFilter::class.java)
-        startActivityForResult(intent, REQUEST_CODE)
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        for(i in StaticStore.filterEntityList.indices) {
-            StaticStore.filterEntityList[i] = true
-        }
-
-        val schname = findViewById<EditText>(R.id.animschname)
-
-        schname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                StaticStore.entityname = s.toString()
-
-                for(i in StaticStore.filterEntityList.indices) {
-                    StaticStore.filterEntityList[i] = true
-                }
-            }
-        })
+        resultLauncher.launch(intent)
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -147,9 +146,5 @@ class AnimationViewer : AppCompatActivity() {
         super.onBackPressed()
         StaticStore.filterReset()
         StaticStore.entityname = ""
-    }
-
-    companion object {
-        const val REQUEST_CODE = 1
     }
 }

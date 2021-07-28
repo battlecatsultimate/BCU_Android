@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
@@ -27,6 +28,13 @@ class BattlePrepare : AppCompatActivity() {
     companion object {
         var rich = false
         var sniper = false
+    }
+
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val line = findViewById<LineUpView>(R.id.lineupView)
+        line.updateLineUp()
+        val setname = findViewById<TextView>(R.id.lineupname)
+        setname.text = setLUName
     }
 
     @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
@@ -88,14 +96,6 @@ class BattlePrepare : AppCompatActivity() {
                 BPAdder(this, data).execute()
             }
         }
-    }
-
-    override fun onActivityResult(code: Int, code1: Int, data: Intent?) {
-        super.onActivityResult(code, code1, data)
-        val line = findViewById<LineUpView>(R.id.lineupView)
-        line.updateLineUp()
-        val setname = findViewById<TextView>(R.id.lineupname)
-        setname.text = setLUName
     }
 
     override fun attachBaseContext(newBase: Context) {

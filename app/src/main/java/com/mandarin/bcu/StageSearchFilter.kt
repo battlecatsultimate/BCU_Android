@@ -15,6 +15,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -41,7 +42,6 @@ import kotlin.collections.ArrayList
 
 class StageSearchFilter : AppCompatActivity() {
     companion object {
-        const val REQUEST_CODE = 200
         val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120,122,123,125,126,127,130)
     }
 
@@ -49,6 +49,35 @@ class StageSearchFilter : AppCompatActivity() {
 
     private val mdata = ArrayList<String>()
     private val bdata = ArrayList<String>()
+
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val data = result.data
+
+        if (result.resultCode == Activity.RESULT_OK && data != null) {
+            val id = StaticStore.transformIdentifier<AbEnemy>(data.getStringExtra("Data")) ?: return@registerForActivityResult
+            val e = id.get() ?: return@registerForActivityResult
+
+            if(e !is Enemy)
+                return@registerForActivityResult
+
+            if (!StaticStore.stgenem.contains(e.id)) {
+                StaticStore.stgenem.add(e.id)
+
+                val enemygroup = findViewById<ChipGroup>(R.id.enemygroup)
+
+                val chip = Chip(this)
+                chip.id = R.id.enemychip + e.id.pack.hashCode() + e.id.id
+                chip.text = getEnemyName(e)
+                chip.isCloseIconVisible = true
+                chip.setOnCloseIconClickListener {
+                    StaticStore.stgenem.remove(e.id)
+                    enemygroup.removeView(chip)
+                }
+
+                enemygroup.addView(chip)
+            }
+        }
+    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,7 +166,8 @@ class StageSearchFilter : AppCompatActivity() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@StageSearchFilter, EnemyList::class.java)
                 intent.putExtra("mode", EAdder.MODE_SELECTION)
-                startActivityForResult(intent, REQUEST_CODE)
+
+                resultLauncher.launch(intent)
             }
         })
 
@@ -455,37 +485,6 @@ class StageSearchFilter : AppCompatActivity() {
     override fun onBackPressed() {
         val bck = findViewById<FloatingActionButton>(R.id.statschbck)
         bck.performClick()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                val id = StaticStore.transformIdentifier<AbEnemy>(data.getStringExtra("Data")) ?: return
-                val e = id.get() ?: return
-
-                if(e !is Enemy)
-                    return
-
-                if (!StaticStore.stgenem.contains(e.id)) {
-                    StaticStore.stgenem.add(e.id)
-
-                    val enemygroup = findViewById<ChipGroup>(R.id.enemygroup)
-
-                    val chip = Chip(this)
-                    chip.id = R.id.enemychip + e.id.pack.hashCode() + e.id.id
-                    chip.text = getEnemyName(e)
-                    chip.isCloseIconVisible = true
-                    chip.setOnCloseIconClickListener {
-                        StaticStore.stgenem.remove(e.id)
-                        enemygroup.removeView(chip)
-                    }
-
-                    enemygroup.addView(chip)
-                }
-            }
-        }
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -83,7 +83,9 @@ class AssetListAdapter(private val ac: Activity, private val files: ArrayList<VF
 
                             intent.putExtra(Intent.EXTRA_TITLE, name)
 
-                            ac.startActivityForResult(intent, AssetBrowser.EXTRACT_FILE)
+                            if(ac is AssetBrowser) {
+                                ac.resultLauncher.launch(intent)
+                            }
 
                             return@setOnMenuItemClickListener true
                         }

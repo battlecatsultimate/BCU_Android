@@ -12,6 +12,7 @@ import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,61 +35,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MapList : AppCompatActivity() {
-    companion object {
-        const val REQUEST_CODE = 100
-    }
-
-    @SuppressLint("SourceLockedOrientationActivity")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        val ed: Editor
-
-        if (!shared.contains("initial")) {
-            ed = shared.edit()
-            ed.putBoolean("initial", true)
-            ed.putBoolean("theme", true)
-            ed.apply()
-        } else {
-            if (!shared.getBoolean("theme", false)) {
-                setTheme(R.style.AppTheme_night)
-            } else {
-                setTheme(R.style.AppTheme_day)
-            }
-        }
-
-        LeakCanaryManager.initCanary(shared)
-
-        DefineItf.check(this)
-
-        AContext.check()
-
-        (CommonStatic.ctx as AContext).updateActivity(this)
-
-        setContentView(R.layout.activity_map_list)
-
-        val back = findViewById<FloatingActionButton>(R.id.stgbck)
-
-        back.setOnClickListener {
-            StaticStore.stgFilterReset()
-            StaticStore.filterReset()
-            StaticStore.entityname = ""
-            finish()
-        }
-
-        val mapAdder = MapAdder(this)
-
-        mapAdder.execute()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == Activity.RESULT_OK) {
             filter = FilterStage.setFilter(StaticStore.stgschname, StaticStore.stmschname, StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss, this)
 
-            val f = filter ?: return
+            val f = filter ?: return@registerForActivityResult
 
             val keys = f.keys.toMutableList()
 
@@ -197,11 +148,11 @@ class MapList : AppCompatActivity() {
                 val index = StaticStore.mapcode.indexOf(keys[stageset.selectedItemPosition])
 
                 if (index == -1)
-                    return
+                    return@registerForActivityResult
 
                 val resmapname = ArrayList<Identifier<StageMap>>()
 
-                val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return
+                val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return@registerForActivityResult
 
                 val mc = MapColc.get(keys[stageset.selectedItemPosition])
 
@@ -236,6 +187,50 @@ class MapList : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val ed: Editor
+
+        if (!shared.contains("initial")) {
+            ed = shared.edit()
+            ed.putBoolean("initial", true)
+            ed.putBoolean("theme", true)
+            ed.apply()
+        } else {
+            if (!shared.getBoolean("theme", false)) {
+                setTheme(R.style.AppTheme_night)
+            } else {
+                setTheme(R.style.AppTheme_day)
+            }
+        }
+
+        LeakCanaryManager.initCanary(shared)
+
+        DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
+        setContentView(R.layout.activity_map_list)
+
+        val back = findViewById<FloatingActionButton>(R.id.stgbck)
+
+        back.setOnClickListener {
+            StaticStore.stgFilterReset()
+            StaticStore.filterReset()
+            StaticStore.entityname = ""
+            finish()
+        }
+
+        val mapAdder = MapAdder(this)
+
+        mapAdder.execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
