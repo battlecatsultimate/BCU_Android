@@ -130,20 +130,7 @@ class CsLoader(ac: Activity, private val fm: FragmentManager, private val lc: Li
     }
 
     inner class CsListTab : FragmentStateAdapter(fm, lc) {
-        private val keys: ArrayList<String>
-
-        init {
-            val lit = fm.fragments
-            val trans = fm.beginTransaction()
-
-            for(f in lit) {
-                trans.remove(f)
-            }
-
-            trans.commitAllowingStateLoss()
-
-            keys = getExistingPack()
-        }
+        private val keys = getExistingPack()
 
         override fun getItemCount(): Int {
             return keys.size

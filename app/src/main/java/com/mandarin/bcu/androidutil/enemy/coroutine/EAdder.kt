@@ -140,13 +140,11 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
                             }
                         }
 
-                        if(name.isEmpty()) {
+                        name.ifEmpty {
                             keys[position]
-                        } else {
-                            name
                         }
                     }
-                }
+                }.attach()
             }
         }
     }
