@@ -37,17 +37,17 @@ class LUUnitSetting : Fragment() {
 
     var f: Form? = null
 
-    lateinit var v: View
-
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View {
-        v = inflater.inflate(R.layout.lineup_unit_set, group, false)
+        val view = inflater.inflate(R.layout.lineup_unit_set, group, false)
 
         update()
 
-        return v
+        return view
     }
 
     fun update() {
+        val v = view ?: return
+
         val spinners = arrayOf(v.findViewById(R.id.lineuplevspin), v.findViewById<Spinner>(R.id.lineuplevpspin))
         val plus = v.findViewById<TextView>(R.id.lineuplevplus)
         val row = v.findViewById<TableRow>(R.id.lineupunittable)
