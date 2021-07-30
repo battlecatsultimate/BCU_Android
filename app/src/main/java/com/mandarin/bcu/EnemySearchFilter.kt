@@ -54,8 +54,8 @@ open class EnemySearchFilter : AppCompatActivity() {
             intArrayOf(0, Data.AB_THEMEI), intArrayOf(0, Data.AB_SEALI), intArrayOf(0, Data.AB_IMUSW), intArrayOf(1, Data.P_CRITI))
     private val atkdraw = intArrayOf(212, 112)
     private val trdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 294, 226, 227, -1, -1, -1)
-    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 264, 296, 293, 208, 239, 213, 214, 215, 216, 210, 243, 237, -1, -1, 229, -1, -100, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
+    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 264, 296, 293, 208, 239, 213, 214, 215, 216, 210, 243, 237, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "DemonShield", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
     private lateinit var adapter: SearchAbilityAdapter
 
     @SuppressLint("SourceLockedOrientationActivity")

@@ -206,7 +206,7 @@ class UnitinfPager : Fragment() {
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1, true)
+        val proc = Interpret.getProc(f.du, fs == 1, true, 1.0)
 
         var name = MultiLangCont.get(f) ?: f.name
 
@@ -401,7 +401,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true)
+                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -443,7 +443,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true)
+                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -930,12 +930,13 @@ class UnitinfPager : Fragment() {
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val proc = Interpret.getProc(du, fs == 1, true)
+        val proc = Interpret.getProc(du, fs == 1, true, 1.0)
 
         val abilityicon = Interpret.getAbiid(du)
 
         if (abil.isNotEmpty() || proc.isNotEmpty()) {
             none.visibility = View.GONE
+            unitabil.visibility = View.VISIBLE
 
             val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -949,6 +950,7 @@ class UnitinfPager : Fragment() {
 
             ViewCompat.setNestedScrollingEnabled(unitabil, false)
         } else {
+            none.visibility = View.VISIBLE
             unitabil.visibility = View.GONE
         }
     }

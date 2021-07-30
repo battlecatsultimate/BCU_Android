@@ -168,7 +168,7 @@ class UnitinfRecycle(private val context: Activity,
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1, true)
+        val proc = Interpret.getProc(f.du, fs == 1, true, 1.0)
 
         val icon = f.anim?.uni?.img?.bimg()
 
@@ -293,7 +293,7 @@ class UnitinfRecycle(private val context: Activity,
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true)
+                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -330,7 +330,7 @@ class UnitinfRecycle(private val context: Activity,
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true)
+                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -860,7 +860,7 @@ class UnitinfRecycle(private val context: Activity,
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val proc = Interpret.getProc(du, fs == 1, true)
+        val proc = Interpret.getProc(du, fs == 1, true, 1.0)
 
         val abilityicon = Interpret.getAbiid(du)
 

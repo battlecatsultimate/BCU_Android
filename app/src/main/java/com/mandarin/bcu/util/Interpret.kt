@@ -82,7 +82,7 @@ object Interpret : Data() {
         return ans.toString()
     }
 
-    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean): List<String> {
+    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean, magnif: Double): List<String> {
         val res: MutableList<Int> = ArrayList()
 
         val lang = Locale.getDefault().language
@@ -98,7 +98,7 @@ object Interpret : Data() {
 
         val l: MutableList<String> = ArrayList()
 
-        val c = Formatter.Context(isEnemy, useSecond)
+        val c = Formatter.Context(isEnemy, useSecond, magnif)
 
         if(common) {
             val mr = du.repAtk

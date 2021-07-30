@@ -778,7 +778,7 @@
         "abbr_name" : "d.shield",
         "full_name" : "Demon Shield",
         "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
-        "format" : "Demon Shield (_left)Shield has (hp) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
+        "format" : "Demon Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
         "class" : {
             "hp" : {
                 "name" : "health",

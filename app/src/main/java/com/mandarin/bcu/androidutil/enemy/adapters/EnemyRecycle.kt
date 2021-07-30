@@ -188,7 +188,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false)
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false, multi / 100.0)
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(em.de)
 
@@ -655,6 +655,28 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private fun multiply(viewHolder: ViewHolder, em: Enemy) {
         viewHolder.enemhp.text = s.getHP(em, multi)
         viewHolder.enematk.text = s.getAtk(em, amulti)
+
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false, multi / 100.0)
+
+        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
+
+        val abilityicon = Interpret.getAbiid(em.de)
+
+        if (ability.isNotEmpty() || proc.isNotEmpty()) {
+            viewHolder.none.visibility = View.GONE
+
+            val linearLayoutManager = LinearLayoutManager(activity)
+
+            linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
+            viewHolder.emabil.layoutManager = linearLayoutManager
+
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
+
+            viewHolder.emabil.adapter = adapterAbil
+
+            ViewCompat.setNestedScrollingEnabled(viewHolder.emabil, false)
+        }
     }
 
     private fun retime(viewHolder: ViewHolder, em: Enemy) {
@@ -663,7 +685,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false)
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false, multi / 100.0)
 
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
 
