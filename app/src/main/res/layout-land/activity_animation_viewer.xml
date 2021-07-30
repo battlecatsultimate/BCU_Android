@@ -20,7 +20,7 @@
             app:contentScrim="?attr/colorPrimary"
 
             app:layout_scrollFlags="scroll|enterAlways"
-            app:toolbarId="@+id/cstool">
+            app:toolbarId="@+id/animtool">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/animtool"

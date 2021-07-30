@@ -282,18 +282,18 @@
 
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/schchzo"
-                app:layout_constraintStart_toStartOf="@+id/schchan"
+                app:layout_constraintStart_toStartOf="@+id/schchal"
                 app:layout_constraintTop_toTopOf="@+id/schchzo" />
 
             <CheckBox
                 android:id="@+id/schchwh"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
 
+                android:layout_marginTop="24dp"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/schchre"
-                app:layout_constraintStart_toStartOf="@+id/schchal"
-                app:layout_constraintTop_toTopOf="@+id/schchre" />
+                app:layout_constraintStart_toStartOf="@+id/schchzo"
+                app:layout_constraintTop_toBottomOf="@+id/schchzo" />
 
             <RadioGroup
                 android:id="@+id/schrgtg"
@@ -538,7 +538,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchre" />
+                app:layout_constraintTop_toBottomOf="@+id/schchwh" />
+
+            <CheckBox
+                android:id="@+id/schchde"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/schchzo"
+                app:layout_constraintStart_toStartOf="@+id/schchan"
+                app:layout_constraintTop_toTopOf="@+id/schchzo" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

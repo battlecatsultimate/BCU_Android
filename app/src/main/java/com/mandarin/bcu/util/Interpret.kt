@@ -44,9 +44,9 @@ object Interpret : Data() {
      * Converts Data Proc index to BCU Android Proc Index
      */
     private val P_INDEX = intArrayOf(P_WEAK, P_STOP, P_SLOW, P_KB, P_WARP, P_CURSE, P_IMUATK,
-            P_STRONG, P_LETHAL, P_CRIT, P_BREAK, P_SATK, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK,
+            P_STRONG, P_LETHAL, P_CRIT, P_BREAK, P_SHIELDBREAK, P_SATK, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK,
             P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK,
-            P_POIATK, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE, P_THEME,
+            P_POIATK, P_DEMONSHIELD, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE, P_THEME,
             P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_CRITI)
 
     /**
@@ -56,18 +56,29 @@ object Interpret : Data() {
             100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 20, 20, 20, 20, 20, 20)
 
     private val PROCIND = arrayOf("WEAK", "STOP", "SLOW", "KB", "WARP", "CURSE", "IMUATK",
-            "STRONG", "LETHAL", "CRIT", "BREAK", "SATK", "MINIWAVE", "WAVE", "VOLC", "IMUWEAK",
+            "STRONG", "LETHAL", "CRIT", "BREAK", "SHIELDBREAK", "SATK", "MINIWAVE", "WAVE", "VOLC", "IMUWEAK",
             "IMUSTOP", "IMUSLOW", "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK",
-            "POIATK", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME",
+            "POIATK", "DEMONSHIELD", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME",
             "POISON", "BOSS", "ARMOR", "SPEED", "CRITI")
 
-    private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK)
+    private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK, P_IMUVOLC)
+
+    private val traitMask = intArrayOf(0, 1, 2, 3, 4, 5, 6, 12, 7, 8, 10, 9)
 
     fun getTrait(type: Int, star: Int): String {
         val ans = StringBuilder()
-        for (i in TRAIT.indices) if (type shr i and 1 > 0) {
-            if (i == 6 && star == 1) ans.append(TRAIT[i]).append(" ").append("(").append(STAR[star]).append(")").append(", ") else ans.append(TRAIT[i]).append(", ")
-        }
+        for (i in TRAIT.indices)
+            if (type shr traitMask[i] and 1 > 0) {
+                if (i == 6 && star == 1)
+                    ans.append(TRAIT[i]).append(" ")
+                        .append("(")
+                        .append(STAR[star])
+                        .append(")")
+                        .append(", ")
+                else
+                    ans.append(TRAIT[i])
+                        .append(", ")
+            }
         return ans.toString()
     }
 
@@ -84,7 +95,6 @@ object Interpret : Data() {
         for (i in immune.indices.reversed()) {
             res.add(PROC.size - i)
         }
-
 
         val l: MutableList<String> = ArrayList()
 
@@ -227,6 +237,7 @@ object Interpret : Data() {
             P_IMUWARP -> atk.proc.IMUWARP.mult != 100
             P_IMUCURSE -> atk.proc.IMUCURSE.mult != 100
             P_IMUPOIATK -> atk.proc.IMUPOIATK.mult != 100
+            P_IMUVOLC -> atk.proc.IMUVOLC.mult != 100
             else -> false
         }
     }

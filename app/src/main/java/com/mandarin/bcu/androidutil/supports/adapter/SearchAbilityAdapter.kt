@@ -77,6 +77,7 @@ class SearchAbilityAdapter(private val context: Context, private val tool: IntAr
 
             if(abdraw[i] == -100) {
                 ch.setText(tool[i])
+                ch.setTextColor(StaticStore.getAttributeColor(context, R.attr.TextPrimary))
             } else {
                 ch.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getIcon(i), null)
 

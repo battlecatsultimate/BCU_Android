@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/animappbar"
+        android:id="@+id/appbar"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
                 app:contentInsetStart="0dp"
                 app:contentInsetStartWithNavigation="0dp"
                 app:layout_constraintHeight_percent="0.075">
@@ -114,7 +115,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:labelFor="@id/unitpager"
             app:tabGravity="fill"
             app:tabMaxWidth="0dp"
             app:tabMode="auto"
@@ -138,16 +138,6 @@
             android:background="?attr/backgroundPrimary"
             tools:context=".AnimationViewer">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/unitpager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:labelFor="@id/unittab"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <ProgressBar
                 android:id="@+id/prog"
                 style="@style/Widget.AppCompat.ProgressBar"
@@ -168,6 +158,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/prog" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/unitpager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

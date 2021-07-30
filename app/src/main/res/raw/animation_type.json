@@ -64,5 +64,12 @@
     },
     "DefEff": {
         "DEF": "default"
+    },
+    "ShieldEff": {
+        "FULL" : "full",
+        "HALF" : "half",
+        "BROKEN" : "broken",
+        "BREAKER" : "breaker",
+        "REGENERATION" : "regeneration"
     }
 }

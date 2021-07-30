@@ -560,7 +560,9 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
         return res
     }
 
-    private fun seekName(name: String) : String {
+    private fun seekName(name: String?) : String {
+        name ?: return "Null"
+
         val a = weakReference.get() ?: return name
 
         return when(name) {
@@ -587,6 +589,11 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
             "atk" -> a.getString(R.string.eff_catk)
             "ext" -> a.getString(R.string.eff_ext)
             "none" -> a.getString(R.string.eff_none)
+            "full" -> a.getString(R.string.eff_full)
+            "half" -> a.getString(R.string.eff_half)
+            "breaker" -> a.getString(R.string.eff_breaker)
+            "broken" -> a.getString(R.string.eff_broken)
+            "regeneration" -> a.getString(R.string.eff_regen)
             else -> name
         }
     }

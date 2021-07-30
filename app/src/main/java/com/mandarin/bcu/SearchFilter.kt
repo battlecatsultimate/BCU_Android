@@ -30,29 +30,29 @@ import common.util.Data
 import java.util.*
 
 class SearchFilter : AppCompatActivity() {
-    private val tgid = intArrayOf(R.id.schchrd, R.id.schchfl, R.id.schchbla, R.id.schchme, R.id.schchan, R.id.schchal, R.id.schchzo, R.id.schchre, R.id.schchwh)
-    private val colors = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8")
+    private val tgid = intArrayOf(R.id.schchrd, R.id.schchfl, R.id.schchbla, R.id.schchme, R.id.schchan, R.id.schchal, R.id.schchzo, R.id.schchde, R.id.schchre, R.id.schchwh)
+    private val colors = arrayOf("0", "1", "2", "3", "4", "5", "6", "12", "7", "8")
     private val rareid = intArrayOf(R.id.schchba, R.id.schchex, R.id.schchr, R.id.schchsr, R.id.schchur, R.id.schchlr)
     private val rarity = arrayOf("0", "1", "2", "3", "4", "5")
     private val atkid = intArrayOf(R.id.schchld, R.id.schchom, R.id.schchmu)
     private val atks = arrayOf("2", "4", "3")
     private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_ao, R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_it, R.string.sch_abi_md, R.string.sch_abi_id, R.string.sch_abi_kb,
-            R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_zk, R.string.sch_abi_bb, R.string.sch_abi_sb, R.string.sch_abi_em, R.string.sch_abi_me,
-            R.string.sch_abi_mw, R.string.sch_abi_wv, R.string.sch_abi_surge, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.sch_abi_imsu, R.string.sch_abi_iwa, R.string.sch_abi_ic, R.string.sch_abi_impoi, R.string.sch_abi_ws, R.string.sch_abi_wk, R.string.sch_abi_eva, R.string.sch_abi_poi, R.string.abi_sui,
+            R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_zk, R.string.sch_abi_bb, R.string.sch_abi_shb, R.string.sch_abi_sb, R.string.sch_abi_em, R.string.sch_abi_me,
+            R.string.sch_abi_mw, R.string.sch_abi_wv, R.string.sch_abi_surge, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.sch_abi_imsu, R.string.sch_abi_iwa, R.string.sch_abi_ic, R.string.sch_abi_impoi, R.string.sch_abi_ws, R.string.sch_abi_wk, R.string.sch_abi_eva, R.string.sch_abi_poi, R.string.sch_abi_ds, R.string.abi_sui,
             R.string.abi_bu, R.string.abi_rev, R.string.abi_gh, R.string.abi_snk, R.string.abi_seal, R.string.abi_stt, R.string.abi_sum, R.string.abi_mvatk, R.string.abi_thch, R.string.abi_poi, R.string.abi_boswv, R.string.abi_armbr, R.string.abi_hast,
             R.string.abi_imvatk, R.string.abi_isnk, R.string.abi_istt, R.string.abi_ipoi, R.string.abi_ithch, R.string.abi_iseal, R.string.abi_iboswv, R.string.abi_imcri)
-    private val tgtool = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_wh)
+    private val tgtool = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_de, R.string.sch_re, R.string.sch_wh)
     private val abils = arrayOf(intArrayOf(1, Data.P_WEAK), intArrayOf(1, Data.P_STOP), intArrayOf(1, Data.P_SLOW),
             intArrayOf(0, Data.AB_ONLY), intArrayOf(0, Data.AB_GOOD), intArrayOf(0, Data.AB_RESIST),
             intArrayOf(0, Data.AB_RESISTS), intArrayOf(0, Data.AB_MASSIVE), intArrayOf(0, Data.AB_MASSIVES),
             intArrayOf(1, Data.P_KB), intArrayOf(1, Data.P_WARP), intArrayOf(1, Data.P_CURSE), intArrayOf(1, Data.P_IMUATK), intArrayOf(1, Data.P_STRONG),
             intArrayOf(1, Data.P_LETHAL), intArrayOf(0, Data.AB_BASE), intArrayOf(1, Data.P_CRIT),
-            intArrayOf(0, Data.AB_ZKILL), intArrayOf(1, Data.P_BREAK), intArrayOf(1, Data.P_SATK),
+            intArrayOf(0, Data.AB_ZKILL), intArrayOf(1, Data.P_BREAK), intArrayOf(1, Data.P_SHIELDBREAK), intArrayOf(1, Data.P_SATK),
             intArrayOf(0, Data.AB_EARN), intArrayOf(0, Data.AB_METALIC), intArrayOf(1, Data.P_MINIWAVE), intArrayOf(1, Data.P_WAVE),
             intArrayOf(1, Data.P_VOLC), intArrayOf(1, Data.P_IMUWEAK), intArrayOf(1, Data.P_IMUSTOP),
             intArrayOf(1, Data.P_IMUSLOW), intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_IMUVOLC),
             intArrayOf(1, Data.P_IMUWARP), intArrayOf(1, Data.P_IMUCURSE), intArrayOf(1, Data.P_IMUPOIATK),
-            intArrayOf(0, Data.AB_WAVES), intArrayOf(0, Data.AB_WKILL), intArrayOf(0, Data.AB_EKILL), intArrayOf(1, Data.P_POIATK), intArrayOf(0, Data.AB_GLASS),
+            intArrayOf(0, Data.AB_WAVES), intArrayOf(0, Data.AB_WKILL), intArrayOf(0, Data.AB_EKILL), intArrayOf(1, Data.P_POIATK), intArrayOf(1, Data.P_DEMONSHIELD), intArrayOf(0, Data.AB_GLASS),
             intArrayOf(1, Data.P_BURROW), intArrayOf(1, Data.P_REVIVE), intArrayOf(0, Data.AB_GHOST),
             intArrayOf(0, Data.P_SNIPER), intArrayOf(1, Data.P_SEAL), intArrayOf(1, Data.P_TIME),
             intArrayOf(1, Data.P_SUMMON), intArrayOf(1, Data.P_MOVEWAVE), intArrayOf(1, Data.P_THEME),
@@ -64,9 +64,9 @@ class SearchFilter : AppCompatActivity() {
     private val targets = arrayOfNulls<CheckBox>(tgid.size)
     private val attacks = arrayOfNulls<CheckBox>(atkid.size)
     private val atkdraw = intArrayOf(212, 112)
-    private val tgdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 226, 227)
-    private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 260, 264, 229, 205, 209, 293, 208, 239, 213, 214, 215, 216, 210, 243, 262, 116, 237, 218, 258, 110, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
+    private val tgdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 294, 226, 227)
+    private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 260, 264, 296, 229, 205, 209, 293, 208, 239, 213, 214, 215, 216, 210, 243, 262, 116, 237, 218, 258, 110, -1, -100, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+    private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
     private lateinit var adapter: SearchAbilityAdapter
 
     @SuppressLint("SourceLockedOrientationActivity")

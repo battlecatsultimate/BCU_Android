@@ -866,4 +866,14 @@
     <string name="orb_str_desc">공격 배율값 x_ 추가, 방어 배율 -% 감소</string>
     <string name="orb_mas_desc">공격 배율값 x_ 추가</string>
     <string name="orb_res_desc">방어 배율 _% 감소</string>
+    <string name="sch_de">악마</string>
+    <string name="sch_abi_ds">악마 쉴드</string>
+    <string name="sch_abi_shb">쉴드를 부순다</string>
+    <string name="eff_full">최대</string>
+    <string name="eff_half">절반</string>
+    <string name="eff_broken">부서짐</string>
+    <string name="eff_breaker">파괴</string>
+    <string name="eff_regen">회복</string>
+    <string name="eff_ds">악마 쉴드</string>
+    <string name="eff_dse">악마 쉴드 적 측면</string>
 </resources>
