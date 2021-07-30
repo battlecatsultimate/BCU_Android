@@ -23,7 +23,16 @@ import com.mandarin.bcu.androidutil.lineup.LineUpView
 import common.battle.BasisSet
 import java.util.*
 
-class LUTreasureSetting(private val line: LineUpView) : Fragment() {
+class LUTreasureSetting : Fragment() {
+    companion object {
+        fun newInstance(line: LineUpView): LUTreasureSetting {
+            val setting = LUTreasureSetting()
+            setting.setVariable(line)
+
+            return setting
+        }
+    }
+    private lateinit var line: LineUpView
 
     private var canbeEdited = true
     private var initialized = false
@@ -648,7 +657,8 @@ class LUTreasureSetting(private val line: LineUpView) : Fragment() {
                             }
                         }
 
-                        line
+                        if(::line.isInitialized)
+                            line.updateUnitSetting()
 
                         canbeEdited = true
 
@@ -769,7 +779,8 @@ class LUTreasureSetting(private val line: LineUpView) : Fragment() {
                                 }
                             }
 
-                            line.updateUnitSetting()
+                            if(::line.isInitialized)
+                                line.updateUnitSetting()
 
                             val c = context ?: return
 
@@ -781,10 +792,7 @@ class LUTreasureSetting(private val line: LineUpView) : Fragment() {
         }
     }
 
-    companion object {
-
-        fun newInstance(line: LineUpView): LUTreasureSetting {
-            return LUTreasureSetting(line)
-        }
+    fun setVariable(line: LineUpView) {
+        this.line = line
     }
 }
