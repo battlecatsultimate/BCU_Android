@@ -68,9 +68,16 @@ class AssetBrowser : AppCompatActivity() {
 
                         val f = File(path)
 
-                        val p = f.absolutePath.split(":")[1]
+                        if(f.absolutePath.contains(":")) {
+                            val p = f.absolutePath.split(":")[1]
 
-                        StaticStore.showShortMessage(this, getString(R.string.file_extract_success).replace("_",file.name).replace("-",p))
+                            StaticStore.showShortMessage(this,
+                                getString(R.string.file_extract_success).replace("_", file.name)
+                                    .replace("-", p)
+                            )
+                        } else {
+                            StaticStore.showShortMessage(this, getString(R.string.file_extract_semi).replace("_",file.name))
+                        }
                     } else {
                         StaticStore.showShortMessage(this, getString(R.string.file_extract_cant))
                     }
