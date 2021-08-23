@@ -10,6 +10,7 @@ import common.battle.Treasure
 import common.battle.data.CustomEntity
 import common.battle.data.MaskUnit
 import common.pack.Identifier
+import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.Limit
 import common.util.stage.SCDef
@@ -83,6 +84,27 @@ class GetStrings(private val c: Context) {
         private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
         val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
+        private val allColor: String
+        private val allTrait: String
+
+        init {
+            val ac = StringBuilder()
+            val at = StringBuilder()
+
+            for (i in Interpret.traitMask.indices) {
+                if(Interpret.traitMask[i] == Data.TRAIT_EVA || Interpret.traitMask[i] == Data.TRAIT_WITCH)
+                    continue
+
+                if (Interpret.traitMask[i] != Data.TRAIT_WHITE)
+                    ac.append(Interpret.TRAIT[i]).append(", ")
+
+                at.append(Interpret.TRAIT[i]).append(", ")
+            }
+
+
+            allColor = ac.toString()
+            allTrait = at.toString()
+        }
     }
 
     init {
@@ -553,16 +575,6 @@ class GetStrings(private val c: Context) {
         else
             ef.du
 
-        val allcolor = StringBuilder()
-        val alltrait = StringBuilder()
-
-        for (i in 0..8) {
-            if (i != 0)
-                allcolor.append(Interpret.TRAIT[i]).append(", ")
-
-            alltrait.append(Interpret.TRAIT[i]).append(", ")
-        }
-
         var result: String
 
         result = Interpret.getTrait(du.type, 0)
@@ -570,10 +582,10 @@ class GetStrings(private val c: Context) {
         if (result == "")
             result = c.getString(R.string.unit_info_t_none)
 
-        if (result == allcolor.toString())
+        if (result == allColor)
             result = c.getString(R.string.unit_info_t_allc)
 
-        if (result == alltrait.toString())
+        if (result == allTrait)
             result = c.getString(R.string.unit_info_t_allt)
 
         if (result.endsWith(", "))
