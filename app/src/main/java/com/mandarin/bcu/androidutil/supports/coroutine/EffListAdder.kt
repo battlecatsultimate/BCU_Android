@@ -117,16 +117,6 @@ class EffListAdder(activity: Activity, private val fm: FragmentManager, private 
     }
 
     inner class EffListTab : FragmentStateAdapter(fm, lc) {
-        init {
-            val lit = fm.fragments
-            val trans = fm.beginTransaction()
-
-            for (f in lit) {
-                trans.remove(f)
-            }
-
-            trans.commitAllowingStateLoss()
-        }
 
         override fun getItemCount(): Int {
             return 3

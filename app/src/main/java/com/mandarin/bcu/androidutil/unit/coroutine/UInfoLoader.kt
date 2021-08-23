@@ -410,7 +410,6 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
         override fun createFragment(position: Int): Fragment {
             return UnitinfPager.newInstance(position, data, names)
         }
-
     }
 
     private inner class ExplanationTab(private val number: Int, private val title: Array<String?>) : FragmentStateAdapter(fm, lc) {

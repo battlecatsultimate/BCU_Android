@@ -771,17 +771,6 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
             LUCatCombo.newInstance(lineup)
         )
 
-        init {
-            val lit = fm.fragments
-            val trans = fm.beginTransaction()
-
-            for(f in lit) {
-                trans.remove(f)
-            }
-
-            trans.commitAllowingStateLoss()
-        }
-
         override fun getItemCount(): Int {
             return 7
         }
