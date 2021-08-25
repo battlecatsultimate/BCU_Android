@@ -876,4 +876,5 @@
     <string name="eff_regen">Regeneration</string>
     <string name="eff_ds">Demon Shield</string>
     <string name="eff_dse">Demon Shield Enemy Side</string>
+    <string name="eff_vt1e">Venom Enemy Side (Type 1 &amp; Positive Damage)</string>
 </resources>

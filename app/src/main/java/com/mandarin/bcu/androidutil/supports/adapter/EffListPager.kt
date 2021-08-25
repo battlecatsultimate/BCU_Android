@@ -44,7 +44,7 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 , R.string.eff_warp, R.string.eff_warpe, R.string.eff_cu, R.string.eff_zde
                 , R.string.eff_bw, R.string.eff_cr, R.string.eff_kb, R.string.eff_sn
                 , R.string.eff_zd, R.string.eff_seal
-                , R.string.eff_vdef, R.string.eff_vt1, R.string.eff_vt2, R.string.eff_vt3
+                , R.string.eff_vdef, R.string.eff_vt1, R.string.eff_vt1e, R.string.eff_vt2, R.string.eff_vt3
                 , R.string.eff_vdefn, R.string.eff_vt1n, R.string.eff_vt2n, R.string.eff_vt3n
                 , R.string.eff_svb , R.string.eff_inv, R.string.eff_tox, R.string.eff_vol, R.string.eff_vole
                 , R.string.eff_cursee, R.string.eff_wv, R.string.eff_wve, R.string.eff_arm

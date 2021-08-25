@@ -759,14 +759,14 @@
     <string name="eff_sn">스냥이퍼</string>
     <string name="eff_zd">좀비 죽음</string>
     <string name="eff_seal">봉인</string>
-    <string name="eff_vdef">맹동 (타입 0 &amp; 양수 데미지)</string>
-    <string name="eff_vdefn">맹동 (타입 0 &amp; 음수 데미지)</string>
-    <string name="eff_vt1n">맹동 (타입 1 &amp; 음수 데미지)</string>
-    <string name="eff_vt2n">맹동 (타입 2 &amp; 음수 데미지)</string>
-    <string name="eff_vt3n">맹동 (타입 3 &amp; 음수 데미지)</string>
-    <string name="eff_vt1">맹동 (타입 1 &amp; 양수 데미지)</string>
-    <string name="eff_vt2">맹동 (타입 2 &amp; 양수 데미지)</string>
-    <string name="eff_vt3">맹동 (타입 3 &amp; 양수 데미지)</string>
+    <string name="eff_vdef">맹독 (타입 0 &amp; 양수 데미지)</string>
+    <string name="eff_vdefn">맹독 (타입 0 &amp; 음수 데미지)</string>
+    <string name="eff_vt1n">맹독 (타입 1 &amp; 음수 데미지)</string>
+    <string name="eff_vt2n">맹독 (타입 2 &amp; 음수 데미지)</string>
+    <string name="eff_vt3n">맹독 (타입 3 &amp; 음수 데미지)</string>
+    <string name="eff_vt1">맹독 (타입 1 &amp; 양수 데미지)</string>
+    <string name="eff_vt2">맹독 (타입 2 &amp; 양수 데미지)</string>
+    <string name="eff_vt3">맹독 (타입 3 &amp; 양수 데미지)</string>
     <string name="eff_svb">혼신의 일격</string>
     <string name="eff_inv">공격 무효</string>
     <string name="eff_tox">독 데미지</string>
@@ -876,4 +876,5 @@
     <string name="eff_regen">회복</string>
     <string name="eff_ds">악마 쉴드</string>
     <string name="eff_dse">악마 쉴드 적 측면</string>
+    <string name="eff_vt1e">맹독 적 측면 (타입 1 &amp; 양수 데미지)</string>
 </resources>
