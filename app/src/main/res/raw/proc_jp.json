@@ -789,30 +789,30 @@
     }
   },
   "DEMONSHIELD" : {
-    "abbr_name" : "d.shield",
-    "full_name" : "Demon Shield",
-    "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
-    "format" : "Demon Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
+    "abbr_name" : "シールド",
+    "full_name" : "悪魔シールド",
+    "tooltip" : "一定量のダメージを遮断します。バリアとは異なり、ダメージを無効化するのではなく、吸収します。",
+    "format" : "悪魔シールド(_left)HP:(_shield(hp)),KB再生HP:(regen)%(_right)",
     "class" : {
       "hp" : {
-        "name" : "health",
-        "tooltip" : "Health of shield"
+        "name" : "HP",
+        "tooltip" : "シールドのHP"
       },
       "regen" : {
-        "name" : "regeneration",
-        "tooltip" : "Percentage of shield hp which will be regenerated when hitbacked"
+        "name" : "再生",
+        "tooltip" : "HB時に回復する基本HPの割合"
       }
     }
   },
   "SHIELDBREAK" : {
-    "abbr_name" : "shield breaker",
-    "full_name" : "Shield Breaker",
-    "tooltip" : "Directly breaks demon shield. Be aware that this doesn't prevent shield from regenerated when hitbacked.",
-    "format" : "(prob)% chance to break demon shield",
-    "class" : {
-      "prob" : {
-        "name" : "chance",
-        "tooltip" : null
+    "abbr_name": "シールドブレイク",
+    "full_name": "悪魔シールドブレイカー",
+    "tooltip": "悪魔のシールドを直接破壊する。ヒットバックしたときのシールドの再生を防ぐことはできないので注意が必要。",
+    "format": "(prob)%の確率で悪魔シールドを破壊する",
+    "class": {
+      "prob": {
+        "name": "確率",
+        "tooltip": null
       }
     }
   }
