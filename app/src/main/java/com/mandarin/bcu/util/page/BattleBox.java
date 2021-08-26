@@ -636,27 +636,27 @@ public interface BattleBox {
 
                     e.anim.smoke.draw(gra, setP(sx, sy), psiz * 1.2);
                 }
+            }
 
-                if(sb.ebase instanceof Entity) {
-                    if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) > 0) {
-                        if(((Entity) sb.ebase).anim.smoke != null && !((Entity) sb.ebase).anim.smoke.done()) {
-                            gra.setTransform(at);
-
-                            double sx = getX(((Entity) sb.ebase).anim.smokeX);
-                            double sy = midh - (road_h - ((Entity) sb.ebase).anim.smokeLayer * DEP + 100.0) * siz;
-
-                            ((Entity) sb.ebase).anim.draw(gra, setP(sx, sy), psiz * 1.2);
-                        }
-                    }
-                } else if(sb.ebase instanceof ECastle) {
-                    if(sb.s_stop == 0 && ((ECastle) sb.ebase).smoke != null && !((ECastle) sb.ebase).smoke.done()) {
+            if(sb.ebase instanceof Entity) {
+                if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) > 0) {
+                    if(((Entity) sb.ebase).anim.smoke != null && !((Entity) sb.ebase).anim.smoke.done()) {
                         gra.setTransform(at);
 
-                        double sx = getX(((ECastle) sb.ebase).smokeX);
-                        double sy = midh - (road_h - ((ECastle) sb.ebase).smokeLayer * DEP + 100.0) * siz;
+                        double sx = getX(((Entity) sb.ebase).anim.smokeX);
+                        double sy = midh - (road_h - ((Entity) sb.ebase).anim.smokeLayer * DEP + 100.0) * siz;
 
-                        ((ECastle) sb.ebase).smoke.draw(gra, setP(sx, sy), psiz * 1.2);
+                        ((Entity) sb.ebase).anim.smoke.draw(gra, setP(sx, sy), psiz * 1.2);
                     }
+                }
+            } else if(sb.ebase instanceof ECastle) {
+                if(sb.s_stop == 0 && ((ECastle) sb.ebase).smoke != null && !((ECastle) sb.ebase).smoke.done()) {
+                    gra.setTransform(at);
+
+                    double sx = getX(((ECastle) sb.ebase).smokeX);
+                    double sy = midh - (road_h - ((ECastle) sb.ebase).smokeLayer * DEP + 100.0) * siz;
+
+                    ((ECastle) sb.ebase).smoke.draw(gra, setP(sx, sy), psiz * 1.2);
                 }
             }
 
