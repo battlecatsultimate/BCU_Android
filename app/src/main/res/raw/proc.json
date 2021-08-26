@@ -792,10 +792,10 @@
         }
     },
     "DEMONSHIELD" : {
-        "abbr_name" : "d.shield",
-        "full_name" : "Demon Shield",
+        "abbr_name" : "a.shield",
+        "full_name" : "Aku Shield",
         "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
-        "format" : "Demon Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
+        "format" : "Aku Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
         "class" : {
             "hp" : {
                 "name" : "health",
@@ -808,10 +808,10 @@
         }
     },
     "SHIELDBREAK" : {
-        "abbr_name" : "shield breaker",
-        "full_name" : "Shield Breaker",
-        "tooltip" : "Directly breaks demon shield. Be aware that this doesn't prevent shield from regenerated when hitbacked.",
-        "format" : "(prob)% chance to break demon shield",
+        "abbr_name" : "shield piercing",
+        "full_name" : "Shield Piercing",
+        "tooltip" : "Directly breaks aku shield. Be aware that this doesn't prevent shield from regenerated when hitbacked.",
+        "format" : "(prob)% chance to break aku shield",
         "class" : {
             "prob" : {
                 "name" : "chance",

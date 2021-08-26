@@ -868,7 +868,7 @@
     <string name="orb_res_desc">방어 배율 _% 감소</string>
     <string name="sch_de">악마</string>
     <string name="sch_abi_ds">악마 쉴드</string>
-    <string name="sch_abi_shb">쉴드를 부순다</string>
+    <string name="sch_abi_shb">쉴드 브레이커</string>
     <string name="eff_full">최대</string>
     <string name="eff_half">절반</string>
     <string name="eff_broken">부서짐</string>

@@ -865,15 +865,15 @@
     <string name="orb_str_desc">Add x_ to damage multiplier, decrease defense multiplier by -%</string>
     <string name="orb_mas_desc">Add x_ to damage multiplier</string>
     <string name="orb_res_desc">Decrease defense multiplier by _%</string>
-    <string name="sch_de">Demon</string>
-    <string name="sch_abi_ds">Demon Shield</string>
+    <string name="sch_de">Aku</string>
+    <string name="sch_abi_ds">Aku Shield</string>
     <string name="sch_abi_shb">Shield Breaker</string>
     <string name="eff_full">Full</string>
     <string name="eff_half">Half</string>
     <string name="eff_broken">Broken</string>
     <string name="eff_breaker">Breaker</string>
     <string name="eff_regen">Regeneration</string>
-    <string name="eff_ds">Demon Shield</string>
-    <string name="eff_dse">Demon Shield Enemy Side</string>
+    <string name="eff_ds">Aku Shield</string>
+    <string name="eff_dse">Aku Shield Enemy Side</string>
     <string name="eff_vt1e">Venom Enemy Side (Type 1 &amp; Positive Damage)</string>
 </resources>
