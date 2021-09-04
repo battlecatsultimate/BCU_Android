@@ -111,6 +111,9 @@ class GIFAsync : CoroutineTask<Void> {
             AnimationCView.CANNON -> {
                 return dateFormat.format(date) + "-C-" + id
             }
+            AnimationCView.DEMONSOUL -> {
+                return dateFormat.format(date) + "-DS-" + id
+            }
             else -> {
                 return dateFormat.format(date)
             }

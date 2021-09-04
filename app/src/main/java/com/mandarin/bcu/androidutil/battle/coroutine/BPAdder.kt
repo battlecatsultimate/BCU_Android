@@ -18,6 +18,7 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
+import common.CommonStatic
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -25,6 +26,7 @@ import common.util.lang.MultiLangCont
 import common.util.stage.Stage
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.collections.ArrayList
 
 open class BPAdder : CoroutineTask<String> {
     private val weakReference: WeakReference<Activity>
@@ -56,7 +58,9 @@ open class BPAdder : CoroutineTask<String> {
         val layout = activity.findViewById<LinearLayout>(R.id.preparelineup)
         val stname = activity.findViewById<TextView>(R.id.battlestgname)
         val v = activity.findViewById<View>(R.id.view)
-        setDisappear(setname, star, equip, sniper, rich, start, layout, stname)
+        val lvlim = activity.findViewById<Spinner>(R.id.battlelvlim)
+        val plus = activity.findViewById<CheckBox>(R.id.battleplus)
+        setDisappear(setname, star, equip, sniper, rich, start, layout, stname, lvlim, plus)
         v?.let { setDisappear(it) }
     }
 
@@ -137,6 +141,8 @@ open class BPAdder : CoroutineTask<String> {
                 val start = activity.findViewById<Button>(R.id.battlestart)
                 val stname = activity.findViewById<TextView>(R.id.battlestgname)
                 val prog = activity.findViewById<ProgressBar>(R.id.prog)
+                val lvlim = activity.findViewById<Spinner>(R.id.battlelvlim)
+                val plus = activity.findViewById<CheckBox>(R.id.battleplus)
 
                 prog.isIndeterminate = true
 
@@ -254,6 +260,48 @@ open class BPAdder : CoroutineTask<String> {
                     BattlePrepare.sniper = false
                     activity.finish()
                 }
+                val lvlimText = ArrayList<String>()
+
+                for(n in 0..50) {
+                    if(n == 0) {
+                        lvlimText.add(activity.getString(R.string.battle_lvlimoff))
+                    } else {
+                        lvlimText.add(n.toString())
+                    }
+                }
+
+                if(st.isAkuStage) {
+                    val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+                    val ed = shared.edit()
+
+                    val lvLimAdapter = ArrayAdapter(activity, R.layout.spinneradapter, lvlimText)
+
+                    lvlim.adapter = lvLimAdapter
+
+                    lvlim.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                            CommonStatic.getConfig().levelLimit = position
+                            plus.isEnabled = CommonStatic.getConfig().levelLimit > 0
+
+                            ed.putInt("levelLimit", position)
+                            ed.apply()
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {}
+                    }
+
+                    plus.setOnCheckedChangeListener { _, isChecked ->
+                        CommonStatic.getConfig().plus = isChecked
+
+                        ed.putBoolean("unlockPlus", isChecked)
+                        ed.apply()
+                    }
+
+                    lvlim.setSelection(CommonStatic.getConfig().levelLimit)
+                    plus.isChecked = CommonStatic.getConfig().plus
+
+                    plus.isEnabled = CommonStatic.getConfig().levelLimit > 0
+                }
             }
             else -> StaticStore.showShortMessage(activity, data[0])
         }
@@ -272,7 +320,15 @@ open class BPAdder : CoroutineTask<String> {
         val stname = activity.findViewById<TextView>(R.id.battlestgname)
         val prog = activity.findViewById<ProgressBar>(R.id.prog)
         val t = activity.findViewById<TextView>(R.id.status)
+        val lvlim = activity.findViewById<Spinner>(R.id.battlelvlim)
+        val plus = activity.findViewById<CheckBox>(R.id.battleplus)
         setAppear(line, setname, star, equip, sniper, rich, start, layout, stname)
+        val st = Identifier.get(this.data)
+
+        if(st != null && st.isAkuStage) {
+            setAppear(lvlim, plus)
+        }
+
         setDisappear(prog, t)
         val v = activity.findViewById<View>(R.id.view)
         v?.let { setAppear(it) }

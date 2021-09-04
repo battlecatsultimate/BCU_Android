@@ -13,6 +13,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import common.pack.Identifier
 import common.util.anim.EAnimD
+import common.util.pack.DemonSoul
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
 import common.util.pack.Soul
@@ -58,10 +59,10 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
         holder.range.setOnRangeBarChangeListener(object : RangeBar.OnRangeBarChangeListener {
             override fun onRangeChangeListener(rangeBar: RangeBar?, leftPinIndex: Int, rightPinIndex: Int, leftPinValue: String?, rightPinValue: String?) {
-                holder.switch.text = generateRangeName(position, holder.range)
+                holder.switch.text = generateRangeName(holder.adapterPosition, holder.range)
 
-                data[position][0] = leftPinIndex
-                data[position][1] = rightPinIndex
+                data[holder.adapterPosition][0] = leftPinIndex
+                data[holder.adapterPosition][1] = rightPinIndex
             }
 
             override fun onTouchStarted(rangeBar: RangeBar?) {
@@ -74,7 +75,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
         holder.switch.setOnCheckedChangeListener { _, b ->
             holder.range.isEnabled = b
-            enables[position] = b
+            enables[holder.adapterPosition] = b
         }
 
         holder.switch.isChecked = enables[position]
@@ -127,6 +128,12 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
             }
             AnimationCView.CANNON -> {
                 if(content !is NyCastle)
+                    throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
+
+                return StaticJava.generateEAnimD(content, ind)
+            }
+            AnimationCView.DEMONSOUL -> {
+                if(content !is DemonSoul)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
                 return StaticJava.generateEAnimD(content, ind)

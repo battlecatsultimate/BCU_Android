@@ -105,6 +105,8 @@ class MainActivity : AppCompatActivity() {
             0f
         StaticStore.upload = shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)
         CommonStatic.getConfig().twoRow = shared.getBoolean("rowlayout", true)
+        CommonStatic.getConfig().levelLimit = shared.getInt("levelLimit", 0)
+        CommonStatic.getConfig().plus = shared.getBoolean("unlockPlus", true)
 
         val result = intent
         var conf = false

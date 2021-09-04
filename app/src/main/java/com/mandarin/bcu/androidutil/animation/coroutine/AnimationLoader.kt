@@ -26,6 +26,7 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.adapter.GIFRangeRecycle
 import common.CommonStatic
 import common.pack.UserProfile
+import common.util.pack.DemonSoul
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
 import common.util.pack.Soul
@@ -113,6 +114,9 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
                     AnimationCView.CANNON -> {
                         CommonStatic.getBCAssets().atks[index]
                     }
+                    AnimationCView.DEMONSOUL -> {
+                        UserProfile.getBCData().demonSouls.list[index]
+                    }
                     else -> {
                         throw IllegalStateException("Invalid type $type in AnimationLoader")
                     }
@@ -132,6 +136,7 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
                     is EffAnim<*> -> AnimationCView.EFFECT
                     is Soul -> AnimationCView.SOUL
                     is NyCastle -> AnimationCView.CANNON
+                    is DemonSoul -> AnimationCView.DEMONSOUL
                     else -> AnimationCView.EFFECT
                 }
 
@@ -555,15 +560,20 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
                     res.add(seekName(t))
                 }
             }
+            is DemonSoul -> {
+                for(t in content.names()) {
+                    res.add(seekName(t))
+                }
+            }
         }
 
         return res
     }
 
     private fun seekName(name: String?) : String {
-        name ?: return "Null"
+        val a = weakReference.get() ?: return name ?: "Default"
 
-        val a = weakReference.get() ?: return name
+        name ?: a.getString(R.string.eff_def)
 
         return when(name) {
             "default" -> a.getString(R.string.eff_def)
@@ -594,7 +604,7 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
             "breaker" -> a.getString(R.string.eff_breaker)
             "broken" -> a.getString(R.string.eff_broken)
             "regeneration" -> a.getString(R.string.eff_regen)
-            else -> name
+            else -> a.getString(R.string.eff_def)
         }
     }
 }

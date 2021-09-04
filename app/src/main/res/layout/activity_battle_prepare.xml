@@ -107,12 +107,31 @@
         app:layout_constraintStart_toEndOf="@+id/battlestar"
         app:layout_constraintTop_toTopOf="@+id/battlestar" />
 
+    <Spinner
+        android:id="@+id/battlelvlim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:popupBackground="?attr/backgroundPrimary"
+        app:layout_constraintStart_toStartOf="@+id/battlestar"
+        app:layout_constraintTop_toBottomOf="@+id/battlestar" />
+
+    <CheckBox
+        android:id="@+id/battleplus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/battle_plus"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/battlelvlim"
+        app:layout_constraintStart_toStartOf="@+id/battlesniper"
+        app:layout_constraintTop_toTopOf="@+id/battlelvlim" />
+
     <TextView
         android:id="@+id/battlestgname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/def_stage_name"
         android:textColor="?attr/UnitinfoName"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/battlebck"

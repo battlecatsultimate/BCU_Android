@@ -19,6 +19,7 @@ import common.CommonStatic
 import common.pack.UserProfile
 import common.util.Data
 import common.util.anim.AnimI
+import common.util.pack.DemonSoul
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
 
@@ -77,6 +78,9 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
             AnimationCView.CANNON -> {
                 ArrayList<NyCastle>(CommonStatic.getBCAssets().atks.toMutableList())
             }
+            AnimationCView.DEMONSOUL -> {
+                UserProfile.getBCData().demonSouls.list
+            }
             else -> {
                 throw IllegalStateException("Invalid type $type in EffListPager")
             }
@@ -101,6 +105,11 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
             AnimationCView.CANNON -> {
                 for(i in data.indices) {
                     name.add(requireContext().getString(R.string.eff_cannon) + " - "+Data.trio(i) + " : " + requireContext().getString(canonID[i]))
+                }
+            }
+            AnimationCView.DEMONSOUL -> {
+                for(i in data.indices) {
+                    name.add(requireContext().getString(R.string.eff_akusoul) + " - " + Data.trio(i))
                 }
             }
         }
@@ -131,6 +140,9 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                     }
                     AnimationCView.CANNON -> {
                         intent.putExtra("Img", ImageViewer.CANNON)
+                    }
+                    AnimationCView.DEMONSOUL -> {
+                        intent.putExtra("Img", ImageViewer.DEMONSOUL)
                     }
                 }
 

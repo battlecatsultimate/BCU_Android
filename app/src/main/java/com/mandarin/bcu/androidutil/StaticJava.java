@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil;
 import common.pack.UserProfile;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimD;
+import common.util.pack.DemonSoul;
 import common.util.pack.EffAnim;
 import common.util.pack.NyCastle;
 import common.util.pack.Soul;
@@ -28,6 +29,10 @@ public class StaticJava {
             } else if(index == 2) {
                 return ((NyCastle) data).getEAnim(NyCastle.NyType.EXT);
             }
+        } else if(data instanceof DemonSoul) {
+            ((DemonSoul) data).load();
+
+            return new EAnimD((DemonSoul) data, ((DemonSoul) data).mamodel, ((DemonSoul) data).anims[index]);
         }
 
         return UserProfile.getBCData().units.get(0).forms[0].getEAnim(AnimU.UType.WALK);

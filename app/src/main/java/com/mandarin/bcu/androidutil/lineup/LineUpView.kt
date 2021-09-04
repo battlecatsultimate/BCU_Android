@@ -134,6 +134,8 @@ class LineUpView : View {
 
         for (i in 0..14)
             units.add(empty)
+
+        isHapticFeedbackEnabled = false
     }
 
     private val timer: CountDownTimer = object : CountDownTimer(100, 100) {

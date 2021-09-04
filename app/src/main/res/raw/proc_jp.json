@@ -764,7 +764,7 @@
         "tooltip": ["0 - エンティティの速度に「速度」を加算/減算します。",
           "1 - 実体の速度を「速度」%増加/減少させます。",
           "2 - 実体の速度を「速度」に設定する"
-          ]
+        ]
       }
     }
   },
@@ -812,6 +812,30 @@
     "class": {
       "prob": {
         "name": "確率",
+        "tooltip": null
+      }
+    }
+  },
+  "DEATHSURGE": {
+    "abbr_name": "死烈波",
+    "full_name": "死烈波",
+    "tooltip": null,
+    "format": "(prob)%の確率で(dis_0)~(dis_1)の距離に(_dispTime(time))の間烈波殺された後を生成する",
+    "class": {
+      "prob": {
+        "name": "確率",
+        "tooltip": null
+      },
+      "dis_0": {
+        "name": "最小距離",
+        "tooltip": null
+      },
+      "dis_1": {
+        "name": "最大距離",
+        "tooltip": null
+      },
+      "time": {
+        "name": "発生期間",
         "tooltip": null
       }
     }

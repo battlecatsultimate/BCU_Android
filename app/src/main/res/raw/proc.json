@@ -818,5 +818,29 @@
                 "tooltip" : null
             }
         }
+    },
+    "DEATHSURGE": {
+        "abbr_name": "d.surge",
+        "full_name": "Death Surge",
+        "tooltip": null,
+        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) when killed (_left)Created within (dis_0) ~ (dis_1) range(_right)",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": "point near",
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": "point far",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            }
+        }
     }
 }

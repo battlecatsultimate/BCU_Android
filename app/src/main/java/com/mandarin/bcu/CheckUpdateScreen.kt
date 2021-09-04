@@ -186,7 +186,15 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
-        LeakCanaryManager.initCanary(shared)
+        if(!shared.contains("levelLimit")) {
+            ed.putInt("levelLimit", 0)
+            ed.apply()
+        }
+
+        if(!shared.contains("unlockPlus")) {
+            ed.putBoolean("unlockPlus", true)
+            ed.apply()
+        }
 
         if(!shared.getBoolean("PackReset0137", false)) {
             ed.putBoolean("PackReset0137", true)
@@ -194,6 +202,8 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
             deleter(File(StaticStore.getExternalRes(this)))
         }
+
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 

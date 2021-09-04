@@ -141,7 +141,9 @@ object Definer {
                 val path1 = "./org/page/catfruit/"
 
                 val names = arrayOf("gatyaitemD_30_f.png", "gatyaitemD_31_f.png", "gatyaitemD_32_f.png", "gatyaitemD_33_f.png", "gatyaitemD_34_f.png", "gatyaitemD_35_f.png", "gatyaitemD_36_f.png"
-                        , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "gatyaitemD_43_f.png", "gatyaitemD_44_f.png", "xp.png")
+                        , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "gatyaitemD_43_f.png", "gatyaitemD_44_f.png"
+                        , "gatyaitemD_160_f.png", "gatyaitemD_161_f.png", "xp.png"
+                )
 
                 StaticStore.fruit = Array(names.size) {i ->
                     val vf = VFile.get(path1+names[i]) ?: return@Array StaticStore.empty(1, 1)

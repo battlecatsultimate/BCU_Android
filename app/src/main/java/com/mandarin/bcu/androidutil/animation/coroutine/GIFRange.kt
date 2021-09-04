@@ -16,6 +16,7 @@ import common.pack.Identifier
 import common.system.P
 import common.util.Data
 import common.util.anim.EAnimD
+import common.util.pack.DemonSoul
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
 import common.util.pack.Soul
@@ -39,8 +40,8 @@ class GIFRange : CoroutineTask<String> {
     val p: P
     val night: Boolean
 
-    val frames: ArrayList<Array<Int>>
-    val enables: Array<Boolean>
+    private val frames: ArrayList<Array<Int>>
+    private val enables: Array<Boolean>
 
     constructor(ac: Activity, data: Identifier<Unit>, form: Int, view: AnimationCView, night: Boolean, frames: ArrayList<Array<Int>>, enables: Array<Boolean>) : super() {
         we = WeakReference(ac)
@@ -210,7 +211,8 @@ class GIFRange : CoroutineTask<String> {
             }
             AnimationCView.EFFECT,
             AnimationCView.SOUL,
-            AnimationCView.CANNON -> {
+            AnimationCView.CANNON,
+            AnimationCView.DEMONSOUL -> {
                 GIFAsync(we.get(), type, Data.trio(index)).execute()
             }
         }
@@ -228,6 +230,10 @@ class GIFRange : CoroutineTask<String> {
             }
             is NyCastle -> {
                 if(type != AnimationCView.CANNON)
+                    throw IllegalStateException("Invalid data ${data::class.java.name} with type $type")
+            }
+            is DemonSoul -> {
+                if(type != AnimationCView.DEMONSOUL)
                     throw IllegalStateException("Invalid data ${data::class.java.name} with type $type")
             }
             else -> {
@@ -260,6 +266,11 @@ class GIFRange : CoroutineTask<String> {
             }
             AnimationCView.CANNON -> {
                 val d = data as NyCastle
+
+                return StaticJava.generateEAnimD(d, ind)
+            }
+            AnimationCView.DEMONSOUL -> {
+                val d = data as DemonSoul
 
                 return StaticJava.generateEAnimD(d, ind)
             }

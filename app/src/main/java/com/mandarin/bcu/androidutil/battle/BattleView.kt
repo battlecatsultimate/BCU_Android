@@ -110,6 +110,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         val gp = Paint()
 
         cv = CVGraphics(Canvas(), cp, bp, gp, true)
+
+        isHapticFeedbackEnabled = false
     }
 
     public override fun onDraw(c: Canvas) {

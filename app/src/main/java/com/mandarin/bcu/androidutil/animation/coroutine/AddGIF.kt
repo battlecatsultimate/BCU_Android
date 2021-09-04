@@ -70,7 +70,8 @@ class AddGIF(c: Activity?, w: Int, h: Int, p: P, siz: Float, night: Boolean, pri
             }
             AnimationCView.EFFECT,
             AnimationCView.SOUL,
-            AnimationCView.CANNON -> {
+            AnimationCView.CANNON,
+            AnimationCView.DEMONSOUL -> {
                 this.animU = StaticJava.generateEAnimD(data, StaticStore.animposition)
                 animU.setTime(StaticStore.frame)
             }

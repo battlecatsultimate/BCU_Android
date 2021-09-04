@@ -17,11 +17,11 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
     private val fruits = arrayOfNulls<ImageView>(6)
     private val fruittext = arrayOfNulls<TextView>(6)
     private val cfdesc = arrayOfNulls<TextView>(3)
-    private val ids = listOf(30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44)
+    private val ids = listOf(30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161)
     private val imgid = intArrayOf(R.id.fruit1, R.id.fruit2, R.id.fruit3, R.id.fruit4, R.id.fruit5, R.id.xp)
     private val txid = intArrayOf(R.id.fruittext1, R.id.fruittext2, R.id.fruittext3, R.id.fruittext4, R.id.fruittext5, R.id.xptext)
     private val cfdeid = intArrayOf(R.id.cfinf1, R.id.cfinf2, R.id.cfinf3)
-    private val cftooltip = intArrayOf(R.string.fruit1, R.string.fruit2, R.string.fruit3, R.string.fruit4, R.string.fruit5, R.string.fruit6, R.string.fruit7, R.string.fruit8, R.string.fruit9, R.string.fruit10, R.string.fruit11, R.string.fruit12, R.string.fruit13, R.string.fruit14, R.string.fruit15)
+    private val cftooltip = intArrayOf(R.string.fruit1, R.string.fruit2, R.string.fruit3, R.string.fruit4, R.string.fruit5, R.string.fruit6, R.string.fruit7, R.string.fruit8, R.string.fruit9, R.string.fruit10, R.string.fruit11, R.string.fruit12, R.string.fruit13, R.string.fruit14, R.string.fruit15, R.string.fruit15, R.string.fruit16)
     private val exist = booleanArrayOf(false, false, false, false, false, true)
     override fun instantiateItem(group: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(activity)

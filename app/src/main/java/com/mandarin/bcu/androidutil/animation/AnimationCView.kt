@@ -18,6 +18,7 @@ import common.pack.Identifier
 import common.pack.UserProfile
 import common.system.P
 import common.util.anim.EAnimD
+import common.util.pack.DemonSoul
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
 import common.util.pack.Soul
@@ -42,6 +43,7 @@ class AnimationCView : View {
         const val EFFECT = 2
         const val SOUL = 3
         const val CANNON = 4
+        const val DEMONSOUL = 5
     }
 
     @JvmField
@@ -117,6 +119,8 @@ class AnimationCView : View {
         } else {
             throw IllegalStateException("Not a unit! : $data")
         }
+
+        isHapticFeedbackEnabled = false
     }
 
     constructor(context: Activity?, data: Identifier<AbEnemy>, mode: Int, night: Boolean, axis: Boolean, textView: TextView, seekBar: SeekBar, fpsind: TextView, gif: TextView) : super(context) {
@@ -154,6 +158,8 @@ class AnimationCView : View {
         } else {
             throw IllegalStateException("Not a enemy! : $data")
         }
+
+        isHapticFeedbackEnabled = false
     }
 
     constructor(context: Activity?, data: Any, type: Int, index: Int, night: Boolean, axis: Boolean, textView: TextView, seekBar: SeekBar, fpsind: TextView, gif: TextView) : super(context) {
@@ -186,6 +192,12 @@ class AnimationCView : View {
             }
             CANNON -> {
                 if(data !is NyCastle)
+                    throw IllegalStateException("Invalid data type : ${data::class.java.name} in AnimationCView with type $type")
+
+                this.data = data
+            }
+            DEMONSOUL -> {
+                if(data !is DemonSoul)
                     throw IllegalStateException("Invalid data type : ${data::class.java.name} in AnimationCView with type $type")
 
                 this.data = data

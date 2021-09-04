@@ -50,6 +50,7 @@ class ImageViewer : AppCompatActivity() {
         const val EFFECT = 4
         const val SOUL = 5
         const val CANNON = 6
+        const val DEMONSOUL = 7
     }
 
     private val skyUpper = 0
@@ -279,6 +280,7 @@ class ImageViewer : AppCompatActivity() {
             EFFECT -> AnimationLoader(this, AnimationCView.EFFECT, index).execute()
             SOUL -> AnimationLoader(this, AnimationCView.SOUL, index).execute()
             CANNON -> AnimationLoader(this, AnimationCView.CANNON, index).execute()
+            DEMONSOUL -> AnimationLoader(this, AnimationCView.DEMONSOUL, index).execute()
         }
     }
 
