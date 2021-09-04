@@ -133,7 +133,7 @@
 
                     </androidx.recyclerview.widget.RecyclerView>
 
-                    <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+                    <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/unitinfpager"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
