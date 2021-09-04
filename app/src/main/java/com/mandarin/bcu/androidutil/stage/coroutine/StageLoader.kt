@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.stage.coroutine
 import android.app.Activity
 import android.content.Intent
 import android.os.SystemClock
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
@@ -69,6 +70,14 @@ class StageLoader(activity: Activity, private val data: Identifier<StageMap>, pr
                 prog.progress = data[1].toInt()
             }
             done -> {
+                val bck: FloatingActionButton = activity.findViewById(R.id.stglistbck)
+
+                bck.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        activity.finish()
+                    }
+                })
+
                 val stm = Identifier.get(this.data) ?: return
 
                 val name = activity.findViewById<TextView>(R.id.stglistname)
@@ -84,7 +93,7 @@ class StageLoader(activity: Activity, private val data: Identifier<StageMap>, pr
 
                     val stmList = f[stm.cont.sid] ?: return
 
-                    val stList = stmList[stm.id.id] ?: return
+                    val stList = stmList[stm.cont.maps.list.indexOf(stm)] ?: return
 
                     Array<Identifier<Stage>>(stList.size) {
                         stm.list.list[stList[it]].id
@@ -124,12 +133,6 @@ class StageLoader(activity: Activity, private val data: Identifier<StageMap>, pr
                     intent.putExtra("custom", custom)
                     activity.startActivity(intent)
                 }
-                val bck: FloatingActionButton = activity.findViewById(R.id.stglistbck)
-                bck.setOnClickListener(object : SingleClick() {
-                    override fun onSingleClick(v: View?) {
-                        activity.finish()
-                    }
-                })
             }
         }
     }

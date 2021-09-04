@@ -252,7 +252,7 @@ class MapAdder(activity: Activity) : CoroutineTask<String>() {
                         val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return
 
                         for(i in 0 until resmaplist.size()) {
-                            val stm = mc.maps[resmaplist.keyAt(i)]
+                            val stm = mc.maps.list[resmaplist.keyAt(i)]
 
                             resmapname.add(stm.id)
                         }
