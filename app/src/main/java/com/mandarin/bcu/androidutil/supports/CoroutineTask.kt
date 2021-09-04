@@ -1,10 +1,7 @@
 package com.mandarin.bcu.androidutil.supports
 
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.collections.ArrayList
 
 abstract class CoroutineTask<Data> {
@@ -20,7 +17,7 @@ abstract class CoroutineTask<Data> {
     private var status = Status.READY
 
     private var index = -1
-    var cancelled = false
+    private var cancelled = false
     var out = false
 
     abstract fun prepare()
@@ -34,7 +31,7 @@ abstract class CoroutineTask<Data> {
     }
 
     fun publishProgress(vararg data: Data) {
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             progressUpdate(*data)
         }
     }
@@ -53,11 +50,11 @@ abstract class CoroutineTask<Data> {
         if(index == 0) {
             status = Status.DOING
 
-            GlobalScope.launch(Dispatchers.Main) {
-                prepare()
-            }
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    prepare()
+                }
 
-            GlobalScope.launch(Dispatchers.Default) {
                 doSomething()
                 status = Status.DONE
                 getOut()
@@ -77,12 +74,12 @@ abstract class CoroutineTask<Data> {
         status = Status.DONE
         cancelled = true
         getOut()
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             finish()
         }
     }
 
-    fun getOut() {
+    private fun getOut() {
         if(out)
             return
 
