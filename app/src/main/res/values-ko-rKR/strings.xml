@@ -877,4 +877,11 @@
     <string name="eff_ds">악마 쉴드</string>
     <string name="eff_dse">악마 쉴드 적 측면</string>
     <string name="eff_vt1e">맹독 적 측면 (타입 1 &amp; 양수 데미지)</string>
+    <string name="sch_abi_sd">사망 시 파동</string>
+    <string name="eff_akusoul">악마 영혼</string>
+    <string name="sch_abi_imusm">소환 무효</string>
+    <string name="fruit16">악마 개다래 씨앗</string>
+    <string name="fruit17">악마 개다래</string>
+    <string name="battle_plus">플러스 레벨 해제</string>
+    <string name="battle_lvlimoff">0 (꺼짐)</string>
 </resources>
