@@ -34,17 +34,14 @@ import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.pack.PackData
 import common.pack.UserProfile
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.lang.Runnable
 import java.text.DecimalFormat
 import java.util.*
 
-@DelicateCoroutinesApi
 class PackManagement : AppCompatActivity() {
     companion object {
         var handlingPacks = false
@@ -216,7 +213,7 @@ class PackManagement : AppCompatActivity() {
                 needReload = false
             }
 
-            GlobalScope.launch(Dispatchers.Default) {
+            CoroutineScope(Dispatchers.Main).launch {
                 run.run()
             }
         }
@@ -358,7 +355,7 @@ class PackManagement : AppCompatActivity() {
             }
         }
 
-        GlobalScope.launch(Dispatchers.Default) {
+        CoroutineScope(Dispatchers.Main).launch {
             run.run()
         }
     }
@@ -413,7 +410,7 @@ class PackManagement : AppCompatActivity() {
             }
         }
 
-        GlobalScope.launch(Dispatchers.Default) {
+        CoroutineScope(Dispatchers.Main).launch {
             run.run()
         }
     }
