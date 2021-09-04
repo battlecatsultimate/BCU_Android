@@ -36,6 +36,32 @@ public class PackConflict {
     private int err = -1;
     private String msg = "";
 
+    public static void filterConflict() {
+        conflicts.removeIf(conf -> {
+            if(conf.id == ID_SAME_ID) {
+                if(conf.confPack.size() >= 2) {
+                    String id = conf.confPack.get(0);
+
+                    boolean different = false;
+
+                    for(int i = 1; i < conf.confPack.size(); i++) {
+                        if(!id.equals(conf.confPack.get(i))) {
+                            different = true;
+
+                            break;
+                        }
+                    }
+
+                    return !different;
+                } else {
+                    return conf.confPack.isEmpty();
+                }
+            } else {
+                return conf.confPack.isEmpty();
+            }
+        });
+    }
+
     public PackConflict(int id, List<String> confPack, boolean solvable) {
         this.id = id;
         this.confPack = confPack;
@@ -168,6 +194,10 @@ public class PackConflict {
                             Log.e("PackConflict","File not existing, ID : "+confPack.get(i));
                         }
                     }
+
+                    if(err != -1)
+                        solved = true;
+
                 } else {
                     Log.e("PackConflict", "Invalid action index in SAME_ID : "+action+"\nCONFPACK : "+confPack);
                     err = ERR_INDEX;

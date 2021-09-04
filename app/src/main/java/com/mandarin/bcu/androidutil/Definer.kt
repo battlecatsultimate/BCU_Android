@@ -14,6 +14,7 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
+import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
 import common.io.assets.AssetLoader
@@ -58,6 +59,7 @@ object Definer {
             if(!StaticStore.packRead) {
                 text.accept(context.getString(R.string.main_pack))
                 UserProfile.loadPacks(prog)
+                PackConflict.filterConflict()
 
                 StaticStore.packRead = true
 
