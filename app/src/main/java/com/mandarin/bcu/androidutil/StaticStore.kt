@@ -874,6 +874,10 @@ object StaticStore {
         return getExternalPath(c) + "user/"
     }
 
+    fun getExternalBackup(c: Context?) : String {
+        return getExternalPath(c) + "backups/"
+    }
+
     fun checkFolders(vararg pathes: String) {
         for (path in pathes) {
             val f = File(path)

@@ -24,9 +24,11 @@ import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.stage.Stage
+import common.util.unit.Form
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.min
 
 open class BPAdder : CoroutineTask<String> {
     private val weakReference: WeakReference<Activity>
@@ -201,10 +203,15 @@ open class BPAdder : CoroutineTask<String> {
                 }
                 start.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
+                        val restricted = restrictLevel(st)
+
                         val intent = Intent(activity, BattleSimulation::class.java)
+
                         intent.putExtra("Data", JsonEncoder.encode(this@BPAdder.data).toString())
                         intent.putExtra("star", star.selectedItemPosition)
                         intent.putExtra("item", item)
+                        intent.putExtra("restricted", restricted)
+
                         activity.startActivity(intent)
                         BattlePrepare.rich = false
                         BattlePrepare.sniper = false
@@ -371,5 +378,31 @@ open class BPAdder : CoroutineTask<String> {
                 num.toString()
             }
         }
+    }
+
+    private fun restrictLevel(st: Stage) : Boolean {
+        var changed = false
+
+        if(st.lim.lvr != null) {
+            val lu = BasisSet.current().sele
+
+            for(forms in lu.lu.fs) {
+                for(form in forms) {
+                    val level = lu.lu.map[form.unit.id] ?: continue
+
+                    for(i in level.lvs.indices) {
+                        val temp = level.lvs[i]
+
+                        level.lvs[i] = min(level.lvs[i], st.lim.lvr.all[i])
+                        level.lvs[i] = min(level.lvs[i], st.lim.lvr.rares[form.unit.rarity][i])
+
+                        if(!changed && temp != level.lvs[i])
+                            changed = true
+                    }
+                }
+            }
+        }
+
+        return changed
     }
 }

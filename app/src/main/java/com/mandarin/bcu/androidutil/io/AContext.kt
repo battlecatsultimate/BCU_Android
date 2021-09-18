@@ -7,6 +7,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import common.CommonStatic
+import common.io.Backup
 import common.io.PackLoader
 import common.io.assets.Admin
 import common.io.assets.UpdateCheck
@@ -17,6 +18,7 @@ import common.util.stage.Music
 import java.io.File
 import java.io.InputStream
 import java.lang.ref.WeakReference
+import java.util.function.Consumer
 
 class AContext : Context {
     companion object {
@@ -84,6 +86,18 @@ class AContext : Context {
         val a = wac.get() ?: return File("")
 
         return File(StaticStore.getExternalWorkspace(a)+relativePath)
+    }
+
+    override fun getBackupFile(string: String?): File {
+        val wac = c ?: return File("")
+
+        val a = wac.get() ?: return File("")
+
+        return File(StaticStore.getExternalBackup(a) + string)
+    }
+
+    override fun getAuthor(): String {
+        return ""
     }
 
     override fun getAssetFile(string: String): File {
@@ -172,6 +186,10 @@ class AContext : Context {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun restore(b: Backup?, prog: Consumer<Double>?): Boolean {
+        return false
     }
 
     override fun getLangFile(file: String): InputStream? {
