@@ -466,6 +466,9 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
             val assets = AssetLoader.previewAssets()
             val require = UserProfile.getPool("required_asset", String::class.java)
 
+            if(assets == null)
+                return false
+
             for(asset in require) {
                 if(!assets.contains("asset_$asset")) {
                     return false
