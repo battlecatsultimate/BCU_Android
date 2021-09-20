@@ -383,7 +383,7 @@ open class BPAdder : CoroutineTask<String> {
     private fun restrictLevel(st: Stage) : Boolean {
         var changed = false
 
-        if(st.lim.lvr != null) {
+        if(st.lim != null && st.lim.lvr != null) {
             val lu = BasisSet.current().sele
 
             for(forms in lu.lu.fs) {
