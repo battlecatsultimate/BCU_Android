@@ -10,6 +10,7 @@ import common.pack.UserProfile
 import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
+import common.util.unit.Trait
 import common.util.unit.Unit
 import java.util.*
 import kotlin.collections.ArrayList
@@ -66,7 +67,7 @@ object FilterEntity {
             val b50 = ArrayList<Boolean>()
             for (f in u.forms) {
                 val du = if (StaticStore.talents) f.maxu() else f.du
-                val t = du.type
+                val t = du.traits
                 val a = du.abi
                 if (!StaticStore.empty)
                     if (StaticStore.atksimu)
@@ -79,7 +80,10 @@ object FilterEntity {
                 }
                 var b31 = !StaticStore.tgorand
                 for (k in StaticStore.tg.indices) {
-                    b31 = if (StaticStore.tgorand) b31 or ((t shr StaticStore.tg[k].toInt() and 1) == 1) else b31 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                    b31 = if (StaticStore.tgorand)
+                        b31 or hasTrait(t, StaticStore.tg[k])
+                    else
+                        b31 and hasTrait(t, StaticStore.tg[k])
                 }
                 var b41 = !StaticStore.aborand
                 for (k in StaticStore.ability.indices) {
@@ -186,7 +190,7 @@ object FilterEntity {
             var b30: Boolean
 
             val de = e.de
-            val t = de.type
+            val t = de.traits
             val a = de.abi
 
             if (!StaticStore.empty)
@@ -210,14 +214,9 @@ object FilterEntity {
                 b20 = !StaticStore.tgorand
                 for (k in StaticStore.tg.indices) {
                     b20 = if (StaticStore.tgorand)
-                        if (StaticStore.tg[k] == "")
-                            t == 0
-                        else
-                            b20 or ((t shr StaticStore.tg[k].toInt() and 1) == 1)
-                    else if (StaticStore.tg[k] == "")
-                        t == 0
+                        b20 or hasTrait(t, StaticStore.tg[k])
                     else
-                        b20 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                        b20 and hasTrait(t, StaticStore.tg[k])
                 }
             }
 
@@ -353,7 +352,7 @@ object FilterEntity {
                 else
                     f.du
 
-                val t = du.type
+                val t = du.traits
                 val a = du.abi
 
                 if(!StaticStore.empty) {
@@ -378,9 +377,9 @@ object FilterEntity {
 
                 for(k in StaticStore.tg.indices) {
                     b31 = if(StaticStore.tgorand) {
-                        b31 or ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                        b31 or hasTrait(t, StaticStore.tg[k])
                     } else {
-                        b31 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                        b31 and hasTrait(t, StaticStore.tg[k])
                     }
                 }
 
@@ -456,5 +455,14 @@ object FilterEntity {
         }
 
         return result
+    }
+
+    private fun hasTrait(traits: List<Trait>, t: Identifier<Trait>) : Boolean {
+        for(tr in traits) {
+            if(tr.id.equals(t))
+                return true
+        }
+
+        return false
     }
 }

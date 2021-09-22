@@ -13,6 +13,7 @@ import com.mandarin.bcu.androidutil.pack.AMusicLoader
 import common.CommonStatic
 import common.CommonStatic.Itf
 import common.io.InStream
+import common.pack.Identifier
 import common.pack.Source
 import common.util.stage.Music
 import java.io.File
@@ -69,6 +70,10 @@ class DefineItf : Itf {
 
     override fun setSE(ind: Int) {
         SoundHandler.setSE(ind)
+    }
+
+    override fun setBGM(mus: Identifier<Music>, loop: Long) {
+        SoundHandler.setBGM(mus, loop)
     }
 
     override fun getMusicReader(pid: Int, mid: Int): CommonStatic.ImgReader {

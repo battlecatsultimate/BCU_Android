@@ -406,9 +406,9 @@ class GetStrings(private val c: Context) {
         if (f == null || t == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.pCoin != null)
+        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
@@ -424,9 +424,9 @@ class GetStrings(private val c: Context) {
         if (f == null || t == null)
             return ""
 
-        val du: MaskUnit = if (f.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
@@ -452,9 +452,9 @@ class GetStrings(private val c: Context) {
         if (f == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.pCoin != null)
+        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
@@ -471,19 +471,19 @@ class GetStrings(private val c: Context) {
         if (em == null)
             return ""
 
-        return if (em.de.shield == 0)
+        return if (em.de.proc.BARRIER.health == 0)
             c.getString(R.string.unit_info_t_none)
         else
-            em.de.shield.toString()
+            em.de.proc.BARRIER.health.toString()
     }
 
     fun getHB(f: Form?, talent: Boolean, lvs: IntArray?): String {
         if (f == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.pCoin != null)
+        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
@@ -500,16 +500,16 @@ class GetStrings(private val c: Context) {
         if (f == null || t == null)
             return ""
 
-        val du: MaskUnit = if (f.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
             f.du
 
-        val result = if(f.pCoin != null && talent) {
-            (((du.hp * f.unit.lv.getMult(lvs[0])).roundToInt() * t.defMulti).toInt() * (f.pCoin.getHPMultiplication(lvs))).toInt()
+        val result = if(f.du.pCoin != null && talent) {
+            (((du.hp * f.unit.lv.getMult(lvs[0])).roundToInt() * t.defMulti).toInt() * (f.du.pCoin.getHPMultiplication(lvs))).toInt()
         } else {
             ((du.hp * f.unit.lv.getMult(lvs[0])).roundToInt() * t.defMulti).toInt()
         }
@@ -528,14 +528,14 @@ class GetStrings(private val c: Context) {
         if (f == null || t == null)
             return ""
 
-        val du: MaskUnit = if (f.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du else f.du
 
-        val result: Int = if(f.pCoin != null && talent) {
-            (((du.allAtk() * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt() * f.pCoin.getAtkMultiplication(lvs)).toInt()
+        val result: Int = if(f.du.pCoin != null && talent) {
+            (((du.allAtk() * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt() * f.du.pCoin.getAtkMultiplication(lvs)).toInt()
         } else {
             ((du.allAtk() * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt()
         }
@@ -567,9 +567,9 @@ class GetStrings(private val c: Context) {
     fun getTrait(ef: Form?, talent: Boolean, lvs: IntArray?): String {
         if (ef == null) return ""
 
-        val du: MaskUnit = if (lvs != null && ef.pCoin != null)
+        val du: MaskUnit = if (lvs != null && ef.du.pCoin != null)
             if (talent)
-                ef.pCoin.improve(lvs)
+                ef.du.pCoin.improve(lvs)
             else
                 ef.du
         else
@@ -577,7 +577,7 @@ class GetStrings(private val c: Context) {
 
         var result: String
 
-        result = Interpret.getTrait(du.type, 0)
+        result = Interpret.getTrait(du.traits, 0)
 
         if (result == "")
             result = c.getString(R.string.unit_info_t_none)
@@ -614,7 +614,7 @@ class GetStrings(private val c: Context) {
 
         val star = de.star
 
-        result = Interpret.getTrait(de.type, star)
+        result = Interpret.getTrait(de.traits, star)
 
         if (result == "")
             result = c.getString(R.string.unit_info_t_none)
@@ -635,9 +635,9 @@ class GetStrings(private val c: Context) {
         if (f == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.pCoin != null)
+        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
@@ -657,9 +657,9 @@ class GetStrings(private val c: Context) {
         if (f == null || t == null)
             return ""
 
-        val du: MaskUnit = if (f.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs)
             else
                 f.du
         else
@@ -670,8 +670,8 @@ class GetStrings(private val c: Context) {
         val damges = ArrayList<Int>()
 
         for (atk in atks) {
-            val result: Int = if(f.pCoin != null && talent) {
-                (((atk[0] * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt() * f.pCoin.getAtkMultiplication(lvs)).toInt()
+            val result: Int = if(f.du.pCoin != null && talent) {
+                (((atk[0] * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt() * f.du.pCoin.getAtkMultiplication(lvs)).toInt()
             } else {
                 ((atk[0] * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt()
             }
@@ -740,7 +740,7 @@ class GetStrings(private val c: Context) {
 
         val ans: String?
 
-        val info = f.pCoin.info
+        val info = f.du.pCoin.info
 
         val trait = listOf(37, 38, 39, 40)
         val basic = listOf(25, 26, 27, 31, 32)
@@ -752,8 +752,8 @@ class GetStrings(private val c: Context) {
         ans = when {
             trait.contains(info[index][0]) -> c.getString(R.string.talen_trait) + talTool[info[index][0]]
             basic.contains(info[index][0]) -> talTool[info[index][0]]
-            f.pCoin.type != 0 && index == 0 -> {
-                val tr = Interpret.getTrait(f.pCoin.type, 0)
+            f.du.pCoin.trait.isNotEmpty() && index == 0 -> {
+                val tr = Interpret.getTrait(f.du.pCoin.trait, 0)
 
                 if(tr.endsWith(", "))
                     c.getString(R.string.talen_abil) + tr.substring(0, tr.length - 2) + " " + talTool[info[index][0]]

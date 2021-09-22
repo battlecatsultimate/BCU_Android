@@ -48,9 +48,7 @@ import common.util.anim.AnimU.UType
 import common.util.anim.ImgCut
 import common.util.lang.MultiLangCont
 import common.util.stage.Music
-import common.util.unit.AbEnemy
-import common.util.unit.Combo
-import common.util.unit.Form
+import common.util.unit.*
 import common.util.unit.Unit
 import java.io.*
 import java.math.BigInteger
@@ -274,7 +272,7 @@ object StaticStore {
     /**
      * Search Filter Variables
      */
-    var tg = ArrayList<String>()
+    var tg = ArrayList<Identifier<Trait>>()
     var rare = ArrayList<String>()
     var ability = ArrayList<ArrayList<Int>>()
     var attack = ArrayList<String>()

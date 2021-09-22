@@ -19,7 +19,7 @@ import common.util.unit.Combo
 import java.text.DecimalFormat
 import java.util.*
 
-class ComboListAdapter internal constructor(activity: Activity, names: Array<String?>) : ArrayAdapter<String?>(activity, R.layout.combo_list_layout, names) {
+class ComboListAdapter internal constructor(activity: Activity, names: Array<String>) : ArrayAdapter<String>(activity, R.layout.combo_list_layout, names) {
     private class ViewHolder constructor(view: View) {
         var comboname: TextView = view.findViewById(R.id.comboname)
         var combodesc: TextView = view.findViewById(R.id.combodesc)
@@ -45,14 +45,14 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
         }
 
         try {
-            holder.comboname.text = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[position].name)
+            holder.comboname.text = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[position])
             val occ = context.getString(R.string.combo_occu) + " : " + BasisSet.current().sele.lu.occupance(StaticStore.combos[position])
             holder.comboocc.text = occ
             holder.combodesc.text = getDescription(StaticStore.combos[position])
             holder.comimglayout.removeAllViews()
             holder.icons.clear()
             for (i in 0..4) {
-                if (StaticStore.combos[position].units.size <= i) {
+                if (StaticStore.combos[position].forms.size <= i) {
                     val icon = ImageView(context)
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
                     icon.setImageBitmap(StaticStore.empty(context, 24f, 24f))
@@ -61,7 +61,7 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
                     holder.icons.add(icon)
                 } else {
                     val icon = ImageView(context)
-                    val f = StaticStore.combos[position].units[i] ?: continue
+                    val f = StaticStore.combos[position].forms[i] ?: continue
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
                     icon.setImageBitmap(f.anim.uni.img.bimg() as Bitmap)
                     icon.background = ContextCompat.getDrawable(context, R.drawable.cell_shape)

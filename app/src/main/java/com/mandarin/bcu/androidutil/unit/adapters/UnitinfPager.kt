@@ -164,14 +164,14 @@ class UnitinfPager : Fragment() {
 
         val f = u.forms[form]
 
-        if (f.pCoin == null) {
+        if (f.du.pCoin == null) {
             unittalen.visibility = View.GONE
             npreset.visibility = View.GONE
             nprow.visibility = View.GONE
 
             pcoinlev = intArrayOf(0, 0, 0, 0, 0, 0)
         } else {
-            val max = f.pCoin.max
+            val max = f.du.pCoin.max
 
             pcoinlev = IntArray(max.size)
 
@@ -206,7 +206,7 @@ class UnitinfPager : Fragment() {
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1, true, 1.0)
+        val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
         var name = MultiLangCont.get(f) ?: f.name
 
@@ -391,9 +391,9 @@ class UnitinfPager : Fragment() {
                 if (unitabil.visibility != View.GONE) {
                     var du = f.du
 
-                    if (f.pCoin != null)
+                    if (f.du.pCoin != null)
                         du = if (talents)
-                            f.pCoin.improve(pcoinlev)
+                            f.du.pCoin.improve(pcoinlev)
                         else
                             f.du
 
@@ -401,7 +401,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -433,9 +433,9 @@ class UnitinfPager : Fragment() {
                 if (unitabil.visibility != View.GONE) {
                     var du = f.du
 
-                    if (f.pCoin != null)
+                    if (f.du.pCoin != null)
                         du = if (talents)
-                            f.pCoin.improve(pcoinlev)
+                            f.du.pCoin.improve(pcoinlev)
                         else
                             f.du
 
@@ -443,7 +443,7 @@ class UnitinfPager : Fragment() {
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -878,9 +878,9 @@ class UnitinfPager : Fragment() {
         }
         npreset.setOnClickListener {
             for (i in pcoins.indices) {
-                pcoins[i]!!.setSelection(getIndex(pcoins[i], f.pCoin.max[i + 1]))
+                pcoins[i]!!.setSelection(getIndex(pcoins[i], f.du.pCoin.max[i + 1]))
 
-                pcoinlev[i + 1] = f.pCoin.max[i + 1]
+                pcoinlev[i + 1] = f.du.pCoin.max[i + 1]
             }
 
             validate(view, f, t)
@@ -926,11 +926,11 @@ class UnitinfPager : Fragment() {
         unittrait.text = s.getTrait(f, talents, pcoinlev)
         unitspd.text = s.getSpd(f, talents, pcoinlev)
 
-        val du: MaskUnit = if (f.pCoin != null) if (talents) f.pCoin.improve(pcoinlev) else f.du else f.du
+        val du: MaskUnit = if (f.du.pCoin != null) if (talents) f.du.pCoin.improve(pcoinlev) else f.du else f.du
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val proc = Interpret.getProc(du, fs == 1, true, 1.0)
+        val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
         val abilityicon = Interpret.getAbiid(du)
 

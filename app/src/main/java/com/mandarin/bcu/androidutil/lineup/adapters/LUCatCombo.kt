@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import common.CommonStatic
+import com.mandarin.bcu.androidutil.supports.ComboTypeComparator
 import common.battle.BasisSet
+import common.pack.Identifier
+import common.pack.UserProfile
 import common.util.lang.MultiLangCont
 import java.util.*
 
@@ -35,14 +37,24 @@ class LUCatCombo : Fragment() {
 
         StaticStore.combos.clear()
 
-        for (i in CommonStatic.getBCAssets().combos.indices) {
-            StaticStore.combos.addAll(listOf(*CommonStatic.getBCAssets().combos[i]))
+        StaticStore.combos.addAll(UserProfile.getBCData().combos.list)
+
+        for(userPack in UserProfile.getUserPacks()) {
+            for(combo in userPack.combos.list) {
+                combo ?: continue
+
+                StaticStore.combos.add(combo)
+            }
         }
 
-        val names = arrayOfNulls<String>(StaticStore.combos.size)
+        StaticStore.combos.sortWith(ComboTypeComparator())
 
-        for (i in StaticStore.combos.indices) {
-            names[i] = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[i].name)
+        val names = Array<String>(StaticStore.combos.size) {
+            if(StaticStore.combos[it].id.pack == Identifier.DEF) {
+                MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[it])
+            } else {
+                StaticStore.combos[it].name
+            }
         }
 
         val combolist = view.findViewById<ListView>(R.id.combolist)
@@ -114,7 +126,7 @@ class LUCatCombo : Fragment() {
 
             val c = StaticStore.combos[posit]
 
-            BasisSet.current().sele.lu.set(c.units)
+            BasisSet.current().sele.lu.set(c.forms)
 
             line.updateLineUp()
 

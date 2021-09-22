@@ -446,7 +446,7 @@ class LUOrbSetting : Fragment() {
             return
         }
 
-        val l = BasisSet.current().sele.lu.getLv(f.unit)
+        val l = BasisSet.current().sele.lu.getLv(f)
 
         val o = f.orbs
 
@@ -552,7 +552,7 @@ class LUOrbSetting : Fragment() {
 
         orb.clear()
 
-        val data = BasisSet.current().sele.lu.getLv(f?.unit).orbs ?: return
+        val data = BasisSet.current().sele.lu.getLv(f).orbs ?: return
 
         for(d in data) {
             orb.add(d)
@@ -692,7 +692,7 @@ class LUOrbSetting : Fragment() {
         val o = f?.orbs ?: return res
 
         if(o.slots != -1) {
-            val l = BasisSet.current().sele.lu.getLv(f?.unit)
+            val l = BasisSet.current().sele.lu.getLv(f)
 
             if(l.orbs == null) {
                 for(i in 0 until o.slots) {
@@ -712,7 +712,7 @@ class LUOrbSetting : Fragment() {
                 }
             }
         } else {
-            val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return res
+            val l = BasisSet.current().sele.lu.getLv(f) ?: return res
 
             if(l.orbs == null || l.orbs.isEmpty()) {
                 return res
@@ -741,7 +741,7 @@ class LUOrbSetting : Fragment() {
         val o = f?.orbs ?: return ""
 
         if(o.slots != -1) {
-            val l = BasisSet.current().sele.lu.getLv(f?.unit)
+            val l = BasisSet.current().sele.lu.getLv(f)
 
             if(l.orbs == null) {
                 return c.getString(R.string.lineup_orb)+"${index+1} - "+c.getString(R.string.unit_info_t_none)
@@ -758,7 +758,7 @@ class LUOrbSetting : Fragment() {
                 c.getString(R.string.lineup_orb)+"${index+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}"
             }
         } else {
-            val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return ""
+            val l = BasisSet.current().sele.lu.getLv(f) ?: return ""
 
             return if(l.orbs == null || l.orbs.isEmpty()) {
                 ""
@@ -836,7 +836,7 @@ class LUOrbSetting : Fragment() {
     private fun setData() {
         f ?: return
 
-        val o = BasisSet.current().sele.lu.getLv(f?.unit) ?: return
+        val o = BasisSet.current().sele.lu.getLv(f) ?: return
 
         o.orbs = orb.toTypedArray()
     }
@@ -922,7 +922,7 @@ class LUOrbSetting : Fragment() {
 
         val o = Array(orb.size) { i -> orb[i]}
 
-        val l = BasisSet.current().sele.lu.getLv(f?.unit) ?: return
+        val l = BasisSet.current().sele.lu.getLv(f) ?: return
 
         l.orbs = o
 

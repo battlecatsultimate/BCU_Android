@@ -75,7 +75,7 @@ class LUUnitSetting : Fragment() {
             if (context == null)
                 return
 
-            if(f?.unit != null) {
+            if(f != null) {
                 BasisSet.synchronizeOrb(f!!.unit)
             }
 
@@ -96,10 +96,10 @@ class LUUnitSetting : Fragment() {
                 talents[i] = v.findViewById(id[i])
             }
 
-            if (f?.pCoin != null) {
-                pcoin = BasisSet.current().sele.lu.getLv(f?.unit)?.lvs ?: return
+            if (f?.du?.pCoin != null) {
+                pcoin = BasisSet.current().sele.lu.getLv(f)?.lvs ?: return
 
-                val max = f?.pCoin?.max
+                val max = f?.du?.pCoin?.max
 
                 for (i in 1 until (max?.size ?: 1)) {
                     val ii = i - 1
@@ -142,7 +142,7 @@ class LUUnitSetting : Fragment() {
             spinners[0].adapter = adapter
             spinners[1].adapter = adapter1
 
-            var loadlev = BasisSet.current().sele.lu.getLv(f?.unit)?.lvs?.get(0) ?: return
+            var loadlev = BasisSet.current().sele.lu.getLv(f)?.lvs?.get(0) ?: return
 
             var loadlevp = 0
 
@@ -162,12 +162,12 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
 
                     if (t.isChecked) {
-                        hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
                     } else {
                         removePCoin()
-                        hp.text = s.getHP(f, BasisSet.current().t(), f != null && f?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f != null && f?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f != null && f?.du?.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f != null && f?.du?.pCoin != null && t.isChecked, pcoin)
                     }
 
                     if (f != null)
@@ -185,12 +185,12 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
 
                     if (t.isChecked) {
-                        hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
                     } else {
                         removePCoin()
-                        hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
                     }
 
                     if(f != null)
@@ -211,12 +211,12 @@ class LUUnitSetting : Fragment() {
                         pcoin[0] = lev + levp1
 
                         if (t.isChecked) {
-                            hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                            atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                            hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                            atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
                         } else {
                             removePCoin()
-                            hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                            atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                            hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                            atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
                         }
 
                         if(f != null) {
@@ -245,8 +245,8 @@ class LUUnitSetting : Fragment() {
                 })
             }
 
-            hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-            atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+            hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+            atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
 
             t.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -269,8 +269,8 @@ class LUUnitSetting : Fragment() {
 
                     BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
 
-                    hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                    atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                    hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                    atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
 
                 } else {
                     val anim = ValueAnimator.ofInt(StaticStore.dptopx(64f, requireContext()), 0)
@@ -293,12 +293,12 @@ class LUUnitSetting : Fragment() {
 
                     BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
 
-                    hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                    atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                    hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                    atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
                 }
             }
 
-            if (f?.pCoin != null) {
+            if (f?.du?.pCoin != null) {
                 if (pcoin[1] == 0 && pcoin[2] == 0 && pcoin[3] == 0 && pcoin[4] == 0 && pcoin[5] == 0) {
                     t.isChecked = false
                     val params = tal.layoutParams
@@ -327,18 +327,18 @@ class LUUnitSetting : Fragment() {
 
                 pcoin[0] = lev + levp1
 
-                hp.text = s.getHP(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
-                atk.text = s.getAtk(f, BasisSet.current().t(), f?.pCoin != null && t.isChecked, pcoin)
+                hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
 
-                if (f?.pCoin == null) {
+                if (f?.du?.pCoin == null) {
                     setDisappear(t, tal)
                     pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
                 } else {
                     setAppear(t, tal)
 
-                    pcoin = BasisSet.current().sele.lu.getLv(f?.unit)?.lvs ?: return@setOnClickListener
+                    pcoin = BasisSet.current().sele.lu.getLv(f)?.lvs ?: return@setOnClickListener
 
-                    val max = f?.pCoin?.max ?: intArrayOf(0)
+                    val max = f?.du?.pCoin?.max ?: intArrayOf(0)
 
                     for (i in 1 until max.size) {
                         val ii = i - 1

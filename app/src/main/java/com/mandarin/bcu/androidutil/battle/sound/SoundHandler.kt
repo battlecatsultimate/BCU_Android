@@ -5,7 +5,9 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
+import common.pack.Identifier
 import common.pack.UserProfile
+import common.util.stage.Music
 import java.io.File
 
 object SoundHandler {
@@ -128,6 +130,57 @@ object SoundHandler {
         }
 
         play[ind] = true
+    }
+
+    fun setBGM(music: Identifier<Music>, loop: Long) {
+        val m = StaticStore.getMusicDataSource(Identifier.get(music)) ?: return
+
+        if(MUSIC.isInitialized) {
+            MUSIC.stop()
+            MUSIC.reset()
+
+            timer?.cancel()
+            timer = null
+        }
+
+        MUSIC.setDataSource(m.absolutePath)
+        MUSIC.prepareAsync()
+        MUSIC.setOnPreparedListener(object: MediaPrepare() {
+            override fun prepare(mp: MediaPlayer?) {
+                if(musicPlay) {
+                    if(loop > 0 && loop < MUSIC.duration) {
+                        timer = object : PauseCountDown((MUSIC.duration - 1).toLong(), (MUSIC.duration - 1).toLong(), true) {
+                            override fun onFinish() {
+                                MUSIC.seekTo(loop.toInt(), true)
+
+                                timer = object : PauseCountDown(
+                                    (MUSIC.duration - 1).toLong(),
+                                    (MUSIC.duration - 1).toLong(),
+                                    true
+                                ) {
+                                    override fun onFinish() {
+                                        MUSIC.seekTo(loop.toInt(), true)
+
+                                        timer?.create()
+                                    }
+
+                                    override fun onTick(millisUntilFinished: Long) {}
+                                }
+                            }
+
+                            override fun onTick(millisUntilFinished: Long) {}
+                        }
+
+                        timer?.create()
+                    } else {
+                        timer = null
+                        MUSIC.isLooping = true
+                    }
+
+                    MUSIC.start()
+                }
+            }
+        })
     }
 
     @JvmStatic

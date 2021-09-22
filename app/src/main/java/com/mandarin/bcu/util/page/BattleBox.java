@@ -161,7 +161,7 @@ public interface BattleBox {
 
             drawCastle(g);
 
-            if(sb.can == sb.max_can && sb.canon.id == 0) {
+            if(sb.cannon == sb.maxCannon && sb.canon.id == 0) {
                 drawCannonRange(g);
             }
 
@@ -265,7 +265,7 @@ public interface BattleBox {
 
             FakeImage left = aux.battle[0][mtype].getImg();
 
-            int ctype = sb.can == sb.max_can && time == 0 ? 1 : 0;
+            int ctype = sb.cannon == sb.maxCannon && time == 0 ? 1 : 0;
 
             FakeImage right = aux.battle[1][ctype].getImg();
 
@@ -302,7 +302,7 @@ public interface BattleBox {
             double marg = 0;
 
             if (ctype == 0)
-                for (int i = 0; i < 10 * sb.can / sb.max_can; i++) {
+                for (int i = 0; i < 10 * sb.cannon / sb.maxCannon; i++) {
                     FakeImage img = aux.battle[1][2 + i].getImg();
                     iw = (int) (hr * img.getWidth());
                     ih = (int) (hr * img.getHeight());
@@ -314,7 +314,7 @@ public interface BattleBox {
                     hi -= ih;
                     g.drawImage(img, w - iw - cutout + BOTTOM_GAP * hr, hi, iw, ih);
                 }
-            if(sb.can == sb.max_can) {
+            if(sb.cannon == sb.maxCannon) {
                 FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
 
                 int fw = (int) (hr * fire.getWidth());

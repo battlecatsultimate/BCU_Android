@@ -6,9 +6,11 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.isEnglish
 import common.battle.data.*
+import common.pack.Identifier
 import common.util.Data
 import common.util.lang.Formatter
 import common.util.lang.ProcLang
+import common.util.unit.Trait
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -84,7 +86,30 @@ object Interpret : Data() {
         return ans.toString()
     }
 
-    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean, magnif: Double): List<String> {
+    fun getTrait(traits: List<Trait>, star: Int): String {
+        val ans = StringBuilder()
+
+        for(trait in traits) {
+            if(trait.id.pack == Identifier.DEF) {
+                if(trait.id.id == 6 && star == 1) {
+                    ans.append(TRAIT[trait.id.id])
+                        .append(" (")
+                        .append(STAR[star])
+                        .append("), ")
+                } else {
+                    ans.append(TRAIT[trait.id.id])
+                        .append(", ")
+                }
+            } else {
+                ans.append(trait.name)
+                    .append(", ")
+            }
+        }
+
+        return ans.toString()
+    }
+
+    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean, magnif: DoubleArray): List<String> {
         val res: MutableList<Int> = ArrayList()
 
         val lang = Locale.getDefault().language

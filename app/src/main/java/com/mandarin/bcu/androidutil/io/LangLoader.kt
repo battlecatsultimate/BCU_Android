@@ -8,6 +8,7 @@ import common.system.files.VFile
 import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
+import common.util.unit.Combo
 import java.io.File
 
 object LangLoader {
@@ -86,9 +87,11 @@ object LangLoader {
                             if (strs.size <= 1) {
                                 continue
                             }
-                            val id = strs[0].trim { it <= ' ' }.toInt()
+                            val id = strs[0].trim { it <= ' ' }
+                            val combo = getComboViaID(UserProfile.getBCData().combos.list, id) ?: continue
+
                             val name = strs[1].trim { it <= ' ' }
-                            MultiLangCont.getStatic().COMNAME.put(l.substring(1, l.length - 1), id, name)
+                            MultiLangCont.getStatic().COMNAME.put(l.substring(1, l.length - 1), combo, name)
                         }
                     }
                 }
@@ -306,5 +309,14 @@ object LangLoader {
         }
 
         StaticStore.medallang = 0
+    }
+
+    private fun getComboViaID(combos: List<Combo>, id: String) : Combo? {
+        for(c in combos) {
+            if(c.name == id)
+                return c
+        }
+
+        return null
     }
 }

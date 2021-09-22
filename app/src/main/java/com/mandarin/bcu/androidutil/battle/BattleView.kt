@@ -10,17 +10,20 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.util.page.BBCtrl
 import com.mandarin.bcu.util.page.BattleBox
 import com.mandarin.bcu.util.page.BattleBox.BBPainter
@@ -35,7 +38,10 @@ import common.pack.UserProfile
 import common.system.P
 import common.util.Data
 import common.util.anim.ImgCut
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.round
+import kotlin.math.tan
 
 @SuppressLint("ViewConstructor")
 class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double) : View(context), BattleBox, OuterBox {
@@ -60,6 +66,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     var dragFrame = 0
     var isSliding = false
     var performed = false
+
+    private var continued = false
 
     init {
         painter.dpi = StaticStore.dptopx(32f, context)
@@ -116,7 +124,14 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
     public override fun onDraw(c: Canvas) {
         if (initialized) {
+            if(continued) {
+                continued = false
+                battleEnd = false
+                SoundHandler.battleEnd = false
+            }
+
             cv.setCanvas(c)
+
             try {
                 painter.draw(cv)
             } catch(e: Exception) {
@@ -138,6 +153,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 for (es in painter.bf.sb.st.data.allEnemy)
                     es.anim.check()
             }
+
             if (!paused) {
                 if (spd > 0) {
                     var i = 0
@@ -301,9 +317,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             battleEnd = true
             SoundHandler.battleEnd = true
 
-            val parentlay = activity.findViewById<CoordinatorLayout>(R.id.battlecoordinate)
-
-            StaticStore.showShortSnack(parentlay,R.string.battle_won,BaseTransientBottomBar.LENGTH_LONG)
+            showBattleResult(true)
         }
     }
 
@@ -335,30 +349,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             battleEnd = true
             SoundHandler.battleEnd = true
 
-            val bh = getBossHealth()
-
-            val parentlay = activity.findViewById<CoordinatorLayout>(R.id.battlecoordinate)
-
-            if(bh == -1) {
-                val snack = Snackbar.make(parentlay,R.string.battle_lost,BaseTransientBottomBar.LENGTH_LONG)
-
-                snack.setAction(R.string.battle_retry) {
-                    retry()
-                }
-
-                snack.setActionTextColor(StaticStore.getAttributeColor(activity,R.attr.colorAccent))
-
-                snack.show()
-            } else {
-                val snack = Snackbar.make(parentlay, context.getString(R.string.battle_lost_boss).replace("_", bh.toString()), BaseTransientBottomBar.LENGTH_LONG)
-
-                snack.setAction(R.string.battle_retry) {
-                    retry()
-                }
-                snack.setActionTextColor(StaticStore.getAttributeColor(activity,R.attr.colorAccent))
-
-                snack.show()
-            }
+            showBattleResult(false)
         }
     }
 
@@ -418,9 +409,18 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         SoundHandler.MUSIC.setOnCompletionListener {
 
         }
+
         SoundHandler.resetHandler()
         activity.startActivity(intent)
         activity.finish()
+    }
+
+    private fun continueBattle() {
+        if(painter.bf is SBCtrl) {
+            (painter.bf as SBCtrl).action.add(-4)
+
+            continued = true
+        }
     }
 
     fun unload() {
@@ -484,5 +484,70 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 SoundHandler.map[i] = result
             }
         }
+    }
+
+    private fun showBattleResult(win: Boolean) {
+        val dialog = BottomSheetDialog(context)
+
+        dialog.setContentView(R.layout.battle_result_bottom_dialog)
+
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+        dialog.setCanceledOnTouchOutside(false)
+
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        val text = dialog.findViewById<TextView>(R.id.resulttext) ?: return
+
+        val primary = dialog.findViewById<Button>(R.id.resultprimary) ?: return
+        val secondary = dialog.findViewById<Button>(R.id.resultsecondary) ?: return
+
+        var dismissed = false
+
+        if(win) {
+            text.setText(R.string.battle_won)
+
+            primary.visibility = GONE
+            secondary.visibility = GONE
+        } else {
+            val bh = getBossHealth()
+
+            if(bh == -1)
+                text.setText(R.string.battle_lost)
+            else {
+                val t = activity.getText(R.string.battle_lost_boss).toString().replace("_", bh.toString())
+
+                text.text = t
+            }
+
+            if(painter.bf.sb.st.non_con) {
+                secondary.visibility = GONE
+            } else {
+                secondary.setOnClickListener {
+                    dialog.dismiss()
+
+                    continueBattle()
+                }
+            }
+
+            primary.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    dialog.dismiss()
+
+                    retry()
+                }
+            })
+        }
+
+        dialog.setOnDismissListener {
+            dismissed = true
+        }
+
+        dialog.show()
+
+        postDelayed({
+            if(!dismissed)
+                dialog.dismiss()
+        }, 6000)
     }
 }

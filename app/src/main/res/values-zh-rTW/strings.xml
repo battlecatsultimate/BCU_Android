@@ -885,4 +885,5 @@
     <string name="battle_plus">Unlock Plus Level</string>
     <string name="battle_lvlimoff">0 (Turned Off)</string>
     <string name="battle_restricted">Unit\'s levels got changed because of level restriction</string>
+    <string name="battle_continue">Continue</string>
 </resources>

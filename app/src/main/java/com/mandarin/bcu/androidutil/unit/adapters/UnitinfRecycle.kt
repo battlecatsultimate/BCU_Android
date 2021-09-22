@@ -134,13 +134,13 @@ class UnitinfRecycle(private val context: Activity,
         }
         val t = BasisSet.current().t()
         val f = forms[viewHolder.adapterPosition]
-        if (f.pCoin == null) {
+        if (f.du.pCoin == null) {
             viewHolder.unittalen.visibility = View.GONE
             viewHolder.npreset.visibility = View.GONE
             viewHolder.nprow.visibility = View.GONE
             pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
         } else {
-            val max = f.pCoin.max
+            val max = f.du.pCoin.max
 
             pcoins = IntArray(max.size)
 
@@ -168,7 +168,7 @@ class UnitinfRecycle(private val context: Activity,
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1, true, 1.0)
+        val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
         val icon = f.anim?.uni?.img?.bimg()
 
@@ -283,9 +283,9 @@ class UnitinfRecycle(private val context: Activity,
                 if (viewHolder.unitabil.visibility != View.GONE) {
                     var du = f.du
 
-                    if (f.pCoin != null)
+                    if (f.du.pCoin != null)
                         du = if (talents)
-                            f.pCoin.improve(pcoins)
+                            f.du.pCoin.improve(pcoins)
                         else
                             f.du
 
@@ -293,7 +293,7 @@ class UnitinfRecycle(private val context: Activity,
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -320,9 +320,9 @@ class UnitinfRecycle(private val context: Activity,
                 if (viewHolder.unitabil.visibility != View.GONE) {
                     var du = f.du
 
-                    if (f.pCoin != null)
+                    if (f.du.pCoin != null)
                         du = if (talents)
-                            f.pCoin.improve(pcoins)
+                            f.du.pCoin.improve(pcoins)
                         else
                             f.du
 
@@ -330,7 +330,7 @@ class UnitinfRecycle(private val context: Activity,
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, 1.0)
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -805,9 +805,9 @@ class UnitinfRecycle(private val context: Activity,
 
         viewHolder.npreset.setOnClickListener {
             for (i in viewHolder.pcoins.indices) {
-                viewHolder.pcoins[i]!!.setSelection(getIndex(viewHolder.pcoins[i], f.pCoin.max[i + 1]))
+                viewHolder.pcoins[i]!!.setSelection(getIndex(viewHolder.pcoins[i], f.du.pCoin.max[i + 1]))
 
-                pcoins[i + 1] = f.pCoin.max[i + 1]
+                pcoins[i + 1] = f.du.pCoin.max[i + 1]
             }
             validate(viewHolder, f, t)
         }
@@ -853,14 +853,14 @@ class UnitinfRecycle(private val context: Activity,
 
         viewHolder.unitspd.text = s.getSpd(f, talents, pcoins)
 
-        val du: MaskUnit = if (f.pCoin != null && talents)
-            f.pCoin.improve(pcoins)
+        val du: MaskUnit = if (f.du.pCoin != null && talents)
+            f.du.pCoin.improve(pcoins)
         else
             f.du
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
-        val proc = Interpret.getProc(du, fs == 1, true, 1.0)
+        val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
         val abilityicon = Interpret.getAbiid(du)
 
