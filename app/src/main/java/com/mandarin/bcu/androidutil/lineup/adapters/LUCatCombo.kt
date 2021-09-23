@@ -12,12 +12,11 @@ import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import com.mandarin.bcu.androidutil.supports.ComboTypeComparator
 import common.battle.BasisSet
 import common.pack.Identifier
 import common.pack.UserProfile
 import common.util.lang.MultiLangCont
-import java.util.*
+import common.util.unit.Combo
 
 
 class LUCatCombo : Fragment() {
@@ -47,7 +46,7 @@ class LUCatCombo : Fragment() {
             }
         }
 
-        StaticStore.combos.sortWith(ComboTypeComparator())
+        StaticStore.combos.sortWith(Comparator.comparingInt(Combo::type).thenComparingInt(Combo::lv))
 
         val names = Array<String>(StaticStore.combos.size) {
             if(StaticStore.combos[it].id.pack == Identifier.DEF) {

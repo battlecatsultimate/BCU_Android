@@ -9,10 +9,10 @@ import android.widget.ListView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.ComboTypeComparator
 import common.pack.Identifier
 import common.pack.UserProfile
 import common.util.lang.MultiLangCont
+import common.util.unit.Combo
 
 class ComboSchListAdapter internal constructor(private val activity: Activity, private val sch: Array<String?>, private val schlst2: ListView, private val combolist: ListView, private var comboListAdapter: ComboListAdapter?) : ArrayAdapter<String?>(activity, R.layout.spinneradapter, sch) {
     private val combocat = BooleanArray(5)
@@ -68,7 +68,7 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
                     }
                 }
 
-                StaticStore.combos.sortWith(ComboTypeComparator())
+                StaticStore.combos.sortWith(Comparator.comparingInt(Combo::type).thenComparingInt(Combo::lv))
 
                 val names = Array<String>(StaticStore.combos.size) {
                     if(StaticStore.combos[it].id.pack == Identifier.DEF) {
@@ -122,7 +122,7 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
                     }
                 }
 
-                StaticStore.combos.sortWith(ComboTypeComparator())
+                StaticStore.combos.sortWith(Comparator.comparingInt(Combo::type).thenComparingInt(Combo::lv))
 
                 val names = Array<String>(StaticStore.combos.size) {
                     if(StaticStore.combos[it].id.pack == Identifier.DEF) {
