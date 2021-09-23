@@ -886,4 +886,5 @@
     <string name="battle_lvlimoff">0 (꺼짐)</string>
     <string name="battle_restricted">유닛의 레벨이 커스텀 레벨 제한으로 인해 변경되었습니다</string>
     <string name="battle_continue">이어하기</string>
+    <string name="sch_ba">성</string>
 </resources>
