@@ -4,29 +4,32 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.unit.asynchs.UInfoLoader
-import common.util.pack.Pack
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.unit.coroutine.UInfoLoader
+import common.CommonStatic
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.unit.Unit
 import java.util.*
 
 class UnitInfo : AppCompatActivity() {
@@ -54,19 +57,13 @@ class UnitInfo : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (shared.getBoolean("Lay_Land", false)) {
@@ -81,6 +78,8 @@ class UnitInfo : AppCompatActivity() {
                 setContentView(R.layout.activity_unit_infor)
             }
         }
+
+        supportActionBar?.elevation = 0F
 
         if (StaticStore.unitinfreset) {
             StaticStore.unittabposition = 0
@@ -97,7 +96,7 @@ class UnitInfo : AppCompatActivity() {
 
                 scrollView.visibility = View.GONE
 
-                val unittable = findViewById<ViewPager>(R.id.unitinftable)
+                val unittable = findViewById<ViewPager2>(R.id.unitinftable)
 
                 unittable.isFocusable = false
                 unittable.requestFocusFromTouch()
@@ -116,7 +115,7 @@ class UnitInfo : AppCompatActivity() {
 
                 scrollView.visibility = View.GONE
 
-                val unittable = findViewById<ViewPager>(R.id.unitinftable)
+                val unittable = findViewById<ViewPager2>(R.id.unitinftable)
 
                 unittable.isFocusable = false
                 unittable.requestFocusFromTouch()
@@ -131,7 +130,7 @@ class UnitInfo : AppCompatActivity() {
             }
         }
 
-        val unittitle = findViewById<TextView>(R.id.unitinfrarname)
+        val unittitle = findViewById<AutoMarquee>(R.id.unitinfrarname)
         val back = findViewById<FloatingActionButton>(R.id.unitinfback)
 
         treasure = findViewById(R.id.treabutton)
@@ -143,36 +142,32 @@ class UnitInfo : AppCompatActivity() {
         }
 
         val result = intent
-        val extra = result.extras
+        val extra = result.extras ?: return
 
-        if (extra != null) {
-            val pid = extra.getInt("PID")
-            val id = extra.getInt("ID")
-            val s = GetStrings(this)
+        val data = StaticStore.transformIdentifier<Unit>(extra.getString("Data")) ?: return
+        val s = GetStrings(this)
 
-            val p = Pack.map[pid] ?: return
+        val u = Identifier.get(data) ?: return
 
-            unittitle.text = s.getTitle(p.us.ulist[id].forms[0])
+        unittitle.text = s.getTitle(u.forms[0])
 
-            val anim = findViewById<Button>(R.id.animanim)
+        val anim = findViewById<Button>(R.id.animanim)
 
-            anim.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    val intent = Intent(this@UnitInfo, ImageViewer::class.java)
+        anim.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@UnitInfo, ImageViewer::class.java)
 
-                    StaticStore.formposition = StaticStore.unittabposition
+                StaticStore.formposition = StaticStore.unittabposition
 
-                    intent.putExtra("Img", 2)
-                    intent.putExtra("PID",pid)
-                    intent.putExtra("ID", id)
-                    intent.putExtra("Form", StaticStore.formposition)
+                intent.putExtra("Img", ImageViewer.ANIMU)
+                intent.putExtra("Data", JsonEncoder.encode(data).toString())
+                intent.putExtra("Form", StaticStore.formposition)
 
-                    startActivity(intent)
-                }
-            })
+                startActivity(intent)
+            }
+        })
 
-            UInfoLoader(pid, id,this, supportFragmentManager).execute()
-        }
+        UInfoLoader(this, data, supportFragmentManager, lifecycle).execute()
     }
 
     override fun onBackPressed() {
@@ -212,5 +207,14 @@ class UnitInfo : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

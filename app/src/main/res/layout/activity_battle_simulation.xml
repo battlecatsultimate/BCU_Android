@@ -8,10 +8,11 @@
     android:background="?attr/backgroundPrimary"
     android:backgroundTint="?attr/backgroundPrimary"
     android:theme="?attr/TILtheme"
+    tools:ignore="TouchTargetSizeCheck"
     tools:context=".BattleSimulation">
 
     <ProgressBar
-        android:id="@+id/battleprog"
+        android:id="@+id/prog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,22 +30,22 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/battleloadt"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/unit_list_unitload"
+        android:text="@string/load_unit"
         android:textColor="?attr/TextPrimary"
-        app:layout_constraintEnd_toEndOf="@+id/battleprog"
-        app:layout_constraintStart_toStartOf="@+id/battleprog"
-        app:layout_constraintTop_toBottomOf="@+id/battleprog" />
+        app:layout_constraintEnd_toEndOf="@+id/prog"
+        app:layout_constraintStart_toStartOf="@+id/prog"
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/battleslow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
         android:focusable="true"
@@ -55,7 +56,8 @@
         app:fabSize="mini"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/iconPrimaryN" />
+        app:tint="@color/iconPrimaryN"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/battlefast"
@@ -72,16 +74,18 @@
         app:fabSize="mini"
         app:layout_constraintStart_toEndOf="@+id/battleslow"
         app:layout_constraintTop_toTopOf="@+id/battleslow"
-        app:tint="@color/iconPrimaryN" />
+        app:tint="@color/iconPrimaryN"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/battlepause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
+        android:contentDescription="@null"
         android:focusable="true"
         android:transitionName="Battle"
         app:backgroundTint="@color/colorAccent"
@@ -91,7 +95,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_pause_black_24dp"
-        app:tint="@color/iconPrimaryN" />
+        app:tint="@color/iconPrimaryN"
+        tools:ignore="DuplicateClickableBoundsCheck,ImageContrastCheck,ImageContrastCheck" />
 
 
     <RelativeLayout
@@ -102,9 +107,114 @@
         android:theme="@style/AppTheme.designDay"
         android:transitionName="Battle"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/battlerow"
+            android:layout_below="@+id/battleplay"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/showunit"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:text="@string/battle_show_unit"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/showenemy"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/battle_show_enem"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/battle_tworow"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchmus"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/config_music"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <SeekBar
+                    android:id="@+id/seekmus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchse"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/config_se"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <SeekBar
+                    android:id="@+id/seekse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="0dp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchui"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:text="@string/ui_sound"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <SeekBar
+                    android:id="@+id/seekui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ScrollView>
 
         <TableRow
+            android:id="@+id/battlerow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -146,10 +256,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:backgroundTint="@color/colorAccent"
             android:clickable="true"
+            android:contentDescription="@null"
             android:focusable="true"
             android:src="@drawable/ic_play_arrow_black_24dp"
             app:backgroundTint="@color/colorAccent"
@@ -164,10 +275,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/battleplay"
             android:backgroundTint="@color/colorAccent"
             android:clickable="true"
+            android:contentDescription="@null"
             android:focusable="true"
             android:src="@drawable/ic_skip_next_black_24dp"
             app:backgroundTint="@color/colorAccent"
@@ -175,84 +287,6 @@
             app:elevation="0dp"
             app:fabSize="mini"
             app:tint="@color/iconPrimaryN" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/showunit"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_below="@+id/battleplay"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:text="@string/battle_show_unit"
-            android:textColor="?attr/TextPrimary"
-            android:textSize="12sp" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/showenemy"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_below="@+id/showunit"
-            android:layout_alignStart="@+id/showunit"
-            android:layout_alignEnd="@+id/showunit"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="0dp"
-            android:text="@string/battle_show_enem"
-            android:textColor="?attr/TextPrimary"
-            android:textSize="12sp" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchmus"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_below="@+id/showenemy"
-            android:layout_alignStart="@+id/showenemy"
-            android:layout_alignEnd="@+id/showenemy"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="0dp"
-            android:text="@string/config_music"
-            android:textColor="?attr/TextPrimary"
-            android:textSize="12sp" />
-
-        <SeekBar
-            android:id="@+id/seekmus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/switchmus"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchse"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_below="@+id/seekmus"
-            android:layout_alignStart="@+id/switchmus"
-            android:layout_alignEnd="@+id/switchmus"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="0dp"
-            android:text="@string/config_se"
-            android:textColor="?attr/TextPrimary"
-            android:textSize="12sp" />
-
-        <SeekBar
-            android:id="@+id/seekse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/switchse"
-            android:layout_alignStart="@+id/seekmus"
-            android:layout_alignEnd="@+id/seekmus"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="0dp" />
 
     </RelativeLayout>
 

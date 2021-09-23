@@ -51,8 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar7"
-        app:srcCompat="@drawable/ic_castle" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
 
     <Spinner
         android:id="@+id/animselect"
@@ -110,7 +109,8 @@
             android:focusable="true"
             android:tint="?attr/TextPrimary"
             app:backgroundTint="?attr/ButtonPrimary"
-            app:srcCompat="@drawable/ic_skip_previous_black_24dp" />
+            app:srcCompat="@drawable/ic_skip_previous_black_24dp"
+            android:contentDescription="@null" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/animplay"
@@ -123,7 +123,8 @@
             android:focusable="true"
             android:tint="?attr/TextPrimary"
             app:backgroundTint="?attr/ButtonPrimary"
-            app:srcCompat="@drawable/ic_pause_black_24dp" />
+            app:srcCompat="@drawable/ic_pause_black_24dp"
+            android:contentDescription="@null" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/animforward"
@@ -134,7 +135,8 @@
             android:tint="?attr/TextPrimary"
             app:backgroundTint="?attr/ButtonPrimary"
             app:srcCompat="@drawable/ic_skip_next_black_24dp"
-            android:focusable="true" />
+            android:focusable="true"
+            android:contentDescription="@null" />
     </TableRow>
 
     <SeekBar
@@ -199,8 +201,8 @@
         app:layout_constraintTop_toBottomOf="@+id/imgviewerfps" />
 
     <ProgressBar
-        android:id="@+id/imgviewerprog"
-        style="?android:attr/progressBarStyle"
+        android:id="@+id/prog"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -209,7 +211,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
 
     <TextView
-        android:id="@+id/imgviewerst"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -218,6 +220,6 @@
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgviewerprog" />
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

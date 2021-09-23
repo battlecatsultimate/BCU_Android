@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -17,16 +16,17 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.Revalidater
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import java.util.*
 
 open class ConfigScreen : AppCompatActivity() {
@@ -34,12 +34,12 @@ open class ConfigScreen : AppCompatActivity() {
         var revalidate: Boolean = false
     }
 
-    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr)
-    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr")
+    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr, R.string.def_lang_it, R.string.def_lang_es, R.string.def_lang_de)
+    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr","it","es","de")
     private var started = false
     private var changed = false
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -59,19 +59,13 @@ open class ConfigScreen : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_config_screen)
 
@@ -159,8 +153,6 @@ open class ConfigScreen : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        println(CommonStatic.Lang.lang)
-
         val apktest = findViewById<SwitchCompat>(R.id.apktest)
 
         apktest.isChecked = shared.getBoolean("apktest", false)
@@ -216,8 +208,6 @@ open class ConfigScreen : AppCompatActivity() {
 
         language.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                println("Started : $started")
-
                 if (started) {
                     changed = true
 
@@ -232,11 +222,9 @@ open class ConfigScreen : AppCompatActivity() {
                     ed1.putInt("Language", l)
                     ed1.apply()
 
-                    if (StaticStore.units != null || StaticStore.enemies != null)
-                        revalidate = true
-                    else {
-                        StaticStore.getLang(l)
-                    }
+                    revalidate = true
+
+                    StaticStore.getLang(l)
 
                     restart()
                 }
@@ -248,21 +236,6 @@ open class ConfigScreen : AppCompatActivity() {
         language.post {
             started = true
         }
-
-        val orientation = findViewById<RadioGroup>(R.id.configorirg)
-
-        val oris = arrayOf(findViewById(R.id.configoriauto), findViewById(R.id.configoriland), findViewById<RadioButton>(R.id.configoriport))
-
-        orientation.setOnCheckedChangeListener { _, checkedId ->
-            if (started) for (i in 0..2) if (i != shared.getInt("Orientation", 0) && checkedId == oris[i].id) {
-                val ed1 = shared.edit()
-                ed1.putInt("Orientation", i)
-                ed1.apply()
-                restart()
-            }
-        }
-
-        oris[shared.getInt("Orientation", 0)].isChecked = true
 
         val unitinfland = findViewById<RadioGroup>(R.id.configinfland)
         val unitinflandlist = findViewById<RadioButton>(R.id.configlaylandlist)
@@ -291,16 +264,6 @@ open class ConfigScreen : AppCompatActivity() {
         unitinfport.setOnCheckedChangeListener { _, checkedId ->
             val ed1 = shared.edit()
             ed1.putBoolean("Lay_Port", checkedId == unitinfportslide.id)
-            ed1.apply()
-        }
-
-        val skiptext = findViewById<SwitchCompat>(R.id.configskiptext)
-
-        skiptext.isChecked = shared.getBoolean("Skip_Text", false)
-
-        skiptext.setOnCheckedChangeListener { _, isChecked ->
-            val ed1 = shared.edit()
-            ed1.putBoolean("Skip_Text", isChecked)
             ed1.apply()
         }
 
@@ -334,6 +297,32 @@ open class ConfigScreen : AppCompatActivity() {
             ed1.putBoolean("FPS", isChecked)
             ed1.apply()
         }
+
+        val gifseek = findViewById<SeekBar>(R.id.configgifseek)
+        val gif = findViewById<TextView>(R.id.configgifsize)
+
+        gif.text = getString(R.string.config_gifsize).replace("_", shared.getInt("gif", 100).toString())
+        gifseek.max = 80
+
+        gifseek.progress = shared.getInt("gif", 100) - 20
+
+        gifseek.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if(p2) {
+                    val prog = p1 + 20
+
+                    val editor = shared.edit()
+                    editor.putInt("gif", prog)
+                    editor.apply()
+
+                    gif.text = getString(R.string.config_gifsize).replace("_", prog.toString())
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+        })
 
         val mus = findViewById<SwitchCompat>(R.id.configmus)
         val musvol = findViewById<SeekBar>(R.id.configmusvol)
@@ -409,8 +398,6 @@ open class ConfigScreen : AppCompatActivity() {
                     editor.putInt("se_vol", progress)
                     editor.apply()
                     SoundHandler.se_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
-
-                    println(SoundHandler.se_vol)
                 }
             }
 
@@ -418,6 +405,62 @@ open class ConfigScreen : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
+
+        val ui = findViewById<SwitchCompat>(R.id.configui)
+        val uivol = findViewById<SeekBar>(R.id.configuivol)
+
+        ui.setOnCheckedChangeListener { _, c ->
+            val editor = shared.edit()
+
+            editor.putBoolean("UI", c)
+            editor.apply()
+
+            SoundHandler.uiPlay = c
+            SoundHandler.ui_vol = if(c) {
+                StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+            } else {
+                0f
+            }
+
+            uivol.isEnabled = c
+        }
+
+        uivol.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    if (progress >= 100 || progress < 0) return
+                    val editor = shared.edit()
+                    editor.putInt("ui_vol", progress)
+                    editor.apply()
+                    SoundHandler.ui_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
+        ui.isChecked = shared.getBoolean("UI", true)
+        uivol.isEnabled = shared.getBoolean("UI", true)
+        uivol.max = 99
+        uivol.progress = shared.getInt("ui_vol", 99)
+
+        val row = findViewById<SwitchCompat>(R.id.configrow)
+
+        row.isChecked = shared.getBoolean("rowlayout", true)
+        row.text = if(CommonStatic.getConfig().twoRow) {
+            getString(R.string.battle_tworow)
+        } else {
+            getString(R.string.battle_onerow)
+        }
+
+        row.setOnCheckedChangeListener {_, isChecked ->
+            val editor = shared.edit()
+            editor.putBoolean("rowlayout", isChecked)
+            CommonStatic.getConfig().twoRow = isChecked
+            editor.apply()
+        }
 
         val build = findViewById<TextView>(R.id.configbuildver)
 
@@ -471,6 +514,17 @@ open class ConfigScreen : AppCompatActivity() {
             }
             false
         })
+
+        val reset = findViewById<MaterialButton>(R.id.configreset)
+
+        reset.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                val intent = Intent(this@ConfigScreen, DataResetManager::class.java)
+
+                startActivity(intent)
+                finish()
+            }
+        })
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {
@@ -519,5 +573,14 @@ open class ConfigScreen : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

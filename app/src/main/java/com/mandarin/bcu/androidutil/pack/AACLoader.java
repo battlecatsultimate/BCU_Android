@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.mandarin.bcu.androidutil.StaticStore;
 import com.mandarin.bcu.androidutil.fakeandroid.FIBM;
-import com.mandarin.bcu.androidutil.io.DefferedLoader;
+import com.mandarin.bcu.androidutil.io.AContext;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,35 +20,35 @@ import javax.crypto.NoSuchPaddingException;
 
 import common.CommonStatic;
 import common.io.InStream;
+import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.system.files.FDByte;
-import common.util.Res;
-import common.util.anim.AnimCI;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 
-public class AACLoader implements AnimCI.AnimLoader {
+public class AACLoader implements Source.AnimLoader {
     private String name;
     private FakeImage num;
-    private ImgCut imgcut;
-    private MaModel mamodel;
-    private MaAnim[] anims;
+    private final ImgCut imgcut;
+    private final MaModel mamodel;
+    private final MaAnim[] anims;
     private VImg uni, edi;
 
     public AACLoader(InStream is, String dir, String name) {
-        this.name = "local anim";
-
         String path;
 
         if(!name.equals("")) {
-            path = dir+"/res/img/" + name + "/";
+            path = dir+"res/img/" + name + "/";
         } else {
-            path = dir+"/res/img/" + findName(dir+"/res/img/","") + "/";
+            path = dir+"res/img/" + findName(dir+"res/img/","") + "/";
         }
 
-        String nam = findName(path,".png");
+        String nam = findName(path,".png", ".bcuimg");
+
+        this.name = "local anim "+nam;
 
         try {
             num = FakeImage.read(is.nextBytesI());
@@ -77,7 +77,7 @@ public class AACLoader implements AnimCI.AnimLoader {
         }
 
         if(!is.end()) {
-            VImg img = new VImg(is.nextBytesI());
+            VImg img = ImageBuilder.toVImg(is.nextBytesI());
             if(img.getImg().getHeight() == 32) {
                 img.mark(FakeImage.Marker.EDI);
                 edi = img;
@@ -88,9 +88,9 @@ public class AACLoader implements AnimCI.AnimLoader {
         }
 
         if(!is.end())
-            uni = new VImg(is.nextBytesI());
+            uni = ImageBuilder.toVImg(is.nextBytesI());
 
-        if(uni != null && uni != Res.slot[0]) {
+        if(uni != null && uni != CommonStatic.getBCAssets().slot[0]) {
             uni.mark(FakeImage.Marker.UNI);
 
             try {
@@ -119,6 +119,7 @@ public class AACLoader implements AnimCI.AnimLoader {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public AACLoader(InStream is, CommonStatic.ImgReader reader) {
         is.nextString();
 
@@ -126,10 +127,18 @@ public class AACLoader implements AnimCI.AnimLoader {
 
         num = reader.readImg(numRef);
 
-        try {
-            DefferedLoader.Companion.getPending().add(new DefferedLoader<>("Context", num, num.getClass().getDeclaredField("password"), c -> StaticStore.getPassword(((AImageReader)reader).name, ((FIBM) num).reference, c)));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(CommonStatic.ctx instanceof AContext) {
+            File f = ((AContext) CommonStatic.ctx).extractImage(numRef);
+
+            if(f != null) {
+                try {
+                    num = ImageBuilder.builder.build(f);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("AACLoader", "File is null : "+numRef);
+            }
         }
 
         edi = reader.readImgOptional(is.nextString());
@@ -167,14 +176,13 @@ public class AACLoader implements AnimCI.AnimLoader {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public Source.ResourceLocation getName() {
+        return new Source.ResourceLocation(null, name);
     }
+
     @Override
-    public FakeImage getNum(boolean load) {
-        if(load) {
-            check();
-        }
+    public FakeImage getNum() {
+        check();
 
         return num;
     }
@@ -189,15 +197,23 @@ public class AACLoader implements AnimCI.AnimLoader {
         return uni;
     }
 
-    private String findName(String path, String extension) {
+    private String findName(String path, String... extension) {
         int i = 0;
 
         while(true) {
-            File f = new File(path+number(i)+extension);
+            boolean numberFound = true;
 
-            if(f.exists()) {
-                i += 1;
-            } else {
+            for(String ex : extension) {
+                File f = new File(path+number(i)+ex);
+
+                if(f.exists()) {
+                    i += 1;
+                    numberFound = false;
+                    break;
+                }
+            }
+
+            if(numberFound) {
                 return number(i);
             }
         }
@@ -242,8 +258,11 @@ public class AACLoader implements AnimCI.AnimLoader {
         }
 
         try {
-            return new String[] {g.getAbsolutePath().replace(".png",".bcuimg"), StaticStore.fileToMD5(g)};
-        } catch (NoSuchAlgorithmException e) {
+            String md5 = StaticStore.fileToMD5(g);
+            StaticStore.encryptPNG(g.getAbsolutePath(), md5, StaticStore.IV, true);
+
+            return new String[] {g.getAbsolutePath().replace(".png",".bcuimg"), md5};
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
             return new String [] {g.getAbsolutePath().replace(".png",".bcuimg"), ""};
         }

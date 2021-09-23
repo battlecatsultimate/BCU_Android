@@ -9,9 +9,10 @@ import android.widget.ListView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
+import common.pack.Identifier
+import common.pack.UserProfile
+import common.util.lang.MultiLangCont
 import common.util.unit.Combo
-import java.util.*
 
 class ComboSchListAdapter internal constructor(private val activity: Activity, private val sch: Array<String?>, private val schlst2: ListView, private val combolist: ListView, private var comboListAdapter: ComboListAdapter?) : ArrayAdapter<String?>(activity, R.layout.spinneradapter, sch) {
     private val combocat = BooleanArray(5)
@@ -21,7 +22,6 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
 
     private class ViewHolder constructor(view: View) {
         var category: TextView = view.findViewById(R.id.spinnertext)
-
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -51,50 +51,91 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
             StaticStore.combos.clear()
             if (comid.isEmpty()) {
                 val locates: MutableList<Int> = ArrayList()
+
                 for (ints1 in locater) {
                     for (j in ints1) {
                         locates.add(j)
                     }
                 }
-                for (i in Combo.combos.indices) {
-                    StaticStore.combos.addAll(listOf(*Combo.combos[i]))
+
+                StaticStore.combos.addAll(UserProfile.getBCData().combos.list)
+
+                for(userPack in UserProfile.getUserPacks()) {
+                    for(combo in userPack.combos.list) {
+                        combo ?: continue
+
+                        StaticStore.combos.add(combo)
+                    }
                 }
-                val names = arrayOfNulls<String>(StaticStore.combos.size)
+
+                StaticStore.combos.sortWith(Comparator.comparingInt(Combo::type).thenComparingInt(Combo::lv))
+
+                val names = Array<String>(StaticStore.combos.size) {
+                    if(StaticStore.combos[it].id.pack == Identifier.DEF) {
+                        MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[it])
+                    } else {
+                        StaticStore.combos[it].name
+                    }
+                }
+
                 val subsch: MutableList<String> = ArrayList()
+
                 for (ints in locateid) {
                     for (anInt in ints) {
                         subsch.add(context.getString(anInt))
                     }
                 }
-                for (i in StaticStore.combos.indices) {
-                    names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
-                }
+
                 comboListAdapter = ComboListAdapter(activity, names)
+
                 combolist.adapter = comboListAdapter
+
                 val adapter = ComboSubSchListAdapter(activity, subsch, combolist, locates, comboListAdapter)
+
                 schlst2.adapter = adapter
             } else {
                 val locates: MutableList<Int> = ArrayList()
                 val subsch: MutableList<String> = ArrayList()
+
                 for (i in comid.indices) {
                     for (j in locater[comid[i].toInt()]) {
                         locates.add(j)
                     }
                 }
+
                 for (i in comid.indices) {
                     for (j in locateid[comid[i].toInt()]) {
                         subsch.add(context.getString(j))
                     }
                 }
+
                 for (i in locates.indices) {
-                    StaticStore.combos.addAll(listOf(*Combo.combos[locates[i]]))
+                    for(pack in UserProfile.getAllPacks()) {
+                        for(c in pack.combos.list) {
+                            c ?: continue
+
+                            for(l in locates) {
+                                if(c.type == l)
+                                    StaticStore.combos.add(c)
+                            }
+                        }
+                    }
                 }
-                val names = arrayOfNulls<String>(StaticStore.combos.size)
-                for (i in StaticStore.combos.indices) {
-                    names[i] = MultiLangCont.COMNAME.getCont(StaticStore.combos[i].name)
+
+                StaticStore.combos.sortWith(Comparator.comparingInt(Combo::type).thenComparingInt(Combo::lv))
+
+                val names = Array<String>(StaticStore.combos.size) {
+                    if(StaticStore.combos[it].id.pack == Identifier.DEF) {
+                        MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[it])
+                    } else {
+                        StaticStore.combos[it].name
+                    }
                 }
+
                 comboListAdapter = ComboListAdapter(activity, names)
+
                 val adapter = ComboSubSchListAdapter(activity, subsch, combolist, locates, comboListAdapter)
+
                 combolist.adapter = comboListAdapter
                 schlst2.adapter = adapter
             }

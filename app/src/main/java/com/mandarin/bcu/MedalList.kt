@@ -2,7 +2,6 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -10,10 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.medal.asynchs.MedalAdder
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.medal.coroutine.MedalAdder
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
 import java.util.*
 
 class MedalList : AppCompatActivity() {
@@ -36,19 +36,13 @@ class MedalList : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_medal_list)
 
@@ -88,5 +82,14 @@ class MedalList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

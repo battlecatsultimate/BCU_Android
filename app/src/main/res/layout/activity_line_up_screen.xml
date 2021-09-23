@@ -53,8 +53,8 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar
-        android:id="@+id/lineupprog"
-        style="?android:attr/progressBarStyle"
+        android:id="@+id/prog"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,15 +64,15 @@
         app:layout_constraintTop_toBottomOf="@+id/lineuptoolbar" />
 
     <TextView
-        android:id="@+id/lineupst"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/unit_list_unitload"
+        android:text="@string/load_unit"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lineupprog" />
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/lineupbck"
@@ -149,7 +149,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineuplayout"
         app:tabMode="scrollable"
-        app:tabTextAppearance="@style/CounterStyle" />
+        app:tabTextAppearance="@style/CounterStyle"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TableRow
         android:id="@+id/lineupsetrow"
@@ -177,8 +178,8 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.1"
             android:contentDescription="@string/def_description"
-            android:tint="?attr/TextPrimary"
-            app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+            app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+            app:tint="?attr/TextPrimary" />
 
         <Spinner
             android:id="@+id/luspin"
@@ -191,9 +192,9 @@
             android:textAlignment="center" />
     </TableRow>
 
-    <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/lineuppager"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="2dp"
         app:layout_constraintBottom_toBottomOf="parent"

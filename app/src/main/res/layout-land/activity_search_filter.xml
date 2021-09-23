@@ -8,7 +8,7 @@
     tools:context=".SearchFilter">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/cstool"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -31,9 +31,9 @@
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@+id/cstool"
+        app:layout_constraintEnd_toEndOf="@+id/cstool"
+        app:layout_constraintTop_toTopOf="@+id/cstool"
         app:srcCompat="@drawable/ic_refresh_black_24dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -47,10 +47,11 @@
         app:fabSize="mini"
         android:focusable="true"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@+id/cstool"
         app:layout_constraintEnd_toStartOf="@+id/schreset"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_format_list_numbered_24" />
+        app:srcCompat="@drawable/ic_baseline_format_list_numbered_24"
+        android:contentDescription="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/schbck"
@@ -65,9 +66,9 @@
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@+id/cstool"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/cstool"
         app:srcCompat="@drawable/back_button" />
 
     <TextView
@@ -79,9 +80,9 @@
         android:textColor="?attr/UnitinfoName"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@+id/cstool"
         app:layout_constraintStart_toEndOf="@+id/schbck"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="@+id/cstool" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/animsc"
@@ -91,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/cstool"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -195,107 +196,6 @@
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/schrgtg" />
-
-            <CheckBox
-                android:id="@+id/schchrd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schtg" />
-
-            <CheckBox
-                android:id="@+id/schchfl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.276"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schtg" />
-
-            <CheckBox
-                android:id="@+id/schchbla"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schtg" />
-
-            <CheckBox
-                android:id="@+id/schchme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.73"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schtg" />
-
-            <CheckBox
-                android:id="@+id/schchan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.95"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schtg" />
-
-            <CheckBox
-                android:id="@+id/schchal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchrd" />
-
-            <CheckBox
-                android:id="@+id/schchzo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/schchfl"
-                app:layout_constraintTop_toBottomOf="@+id/schchfl" />
-
-            <CheckBox
-                android:id="@+id/schchre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/schchbla"
-                app:layout_constraintTop_toBottomOf="@+id/schchbla" />
-
-            <CheckBox
-                android:id="@+id/schchwh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/schchme"
-                app:layout_constraintTop_toBottomOf="@+id/schchme" />
 
             <RadioGroup
                 android:id="@+id/schrgtg"
@@ -541,7 +441,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/schchre" />
+                app:layout_constraintTop_toBottomOf="@+id/schchtgrec" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/schchtgrec"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/schrgtg" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

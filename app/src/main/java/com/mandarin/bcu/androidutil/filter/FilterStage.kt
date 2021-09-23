@@ -5,59 +5,79 @@ import android.util.SparseArray
 import androidx.core.util.isNotEmpty
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.pack.Identifier
+import common.util.Data
+import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
-import common.util.stage.SCDef
 import common.util.stage.Stage
-import common.util.unit.Enemy
+import common.util.unit.AbEnemy
 import java.util.*
 import kotlin.collections.ArrayList
 
 object FilterStage {
-    fun setFilter(name: String, stmname: String, enemies: List<Int>, enemorand: Boolean, music: Int, bg: Int, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : SparseArray<SparseArray<ArrayList<Int>>> {
-        val result = SparseArray<SparseArray<ArrayList<Int>>>()
-
-        val mc = MapColc.MAPS ?: return result
+    fun setFilter(name: String, stmname: String, enemies: ArrayList<Identifier<AbEnemy>>, enemorand: Boolean, music: String, bg: String, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
+        val result = HashMap<String, SparseArray<ArrayList<Int>>>()
 
         for(n in 0 until StaticStore.mapcode.size) {
             val i = StaticStore.mapcode[n]
-            val m = if(n < StaticStore.BCmaps) {
-                mc[i] ?: continue
-            } else {
-                val p = Pack.map[i] ?: continue
-
-                p.mc ?: continue
-            }
+            val m = MapColc.get(i) ?: continue
 
             val stresult = SparseArray<ArrayList<Int>>()
 
-            for(j in m.maps.indices) {
-                val stm = m.maps[j] ?: continue
+            for(j in m.maps.list.indices) {
+                val stm = m.maps.list[j] ?: continue
 
                 val sresult = ArrayList<Int>()
 
-                for(k in 0 until stm.list.size) {
-                    val s = stm.list[k] ?: continue
+                for(k in 0 until stm.list.list.size) {
+                    val s = stm.list.list[k] ?: continue
 
                     val nam = if(stmname != "") {
                         if(name != "") {
-                            val stmnam = (MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "").toLowerCase(Locale.ROOT).contains(stmname.toLowerCase(Locale.ROOT))
-                            val stnam = (MultiLangCont.STNAME.getCont(s) ?: s.name ?: "").toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))
+                            val stmnam = (MultiLangCont.get(stm) ?: stm.name ?: "").lowercase().contains(stmname.lowercase())
+                            val stnam = (MultiLangCont.get(s) ?: s.name ?: "").lowercase().contains(name.lowercase())
 
                             stmnam && stnam
                         } else {
-                            (MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "").toLowerCase(Locale.ROOT).contains(stmname.toLowerCase(Locale.ROOT))
+                            (MultiLangCont.get(stm) ?: stm.name ?: "").lowercase().contains(stmname.lowercase())
                         }
                     } else {
-                        (MultiLangCont.STNAME.getCont(s) ?: s.name ?: "").toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))
+                        (MultiLangCont.get(s) ?: s.name ?: "").lowercase().contains(name.lowercase())
                     }
 
-                    val enem = containEnemy(enemies, s.data.allEnemy, enemorand)
+                    val es = ArrayList<Identifier<AbEnemy>>()
 
-                    val mus = s.mus0 == music || s.mus1 == music || music == -1
+                    for(d in s.data.datas) {
+                        val e = d.enemy
 
-                    val backg = s.bg == bg || bg == -1
+                        if(!es.contains(e)) {
+                            es.add(e)
+                        }
+                    }
+
+                    val enem = containEnemy(enemies, es, enemorand)
+
+                    var mus = music.isEmpty()
+
+                    if(!mus && s.mus0 != null && s.mus0.id != -1) {
+                        val m0 = s.mus0.pack + " - " + Data.trio(s.mus0.id)
+
+                        mus = mus || m0 == music
+                    }
+
+                    if(!mus && s.mus1 != null && s.mus1.id != -1) {
+                        val m1 = s.mus1.pack + " - " + Data.trio(s.mus1.id)
+
+                        mus = mus || m1 == music
+                    }
+
+                    var backg = bg.isEmpty()
+
+                    if(!backg && s.bg != null && s.bg.id != -1) {
+                        val b = s.bg.pack + " - " + Data.trio(s.bg.id)
+
+                        backg = backg || bg == b
+                    }
 
                     val stars = stm.stars.size > star
 
@@ -96,22 +116,22 @@ object FilterStage {
             }
 
             if(stresult.isNotEmpty())
-                result.put(i,stresult)
+                result[i] = stresult
         }
 
         return result
     }
 
-    private fun containEnemy(src: List<Int>, target: Set<Enemy>, orand: Boolean) : Boolean {
+    private fun containEnemy(src: ArrayList<Identifier<AbEnemy>>, target: List<Identifier<AbEnemy>>, orand: Boolean) : Boolean {
         if(src.isEmpty()) return true
 
         if(target.isEmpty()) return false
 
-        val targetid = ArrayList<Int>()
+        val targetid = ArrayList<Identifier<AbEnemy>>()
 
         for(ten in target) {
-            if (!targetid.contains(ten.id)) {
-                targetid.add(ten.id)
+            if (!contains(ten, targetid)) {
+                targetid.add(ten)
             }
         }
 
@@ -119,13 +139,13 @@ object FilterStage {
 
         if(orand) {
             for(i in src) {
-                if(targetid.contains(i))
+                if(contains(i, targetid))
                     return true
             }
 
             return false
         } else {
-            return targetid.containsAll(src)
+            return containsAll(src, targetid)
         }
     }
 
@@ -134,7 +154,7 @@ object FilterStage {
             val def = st.data ?: return false
 
             for (i in def.datas) {
-                if (i[SCDef.B] == 1)
+                if (i.boss == 1)
                     return true
             }
         } catch(e: Exception) {
@@ -143,5 +163,25 @@ object FilterStage {
         }
 
         return false
+    }
+
+    private fun contains(src: Identifier<AbEnemy>, target: ArrayList<Identifier<AbEnemy>>) : Boolean {
+        for(id in target) {
+            if(id.equals(src)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private fun containsAll(src: ArrayList<Identifier<AbEnemy>>, target: ArrayList<Identifier<AbEnemy>>) : Boolean {
+        for(id in src) {
+            if(!contains(id, target)) {
+                return false
+            }
+        }
+
+        return true
     }
 }

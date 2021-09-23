@@ -2,7 +2,6 @@ package com.mandarin.bcu
 
 import android.app.Activity
 import android.content.*
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -11,19 +10,21 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.music.asynchs.MusicLoader
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.music.coroutine.MusicLoader
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.pack.Identifier
+import common.util.stage.Music
 import java.lang.ref.WeakReference
 import java.util.*
 
 class MusicPlayer : AppCompatActivity() {
     companion object {
-        var sound : SoundPlayer? = SoundPlayer()
-        var posit = 1
-        var pid = 0
+        var sound = SoundPlayer()
+        var music: Identifier<Music>? = null
         var next = false
         var looping = false
         var completed = false
@@ -33,8 +34,6 @@ class MusicPlayer : AppCompatActivity() {
         var opened = false
 
         fun reset() {
-            pid = 0
-            posit = 1
             next = false
             looping = false
             completed = false
@@ -67,19 +66,13 @@ class MusicPlayer : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         registerReceiver(musicreceive, IntentFilter(Intent.ACTION_HEADSET_PLUG))
 
@@ -90,12 +83,9 @@ class MusicPlayer : AppCompatActivity() {
 
             if (bundle != null) {
                 if (!opened) {
-                    posit = bundle.getInt("Music")
-                    pid = bundle.getInt("PID")
+                    music = StaticStore.transformIdentifier(bundle.getString("Data"))
                     opened = true
                 }
-
-                sound = SoundPlayer()
 
                 musicasync = MusicLoader(this)
 
@@ -121,8 +111,6 @@ class MusicPlayer : AppCompatActivity() {
         musicasync?.destroyed = true
         musicasync = null
         unregisterReceiver(musicreceive)
-        sound?.release()
-        sound = null
         StaticStore.toast = null
         super.onDestroy()
     }
@@ -151,12 +139,25 @@ class MusicPlayer : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    class MusicReceiver(ac: Activity) : BroadcastReceiver() {
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
+    }
+
+    class MusicReceiver : BroadcastReceiver {
         private var unregister = false
         private var rotated = true
         private val ac: WeakReference<Activity>?
 
-        init {
+        constructor() {
+            ac = null
+        }
+
+        constructor(ac: Activity) {
             this.ac = WeakReference(ac)
         }
 
@@ -171,8 +172,8 @@ class MusicPlayer : AppCompatActivity() {
             if(intent?.action.equals(Intent.ACTION_HEADSET_PLUG)) {
 
                 when(intent?.getIntExtra("state",-1) ?: -1) {
-                    0 -> if(sound?.isInitialized == true && sound?.isReleased == false) {
-                        if(sound?.isRunning == true || sound?.isPlaying == true) {
+                    0 -> if(sound.isInitialized && !sound.isReleased) {
+                        if(sound.isRunning || sound.isPlaying) {
                             val play: FloatingActionButton = ac?.get()?.findViewById(R.id.musicplay) ?: return
 
                             play.performClick()

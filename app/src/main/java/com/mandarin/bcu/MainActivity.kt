@@ -7,31 +7,32 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.io.asynchs.UploadLogs
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.io.coroutine.UploadLogs
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import common.CommonStatic
 import java.io.File
 import java.util.*
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     private var sendcheck = false
     private var notshowcheck = false
@@ -70,20 +71,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         deleter(File(Environment.getDataDirectory().absolutePath+"/data/com.mandarin.bcu/temp/"))
+        deleter(File(StaticStore.getExternalTemp(this)))
 
         Thread.setDefaultUncaughtExceptionHandler(ErrorLogWriter(StaticStore.getExternalLog(this), shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)))
 
@@ -101,7 +98,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             0f
         }
+        SoundHandler.uiPlay = shared.getBoolean("UI", true)
+        SoundHandler.ui_vol = if(SoundHandler.uiPlay)
+            StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+        else
+            0f
         StaticStore.upload = shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)
+        CommonStatic.getConfig().twoRow = shared.getBoolean("rowlayout", true)
+        CommonStatic.getConfig().levelLimit = shared.getInt("levelLimit", 0)
+        CommonStatic.getConfig().plus = shared.getBoolean("unlockPlus", true)
 
         val result = intent
         var conf = false
@@ -202,125 +207,177 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 yes.setOnClickListener {
-                    UploadLogs(this@MainActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                    UploadLogs(this@MainActivity).execute()
                     StaticStore.showShortMessage(this@MainActivity, R.string.main_err_start)
                     dialog.dismiss()
                 }
 
                 dialog.setOnDismissListener {
-                    when {
-                        shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                        shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                        shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                    }
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
                     StaticStore.dialogisShowed = true
                 }
             } else if (shared.getBoolean("upload", false)) {
                 StaticStore.showShortMessage(this, R.string.main_err_upload)
 
-                UploadLogs(this@MainActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                UploadLogs(this@MainActivity).execute()
             }
         }
 
         isRunning = true
 
-        val animbtn = findViewById<Button>(R.id.anvibtn)
-        val stagebtn = findViewById<Button>(R.id.stgbtn)
-        val emlistbtn = findViewById<Button>(R.id.eninfbtn)
-        val basisbtn = findViewById<Button>(R.id.basisbtn)
-        val medalbtn = findViewById<Button>(R.id.medalbtn)
-        val bgbtn = findViewById<Button>(R.id.bgbtn)
+        val grid = findViewById<GridLayout>(R.id.maingrid)
+
+        val drawables = intArrayOf(R.drawable.ic_kasa_jizo, R.drawable.ic_enemy, R.drawable.ic_castle,
+                R.drawable.ic_medal, R.drawable.ic_basis, R.drawable.ic_bg, R.drawable.ic_castles,
+                R.drawable.ic_music, R.drawable.ic_effect, R.drawable.ic_pack, R.drawable.ic_baseline_folder_24)
+
+        val classes = arrayOf(AnimationViewer::class.java, EnemyList::class.java, MapList::class.java,
+                MedalList::class.java, LineUpScreen::class.java, BackgroundList::class.java, CastleList::class.java,
+                MusicList::class.java, EffectList::class.java, PackManagement::class.java, AssetBrowser::class.java)
+
+        val texts = intArrayOf(R.string.main_unitinfo,R.string.main_enemy_info, R.string.stg_inf,
+                R.string.main_medal, R.string.main_equip, R.string.main_bg, R.string.main_castle,
+                R.string.main_music, R.string.main_effect, R.string.main_packs, R.string.main_asset)
+
+        val row = 7
+        val col = 2 // unit/enem | stage,medal | basis | bg,castles | music,effect | pack | asset
+
+        val gap = StaticStore.dptopx(4f, this)
+
+        val w = StaticStore.getScreenWidth(this, false) - StaticStore.dptopx(32f, this) - gap * 4
+
+        grid.rowCount = row
+        grid.columnCount = col
+
+        for(i in 0 until row) {
+            if(i == 2 || i == 5 || i == 6) {
+                var index = i * 2
+
+                if(i > 2)
+                    index--
+
+                if(i > 5)
+                    index--
+
+                val card = CardView(this)
+
+                val r = GridLayout.spec(i, 1)
+                val c = GridLayout.spec(0 ,2)
+
+                val gParam = GridLayout.LayoutParams(r, c)
+
+                gParam.setMargins(gap, gap, gap, gap)
+
+                card.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+                val v = LayoutInflater.from(this).inflate(R.layout.main_card_layout, card, false)
+
+                val layout = v.findViewById<ConstraintLayout>(R.id.cardlayout)
+
+                val lParam = layout.layoutParams
+
+                lParam.width = w + gap * 2
+                lParam.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
+
+                layout.layoutParams = lParam
+
+                val text = v.findViewById<TextView>(R.id.cardname)
+                val img = v.findViewById<ImageView>(R.id.cardimg)
+
+                text.setText(texts[index])
+                img.setImageDrawable(ContextCompat.getDrawable(this, drawables[index]))
+
+                card.addView(v)
+
+                card.isClickable = true
+
+                card.radius = StaticStore.dptopx(8f, this).toFloat()
+
+                card.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        val intent = Intent(this@MainActivity, classes[index])
+
+                        startActivity(intent)
+
+                        if(classes[index] == PackManagement::class.java) {
+                            finish()
+                        }
+                    }
+                })
+
+                grid.addView(card, gParam)
+            } else {
+                for(j in 0 until col) {
+                    var index = i * 2 + j
+
+                    if(i > 2)
+                        index --
+
+                    if(i > 5)
+                        index--
+
+                    val card = CardView(this)
+
+                    val r = GridLayout.spec(i, 1)
+                    val c = GridLayout.spec(j ,1)
+
+                    val gParam = GridLayout.LayoutParams(r, c)
+
+                    gParam.setMargins(gap, gap, gap, gap)
+
+                    card.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+                    val v = LayoutInflater.from(this).inflate(R.layout.main_card_layout, card, false)
+
+                    val layout = v.findViewById<ConstraintLayout>(R.id.cardlayout)
+
+                    val lParam = layout.layoutParams
+
+                    lParam.width = w / 2
+                    lParam.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
+
+                    layout.layoutParams = lParam
+
+                    val text = v.findViewById<TextView>(R.id.cardname)
+                    val img = v.findViewById<ImageView>(R.id.cardimg)
+
+                    text.setText(texts[index])
+                    img.setImageDrawable(ContextCompat.getDrawable(this, drawables[index]))
+
+                    card.addView(v)
+
+                    card.isClickable = true
+
+                    card.radius = StaticStore.dptopx(8f, this).toFloat()
+
+                    card.setOnClickListener(object : SingleClick() {
+                        override fun onSingleClick(v: View?) {
+                            val intent = Intent(this@MainActivity, classes[index])
+
+                            startActivity(intent)
+
+                            if(classes[index] == PackManagement::class.java) {
+                                finish()
+                            }
+                        }
+                    })
+
+                    grid.addView(card, gParam)
+                }
+            }
+        }
+
         val config = findViewById<FloatingActionButton>(R.id.mainconfig)
-        val musbtn = findViewById<Button>(R.id.mubtn)
-
-        animbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_kasa_jizo), null, null, null)
-        stagebtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_castle), null, null, null)
-        emlistbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_enemy), null, null, null)
-        emlistbtn.compoundDrawablePadding = StaticStore.dptopx(16f, this)
-        basisbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_basis), null, null, null)
-        medalbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_medal), null, null, null)
-        bgbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_bg), null, null, null)
-        bgbtn.compoundDrawablePadding = StaticStore.dptopx(16f, this)
-        musbtn.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this, R.drawable.ic_music), null, null, null)
-
-        animbtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                animationview()
-            }
-        })
-
-        stagebtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                stageinfoview()
-            }
-        })
 
         config.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                gotoconfig()
-            }
-        })
+                val intent = Intent(this@MainActivity, ConfigScreen::class.java)
 
-        emlistbtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                gotoenemyinf()
-            }
-        })
-
-        basisbtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                val intent = Intent(this@MainActivity, LineUpScreen::class.java)
                 startActivity(intent)
+                finish()
             }
         })
-
-        medalbtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                val intent = Intent(this@MainActivity, MedalList::class.java)
-                startActivity(intent)
-            }
-        })
-
-        bgbtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                val intent = Intent(this@MainActivity, BackgroundList::class.java)
-                startActivity(intent)
-            }
-        })
-
-        musbtn.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                val intent = Intent(this@MainActivity, MusicList::class.java)
-                startActivity(intent)
-            }
-
-        })
-    }
-
-    private fun animationview() {
-        val intent = Intent(this, AnimationViewer::class.java)
-
-        startActivity(intent)
-    }
-
-    private fun stageinfoview() {
-        val intent = Intent(this, MapList::class.java)
-
-        startActivity(intent)
-    }
-
-    private fun gotoconfig() {
-        val intent = Intent(this, ConfigScreen::class.java)
-
-        startActivity(intent)
-        finish()
-    }
-
-    private fun gotoenemyinf() {
-        val intent = Intent(this, EnemyList::class.java)
-
-        startActivity(intent)
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -364,6 +421,15 @@ class MainActivity : AppCompatActivity() {
         StaticStore.toast = null
 
         super.onDestroy()
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 
     private fun deleter(f: File) {

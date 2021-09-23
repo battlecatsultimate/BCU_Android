@@ -1,20 +1,28 @@
 package com.mandarin.bcu.androidutil.stage.adapters
 
 import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import com.mandarin.bcu.R
-import common.util.pack.Pack
-import common.util.stage.MapColc
+import com.mandarin.bcu.androidutil.StaticStore
+import common.pack.Identifier
+import common.util.Data
+import common.util.lang.MultiLangCont
+import common.util.stage.StageMap
 
-class MapListAdapter(private val activity: Activity, private val maps: ArrayList<String>, private val mapcode: Int, private val positions: ArrayList<Int>, private val custom: Boolean) : ArrayAdapter<String?>(activity, R.layout.map_list_layout, maps.toTypedArray()) {
+class MapListAdapter(private val activity: Activity, private val maps: ArrayList<Identifier<StageMap>>) : ArrayAdapter<Identifier<StageMap>>(activity, R.layout.map_list_layout, maps.toTypedArray()) {
 
     private class ViewHolder constructor(row: View) {
         var name: TextView = row.findViewById(R.id.map_list_name)
         var count: TextView = row.findViewById(R.id.map_list_coutns)
+        var star: ImageView = row.findViewById(R.id.map_list_star)
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -31,39 +39,63 @@ class MapListAdapter(private val activity: Activity, private val maps: ArrayList
             holder = row.tag as ViewHolder
         }
 
-        val mc = if(custom) {
-            val p = Pack.map[mapcode] ?: return row
+        val stm = Identifier.get(maps[position]) ?: return row
 
-            p.mc
-        } else {
-            MapColc.MAPS[mapcode]
-        }
+        holder.name.text = withID(maps[position])
 
-        holder.name.text = withID(positions[position], maps[position])
-
-        val numbers: String
-        numbers =
-                if (mc != null)
-                    if (mc.maps[positions[position]].list.size == 1)
-                        mc.maps[positions[position]].list.size.toString() + activity.getString(R.string.map_list_stage)
-                    else
-                        mc.maps[positions[position]].list.size.toString() + activity.getString(R.string.map_list_stages)
+        val numbers: String = if (stm.list.size() == 1)
+                    stm.list.size().toString() + activity.getString(R.string.map_list_stage)
                 else
-                    0.toString() + activity.getString(R.string.map_list_stages)
+                    stm.list.size().toString() + activity.getString(R.string.map_list_stages)
+
         holder.count.text = numbers
+
+        if(!StaticStore.BCMapCode.contains(stm.id.pack))
+            holder.star.visibility = View.GONE
+        else
+            generateStar(holder.star, stm)
+
         return row
     }
 
-    private fun number(num: Int): String {
-        return if (num in 0..9) "00$num" else if (num in 10..99) "0$num" else "" + num
-    }
+    private fun withID(name: Identifier<StageMap>): String {
+        val stm = Identifier.get(name) ?: return Data.trio(name.id)
 
-    private fun withID(id: Int, name: String): String {
-        return if (name == "") {
-            number(id)
+        val n = MultiLangCont.get(stm) ?: stm.name ?: ""
+
+        return if (n == "") {
+            Data.trio(name.id)
         } else {
-            number(id) + " - " + name
+            Data.trio(name.id) + " - " + n
         }
     }
 
+    private fun generateStar(star: ImageView, stm: StageMap) {
+        if(StaticStore.starDifficulty == null) {
+            star.visibility = View.GONE
+            return
+        }
+
+        val h = StaticStore.dptopx(16f, activity)
+
+        val w = (StaticStore.getScreenWidth(activity, false) - StaticStore.dptopx(16f, activity) * 2).coerceAtMost(h * 12)
+
+        val wh = (w / 12.0).toFloat()
+        val sta = stm.starMask
+
+        val starMap = Bitmap.createBitmap(w, wh.toInt(), Bitmap.Config.ARGB_8888)
+
+        val cv = Canvas(starMap)
+        val p = Paint()
+
+        for(i in 0 until 12) {
+            if(sta shr i and 1 != 0) {
+                cv.drawBitmap(StaticStore.getResizebp(StaticStore.starDifficulty!![1], wh, wh), wh * i, 0f, p)
+            } else {
+                cv.drawBitmap(StaticStore.getResizebp(StaticStore.starDifficulty!![0], wh, wh), wh * i, 0f, p)
+            }
+        }
+
+        star.setImageBitmap(starMap)
+    }
 }

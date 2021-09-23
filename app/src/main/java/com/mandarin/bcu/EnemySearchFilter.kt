@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -21,41 +20,44 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SearchAbilityAdapter
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.SearchAbilityAdapter
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.adapter.SearchTraitAdapter
+import common.CommonStatic
+import common.pack.Identifier
+import common.pack.UserProfile
 import common.util.Data
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import common.util.unit.Trait
 import java.util.*
+import kotlin.collections.ArrayList
 
 open class EnemySearchFilter : AppCompatActivity() {
     private val attacks = arrayOfNulls<CheckBox>(3)
-    private val trid = intArrayOf(R.id.eschchrd, R.id.eschchfl, R.id.eschchbla, R.id.eschchme, R.id.eschchan, R.id.eschchal, R.id.eschchzo, R.id.eschchre, R.id.eschchwh, R.id.eschwit, R.id.escheva, R.id.eschnone)
-    private val traits = arrayOfNulls<CheckBox>(trid.size)
-    private val colors = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "0", "10", "9", "")
     private val atkid = intArrayOf(R.id.eschchld, R.id.eschchom, R.id.eschchmu)
     private val atks = arrayOf("2", "4", "3")
-    private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr,
-            R.string.sch_abi_wv, R.string.sch_abi_surge, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.sch_abi_imsu, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_sb, R.string.sch_abi_poi, R.string.abi_sui,
+    private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_bb, R.string.sch_abi_shb,
+            R.string.sch_abi_mw, R.string.sch_abi_wv, R.string.sch_abi_surge, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.sch_abi_imsu, R.string.sch_abi_impoi, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_sb, R.string.sch_abi_poi, R.string.sch_abi_ds, R.string.sch_abi_sd, R.string.abi_sui,
             R.string.abi_gh, R.string.abi_snk, R.string.abi_seal, R.string.abi_stt, R.string.abi_sum, R.string.abi_mvatk, R.string.abi_thch, R.string.abi_poi, R.string.abi_boswv, R.string.abi_armbr, R.string.abi_hast,
             R.string.abi_imvatk, R.string.abi_isnk, R.string.abi_istt, R.string.abi_ipoi, R.string.abi_ithch, R.string.abi_iseal, R.string.abi_iboswv, R.string.abi_imcri)
-    private val trtool = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_wh)
+    private val trToolID = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_de, R.string.sch_re, R.string.sch_wh, R.string.esch_eva, R.string.esch_witch, R.string.unit_info_t_none)
     private val abils = arrayOf(intArrayOf(1, Data.P_WEAK), intArrayOf(1, Data.P_STOP), intArrayOf(1, Data.P_SLOW), intArrayOf(1, Data.P_KB),
             intArrayOf(1, Data.P_WARP), intArrayOf(1, Data.P_CURSE), intArrayOf(1, Data.P_IMUATK), intArrayOf(1, Data.P_STRONG),
-            intArrayOf(1, Data.P_LETHAL), intArrayOf(0, Data.AB_BASE), intArrayOf(1, Data.P_CRIT), intArrayOf(1, Data.P_WAVE),
+            intArrayOf(1, Data.P_LETHAL), intArrayOf(0, Data.AB_BASE), intArrayOf(1, Data.P_CRIT), intArrayOf(1, Data.P_BREAK), intArrayOf(1, Data.P_SHIELDBREAK), intArrayOf(1, Data.P_MINIWAVE), intArrayOf(1, Data.P_WAVE),
             intArrayOf(1, Data.P_VOLC), intArrayOf(1, Data.P_IMUWEAK), intArrayOf(1, Data.P_IMUSTOP), intArrayOf(1, Data.P_IMUSLOW),
-            intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_IMUVOLC), intArrayOf(1, Data.P_BURROW),
-            intArrayOf(1, Data.P_REVIVE), intArrayOf(1, Data.P_SATK), intArrayOf(1, Data.P_POIATK), intArrayOf(0, Data.AB_GLASS), intArrayOf(0, Data.AB_GHOST),
-            intArrayOf(0, Data.P_SNIPER), intArrayOf(1, Data.P_SEAL), intArrayOf(1, Data.P_TIME), intArrayOf(1, Data.P_SUMMON),
+            intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_IMUVOLC), intArrayOf(1, Data.P_IMUPOIATK),intArrayOf(1, Data.P_BURROW),
+            intArrayOf(1, Data.P_REVIVE), intArrayOf(1, Data.P_SATK), intArrayOf(1, Data.P_POIATK), intArrayOf(1, Data.P_DEMONSHIELD), intArrayOf(1, Data.P_DEATHSURGE),
+            intArrayOf(0, Data.AB_GLASS), intArrayOf(0, Data.AB_GHOST), intArrayOf(0, Data.P_SNIPER), intArrayOf(1, Data.P_SEAL), intArrayOf(1, Data.P_TIME), intArrayOf(1, Data.P_SUMMON),
             intArrayOf(1, Data.P_MOVEWAVE), intArrayOf(1, Data.P_THEME), intArrayOf(1, Data.P_POISON), intArrayOf(1, Data.P_BOSS), intArrayOf(1, Data.P_ARMOR), intArrayOf(1, Data.P_SPEED),
-            intArrayOf(0, Data.AB_MOVEI), intArrayOf(0, Data.AB_SNIPERI), intArrayOf(0, Data.AB_TIMEI), intArrayOf(0, Data.AB_POII),
-            intArrayOf(0, Data.AB_THEMEI), intArrayOf(0, Data.AB_SEALI), intArrayOf(0, Data.AB_IMUSW), intArrayOf(1, Data.P_CRITI))
+            intArrayOf(1, Data.P_IMUMOVING), intArrayOf(0, Data.AB_SNIPERI), intArrayOf(0, Data.AB_TIMEI), intArrayOf(1, Data.P_IMUPOI),
+            intArrayOf(0, Data.AB_THEMEI), intArrayOf(1, Data.P_IMUSEAL), intArrayOf(0, Data.AB_IMUSW), intArrayOf(1, Data.P_CRITI))
     private val atkdraw = intArrayOf(212, 112)
-    private val trdraw = intArrayOf(219, 220, 221, 222, 223, 224, 225, 226, 227, -1, -1, -1)
-    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 208, 239, 213, 214, 215, 216, 210, 243, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
-    private var adapter: SearchAbilityAdapter? = null
+    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 264, 296, 293, 208, 239, 213, 214, 215, 216, 210, 243, 237, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "DemonShield", "DeathSurge", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX")
+    private lateinit var abAdapter: SearchAbilityAdapter
+    private lateinit var trAdapter: SearchTraitAdapter
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,24 +79,18 @@ open class EnemySearchFilter : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_enemy_search_filter)
 
         if (StaticStore.img15 == null) {
-            StaticStore.readImg(this)
+            StaticStore.readImg()
         }
 
         val tgor = findViewById<RadioButton>(R.id.eschrdtgor)
@@ -117,17 +113,6 @@ open class EnemySearchFilter : AppCompatActivity() {
         val atkor = findViewById<RadioButton>(R.id.eschrdatkor)
         val abor = findViewById<RadioButton>(R.id.eschrdabor)
 
-        for (i in trid.indices) {
-            traits[i] = findViewById(trid[i])
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && trdraw[i] != -1)
-                traits[i]?.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(trdraw[i], 40f), null)
-            else if (trdraw[i] != -1)
-                traits[i]?.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(trdraw[i], 32f), null)
-
-            if (trdraw[i] != -1)
-                traits[i]?.compoundDrawablePadding = StaticStore.dptopx(16f, this)
-        }
-
         for (i in atkid.indices) {
             attacks[i] = findViewById(atkid[i])
 
@@ -142,13 +127,21 @@ open class EnemySearchFilter : AppCompatActivity() {
         }
 
         val abrec = findViewById<RecyclerView>(R.id.eschchabrec)
+        val trrec = findViewById<RecyclerView>(R.id.eschchtgrec)
 
-        adapter = SearchAbilityAdapter(this, abtool, abils, abdraw, abfiles)
+        abAdapter = SearchAbilityAdapter(this, abtool, abils, abdraw, abfiles)
+        abAdapter.setHasStableIds(true)
+
+        trAdapter = SearchTraitAdapter(this, generateTraitToolTip(), generateTraitArray())
+        trAdapter.setHasStableIds(true)
 
         abrec.layoutManager = LinearLayoutManager(this)
-        abrec.adapter = adapter
+        abrec.adapter = abAdapter
         abrec.isNestedScrollingEnabled = false
 
+        trrec.layoutManager = LinearLayoutManager(this)
+        trrec.adapter = trAdapter
+        trrec.isNestedScrollingEnabled = false
 
         tgor.isChecked = true
         atkor.isChecked = true
@@ -160,7 +153,8 @@ open class EnemySearchFilter : AppCompatActivity() {
     }
 
     private fun getResizeDraw(id: Int, dp: Float): BitmapDrawable {
-        val bd = BitmapDrawable(resources, StaticStore.getResizeb(StaticStore.img15[id].bimg() as Bitmap, this, dp))
+        val icon = StaticStore.img15?.get(id)?.bimg() ?: StaticStore.empty(this, dp, dp)
+        val bd = BitmapDrawable(resources, StaticStore.getResizeb(icon as Bitmap, this, dp))
 
         bd.isFilterBitmap = true
         bd.setAntiAlias(true)
@@ -168,7 +162,7 @@ open class EnemySearchFilter : AppCompatActivity() {
         return bd
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
     protected fun listeners() {
         val back = findViewById<FloatingActionButton>(R.id.eschbck)
         val reset = findViewById<FloatingActionButton>(R.id.schreset)
@@ -202,12 +196,11 @@ open class EnemySearchFilter : AppCompatActivity() {
                 if (attack1!!.isChecked)
                     attack1.isChecked = false
             }
-            for (trait in traits) {
-                if (trait!!.isChecked)
-                    trait.isChecked = false
-            }
 
-            adapter?.notifyDataSetChanged()
+            trAdapter.updateList()
+            trAdapter.notifyDataSetChanged()
+            abAdapter.updateList()
+            abAdapter.notifyDataSetChanged()
         }
 
         val tggroup = findViewById<RadioGroup>(R.id.eschrgtg)
@@ -220,21 +213,6 @@ open class EnemySearchFilter : AppCompatActivity() {
         atkgroup.setOnCheckedChangeListener { _, checkedId -> StaticStore.atksimu = checkedId == atkmu.id }
         atkgroupor.setOnCheckedChangeListener { _, checkedId -> StaticStore.atkorand = checkedId == atkor.id }
         abgroup.setOnCheckedChangeListener { _, checkedId -> StaticStore.aborand = checkedId == abor.id }
-
-        for (i in traits.indices) {
-            traits[i]?.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked)
-                    StaticStore.tg.add(colors[i])
-                else
-                    StaticStore.tg.remove(colors[i])
-            }
-
-            if (i < 9) traits[i]?.setOnLongClickListener { v ->
-                StaticStore.showShortMessage(v.context, trtool[i])
-
-                true
-            }
-        }
 
         for (i in attacks.indices) {
             attacks[i]?.setOnCheckedChangeListener { _, isChecked ->
@@ -298,13 +276,8 @@ open class EnemySearchFilter : AppCompatActivity() {
             abgroup.check(R.id.eschrdaband)
 
         for (i in atks.indices) {
-            if (StaticStore.attack != null && StaticStore.attack.contains(atks[i]))
+            if (StaticStore.attack.contains(atks[i]))
                 attacks[i]?.isChecked = true
-        }
-
-        for (i in colors.indices) {
-            if (StaticStore.tg != null && StaticStore.tg.contains(colors[i]))
-                traits[i]?.isChecked = true
         }
     }
 
@@ -341,5 +314,50 @@ open class EnemySearchFilter : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
+    }
+
+    private fun generateTraitArray() : Array<Identifier<Trait>> {
+        val traits = ArrayList<Identifier<Trait>>()
+
+        for(i in 0 until 13) {
+            traits.add(UserProfile.getBCData().traits.list[i].id)
+        }
+
+        for(userPack in UserProfile.getUserPacks()) {
+            for(tr in userPack.traits.list) {
+                tr ?: continue
+
+                traits.add(tr.id)
+            }
+        }
+
+        return traits.toTypedArray()
+    }
+
+    private fun generateTraitToolTip() : Array<String> {
+        val tool = ArrayList<String>()
+
+        for(i in trToolID.indices) {
+            tool.add(getText(trToolID[i]).toString())
+        }
+
+        for(userPack in UserProfile.getUserPacks()) {
+            for(tr in userPack.traits.list) {
+                tr ?: continue
+
+                tool.add(tr.name)
+            }
+        }
+
+        return tool.toTypedArray()
     }
 }

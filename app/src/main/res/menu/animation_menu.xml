@@ -25,6 +25,17 @@
         android:id="@+id/anim_option_gif"
         android:icon="@drawable/ic_more_horiz_black_24dp"
         android:title="@string/anim_option_gifstart"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/anim_gif_normal"
+                android:title="@string/png_normal"/>
+            <item android:id="@+id/anim_gif_range"
+                android:title="@string/gif_range"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/anim_option_gif_finish"
+        android:title="@string/anim_option_gifstop"/>
 
 </menu>

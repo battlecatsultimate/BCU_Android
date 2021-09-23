@@ -2,27 +2,22 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.stage.asynchs.StageLoader
-import common.system.MultiLangCont
-import common.util.pack.Pack
-import common.util.stage.MapColc
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.stage.coroutine.StageLoader
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.util.stage.StageMap
 import java.util.*
 
 class StageList : AppCompatActivity() {
-    private var mapcode = 0
-    private var stid = 0
     private var custom = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,19 +39,13 @@ class StageList : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_stage_list)
 
@@ -64,34 +53,14 @@ class StageList : AppCompatActivity() {
         val extra = result.extras
 
         if (extra != null) {
-            mapcode = extra.getInt("mapcode")
-            stid = extra.getInt("stid")
+            val data = StaticStore.transformIdentifier<StageMap>(extra.getString("Data")) ?: return
+
             custom = extra.getBoolean("custom")
+
+            val stageLoader = StageLoader(this, data, custom)
+
+            stageLoader.execute()
         }
-
-        val name = findViewById<TextView>(R.id.stglistname)
-
-        val index = StaticStore.mapcode.indexOf(mapcode)
-
-        val mc = if(index < StaticStore.BCmaps) {
-            MapColc.MAPS[mapcode]
-        } else {
-            val p = Pack.map[mapcode] ?: return
-
-            p.mc
-        }
-
-        if (mc != null) {
-            val stm = mc.maps[stid]
-            var stname = MultiLangCont.SMNAME.getCont(stm) ?: stm.name
-            if (stname == null)
-                stname = number(stid)
-            name.text = stname
-        }
-
-        val stageLoader = StageLoader(this, mapcode, stid, custom)
-
-        stageLoader.execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -130,17 +99,12 @@ class StageList : AppCompatActivity() {
         StaticStore.toast = null
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

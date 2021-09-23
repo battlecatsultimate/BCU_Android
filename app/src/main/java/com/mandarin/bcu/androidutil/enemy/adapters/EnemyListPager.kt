@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -14,25 +15,25 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
-import common.system.MultiLangCont
-import common.util.Data
-import common.util.pack.Pack
+import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
+import com.mandarin.bcu.androidutil.filter.FilterEntity
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.pack.UserProfile
 
 class EnemyListPager : Fragment() {
 
-    private var pid = 0
+    private var pid = Identifier.DEF
     private var position = 0
     private var mode = EAdder.MODE_INFO
 
     companion object {
-        fun newInstance(pid: Int, position: Int, mode: Int) : EnemyListPager {
+        fun newInstance(pid: String, position: Int, mode: Int) : EnemyListPager {
             val elp = EnemyListPager()
             val bundle = Bundle()
 
-            bundle.putInt("pid", pid)
+            bundle.putString("pid", pid)
             bundle.putInt("position", position)
             bundle.putInt("mode", mode)
 
@@ -47,7 +48,7 @@ class EnemyListPager : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
-        pid = arguments?.getInt("pid") ?: 0
+        pid = arguments?.getString("pid") ?: Identifier.DEF
         position = arguments?.getInt("position") ?: 0
         mode = arguments?.getInt("mode") ?: EAdder.MODE_INFO
 
@@ -56,7 +57,7 @@ class EnemyListPager : Fragment() {
 
         validate(nores, list)
 
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
 
         val runnable = object : Runnable {
             override fun run() {
@@ -65,7 +66,6 @@ class EnemyListPager : Fragment() {
 
                 if(StaticStore.filterEntityList[position]) {
                     validate(nores,list)
-                    println(position)
                     StaticStore.filterEntityList[position] = false
                 }
 
@@ -81,40 +81,17 @@ class EnemyListPager : Fragment() {
     }
 
     private fun validate(nores: TextView, list: ListView) {
-        val p = Pack.map[pid] ?: return
+        UserProfile.getPack(pid) ?: return
 
-        val filterEntity = FilterEntity(p.es.size(), StaticStore.entityname, pid)
-
-        val numbers = filterEntity.eSetFilter()
+        val numbers = FilterEntity.setEnemyFilter(pid)
 
         if(numbers.isNotEmpty()) {
             nores.visibility = View.GONE
             list.visibility = View.VISIBLE
 
-            val names = ArrayList<String>()
-
-            for(i in numbers) {
-                if(p.es.list[i] == null)
-                    continue
-
-                val name = if(pid == 0) {
-                    MultiLangCont.ENAME.getCont(p.es.list[i]) ?: ""
-                } else {
-                    p.es.list[i]?.name ?: ""
-                }
-
-                val id = if(pid != 0) {
-                    StaticStore.getID(p.es.list[i].id)
-                } else {
-                    i
-                }
-
-                names.add(getName(id, name))
-            }
-
             val cont = context ?: return
 
-            val adapter = EnemyListAdapter(cont, names, numbers, pid)
+            val adapter = EnemyListAdapter(cont, numbers)
 
             list.adapter = adapter
 
@@ -126,16 +103,14 @@ class EnemyListPager : Fragment() {
                         if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
                         StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
                         val result = Intent(ac, EnemyInfo::class.java)
-                        result.putExtra("ID", StaticStore.getID(p.es.list[numbers[position]].id))
-                        result.putExtra("PID", pid)
+                        result.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
                         ac.startActivity(result)
                     }
                 }
                 EAdder.MODE_SELECTION -> {
                     list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                         val intent = Intent()
-                        intent.putExtra("id", numbers[position])
-                        intent.putExtra("pid",pid)
+                        intent.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
                         ac.setResult(Activity.RESULT_OK, intent)
                         ac.finish()
                     }
@@ -145,8 +120,7 @@ class EnemyListPager : Fragment() {
                         if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
                         StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
                         val result = Intent(ac, EnemyInfo::class.java)
-                        result.putExtra("ID", StaticStore.getID(p.es.list[numbers[position]].id))
-                        result.putExtra("PID",pid)
+                        result.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
                         ac.startActivity(result)
                     }
                 }
@@ -160,27 +134,5 @@ class EnemyListPager : Fragment() {
     override fun onDestroy() {
         destroyed = true
         super.onDestroy()
-    }
-
-    private fun getName(i: Int, name: String) : String {
-        return if(name == "") {
-            Data.hex(pid)+" - "+number(i) + "/"
-        } else {
-            Data.hex(pid)+" - "+number(i) + "/" + name
-        }
-    }
-
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
     }
 }

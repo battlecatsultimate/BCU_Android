@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil.unit.adapters
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +10,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.util.pack.Pack
-import org.w3c.dom.Text
-import java.util.*
-import kotlin.collections.ArrayList
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
+import common.pack.Identifier
+import common.util.lang.MultiLangCont
+import common.util.unit.Unit
 
-class UnitListAdapter(context: Context, private val name: ArrayList<String>, private val locate: ArrayList<Int>, private val pid: Int) : ArrayAdapter<String?>(context, R.layout.listlayout, name.toTypedArray()) {
+class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<Unit>>) : ArrayAdapter<Identifier<Unit>>(context, R.layout.listlayout, name.toTypedArray()) {
 
     private class ViewHolder constructor(row: View) {
-        var id: TextView = row.findViewById(R.id.unitID)
+        var id: AutoMarquee = row.findViewById(R.id.unitID)
         var title: TextView = row.findViewById(R.id.unitname)
         var image: ImageView = row.findViewById(R.id.uniticon)
     }
@@ -38,24 +37,14 @@ class UnitListAdapter(context: Context, private val name: ArrayList<String>, pri
             holder = row.tag as ViewHolder
         }
 
-        val p = Pack.map[pid] ?: return row
+        val u = Identifier.get(name[position]) ?: return row
 
-        if(position < 0 || position >= name.size || position >= locate.size)
-            return row
+        holder.id.text = StaticStore.generateIdName(name[position], context)
+        holder.id.isSelected = true
+        holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].name ?: ""
+        holder.title.isSelected = true
 
-        val info = name[position].split("/")
-
-        if(info.size != 2) {
-            Log.w("ListAdapter","Invalid Format : "+ name[position])
-
-            holder.id.visibility = View.GONE
-            holder.title.text = name[position]
-        } else {
-            holder.id.text = info[0]
-            holder.title.text = info[1]
-        }
-
-        holder.image.setImageBitmap(StaticStore.MakeIcon(context, p.us.ulist.list[locate[position]].forms[0].anim.uni.img.bimg() as Bitmap, 48f))
+        holder.image.setImageBitmap(StaticStore.makeIcon(context, u.forms[0].anim.uni.img.bimg() as Bitmap, 48f))
 
         return row
     }

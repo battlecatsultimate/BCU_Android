@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <com.mandarin.bcu.androidutil.supports.AutoMarquee
         android:id="@+id/comboname"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginEnd="16dp"
         android:textColor="?attr/TextPrimary"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@+id/comboocc"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         android:textColor="?attr/TextPrimary"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/comboname"
@@ -32,7 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         android:textColor="?attr/TextPrimary"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/comboname"

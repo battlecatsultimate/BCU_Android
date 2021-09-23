@@ -1,45 +1,27 @@
 package com.mandarin.bcu.androidutil
 
 import android.content.Context
-import com.mandarin.bcu.androidutil.StaticStore.unitnumber
-import com.mandarin.bcu.androidutil.unit.Definer
-import common.system.MultiLangCont
-import common.util.Data
-import common.util.pack.Pack
-import common.util.stage.MapColc
+import common.pack.PackData
+import common.pack.UserProfile
 
 object Revalidater {
     fun validate(lang: String, context: Context) {
-        Definer().redefine(context, lang)
+        Definer.redefine(context, lang)
 
-        if (StaticStore.lunames.isNotEmpty() || StaticStore.ludata.isNotEmpty()) {
-            StaticStore.lunames.clear()
+        if (StaticStore.ludata.isNotEmpty()) {
             StaticStore.ludata.clear()
 
-            for(m in Pack.map) {
-                val p = m.value ?: continue
+            val plist = UserProfile.getAllPacks()
 
-                val pid = p.id
+            for(m in plist) {
+                if(m !is PackData.DefPack && m !is PackData.UserPack) {
+                    continue
+                }
 
-                for(i in p.us.ulist.list.indices) {
-                    val unit = p.us.ulist.list[i]
+                for(i in m.units.list.indices) {
+                    val unit = m.units.list[i]
 
-                    val name = MultiLangCont.FNAME.getCont(unit.forms[0]) ?: unit.forms[0].name ?: ""
-
-                    val id = if(p.id != 0) {
-                        StaticStore.getID(p.us.ulist.list[i].id)
-                    } else {
-                        i
-                    }
-
-                    val fullName = if(name != "") {
-                        Data.hex(pid)+" - "+number(id)+"/"+name
-                    } else {
-                        Data.hex(pid)+" - "+number(id)+"/"
-                    }
-
-                    StaticStore.lunames.add(fullName)
-                    StaticStore.ludata.add("$pid-$i")
+                    StaticStore.ludata.add(unit.id)
                 }
             }
         }
@@ -51,38 +33,19 @@ object Revalidater {
                 StaticStore.mapcolcname.add(context.getString(i))
             }
 
-            for(i in Pack.map) {
-                val v= i.value
-
-                if(v.id == 0)
+            for(i in UserProfile.getAllPacks()) {
+                if(i is PackData.DefPack)
                     continue
-                else {
-                    val k = Data.hex(i.key)
+                else if(i is PackData.UserPack) {
+                    var k = i.desc.name
 
-                    val name = v.name ?: ""
+                    if(k == null || k.isEmpty()) {
+                        k = i.desc.id
+                    }
 
-                    if(name == "")
-                        StaticStore.mapcolcname.add(k)
-                    else
-                        StaticStore.mapcolcname.add(k + " - " + v.name)
+                    StaticStore.mapcolcname.add(k)
                 }
             }
         }
     }
-
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                num.toString()
-            }
-        }
-    }
-
-
 }

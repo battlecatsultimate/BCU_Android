@@ -3,7 +3,6 @@ package com.mandarin.bcu
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -16,13 +15,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.asynchs.EInfoLoader
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.enemy.coroutine.EInfoLoader
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import common.system.MultiLangCont
-import common.util.pack.Pack
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
+import common.util.unit.Enemy
 import java.util.*
 
 class EnemyInfo : AppCompatActivity() {
@@ -46,19 +49,13 @@ class EnemyInfo : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_enemy_info)
 
@@ -79,31 +76,31 @@ class EnemyInfo : AppCompatActivity() {
 
         if (extra != null) {
 
-            val id = extra.getInt("ID")
-            val pid = extra.getInt("PID")
+            val data = StaticStore.transformIdentifier<AbEnemy>(extra.getString("Data")) ?: return
             val multi = extra.getInt("Multiply")
             val amulti = extra.getInt("AMultiply")
 
-            val p = Pack.map[pid] ?: return
+            val e = Identifier.get(data)
 
-            title.text = MultiLangCont.ENAME.getCont(p.es[id]) ?: p.es[id]?.name
+            if(e is Enemy) {
+                title.text = MultiLangCont.get(e) ?: e.name
+            }
 
             val eanim = findViewById<Button>(R.id.eanimanim)
 
             eanim.setOnClickListener(object : SingleClick() {
                 override fun onSingleClick(v: View?) {
                     val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
-                    intent.putExtra("Img", 3)
-                    intent.putExtra("PID", pid)
-                    intent.putExtra("ID", id)
+                    intent.putExtra("Img", ImageViewer.ANIME)
+                    intent.putExtra("Data", JsonEncoder.encode(data).toString())
                     startActivity(intent)
                 }
             })
 
             if (multi != 0)
-                EInfoLoader(this, id, multi, amulti, pid).execute()
+                EInfoLoader(this, multi, amulti, data).execute()
             else
-                EInfoLoader(this, id, pid).execute()
+                EInfoLoader(this, data).execute()
         }
     }
 
@@ -138,5 +135,14 @@ class EnemyInfo : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

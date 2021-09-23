@@ -1,10 +1,10 @@
 package com.mandarin.bcu
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,89 +12,44 @@ import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.util.isEmpty
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mandarin.bcu.androidutil.filter.FilterStage
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.filter
+import com.mandarin.bcu.androidutil.filter.FilterStage
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.stage.adapters.MapListAdapter
-import com.mandarin.bcu.androidutil.stage.asynchs.MapAdder
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import com.mandarin.bcu.androidutil.stage.coroutine.MapAdder
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.io.json.JsonEncoder
+import common.pack.Identifier
 import common.util.stage.MapColc
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import common.util.stage.StageMap
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MapList : AppCompatActivity() {
-    companion object {
-        const val REQUEST_CODE = 100
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
-        val ed: Editor
-
-        if (!shared.contains("initial")) {
-            ed = shared.edit()
-            ed.putBoolean("initial", true)
-            ed.putBoolean("theme", true)
-            ed.apply()
-        } else {
-            if (!shared.getBoolean("theme", false)) {
-                setTheme(R.style.AppTheme_night)
-            } else {
-                setTheme(R.style.AppTheme_day)
-            }
-        }
-
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
-
-        DefineItf.check(this)
-
-        setContentView(R.layout.activity_map_list)
-
-        val back = findViewById<FloatingActionButton>(R.id.stgbck)
-
-        back.setOnClickListener {
-            StaticStore.stgFilterReset()
-            finish()
-        }
-
-        val mapAdder = MapAdder(this)
-
-        mapAdder.execute()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == Activity.RESULT_OK) {
             filter = FilterStage.setFilter(StaticStore.stgschname, StaticStore.stmschname, StaticStore.stgenem, StaticStore.stgenemorand, StaticStore.stgmusic, StaticStore.stgbg, StaticStore.stgstar, StaticStore.stgbh, StaticStore.bhop, StaticStore.stgcontin, StaticStore.stgboss, this)
+
+            val f = filter ?: return@registerForActivityResult
+
+            val keys = f.keys.toMutableList()
+
+            keys.sort()
 
             val stageset = findViewById<Spinner>(R.id.stgspin)
             val maplist = findViewById<ListView>(R.id.maplist)
-            val loadt = findViewById<TextView>(R.id.mapst)
+            val loadt = findViewById<TextView>(R.id.status)
 
-            if(filter.isEmpty()) {
+            if(f.isEmpty()) {
                 stageset.visibility = View.GONE
                 maplist.visibility = View.GONE
 
@@ -106,10 +61,9 @@ class MapList : AppCompatActivity() {
                 loadt.visibility = View.GONE
 
                 val resmc = ArrayList<String>()
-                val resposition = ArrayList<Int>()
 
-                for (i in 0 until filter.size()) {
-                    val index = StaticStore.mapcode.indexOf(filter.keyAt(i))
+                for (i in keys) {
+                    val index = StaticStore.mapcode.indexOf(i)
 
                     if (index != -1) {
                         resmc.add(StaticStore.mapcolcname[index])
@@ -161,33 +115,24 @@ class MapList : AppCompatActivity() {
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         try {
-                            var index = StaticStore.mapcode.indexOf(filter.keyAt(position))
+                            var index = StaticStore.mapcode.indexOf(keys[position])
 
                             if (index == -1)
                                 index = 0
 
-                            val resmapname = ArrayList<String>()
+                            val resmapname = ArrayList<Identifier<StageMap>>()
 
-                            resposition.clear()
+                            val resmaplist = f[keys[position]] ?: return
 
-                            val resmaplist = filter[filter.keyAt(position)]
-
-                            val mc = if(index < StaticStore.BCmaps) {
-                                MapColc.MAPS[StaticStore.mapcode[index]] ?: return
-                            } else {
-                                val p = Pack.map[StaticStore.mapcode[index]] ?: return
-
-                                p.mc ?: return
-                            }
+                            val mc = MapColc.get(StaticStore.mapcode[index]) ?: return
 
                             for(i in 0 until resmaplist.size()) {
                                 val stm = mc.maps[resmaplist.keyAt(i)]
 
-                                resmapname.add(MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "")
-                                resposition.add(resmaplist.keyAt(i))
+                                resmapname.add(stm.id)
                             }
 
-                            val mapListAdapter = MapListAdapter(this@MapList, resmapname, filter.keyAt(position), resposition, index >= StaticStore.BCmaps)
+                            val mapListAdapter = MapListAdapter(this@MapList, resmapname)
 
                             maplist.adapter = mapListAdapter
                         } catch (e: NullPointerException) {
@@ -200,31 +145,24 @@ class MapList : AppCompatActivity() {
 
                 stageset.adapter = adapter
 
-                val index = StaticStore.mapcode.indexOf(filter.keyAt(stageset.selectedItemPosition))
+                val index = StaticStore.mapcode.indexOf(keys[stageset.selectedItemPosition])
 
                 if (index == -1)
-                    return
+                    return@registerForActivityResult
 
-                val resmapname = ArrayList<String>()
+                val resmapname = ArrayList<Identifier<StageMap>>()
 
-                val resmaplist = filter[filter.keyAt(stageset.selectedItemPosition)]
+                val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return@registerForActivityResult
 
-                val mc = if(index < StaticStore.BCmaps) {
-                    MapColc.MAPS[filter.keyAt(stageset.selectedItemPosition)] ?: return
-                } else {
-                    val p = Pack.map[filter.keyAt(stageset.selectedItemPosition)] ?: return
-
-                    p.mc ?: return
-                }
+                val mc = MapColc.get(keys[stageset.selectedItemPosition])
 
                 for(i in 0 until resmaplist.size()) {
-                    val stm = mc.maps[i]
+                    val stm = mc.maps.list[resmaplist.keyAt(i)]
 
-                    resmapname.add(MultiLangCont.SMNAME.getCont(stm) ?: stm.name ?: "")
-                    resposition.add(resmaplist.keyAt(i))
+                    resmapname.add(stm.id)
                 }
 
-                val mapListAdapter = MapListAdapter(this, resmapname, filter.keyAt(stageset.selectedItemPosition),resposition, index >= StaticStore.BCmaps)
+                val mapListAdapter = MapListAdapter(this, resmapname)
 
                 maplist.adapter = mapListAdapter
 
@@ -234,18 +172,65 @@ class MapList : AppCompatActivity() {
 
                     StaticStore.maplistClick = SystemClock.elapsedRealtime()
 
+                    val stm = if(maplist.adapter is MapListAdapter) {
+                        (maplist.adapter as MapListAdapter).getItem(position) ?: return@OnItemClickListener
+                    } else {
+                        return@OnItemClickListener
+                    }
+
                     val intent = Intent(this@MapList, StageList::class.java)
 
-                    val rIndex = StaticStore.mapcode.indexOf(filter.keyAt(stageset.selectedItemPosition))
-
-                    intent.putExtra("mapcode", filter.keyAt(stageset.selectedItemPosition))
-                    intent.putExtra("stid", resposition[position])
-                    intent.putExtra("custom", rIndex >= StaticStore.BCmaps)
+                    intent.putExtra("Data", JsonEncoder.encode(stm).toString())
+                    intent.putExtra("custom", !StaticStore.BCMapCode.contains(stm.cont.sid))
 
                     startActivity(intent)
                 }
             }
         }
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val ed: Editor
+
+        if (!shared.contains("initial")) {
+            ed = shared.edit()
+            ed.putBoolean("initial", true)
+            ed.putBoolean("theme", true)
+            ed.apply()
+        } else {
+            if (!shared.getBoolean("theme", false)) {
+                setTheme(R.style.AppTheme_night)
+            } else {
+                setTheme(R.style.AppTheme_day)
+            }
+        }
+
+        LeakCanaryManager.initCanary(shared)
+
+        DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
+        setContentView(R.layout.activity_map_list)
+
+        val back = findViewById<FloatingActionButton>(R.id.stgbck)
+
+        back.setOnClickListener {
+            StaticStore.stgFilterReset()
+            StaticStore.filterReset()
+            StaticStore.entityname = ""
+            finish()
+        }
+
+        val mapAdder = MapAdder(this)
+
+        mapAdder.execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -280,5 +265,14 @@ class MapList : AppCompatActivity() {
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

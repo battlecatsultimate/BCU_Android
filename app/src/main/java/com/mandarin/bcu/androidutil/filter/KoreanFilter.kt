@@ -21,7 +21,7 @@ object KoreanFilter {
     }
 
     private fun isKorean(c: Char) : Boolean {
-        return c.toInt() in BEGIN..END
+        return c.code in BEGIN..END
     }
 
     private fun isSegment(c: Char) : Boolean {
@@ -33,7 +33,7 @@ object KoreanFilter {
 
         for(c in src) {
             if(isKorean(c) && !isSegment(c)) {
-                res.append(segments[(c.toInt()-BEGIN) / INTERVAL])
+                res.append(segments[(c.code -BEGIN) / INTERVAL])
             } else {
                 res.append(c)
             }
@@ -44,9 +44,9 @@ object KoreanFilter {
 
     fun filter(name: String, sch: String) : Boolean {
         return if(isSegments(sch)) {
-            extractSegment(name).contains(sch)
+            extractSegment(name).contains(sch.lowercase())
         } else {
-            name.contains(sch)
+            name.contains(sch.lowercase())
         }
     }
 }

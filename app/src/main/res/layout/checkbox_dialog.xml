@@ -42,15 +42,15 @@
 
     <Button
         android:id="@+id/checkdialogconf"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="?attr/backgroundPrimary"
+        android:backgroundTint="?attr/colorAccent"
         android:text="@string/main_confirm"
         android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary"
+        android:textColor="@color/TextPrimaryN"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/checkdialogcont"
         app:layout_constraintTop_toBottomOf="@+id/checkdialogcheck" />

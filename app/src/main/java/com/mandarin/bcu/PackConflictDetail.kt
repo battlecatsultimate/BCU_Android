@@ -2,7 +2,6 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.drawable.AnimatedVectorDrawable
@@ -11,18 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.conflict.adapters.PackConfListAdapter
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.nhaarman.supertooltips.ToolTip
 import com.nhaarman.supertooltips.ToolTipRelativeLayout
+import common.CommonStatic
+import common.io.assets.AssetLoader
 import common.util.Data
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
-import main.MainBCU
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -48,19 +49,13 @@ class PackConflictDetail : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_pack_conflict_detail)
 
@@ -124,7 +119,7 @@ class PackConflictDetail : AppCompatActivity() {
 
                         path.text = getFilePath(pc.confPack[0])
 
-                        sticon.setImageDrawable(getDrawable(R.drawable.ic_approve))
+                        sticon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_approve))
                     }
                     PackConflict.ID_PARENT -> {
                         desc.text = getParentPackList(pc)
@@ -393,7 +388,7 @@ class PackConflictDetail : AppCompatActivity() {
                         }
                     }
 
-                    PackConflict.ID_UNSUPPORTED_BCU -> {
+                    PackConflict.ID_UNSUPPORTED_CORE_VERSION -> {
                         desc.text = getVersions(pc)
 
                         path.text = getFilePath(pc.confPack[0])
@@ -401,9 +396,9 @@ class PackConflictDetail : AppCompatActivity() {
                         var d = getString(R.string.pack_conf_guide_unsupp)
 
                         d = if(pc.confPack.size != 2) {
-                            d.replace("-", Data.revVer(MainBCU.ver)).replace("_", "Unknown")
+                            d.replace("-", AssetLoader.CORE_VER).replace("_", "Unknown")
                         } else {
-                            d.replace("-", Data.revVer(MainBCU.ver)).replace("_", pc.confPack[1])
+                            d.replace("-", AssetLoader.CORE_VER).replace("_", pc.confPack[1])
                         }
 
                         detail.text = d
@@ -558,7 +553,7 @@ class PackConflictDetail : AppCompatActivity() {
                 }
             } else {
                 action.visibility = View.GONE
-                sticon.setImageDrawable(getDrawable(R.drawable.ic_notsolve))
+                sticon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notsolve))
                 status.setText(R.string.pack_conf_cantsolve)
                 desc.setText(R.string.pack_conf_desc_cantsolve)
                 path.visibility = View.GONE
@@ -610,11 +605,8 @@ class PackConflictDetail : AppCompatActivity() {
 
     private fun getFilePath(pack: String) : String {
         return when {
-            pack.endsWith(".bcupack") -> {
+            pack.endsWith(".pack.bcuzip") -> {
                 StaticStore.getExternalPack(this)+pack
-            }
-            pack.endsWith(".bcudata") -> {
-                StaticStore.getExternalRes(this)+"data/$pack"
             }
             else -> {
                 "Invalid File"
@@ -632,9 +624,9 @@ class PackConflictDetail : AppCompatActivity() {
 
     private fun getVersions(pc: PackConflict) : String {
         return if(pc.confPack.size != 2) {
-            getString(R.string.pack_desc_unsupported).replace("-", Data.revVer(MainBCU.ver)).replace("_", "Unknown")
+            getString(R.string.pack_desc_unsupported).replace("-", AssetLoader.CORE_VER).replace("_", "Unknown")
         } else {
-            getString(R.string.pack_desc_unsupported).replace("-", Data.revVer(MainBCU.ver)).replace("_", pc.confPack[1])
+            getString(R.string.pack_desc_unsupported).replace("-", AssetLoader.CORE_VER).replace("_", pc.confPack[1])
         }
     }
 
@@ -654,12 +646,21 @@ class PackConflictDetail : AppCompatActivity() {
         var anim: AnimatedVectorDrawable
 
         v.apply {
-            setImageDrawable(context.getDrawable(id))
+            setImageDrawable(ContextCompat.getDrawable(context, id))
             anim = drawable as AnimatedVectorDrawable
         }
 
         if(start) {
             anim.start()
         }
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

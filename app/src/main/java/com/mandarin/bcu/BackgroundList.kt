@@ -1,28 +1,30 @@
 package com.mandarin.bcu
 
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
-import com.mandarin.bcu.androidutil.BGListPager
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import common.util.pack.Background
-import common.util.pack.Pack
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.BGListPager
+import common.CommonStatic
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,34 +51,55 @@ class BackgroundList : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_background_list)
 
-        if(StaticStore.bgread == 0)
-            Background.read()
-
         val tab = findViewById<TabLayout>(R.id.bglisttab)
-        val pager = findViewById<MeasureViewPager>(R.id.bglistpager)
+        val pager = findViewById<ViewPager2>(R.id.bglistpager)
 
-        pager.removeAllViewsInLayout()
-        pager.adapter = BGListTab(supportFragmentManager)
-        pager.offscreenPageLimit = Pack.map.keys.size
-        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab))
+        pager.adapter = BGListTab()
+        pager.offscreenPageLimit = getExistingBGPack()
 
-        tab.setupWithViewPager(pager)
+        val keys = getExistingPack()
+
+        TabLayoutMediator(tab, pager) { t, position ->
+            t.text = if (position == 0) {
+                getString(R.string.pack_default)
+            } else {
+                val pack = UserProfile.getUserPack(keys[position])
+
+                if (pack == null) {
+                    keys[position]
+                }
+
+                val name = pack?.desc?.name ?: ""
+
+                if (name.isEmpty()) {
+                    keys[position]
+                } else {
+                    name
+                }
+            }
+        }.attach()
+
+        if(getExistingBGPack() == 1) {
+            tab.visibility = View.GONE
+
+            val collapse = findViewById<CollapsingToolbarLayout>(R.id.bgcollapse)
+
+            val param = collapse.layoutParams as AppBarLayout.LayoutParams
+
+            param.scrollFlags = 0
+
+            collapse.layoutParams = param
+        }
 
         val bck = findViewById<FloatingActionButton>(R.id.bgbck)
 
@@ -116,67 +139,51 @@ class BackgroundList : AppCompatActivity() {
         StaticStore.toast = null
     }
 
-    inner class BGListTab(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val keys: ArrayList<Int>
+    override fun onResume() {
+        AContext.check()
 
-        init {
-            val lit = fm.fragments
-            val trans = fm.beginTransaction()
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
 
-            for (f in lit) {
-                trans.remove(f)
+        super.onResume()
+    }
+
+    private fun getExistingBGPack() : Int {
+        var res = 0
+
+        for(p in UserProfile.getAllPacks()) {
+            if(p.bgs.list.isNotEmpty())
+                res++
+        }
+
+        return res
+    }
+
+    private fun getExistingPack(): ArrayList<String> {
+        val list = UserProfile.getAllPacks()
+
+        val res = ArrayList<String>()
+
+        for(k in list) {
+            if(k is PackData.DefPack) {
+                res.add(Identifier.DEF)
+            } else if(k is PackData.UserPack && k.bgs.size() != 0) {
+                res.add(k.desc.id)
             }
-
-            trans.commitAllowingStateLoss()
-
-            keys = getExistingPack()
         }
 
-        override fun getItem(position: Int): Fragment {
-            return BGListPager.newInstance(keys[position])
-        }
+        return res
+    }
 
-        override fun getCount(): Int {
+    inner class BGListTab : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        private val keys = getExistingPack()
+
+        override fun getItemCount(): Int {
             return keys.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return if (position == 0) {
-                "Default"
-            } else {
-                val pack = Pack.map[keys[position]]
-
-                if (pack == null) {
-                    keys[position].toString()
-                }
-
-                val name = pack?.name ?: ""
-
-                if (name.isEmpty()) {
-                    keys[position].toString()
-                } else {
-                    name
-                }
-            }
-        }
-
-        override fun saveState(): Parcelable? {
-            return null
-        }
-
-        private fun getExistingPack(): ArrayList<Int> {
-            val keys = Pack.map.keys.toMutableList()
-            val res = ArrayList<Int>()
-
-            for(k in keys) {
-                val p = Pack.map[k] ?: continue
-
-                if(p.bg.list.isNotEmpty()) {
-                    res.add(k)
-                }
-            }
-
-            return res
+        override fun createFragment(position: Int): Fragment {
+            return BGListPager.newInstance(keys[position])
         }
     }
 }

@@ -1,0 +1,827 @@
+{
+    "KB": {
+        "abbr_name": "넉백",
+        "full_name": "날려버린다",
+        "tooltip": "타겟을 일정 거리와 시간동안 날려버립니다",
+        "format": [
+            "(prob)% 확률로 타겟을 ",
+            "[(dis==0){기본 거리만큼}(dis!=0){거리 (dis)만큼}] ",
+            "[(time==0){기본 시간동안 날려버린다}(time>0){(_dispTime(time)) 동안 날려버린다}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다. 0을 입력하여 기본값으로 설정합니다"
+            },
+            "dis": {
+                "name": "거리",
+                "tooltip": "타겟을 얼만큼 날려버릴지 정합니다. 0을 입력하여 기본값으로 설정합니다"
+            }
+        }
+    },
+    "STOP": {
+        "abbr_name": "멈춘다",
+        "full_name": "멈춘다",
+        "tooltip": "타겟을 일정 시간동안 멈추게 합니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 멈춘다",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다. 실제 값은 보물 등에 의해 달라질 수 있습니다"
+            }
+        }
+    },
+    "SLOW": {
+        "abbr_name": "느리게",
+        "full_name": "느리게 한다",
+        "tooltip": "타겟의 이동속도를 느리게 합니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 느리게 한다",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다. 실제 값은 보물 등에 의해 달라질 수 있습니다"
+            }
+        }
+    },
+    "CRIT": {
+        "abbr_name": "크리티컬",
+        "full_name": "크리티컬",
+        "tooltip": "메탈이 아닌 타겟에게 추가 데미지를, 메탈인 타겟에게 기본 데미지를 가합니다.",
+        "format": [
+            "(prob)% 확률로 크리티컬",
+            "[(mult>0&mult!=200){ {_left}타겟에게 (mult)% 의 데미지로 공격{_right}}",
+            "(mult<0){ {_left}메탈인 타겟의 현재 체력의 (_abs(mult))% 만큼 공격{_right}}]"
+        ],
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "mult": {
+                "name": "배율",
+                "tooltip": "기본값은 200% 입니다. 음수값을 입력하여 메탈 타겟의 현재 체력의 특정 %만큼 공격하게 할 수 있습니다"
+            }
+        }
+    },
+    "WAVE": {
+        "abbr_name": "파동",
+        "full_name": "파동",
+        "tooltip": "타겟 앞에 파동을 생성하여 멀리있는 타겟까지 공격할 수 있습니다",
+        "format": "(prob)% 확률로 레벨 (lv) 파동",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "lv": {
+                "name": "레벨",
+                "tooltip": "생성될 파동의 개수를 정합니다. 레벨이 높을수록 많은 파동이 생성됩니다"
+            }
+        }
+    },
+    "WEAK": {
+        "abbr_name": "약하게",
+        "full_name": "약하게 한다",
+        "tooltip": "타겟의 공격력을 특정 %로 감소시킵니다",
+        "format": "(prob)% 확률로 타겟을 (mult)% 로 (_dispTime(time)) 동안 약하게 한다",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다. 실제 값은 보물 등에 의해 달라질 수 있습니다"
+            },
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "타겟의 공격력을 얼마만큼 감소시킬지 정합니다."
+            }
+        }
+    },
+    "BREAK": {
+        "abbr_name": "베리어",
+        "full_name": "베리어를 부순다",
+        "tooltip": "타겟의 베리어의 체력에 상관없이 바로 부수고 데미지를 가합니다",
+        "format": "(prob)% 확률로 베리어를 부순다",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            }
+        }
+    },
+    "WARP": {
+        "abbr_name": "워프",
+        "full_name": "워프",
+        "tooltip": "타겟을 특정거리와 시간동안 워프시킵니다. 워프되는 동안에는 데미지를 받거나 공격할 수 없습니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 거리 (dis) 만큼 워프",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "타겟이 워프될 시간을 정합니다"
+            },
+            "dis": {
+                "name": "거리",
+                "tooltip": "타겟을 워프시킬 거리를 정합니다. 음수값을 입력하여 반대 방향으로 워프시킬 수 있습니다"
+            }
+        }
+    },
+    "CURSE": {
+        "abbr_name": "저주",
+        "full_name": "저주",
+        "tooltip": "속성과 관련된 능력들을 무효화시킵니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 저주",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다. 실제 값은 본능 등에 의해 달라질 수 있습니다"
+            }
+        }
+    },
+    "STRONG": {
+        "abbr_name": "강해진다",
+        "full_name": "강해진다",
+        "tooltip": "특정 체력만큼 낮아지면 공격력이 특정 % 만큼 더 증가합니다.",
+        "format": "(health)% 체력보다 낮아지면 (mult)% 만큼 더 강해진다",
+        "class": {
+            "health": {
+                "name": "체력",
+                "tooltip": "해당 능력이 발동될 체력을 정합니다"
+            },
+            "mult": {
+                "name": "증가",
+                "tooltip": "공격력을 얼만큼 증가시킬지 정합니다. 100을 입력하면 발동시 200% 의 공격력을 갖게 됩니다"
+            }
+        }
+    },
+    "LETHAL": {
+        "abbr_name": "살아남는다",
+        "full_name": "살아남는다",
+        "tooltip": "상대의 공격력이 남은 체력보다 높아도 한번 버텨냅니다",
+        "format": "(prob)% 확률로 살아남는다",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "해당 능력을 발동시킬 확률입니다"
+            }
+        }
+    },
+    "BURROW": {
+        "abbr_name": "버로우",
+        "full_name": "버로우",
+        "tooltip": "타겟을 만나면 특정 횟수만큼 땅속으로 들어가 특정 거리만큼 이동합니다. 버로우 중에는 공격할 수 없습니다",
+        "format": "거리 (dis) 만큼 [(count<0){무한 번}(count>=0){(count) 번}] 버로우",
+        "class": {
+            "count": {
+                "name": "횟수",
+                "tooltip": "버로우할 횟수를 정합니다. -1을 입력하여 무한 번 버로우 할 수 있습니다"
+            },
+            "dis": {
+                "name": "거리",
+                "tooltip": "버로우해서 이동할 거리를 정합니다"
+            }
+        }
+    },
+    "REVIVE": {
+        "abbr_name": "부활",
+        "full_name": "부활",
+        "tooltip": "죽지 않고 특정 시간 뒤에 특정 체력으로 부활합니다. 타입을 설정하여 범위 내의 아군을 부활시킬 수 있습니다",
+        "format": [
+            "(_dispTime(time)) 뒤에 [(count<0){무한 번}(count>=0&count<=1){(count) 번}(count>1){(count) 번}]",
+            " (health)% 체력으로 부활 ",
+            "[(type.imu_zkill){(_left)좀비킬러 무효화(_right)}]",
+            "[(type.revive_others){(_left)발동자로부터 거리 (dis_0) ~ (dis_1) 사이에 있는",
+            "[(type.revive_non_zombie){ 모든 아군들은}][(!type.revive_non_zombie){ 모든 좀비 아군들은}]",
+            "[(type.range>=2){ 한번 영역에 들어가면}]",
+            "[(type.range_type==0){ 발동자가 필드에 존재하고 걷거나 기다리거나 공격하는 동안에만 부활할 수 있다}]",
+            "[(type.range_type==1){ 발동자가 적군이 인식할 수 있을 때에만 부활할 수 있다}]",
+            "[(type.range_type==2){ 발동자가 필드에 살아있을 때에만 부활할 수 있다}]",
+            "[(type.range_type==3){ 부활할 수 있다}](_right)}]"
+        ],
+        "class": {
+            "count": {
+                "name": "부활 횟수",
+                "tooltip": "부활할 횟수를 정합니다. -1을 입력하여 무한 번 부활할 수 있게 할 수 있습니다"
+            },
+            "time": {
+                "name": "딜레이",
+                "tooltip": "일정 시간 뒤에 부활할 수 있도록 정합니다"
+            },
+            "health": {
+                "name": "체력",
+                "tooltip": "부활했을 때의 체력을 퍼센트로 정합니다"
+            },
+            "dis_0": {
+                "name": "거리 1",
+                "tooltip": "부활 범위 1 입니다. 거리 1 ~ 거리 2 로 정해지고 \"다른 아군들을 부활\" 특성이 켜져있을 때에만 사용됩니다"
+            },
+            "dis_1": {
+                "name": "거리 2",
+                "tooltip": "부활 범위 2 입니다. 거리 1 ~ 거리 2 로 정해지고 \"다른 아군들을 부활\" 특성이 켜져있을 때에만 사용됩니다"
+            },
+            "type.range_type": {
+                "name": "부활 범위 타입",
+                "tooltip": [
+                    "\"다른 아군들을 부활\" 특성이 켜져있을 때에만 사용됩니다",
+                    "0 을 입력하면 발동자는 걷거나 기다리거나 공격하는 평소 상태에서만 발동할 수 있습니다. ",
+                    "1 을 입력하면 발동자를 적군이 인식할 수 동안에만 발동할 수 있습니다. ",
+                    "2 를 입력하며 아군이 영역에 한번 들어가면 발동자가 살아있는 한에서만 부활 할 수 있습니다. ",
+                    "3 을 입력하면 아군은 항상 부활 할 수 있습니다"
+                ]
+            },
+            "type.imu_zkill": {
+                "name": "좀비 킬러 무효화",
+                "tooltip": "좀비 킬러를 무효화 합니다"
+            },
+            "type.revive_non_zombie": {
+                "name": "일반 아군도 포함",
+                "tooltip": "좀비가 아닌 일반 아군들도 부활시킵니다. \"다른 아군들을 부활\" 특성이 켜져있을 때에만 적용됩니다"
+            },
+            "type.revive_others": {
+                "name": "다른 아군들을 부활",
+                "tooltip": "활성화하여 부활 범위 능력을 발동합니다"
+            }
+        }
+    },
+    "IMUKB": {
+        "abbr_name": "밀치기 무효",
+        "full_name": "밀치기 무효",
+        "tooltip": "밀치기 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){밀치기 무효}(mult<100&mult>0){밀치기 내성 (_left)밀쳐나는 거리 (mult)% 감소(_right)}(mult<0){밀치기에 약함 (_left)밀쳐나는 거리 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "밀쳐날 거리를 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUSTOP": {
+        "abbr_name": "멈춘다 무효",
+        "full_name": "멈춘다 무효",
+        "tooltip": "멈춘다 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){멈춘다 무효}(mult<100&mult>0){멈춘다 내성 (_left)멈추는 시간 (mult)% 감소}(mult<0){멈춘다에 약함 (_left)멈추는 시간 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "멈출 시간을 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUSLOW": {
+        "abbr_name": "느리게 무효",
+        "full_name": "느리게 무효",
+        "tooltip": "느리게 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){느리게 무효}(mult<100&mult>0){느리게 내성 (_left)느려지는 시간 (mult)% 감소}(mult<0){느리게에 약함 (_left)느려지는 시간 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "느려지는 시간을 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUWAVE": {
+        "abbr_name": "파동 무효",
+        "full_name": "파동 무효",
+        "tooltip": "파동 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){파동 무효}(mult<100&mult>0){파동 내성 (_left)파동 데미지 (mult)% 감소(_right)}(mult<0){파동에 약함 (_left)파동 데미지 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "파동 데미지를 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUWEAK": {
+        "abbr_name": "약화 무효",
+        "full_name": "약화 무효",
+        "tooltip": "약하게 한다 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){약화 무효}(mult<100&mult>0){약화 내성 (_left)약화 시간 (mult)% 감소(_right)}(mult<0){약화에 약함 (_left)약화 시간 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "약화되는 시간을 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUWARP": {
+        "abbr_name": "워프 무효",
+        "full_name": "워프 무효",
+        "tooltip": "워프 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){워프 무효}(mult<100&mult>0){워프 내성 (_left)워프 시간 (mult)% 감소(_right)}(mult<0){워프에 약함 (_left)워프 시간 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "워프되는 시간을 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUCURSE": {
+        "abbr_name": "저주 무효",
+        "full_name": "저주 무효",
+        "tooltip": "저주 능력을 약하게 받거나 무효화합니다",
+        "format": "[(mult==100){저주 무효}(mult<100&mult>0){저주 내성 (_left)저주 시간 (mult)% 감소(_right)}(mult<0){저주에 약함 (_left)저주 시간 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "저주되는 시간을 퍼센트로 감소시킵니다"
+            }
+        }
+    },
+    "IMUSUMMON": {
+        "abbr_name": "imu. Summon",
+        "full_name": "Immune/Resist to Summon",
+        "tooltip": null,
+        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon[(mult<100&mult>0){ (_left)Reduces (mult)% of summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}]",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Only applies to On Hit and On Kill summon."
+            }
+        }
+    },
+    "SNIPER": {
+        "abbr_name": "스냥이퍼 넉백",
+        "full_name": "스냥이퍼 넉백",
+        "tooltip": "스냥이퍼 아이템이 발동하는 넉백과 같은 넉백입니다. 엄연히 일반 넉백과 다르므로 넉백 무효 능력을 무시합니다",
+        "format": "(prob)% 확률로 스냥이퍼 넉백",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            }
+        }
+    },
+    "TIME": {
+        "abbr_name": "시간 정지",
+        "full_name": "시간 정지",
+        "tooltip": "일반 멈춘다 능력과 다르게 해당 능력은 쿨다운, 머니, 냥코 성 충전, 파동 등 모든 것을 정지시킵니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 시간 정지",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            }
+        }
+    },
+    "SEAL": {
+        "abbr_name": "봉인",
+        "full_name": "봉인",
+        "tooltip": "봉인 능력은 저주보다 강한 능력으로 버로우, 메탈, 한번만 공격, 타겟 한정, 기본 부활 능력을 제외한 모든 능력을 일시적으로 무효화시킵니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 봉인",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            }
+        }
+    },
+    "SUMMON": {
+        "abbr_name": "소환",
+        "full_name": "소환",
+        "tooltip": "특정 발동 조건을 만족하면 일정 시간가 거리에 정해진 아군을 소환합니다. 유닛의 경우, 첫번째 형태로만 소환됩니다",
+        "format": [
+            "(prob)% 확률로 (_dispTime(time)) 후에 [(!type.on_kill&!type.on_hit){거리 (dis) [(dis<0){뒤}(dis>=0){앞}]에서}] [(_isEnemy){(mult)% 배율로}] (_entity(id)) 소환 (_left)",
+            "[(!type.fix_buff&_isEnemy){소환자의 배율에 상대적으로 소환되고}] ",
+            "[(type.anim_type==3){ 버로우 능력을 지우고 }]",
+            "[(type.on_hit|type.on_kill){[(type.on_hit){매 공격마다}",
+            "(type.on_kill&!type.on_hit){상대를 죽일 때마다}]",
+            " 상대로부터 거리 (dis) [(dis<0){뒤}(dis>=0){앞}]에서 }]",
+            "[(type.ignore_limit){스테이지 제한에 상관없이}] ",
+            "[(!type.random_layer){소환자의 레이어와 같은 곳에}",
+            "(type.random_layer){렌덤한 레이어에}] ",
+            "[(type.same_health){소환자와 같은 체력으로} ]",
+            "[(type.anim_type==0){평범하게 소환}(type.anim_type==1){워프 에니메이션과 함께 소환}(type.anim_type>=2){버로우 애니메이션과 함께 소환}](_right)"
+        ],
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "해당 능력을 발동시킬 확률입니다"
+            },
+            "id": {
+                "name": "ID",
+                "tooltip": "소환할 상대를 정합니다"
+            },
+            "dis": {
+                "name": "거리",
+                "tooltip": "소환자로부터의 거리를 정합니다. \"매 공격마다\" 혹은 \"매 킬마다\" 가 활성화 되어있으면 공격받은 상대로부터의 거리입니다"
+            },
+            "mult": {
+                "name": "배율",
+                "tooltip": "소환되는 상대의 배율을 정합니다. 적을 위한 값이며 유닛은 따르지 않습니다. \"고정된 버프\"를 활성화 시키면 소환자의 배율에 상대적으로 소환됩니다"
+            },
+            "type.anim_type": {
+                "name": "소환 애니메이션",
+                "tooltip": [
+                    "소환될 때의 애니메이션을 정합니다. 0 은 아무 애니메이션 없이 소환, 1 은 워프 애니메이션과 함께 소환,",
+                    " 2 는 버로우 애니메이션과 함께, 3 버로우 애니메이션과 소환되고 버로우 능력을 지웁니다.",
+                    " 애니메이션 타입 2와 3을 이용하기 위해서는 소환되는 상대가 버로우 애니메이션을 갖고 있어야 합니다"
+                ]
+            },
+            "type.ignore_limit": {
+                "name": "제한 무시",
+                "tooltip": "스테이지의 유닛/적 제한에 상관없이 소환됩니다. 게임 성능에 영향을 주니 주의해 주세요"
+            },
+            "type.fix_buff": {
+                "name": "고정된 버프",
+                "tooltip": [
+                    "소환자의 배율과 같은 배율로 소환됩니다",
+                    "예시: 해당 특성이 활성화 되어있지 않으면 소환자의 배율이 200%, 소환될 상대의 배율이 300% 이면 600%의 배율로 소환되지만 활성화 되어있으면 200%로 소환됩니다"
+                ]
+            },
+            "type.same_health": {
+                "name": "같은 체력으로 소환",
+                "tooltip": "소환될 상대가 소환자와 같은 체력으로 소환됩니다"
+            },
+            "type.random_layer": {
+                "name": "랜덤 레이어",
+                "tooltip": "해당 특성이 활성화 되어있으면 소환자의 레이어를 따르지 않고 랜덤한 레이어에 소환됩니다"
+            },
+            "type.on_hit": {
+                "name": "매 공격마다",
+                "tooltip": [
+                    "타겟을 공격했을 시에만 매 공격마다 소환됩니다.",
+                    " 해당 특성을 활성화하면 공격을 맞는 타겟앞에 특정된 거리 앞에 소환되게 됩니다.",
+                    " 소환자가 범위 공격을 가지고 있으면 한번에 여러마리의 개체를 소환할 수 있습니다"
+                ]
+            },
+            "type.on_kill": {
+                "name": "매 킬마다",
+                "tooltip": [
+                    "타겟을 소환자가 죽였을 시에만 소환됩니다.",
+                    " 해당 특성을 활성화하면 죽게 되는 타겟 앞에 특정된 거리 앞에 소환되게 됩니다.",
+                    " 소환자가 범위 공격을 가지고 있으면 한번에 여러마리의 개체를 소환할 수 있습니다"
+                ]
+            },
+            "time": {
+                "name": "지연 시간",
+                "tooltip": "정해진 시간 뒤에 개체가 소환됩니다"
+            }
+        }
+    },
+    "MOVEWAVE": {
+        "abbr_name": "이동 공격",
+        "full_name": "이동 공격",
+        "tooltip": "특정 확률로 이동하는 공격 영역을 만들어냅니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 매 (_dispTime(itv)) 마다 이동 공격 (_left)거리 (dis) 에서 생성되며 (width) 의 넓이와 (speed) 의 속도로 이동(_right)",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "speed": {
+                "name": "스피드",
+                "tooltip": "공격 영역이 움직일 스피드 입니다"
+            },
+            "width": {
+                "name": "넓이",
+                "tooltip": "공격 영역의 총 넓이를 정합니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "dis": {
+                "name": "거리",
+                "tooltip": "발동자 앞에서 소환될 공격 영역의 중심점의 위치를 정합니다"
+            },
+            "itv": {
+                "name": "간격",
+                "tooltip": "공격 영역이 매 특정 시간마다 공격하도록 시간을 정합니다"
+            }
+        }
+    },
+    "THEME": {
+        "abbr_name": "배경 변경",
+        "full_name": "배경 변경",
+        "tooltip": "전투의 배경을 바꿉니다. 타입에 따라서 전투에 있는 대부분의 개체들을 다 제거할 수 있습니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 배경 (_bg(id)) (_left)으(_right)로 변경 [(type.kill){(_left)발동 시 필드에 있는 모든 개체 제거(_right)}]",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "id": {
+                "name": "배경 ID",
+                "tooltip": "능력 발동 시 변경될 배경을 정합니다"
+            },
+            "type.kill": {
+                "name": "개체 제거",
+                "tooltip": "능력 발동 시 해당 필드의 모든 개체를 제거합니다"
+            }
+        }
+    },
+    "POISON": {
+        "abbr_name": "맹독",
+        "full_name": "맹독",
+        "tooltip": "BCU에서 만들어진 능력입니다. 냥코의 독 능력과 다르게 발동 시간과 공격 간격을 가질 수 있습니다",
+        "format": [
+            "(prob)% 확률로 (_dispTime(time)) 동안 매 (_dispTime(itv)) 마다 맹독 (_left)중첩 [(type.unstackable){불}]가능하며 ",
+            "[(type.damage_type==0){일정한 데미지 (damage)로 공격}",
+            "(type.damage_type>0){타겟의 [(type.damage_type==1){최대 체력의}(type.damage_type==2){현재 체력의}(type.damage_type==3){감소된 체력의}] (damage)% 만큼 공격}](_right)"
+        ],
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "damage": {
+                "name": "데미지",
+                "tooltip": "타입에 따라서 일정값 혹은 퍼센트가 될 수 있습니다"
+            },
+            "itv": {
+                "name": "간격",
+                "tooltip": "매 특정 시간마다 공격하도록 시간을 정합니다"
+            },
+            "type.damage_type": {
+                "name": "공격 타입",
+                "tooltip": "0 은 고정된 데미지, 1 은 타겟의 최대 체력, 2 는 타겟의 현재 체력, 3 는 타겟의 감소된 체력으로 공격합니다. 0 은 고정값, 1/2/3 은 퍼센트입니다"
+            },
+            "type.unstackable": {
+                "name": "중첩 불가능",
+                "tooltip": "해당 특성이 활성화되면 중첩이 불가능해집니다"
+            }
+        }
+    },
+    "BOSS": {
+        "abbr_name": "보스 파동",
+        "full_name": "보스 파동",
+        "tooltip": "스테이지에서 보스들이 내보내는 밀쳐내기 능력입니다",
+        "format": "(prob)% 확률로 보스 파동",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            }
+        }
+    },
+    "CRITI": {
+        "abbr_name": "크리티컬 무효",
+        "full_name": "크리티컬 무효",
+        "tooltip": "크리티컬을 특정 타입에 따라 다르게 받아들입니다",
+        "format": [
+            "[(type==0){비활성화}(type==1){크리티컬 무효}",
+            "(type==2){크리티컬 스톱퍼}]"
+        ],
+        "class": {
+            "type": {
+                "name": "타입",
+                "tooltip": "1 은 크리티컬 무효, 2 는 크리티컬을 제거하여 다른 메탈 유닛들도 보호합니다"
+            }
+        }
+    },
+    "SATK": {
+        "abbr_name": "혼신의 일격",
+        "full_name": "혼신의 일격",
+        "tooltip": "특정 확률로 일정 퍼센트만큼 높은 데미지를 가합니다",
+        "format": "(prob)% 확률로 혼신의 일격 (_left)(mult)% 만큼 더 데미지(_right)",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "얼만큼 더 강력하게 공격할지 정합니다. 예시: 100%로 설정하면 일정 확률로 데미지의 200%로 공격합니다"
+            }
+        }
+    },
+    "IMUATK": {
+        "abbr_name": "공격 무효",
+        "full_name": "공격 무효",
+        "tooltip": "특정 확률로 일정 시간동안 들어오는 모든 공격을 무시합니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 공격 무효",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            }
+        }
+    },
+    "POIATK": {
+        "abbr_name": "독 데미지",
+        "full_name": "독 데미지",
+        "tooltip": "일정 확률로 타겟의 최대 체력의 특정 퍼센트 만큼 공격합니다. 기본 공격도 같이 가해집니다",
+        "format": "(prob)% 확률로 독 데미지 (_left)타겟 체력의 (mult)% 만큼 공격(_right)",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "타겟의 체력의 어느정도의 퍼센트만큼 공격할지 정합니다"
+            }
+        }
+    },
+    "VOLC": {
+        "abbr_name": "열파 공격",
+        "full_name": "열파 공격",
+        "tooltip": "한 자리에서 계속 일정 간격으로 공격하는 열파를 만들어냅니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 열파 공격 (_left) (dis_0) ~ (dis_1) 사이에서 랜덤으로 생성(_right)",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "dis_0": {
+                "name": "최소 거리",
+                "tooltip": "열파 공격이 소환되는 최소 거리를 정합니다"
+            },
+            "dis_1": {
+                "name": "최대 거리",
+                "tooltip": "열파 공격이 소환되는 최대 거리를 정합니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            }
+        }
+    },
+    "IMUPOIATK": {
+        "abbr_name": "독 데미지 무효",
+        "full_name": "독 데미지 무효",
+        "tooltip": "독 데미지를 약하게 받거나 무효화 합니다",
+        "format": "[(mult==100){독 데미지 무효}(mult<100&mult>0){독 데미지 내성 (_left)데미지 (mult)% 감소(_right)}(mult<0){독 데미지에 약함 (_left)데미지 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "독 데미지를 퍼센트만큼 감소시킵니다"
+            }
+        }
+    },
+    "IMUVOLC": {
+        "abbr_name": "열파 공격 무효",
+        "full_name": "열파 공격 무효",
+        "tooltip": "열파 공격을 약하게 받거나 무효화 합니다",
+        "format": "[(mult==100){열파 공격 무효}(mult<100&mult>0){열파 공격 내성 (_left)데미지 (mult)% 감소(_right)}(mult<0){열파 공격에 약함 (_left)데미지 (_abs(mult))% 더 증가(_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "열파 공격 데미지를 퍼세트만큼 감소시킵니다"
+            }
+        }
+    },
+    "ARMOR": {
+        "abbr_name": "방어력 감소",
+        "full_name": "방어력 감소",
+        "tooltip": "타겟을 특정 퍼센트만큼 데미지를 받도록 합니다. 음수값을 통해 데미지를 덜 받도록 할 수도 있습니다",
+        "format": "(prob)% 확률로 (_dispTime(time)) 동안 방어력 감소 (_left)타겟이 데미지를 (mult)% 만큼 더 받음(_right)",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "데미지를 얼만큼 더 혹은 덜 받을지 정합니다. 예시: 150%로 두면 데미지를 평소의 250% 로 받습니다"
+            }
+        }
+    },
+    "SPEED": {
+        "abbr_name": "속도 증가",
+        "full_name": "속도 증가",
+        "tooltip": "타겟의 속도를 빠르게 혹은 느리게 움직이도록 합니다. 값을 잘 조정하여 뒤로 가게 할 수도 있습니다. 느리게의 우선순위가 높아 느리게가 발동되면 속도는 1이 됩니다",
+        "format": [
+            "(prob)% 확률로 (_dispTime(time)) 동안 속도 [(speed>=0){증가}(speed<0){감소}] (_left)",
+            "타겟[(type==0){에게 속도 (_abs(speed)) [(speed>=0){부여}(speed<0){감소}]}",
+            "(type==1){이 (_abs(speed))% 만큼 [(speed>=0){더 빠르게}(speed<0){더 느리게}] 이동}",
+            "(type==2){의 속도를 (speed) 로 변경}](_right)"
+        ],
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "speed": {
+                "name": "속도",
+                "tooltip": "타입에 따라서 일정값이나 퍼센트로 타겟의 속도를 변경합니다"
+            },
+            "type": {
+                "name": "타입",
+                "tooltip": "0 은 타겟에게 일정 속도를 부여하고, 1 은 타겟의 속도의 특정 퍼센트만큼 부여하며, 2 는 타겟의 속도를 특정 속도로 고정시킵니다"
+            }
+        }
+    },
+
+    "MINIWAVE" : {
+        "abbr_name" : "소파동",
+        "full_name" : "소파동",
+        "tooltip" : "파동과 비슷하지만 더 빨리 움직이고 파동보다 적은 데미지를 가하는 소형 파동입니다",
+        "format" : "(prob)% 확률로 레벨 (lv) 소파동 (_left)타겟에게 발동자 데미지의 (multi)% 만큼 공격(_right)",
+        "class" : {
+            "prob" : {
+                "name" : "확률",
+                "tooltip" : "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "lv" : {
+                "name" : "레벨",
+                "tooltip" : "생성될 파동의 개수를 정합니다. 레벨이 높을수록 많은 파동이 생성됩니다"
+            },
+            "multi" : {
+                "name" : "데미지",
+                "tooltip" : "발동자 데미지의 퍼센트로 작동합니다. 만약 값이 20 이면, 발동자 데미지의 20% 만큼 타겟에게 공격합니다. 음수도 허용됩니다"
+            }
+        }
+    },
+    "DEMONSHIELD" : {
+        "abbr_name" : "악마 쉴드",
+        "full_name" : "악마 쉴드",
+        "tooltip" : "일정 양의 데미지를 막아줍니다. 베리어처럼 체력보다 낮은 데미지를 무시하지 않으며 축적됩니다. 축적된 데미지가 체력을 넘기면 부숴집니다",
+        "format" : "악마 쉴드 (_left)(_shield(hp)) 체력을 가지고 있고 히트백 시 원래 쉴드 체력의 (regen)% 만큼 회복(_right)",
+        "class" : {
+            "hp" : {
+                "name" : "체력",
+                "tooltip" : "쉴드의 체력입니다"
+            },
+            "regen" : {
+                "name" : "회복",
+                "tooltip" : "히트백시 원래 쉴드 체력의 몇 퍼센트로 회복될지 정합니다"
+            }
+        }
+    },
+    "SHIELDBREAK" : {
+        "abbr_name" : "쉴드",
+        "full_name" : "쉴드를 브레이커",
+        "tooltip" : "쉴드를 즉시 파괴합니다. 이 능력은 히트백시 쉴드가 다시 회복되는 것을 막을 수 없으니 유의해 주세요",
+        "format" : "(prob)% 확률로 악마 쉴드를 부순다",
+        "class" : {
+            "prob" : {
+                "name" : "확률",
+                "tooltip" : "타겟에게 해당 능력을 발동시킬 확률입니다"
+            }
+        }
+    },
+    "DEATHSURGE": {
+        "abbr_name": "사망 열파",
+        "full_name": "사망 시 열파",
+        "tooltip": "해당 개체가 죽으면 열파를 생성하도록 만듭니다. 이 능력이 발동될 경우 설정된 영혼에 상관없이 무조건 악마 영혼이 나타납니다",
+        "format": "(prob)% 확률로 사망 시 (_dispTime(time)) 동안 열파 공격 (_left) (dis_0) ~ (dis_1) 사이에서 랜덤으로 생성(_right)",
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "dis_0": {
+                "name": "최소 거리",
+                "tooltip": "열파 공격이 소환되는 최소 거리를 정합니다"
+            },
+            "dis_1": {
+                "name": "최대 거리",
+                "tooltip": "열파 공격이 소환되는 최대 거리를 정합니다"
+            },
+            "time": {
+                "name": "시간",
+                "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            }
+        }
+    }
+}

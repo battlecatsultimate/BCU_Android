@@ -1,8 +1,8 @@
 package com.mandarin.bcu
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -11,19 +11,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.stage.asynchs.StageAdder
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.stage.coroutine.StageAdder
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.util.stage.Stage
 import java.util.*
 
 class StageInfo : AppCompatActivity() {
-    private var mapcode = 0
-    private var stid = 0
-    private var posit = 0
     private var custom = false
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,19 +43,13 @@ class StageInfo : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_stage_info)
 
@@ -73,13 +67,12 @@ class StageInfo : AppCompatActivity() {
         val extra = result.extras
 
         if (extra != null) {
-            mapcode = extra.getInt("mapcode")
-            stid = extra.getInt("stid")
-            posit = extra.getInt("posit")
-            custom = extra.getBoolean("custom")
-        }
+            val data = StaticStore.transformIdentifier<Stage>(extra.getString("Data")) ?: return
 
-        StageAdder(this, mapcode, stid, posit, custom).execute()
+            custom = extra.getBoolean("custom")
+
+            StageAdder(this, data).execute()
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -107,9 +100,24 @@ class StageInfo : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
+        if(StaticStore.SisOpen) {
+            val treasure = findViewById<FloatingActionButton>(R.id.stginfotrea)
 
-        bck.performClick()
+            treasure.performClick()
+        } else {
+            val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
+
+            bck.performClick()
+        }
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 
     public override fun onDestroy() {

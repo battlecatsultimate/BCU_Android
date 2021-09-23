@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.music.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,11 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import common.pack.Identifier
+import common.util.Data
+import common.util.stage.Music
 
-class MusicListAdapter(context: Context, private val name: ArrayList<String>, private val pid: Int, private val player: Boolean) : ArrayAdapter<String?>(context, R.layout.map_list_layout, name.toTypedArray()) {
+class MusicListAdapter(context: Context, private val name: ArrayList<Identifier<Music>>, private val pid: String, private val player: Boolean) : ArrayAdapter<Identifier<Music>>(context, R.layout.map_list_layout, name.toTypedArray()) {
     private class ViewHolder constructor(row: View) {
         val title: TextView = row.findViewById(R.id.map_list_name)
         val duration: TextView = row.findViewById(R.id.map_list_coutns)
@@ -30,29 +32,20 @@ class MusicListAdapter(context: Context, private val name: ArrayList<String>, pr
             holder = row.tag as ViewHolder
         }
 
-        holder.title.text = name[position]
+        holder.title.text = generateName(name[position])
 
         holder.duration.text = if(player) {
             if(position >= StaticStore.musicData.size) {
                 ""
             } else {
-                val info = StaticStore.musicData[position].split("\\")
+                val info = StaticStore.musicData[position]
 
-                if(info.size != 2) {
-                    Log.e("MusicListAdapter", "Invalid String Format : "+StaticStore.musicData[position])
+                val p = StaticStore.musicnames[info.pack]
+
+                if(p == null) {
                     ""
                 } else {
-                    val p = StaticStore.musicnames[info[0].toInt()]
-
-                    if(p == null) {
-                        ""
-                    } else {
-                        if(info[1].toInt() >= p.size) {
-                            ""
-                        } else {
-                            p[info[1].toInt()]
-                        }
-                    }
+                    p[info.id] ?: ""
                 }
             }
         } else {
@@ -61,14 +54,19 @@ class MusicListAdapter(context: Context, private val name: ArrayList<String>, pr
             if(ms == null)
                 ""
             else {
-                if(position >= ms.size)
-                    ""
-                else
-                    ms[position] ?: "00:00"
+                ms[name[position].id] ?: ""
             }
         }
 
 
         return row
+    }
+
+    private fun generateName(id: Identifier<Music>) : String {
+        return if(id.pack == Identifier.DEF) {
+            context.getString(R.string.pack_default) +" - "+ Data.trio(id.id)
+        } else {
+            StaticStore.getPackName(id.pack)+" - "+ Data.trio(id.id)
+        }
     }
 }

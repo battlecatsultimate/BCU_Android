@@ -4,3 +4,7 @@
 local.properties
 *.json
 
+/app/.cxx/*
+/app/.externalNativeBuild/*
+/app/release/*
+/build/*

@@ -8,20 +8,23 @@ import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
-import common.util.pack.Pack
+import common.pack.Identifier
+import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
+import common.util.unit.Enemy
 
-class DynamicEmExplanation(private val activity: Activity, private val pid: Int, private val id: Int) : PagerAdapter() {
+class DynamicEmExplanation(private val activity: Activity, private val data: Identifier<AbEnemy>) : PagerAdapter() {
     private val txid = intArrayOf(R.id.enemyex0, R.id.enemyex1, R.id.enemyex2, R.id.enemyex3)
     override fun instantiateItem(group: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(activity)
         val layout = inflater.inflate(R.layout.enemy_explanation, group, false) as ViewGroup
         val title = layout.findViewById<TextView>(R.id.enemyexname)
 
-        val p = Pack.map[pid] ?: return layout
-        val e = p.es[id]
+        val e = data.get() ?: return layout
 
-        var name = MultiLangCont.ENAME.getCont(e) ?: e.name
+        if(e !is Enemy) return layout
+
+        var name = MultiLangCont.get(e) ?: e.name
 
         if (name == null)
             name = ""
@@ -31,7 +34,7 @@ class DynamicEmExplanation(private val activity: Activity, private val pid: Int,
         for (i in txid.indices)
             exps[i] = layout.findViewById(txid[i])
 
-        var explanation = MultiLangCont.EEXP.getCont(e)
+        var explanation = MultiLangCont.getStatic().EEXP.getCont(e)
 
         if (explanation == null)
             explanation = arrayOf("", "", "", "")

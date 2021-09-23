@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,14 +19,23 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.lineup.LineUpView
 import common.battle.BasisSet
 import java.util.*
 
 class LUTreasureSetting : Fragment() {
+    companion object {
+        fun newInstance(line: LineUpView): LUTreasureSetting {
+            val setting = LUTreasureSetting()
+            setting.setVariable(line)
+
+            return setting
+        }
+    }
+    private lateinit var line: LineUpView
 
     private var canbeEdited = true
     private var initialized = false
-    private var destroyed = false
 
     private val techid = intArrayOf(R.id.cdlev, R.id.aclev, R.id.basehlev, R.id.worklev, R.id.walletlev, R.id.rechargelev)
     private val eocid = intArrayOf(R.id.atktrea, R.id.healtrea, R.id.cdtrea, R.id.actrea, R.id.worktrea, R.id.wallettrea)
@@ -59,14 +67,12 @@ class LUTreasureSetting : Fragment() {
     private val tilid = intArrayOf(R.id.statschmulti, R.id.canatklev, R.id.canrangelev, R.id.eoctrea, R.id.eocitftrea, R.id.itffruittrea, R.id.cotctrea, R.id.itfcrytrea, R.id.cotccrytrea)
     private val tilsid = arrayOf(techid, eocid, eocitfid, itfid, cotcid, maskid)
 
-    private val handler = Handler()
-
-    private var color: IntArray? = null
+    private lateinit var color: IntArray
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_treasure_set, group, false)
 
-        color = intArrayOf(StaticStore.getAttributeColor(Objects.requireNonNull<Context>(context), R.attr.TextPrimary))
+        color = intArrayOf(StaticStore.getAttributeColor(requireContext(), R.attr.TextPrimary))
 
         listeners(view)
 
@@ -76,130 +82,198 @@ class LUTreasureSetting : Fragment() {
         val eoce = view.findViewById<TextInputEditText>(R.id.eoctreat)
         val eocitfe = view.findViewById<TextInputEditText>(R.id.eocitftreat)
 
-        val teches = arrayOfNulls<TextInputEditText>(6)
-
-        for (i in teches.indices) {
-            teches[i] = view.findViewById(techeid[i])
+        val teches = Array<TextInputEditText>(6) {
+            view.findViewById(techeid[it])
         }
 
-        val eoces = arrayOfNulls<TextInputEditText>(6)
-
-        for (i in eoces.indices) {
-            eoces[i] = view.findViewById(eoceid[i])
+        val eoces = Array<TextInputEditText>(6) {
+            view.findViewById(eoceid[it])
         }
 
-        val eocitfes = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in eocitfes.indices) {
-            eocitfes[i] = view.findViewById(eocitfeid[i])
+        val eocitfes = Array<TextInputEditText>(3) {
+            view.findViewById(eocitfeid[it])
         }
 
         val itfe = view.findViewById<TextInputEditText>(R.id.itffruittreat)
 
-        val itfes = arrayOfNulls<TextInputEditText>(4)
-
-        for (i in itfes.indices) {
-            itfes[i] = view.findViewById(itfeid[i])
+        val itfes = Array<TextInputEditText>(4) {
+            view.findViewById(itfeid[it])
         }
 
         val cotce = view.findViewById<TextInputEditText>(R.id.cotctreat)
 
-        val cotces = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in cotces.indices) {
-            cotces[i] = view.findViewById(cotceid[i])
+        val cotces = Array<TextInputEditText>(3) {
+            view.findViewById(cotceid[it])
         }
 
         val itfcrye = view.findViewById<TextInputEditText>(R.id.itfcrytreat)
 
         val cotccrye = view.findViewById<TextInputEditText>(R.id.cotccrytreat)
 
-        val maskes = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in maskes.indices) {
-            maskes[i] = view.findViewById(maskeid[i])
+        val maskes = Array<TextInputEditText>(3) {
+            view.findViewById(maskeid[it])
         }
 
-        val runnable = object : Runnable {
-            override fun run() {
-                if (StaticStore.updateTreasure) {
-                    val t = BasisSet.current.t()
 
-                    initialized = false
+        val t = BasisSet.current().t()
 
-                    itfcrye.setText(t.alien.toString())
-                    cotccrye.setText(t.star.toString())
+        initialized = false
 
-                    for (i in 0..5) {
-                        teches[i]?.setText(t.tech[i].toString())
-                    }
+        itfcrye.setText(t.alien.toString())
+        cotccrye.setText(t.star.toString())
 
-                    canatke.setText(t.tech[6].toString())
-                    canrangee.setText(t.tech[7].toString())
-
-                    for (i in 0..5) {
-                        eoces[i]?.setText(t.trea[i].toString())
-                    }
-
-                    for (i in eocitfes.indices) {
-                        eocitfes[i]?.setText(t.trea[i + 6].toString())
-                    }
-
-                    for (i in 0..3) {
-                        itfes[i]?.setText(t.fruit[i].toString())
-                    }
-
-                    for (i in 4 until t.fruit.size) {
-                        cotces[i - 4]?.setText(t.fruit[i].toString())
-                    }
-
-                    for (i in t.gods.indices) {
-                        maskes[i]?.setText(t.gods[i].toString())
-                    }
-
-
-                    if (valuesAllSame(0))
-                        teche.setText(t.tech[0].toString())
-
-                    if (valuesAllSame(1))
-                        eoce.setText(t.trea[0].toString())
-
-                    if (valuesAllSame(2))
-                        eocitfe.setText(t.trea[6].toString())
-
-                    if (valuesAllSame(3))
-                        itfe.setText(t.fruit[0].toString())
-
-                    if (valuesAllSame(4))
-                        cotce.setText(t.fruit[4].toString())
-
-                    initialized = true
-
-                    StaticStore.updateTreasure = false
-                }
-
-                if (!destroyed)
-                    handler.postDelayed(this, 50)
-            }
+        for (i in 0..5) {
+            teches[i].setText(t.tech[i].toString())
         }
 
-        handler.postDelayed(runnable, 50)
+        canatke.setText(t.tech[6].toString())
+        canrangee.setText(t.tech[7].toString())
+
+        for (i in 0..5) {
+            eoces[i].setText(t.trea[i].toString())
+        }
+
+        for (i in eocitfes.indices) {
+            eocitfes[i].setText(t.trea[i + 6].toString())
+        }
+
+        for (i in 0..3) {
+            itfes[i].setText(t.fruit[i].toString())
+        }
+
+        for (i in 4 until t.fruit.size) {
+            cotces[i - 4].setText(t.fruit[i].toString())
+        }
+
+        for (i in t.gods.indices) {
+            maskes[i].setText(t.gods[i].toString())
+        }
+
+        if (valuesAllSame(0))
+            teche.setText(t.tech[0].toString())
+
+        if (valuesAllSame(1))
+            eoce.setText(t.trea[0].toString())
+
+        if (valuesAllSame(2))
+            eocitfe.setText(t.trea[6].toString())
+
+        if (valuesAllSame(3))
+            itfe.setText(t.fruit[0].toString())
+
+        if (valuesAllSame(4))
+            cotce.setText(t.fruit[4].toString())
+
+        initialized = true
 
         return view
     }
 
+    fun update() {
+        val view = view ?: return
+
+        val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
+        val canatke = view.findViewById<TextInputEditText>(R.id.canatklevt)
+        val canrangee = view.findViewById<TextInputEditText>(R.id.canrangelevt)
+        val eoce = view.findViewById<TextInputEditText>(R.id.eoctreat)
+        val eocitfe = view.findViewById<TextInputEditText>(R.id.eocitftreat)
+
+        val teches = Array<TextInputEditText>(6) {
+            view.findViewById(techeid[it])
+        }
+
+        val eoces = Array<TextInputEditText>(6) {
+            view.findViewById(eoceid[it])
+        }
+
+        val eocitfes = Array<TextInputEditText>(3) {
+            view.findViewById(eocitfeid[it])
+        }
+
+        val itfe = view.findViewById<TextInputEditText>(R.id.itffruittreat)
+
+        val itfes = Array<TextInputEditText>(4) {
+            view.findViewById(itfeid[it])
+        }
+
+        val cotce = view.findViewById<TextInputEditText>(R.id.cotctreat)
+
+        val cotces = Array<TextInputEditText>(3) {
+            view.findViewById(cotceid[it])
+        }
+
+        val itfcrye = view.findViewById<TextInputEditText>(R.id.itfcrytreat)
+
+        val cotccrye = view.findViewById<TextInputEditText>(R.id.cotccrytreat)
+
+        val maskes = Array<TextInputEditText>(3) {
+            view.findViewById(maskeid[it])
+        }
+
+        val t = BasisSet.current().t()
+
+        initialized = false
+
+        itfcrye.setText(t.alien.toString())
+        cotccrye.setText(t.star.toString())
+
+        for (i in 0..5) {
+            teches[i].setText(t.tech[i].toString())
+        }
+
+        canatke.setText(t.tech[6].toString())
+        canrangee.setText(t.tech[7].toString())
+
+        for (i in 0..5) {
+            eoces[i].setText(t.trea[i].toString())
+        }
+
+        for (i in eocitfes.indices) {
+            eocitfes[i].setText(t.trea[i + 6].toString())
+        }
+
+        for (i in 0..3) {
+            itfes[i].setText(t.fruit[i].toString())
+        }
+
+        for (i in 4 until t.fruit.size) {
+            cotces[i - 4].setText(t.fruit[i].toString())
+        }
+
+        for (i in t.gods.indices) {
+            maskes[i].setText(t.gods[i].toString())
+        }
+
+        if (valuesAllSame(0))
+            teche.setText(t.tech[0].toString())
+
+        if (valuesAllSame(1))
+            eoce.setText(t.trea[0].toString())
+
+        if (valuesAllSame(2))
+            eocitfe.setText(t.trea[6].toString())
+
+        if (valuesAllSame(3))
+            itfe.setText(t.fruit[0].toString())
+
+        if (valuesAllSame(4))
+            cotce.setText(t.fruit[4].toString())
+
+        initialized = true
+    }
+
     private fun listeners(view: View) {
-        val t = BasisSet.current.t()
+        val t = BasisSet.current().t()
 
         val tech = view.findViewById<TextInputLayout>(R.id.statschmulti)
         val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
 
-        val techs = arrayOfNulls<TextInputLayout>(6)
-        val teches = arrayOfNulls<TextInputEditText>(6)
+        val techs = Array<TextInputLayout>(6) {
+            view.findViewById(techid[it])
+        }
 
-        for (i in techs.indices) {
-            techs[i] = view.findViewById(techid[i])
-            teches[i] = view.findViewById(techeid[i])
+        val teches = Array<TextInputEditText>(6) {
+            view.findViewById(techeid[it])
         }
 
         val canatk = view.findViewById<TextInputLayout>(R.id.canatklev)
@@ -214,42 +288,42 @@ class LUTreasureSetting : Fragment() {
         val eocitf = view.findViewById<TextInputLayout>(R.id.eocitftrea)
         val eocitfe = view.findViewById<TextInputEditText>(R.id.eocitftreat)
 
-        val eocs = arrayOfNulls<TextInputLayout>(6)
-        val eoces = arrayOfNulls<TextInputEditText>(6)
+        val eocs = Array<TextInputLayout>(6) {
+            view.findViewById(eocid[it])
+        }
 
-        for (i in eocs.indices) {
-            eocs[i] = view.findViewById(eocid[i])
-            eoces[i] = view.findViewById(eoceid[i])
+        val eoces = Array<TextInputEditText>(6) {
+            view.findViewById(eoceid[it])
         }
 
         val itf = view.findViewById<TextInputLayout>(R.id.itffruittrea)
         val itfe = view.findViewById<TextInputEditText>(R.id.itffruittreat)
 
-        val eocitfs = arrayOfNulls<TextInputLayout>(3)
-        val eocitfes = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in eocitfs.indices) {
-            eocitfs[i] = view.findViewById(eocitfid[i])
-            eocitfes[i] = view.findViewById(eocitfeid[i])
+        val eocitfs = Array<TextInputLayout>(3) {
+            view.findViewById(eocitfid[it])
         }
 
-        val itfs = arrayOfNulls<TextInputLayout>(4)
-        val itfes = arrayOfNulls<TextInputEditText>(4)
+        val eocitfes = Array<TextInputEditText>(3) {
+            view.findViewById(eocitfeid[it])
+        }
 
-        for (i in itfs.indices) {
-            itfs[i] = view.findViewById(itfid[i])
-            itfes[i] = view.findViewById(itfeid[i])
+        val itfs = Array<TextInputLayout>(4) {
+            view.findViewById(itfid[it])
+        }
+
+        val itfes = Array<TextInputEditText>(4) {
+            view.findViewById(itfeid[it])
         }
 
         val cotc = view.findViewById<TextInputLayout>(R.id.cotctrea)
         val cotce = view.findViewById<TextInputEditText>(R.id.cotctreat)
 
-        val cotcs = arrayOfNulls<TextInputLayout>(3)
-        val cotces = arrayOfNulls<TextInputEditText>(3)
+        val cotcs = Array<TextInputLayout>(3) {
+            view.findViewById(cotcid[it])
+        }
 
-        for (i in cotcs.indices) {
-            cotcs[i] = view.findViewById(cotcid[i])
-            cotces[i] = view.findViewById(cotceid[i])
+        val cotces = Array<TextInputEditText>(3) {
+            view.findViewById(cotceid[it])
         }
 
         val itfcry = view.findViewById<TextInputLayout>(R.id.itfcrytrea)
@@ -258,42 +332,42 @@ class LUTreasureSetting : Fragment() {
         val cotccry = view.findViewById<TextInputLayout>(R.id.cotccrytrea)
         val cotccrye = view.findViewById<TextInputEditText>(R.id.cotccrytreat)
 
-        val masks = arrayOfNulls<TextInputLayout>(3)
-        val maskes = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in masks.indices) {
-            masks[i] = view.findViewById(maskid[i])
-            maskes[i] = view.findViewById(maskeid[i])
+        val masks = Array<TextInputLayout>(3) {
+            view.findViewById(maskid[it])
         }
 
-        val expands = arrayOfNulls<FloatingActionButton>(5)
-        val layouts = arrayOfNulls<LinearLayout>(5)
+        val maskes = Array<TextInputEditText>(3) {
+            view.findViewById(maskeid[it])
+        }
 
-        for (i in expands.indices) {
-            expands[i] = view.findViewById(expandid[i])
-            layouts[i] = view.findViewById(layoutid[i])
+        val expands = Array<FloatingActionButton>(5) {
+            view.findViewById(expandid[it])
+        }
+
+        val layouts = Array<LinearLayout>(5) {
+            view.findViewById(layoutid[it])
         }
 
         //Listeners for expand image buttons
         for (i in expands.indices) {
 
-            expands[i]?.setOnClickListener(View.OnClickListener {
+            expands[i].setOnClickListener(View.OnClickListener {
                 if (SystemClock.elapsedRealtime() - StaticStore.infoClick < StaticStore.INFO_INTERVAL)
                     return@OnClickListener
 
                 StaticStore.infoClick = SystemClock.elapsedRealtime()
 
-                if (layouts[i]?.height ?: 0 == 0) {
-                    layouts[i]?.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                if (layouts[i].height == 0) {
+                    layouts[i].measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-                    val height = layouts[i]?.measuredHeight ?: 0
+                    val height = layouts[i].measuredHeight
 
                     val anim = ValueAnimator.ofInt(0, height)
                     anim.addUpdateListener { animation ->
                         val `val` = animation.animatedValue as Int
-                        val params = layouts[i]?.layoutParams
+                        val params = layouts[i].layoutParams
                         params?.height = `val`
-                        layouts[i]?.layoutParams = params
+                        layouts[i].layoutParams = params
                     }
 
                     anim.duration = 300
@@ -302,18 +376,18 @@ class LUTreasureSetting : Fragment() {
 
                     val c = context ?: return@OnClickListener
 
-                    expands[i]?.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.ic_expand_more_black_24dp))
+                    expands[i].setImageDrawable(ContextCompat.getDrawable(c, R.drawable.ic_expand_more_black_24dp))
                 } else {
-                    layouts[i]?.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    layouts[i].measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-                    val height = layouts[i]?.measuredHeight ?: 0
+                    val height = layouts[i].measuredHeight
 
                     val anim = ValueAnimator.ofInt(height, 0)
                     anim.addUpdateListener { animation ->
                         val `val` = animation.animatedValue as Int
-                        val params = layouts[i]?.layoutParams
+                        val params = layouts[i].layoutParams
                         params?.height = `val`
-                        layouts[i]?.layoutParams = params
+                        layouts[i].layoutParams = params
                     }
 
                     anim.duration = 300
@@ -322,7 +396,7 @@ class LUTreasureSetting : Fragment() {
 
                     val c = context ?: return@OnClickListener
 
-                    expands[i]?.setImageDrawable(ContextCompat.getDrawable(c, R.drawable.ic_expand_less_black_24dp))
+                    expands[i].setImageDrawable(ContextCompat.getDrawable(c, R.drawable.ic_expand_less_black_24dp))
                 }
             })
         }
@@ -338,30 +412,30 @@ class LUTreasureSetting : Fragment() {
         //Listeners for TextInputLayouts
 
         for (i in 0..5) {
-            teches[i]?.setText(t.tech[i].toString())
+            teches[i].setText(t.tech[i].toString())
         }
 
         canatke.setText(t.tech[6].toString())
         canrangee.setText(t.tech[7].toString())
 
         for (i in 0..5) {
-            eoces[i]?.setText(t.trea[i].toString())
+            eoces[i].setText(t.trea[i].toString())
         }
 
         for (i in eocitfes.indices) {
-            eocitfes[i]?.setText(t.trea[i + 6].toString())
+            eocitfes[i].setText(t.trea[i + 6].toString())
         }
 
         for (i in 0..3) {
-            itfes[i]?.setText(t.fruit[i].toString())
+            itfes[i].setText(t.fruit[i].toString())
         }
 
         for (i in 4 until t.fruit.size) {
-            cotces[i - 4]?.setText(t.fruit[i].toString())
+            cotces[i - 4].setText(t.fruit[i].toString())
         }
 
         for (i in t.gods.indices) {
-            maskes[i]?.setText(t.gods[i].toString())
+            maskes[i].setText(t.gods[i].toString())
         }
 
 
@@ -389,48 +463,48 @@ class LUTreasureSetting : Fragment() {
     private fun valuesAllSame(mode: Int): Boolean {
         when (mode) {
             0 -> {
-                val value = BasisSet.current.t().tech[0]
+                val value = BasisSet.current().t().tech[0]
 
                 for (i in 1..5) {
-                    if (value != BasisSet.current.t().tech[i])
+                    if (value != BasisSet.current().t().tech[i])
                         return false
                 }
 
                 return true
             }
             1 -> {
-                val value = BasisSet.current.t().trea[0]
+                val value = BasisSet.current().t().trea[0]
 
                 for (i in 1..5) {
-                    if (value != BasisSet.current.t().trea[i])
+                    if (value != BasisSet.current().t().trea[i])
                         return false
                 }
 
                 return true
             }
             2 -> {
-                val value = BasisSet.current.t().trea[6]
+                val value = BasisSet.current().t().trea[6]
 
                 for (i in 7..8)
-                    if (value != BasisSet.current.t().trea[i])
+                    if (value != BasisSet.current().t().trea[i])
                         return false
 
                 return true
             }
             3 -> {
-                val value = BasisSet.current.t().fruit[0]
+                val value = BasisSet.current().t().fruit[0]
 
                 for (i in 1..3)
-                    if (value != BasisSet.current.t().fruit[i])
+                    if (value != BasisSet.current().t().fruit[i])
                         return false
 
                 return true
             }
             4 -> {
-                val value = BasisSet.current.t().fruit[4]
+                val value = BasisSet.current().t().fruit[4]
 
-                for (i in 5 until BasisSet.current.t().fruit.size)
-                    if (value != BasisSet.current.t().fruit[i])
+                for (i in 5 until BasisSet.current().t().fruit.size)
+                    if (value != BasisSet.current().t().fruit[i])
                         return false
 
                 return true
@@ -446,10 +520,10 @@ class LUTreasureSetting : Fragment() {
         }
     }
 
-    private fun setListenerforTextInputLayouts(vararg texts: Array<TextInputLayout?>) {
+    private fun setListenerforTextInputLayouts(vararg texts: Array<TextInputLayout>) {
         for (ts in texts) {
             for (t in ts) {
-                t?.setHelperTextColor(ColorStateList(states, color))
+                t.setHelperTextColor(ColorStateList(states, color))
             }
         }
     }
@@ -459,34 +533,24 @@ class LUTreasureSetting : Fragment() {
 
         if (view == null) return
 
-        val teches = arrayOfNulls<TextInputEditText>(6)
-
-        for (i in teches.indices) {
-            teches[i] = view.findViewById(techeid[i])
+        val teches = Array<TextInputEditText>(6) {
+            view.findViewById(techeid[it])
         }
 
-        val eoces = arrayOfNulls<TextInputEditText>(6)
-
-        for (i in eoces.indices) {
-            eoces[i] = view.findViewById(eoceid[i])
+        val eoces = Array<TextInputEditText>(6) {
+            view.findViewById(eoceid[it])
         }
 
-        val eocitfes = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in eocitfes.indices) {
-            eocitfes[i] = view.findViewById(eocitfeid[i])
+        val eocitfes = Array<TextInputEditText>(3) {
+            view.findViewById(eocitfeid[it])
         }
 
-        val itfes = arrayOfNulls<TextInputEditText>(4)
-
-        for (i in itfes.indices) {
-            itfes[i] = view.findViewById(itfeid[i])
+        val itfes = Array<TextInputEditText>(4) {
+            view.findViewById(itfeid[it])
         }
 
-        val cotces = arrayOfNulls<TextInputEditText>(3)
-
-        for (i in cotces.indices) {
-            cotces[i] = view.findViewById(cotceid[i])
+        val cotces = Array<TextInputEditText>(3) {
+            view.findViewById(cotceid[it])
         }
 
         for (i in texts.indices) {
@@ -531,7 +595,7 @@ class LUTreasureSetting : Fragment() {
                         return
 
                     if (s.toString().isNotEmpty()) {
-                        val t = BasisSet.current.t()
+                        val t = BasisSet.current().t()
 
                         canbeEdited = false
 
@@ -541,25 +605,25 @@ class LUTreasureSetting : Fragment() {
                             when (i) {
                                 0 -> for (j in 0..5) {
                                     t.tech[j] = `val`
-                                    teches[j]?.setText(`val`.toString())
+                                    teches[j].setText(`val`.toString())
                                 }
                                 1 -> t.tech[6] = `val`
                                 2 -> t.tech[7] = `val`
                                 3 -> for (j in 0..5) {
                                     t.trea[j] = `val`
-                                    eoces[j]?.setText(`val`.toString())
+                                    eoces[j].setText(`val`.toString())
                                 }
                                 4 -> for (j in 6..8) {
                                     t.trea[j] = `val`
-                                    eocitfes[j - 6]?.setText(`val`.toString())
+                                    eocitfes[j - 6].setText(`val`.toString())
                                 }
                                 5 -> for (j in 0..3) {
                                     t.fruit[j] = `val`
-                                    itfes[j]?.setText(`val`.toString())
+                                    itfes[j].setText(`val`.toString())
                                 }
                                 6 -> for (j in 4 until t.fruit.size) {
                                     t.fruit[j] = `val`
-                                    cotces[j - 4]?.setText(`val`.toString())
+                                    cotces[j - 4].setText(`val`.toString())
                                 }
                                 7 -> t.alien = `val`
                                 8 -> t.star = `val`
@@ -568,42 +632,46 @@ class LUTreasureSetting : Fragment() {
                             when (i) {
                                 0 -> for (j in 0..5) {
                                     t.tech[j] = 30
-                                    teches[j]?.setText(30.toString())
+                                    teches[j].setText(30.toString())
                                 }
                                 1 -> t.tech[6] = 30
                                 2 -> t.tech[7] = 10
                                 3 -> for (j in 0..5) {
                                     t.trea[j] = 300
-                                    eoces[j]?.setText(300.toString())
+                                    eoces[j].setText(300.toString())
                                 }
                                 4 -> for (j in 6..8) {
                                     t.trea[j] = 600
-                                    eocitfes[j - 6]?.setText(600.toString())
+                                    eocitfes[j - 6].setText(600.toString())
                                 }
                                 5 -> for (j in 0..3) {
                                     t.fruit[j] = 300
-                                    itfes[j]?.setText(300.toString())
+                                    itfes[j].setText(300.toString())
                                 }
                                 6 -> for (j in 4 until t.fruit.size) {
                                     t.fruit[j] = 300
-                                    cotces[j - 4]?.setText(300.toString())
+                                    cotces[j - 4].setText(300.toString())
                                 }
                                 7 -> t.alien = 600
                                 8 -> t.star = 1500
                             }
                         }
 
-                        StaticStore.updateForm = true
+                        if(::line.isInitialized)
+                            line.updateUnitSetting()
 
                         canbeEdited = true
-                        StaticStore.saveLineUp(context)
+
+                        val c = context ?: return
+
+                        StaticStore.saveLineUp(c)
                     }
                 }
             })
         }
     }
 
-    private fun setListenerforTextInptEditTexts(view: View, vararg texts: Array<TextInputEditText?>) {
+    private fun setListenerforTextInptEditTexts(view: View, vararg texts: Array<TextInputEditText>) {
         if (context == null) return
 
         val tech = view.findViewById<TextInputLayout>(R.id.statschmulti)
@@ -624,7 +692,7 @@ class LUTreasureSetting : Fragment() {
         for (i in texts.indices) {
             for (j in texts[i].indices) {
 
-                texts[i][j]?.addTextChangedListener(object : TextWatcher {
+                texts[i][j].addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
                     }
@@ -664,7 +732,7 @@ class LUTreasureSetting : Fragment() {
 
                     override fun afterTextChanged(s: Editable) {
                         if (s.toString().isNotEmpty()) {
-                            val t = BasisSet.current.t()
+                            val t = BasisSet.current().t()
 
                             if (canbeEdited && Integer.parseInt(s.toString()) <= limitvalss[i] && Integer.parseInt(s.toString()) >= limitminss[i]) {
                                 val `val` = Integer.parseInt(s.toString())
@@ -711,8 +779,12 @@ class LUTreasureSetting : Fragment() {
                                 }
                             }
 
-                            StaticStore.updateForm = true
-                            StaticStore.saveLineUp(context)
+                            if(::line.isInitialized)
+                                line.updateUnitSetting()
+
+                            val c = context ?: return
+
+                            StaticStore.saveLineUp(c)
                         }
                     }
                 })
@@ -720,15 +792,7 @@ class LUTreasureSetting : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyed = true
-    }
-
-    companion object {
-
-        fun newInstance(): LUTreasureSetting {
-            return LUTreasureSetting()
-        }
+    fun setVariable(line: LineUpView) {
+        this.line = line
     }
 }

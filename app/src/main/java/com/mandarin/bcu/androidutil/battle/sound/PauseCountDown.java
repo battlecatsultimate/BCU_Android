@@ -2,6 +2,7 @@ package com.mandarin.bcu.androidutil.battle.sound;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 
@@ -183,7 +184,7 @@ public abstract class PauseCountDown {
 
     // handles counting down
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
         @SuppressLint("HandlerLeak")
         @Override

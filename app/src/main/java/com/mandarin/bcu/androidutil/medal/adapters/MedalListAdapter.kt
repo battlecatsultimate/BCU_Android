@@ -9,10 +9,10 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import java.util.*
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import kotlin.collections.ArrayList
 
-class MedalListAdapter(private val activity: Activity, private val num: Int, width: Int, private val imgwh: Float, lines: Array<String?>) : ArrayAdapter<String?>(activity, R.layout.medal_layout, lines) {
+class MedalListAdapter(private val activity: Activity, private val num: Int, width: Int, private val imgwh: Float, lines: Array<String?>, private val order: ArrayList<Int>) : ArrayAdapter<String?>(activity, R.layout.medal_layout, lines) {
     private val height: Int = width / num - StaticStore.dptopx(4f, activity)
 
     private class ViewHolder constructor(view: View) {
@@ -37,8 +37,10 @@ class MedalListAdapter(private val activity: Activity, private val num: Int, wid
 
 
         val posit = num * position
+
         holder.layout.removeAllViews()
         holder.icons.clear()
+
         for (j in 0 until num) {
             if (posit + j < StaticStore.medals.size) {
                 val b = StaticStore.getResizeb(StaticStore.medals[posit + j], activity, imgwh)
@@ -63,8 +65,8 @@ class MedalListAdapter(private val activity: Activity, private val num: Int, wid
                         val name = dialog.findViewById<TextView>(R.id.medalname)
                         val desc = dialog.findViewById<TextView>(R.id.medaldesc)
                         icon1.setImageBitmap(StaticStore.getResizeb(StaticStore.medals[posit + j], activity, imgwh))
-                        name.text = StaticStore.MEDNAME.getCont(posit + j)
-                        desc.text = StaticStore.MEDEXP.getCont(posit + j)
+                        name.text = StaticStore.MEDNAME.getCont(order[posit + j])
+                        desc.text = StaticStore.MEDEXP.getCont(order[posit + j])
                         val lp = WindowManager.LayoutParams()
                         lp.copyFrom(dialog.window?.attributes)
                         lp.width = WindowManager.LayoutParams.MATCH_PARENT

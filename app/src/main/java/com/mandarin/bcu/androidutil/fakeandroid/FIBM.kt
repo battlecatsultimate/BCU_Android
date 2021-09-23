@@ -14,6 +14,11 @@ class FIBM : FakeImage {
     @JvmField
     var password: String = ""
 
+    constructor() {
+        bit = StaticStore.empty(1, 1)
+        bit.recycle()
+    }
+
     constructor(read: Bitmap) {
         bit = read.copy(Bitmap.Config.ARGB_8888, true)
     }
@@ -81,9 +86,21 @@ class FIBM : FakeImage {
         bit.recycle()
     }
 
+    override fun cloneImage(): FakeImage {
+        val copy = if(bit.isRecycled)
+            StaticStore.empty(1, 1)
+        else
+            bit.copy(bit.config, true)
+
+        if(bit.isRecycled)
+            copy.recycle()
+
+        return FIBM(copy)
+    }
+
     companion object {
         @JvmField
-        val builder: ImageBuilder = BMBuilder()
+        val builder: ImageBuilder<Bitmap> = BMBuilder()
 
         fun build(bimg2: Bitmap?): FakeImage? {
             return try {

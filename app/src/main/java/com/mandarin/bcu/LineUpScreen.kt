@@ -3,26 +3,32 @@ package com.mandarin.bcu
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Point
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
-import com.mandarin.bcu.androidutil.lineup.asynchs.LUAdder
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.lineup.coroutine.LUAdder
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
 import java.util.*
 
 class LineUpScreen : AppCompatActivity() {
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val line = findViewById<LineUpView>(R.id.lineupView)
+
+        line.updateUnitList()
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,40 +49,32 @@ class LineUpScreen : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_line_up_screen)
 
-        val line = LineUpView(this)
+        val lineupPager = findViewById<ViewPager2>(R.id.lineuppager)
+
+        val line = LineUpView(this, lineupPager)
 
         line.id = R.id.lineupView
 
         val layout = findViewById<LinearLayout>(R.id.lineuplayout)
-        val display = windowManager.defaultDisplay
-        val size = Point()
 
-        display.getSize(size)
-
-        val w = size.x.toFloat()
+        val w = StaticStore.getScreenWidth(this, false)
         val h = w / 5.0f * 3
 
         line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
 
         layout.addView(line)
 
-        LUAdder(this, supportFragmentManager).execute()
+        LUAdder(this, supportFragmentManager, lifecycle).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -111,15 +109,12 @@ class LineUpScreen : AppCompatActivity() {
             StaticStore.showShortMessage(this, R.string.err_lusave_fail)
         }
 
-        StaticStore.updateList = false
         StaticStore.filterReset()
+        StaticStore.entityname = ""
         StaticStore.set = null
         StaticStore.lu = null
 
-        if(StaticStore.combos != null)
-            StaticStore.combos.clear()
-        else
-            StaticStore.combos = ArrayList()
+        StaticStore.combos.clear()
 
         super.onBackPressed()
     }
@@ -129,7 +124,12 @@ class LineUpScreen : AppCompatActivity() {
         StaticStore.toast = null
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+    override fun onResume() {
+        AContext.check()
 
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

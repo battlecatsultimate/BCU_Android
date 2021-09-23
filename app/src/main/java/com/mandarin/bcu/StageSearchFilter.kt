@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -16,35 +15,72 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.enemy.asynchs.EAdder
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import common.system.MultiLangCont
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
 import common.util.Data
-import common.util.pack.Pack
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
+import common.util.unit.Enemy
 import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
 
 class StageSearchFilter : AppCompatActivity() {
     companion object {
-        const val REQUEST_CODE = 200
-        val GAME_MUSICS = intArrayOf(3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,100,101,102,103,104,117,118,119,120,122,123,125)
+        val GAME_MUSICS = intArrayOf(
+            3,4,5,6,30,31,32,33,34,47,48,49,58,62,66,67,68,69,75,76,77,78,79,80,81,82,87,89,97,98,99,
+            100,101,102,103,104,117,118,119,120,122,123,125,126,127,130,131,132,133,140,141,142
+        )
     }
 
     private val radioid = intArrayOf(R.id.lessthan, R.id.same, R.id.greaterthan)
 
-    private val mdata = ArrayList<Int>()
-    private val bdata = ArrayList<Int>()
+    private val mdata = ArrayList<String>()
+    private val bdata = ArrayList<String>()
+
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val data = result.data
+
+        if (result.resultCode == Activity.RESULT_OK && data != null) {
+            val id = StaticStore.transformIdentifier<AbEnemy>(data.getStringExtra("Data")) ?: return@registerForActivityResult
+            val e = id.get() ?: return@registerForActivityResult
+
+            if(e !is Enemy)
+                return@registerForActivityResult
+
+            if (!StaticStore.stgenem.contains(e.id)) {
+                StaticStore.stgenem.add(e.id)
+
+                val enemygroup = findViewById<ChipGroup>(R.id.enemygroup)
+
+                val chip = Chip(this)
+                chip.id = R.id.enemychip + e.id.pack.hashCode() + e.id.id
+                chip.text = getEnemyName(e)
+                chip.isCloseIconVisible = true
+                chip.setOnCloseIconClickListener {
+                    StaticStore.stgenem.remove(e.id)
+                    enemygroup.removeView(chip)
+                }
+
+                enemygroup.addView(chip)
+            }
+        }
+    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,19 +102,13 @@ class StageSearchFilter : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_stage_search_filter)
 
@@ -102,12 +132,17 @@ class StageSearchFilter : AppCompatActivity() {
         scroll.isHorizontalScrollBarEnabled = false
 
         for (id in StaticStore.stgenem) {
+            val e = Identifier.get(id) ?: continue
+
+            if(e !is Enemy)
+                continue
+
             val chip = Chip(this)
-            chip.id = R.id.enemychip + id
-            chip.text = getEnemyName(id)
+            chip.id = R.id.enemychip + id.pack.hashCode() + id.id
+            chip.text = getEnemyName(e)
             chip.isCloseIconVisible = true
             chip.setOnCloseIconClickListener {
-                StaticStore.stgenem.remove(Integer.valueOf(id))
+                StaticStore.stgenem.remove(id)
                 enemygroup.removeView(chip)
             }
 
@@ -134,7 +169,8 @@ class StageSearchFilter : AppCompatActivity() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@StageSearchFilter, EnemyList::class.java)
                 intent.putExtra("mode", EAdder.MODE_SELECTION)
-                startActivityForResult(intent, REQUEST_CODE)
+
+                resultLauncher.launch(intent)
             }
         })
 
@@ -153,21 +189,23 @@ class StageSearchFilter : AppCompatActivity() {
         musics.add(getString(R.string.combo_all))
 
         for (i in GAME_MUSICS) {
-            musics.add(Data.hex(0) + " - "+number(i))
-            mdata.add(i)
+            musics.add(getString(R.string.pack_default) + " - "+number(i))
+            mdata.add(Identifier.DEF+" - "+number(i))
         }
 
-        for(i in Pack.map) {
-            if(i.value.id == 0)
+        for(i in UserProfile.getAllPacks()) {
+            if(i is PackData.DefPack)
                 continue
 
-            val ms = i.value.ms
+            val ms = i.musics
 
             for(j in ms.list) {
-                val musicName = j.name.replace(".ogg", "")
+                val p = StaticStore.getPackName(j.id.pack)
 
-                musics.add(Data.hex(i.key) + " - " + musicName)
-                mdata.add(i.key*1000+musicName.toInt())
+                val musicName = "$p - ${Data.trio(j.id.id)}"
+
+                musics.add(musicName)
+                mdata.add(musicName)
             }
         }
 
@@ -182,33 +220,37 @@ class StageSearchFilter : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 StaticStore.stgmusic = if(position == 0)
-                    -1
+                    ""
                 else
                     mdata[position-1]
             }
         }
 
-        if (StaticStore.stgmusic != -1) {
+        if (StaticStore.stgmusic.isNotEmpty()) {
             musicspin.setSelection(mdata.indexOf(StaticStore.stgmusic)+1, false)
         }
 
         val backgrounds = ArrayList<String>()
         backgrounds.add(getString(R.string.combo_all))
 
-        for(i in Pack.def.bg.list.indices) {
-            backgrounds.add(Data.hex(0)+ " - "+number(i))
-            bdata.add(i)
+        for(i in UserProfile.getBCData().bgs.list) {
+            backgrounds.add(getString(R.string.pack_default)+ " - "+number(i.id.id))
+
+            bdata.add(Identifier.DEF+" - "+number(i.id.id))
         }
 
-        for(i in Pack.map) {
-            if(i.value.id == 0)
+        for(i in UserProfile.getAllPacks()) {
+            if(i is PackData.DefPack)
                 continue
 
-            val bg = i.value.bg.list
+            if(i !is PackData.UserPack)
+                continue
+
+            val bg = i.bgs.list
 
             for(b in bg) {
-                backgrounds.add(Data.hex(i.key) + " - "+ number(StaticStore.getID(b.id)))
-                bdata.add(i.key*1000+StaticStore.getID(b.id))
+                backgrounds.add(i.desc.name + " - "+ number(b.id.id))
+                bdata.add(StaticStore.getPackName(b.id.pack) + " - "+number(b.id.id))
             }
         }
 
@@ -223,14 +265,14 @@ class StageSearchFilter : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 StaticStore.stgbg = if(position == 0)
-                    -1
+                    ""
                 else
                     bdata[position-1]
             }
 
         }
 
-        if(StaticStore.stgbg != -1) {
+        if(StaticStore.stgbg.isNotEmpty()) {
             val index = bdata.indexOf(StaticStore.stgbg)
 
             bgspin.setSelection(index+1, false)
@@ -448,38 +490,6 @@ class StageSearchFilter : AppCompatActivity() {
         bck.performClick()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                val id = data.getIntExtra("id", 0)
-                val pid = data.getIntExtra("pid", 0)
-
-                val p = Pack.map[pid] ?: return
-
-                val e = p.es.list[id]
-
-                if (!StaticStore.stgenem.contains(e.id)) {
-                    StaticStore.stgenem.add(e.id)
-
-                    val enemygroup = findViewById<ChipGroup>(R.id.enemygroup)
-
-                    val chip = Chip(this)
-                    chip.id = R.id.enemychip + e.id
-                    chip.text = getEnemyName(e.id)
-                    chip.isCloseIconVisible = true
-                    chip.setOnCloseIconClickListener {
-                        StaticStore.stgenem.remove(Integer.valueOf(e.id))
-                        enemygroup.removeView(chip)
-                    }
-
-                    enemygroup.addView(chip)
-                }
-            }
-        }
-    }
-
     override fun attachBaseContext(newBase: Context) {
         val shared = newBase.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
         val lang = shared?.getInt("Language",0) ?: 0
@@ -509,22 +519,22 @@ class StageSearchFilter : AppCompatActivity() {
         StaticStore.toast = null
     }
 
-    private fun getEnemyName(id: Int): String {
+    private fun getEnemyName(id: Enemy): String {
         try {
-            val p = Pack.map[StaticStore.getPID(id)] ?: return ""
+            val name = MultiLangCont.get(id) ?: id.name ?: ""
 
-            val e = p.es[StaticStore.getID(id)]
-
-            val name = MultiLangCont.ENAME.getCont(e) ?: e.name ?: ""
+            val pack = StaticStore.getPackName(id.id.pack)
 
             if (name == "") {
-                return getString(R.string.stg_sch_enemy) + number(id)
+                return getString(R.string.stg_sch_enemy) + " $pack - ${number(id.id.id)}"
             }
 
             return name
         } catch (e: Exception) {
             ErrorLogWriter.writeLog(e, StaticStore.upload, this)
-            return getString(R.string.stg_sch_enemy) + number(id)
+            val pack = StaticStore.getPackName(id.id.pack)
+
+            return getString(R.string.stg_sch_enemy) + " $pack - ${number(id.id.id)}"
         }
     }
 
@@ -540,5 +550,14 @@ class StageSearchFilter : AppCompatActivity() {
                 id.toString()
             }
         }
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

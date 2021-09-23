@@ -3,17 +3,31 @@ package com.mandarin.bcu.androidutil.lineup
 import android.content.Context
 import android.graphics.*
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
+import androidx.viewpager2.widget.ViewPager2
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.lineup.adapters.*
+import com.mandarin.bcu.androidutil.lineup.coroutine.LUAdder
 import common.battle.BasisSet
 import common.battle.LineUp
+import common.system.files.VFile
 import common.util.unit.Form
-import java.io.File
 import java.util.*
 
-class LineUpView(context: Context?) : View(context) {
+class LineUpView : View {
+    val pager: ViewPager2?
+
+    constructor(context: Context?) : super(context) {
+        this.pager = null
+    }
+
+    constructor(context: Context?, pager: ViewPager2) : super(context) {
+        this.pager = pager
+    }
+
     private val postionReplace = 600
 
     /**
@@ -96,6 +110,34 @@ class LineUpView(context: Context?) : View(context) {
 
     var yello = false
 
+    init {
+        val path = "./org/page/uni.png"
+
+        empty = VFile.get(path).data.img.bimg() as Bitmap
+
+        this.f = StaticStore.dptopx(8f, context).toFloat()
+
+        bd = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context, R.drawable.ic_delete_forever_black_24dp), bw * 2 / 3, bw * 2 / 3)
+        replace = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context, R.drawable.ic_autorenew_black_24dp), bw * 2 / 5, bw * 2 / 5)
+        p.isFilterBitmap = true
+        p.isAntiAlias = true
+        p.color = StaticStore.getAttributeColor(context, R.attr.ButtonPrimary)
+        floating.isFilterBitmap = true
+        floating.isAntiAlias = true
+        floating.alpha = 255 / 2
+        for (i in position.indices) {
+            for (j in position[i].indices) {
+                position[i][j][0] = bw * i
+                position[i][j][1] = bw * i
+            }
+        }
+
+        for (i in 0..14)
+            units.add(empty)
+
+        isHapticFeedbackEnabled = false
+    }
+
     private val timer: CountDownTimer = object : CountDownTimer(100, 100) {
         override fun onFinish() {
             yello = !yello
@@ -118,7 +160,10 @@ class LineUpView(context: Context?) : View(context) {
         drawDeleteBox(c)
         drawReplaceBox(c)
         drawSelectedOutLine(c)
-        if (drawFloating) drawFloatingImage(c)
+
+        if (drawFloating)
+            drawFloatingImage(c)
+
         if (touched) {
             invalidate()
         }
@@ -128,7 +173,10 @@ class LineUpView(context: Context?) : View(context) {
      * If floatB is true, draws floating unit image
      */
     private fun drawFloatingImage(c: Canvas) {
-        if (floatB != empty) c.drawBitmap(StaticStore.getResizebp(floatB, bw * 1.5f, bw * 1.5f), posx - bw * 1.5f / 2, posy - bw * 1.5f / 2, floating)
+        val f = floatB ?: return
+
+        if (f != empty)
+            c.drawBitmap(StaticStore.getResizebp(f, bw * 1.5f, bw * 1.5f), posx - bw * 1.5f / 2, posy - bw * 1.5f / 2, floating)
     }
 
     /**
@@ -137,6 +185,7 @@ class LineUpView(context: Context?) : View(context) {
     private fun getPosition() {
         val w = width.toFloat()
         val h = height.toFloat()
+
         if (w != 0f && h != 0f) {
             bw = w / 5.0f
             for (i in position.indices) {
@@ -152,19 +201,24 @@ class LineUpView(context: Context?) : View(context) {
      * Remove unit from lineup and itself using position
      */
     private fun removeUnit(posit: IntArray) {
-        if (StaticStore.currentForms == null) {
+        if (StaticStore.currentForms.isEmpty()) {
             toFormList()
         }
 
-        if (posit[0] * 5 + posit[1] >= StaticStore.currentForms.size || posit[0] * 5 + posit[1] < 0) if (posit[0] != 100) return
+        if (posit[0] * 5 + posit[1] >= StaticStore.currentForms.size || posit[0] * 5 + posit[1] < 0) if (posit[0] != 100)
+            return
+
         if (posit[0] != 100) {
             if (posit[0] * 5 + posit[1] < StaticStore.currentForms.size) {
                 StaticStore.currentForms.removeAt(posit[0] * 5 + posit[1])
                 StaticStore.currentForms.add(null)
+
                 units.removeAt(posit[0] * 5 + posit[1])
                 units.add(empty)
             }
+
             lastPosit--
+
             toFormArray()
         } else {
             repform = null
@@ -184,11 +238,16 @@ class LineUpView(context: Context?) : View(context) {
      */
     private fun drawReplaceBox(c: Canvas) {
         if (repform == null) {
-            c.drawBitmap(StaticStore.getResizebp(empty, bw, bw), 0f, bw * 2, p)
+            val e = empty ?: return
+
+            c.drawBitmap(StaticStore.getResizebp(e, bw, bw), 0f, bw * 2, p)
             c.drawBitmap(replace, bw / 2 - replace.width.toFloat() / 2, bw * 2.5f - replace.height.toFloat() / 2, icon)
         } else {
             var icon = repform!!.anim.uni.img.bimg() as Bitmap
-            if (icon.width != icon.height) icon = StaticStore.MakeIcon(context, icon, 48f)
+
+            if (icon.width != icon.height)
+                icon = StaticStore.makeIcon(context, icon, 48f)
+
             c.drawBitmap(StaticStore.getResizebp(icon, bw, bw), 0f, bw * 2, p)
         }
     }
@@ -198,9 +257,19 @@ class LineUpView(context: Context?) : View(context) {
      */
     private fun drawUnits(c: Canvas) {
         var k = 0
+
         for (floats in position) {
             for (aFloat in floats) {
-                if (k >= units.size) c.drawBitmap(StaticStore.getResizebp(empty, bw, bw), aFloat[0], aFloat[1], p) else c.drawBitmap(StaticStore.getResizebp(units[k], bw, bw), aFloat[0], aFloat[1], p)
+                if (k >= units.size) {
+                    val e = empty ?: continue
+
+                    c.drawBitmap(StaticStore.getResizebp(e, bw, bw), aFloat[0], aFloat[1], p)
+                } else {
+                    val u = units[k] ?: continue
+
+                    c.drawBitmap(StaticStore.getResizebp(u, bw, bw), aFloat[0], aFloat[1], p)
+                }
+
                 k += 1
             }
         }
@@ -215,17 +284,19 @@ class LineUpView(context: Context?) : View(context) {
             Color.MAGENTA
         }
 
-        if(StaticStore.position == null) {
+        if(StaticStore.position.isEmpty()) {
             p.color = color
             return
         }
 
         if(StaticStore.position[0] == -1) {
             p.color = color
+
             return
         } else if(StaticStore.position[0] == 100) {
             if(repform == null) {
                 p.color = color
+
                 return
             }
 
@@ -270,11 +341,17 @@ class LineUpView(context: Context?) : View(context) {
      * Changes 2 units' position using 2 ints. from is first unit's position, and to is second unit's position
      */
     private fun changeUnitPosition(from: Int, to: Int) {
-        if (from < 0 || from >= units.size || to < 0 || to >= units.size) return
+        if (from < 0 || from >= units.size || to < 0 || to >= units.size)
+            return
+
         val b = units[from]
         val b2 = units[to]
-        if (b == empty) return
+
+        if (b == empty)
+            return
+
         val f = StaticStore.currentForms[from]
+
         if (b2 != empty) {
             units.removeAt(from)
             StaticStore.currentForms.removeAt(from)
@@ -317,9 +394,9 @@ class LineUpView(context: Context?) : View(context) {
                 val icon = repform?.anim?.uni?.img?.bimg()
 
                 b = if(icon == null) {
-                    StaticStore.MakeIcon(context, null, 48f)
+                    StaticStore.makeIcon(context, null, 48f)
                 } else {
-                    StaticStore.MakeIcon(context, icon as Bitmap, 48f)
+                    StaticStore.makeIcon(context, icon as Bitmap, 48f)
                 }
             }
 
@@ -338,9 +415,9 @@ class LineUpView(context: Context?) : View(context) {
                 val icon = repform?.anim?.uni?.img?.bimg()
 
                 b2 = if(icon == null) {
-                    StaticStore.MakeIcon(context, null, 48f)
+                    StaticStore.makeIcon(context, null, 48f)
                 } else {
-                    StaticStore.MakeIcon(context, icon as Bitmap, 48f)
+                    StaticStore.makeIcon(context, icon as Bitmap, 48f)
                 }
             }
 
@@ -352,12 +429,12 @@ class LineUpView(context: Context?) : View(context) {
 
         if (b != null) {
             if (b.height != b.height)
-                b = StaticStore.MakeIcon(context, b, 48f)
+                b = StaticStore.makeIcon(context, b, 48f)
         }
 
         if (b2 != null) {
             if (b2.height != b2.width)
-                b2 = StaticStore.MakeIcon(context, b2, 48f)
+                b2 = StaticStore.makeIcon(context, b2, 48f)
         }
 
         if (f == null && f2 == null)
@@ -407,6 +484,7 @@ class LineUpView(context: Context?) : View(context) {
      */
     fun checkChange() {
         val posit = getTouchedUnit(posx, posy) ?: return
+
         if (posit[0] == -100 && posit[1] == -100) {
             removeUnit(prePosit)
         } else if (posit[0] == 100 || prePosit[0] == 100) {
@@ -414,7 +492,8 @@ class LineUpView(context: Context?) : View(context) {
         } else {
             changeUnitPosition(5 * prePosit[0] + prePosit[1], 5 * posit[0] + posit[1])
         }
-        BasisSet.current.sele.lu.renew()
+
+        BasisSet.current().sele.lu.renew()
 
         try {
             StaticStore.saveLineUp(context)
@@ -443,12 +522,21 @@ class LineUpView(context: Context?) : View(context) {
      * Gets unit's icon using position vlaues
      */
     fun getUnitImage(x: Int, y: Int): Bitmap? {
-        if (x == 100) return if (repform != null) {
-            var b = repform!!.anim.uni.img.bimg() as Bitmap
-            if (b.height != b.width) b = StaticStore.MakeIcon(context, b, 48f)
-            b
-        } else empty
-        return if (5 * x + y >= units.size || 5 * x + y < 0) empty else units[5 * x + y]
+        if (x == 100)
+            return if (repform != null) {
+                var b = repform!!.anim.uni.img.bimg() as Bitmap
+
+                if (b.height != b.width)
+                    b = StaticStore.makeIcon(context, b, 48f)
+
+                b
+            } else
+                empty
+
+        return if (5 * x + y >= units.size || 5 * x + y < 0)
+            empty
+        else
+            units[5 * x + y]
     }
 
     /**
@@ -457,19 +545,28 @@ class LineUpView(context: Context?) : View(context) {
     fun getTouchedUnit(x: Float, y: Float): IntArray? {
         for (i in position.indices) {
             for (j in position[i].indices) {
-                if (x - position[i][j][0] >= 0 && y - position[i][j][1] > 0 && x - bw - position[i][j][0] < 0 && y - bw - position[i][j][1] < 0) return intArrayOf(i, j)
+                if (x - position[i][j][0] >= 0 && y - position[i][j][1] > 0 && x - bw - position[i][j][0] < 0 && y - bw - position[i][j][1] < 0)
+                    return intArrayOf(i, j)
             }
         }
-        if (y > bw * 2 && y <= bw * 3 && x >= bw) return intArrayOf(-100, -100)
-        return if (y > bw * 2 && y <= bw * 3 && x <= bw) intArrayOf(100, 100) else null
+
+        if (y > bw * 2 && y <= bw * 3 && x >= bw)
+            return intArrayOf(-100, -100)
+
+        return if (y > bw * 2 && y <= bw * 3 && x <= bw)
+            intArrayOf(100, 100)
+        else
+            null
     }
 
     /**
      * Gets form data from array of forms in Lineup and converts it to list of forms in StaticStore
      */
     private fun toFormList() {
-        val forms = BasisSet.current.sele.lu.fs
+        val forms = BasisSet.current().sele.lu.fs
+
         StaticStore.currentForms = ArrayList()
+
         for (form in forms) {
             StaticStore.currentForms.addAll(listOf(*form))
         }
@@ -479,9 +576,12 @@ class LineUpView(context: Context?) : View(context) {
      * Gets form data from list of forms in StaticStore and converts it to array of forms in Lineup
      */
     fun toFormArray() {
-        for (i in BasisSet.current.sele.lu.fs.indices) {
-            for (j in BasisSet.current.sele.lu.fs[i].indices) {
-                if (i * 5 + j < StaticStore.currentForms.size) BasisSet.current.sele.lu.fs[i][j] = StaticStore.currentForms[i * 5 + j] else BasisSet.current.sele.lu.fs[i][j] = null
+        for (i in BasisSet.current().sele.lu.fs.indices) {
+            for (j in BasisSet.current().sele.lu.fs[i].indices) {
+                if (i * 5 + j < StaticStore.currentForms.size)
+                    BasisSet.current().sele.lu.fs[i][j] = StaticStore.currentForms[i * 5 + j]
+                else
+                    BasisSet.current().sele.lu.fs[i][j] = null
             }
         }
     }
@@ -492,27 +592,34 @@ class LineUpView(context: Context?) : View(context) {
     fun updateLineUp() {
         clearAllUnit()
         toFormList()
+
         lastPosit = 0
-        for (i in BasisSet.current.sele.lu.fs.indices) {
-            for (j in BasisSet.current.sele.lu.fs[i].indices) {
-                val f = BasisSet.current.sele.lu.fs[i][j]
+
+        for (i in BasisSet.current().sele.lu.fs.indices) {
+            for (j in BasisSet.current().sele.lu.fs[i].indices) {
+                val f = BasisSet.current().sele.lu.fs[i][j]
+
                 if (f != null) {
                     if (repform != null) {
                         if (f.unit === repform!!.unit) {
                             repform = null
+
                             StaticStore.position = intArrayOf(-1, -1)
-                            StaticStore.updateForm = true
-                            StaticStore.updateOrb = true
+
+                            updateUnitSetting()
+                            updateUnitOrb()
                         }
                     }
+
                     var b = f.anim.uni.img.bimg() as Bitmap
-                    if (b.width != b.height) b = StaticStore.MakeIcon(context, b, 48f)
+                    if (b.width != b.height) b = StaticStore.makeIcon(context, b, 48f)
                     changeUnitImage(i * 5 + j, b)
                     lastPosit += 1
                 }
             }
         }
-        BasisSet.current.sele.lu.renew()
+
+        BasisSet.current().sele.lu.renew()
     }
 
     /**
@@ -520,8 +627,9 @@ class LineUpView(context: Context?) : View(context) {
      */
     fun changeFroms(lu: LineUp) {
         for (i in lu.fs.indices) {
-            System.arraycopy(lu.fs[i], 0, BasisSet.current.sele.lu.fs[i], 0, lu.fs[i].size)
+            System.arraycopy(lu.fs[i], 0, BasisSet.current().sele.lu.fs[i], 0, lu.fs[i].size)
         }
+
         updateLineUp()
     }
 
@@ -530,29 +638,57 @@ class LineUpView(context: Context?) : View(context) {
         super.onDetachedFromWindow()
     }
 
-    init {
-        val path = StaticStore.getExternalPath(context)+"org/page/uni.png"
-        val f = File(path)
-        empty = if (!f.exists()) {
-            StaticStore.empty(context, 10f, 10f)
-        } else {
-            BitmapFactory.decodeFile(path)
-        }
-        this.f = StaticStore.dptopx(8f, context).toFloat()
-        bd = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context, R.drawable.ic_delete_forever_black_24dp), bw * 2 / 3, bw * 2 / 3)
-        replace = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context, R.drawable.ic_autorenew_black_24dp), bw * 2 / 5, bw * 2 / 5)
-        p.isFilterBitmap = true
-        p.isAntiAlias = true
-        p.color = StaticStore.getAttributeColor(context, R.attr.ButtonPrimary)
-        floating.isFilterBitmap = true
-        floating.isAntiAlias = true
-        floating.alpha = 255 / 2
-        for (i in position.indices) {
-            for (j in position[i].indices) {
-                position[i][j][0] = bw * i
-                position[i][j][1] = bw * i
-            }
-        }
-        for (i in 0..14) units.add(empty)
+    fun updateUnitList() {
+        Log.i("LineupView", "Updating unit list...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[0] as LUUnitList).update()
+    }
+
+    fun updateUnitSetting() {
+        Log.i("LineupView", "Updating unit setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[1] as LUUnitSetting).update()
+    }
+
+    fun updateUnitOrb() {
+        Log.i("LineupView", "Updating unit orb setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[2] as LUOrbSetting).update()
+    }
+
+    fun updateCastleSetting() {
+        Log.i("LineupView", "Updating castle setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[3] as LUCastleSetting).update()
+    }
+
+    fun updateTreasureSetting() {
+        Log.i("LineupView", "Updating treasure setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[4] as LUTreasureSetting).update()
+    }
+
+    fun updateConstructionSetting() {
+        Log.i("LineupView", "Updating construction setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            (adapter.fragments[5] as LUConstruction).update()
     }
 }

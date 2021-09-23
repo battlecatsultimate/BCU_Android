@@ -21,8 +21,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
-        android:id="@+id/lineupprog"
-        style="?android:attr/progressBarStyle"
+        android:id="@+id/prog"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,15 +64,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/lineupst"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/unit_list_unitload"
+        android:text="@string/load_unit"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lineupprog" />
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/lineupbck"
@@ -158,8 +158,8 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.1"
             android:contentDescription="@string/def_description"
-            android:tint="?attr/TextPrimary"
-            app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+            app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+            app:tint="?attr/TextPrimary" />
 
         <Spinner
             android:id="@+id/luspin"
@@ -197,25 +197,31 @@
             android:layout_height="match_parent"
             android:background="?attr/TableBorder" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:orientation="vertical">
+            android:layout_weight="0.5">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/lineuptab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:tabMode="scrollable"
                 app:tabTextAppearance="@style/CounterStyle" />
 
-            <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/lineuppager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineuptab" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </TableRow>
 

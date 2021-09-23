@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mandarin.bcu.androidutil.supports.AutoMarquee xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/spinnertext"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,5 +9,6 @@
     android:paddingTop="12dp"
     android:paddingEnd="8dp"
     android:paddingBottom="12dp"
+    android:singleLine="true"
     android:textColor="?attr/TextPrimary"
     android:textSize="12sp" />

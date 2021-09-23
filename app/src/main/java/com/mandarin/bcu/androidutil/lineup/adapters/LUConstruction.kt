@@ -1,30 +1,27 @@
 package com.mandarin.bcu.androidutil.lineup.adapters
 
-import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.battle.BasisSet
+import common.battle.Treasure
 import common.util.Data
 
 class LUConstruction : Fragment() {
 
     private var initialized = false
     private var editable = true
-    private var destroyed = false
 
     private val layoutid = intArrayOf(R.id.castlelev, R.id.slowlev, R.id.walllev, R.id.stoplev, R.id.waterlev, R.id.zombielev, R.id.breakerlev, R.id.curselev)
 
@@ -34,56 +31,58 @@ class LUConstruction : Fragment() {
 
     private var color: IntArray? = null
 
-    private val handler = Handler()
-    private var runnable = Runnable { }
-
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.lineup_construction, group, false)
 
         if (context == null) return view
 
-        color = intArrayOf(getAttributeColor(context!!, R.attr.TextPrimary))
+        color = intArrayOf(StaticStore.getAttributeColor(requireContext(), R.attr.TextPrimary))
 
         listeners(view)
 
-        runnable = object : Runnable {
-            override fun run() {
-                if (StaticStore.updateConst) {
-                    initialized = false
+        initialized = false
 
-                    val texts = arrayOfNulls<TextInputEditText>(Data.BASE_TOT)
-
-                    val text = view.findViewById<TextInputEditText>(R.id.constlevt)
-
-                    if (valuesAllSame())
-                        text.setText(BasisSet.current.t().bslv[0].toString())
-
-                    val vals = BasisSet.current.t().bslv
-
-                    for (i in vals.indices) {
-                        texts[i] = view.findViewById(textid[i])
-                        texts[i]?.setText(vals[i].toString())
-                    }
-
-                    initialized = true
-
-                    StaticStore.updateConst = false
-                }
-
-                if (!destroyed)
-                    handler.postDelayed(this, 50)
-            }
+        val texts = Array<TextInputEditText>(Data.BASE_TOT) {
+            view.findViewById(textid[it])
         }
 
-        handler.postDelayed(runnable, 50)
+        val text = view.findViewById<TextInputEditText>(R.id.constlevt)
+
+        if (valuesAllSame())
+            text.setText(BasisSet.current().t().bslv[0].toString())
+
+        val vals = BasisSet.current().t().bslv
+
+        for (i in vals.indices) {
+            texts[i].setText(vals[i].toString())
+        }
+
+        initialized = true
 
         return view
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyed = true
-        handler.removeCallbacks(runnable)
+    fun update() {
+        val view = view ?: return
+
+        initialized = false
+
+        val texts = Array<TextInputEditText>(Data.BASE_TOT) {
+            view.findViewById(textid[it])
+        }
+
+        val text = view.findViewById<TextInputEditText>(R.id.constlevt)
+
+        if (valuesAllSame())
+            text.setText(BasisSet.current().t().bslv[0].toString())
+
+        val vals = BasisSet.current().t().bslv
+
+        for (i in vals.indices) {
+            texts[i].setText(vals[i].toString())
+        }
+
+        initialized = true
     }
 
     private fun listeners(view: View) {
@@ -101,9 +100,9 @@ class LUConstruction : Fragment() {
         setListenerforTextInputLayouts(constructions)
 
         if (valuesAllSame())
-            text.setText(BasisSet.current.t().bslv[0].toString())
+            text.setText(BasisSet.current().t().bslv[0].toString())
 
-        val vals = BasisSet.current.t().bslv
+        val vals = BasisSet.current().t().bslv
 
         for (i in vals.indices) {
             texts[i]?.setText(vals[i].toString())
@@ -116,7 +115,7 @@ class LUConstruction : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
-                    if (Integer.parseInt(s.toString()) > 20 || Integer.parseInt(s.toString()) < 1) {
+                    if (Integer.parseInt(s.toString()) > 30 || Integer.parseInt(s.toString()) < 1) {
                         if (construction.isHelperTextEnabled) {
                             construction.isHelperTextEnabled = false
                             construction.isErrorEnabled = true
@@ -128,7 +127,7 @@ class LUConstruction : Fragment() {
                             construction.isErrorEnabled = false
                             construction.isHelperTextEnabled = true
                             construction.setHelperTextColor(ColorStateList(states, color))
-                            construction.helperText = "1~20 Lv."
+                            construction.helperText = "1~30 Lv."
                         }
                     }
                 } else {
@@ -137,18 +136,18 @@ class LUConstruction : Fragment() {
                         construction.isErrorEnabled = false
                         construction.isHelperTextEnabled = true
                         construction.setHelperTextColor(ColorStateList(states, color))
-                        construction.helperText = "1~20 Lv."
+                        construction.helperText = "1~30 Lv."
                     }
                 }
             }
 
             override fun afterTextChanged(s: Editable) {
                 if (s.toString().isNotEmpty()) {
-                    val t = BasisSet.current.t()
+                    val t = BasisSet.current().t()
 
                     editable = false
 
-                    if (Integer.parseInt(s.toString()) in 1..20) {
+                    if (Integer.parseInt(s.toString()) in 1..30) {
                         val `val` = Integer.parseInt(s.toString())
 
                         for (i in texts.indices) {
@@ -157,8 +156,8 @@ class LUConstruction : Fragment() {
                         }
                     } else {
                         for (i in texts.indices) {
-                            t.bslv[i] = 20
-                            texts[i]?.setText(20.toString())
+                            t.bslv[i] = 30
+                            texts[i]?.setText(30.toString())
                         }
                     }
 
@@ -179,9 +178,20 @@ class LUConstruction : Fragment() {
     }
 
     private fun setListenersFortextInputEditText(construction: TextInputLayout, text: TextInputEditText?, constructions: Array<TextInputLayout?>, texts: Array<TextInputEditText?>) {
-        if (context == null) return
+        if (context == null)
+            return
 
         for (i in texts.indices) {
+
+            val max = if(i == 0)
+                30
+            else {
+                val curve = Treasure.curveData[i]
+
+                curve?.max ?: 30
+            }
+
+            constructions[i]?.helperText = "1~$max Lv."
 
             texts[i]?.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -190,7 +200,7 @@ class LUConstruction : Fragment() {
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (s.toString().isNotEmpty()) {
-                        if (Integer.parseInt(s.toString()) > 20 || Integer.parseInt(s.toString()) < 1) {
+                        if (Integer.parseInt(s.toString()) > max || Integer.parseInt(s.toString()) < 1) {
                             if (constructions[i]?.isHelperTextEnabled == true) {
                                 constructions[i]?.isHelperTextEnabled = false
                                 constructions[i]?.isErrorEnabled = true
@@ -202,7 +212,7 @@ class LUConstruction : Fragment() {
                                 constructions[i]?.isErrorEnabled = false
                                 constructions[i]?.isHelperTextEnabled = true
                                 constructions[i]?.setHelperTextColor(ColorStateList(states, color))
-                                constructions[i]?.helperText = "1~20 Lv."
+                                constructions[i]?.helperText = "1~$max Lv."
                             }
                         }
                     } else {
@@ -211,7 +221,7 @@ class LUConstruction : Fragment() {
                             constructions[i]?.isErrorEnabled = false
                             constructions[i]?.isHelperTextEnabled = true
                             constructions[i]?.setHelperTextColor(ColorStateList(states, color))
-                            constructions[i]?.helperText = "1~20 Lv."
+                            constructions[i]?.helperText = "1~$max Lv."
                         }
                     }
                 }
@@ -220,19 +230,21 @@ class LUConstruction : Fragment() {
                     if (!initialized) return
 
                     if (s.toString().isNotEmpty()) {
-                        val t = BasisSet.current.t()
+                        val t = BasisSet.current().t()
 
-                        if (editable && Integer.parseInt(s.toString()) <= 20 && Integer.parseInt(s.toString()) >= 1) {
+                        if (editable && Integer.parseInt(s.toString()) <= max && Integer.parseInt(s.toString()) >= 1) {
                             val `val` = Integer.parseInt(s.toString())
 
                             t.bslv[i] = `val`
 
                             text?.setText("")
                             construction.isHelperTextEnabled = true
-                            construction.helperText = "1~20 Lv."
+                            construction.helperText = "1~$max Lv."
                         }
 
-                        StaticStore.saveLineUp(context)
+                        val c = context ?: return
+
+                        StaticStore.saveLineUp(c)
                     }
                 }
             })
@@ -240,7 +252,7 @@ class LUConstruction : Fragment() {
     }
 
     private fun valuesAllSame(): Boolean {
-        val bases = BasisSet.current.t().bslv ?: return false
+        val bases = BasisSet.current().t().bslv ?: return false
 
         val check = bases[0]
 
@@ -256,20 +268,6 @@ class LUConstruction : Fragment() {
 
         fun newInstance(): LUConstruction {
             return LUConstruction()
-        }
-
-        private fun getAttributeColor(context: Context, attributeId: Int): Int {
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(attributeId, typedValue, true)
-            val colorRes = typedValue.resourceId
-            var color = -1
-            try {
-                color = ContextCompat.getColor(context, colorRes)
-            } catch (e: Resources.NotFoundException) {
-                e.printStackTrace()
-            }
-
-            return color
         }
     }
 }

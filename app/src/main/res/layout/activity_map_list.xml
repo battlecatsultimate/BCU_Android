@@ -53,24 +53,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_filter_list_black_24dp"
-        android:focusable="true" />
+        android:focusable="true"
+        android:contentDescription="@null" />
 
     <Spinner
         android:id="@+id/stgspin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@color/stageSelect"
         android:maxWidth="225dp"
         android:minWidth="144dp"
         android:popupBackground="?attr/stageSelect"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/stgtool"
         app:layout_constraintEnd_toStartOf="@+id/stgfilter"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@+id/stgbck"
         app:layout_constraintTop_toTopOf="@+id/stgtool" />
 
     <ProgressBar
-        android:id="@+id/mapprog"
-        style="?android:attr/progressBarStyle"
+        android:id="@+id/prog"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/maplist"
@@ -79,24 +84,25 @@
         app:layout_constraintTop_toTopOf="@+id/maplist" />
 
     <TextView
-        android:id="@+id/mapst"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/unit_list_unitload"
+        android:text="@string/load_stage"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapprog" />
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
 
     <ListView
         android:id="@+id/maplist"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fastScrollEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stgtool" >
+        app:layout_constraintTop_toBottomOf="@+id/stgtool">
 
     </ListView>
 

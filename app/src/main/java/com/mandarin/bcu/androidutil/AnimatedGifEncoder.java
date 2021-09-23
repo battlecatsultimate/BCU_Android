@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@SuppressWarnings("All")
 public class AnimatedGifEncoder {
 
     protected int width; // image size
@@ -85,7 +86,6 @@ public class AnimatedGifEncoder {
      * added.
      *
      * @param iter int number of iterations.
-     * @return
      */
     public void setRepeat(int iter) {
         if (iter >= 0) {
@@ -208,7 +208,6 @@ public class AnimatedGifEncoder {
      * greater than 20 do not yield significant improvements in speed.
      *
      * @param quality int greater than 0.
-     * @return
      */
     public void setQuality(int quality) {
         if (quality < 1)
@@ -286,9 +285,13 @@ public class AnimatedGifEncoder {
         // map image pixels to new palette
         int k = 0;
         for (int i = 0; i < nPix; i++) {
-            int index = nq.map(pixels[k++] & 0xff, pixels[k++] & 0xff, pixels[k++] & 0xff);
-            usedEntry[index] = true;
-            indexedPixels[i] = (byte) index;
+            try {
+                int index = nq.map(pixels[k++] & 0xff, pixels[k++] & 0xff, pixels[k++] & 0xff);
+                usedEntry[index] = true;
+                indexedPixels[i] = (byte) index;
+            } catch (Exception ignored) {
+
+            }
         }
         pixels = null;
         colorDepth = 8;
@@ -307,7 +310,7 @@ public class AnimatedGifEncoder {
             return -1;
         int r = (c >> 16) & 0xff;
         int g = (c >> 8) & 0xff;
-        int b = (c >> 0) & 0xff;
+        int b = (c) & 0xff;
         int minpos = 0;
         int dmin = 256 * 256 * 256;
         int len = colorTab.length;
@@ -344,7 +347,7 @@ public class AnimatedGifEncoder {
         for (int i = 0; i < data.length; i++) {
             int td = data[i];
             int tind = i * 3;
-            pixels[tind++] = (byte) ((td >> 0) & 0xFF);
+            pixels[tind++] = (byte) ((td) & 0xFF);
             pixels[tind++] = (byte) ((td >> 8) & 0xFF);
             pixels[tind] = (byte) ((td >> 16) & 0xFF);
         }
@@ -503,6 +506,7 @@ public class AnimatedGifEncoder {
  */
 
 //	 Ported to Java 12/00 K Weiner
+@SuppressWarnings("All")
 class NeuQuant {
 
     protected static final int netsize = 256; /* number of colours used */
@@ -730,8 +734,6 @@ class NeuQuant {
         radius = initradius;
 
         rad = radius >> radiusbiasshift;
-        if (rad <= 1)
-            rad = 0;
         for (i = 0; i < rad; i++)
             radpower[i] = alpha * (((rad * rad - i * i) * radbias) / (rad * rad));
 
@@ -754,7 +756,7 @@ class NeuQuant {
 
         i = 0;
         while (i < samplepixels) {
-            b = (p[pix + 0] & 0xff) << netbiasshift;
+            b = (p[pix] & 0xff) << netbiasshift;
             g = (p[pix + 1] & 0xff) << netbiasshift;
             r = (p[pix + 2] & 0xff) << netbiasshift;
             j = contest(b, g, r);
@@ -907,7 +909,7 @@ class NeuQuant {
                     p[0] -= (a * (p[0] - b)) / alpharadbias;
                     p[1] -= (a * (p[1] - g)) / alpharadbias;
                     p[2] -= (a * (p[2] - r)) / alpharadbias;
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 } // prevents 1.3 miscompilation
             }
             if (k > lo) {
@@ -916,7 +918,7 @@ class NeuQuant {
                     p[0] -= (a * (p[0] - b)) / alpharadbias;
                     p[1] -= (a * (p[1] - g)) / alpharadbias;
                     p[2] -= (a * (p[2] - r)) / alpharadbias;
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -990,6 +992,7 @@ class NeuQuant {
 //	 Adapted from Jef Poskanzer's Java port by way of J. M. G. Elliott.
 //	 K Weiner 12/00
 
+@SuppressWarnings("All")
 class LZWEncoder {
 
     private static final int EOF = -1;

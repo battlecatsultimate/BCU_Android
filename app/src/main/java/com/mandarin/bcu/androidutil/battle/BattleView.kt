@@ -10,51 +10,68 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.MediaPrepare
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.util.page.BBCtrl
 import com.mandarin.bcu.util.page.BattleBox
 import com.mandarin.bcu.util.page.BattleBox.BBPainter
 import com.mandarin.bcu.util.page.BattleBox.OuterBox
+import common.CommonStatic
 import common.battle.BattleField
 import common.battle.SBCtrl
 import common.battle.entity.EEnemy
-import common.util.ImgCore
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.pack.UserProfile
+import common.system.P
+import common.util.Data
 import common.util.anim.ImgCut
-import common.util.pack.Pack
-import java.io.IOException
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.round
+import kotlin.math.tan
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, private val stid: Int) : View(context), BattleBox, OuterBox {
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double) : View(context), BattleBox, OuterBox {
     @JvmField
-    var painter: BBPainter = if (type == 0) BBPainter(this, field, this) else BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat())
+    var painter: BBPainter = if (type == 0)
+        BBPainter(this, field, this)
+    else
+        BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat(), cutout)
 
-    @JvmField
     var initialized = false
-    @JvmField
     var paused = false
     var battleEnd = false
     var musicChanged = false
-    @JvmField
     var spd = 0
+    var velocity = 0.0
     private var upd = 0
     private val cv: CVGraphics
     private val updater: Updater
 
+    var initPoint: P? = null
+    var endPoint: P? = null
+    var dragFrame = 0
+    var isSliding = false
+    var performed = false
+
+    private var continued = false
+
     init {
         painter.dpi = StaticStore.dptopx(32f, context)
-        ImgCore.ref = axis
+        CommonStatic.getConfig().ref = axis
         updater = Updater()
 
         val aa = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_GAME).build()
@@ -62,12 +79,15 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         SoundHandler.SE = SoundPool.Builder().setMaxStreams(50).setAudioAttributes(aa).build()
         SoundHandler.ATK = SoundPool.Builder().setAudioAttributes(aa).build()
         SoundHandler.BASE = SoundPool.Builder().setAudioAttributes(aa).build()
+        SoundHandler.TOUCH = SoundPool.Builder().setAudioAttributes(aa).build()
+        SoundHandler.SPAWN_FAIL = SoundPool.Builder().setAudioAttributes(aa).build()
 
-        //Preparing ferequntly used SE
+        //Preparing frequently used SE
 
         loadSE(SoundHandler.SE_SE, 25, 26)
         loadSE(SoundHandler.SE_ATK, 20, 21)
         loadSE(SoundHandler.SE_BASE, 22)
+        loadSE(SoundHandler.SE_UI, 10, 15, 19, 27, 28)
 
         for (fs in painter.bf.sb.b.lu.fs) {
             for (f in fs) {
@@ -75,7 +95,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     if (f.anim.uni.img.height == f.anim.uni.img.width) {
                         val cut = ImgCut.newIns("./org/data/uni.imgcut")
                         f.anim.uni.setCut(cut)
-                        f.anim.uni.setImg(f.anim.uni.img)
+                        f.anim.uni.img = f.anim.uni.img
                         f.anim.check()
                     } else {
                         f.anim.check()
@@ -84,7 +104,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             }
         }
 
-        if(painter.bf.sb.st.mus0 > 0) {
+        if(painter.bf.sb.st.mus0 != null) {
             SoundHandler.lop = painter.bf.sb.st.loop0
         }
 
@@ -98,11 +118,20 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         val gp = Paint()
 
         cv = CVGraphics(Canvas(), cp, bp, gp, true)
+
+        isHapticFeedbackEnabled = false
     }
 
     public override fun onDraw(c: Canvas) {
         if (initialized) {
+            if(continued) {
+                continued = false
+                battleEnd = false
+                SoundHandler.battleEnd = false
+            }
+
             cv.setCanvas(c)
+
             try {
                 painter.draw(cv)
             } catch(e: Exception) {
@@ -112,7 +141,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                             if (f.anim.uni.img.height == f.anim.uni.img.width) {
                                 val cut = ImgCut.newIns("./org/data/uni.imgcut")
                                 f.anim.uni.setCut(cut)
-                                f.anim.uni.setImg(f.anim.uni.img)
+                                f.anim.uni.img = f.anim.uni.img
                                 f.anim.check()
                             } else {
                                 f.anim.check()
@@ -124,6 +153,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 for (es in painter.bf.sb.st.data.allEnemy)
                     es.anim.check()
             }
+
             if (!paused) {
                 if (spd > 0) {
                     var i = 0
@@ -144,6 +174,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     painter.bf.update()
                     resetSE()
                 }
+
+                painter.pos += velocity.toInt()
             }
         }
     }
@@ -160,26 +192,21 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     override fun callBack(o: Any) {}
     private inner class Updater : Runnable {
         override fun run() {
-            if (!paused) invalidate()
+            if (!paused)
+                invalidate()
+
             if (!musicChanged) {
                 if (haveToChangeMusic()) {
                     SoundHandler.haveToChange = true
                     SoundHandler.MUSIC.stop()
                     SoundHandler.MUSIC.reset()
-                    val f = if(painter.bf.sb.st.mus0 < 1000) {
-                        Pack.def.ms[painter.bf.sb.st.mus1]
-                    } else {
-                        val mp = Pack.map[StaticStore.getPID(painter.bf.sb.st.mus1)]
-
-                        if(mp != null) {
-                            mp.ms.list[StaticStore.getMusicIndex(painter.bf.sb.st.mus1)]
-                        } else {
-                            Pack.def.ms[3]
-                        }
-                    }
+                    val f = StaticStore.getMusicDataSource(Identifier.get(painter.bf.sb.st.mus1))
 
                     if (f != null) {
-                        try {
+                        this@BattleView.postDelayed({
+                            if(battleEnd)
+                                return@postDelayed
+
                             SoundHandler.MUSIC.setDataSource(f.absolutePath)
                             SoundHandler.MUSIC.prepareAsync()
                             SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
@@ -225,13 +252,16 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                                     }
                                 }
                             })
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
+                        }, Data.MUSIC_DELAY.toLong())
                     }
                     musicChanged = true
                 }
             }
+
+            if(isSliding) {
+                dragFrame++
+            }
+
             if (!battleEnd) {
                 checkWin()
                 checkLose()
@@ -246,8 +276,11 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
     override fun paint() {}
     override fun reset() {}
+
     private fun haveToChangeMusic(): Boolean {
-        if (painter.bf.sb.st.mush == 0 || painter.bf.sb.st.mush == 100) musicChanged = true
+        if (painter.bf.sb.st.mush == 0 || painter.bf.sb.st.mush == 100)
+            musicChanged = true
+
         return (painter.bf.sb.ebase.health.toFloat() / painter.bf.sb.ebase.maxH.toFloat() * 100).toInt() <painter.bf.sb.st.mush && painter.bf.sb.st.mush != 0 && painter.bf.sb.st.mush != 100
     }
 
@@ -261,31 +294,30 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.MUSIC.stop()
             SoundHandler.MUSIC.reset()
             SoundHandler.MUSIC.isLooping = false
-            val f = Pack.def.ms[8]
-            if (f != null) {
-                if (f.exists()) {
-                    try {
-                        SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                        SoundHandler.MUSIC.prepareAsync()
-                        SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                            override fun prepare(mp: MediaPlayer?) {
-                                SoundHandler.MUSIC.start()
-                            }
-                        })
-                        SoundHandler.MUSIC.setOnCompletionListener {
-                            SoundHandler.MUSIC.release()
+
+            if(SoundHandler.sePlay) {
+                val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[8])
+
+                if (f != null) {
+                    SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                    SoundHandler.MUSIC.prepareAsync()
+
+                    SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                        override fun prepare(mp: MediaPlayer?) {
+                            SoundHandler.MUSIC.start()
                         }
-                    } catch (e: IOException) {
-                        e.printStackTrace()
+                    })
+                    
+                    SoundHandler.MUSIC.setOnCompletionListener {
+                        SoundHandler.MUSIC.release()
                     }
                 }
             }
+
             battleEnd = true
             SoundHandler.battleEnd = true
 
-            val parentlay = activity.findViewById<CoordinatorLayout>(R.id.battlecoordinate)
-
-            StaticStore.showShortSnack(parentlay,R.string.battle_won,BaseTransientBottomBar.LENGTH_LONG)
+            showBattleResult(true)
         }
     }
 
@@ -294,49 +326,30 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.MUSIC.stop()
             SoundHandler.MUSIC.reset()
             SoundHandler.MUSIC.isLooping = false
-            val f = Pack.def.ms[9]
-            if (f != null) {
-                if (f.exists()) {
-                    try {
-                        SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                        SoundHandler.MUSIC.prepareAsync()
-                        SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                            override fun prepare(mp: MediaPlayer?) {
-                                SoundHandler.MUSIC.start()
-                            }
-                        })
-                        SoundHandler.MUSIC.setOnCompletionListener {
-                            SoundHandler.MUSIC.release()
+
+            if(SoundHandler.sePlay) {
+                val f = StaticStore.getMusicDataSource(UserProfile.getBCData().musics[9])
+
+                if (f != null) {
+                    SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                    SoundHandler.MUSIC.prepareAsync()
+
+                    SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                        override fun prepare(mp: MediaPlayer?) {
+                            SoundHandler.MUSIC.start()
                         }
-                    } catch (e: IOException) {
-                        e.printStackTrace()
+                    })
+
+                    SoundHandler.MUSIC.setOnCompletionListener {
+                        SoundHandler.MUSIC.release()
                     }
                 }
             }
+
             battleEnd = true
             SoundHandler.battleEnd = true
 
-            val bh = getBossHealth()
-
-            val parentlay = activity.findViewById<CoordinatorLayout>(R.id.battlecoordinate)
-
-            if(bh == -1) {
-                val snack = Snackbar.make(parentlay,R.string.battle_lost,BaseTransientBottomBar.LENGTH_LONG)
-                snack.setAction(R.string.battle_retry) {
-                    retry()
-                }
-                snack.setActionTextColor(StaticStore.getAttributeColor(activity,R.attr.colorAccent))
-
-                snack.show()
-            } else {
-                val snack = Snackbar.make(parentlay, context.getString(R.string.battle_lost_boss).replace("_", bh.toString()), BaseTransientBottomBar.LENGTH_LONG)
-                snack.setAction(R.string.battle_retry) {
-                    retry()
-                }
-                snack.setActionTextColor(StaticStore.getAttributeColor(activity,R.attr.colorAccent))
-
-                snack.show()
-            }
+            showBattleResult(false)
         }
     }
 
@@ -375,13 +388,15 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     }
 
     fun retry() {
+        battleEnd = true
+
         val intent = Intent(activity,BattleSimulation::class.java)
 
-        intent.putExtra("mapcode",painter.bf.sb.st.map.mc.id)
-        intent.putExtra("stid", stid)
-        intent.putExtra("stage",painter.bf.sb.st.id())
+        intent.putExtra("Data", JsonEncoder.encode(painter.bf.sb.st.id).toString())
         intent.putExtra("star",painter.bf.sb.est.star)
         intent.putExtra("item",painter.bf.sb.conf[0])
+        intent.putExtra("size", painter.siz)
+        intent.putExtra("pos", painter.pos)
 
         if(SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
             if(SoundHandler.MUSIC.isRunning || SoundHandler.MUSIC.isPlaying) {
@@ -394,9 +409,18 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         SoundHandler.MUSIC.setOnCompletionListener {
 
         }
+
         SoundHandler.resetHandler()
         activity.startActivity(intent)
         activity.finish()
+    }
+
+    private fun continueBattle() {
+        if(painter.bf is SBCtrl) {
+            (painter.bf as SBCtrl).action.add(-4)
+
+            continued = true
+        }
     }
 
     fun unload() {
@@ -411,14 +435,119 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         for (e in painter.bf.sb.st.data.allEnemy) e?.anim?.unload()
     }
 
+    fun checkSlideUpDown() {
+        val e = endPoint ?: return
+        val i = initPoint ?: return
+
+        if(battleEnd || painter.bf.sb.lineupChanging || painter.bf.sb.isOneLineup || painter.bf.sb.ubase.health == 0.toLong() || dragFrame == 0 || performed)
+            return
+
+        val minDistance = height * 0.15
+
+        val dy = e.y - i.y
+        val v = dy / dragFrame
+
+        if(abs(dy) >= minDistance) {
+            performed = true
+
+            if(painter is BBCtrl) {
+                if(v < 0) {
+                    (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_UP)
+                } else {
+                    (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_DOWN)
+                }
+            } else {
+                painter.bf.sb.lineupChanging = true
+                painter.bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME
+                painter.bf.sb.changeDivision = painter.bf.sb.changeFrame / 2
+
+                painter.bf.sb.goingUp = v < 0
+            }
+        }
+    }
+
+    fun isInSlideRange() : Boolean {
+        val e = endPoint ?: return false
+        val i = initPoint ?: return false
+
+        val dx = e.x - i.x
+        val dy = e.y - i.y
+
+        return tan(Math.toRadians(50.0)) >= abs(dx) / abs(dy)
+    }
+
     private fun loadSE(type: Int, vararg ind: Int) {
         for(i in ind) {
             val result = SoundHandler.load(type, i, play = false)
 
             if(result != -1) {
-                println("ID : $i\nRESULT : $result")
                 SoundHandler.map[i] = result
             }
         }
+    }
+
+    private fun showBattleResult(win: Boolean) {
+        val dialog = BottomSheetDialog(context)
+
+        dialog.setContentView(R.layout.battle_result_bottom_dialog)
+
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+        dialog.setCanceledOnTouchOutside(false)
+
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        val text = dialog.findViewById<TextView>(R.id.resulttext) ?: return
+
+        val primary = dialog.findViewById<Button>(R.id.resultprimary) ?: return
+        val secondary = dialog.findViewById<Button>(R.id.resultsecondary) ?: return
+
+        var dismissed = false
+
+        if(win) {
+            text.setText(R.string.battle_won)
+
+            primary.visibility = GONE
+            secondary.visibility = GONE
+        } else {
+            val bh = getBossHealth()
+
+            if(bh == -1)
+                text.setText(R.string.battle_lost)
+            else {
+                val t = activity.getText(R.string.battle_lost_boss).toString().replace("_", bh.toString())
+
+                text.text = t
+            }
+
+            if(painter.bf.sb.st.non_con) {
+                secondary.visibility = GONE
+            } else {
+                secondary.setOnClickListener {
+                    dialog.dismiss()
+
+                    continueBattle()
+                }
+            }
+
+            primary.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    dialog.dismiss()
+
+                    retry()
+                }
+            })
+        }
+
+        dialog.setOnDismissListener {
+            dismissed = true
+        }
+
+        dialog.show()
+
+        postDelayed({
+            if(!dismissed)
+                dialog.dismiss()
+        }, 6000)
     }
 }

@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,12 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.battle.BasisSet
-import common.system.MultiLangCont
+import common.util.lang.MultiLangCont
 import common.util.unit.Combo
 import java.text.DecimalFormat
 import java.util.*
 
-class ComboListAdapter internal constructor(activity: Activity, names: Array<String?>) : ArrayAdapter<String?>(activity, R.layout.combo_list_layout, names) {
+class ComboListAdapter internal constructor(activity: Activity, names: Array<String>) : ArrayAdapter<String>(activity, R.layout.combo_list_layout, names) {
     private class ViewHolder constructor(view: View) {
         var comboname: TextView = view.findViewById(R.id.comboname)
         var combodesc: TextView = view.findViewById(R.id.combodesc)
@@ -46,14 +45,14 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
         }
 
         try {
-            holder.comboname.text = MultiLangCont.COMNAME.getCont(StaticStore.combos[position].name)
-            val occ = context.getString(R.string.combo_occu) + " : " + BasisSet.current.sele.lu.occupance(StaticStore.combos[position])
+            holder.comboname.text = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[position])
+            val occ = context.getString(R.string.combo_occu) + " : " + BasisSet.current().sele.lu.occupance(StaticStore.combos[position])
             holder.comboocc.text = occ
             holder.combodesc.text = getDescription(StaticStore.combos[position])
             holder.comimglayout.removeAllViews()
             holder.icons.clear()
             for (i in 0..4) {
-                if (StaticStore.combos[position].units.size <= i) {
+                if (StaticStore.combos[position].forms.size <= i) {
                     val icon = ImageView(context)
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
                     icon.setImageBitmap(StaticStore.empty(context, 24f, 24f))
@@ -62,9 +61,11 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
                     holder.icons.add(icon)
                 } else {
                     val icon = ImageView(context)
+                    val f = StaticStore.combos[position].forms[i] ?: continue
                     icon.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
-                    icon.setImageBitmap(StaticStore.units[StaticStore.combos[position].units[i][0]].forms[StaticStore.combos[position].units[i][1]].anim.uni.img.bimg() as Bitmap)
+                    icon.setImageBitmap(f.anim.uni.img.bimg() as Bitmap)
                     icon.background = ContextCompat.getDrawable(context, R.drawable.cell_shape)
+                    icon.setPadding(0, StaticStore.dptopx(8f, context), 0, StaticStore.dptopx(8f, context))
                     holder.comimglayout.addView(icon)
                     holder.icons.add(icon)
                 }
@@ -95,6 +96,6 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
             22, 23 -> multi = " ( +" + (100 + 100 * c.lv) + "% )"
             24 -> multi = " ( +" + (1 + c.lv) + "% )"
         }
-        return context.getString(comnames[c.type]) + " Lv. " + c.lv + multi
+        return context.getString(comnames[c.type]) + " Lv. " + (c.lv + 1) + multi
     }
 }

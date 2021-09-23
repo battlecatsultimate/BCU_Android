@@ -2,7 +2,6 @@ package com.mandarin.bcu
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
@@ -23,11 +22,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import com.mandarin.bcu.androidutil.adapters.StatFilterAdapter
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.StatFilterAdapter
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
 import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -57,19 +57,13 @@ class StatSearchFilter : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_stat_search_filter)
 
@@ -116,16 +110,18 @@ class StatSearchFilter : AppCompatActivity() {
                 StatFilterElement.show = false
                 select.hide()
 
+                val size = StatFilterElement.statFilter.size
+
                 StatFilterElement.statFilter.removeIf {
                     it.delete
                 }
 
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeRemoved(0, size)
             } else {
                 StatFilterElement.show = true
                 select.show()
 
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeChanged(0, StatFilterElement.statFilter.size)
             }
         }
 
@@ -134,7 +130,7 @@ class StatSearchFilter : AppCompatActivity() {
                 element.delete = true
             }
 
-            adapter.notifyDataSetChanged()
+            adapter.notifyItemRangeChanged(0, StatFilterElement.statFilter.size)
         }
 
         add.setOnClickListener(object : SingleClick() {
@@ -225,7 +221,7 @@ class StatSearchFilter : AppCompatActivity() {
                                     l = 0
                                 }
 
-                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
+                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l+1)) {
                                     levspin.setSelection(l, false)
                                     break
                                 } else {
@@ -290,7 +286,7 @@ class StatSearchFilter : AppCompatActivity() {
                         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                             val v1 = super.getView(position, convertView, parent)
 
-                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position)) {
+                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position+1)) {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.TextPrimary))
                             } else {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.HintPrimary))
@@ -302,7 +298,7 @@ class StatSearchFilter : AppCompatActivity() {
                         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                             val v1 = super.getView(position, convertView, parent)
 
-                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position)) {
+                            if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position+1)) {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.TextPrimary))
                             } else {
                                 (v1 as TextView).setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.HintPrimary))
@@ -312,7 +308,7 @@ class StatSearchFilter : AppCompatActivity() {
                         }
 
                         override fun isEnabled(position: Int): Boolean {
-                            return StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position)
+                            return StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, position+1)
                         }
                     }
 
@@ -357,8 +353,7 @@ class StatSearchFilter : AppCompatActivity() {
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            println("INDEX : $t | TYPE : ${StatFilterAdapter.unitData[t]} | OPT : $o | LEV : $l")
-                            StatFilterElement(StatFilterAdapter.unitData[t], o, l)
+                            StatFilterElement(StatFilterAdapter.unitData[t], o, l+1)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)
                             dialog.dismiss()
@@ -544,7 +539,7 @@ class StatSearchFilter : AppCompatActivity() {
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            StatFilterElement(StatFilterAdapter.enemyData[t], o, l)
+                            StatFilterElement(StatFilterAdapter.enemyData[t], o, l+1)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)
                             dialog.dismiss()
@@ -650,4 +645,12 @@ class StatSearchFilter : AppCompatActivity() {
         StatFilterElement.started = false
     }
 
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
+    }
 }

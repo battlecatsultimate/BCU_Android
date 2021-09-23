@@ -4,23 +4,23 @@ import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.circularreveal.CircularRevealRelativeLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.transition.MaterialArcMotion
-import com.google.android.material.transition.MaterialContainerTransform
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.battle.asynchs.BAdder
+import com.mandarin.bcu.androidutil.battle.coroutine.BAdder
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
+import common.util.stage.Stage
 import java.util.*
 
 class BattleSimulation : AppCompatActivity() {
@@ -43,17 +43,32 @@ class BattleSimulation : AppCompatActivity() {
             }
         }
 
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
 
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
+
         setContentView(R.layout.activity_battle_simulation)
+
+        val att = window.attributes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            att.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+
+        @Suppress("DEPRECATION")
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val controller = window.insetsController
+
+            if(controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
 
         SoundHandler.inBattle = true
 
@@ -61,13 +76,18 @@ class BattleSimulation : AppCompatActivity() {
         val bundle = intent.extras
 
         if (bundle != null) {
-            val mapcode = bundle.getInt("mapcode")
-            val stid = bundle.getInt("stid")
-            val posit = bundle.getInt("stage")
+            val data = StaticStore.transformIdentifier<Stage>(bundle.getString("Data")) ?: return
             val star = bundle.getInt("star")
             val item = bundle.getInt("item")
+            val siz = bundle.getDouble("size", 1.0)
+            val pos = bundle.getInt("pos", 0)
+            val restricted = bundle.getBoolean("restricted", false)
 
-            BAdder(this, mapcode, stid, posit, star, item).execute()
+            if(restricted) {
+                StaticStore.showShortMessage(this, R.string.battle_restricted)
+            }
+
+            BAdder(this, data, star, item, siz, pos).execute()
         }
     }
 
@@ -108,7 +128,12 @@ class BattleSimulation : AppCompatActivity() {
     }
 
     private fun hideSystemUI() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        @Suppress("DEPRECATION")
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        }
     }
 
     public override fun onDestroy() {
@@ -129,6 +154,12 @@ class BattleSimulation : AppCompatActivity() {
 
     public override fun onResume() {
         super.onResume()
+
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
         if (SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
             if ((!SoundHandler.MUSIC.isRunning || !SoundHandler.MUSIC.isPlaying) && SoundHandler.musicPlay) {
                 SoundHandler.MUSIC.start()

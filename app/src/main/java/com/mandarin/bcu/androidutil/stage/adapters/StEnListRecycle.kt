@@ -16,23 +16,24 @@ import com.mandarin.bcu.EnemyInfo
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
-import common.util.pack.Pack
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.pack.UserProfile
 import common.util.stage.SCDef
 import common.util.stage.Stage
+import common.util.unit.Enemy
 
-class StEnListRecycle(private val activity: Activity, private val st: Stage, private var multi: Int, private var frse: Boolean, private val mapcode: Int, private val custom: Boolean) : RecyclerView.Adapter<StEnListRecycle.ViewHolder>() {
+class StEnListRecycle(private val activity: Activity, private val st: Stage, private var multi: Int, private var frse: Boolean) : RecyclerView.Adapter<StEnListRecycle.ViewHolder>() {
 
     init {
         if (StaticStore.infoOpened == null) {
-            StaticStore.infoOpened = BooleanArray(st.data.datas.size)
-            for (i in st.data.datas.indices) {
-                StaticStore.infoOpened[i] = false
+            StaticStore.infoOpened = BooleanArray(st.data.datas.size) {
+                false
             }
-        } else if (StaticStore.infoOpened.size < st.data.datas.size) {
-            StaticStore.infoOpened = BooleanArray(st.data.datas.size)
-            for (i in st.data.datas.indices) {
-                StaticStore.infoOpened[i] = false
+        } else if (StaticStore.infoOpened?.size ?: 0 < st.data.datas.size) {
+            StaticStore.infoOpened = BooleanArray(st.data.datas.size) {
+                false
             }
         }
     }
@@ -46,24 +47,34 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
         val s = GetStrings(activity)
         val data = reverse(st.data.datas)
 
+        val infos = StaticStore.infoOpened ?: return
+
         viewHolder.expand.setOnClickListener(View.OnClickListener {
-            if (SystemClock.elapsedRealtime() - StaticStore.infoClick < StaticStore.INFO_INTERVAL) return@OnClickListener
+            if (SystemClock.elapsedRealtime() - StaticStore.infoClick < StaticStore.INFO_INTERVAL)
+                return@OnClickListener
+
             StaticStore.infoClick = SystemClock.elapsedRealtime()
+
             if (viewHolder.moreinfo.height == 0) {
                 viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
                 val height = viewHolder.moreinfo.measuredHeight
                 val anim = ValueAnimator.ofInt(0, height)
+
                 anim.addUpdateListener { animation ->
                     val `val` = animation.animatedValue as Int
                     val layout = viewHolder.moreinfo.layoutParams
                     layout.height = `val`
                     viewHolder.moreinfo.layoutParams = layout
                 }
+
                 anim.duration = 300
                 anim.interpolator = DecelerateInterpolator()
                 anim.start()
+
                 viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_more_black_24dp))
-                StaticStore.infoOpened[viewHolder.adapterPosition] = true
+
+                infos[viewHolder.adapterPosition] = true
             } else {
                 viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 val height = viewHolder.moreinfo.measuredHeight
@@ -78,11 +89,11 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
                 anim.interpolator = DecelerateInterpolator()
                 anim.start()
                 viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_less_black_24dp))
-                StaticStore.infoOpened[viewHolder.adapterPosition] = false
+                infos[viewHolder.adapterPosition] = false
             }
         })
 
-        if (StaticStore.infoOpened[viewHolder.adapterPosition]) {
+        if (infos[viewHolder.adapterPosition]) {
             viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val layout = viewHolder.moreinfo.layoutParams
             layout.height = viewHolder.moreinfo.measuredHeight
@@ -90,14 +101,12 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_more_black_24dp))
         }
 
-        val id = data[viewHolder.adapterPosition]?.get(SCDef.E) ?: 0
+        val id = data[viewHolder.adapterPosition]?.enemy ?: UserProfile.getBCData().enemies[0].id
 
-        val em = if(id < StaticStore.enemies.size) {
-            StaticStore.enemies[id]
-        } else {
-            val epid = StaticStore.getPID(id)
-            Pack.map[epid]?.es?.get(StaticStore.getID(id)) ?: return
-        }
+        val em = Identifier.get(id) ?: return
+
+        if(em !is Enemy)
+            return
 
         val icon = em.anim?.edi?.img?.bimg()
 
@@ -107,55 +116,54 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.icon.setImageBitmap(StaticStore.getResizeb(icon as Bitmap,activity, 85f, 32f))
         }
 
-        viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
+        viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition] ?: SCDef.Line())
 
 
         viewHolder.info.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, EnemyInfo::class.java)
-                intent.putExtra("PID",em.pac.id)
-                intent.putExtra("ID", StaticStore.getID(em.id))
-                intent.putExtra("Multiply", (data[viewHolder.adapterPosition]?.get(SCDef.M)?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
-                intent.putExtra("AMultiply", (data[viewHolder.adapterPosition]?.get(SCDef.M1)?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("Data", JsonEncoder.encode(em.id).toString())
+                intent.putExtra("Multiply", (data[viewHolder.adapterPosition]?.multiple?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("AMultiply", (data[viewHolder.adapterPosition]?.mult_atk?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
                 activity.startActivity(intent)
             }
         })
 
-        viewHolder.multiply.text = s.getMultiply(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), multi)
+        viewHolder.multiply.text = s.getMultiply(data[viewHolder.adapterPosition] ?: SCDef.Line(), multi)
 
-        viewHolder.bh.text = s.getBaseHealth(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
+        viewHolder.bh.text = s.getBaseHealth(data[viewHolder.adapterPosition] ?: SCDef.Line())
 
-        if (data[viewHolder.adapterPosition]?.get(SCDef.B) ?: -1 == 0)
+        if (data[viewHolder.adapterPosition]?.boss ?: -1 == 0)
             viewHolder.isboss.text = activity.getString(R.string.unit_info_false)
         else
             viewHolder.isboss.text = activity.getString(R.string.unit_info_true)
 
-        viewHolder.layer.text = s.getLayer(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE))
+        viewHolder.layer.text = s.getLayer(data[viewHolder.adapterPosition] ?: SCDef.Line())
 
         viewHolder.startb.setOnClickListener {
             if (viewHolder.start.text.toString().endsWith("f"))
-                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), false)
+                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: SCDef.Line(), false)
             else
-                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), true)
+                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: SCDef.Line(), true)
         }
 
-        viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), frse)
+        viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: SCDef.Line(), frse)
 
         viewHolder.respawnb.setOnClickListener {
             if (viewHolder.respawn.text.toString().endsWith("f"))
-                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), false)
+                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), false)
             else
-                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), true)
+                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), true)
         }
 
-        viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: IntArray(SCDef.SIZE), frse)
+        viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), frse)
     }
 
     override fun getItemCount(): Int {
         return st.data.datas.size
     }
 
-    inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
+    class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         var expand: ImageButton = row.findViewById(R.id.stgenlistexp)
         var icon: ImageView = row.findViewById(R.id.stgenlisticon)
         var multiply: TextView = row.findViewById(R.id.stgenlistmultir)
@@ -172,8 +180,8 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
 
     }
 
-    private fun reverse(data: Array<IntArray>): Array<IntArray?> {
-        val result = arrayOfNulls<IntArray>(data.size)
+    private fun reverse(data: Array<SCDef.Line>): Array<SCDef.Line?> {
+        val result = arrayOfNulls<SCDef.Line>(data.size)
         for (i in data.indices) {
             result[i] = data[data.size - 1 - i]
         }

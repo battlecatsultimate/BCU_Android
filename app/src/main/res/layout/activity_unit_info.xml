@@ -23,14 +23,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.mandarin.bcu.androidutil.supports.AutoMarquee
             android:id="@+id/unitinfrarname"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
-            android:text="Unit_Rairty_Name"
             android:textColor="?attr/UnitinfoName"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -40,8 +39,8 @@
             app:layout_constraintTop_toTopOf="@+id/toolbar2" />
 
         <ProgressBar
-            android:id="@+id/unitinfprog"
-            style="?android:attr/progressBarStyle"
+            android:id="@+id/prog"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,135 +48,173 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/unitinfscroll"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/load_process"
+            android:textColor="?attr/TextPrimary"
+            app:layout_constraintEnd_toEndOf="@+id/prog"
+            app:layout_constraintStart_toStartOf="@+id/prog"
+            app:layout_constraintTop_toBottomOf="@+id/prog" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/unitcoord"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar2"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="?attr/backgroundPrimary">
 
-                <Button
-                    android:id="@+id/animanim"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:backgroundTint="?attr/ButtonPrimary"
-                    android:text="@string/anim_anim"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/TextPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/unitinfexplain"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-                    android:id="@+id/unitinftable"
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfexplain" />
+                    app:layout_scrollFlags="scroll|enterAlways">
 
-                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-                    android:id="@+id/unitinfpager"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfexp">
+                    <androidx.appcompat.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:contentInsetStart="0dp"
+                        app:contentInsetStartWithNavigation="0dp"
+                        app:titleMargin="0dp">
 
-                </com.mandarin.bcu.androidutil.adapters.MeasureViewPager>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:id="@+id/animanim"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp"
+                                android:backgroundTint="?attr/ButtonPrimary"
+                                android:text="@string/anim_anim"
+                                android:textAllCaps="false"
+                                android:textColor="?attr/TextPrimary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.appcompat.widget.Toolbar>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/unitinfexplain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/animanim"
                     app:tabGravity="fill"
                     app:tabMaxWidth="0dp"
-                    app:tabPaddingEnd="24dp"
-                    app:tabPaddingStart="24dp"
-                    app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+                    app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
                     app:tabTextColor="?attr/TextPrimary" />
 
-                <TextView
-                    android:id="@+id/unitinfexp"
-                    android:layout_width="wrap_content"
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/unitinfscroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:descendantFocusability="blocksDescendants"
+                android:fillViewport="true"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/unit_info_extitle"
-                    android:textColor="?attr/TextPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinftable" />
+                    android:descendantFocusability="blocksDescendants">
 
-                <TextView
-                    android:id="@+id/cfinftext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/unit_info_catfruit"
-                    android:textColor="?attr/TextPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view" />
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/unitinftable"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/TableBorder"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/unitinfpager" />
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/unitinfpager"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinfexp">
 
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/TableBorder"
-                    app:layout_constraintBottom_toTopOf="@+id/unitinfpager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    </androidx.viewpager2.widget.ViewPager2>
 
-                <com.mandarin.bcu.androidutil.adapters.MeasureViewPager
-                    android:id="@+id/catfruitpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cfinftext">
+                    <TextView
+                        android:id="@+id/unitinfexp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/unit_info_extitle"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinftable" />
 
-                </com.mandarin.bcu.androidutil.adapters.MeasureViewPager>
+                    <TextView
+                        android:id="@+id/cfinftext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/unit_info_catfruit"
+                        android:textColor="?attr/TextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/TableBorder"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/unitinfpager" />
+
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/TableBorder"
+                        app:layout_constraintBottom_toTopOf="@+id/unitinfpager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <com.mandarin.bcu.androidutil.supports.MeasureViewPager
+                        android:id="@+id/catfruitpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cfinftext">
+
+                    </com.mandarin.bcu.androidutil.supports.MeasureViewPager>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/unitinfback"
@@ -223,7 +260,7 @@
             android:theme="?attr/TILtheme"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/unitinfscroll"
+            app:layout_constraintStart_toEndOf="@+id/unitcoord"
             app:layout_constraintTop_toBottomOf="@id/toolbar2"
             app:layout_constraintVertical_bias="0.0"
             tools:context=".UnitInfo">
@@ -274,7 +311,7 @@
                         app:errorEnabled="true"
                         app:errorIconTint="?attr/ErrorPrimary"
                         app:errorTextColor="?attr/ErrorPrimary"
-                        app:helperText="1~30"
+                        app:helperText="1~30 Lv."
                         app:helperTextEnabled="true"
                         app:helperTextTextColor="?attr/TextPrimary"
                         app:hintTextColor="?attr/TextPrimary"
@@ -315,7 +352,7 @@
                         app:errorEnabled="true"
                         app:errorIconTint="?attr/ErrorPrimary"
                         app:errorTextColor="?attr/ErrorPrimary"
-                        app:helperText="0~300"
+                        app:helperText="0~300 %"
                         app:helperTextEnabled="true"
                         app:helperTextTextColor="?attr/TextPrimary"
                         app:hintTextColor="?attr/TextPrimary"
@@ -357,7 +394,7 @@
                         app:errorEnabled="true"
                         app:errorIconTint="?attr/ErrorPrimary"
                         app:errorTextColor="?attr/ErrorPrimary"
-                        app:helperText="0~300"
+                        app:helperText="0~300 %"
                         app:helperTextEnabled="true"
                         app:helperTextTextColor="?attr/TextPrimary"
                         app:hintTextColor="?attr/TextPrimary"
@@ -400,7 +437,7 @@
                         app:errorEnabled="true"
                         app:errorIconTint="?attr/ErrorPrimary"
                         app:errorTextColor="?attr/ErrorPrimary"
-                        app:helperText="0~300"
+                        app:helperText="0~300 %"
                         app:helperTextEnabled="true"
                         app:helperTextTextColor="?attr/TextPrimary"
                         app:hintTextColor="?attr/TextPrimary"

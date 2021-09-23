@@ -19,28 +19,30 @@
 
     <TableLayout
         android:id="@+id/tableLayout2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/cell_shape"
-        android:stretchColumns="*"
+        android:shrinkColumns="1,3,5"
+        android:stretchColumns="1,3,5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stginfotitle">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_shape">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/stginfoid"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/unit_info_id"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -48,7 +50,7 @@
             <TextView
                 android:id="@+id/stginfoidr"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -56,12 +58,46 @@
                 android:text="@string/def_stage_id"
                 android:textColor="?attr/TextPrimary" />
 
+            <Button
+                android:id="@+id/stginfopack"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/unit_inf_pack"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <com.mandarin.bcu.androidutil.supports.AutoMarquee
+                android:id="@+id/stginfopackr"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="?attr/TextPrimary" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cell_shape">
+
             <TextView
                 android:id="@+id/stginfostar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_star"
@@ -89,6 +125,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_energy"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -102,6 +140,32 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/def_stage_energy"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/stginfomaxen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="12dp"
+                android:text="@string/stg_info_maxen"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfomaxenr"
+                android:layout_width="93dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/def_max_enemy"
                 android:textColor="?attr/TextPrimary" />
 
         </TableRow>
@@ -118,6 +182,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_xp"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -139,7 +205,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bh"
                 android:textColor="?attr/TextPrimary"
@@ -169,7 +237,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
+                android:paddingStart="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_inf_diff"
                 android:textColor="?attr/TextPrimary"
@@ -194,6 +264,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_cont"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -217,6 +289,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_len"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -238,37 +312,15 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/stginfomaxen"
+                android:id="@+id/stginfomusic"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cell_shape"
-                android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:text="@string/stg_info_maxen"
-                android:textColor="?attr/TextPrimary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/stginfomaxenr"
-                android:layout_width="93dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/def_max_enemy"
-                android:textColor="?attr/TextPrimary" />
-
-            <TextView
-                android:id="@+id/stginfomusic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cell_shape"
-                android:gravity="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_music"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -277,6 +329,7 @@
                 android:id="@+id/stginfomusicr"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="2"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -288,11 +341,13 @@
             <TextView
                 android:id="@+id/stginfomusic2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/def_music2"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -301,6 +356,7 @@
                 android:id="@+id/stginfomusic2r"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_span="2"
                 android:background="@drawable/button_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -333,7 +389,6 @@
                 android:id="@+id/stginfoloopt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -350,6 +405,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_loop1"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -358,7 +415,6 @@
                 android:id="@+id/stginfoloop1t"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_span="2"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
@@ -366,6 +422,33 @@
                 android:text="@string/def_zero_time"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/stginfominres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="12dp"
+                android:text="@string/min_respawn"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfominrest"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_span="5"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -380,6 +463,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_bg"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="14sp"
@@ -401,11 +486,13 @@
             <TextView
                 android:id="@+id/stginfoct"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_ct"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />
@@ -436,6 +523,8 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:text="@string/stg_info_limit"
                 android:textColor="?attr/TextPrimary"
                 android:textStyle="bold" />

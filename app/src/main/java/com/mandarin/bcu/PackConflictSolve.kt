@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -13,25 +12,52 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
 import android.widget.ProgressBar
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.adapters.SingleClick
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.conflict.adapters.PackConfListAdapter
 import com.mandarin.bcu.androidutil.pack.conflict.asynchs.PackConfSolver
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
 import java.util.*
 import kotlin.collections.ArrayList
 
 class PackConflictSolve : AppCompatActivity() {
     companion object {
-        const val REQUEST = 800
         const val RESULT_OK = 801
         val data = ArrayList<Int>()
+    }
+
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), this::onResult)
+
+    private fun onResult(result: ActivityResult) {
+        if(result.resultCode == RESULT_OK && dataChanged()) {
+            val pclist = findViewById<ListView>(R.id.packconflist)
+            val names = ArrayList<String>()
+
+            for(pc in PackConflict.conflicts) {
+                names.add(pc.toString())
+            }
+
+            val adapter = PackConfListAdapter(this, names)
+
+            pclist.adapter = adapter
+
+            pclist.onItemClickListener = AdapterView.OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+                val intent = Intent(this, PackConflictDetail::class.java)
+
+                intent.putExtra("position", position)
+
+                resultLauncher.launch(intent)
+            }
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -54,19 +80,13 @@ class PackConflictSolve : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_pack_conflict_solve)
 
@@ -109,7 +129,7 @@ class PackConflictSolve : AppCompatActivity() {
 
             intent.putExtra("position", position)
 
-            startActivityForResult(intent, REQUEST)
+            resultLauncher.launch(intent)
         }
     }
 
@@ -148,31 +168,6 @@ class PackConflictSolve : AppCompatActivity() {
         StaticStore.toast = null
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(resultCode == RESULT_OK && dataChanged()) {
-            val pclist = findViewById<ListView>(R.id.packconflist)
-            val names = ArrayList<String>()
-
-            for(pc in PackConflict.conflicts) {
-                names.add(pc.toString())
-            }
-
-            val adapter = PackConfListAdapter(this, names)
-
-            pclist.adapter = adapter
-
-            pclist.onItemClickListener = AdapterView.OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-                val intent = Intent(this, PackConflictDetail::class.java)
-
-                intent.putExtra("position", position)
-
-                startActivityForResult(intent, REQUEST)
-            }
-        }
-    }
-
     private fun dataChanged() : Boolean {
         for(d in data.indices) {
             val pc = PackConflict.conflicts[d]
@@ -189,5 +184,14 @@ class PackConflictSolve : AppCompatActivity() {
         }
 
         return false
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

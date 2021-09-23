@@ -2,8 +2,7 @@ package com.mandarin.bcu.androidutil.battle.sound
 
 import android.media.MediaPlayer
 import android.util.Log
-import com.mandarin.bcu.androidutil.adapters.MediaPrepare
-import java.io.IOException
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
 
 /**
  * This class extends MediaPlayer.
@@ -42,7 +41,7 @@ class SoundPlayer : MediaPlayer() {
     }
 
     override fun isPlaying(): Boolean {
-        if(!safeCheck()) return false
+        if(!isSafe()) return false
 
         if(isReleased) return false
 
@@ -54,7 +53,7 @@ class SoundPlayer : MediaPlayer() {
         super.release()
     }
 
-    @Throws(IOException::class)
+    @Throws(Exception::class)
     override fun setDataSource(path: String) {
         if(isReleased) {
             Log.e("SoundPlayerIllegal", "This SoundPlayer is already released")
@@ -89,7 +88,7 @@ class SoundPlayer : MediaPlayer() {
      * Improved start() method by checking SoundPlayer is prepared.
      */
     override fun start() {
-        if(!safeCheck()) {
+        if(!isSafe()) {
             Log.e("SoundPlayerIllegal", "Music isn't initialized")
             return
         }
@@ -127,7 +126,7 @@ class SoundPlayer : MediaPlayer() {
     }
 
     fun start(se: Boolean) {
-        if(!safeCheck())
+        if(!isSafe())
             return
 
         if (se) {
@@ -140,14 +139,14 @@ class SoundPlayer : MediaPlayer() {
     }
 
     override fun stop() {
-        if(!safeCheck()) return
+        if(!isSafe()) return
 
         super.start()
         isRunning = false
     }
 
     override fun pause() {
-        if(!safeCheck()) return
+        if(!isSafe()) return
 
 
 
@@ -155,7 +154,7 @@ class SoundPlayer : MediaPlayer() {
         isRunning = false
     }
 
-    private fun safeCheck() : Boolean {
+    private fun isSafe() : Boolean {
         if(isReleased) {
             Log.e("SoundPlayerIllegal","This SoundPlaeyer is already released")
             return false
@@ -167,5 +166,13 @@ class SoundPlayer : MediaPlayer() {
         }
 
         return true
+    }
+
+    override fun prepareAsync() {
+        if(!isSafe()) {
+            return
+        }
+
+        super.prepareAsync()
     }
 }

@@ -8,57 +8,69 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
-import common.util.pack.Pack
-import java.util.*
+import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.lang.MultiLangCont
+import common.util.unit.Unit
 
 class DynamicExplanation : Fragment() {
+    companion object {
+        @JvmStatic
+        fun newInstance(`val`: Int, data: Identifier<Unit>, titles: Array<String?>?): DynamicExplanation {
+            val explanation = DynamicExplanation()
+            val bundle = Bundle()
+
+            bundle.putInt("Number", `val`)
+            bundle.putStringArray("Title", titles)
+            bundle.putString("Data", JsonEncoder.encode(data).toString())
+
+            explanation.arguments = bundle
+
+            return explanation
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.unit_info_tab, container, false)
-        val pid = arguments!!.getInt("PID", 0)
-        val `val` = arguments!!.getInt("Number", 0)
-        val id = arguments!!.getInt("ID", 0)
 
-        val p = Pack.map[pid] ?: return view
+        val arg = arguments ?: return view
 
-        if(id >= p.us.ulist.size())
-            return view
+        val data = StaticStore.transformIdentifier<Unit>(arg.getString("Data")) ?: return view
 
-        val u = p.us.ulist[id]
+        val `val` = arg.getInt("Number", 0)
 
-        var explanation = MultiLangCont.FEXP.getCont(u.forms[`val`])
+        val u = data.get() ?: return view
+
+        var explanation = MultiLangCont.getStatic().FEXP.getCont(u.forms[`val`])
+
         if (explanation == null) {
             explanation = arrayOf<String?>("", "", "")
         }
+
         val unitname = view.findViewById<TextView>(R.id.unitexname)
-        val explains = arrayOfNulls<TextView>(3)
+
         val lineid = intArrayOf(R.id.unitex0, R.id.unitex1, R.id.unitex2)
-        for (i in lineid.indices) explains[i] = view.findViewById(lineid[i])
-        explains[2]!!.setPadding(0, 0, 0, StaticStore.dptopx(24f, Objects.requireNonNull(activity)))
-        var name = MultiLangCont.FNAME.getCont(u.forms[`val`]) ?: u.forms[`val`].name
-        if (name == null) name = ""
+
+        val explains = Array<TextView>(3) {
+            view.findViewById(lineid[it])
+        }
+
+        explains[2].setPadding(0, 0, 0, StaticStore.dptopx(24f,requireActivity()))
+
+        var name = MultiLangCont.get(u.forms[`val`]) ?: u.forms[`val`].name
+
+        if (name == null)
+            name = ""
+
         unitname.text = name
+
         for (i in explains.indices) {
             if (i >= explanation.size) {
-                explains[i]!!.text = ""
+                explains[i].text = ""
             } else {
-                if (explanation[i] != null) explains[i]!!.text = explanation[i]
+                if (explanation[i] != null) explains[i].text = explanation[i]
             }
         }
         return view
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(`val`: Int, id: Int, pid: Int, titles: Array<String?>?): DynamicExplanation {
-            val explanation = DynamicExplanation()
-            val bundle = Bundle()
-            bundle.putInt("Number", `val`)
-            bundle.putInt("ID", id)
-            bundle.putInt("PID",pid)
-            bundle.putStringArray("Title", titles)
-            explanation.arguments = bundle
-            return explanation
-        }
     }
 }

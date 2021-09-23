@@ -4,29 +4,37 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Point
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.battle.asynchs.BPAdder
+import com.mandarin.bcu.androidutil.battle.coroutine.BPAdder
+import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.lineup.LineUpView
+import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import common.CommonStatic
 import common.battle.BasisSet
-import leakcanary.AppWatcher
-import leakcanary.LeakCanary
+import common.util.stage.Stage
 import java.util.*
 
 class BattlePrepare : AppCompatActivity() {
     companion object {
         var rich = false
         var sniper = false
+    }
+
+    val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val line = findViewById<LineUpView>(R.id.lineupView)
+        line.updateLineUp()
+        val setname = findViewById<TextView>(R.id.lineupname)
+        setname.text = setLUName
     }
 
     @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
@@ -49,19 +57,13 @@ class BattlePrepare : AppCompatActivity() {
             }
         }
 
-        when {
-            shared.getInt("Orientation", 0) == 1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            shared.getInt("Orientation", 0) == 2 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            shared.getInt("Orientation", 0) == 0 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-
-        val devMode = shared.getBoolean("DEV_MOE", false)
-
-        AppWatcher.config = AppWatcher.config.copy(enabled = devMode)
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = devMode)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(devMode)
+        LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
+
+        AContext.check()
+
+        (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_battle_prepare)
 
@@ -71,17 +73,10 @@ class BattlePrepare : AppCompatActivity() {
 
         val layout = findViewById<LinearLayout>(R.id.preparelineup)
 
-        val display = windowManager.defaultDisplay
-        val size = Point()
-
-        display.getSize(size)
-
-        val w: Float
-
-        w = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            size.x / 2.0f
+        val w: Float = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            StaticStore.getScreenWidth(this, false).toFloat() / 2.0f
         else
-            size.x.toFloat()
+            StaticStore.getScreenWidth(this, false).toFloat()
 
         val h = w / 5.0f * 3
 
@@ -93,24 +88,14 @@ class BattlePrepare : AppCompatActivity() {
         val result = intent.extras
 
         if (result != null) {
-            val mapcode = result.getInt("mapcode")
-            val stid = result.getInt("stid")
-            val posit = result.getInt("stage")
+            val data = StaticStore.transformIdentifier<Stage>(result.getString("Data")) ?: return
 
             if (result.containsKey("selection")) {
-                BPAdder(this, mapcode, stid, posit, result.getInt("selection")).execute()
+                BPAdder(this, data, result.getInt("selection")).execute()
             } else {
-                BPAdder(this, mapcode, stid, posit).execute()
+                BPAdder(this, data).execute()
             }
         }
-    }
-
-    override fun onActivityResult(code: Int, code1: Int, data: Intent?) {
-        super.onActivityResult(code, code1, data)
-        val line = findViewById<LineUpView>(R.id.lineupView)
-        line.updateLineUp()
-        val setname = findViewById<TextView>(R.id.lineupname)
-        setname.text = setLUName
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -138,10 +123,19 @@ class BattlePrepare : AppCompatActivity() {
     }
 
     private val setLUName: String
-        get() = BasisSet.current.name + " - " + BasisSet.current.sele.name
+        get() = BasisSet.current().name + " - " + BasisSet.current().sele.name
 
     public override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
+    }
+
+    override fun onResume() {
+        AContext.check()
+
+        if(CommonStatic.ctx is AContext)
+            (CommonStatic.ctx as AContext).updateActivity(this)
+
+        super.onResume()
     }
 }

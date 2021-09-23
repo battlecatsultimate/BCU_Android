@@ -5,24 +5,40 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants">
 
-    <TextView
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/BorderPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/packconfaction" />
+
+    <com.mandarin.bcu.androidutil.supports.AutoMarquee
         android:id="@+id/packconftitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:textColor="?attr/TextPrimary"
         android:textStyle="bold"
         android:transitionName="packid"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@+id/packconfremove"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
         android:id="@+id/packconfdesc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/pack_conf_corrupt"
         android:textColor="?attr/TextPrimary"
         android:textSize="12sp"
@@ -54,18 +70,19 @@
 
     <Spinner
         android:id="@+id/packconfaction"
-        style="@style/Platform.Widget.AppCompat.Spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="?attr/TextPrimary"
         android:dropDownWidth="match_parent"
         android:popupBackground="?attr/backgroundPrimary"
         android:transitionName="action"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/packconfdesc"
-        app:layout_constraintEnd_toStartOf="@+id/packconfstatus"
-        app:layout_constraintTop_toTopOf="@+id/packconftitle" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.nhaarman.supertooltips.ToolTipRelativeLayout
         android:id="@+id/packconftooltip"
@@ -73,7 +90,6 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

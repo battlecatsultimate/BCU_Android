@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import common.system.MultiLangCont
+import common.util.lang.MultiLangCont
 import common.util.stage.Stage
 import java.text.DecimalFormat
 
@@ -20,7 +20,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         dropData = handleDrops()
     }
 
-    inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
+    class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         var chance: TextView = row.findViewById(R.id.dropchance)
         var item: TextView = row.findViewById(R.id.dropitem)
         var amount: TextView = row.findViewById(R.id.dropamount)
@@ -46,7 +46,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
 
         val data = st.info.drop[i]
         viewHolder.chance.text = c
-        var reward = MultiLangCont.RWNAME.getCont(data[1])
+        var reward = MultiLangCont.getStatic().RWNAME.getCont(data[1])
         if (reward == null) reward = data[1].toString()
         if (i == 0) {
             if (data[0] != 100) {
@@ -72,8 +72,6 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
     }
 
     private fun handleDrops() : List<String> {
-        println(st.info.rand)
-
         val res = ArrayList<String>()
 
         val data = st.info.drop
@@ -94,14 +92,42 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         } else if(sum == 100) {
             for(i in data)
                 res.add(i[0].toString())
-        } else if(sum > 100 && st.info.rand == 0) {
+        } else if(sum > 100 && (st.info.rand == 0 || st.info.rand == 1)) {
             var rest = 100.0
 
-            for(i in data) {
-                val filter = rest * i[0].toDouble() / 100.0
-                rest -= filter
+            if(data[0][0] == 100) {
+                res.add("100")
 
-                res.add(df.format(filter))
+                for(i in 1 until data.size) {
+                    val filter = rest * data[i][0].toDouble() / 100.0
+                    rest -= filter
+
+                    res.add(df.format(filter))
+                }
+            } else {
+                for(i in data) {
+                    val filter = rest * i[0].toDouble() / 100.0
+                    rest -= filter
+
+                    res.add(df.format(filter))
+                }
+            }
+        } else if(st.info.rand == -4) {
+            var total = 0
+
+            for(i in data) {
+                total += i[0]
+            }
+
+            if(total == 0) {
+                for(i in data)
+                    res.add(i[0].toString())
+
+                return res
+            }
+
+            for(i in data) {
+                res.add(df.format(i[0] * 100.0 / total))
             }
         } else {
             for(i in data)

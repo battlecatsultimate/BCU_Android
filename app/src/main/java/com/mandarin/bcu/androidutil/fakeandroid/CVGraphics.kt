@@ -20,14 +20,17 @@ class CVGraphics : FakeGraphics {
                 0f, 0f, 0f, 1f, 0f)
 
         const val POSITIVE = 100
+
+        private val src = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
+        private val add = PorterDuffXfermode(PorterDuff.Mode.ADD)
+        private val multi = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
+        private val screen = PorterDuffXfermode(PorterDuff.Mode.SCREEN)
     }
 
     private var c: Canvas
     private val cp: Paint
     private val bp: Paint
     private val gp: Paint
-    private val src = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
-    private val add = PorterDuffXfermode(PorterDuff.Mode.ADD)
     private val negative = ColorMatrixColorFilter(negate)
     private val m = Matrix()
     private val m2 = Matrix()
@@ -125,7 +128,7 @@ class CVGraphics : FakeGraphics {
     }
 
     override fun gradRect(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, c: IntArray, d: Int, e: Int, f: IntArray) {
-        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (x + h).toFloat(), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
+        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (y + h).toFloat(), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
 
         gp.shader = s
 
@@ -196,6 +199,14 @@ class CVGraphics : FakeGraphics {
                     }
                     1 -> {
                         bp.xfermode = add
+                        bp.alpha = alpha
+                    }
+                    2 -> {
+                        bp.xfermode = multi
+                        bp.alpha = alpha
+                    }
+                    3 -> {
+                        bp.xfermode = screen
                         bp.alpha = alpha
                     }
                 }

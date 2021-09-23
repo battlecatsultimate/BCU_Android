@@ -1,0 +1,75 @@
+{
+    "KBEff": {
+        "SW": "shock wave",
+        "ASS": "sniper",
+        "KB": "knock back"
+    },
+    "UType": {
+        "BURROW_UP": "burrow up",
+        "BURROW_MOVE": "burrow move",
+        "IDLE": "idle",
+        "HB": "hit back",
+        "BURROW_DOWN": "burrow down",
+        "ENTER": "enter",
+        "ATK": "attack",
+        "WALK": "walk"
+    },
+    "VolcEff": {
+        "DURING": "on",
+        "START": "start",
+        "END": "end"
+    },
+    "ArmorEff": {
+        "BUFF": "buff",
+        "DEBUFF": "debuff"
+    },
+    "SpeedEff": {
+        "UP": "increase",
+        "DOWN": "decrease"
+    },
+    "WaveType": {
+        "DEF": "default"
+    },
+    "WeakUpEff": {
+        "UP": "increase"
+    },
+    "WarpEff": {
+        "ENTER": "enter",
+        "EXIT": "exit"
+    },
+    "NyType": {
+        "BASE": "base",
+        "ATK": "attack",
+        "EXT": "extra"
+    },
+    "BarrierEff": {
+        "DESTR": "destroy",
+        "BREAK": "break",
+        "NONE": "default"
+    },
+    "BGWvType": {
+        "ENEMY": "enemy wave",
+        "UNIT": "unit wave"
+    },
+    "ZombieEff": {
+        "DOWN": "knock down",
+        "REVIVE": "revive"
+    },
+    "SoulType": {
+        "DEF": "default"
+    },
+    "SniperEff": {
+        "IDLE": "idle",
+        "ATK": "attack"
+    },
+    "DefEff": {
+        "DEF": "default"
+    },
+    "ShieldEff": {
+        "FULL" : "full",
+        "HALF" : "half",
+        "BROKEN" : "broken",
+        "BREAKER" : "breaker",
+        "REGENERATION" : "regeneration"
+    }
+}

@@ -4,216 +4,20 @@ import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
-import common.system.MultiLangCont
+import common.battle.data.MaskEntity
+import common.pack.Identifier
+import common.pack.UserProfile
 import common.util.Data
-import common.util.pack.Pack
+import common.util.lang.MultiLangCont
+import common.util.unit.AbEnemy
+import common.util.unit.Trait
+import common.util.unit.Unit
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FilterEntity(private var entitynumber: Int, private var entityname: String, private var pid: Int) {
-    companion object {
-        fun setLuFilter() : ArrayList<Int> {
-            val b0 = ArrayList<Boolean>()
-            val b1 = ArrayList<Boolean>()
-            val b2 = ArrayList<Boolean>()
-            val b3 = ArrayList<Boolean>()
-            val b4 = ArrayList<Boolean>()
-
-            if(StaticStore.rare.isEmpty()) {
-                for(i in 0 until StaticStore.ludata.size)
-                    b0.add(true)
-            }
-
-            if(StaticStore.empty) {
-                for(i in 0 until StaticStore.ludata.size)
-                    b1.add(true)
-            }
-
-            if(StaticStore.attack.isEmpty()) {
-                for(i in 0 until StaticStore.ludata.size)
-                    b2.add(true)
-            }
-
-            if(StaticStore.tg.isEmpty()) {
-                for(i in 0 until StaticStore.ludata.size)
-                    b3.add(true)
-            }
-
-            if(StaticStore.ability.isEmpty()) {
-                for(i in 0 until StaticStore.ludata.size)
-                    b4.add(true)
-            }
-
-            for(info in StaticStore.ludata) {
-                val data = info.split("-")
-
-                if(data.size < 2) {
-                    b0.add(false)
-                    b1.add(false)
-                    b2.add(false)
-                    b3.add(false)
-                    b4.add(false)
-                    continue
-                }
-
-                val pid = data[0].toInt()
-
-                val p = Pack.map[pid]
-
-                if(p == null) {
-                    b0.add(false)
-                    b1.add(false)
-                    b2.add(false)
-                    b3.add(false)
-                    b4.add(false)
-                    continue
-                }
-
-                val id = data[1].toInt()
-
-                if(id >= p.us.ulist.list.size) {
-                    b0.add(false)
-                    b1.add(false)
-                    b2.add(false)
-                    b3.add(false)
-                    b4.add(false)
-                    continue
-                }
-
-                val u = p.us.ulist.list[id]
-
-                b0.add(StaticStore.rare.contains(u.rarity.toString()))
-
-                val b10 = ArrayList<Boolean>()
-                val b20 = ArrayList<Boolean>()
-                val b30 = ArrayList<Boolean>()
-                val b40 = ArrayList<Boolean>()
-
-                for(f in u.forms) {
-                    val du = if(StaticStore.talents)
-                        f.maxu()
-                    else
-                        f.du
-
-                    val t = du.type
-                    val a = du.abi
-
-                    if(!StaticStore.empty) {
-                        if(StaticStore.atksimu) {
-                            b10.add(Interpret.isType(du, 1))
-                        } else {
-                            b10.add(Interpret.isType(du, 0))
-                        }
-                    }
-
-                    var b21 = !StaticStore.atkorand
-
-                    for(k in StaticStore.attack.indices) {
-                        b21 = if(StaticStore.atkorand) {
-                            b21 or Interpret.isType(du, StaticStore.attack[k].toInt())
-                        } else {
-                            b21 and Interpret.isType(du, StaticStore.attack[k].toInt())
-                        }
-                    }
-
-                    var b31 = !StaticStore.tgorand
-
-                    for(k in StaticStore.tg.indices) {
-                        b31 = if(StaticStore.tgorand) {
-                            b31 or ((t shr StaticStore.tg[k].toInt() and 1) == 1)
-                        } else {
-                            b31 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
-                        }
-                    }
-
-                    var b41 = !StaticStore.aborand
-
-                    for(k in StaticStore.ability.indices) {
-                        val vect = StaticStore.ability[k]
-
-                        if(vect[0] == 0) {
-                            val bind = a and vect[1] != 0
-                            b41 = if(StaticStore.aborand) {
-                                b41 or bind
-                            } else {
-                                b41 and bind
-                            }
-                        } else if (vect[0] == 1) {
-                            b41 = if(StaticStore.aborand) {
-                                b41 or (du.getProc(vect[1])[0] > 0)
-                            } else {
-                                b41 and (du.getProc(vect[1])[0] > 0)
-                            }
-                        }
-                    }
-
-                    b20.add(b21)
-                    b30.add(b31)
-                    b40.add(b41)
-                }
-
-                b1.add(!StaticStore.empty && b10.contains(true))
-                b2.add(b20.contains(true))
-                b3.add(b30.contains(true))
-                b4.add(b40.contains(true))
-            }
-
-            val result = ArrayList<Int>()
-
-            val lang = Locale.getDefault().language
-
-            for(i in StaticStore.ludata.indices) {
-                if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
-                    if(StaticStore.entityname.isNotEmpty()) {
-                        val info = StaticStore.ludata[i].split("-")
-
-                        if(info.size < 2)
-                            continue
-
-                        val pid = info[0].toInt()
-                        val id = info[1].toInt()
-
-                        val p = Pack.map[pid] ?: continue
-
-                        if(id >= p.us.ulist.list.size)
-                            continue
-
-                        val u = p.us.ulist.list[id]
-
-                        var added = false
-
-                        for(j  in u.forms.indices) {
-                            if(added)
-                                continue
-
-                            var name = MultiLangCont.FNAME.getCont(u.forms[j]) ?: u.forms[j].name
-
-                            if(name == null)
-                                name = ""
-
-                            name = Data.trio(j) + "-" + name.toLowerCase(Locale.ROOT)
-
-                            added = if(CommonStatic.Lang.lang == 2 || lang == "ko") {
-                                KoreanFilter.filter(name, StaticStore.entityname)
-                            } else {
-                                name.contains(StaticStore.entityname)
-                            }
-                        }
-
-                        if(added)
-                            result.add(i)
-                    } else {
-                        result.add(i)
-                    }
-                }
-            }
-
-            return result
-        }
-    }
-
-    fun setFilter(): ArrayList<Int> {
-        val p = Pack.map[pid] ?: return ArrayList()
+object FilterEntity {
+    fun setUnitFilter(pid: String): ArrayList<Identifier<Unit>> {
+        val p = UserProfile.getPack(pid) ?: return ArrayList()
 
         val b0 = ArrayList<Boolean>()
         val b1 = ArrayList<Boolean>()
@@ -223,31 +27,37 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
         val b5 = ArrayList<Boolean>()
 
         if (StaticStore.rare.isEmpty()) {
-            for (i in 0 until entitynumber)
+            for (i in p.units.list.indices)
                 b0.add(true)
         }
+
         if (StaticStore.empty) {
-            for (i in 0 until entitynumber)
+            for (i in p.units.list.indices)
                 b1.add(true)
         }
+
         if (StaticStore.attack.isEmpty()) {
-            for (i in 0 until entitynumber)
+            for (i in p.units.list.indices)
                 b2.add(true)
         }
+
         if (StaticStore.tg.isEmpty()) {
-            for (i in 0 until entitynumber)
+            for (i in p.units.list.indices)
                 b3.add(true)
         }
+
         if (StaticStore.ability.isEmpty()) {
-            for (i in 0 until entitynumber)
+            for (i in p.units.list.indices)
                 b4.add(true)
         }
+
         if (StatFilterElement.statFilter.isEmpty()) {
-            for(i in 0 until entitynumber) {
+            for(i in p.units.list.indices) {
                 b5.add(true)
             }
         }
-        for (u in p.us.ulist.list) {
+
+        for (u in p.units.list) {
             if(StaticStore.rare.isNotEmpty()) b0.add(StaticStore.rare.contains(u.rarity.toString()))
 
             val b10 = ArrayList<Boolean>()
@@ -257,7 +67,7 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
             val b50 = ArrayList<Boolean>()
             for (f in u.forms) {
                 val du = if (StaticStore.talents) f.maxu() else f.du
-                val t = du.type
+                val t = du.traits
                 val a = du.abi
                 if (!StaticStore.empty)
                     if (StaticStore.atksimu)
@@ -270,7 +80,10 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                 }
                 var b31 = !StaticStore.tgorand
                 for (k in StaticStore.tg.indices) {
-                    b31 = if (StaticStore.tgorand) b31 or ((t shr StaticStore.tg[k].toInt() and 1) == 1) else b31 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                    b31 = if (StaticStore.tgorand)
+                        b31 or hasTrait(t, StaticStore.tg[k])
+                    else
+                        b31 and hasTrait(t, StaticStore.tg[k])
                 }
                 var b41 = !StaticStore.aborand
                 for (k in StaticStore.ability.indices) {
@@ -279,7 +92,7 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                         val bind = a and vect[1] != 0
                         b41 = if (StaticStore.aborand) b41 or bind else b41 and bind
                     } else if (vect[0] == 1) {
-                        b41 = if (StaticStore.aborand) b41 or (du.getProc(vect[1])[0] > 0) else b41 and (du.getProc(vect[1])[0] > 0)
+                        b41 = if (StaticStore.aborand) b41 or getChance(vect[1], du) else b41 and getChance(vect[1], du)
                     }
                 }
                 b20.add(b21)
@@ -287,77 +100,62 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                 b40.add(b41)
                 b50.add(StatFilterElement.performFilter(f, StatFilterElement.orand))
             }
-            if (!StaticStore.empty)
-                if (b10.contains(true))
-                    b1.add(true)
-                else
-                    b1.add(false)
-
-            if (StaticStore.attack.isNotEmpty())
-                if (b20.contains(true))
-                    b2.add(true)
-                else
-                    b2.add(false)
-
-            if (StaticStore.tg.isNotEmpty())
-                if (b30.contains(true))
-                    b3.add(true)
-                else
-                    b3.add(false)
-
-            if (StaticStore.ability.isNotEmpty())
-                if (b40.contains(true))
-                    b4.add(true)
-                else
-                    b4.add(false)
-
-            if (StatFilterElement.statFilter.isNotEmpty())
-                if (b50.contains(true))
-                    b5.add(true)
-                else
-                    b5.add(false)
+            if (!StaticStore.empty) if (b10.contains(true)) b1.add(true) else b1.add(false)
+            if (StaticStore.attack.isNotEmpty()) if (b20.contains(true)) b2.add(true) else b2.add(false)
+            if (StaticStore.tg.isNotEmpty()) if (b30.contains(true)) b3.add(true) else b3.add(false)
+            if (StaticStore.ability.isNotEmpty()) if (b40.contains(true)) b4.add(true) else b4.add(false)
+            if (StatFilterElement.statFilter.isNotEmpty()) if (b50.contains(true)) b5.add(true) else b5.add(false)
         }
-        val result = ArrayList<Int>()
+
+        val result = ArrayList<Identifier<Unit>>()
 
         val lang = Locale.getDefault().language
 
-        for (i in 0 until entitynumber)
-            if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
-                if (entityname.isNotEmpty()) {
-                    val u = p.us.ulist.list[i]
+        for (i in p.units.list.indices) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
+            val u = p.units.list[i]
 
-                    var added = false
+            if (StaticStore.entityname.isNotEmpty()) {
+                var added = false
 
-                    for (j in u.forms.indices) {
-                        if (added)
-                            continue
-
-                        var name = MultiLangCont.FNAME.getCont(u.forms[j]) ?: u.forms[j].name
-
-                        if (name == null)
-                            name = ""
-
-                        name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
-
-                        added = if(CommonStatic.Lang.lang == 2 || lang == Interpret.KO) {
-                            KoreanFilter.filter(name, StaticStore.entityname)
-                        } else {
-                            name.contains(StaticStore.entityname)
-                        }
-                    }
-
+                for (j in u.forms.indices) {
                     if (added)
-                        result.add(i)
+                        continue
+
+                    var name = MultiLangCont.get(u.forms[j]) ?: u.forms[j].name
+
+                    if (name == null)
+                        name = ""
+
+                    name = Data.trio(i) + " - " + name.lowercase()
+
+                    added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                        KoreanFilter.filter(name, StaticStore.entityname)
+                    } else {
+                        name.contains(StaticStore.entityname.lowercase())
+                    }
+                }
+
+                if (added)
+                    result.add(u.id)
             } else {
-                result.add(i)
+                result.add(u.id)
             }
         }
 
         return result
     }
 
-    fun eSetFilter(): ArrayList<Int> {
-        val p = Pack.map[pid] ?: return ArrayList()
+    private fun getChance(data: Int, du: MaskEntity) : Boolean {
+        return when(data) {
+            in 0 until Data.PROC_TOT -> {
+               du.proc.getArr(data).exists()
+            }
+            else -> false
+        }
+    }
+
+    fun setEnemyFilter(pid: String): ArrayList<Identifier<AbEnemy>> {
+        val p = UserProfile.getPack(pid) ?: return ArrayList()
 
         val b0 = ArrayList<Boolean>()
         val b1 = ArrayList<Boolean>()
@@ -366,33 +164,33 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
         val b4 = ArrayList<Boolean>()
 
         if (StaticStore.empty) {
-            for (i in 0 until entitynumber)
+            for (i in p.enemies.list.indices)
                 b0.add(true)
         }
 
         if (StaticStore.attack.isEmpty())
-            for (i in 0 until entitynumber)
+            for (i in p.enemies.list.indices)
                 b1.add(true)
 
         if (StaticStore.tg.isEmpty() && !StaticStore.starred)
-            for (i in 0 until entitynumber)
+            for (i in p.enemies.list.indices)
                 b2.add(true)
 
         if (StaticStore.ability.isEmpty())
-            for (i in 0 until entitynumber)
+            for (i in p.enemies.list.indices)
                 b3.add(true)
 
         if (StatFilterElement.statFilter.isEmpty())
-            for(i in 0 until entitynumber)
+            for(i in p.enemies.list.indices)
                 b4.add(true)
 
-        for (e in p.es.list) {
+        for (e in p.enemies.list) {
             var b10: Boolean
             var b20: Boolean
             var b30: Boolean
 
             val de = e.de
-            val t = de.type
+            val t = de.traits
             val a = de.abi
 
             if (!StaticStore.empty)
@@ -416,14 +214,9 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                 b20 = !StaticStore.tgorand
                 for (k in StaticStore.tg.indices) {
                     b20 = if (StaticStore.tgorand)
-                        if (StaticStore.tg[k] == "")
-                            t == 0
-                        else
-                            b20 or ((t shr StaticStore.tg[k].toInt() and 1) == 1)
-                    else if (StaticStore.tg[k] == "")
-                        t == 0
+                        b20 or hasTrait(t, StaticStore.tg[k])
                     else
-                        b20 and ((t shr StaticStore.tg[k].toInt() and 1) == 1)
+                        b20 and hasTrait(t, StaticStore.tg[k])
                 }
             }
 
@@ -442,9 +235,9 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
                         b30 and bind
                 } else if (vect[0] == 1) {
                     b30 = if (StaticStore.aborand)
-                        b30 or (de.getProc(vect[1])[0] != 0)
+                        b30 or getChance(vect[1], de)
                     else
-                        b30 and (de.getProc(vect[1])[0] != 0)
+                        b30 and getChance(vect[1], de)
                 }
             }
 
@@ -462,50 +255,214 @@ class FilterEntity(private var entitynumber: Int, private var entityname: String
             }
         }
 
-        val result = ArrayList<Int>()
+        val result = ArrayList<Identifier<AbEnemy>>()
 
         val lang = Locale.getDefault().language
 
-        for (i in 0 until entitynumber)
+        for (i in p.enemies.list.indices)
             if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
-                if (entityname.isNotEmpty()) {
-                    val e = p.es.list[i]
+                val e = p.enemies.list[i]
 
-                    var name = MultiLangCont.ENAME.getCont(e) ?: e.name
+                if (StaticStore.entityname.isNotEmpty()) {
+                    var name = MultiLangCont.get(e) ?: e.name
 
                     if (name == null)
                         name = ""
 
-                    name = number(i) + " - " + name.toLowerCase(Locale.ROOT)
+                    name = Data.trio(i) + " - " + name.lowercase()
 
-                    if(CommonStatic.Lang.lang == 2 || lang == Interpret.KO) {
-                        if(KoreanFilter.filter(name, StaticStore.entityname)) {
-                            result.add(i)
-                        }
+                    val added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                        KoreanFilter.filter(name, StaticStore.entityname)
                     } else {
-                        if(name.contains(StaticStore.entityname)) {
-                            result.add(i)
-                        }
+                        name.contains(StaticStore.entityname.lowercase())
                     }
+
+                    if (added)
+                        result.add(e.id)
                 } else {
-                    result.add(i)
+                    result.add(e.id)
                 }
             }
 
         return result
     }
 
-    private fun number(num: Int): String {
-        return when (num) {
-            in 0..9 -> {
-                "00$num"
-            }
-            in 10..99 -> {
-                "0$num"
-            }
-            else -> {
-                "" + num
+    fun setLuFilter() : ArrayList<Identifier<Unit>> {
+        val b0 = ArrayList<Boolean>()
+        val b1 = ArrayList<Boolean>()
+        val b2 = ArrayList<Boolean>()
+        val b3 = ArrayList<Boolean>()
+        val b4 = ArrayList<Boolean>()
+        val b5 = ArrayList<Boolean>()
+
+        if(StaticStore.rare.isEmpty()) {
+            for(i in 0 until StaticStore.ludata.size)
+                b0.add(true)
+        }
+
+        if(StaticStore.empty) {
+            for(i in 0 until StaticStore.ludata.size)
+                b1.add(true)
+        }
+
+        if(StaticStore.attack.isEmpty()) {
+            for(i in 0 until StaticStore.ludata.size)
+                b2.add(true)
+        }
+
+        if(StaticStore.tg.isEmpty()) {
+            for(i in 0 until StaticStore.ludata.size)
+                b3.add(true)
+        }
+
+        if(StaticStore.ability.isEmpty()) {
+            for(i in 0 until StaticStore.ludata.size)
+                b4.add(true)
+        }
+
+        if (StatFilterElement.statFilter.isEmpty()) {
+            for(i in 0 until StaticStore.ludata.size) {
+                b5.add(true)
             }
         }
+
+        for(info in StaticStore.ludata) {
+            val u = Identifier.get(info)
+
+            if(u == null) {
+                b0.add(false)
+                b1.add(false)
+                b2.add(false)
+                b3.add(false)
+                b4.add(false)
+                continue
+            }
+
+            b0.add(StaticStore.rare.contains(u.rarity.toString()))
+
+            val b10 = ArrayList<Boolean>()
+            val b20 = ArrayList<Boolean>()
+            val b30 = ArrayList<Boolean>()
+            val b40 = ArrayList<Boolean>()
+            val b50 = ArrayList<Boolean>()
+
+            for(f in u.forms) {
+                val du = if(StaticStore.talents)
+                    f.maxu()
+                else
+                    f.du
+
+                val t = du.traits
+                val a = du.abi
+
+                if(!StaticStore.empty) {
+                    if(StaticStore.atksimu) {
+                        b10.add(Interpret.isType(du, 1))
+                    } else {
+                        b10.add(Interpret.isType(du, 0))
+                    }
+                }
+
+                var b21 = !StaticStore.atkorand
+
+                for(k in StaticStore.attack.indices) {
+                    b21 = if(StaticStore.atkorand) {
+                        b21 or Interpret.isType(du, StaticStore.attack[k].toInt())
+                    } else {
+                        b21 and Interpret.isType(du, StaticStore.attack[k].toInt())
+                    }
+                }
+
+                var b31 = !StaticStore.tgorand
+
+                for(k in StaticStore.tg.indices) {
+                    b31 = if(StaticStore.tgorand) {
+                        b31 or hasTrait(t, StaticStore.tg[k])
+                    } else {
+                        b31 and hasTrait(t, StaticStore.tg[k])
+                    }
+                }
+
+                var b41 = !StaticStore.aborand
+
+                for(k in StaticStore.ability.indices) {
+                    val vect = StaticStore.ability[k]
+
+                    if(vect[0] == 0) {
+                        val bind = a and vect[1] != 0
+                        b41 = if(StaticStore.aborand) {
+                            b41 or bind
+                        } else {
+                            b41 and bind
+                        }
+                    } else if (vect[0] == 1) {
+                        b41 = if(StaticStore.aborand) {
+                            b41 or getChance(vect[1], du)
+                        } else {
+                            b41 and getChance(vect[1], du)
+                        }
+                    }
+                }
+
+                b20.add(b21)
+                b30.add(b31)
+                b40.add(b41)
+                b50.add(StatFilterElement.performFilter(f, StatFilterElement.orand))
+            }
+
+            b1.add(!StaticStore.empty && b10.contains(true))
+            b2.add(b20.contains(true))
+            b3.add(b30.contains(true))
+            b4.add(b40.contains(true))
+            b5.add(b50.contains(true))
+        }
+
+        val result = ArrayList<Identifier<Unit>>()
+
+        val lang = Locale.getDefault().language
+
+        for(i in StaticStore.ludata.indices) {
+            if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
+                val u = Identifier.get(StaticStore.ludata[i]) ?: continue
+
+                if(StaticStore.entityname.isNotEmpty()) {
+                    var added = false
+
+                    for(j  in u.forms.indices) {
+                        if(added)
+                            continue
+
+                        var name = MultiLangCont.get(u.forms[j]) ?: u.forms[j].name
+
+                        if(name == null)
+                            name = ""
+
+                        name = Data.trio(j) + "-" + name.lowercase()
+
+                        added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                            KoreanFilter.filter(name, StaticStore.entityname)
+                        } else {
+                            name.contains(StaticStore.entityname.lowercase())
+                        }
+                    }
+
+                    if(added)
+                        result.add(u.id)
+                } else {
+                    result.add(u.id)
+                }
+            }
+        }
+
+        return result
+    }
+
+    private fun hasTrait(traits: List<Trait>, t: Identifier<Trait>) : Boolean {
+        for(tr in traits) {
+            if(tr.id.equals(t))
+                return true
+        }
+
+        return false
     }
 }
