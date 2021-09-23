@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.BattlePrepare
 import com.mandarin.bcu.BattleSimulation
@@ -28,6 +31,7 @@ import common.util.unit.Form
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.max
 import kotlin.math.min
 
 open class BPAdder : CoroutineTask<String> {
@@ -192,6 +196,7 @@ open class BPAdder : CoroutineTask<String> {
                     }
                     BattlePrepare.sniper = isChecked
                 }
+
                 rich.isChecked = BattlePrepare.rich
                 rich.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
@@ -201,6 +206,7 @@ open class BPAdder : CoroutineTask<String> {
                     }
                     BattlePrepare.rich = isChecked
                 }
+
                 start.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val restricted = restrictLevel(st)
@@ -218,6 +224,7 @@ open class BPAdder : CoroutineTask<String> {
                         activity.finish()
                     }
                 })
+
                 line.setOnTouchListener { _: View?, event: MotionEvent ->
                     val posit: IntArray?
                     when (event.action) {
@@ -261,12 +268,14 @@ open class BPAdder : CoroutineTask<String> {
                     }
                     true
                 }
+
                 val bck: FloatingActionButton = activity.findViewById(R.id.battlebck)
                 bck.setOnClickListener {
                     BattlePrepare.rich = false
                     BattlePrepare.sniper = false
                     activity.finish()
                 }
+
                 val lvlimText = ArrayList<String>()
 
                 for(n in 0..50) {
@@ -281,7 +290,18 @@ open class BPAdder : CoroutineTask<String> {
                     val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
                     val ed = shared.edit()
 
-                    val lvLimAdapter = ArrayAdapter(activity, R.layout.spinneradapter, lvlimText)
+                    val lvLimAdapter = object : ArrayAdapter<String>(activity, R.layout.spinneradapter, lvlimText) {
+
+                        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            val v = super.getDropDownView(position, convertView, parent)
+
+                            v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+                            lvlim.dropDownWidth = max(lvlim.dropDownWidth, v.measuredWidth)
+
+                            return v
+                        }
+                    }
 
                     lvlim.adapter = lvLimAdapter
 
