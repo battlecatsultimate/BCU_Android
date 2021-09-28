@@ -511,10 +511,10 @@ class LUOrbSetting : Fragment() {
             if(f.orbs.slots != -1) {
                 types.add(c.getString(R.string.unit_info_t_none))
                 types.add(c.getString(R.string.orb_atk))
-                types.add(c.getString(R.string.orb_res))
+                types.add(c.getString(R.string.orb_def))
             } else {
                 types.add(c.getString(R.string.orb_atk))
-                types.add(c.getString(R.string.orb_res))
+                types.add(c.getString(R.string.orb_def))
             }
 
             val a0 = ArrayAdapter(c, R.layout.spinnersmall, types.toTypedArray())
@@ -587,6 +587,8 @@ class LUOrbSetting : Fragment() {
         if(slot) {
             types.add(c.getString(R.string.unit_info_t_none))
         }
+
+        typeData.clear()
 
         types.add(c.getString(R.string.orb_atk))
         typeData.add(Data.ORB_ATK)
@@ -696,7 +698,7 @@ class LUOrbSetting : Fragment() {
 
             if(l.orbs == null) {
                 for(i in 0 until o.slots) {
-                    res.add(c.getString(R.string.lineup_orb)+"${i+1} - "+c.getString(R.string.unit_info_t_none))
+                    res.add(c.getString(R.string.lineup_orb)+" ${i+1} - "+c.getString(R.string.unit_info_t_none))
                 }
 
                 return res
@@ -706,9 +708,9 @@ class LUOrbSetting : Fragment() {
                 val data = l.orbs[i]
 
                 if(data.isEmpty()) {
-                    res.add(c.getString(R.string.lineup_orb)+"${i+1} - "+c.getString(R.string.unit_info_t_none))
+                    res.add(c.getString(R.string.lineup_orb)+" ${i+1} - "+c.getString(R.string.unit_info_t_none))
                 } else {
-                    res.add(c.getString(R.string.lineup_orb)+"${i+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}")
+                    res.add(c.getString(R.string.lineup_orb)+" ${i+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}")
                 }
             }
         } else {
@@ -724,7 +726,7 @@ class LUOrbSetting : Fragment() {
                         Log.e("LUOrbSetting","Invalid format detected in generateOrbTexts() ! : ${l.orbs?.contentDeepToString()}")
                         return res
                     } else {
-                        res.add(c.getString(R.string.lineup_orb)+"${i+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}")
+                        res.add(c.getString(R.string.lineup_orb)+" ${i+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}")
                     }
                 }
             }
@@ -744,7 +746,7 @@ class LUOrbSetting : Fragment() {
             val l = BasisSet.current().sele.lu.getLv(f)
 
             if(l.orbs == null) {
-                return c.getString(R.string.lineup_orb)+"${index+1} - "+c.getString(R.string.unit_info_t_none)
+                return c.getString(R.string.lineup_orb)+" ${index+1} - "+c.getString(R.string.unit_info_t_none)
             }
 
             if(index >= l.orbs.size)
@@ -753,9 +755,9 @@ class LUOrbSetting : Fragment() {
             val data = orb[index]
 
             return if(data.isEmpty()) {
-                c.getString(R.string.lineup_orb)+"${index+1} - "+c.getString(R.string.unit_info_t_none)
+                c.getString(R.string.lineup_orb)+" ${index+1} - "+c.getString(R.string.unit_info_t_none)
             } else {
-                c.getString(R.string.lineup_orb)+"${index+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}"
+                c.getString(R.string.lineup_orb)+" ${index+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}"
             }
         } else {
             val l = BasisSet.current().sele.lu.getLv(f) ?: return ""
