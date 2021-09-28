@@ -7,9 +7,7 @@ import android.content.Intent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.*
-import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.BattlePrepare
 import com.mandarin.bcu.BattleSimulation
@@ -17,20 +15,17 @@ import com.mandarin.bcu.LineUpScreen
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.stage.Stage
-import common.util.unit.Form
 import java.lang.ref.WeakReference
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
 
