@@ -183,7 +183,6 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     public override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         removeCallbacks(updater)
-        painter.bf.sb.release()
     }
 
     override fun getSpeed(): Int {
@@ -412,6 +411,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
 
         SoundHandler.resetHandler()
+
+        painter.bf.sb.release()
+
         activity.startActivity(intent)
         activity.finish()
     }
@@ -434,6 +436,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
 
         for (e in painter.bf.sb.st.data.allEnemy) e?.anim?.unload()
+
+        painter.bf.sb.release()
     }
 
     fun checkSlideUpDown() {

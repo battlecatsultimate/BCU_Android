@@ -399,6 +399,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                             battleView.unload()
 
+                            battleView.painter.bf.sb.release()
+
                             activity.finish()
                         }
 
@@ -423,6 +425,9 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 SoundHandler.MUSIC.release()
                             }
                         }
+
+                        battleView.painter.bf.sb.release()
+
                         activity.finish()
                     }
                 }
