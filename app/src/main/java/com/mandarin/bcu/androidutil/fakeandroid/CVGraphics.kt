@@ -135,6 +135,14 @@ class CVGraphics : FakeGraphics {
         this.c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), gp)
     }
 
+    override fun gradRectAlpha(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, al: Int, c: IntArray, d: Int, e: Int, al2: Int, f: IntArray) {
+        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (y + h).toFloat(), Color.argb(al, c[0], c[1], c[2]), Color.argb(al2, f[0], f[1], f[2]), Shader.TileMode.CLAMP)
+
+        gp.shader = s
+
+        this.c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), gp)
+    }
+
     override fun rotate(d: Double) {
         m.preRotate(Math.toDegrees(d).toFloat())
         c.setMatrix(m)
@@ -176,6 +184,11 @@ class CVGraphics : FakeGraphics {
                 cp.color = Color.WHITE
             }
         }
+    }
+
+    override fun setColor(r: Int, g: Int, b: Int) {
+        color = Color.rgb(r, g, b)
+        cp.color = Color.rgb(r, g, b)
     }
 
     override fun setComposite(mode: Int, p0: Int, p1: Int) {

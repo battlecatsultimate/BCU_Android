@@ -529,8 +529,19 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/configrow"
+                app:layout_constraintTop_toBottomOf="@+id/configbgeff"
                 app:strokeColor="?attr/ErrorPrimary" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configbgeff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/config_bgeff"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configrow"
+                app:layout_constraintStart_toStartOf="@+id/configrow"
+                app:layout_constraintTop_toBottomOf="@+id/configrow" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

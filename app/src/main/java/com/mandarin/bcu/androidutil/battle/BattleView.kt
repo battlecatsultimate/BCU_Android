@@ -183,6 +183,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     public override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         removeCallbacks(updater)
+        painter.bf.sb.release()
     }
 
     override fun getSpeed(): Int {

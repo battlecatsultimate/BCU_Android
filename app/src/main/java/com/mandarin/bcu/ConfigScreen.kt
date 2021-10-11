@@ -525,6 +525,19 @@ open class ConfigScreen : AppCompatActivity() {
                 finish()
             }
         })
+
+        val bgEff = findViewById<SwitchCompat>(R.id.configbgeff)
+
+        bgEff.setOnCheckedChangeListener { _, c ->
+            CommonStatic.getConfig().drawBGEffect = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("bgeff", c)
+            editor.apply()
+        }
+
+        bgEff.isChecked = shared.getBoolean("bgeff", true)
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {

@@ -203,6 +203,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             deleter(File(StaticStore.getExternalRes(this)))
         }
 
+        if(!shared.contains("bgeff")) {
+            ed.putBoolean("bgeff", true)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)

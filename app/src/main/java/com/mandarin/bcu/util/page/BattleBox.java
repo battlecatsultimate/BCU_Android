@@ -155,9 +155,22 @@ public interface BattleBox {
                 g.setComposite(CVGraphics.GRAY, 0, 0);
             }
 
+            double y = maxH * siz - midh;
+            double midY = groundHeight / minSiz;
+
+            if(CommonStatic.getConfig().drawBGEffect)
+                sb.registerBattleDimension(midY, h / minSiz);
+
+            if(CommonStatic.getConfig().twoRow)
+                midY += (h * 0.75 / 10.0);
+
             ImgCore.set(g);
 
             sb.bg.draw(g, setP(box.getWidth(), box.getHeight()), pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+
+            if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
+                sb.bgEffect.preDraw(g, setP(pos, y), siz, midY);
+            }
 
             drawCastle(g);
 
@@ -166,6 +179,15 @@ public interface BattleBox {
             }
 
             drawEntity(g);
+
+            if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
+                sb.bgEffect.postDraw(g, setP(pos, y), siz, midY);
+            }
+
+            if(sb.bg.overlay != null) {
+                drawBGOverlay(g, midY);
+            }
+
             drawBtm(g);
             drawTop(g);
 
@@ -868,6 +890,13 @@ public interface BattleBox {
                     p.x += m.getWidth() * ratio;
                 }
             }
+        }
+
+        protected synchronized void drawBGOverlay(FakeGraphics gra, double midY) {
+            if(sb.bg.overlay == null)
+                return;
+
+            gra.gradRectAlpha(pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((1530 + midY) * siz), pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], pos, (int) (1530 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
         }
     }
 

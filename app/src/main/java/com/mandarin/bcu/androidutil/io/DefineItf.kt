@@ -47,7 +47,7 @@ class DefineItf : Itf {
         }
     }
 
-    override fun exit(save: Boolean) {}
+    override fun save(save: Boolean, exit: Boolean) {}
 
     override fun getMusicLength(f: Music?): Long {
         f ?: return -1
