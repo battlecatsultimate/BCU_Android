@@ -33,6 +33,7 @@ import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
+import common.battle.data.CustomUnit
 import common.battle.data.MaskUnit
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -40,6 +41,7 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Form
 import common.util.unit.Unit
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UnitinfPager : Fragment() {
     companion object {
@@ -97,7 +99,9 @@ class UnitinfPager : Fragment() {
         val unittalen = view.findViewById<CheckBox>(R.id.unitinftalen)
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
-        val pcoins = arrayOfNulls<Spinner>(ids.size)
+        val pcoins = Array<Spinner>(ids.size) { i ->
+            view.findViewById(ids[i])
+        }
 
         for (i in ids.indices)
             pcoins[i] = view.findViewById(ids[i])
@@ -171,13 +175,27 @@ class UnitinfPager : Fragment() {
 
             pcoinlev = intArrayOf(0, 0, 0, 0, 0, 0)
         } else {
-            val max = f.du.pCoin.max
+            val max = if(f.du is CustomUnit) {
+                IntArray(f.du.pCoin.max.size) {
+                    if(it == 0 || it - 1 >= f.du.pCoin.info.size)
+                        0
+                    else
+                        f.du.pCoin.info[it - 1][1]
+                }
+            } else {
+                f.du.pCoin.max
+            }
 
             pcoinlev = IntArray(max.size)
 
             pcoinlev[0] = 0
 
             for (j in pcoins.indices) {
+                if(j >= f.du.pCoin.info.size) {
+                    pcoins[j].isEnabled = false
+                    continue
+                }
+
                 val plev: MutableList<Int> = ArrayList()
 
                 for (k in 0 until max[j + 1] + 1)
@@ -185,8 +203,8 @@ class UnitinfPager : Fragment() {
 
                 val adapter = ArrayAdapter(activity, R.layout.spinneradapter, plev)
 
-                pcoins[j]!!.adapter = adapter
-                pcoins[j]!!.setSelection(getIndex(pcoins[j], max[j + 1]))
+                pcoins[j].adapter = adapter
+                pcoins[j].setSelection(getIndex(pcoins[j], max[j + 1]))
 
                 pcoinlev[j + 1] = max[j + 1]
             }
@@ -301,10 +319,9 @@ class UnitinfPager : Fragment() {
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val npresetrow = view.findViewById<TableRow>(R.id.talresetrow)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
-        val pcoins = arrayOfNulls<Spinner>(ids.size)
-
-        for (i in ids.indices)
-            pcoins[i] = view.findViewById(ids[i])
+        val pcoins = Array<Spinner>(ids.size) { i ->
+            view.findViewById(ids[i])
+        }
 
         val t = BasisSet.current().t()
 
@@ -859,9 +876,9 @@ class UnitinfPager : Fragment() {
         }
 
         for (i in pcoins.indices) {
-            pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
+            pcoins[i].onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
-                    pcoinlev[i+1] = pcoins[i]!!.selectedItem as Int
+                    pcoinlev[i+1] = pcoins[i].selectedItem as Int
 
                     validate(view, f, t)
                 }
@@ -869,18 +886,32 @@ class UnitinfPager : Fragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            pcoins[i]!!.setOnLongClickListener {
-                pcoins[i]!!.isClickable = false
+            pcoins[i].setOnLongClickListener {
+                pcoins[i].isClickable = false
 
                 StaticStore.showShortMessage(activity, s.getTalentName(i, f))
                 true
             }
         }
         npreset.setOnClickListener {
-            for (i in pcoins.indices) {
-                pcoins[i]!!.setSelection(getIndex(pcoins[i], f.du.pCoin.max[i + 1]))
+            val max = if(f.du is CustomUnit) {
+                IntArray(f.du.pCoin.max.size) {
+                    if(it == 0 || it - 1 >= f.du.pCoin.info.size)
+                        0
+                    else
+                        f.du.pCoin.info[it -1][1]
+                }
+            } else {
+                f.du.pCoin.max
+            }
 
-                pcoinlev[i + 1] = f.du.pCoin.max[i + 1]
+            for (i in pcoins.indices) {
+                if(i >= f.du.pCoin.info.size)
+                    continue
+
+                pcoins[i].setSelection(getIndex(pcoins[i], max[i + 1]))
+
+                pcoinlev[i + 1] = max[i + 1]
             }
 
             validate(view, f, t)
@@ -926,7 +957,10 @@ class UnitinfPager : Fragment() {
         unittrait.text = s.getTrait(f, talents, pcoinlev)
         unitspd.text = s.getSpd(f, talents, pcoinlev)
 
-        val du: MaskUnit = if (f.du.pCoin != null) if (talents) f.du.pCoin.improve(pcoinlev) else f.du else f.du
+        val du: MaskUnit = if (f.du.pCoin != null && talents)
+            f.du.pCoin.improve(pcoinlev)
+        else
+            f.du
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 

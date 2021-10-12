@@ -12,6 +12,7 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import common.CommonStatic
 import common.pack.Identifier
 import common.util.unit.Trait
 import kotlin.math.ceil
@@ -125,9 +126,9 @@ class SearchTraitAdapter(private val context: Context, private val tool: Array<S
                 null
         } else {
             if(trait.icon != null)
-                getDrawable(trait.icon.bimg.bimg() as Bitmap)
+                getDrawable(trait.icon.img.bimg() as Bitmap)
             else
-                null //TODO Dummy trait icon
+                getDrawable(CommonStatic.getBCAssets().dummyTrait.img.bimg() as Bitmap)
         }
     }
 

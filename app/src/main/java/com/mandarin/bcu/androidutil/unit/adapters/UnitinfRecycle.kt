@@ -30,6 +30,7 @@ import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
+import common.battle.data.CustomUnit
 import common.battle.data.MaskUnit
 import common.pack.Identifier
 import common.util.unit.Form
@@ -91,11 +92,12 @@ class UnitinfRecycle(private val context: Activity,
 
         private var ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
 
-        var pcoins = arrayOfNulls<Spinner>(ids.size)
+        var pcoins = Array<Spinner>(ids.size) { i ->
+            itemView.findViewById(ids[i])
+        }
 
         init {
             unitplus.text = " + "
-            for (i in ids.indices) pcoins[i] = itemView.findViewById(ids[i])
         }
     }
 
@@ -140,16 +142,35 @@ class UnitinfRecycle(private val context: Activity,
             viewHolder.nprow.visibility = View.GONE
             pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
         } else {
-            val max = f.du.pCoin.max
+            val max = if(f.du is CustomUnit) {
+                IntArray(f.du.pCoin.max.size) {
+                    if(it == 0 || it - 1 >= f.du.pCoin.info.size)
+                        0
+                    else
+                        f.du.pCoin.info[it - 1][1]
+                }
+            } else {
+                f.du.pCoin.max
+            }
 
             pcoins = IntArray(max.size)
 
             for (j in viewHolder.pcoins.indices) {
+                if(j >= f.du.pCoin.info.size) {
+                    viewHolder.pcoins[j].isEnabled = false
+                    continue
+                }
+
                 val plev: MutableList<Int> = ArrayList()
-                for (k in 0 until max[j + 1] + 1) plev.add(k)
+
+                for (k in 0 until max[j + 1] + 1)
+                    plev.add(k)
+
                 val adapter = ArrayAdapter(context, R.layout.spinneradapter, plev)
-                viewHolder.pcoins[j]!!.adapter = adapter
-                viewHolder.pcoins[j]!!.setSelection(getIndex(viewHolder.pcoins[j], max[j + 1]))
+
+                viewHolder.pcoins[j].adapter = adapter
+                viewHolder.pcoins[j].setSelection(getIndex(viewHolder.pcoins[j], max[j + 1]))
+
                 pcoins[j + 1] = max[j + 1]
             }
         }
@@ -785,17 +806,17 @@ class UnitinfRecycle(private val context: Activity,
         }
 
         for (i in viewHolder.pcoins.indices) {
-            viewHolder.pcoins[i]!!.onItemSelectedListener = object : OnItemSelectedListener {
+            viewHolder.pcoins[i].onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    pcoins[i+1] = viewHolder.pcoins[i]!!.selectedItem as Int
+                    pcoins[i+1] = viewHolder.pcoins[i].selectedItem as Int
                     validate(viewHolder, f, t)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            viewHolder.pcoins[i]!!.setOnLongClickListener {
-                viewHolder.pcoins[i]!!.isClickable = false
+            viewHolder.pcoins[i].setOnLongClickListener {
+                viewHolder.pcoins[i].isClickable = false
 
                 StaticStore.showShortMessage(context, s.getTalentName(i, f))
 
@@ -804,10 +825,24 @@ class UnitinfRecycle(private val context: Activity,
         }
 
         viewHolder.npreset.setOnClickListener {
-            for (i in viewHolder.pcoins.indices) {
-                viewHolder.pcoins[i]!!.setSelection(getIndex(viewHolder.pcoins[i], f.du.pCoin.max[i + 1]))
+            val max = if(f.du is CustomUnit) {
+                IntArray(f.du.pCoin.max.size) {
+                    if(it == 0 || it - 1 >= f.du.pCoin.info.size)
+                        0
+                    else
+                        f.du.pCoin.info[it - 1][1]
+                }
+            } else {
+                f.du.pCoin.max
+            }
 
-                pcoins[i + 1] = f.du.pCoin.max[i + 1]
+            for (i in viewHolder.pcoins.indices) {
+                if(i >= f.du.pCoin.info.size)
+                    continue
+
+                viewHolder.pcoins[i].setSelection(getIndex(viewHolder.pcoins[i], max[i + 1]))
+
+                pcoins[i + 1] = max[i + 1]
             }
             validate(viewHolder, f, t)
         }

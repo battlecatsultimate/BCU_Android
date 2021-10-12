@@ -403,6 +403,8 @@ open class BPAdder : CoroutineTask<String> {
 
             for(forms in lu.lu.fs) {
                 for(form in forms) {
+                    form ?: continue
+
                     val level = lu.lu.map[form.unit.id] ?: continue
 
                     for(i in level.lvs.indices) {

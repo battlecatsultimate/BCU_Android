@@ -51,7 +51,7 @@ class GetStrings(private val c: Context) {
                 R.string.unit_info_cost, //25: Cost
                 R.string.unit_info_cd, //26: Cooldown
                 R.string.unit_info_spd, //27: Speed
-                -1, //28: ??
+                R.string.hb, //28: ??
                 R.string.sch_abi_ic, //29: Imu. Curse
                 R.string.talen_cu, //30: Res. Curse
                 R.string.unit_info_atk, //31: Attack Damage
@@ -79,7 +79,9 @@ class GetStrings(private val c: Context) {
                 R.string.abi_ipoi, //53: Imu. Poison
                 R.string.talen_sur, //54: Res. Surge
                 R.string.sch_abi_imsu, //55: Imu. Surge
-                R.string.sch_abi_surge, //56: Surge Attack
+                R.string.sch_abi_surge, //56: Surge Attack,
+                R.string.sch_de, //57: Aku
+                R.string.sch_abi_sb //58: Shield breaker
         )
         private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
@@ -567,11 +569,8 @@ class GetStrings(private val c: Context) {
     fun getTrait(ef: Form?, talent: Boolean, lvs: IntArray?): String {
         if (ef == null) return ""
 
-        val du: MaskUnit = if (lvs != null && ef.du.pCoin != null)
-            if (talent)
-                ef.du.pCoin.improve(lvs)
-            else
-                ef.du
+        val du: MaskUnit = if (lvs != null && ef.du.pCoin != null && talent)
+            ef.du.pCoin.improve(lvs)
         else
             ef.du
 
