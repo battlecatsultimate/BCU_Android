@@ -71,5 +71,9 @@
         "BROKEN" : "broken",
         "BREAKER" : "breaker",
         "REGENERATION" : "regeneration"
+    },
+    "DmgCap": {
+        "FAIL" : "fail",
+        "SUCCESS" : "success"
     }
 }

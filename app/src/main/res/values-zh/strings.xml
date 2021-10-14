@@ -888,4 +888,9 @@
     <string name="battle_continue">Continue</string>
     <string name="sch_ba">Base</string>
     <string name="config_bgeff">Draw background effect</string>
+    <string name="sch_abi_cou">Counter Attack</string>
+    <string name="sch_abi_imar">Imu.Armor Break</string>
+    <string name="sch_abi_imsp">Imu.Haste</string>
+    <string name="sch_abi_cut">Super Armor</string>
+    <string name="sch_abi_cap">Magic Shield</string>
 </resources>

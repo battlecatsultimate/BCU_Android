@@ -801,5 +801,186 @@
                 "tooltip" : null
             }
         }
+    },
+    "COUNTER" : {
+        "abbr_name": "Counter",
+        "full_name": "Counter Attack",
+        "tooltip": "Deal damage back when attacked.",
+        "format": ["(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back.",
+            "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks.}] This counterattack will ",
+            "[(type.procType<2|type.procType==3){[(type.procType==0){not }]have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. ",
+            "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
+            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "damage": {
+                "name": "Damage%",
+                "tooltip": "The percentage of damage to reflect when getting hit."
+            },
+            "minRange": {
+                "name": "Blindspot",
+                "tooltip": "The counter won't hit anything standing below this number. Leave this and Max Range in 0 to use the unit's normal range."
+            },
+            "maxRange": {
+                "name": "Max Range",
+                "tooltip": "The counter will hit anything standing below this number. Leave this and Blindspot in 0 to use the unit's normal range."
+            },
+            "type.procType": {
+                "name": "Proc Type",
+                "tooltip": "The parameter here affects how attack procs are handled. 0 = Removes all procs. 1 = Reflects all procs back to the attacker. 2 = Replaces all the attack's procs with this unit's procs. 3 = Uses both this entity and the attacker's procs. Useless if there's a hit registered as counter"
+            },
+            "type.counterWave": {
+                "name": "Counter Waves",
+                "tooltip": "Toggle response when hit with a Wave or Surge. 0 = Do Nothing. 1 = Counter. 2 = Reflect."
+            },
+            "type.useOwnDamage": {
+                "name": "Use Own Damage",
+                "tooltip": "Use this unit's damage for counters instead of received damage."
+            },
+            "type.outRange": {
+                "name": "Ignore Distance",
+                "tooltip": "Toggle this on and the unit will counter regardless of how far away the attacker is."
+            },
+            "type.areaAttack": {
+                "name": "Area Attack",
+                "tooltip": "Toggle this on and the counter will target all units in the counter's range. If left off, only the attacker will receive damage."
+            }
+        }
+    },
+    "DEATHSURGE": {
+        "abbr_name": "D.Surge",
+        "full_name": "Death Surge",
+        "tooltip": null,
+        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) when killed (_left)Created within (dis_0) ~ (dis_1) range(_right)",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": "point near",
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": "point far",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUSPEED": {
+        "abbr_name": "Imu.Haste",
+        "full_name": "Immune/Resistant to Haste",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Haste",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Haste [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects speed [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block Haste"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to speed debuffs, -1 = Only resistant to speed buffs"
+            }
+        }
+    },
+    "IMUARMOR": {
+        "abbr_name": "Imu. ABreak",
+        "full_name": "Immune/Resistant to Armor Break",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Armor Break",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Armor Break [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
+            "[(smartImu!=0){Only affects armor [(smartImu>0){buffs}(smartImu<0){debuffs}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce damage. Set to 100 to completely block armor break"
+            },
+            "smartImu": {
+                "name": "Ignore",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to armor debuffs, -1 = Only resistant to armor buffs"
+            }
+        }
+    },
+    "IMUSUMMON": {
+        "abbr_name": "imu. Summon",
+        "full_name": "Immune/Resistant to Summon",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon",
+            "[(mult<100&mult>0){ (_left)Reduces (mult)% of the summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Summon [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Reduces (block)% of the summoned entity's strength(_right)}(block<0){ (_left)Summoned entities will be (_abs(block))% stronger(_right)}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Only applies to On Hit and On Kill summon."
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce all summoned entities' strength. Set to 100 to completely block summon"
+            }
+        }
+    },
+    "IMUSEAL": {
+        "abbr_name": "imu. Seal",
+        "full_name": "Immune/Resistant to Seal",
+        "tooltip": null,
+        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal",
+            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(block!=0){& }]}][(block!=0){Seal [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block seal"
+            }
+        }
+    },
+    "BARRIER" : {
+        "abbr_name" : "barrier",
+        "full_name" : "Barrier",
+        "tooltip" : "Blocks all damage lower than the barrier's HP. Will break if an attack deals more damage than it's HP",
+        "format" : ["Barrier (_left)Barrier has (health) HP",
+            "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
+            "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
+        ],
+        "class" : {
+            "health" : {
+                "name" : "Health",
+                "tooltip" : "Health of the barrier"
+            },
+            "regentime" : {
+                "name" : "Regeneration Time",
+                "tooltip" : "The entity's barrier will regenerate after a period of time passes. Set to 0 to deactivate this ability."
+            },
+            "timeout" : {
+                "name" : "Timeout",
+                "tooltip" : "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
+            }
+        }
     }
 }

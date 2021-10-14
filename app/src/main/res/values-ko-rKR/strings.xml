@@ -888,4 +888,9 @@
     <string name="battle_continue">이어하기</string>
     <string name="sch_ba">성</string>
     <string name="config_bgeff">전투 내 배경 효과 표시</string>
+    <string name="sch_abi_cou">카운터 공격</string>
+    <string name="sch_abi_imar">방어력 감소 무효</string>
+    <string name="sch_abi_imsp">속도 증가 무효</string>
+    <string name="sch_abi_cut">슈퍼 아머</string>
+    <string name="sch_abi_cap">마법 쉴드</string>
 </resources>

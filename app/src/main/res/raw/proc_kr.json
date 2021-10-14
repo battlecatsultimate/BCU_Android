@@ -268,11 +268,18 @@
         "abbr_name": "밀치기 무효",
         "full_name": "밀치기 무효",
         "tooltip": "밀치기 능력을 약하게 받거나 무효화합니다",
-        "format": "[(mult==100){밀치기 무효}(mult<100&mult>0){밀치기 내성 (_left)밀쳐나는 거리 (mult)% 감소(_right)}(mult<0){밀치기에 약함 (_left)밀쳐나는 거리 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){밀치기[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){밀치기 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)밀치는 거리 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 밀치기 거리 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "밀쳐날 거리를 퍼센트로 감소시킵니다"
+            },
+            "block": {
+                "name": "밀치기 삭제",
+                "tooltip": "받은 공격 자체의 밀치기 거리를 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -280,11 +287,18 @@
         "abbr_name": "멈춘다 무효",
         "full_name": "멈춘다 무효",
         "tooltip": "멈춘다 능력을 약하게 받거나 무효화합니다",
-        "format": "[(mult==100){멈춘다 무효}(mult<100&mult>0){멈춘다 내성 (_left)멈추는 시간 (mult)% 감소}(mult<0){멈춘다에 약함 (_left)멈추는 시간 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){멈춘다[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){멈춘다 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)멈추는 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 멈추는 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "멈출 시간을 퍼센트로 감소시킵니다"
+            },
+            "block": {
+                "name": "멈춘다 삭제",
+                "tooltip": "받은 공격 자체의 멈추는 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -292,11 +306,18 @@
         "abbr_name": "느리게 무효",
         "full_name": "느리게 무효",
         "tooltip": "느리게 능력을 약하게 받거나 무효화합니다",
-        "format": "[(mult==100){느리게 무효}(mult<100&mult>0){느리게 내성 (_left)느려지는 시간 (mult)% 감소}(mult<0){느리게에 약함 (_left)느려지는 시간 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){느리게[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){느리게 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)느리게 하는 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 느리게 하는 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "느려지는 시간을 퍼센트로 감소시킵니다"
+            },
+            "block": {
+                "name": "느리게 삭제",
+                "tooltip": "받은 공격 자체의 느리게 하는 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -316,11 +337,22 @@
         "abbr_name": "약화 무효",
         "full_name": "약화 무효",
         "tooltip": "약하게 한다 능력을 약하게 받거나 무효화합니다",
-        "format": "[(mult==100){약화 무효}(mult<100&mult>0){약화 내성 (_left)약화 시간 (mult)% 감소(_right)}(mult<0){약화에 약함 (_left)약화 시간 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){약하게 한다[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){약하게 한다 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)약화 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 약화 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "약화되는 시간을 퍼센트로 감소시킵니다"
+            },
+            "block": {
+                "name": "밀치기 삭제",
+                "tooltip": "받은 공격 자체의 약화 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
+            },
+            "smartImu": {
+                "name": "무시",
+                "tooltip": "0 = 버프 디버프 상관없이 전부 무시합니다\n1 = 디버프만 무시합니다\n-1 = 버프만 무시합니다"
             }
         }
     },
@@ -328,11 +360,18 @@
         "abbr_name": "워프 무효",
         "full_name": "워프 무효",
         "tooltip": "워프 능력을 약하게 받거나 무효화합니다",
-        "format": "[(mult==100){워프 무효}(mult<100&mult>0){워프 내성 (_left)워프 시간 (mult)% 감소(_right)}(mult<0){워프에 약함 (_left)워프 시간 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){워프[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){워프 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)워프 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 워프 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "워프되는 시간을 퍼센트로 감소시킵니다"
+            },
+            "block": {
+                "name": "워프 삭제",
+                "tooltip": "받은 공격 자체의 워프 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -340,23 +379,18 @@
         "abbr_name": "저주 무효",
         "full_name": "저주 무효",
         "tooltip": "저주 능력을 약하게 받거나 무효화합니다",
-        "format": "[(mult==100){저주 무효}(mult<100&mult>0){저주 내성 (_left)저주 시간 (mult)% 감소(_right)}(mult<0){저주에 약함 (_left)저주 시간 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){저주[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){저주 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)저주 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 저주 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "저주되는 시간을 퍼센트로 감소시킵니다"
-            }
-        }
-    },
-    "IMUSUMMON": {
-        "abbr_name": "imu. Summon",
-        "full_name": "Immune/Resist to Summon",
-        "tooltip": null,
-        "format": "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon[(mult<100&mult>0){ (_left)Reduces (mult)% of summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}]",
-        "class": {
-            "mult": {
-                "name": "percent",
-                "tooltip": "Only applies to On Hit and On Kill summon."
+            },
+            "block": {
+                "name": "저주 삭제",
+                "tooltip": "받은 공격 자체의 저주 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -596,13 +630,17 @@
         "full_name": "크리티컬 무효",
         "tooltip": "크리티컬을 특정 타입에 따라 다르게 받아들입니다",
         "format": [
-            "[(type==0){비활성화}(type==1){크리티컬 무효}",
-            "(type==2){크리티컬 스톱퍼}]"
+            "[(block==0){크리티컬[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){크리티컬 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)크리티컬 데미지 (mult)% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 크리티컬 데미지 (block)% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
         ],
         "class": {
-            "type": {
-                "name": "타입",
-                "tooltip": "1 은 크리티컬 무효, 2 는 크리티컬을 제거하여 다른 메탈 유닛들도 보호합니다"
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "크리티컬 데미지를 퍼센트로 감소합니다"
+            },
+            "block": {
+                "name": "크리티컬 삭제",
+                "tooltip": "받은 공격 자체의 크리티컬 데미지를 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -682,11 +720,18 @@
         "abbr_name": "독 데미지 무효",
         "full_name": "독 데미지 무효",
         "tooltip": "독 데미지를 약하게 받거나 무효화 합니다",
-        "format": "[(mult==100){독 데미지 무효}(mult<100&mult>0){독 데미지 내성 (_left)데미지 (mult)% 감소(_right)}(mult<0){독 데미지에 약함 (_left)데미지 (_abs(mult))% 더 증가(_right)}]",
+        "format": [
+            "[(block==0){독 데미지[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){독 데미지 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)독 데미지 (mult)% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 독 데미지 (block)% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "퍼센트",
                 "tooltip": "독 데미지를 퍼센트만큼 감소시킵니다"
+            },
+            "block": {
+                "name": "독 데미지 삭제",
+                "tooltip": "받은 공격 자체의 독 데미지를 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     },
@@ -821,6 +866,248 @@
             "time": {
                 "name": "시간",
                 "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            }
+        }
+    },
+    "COUNTER" : {
+        "abbr_name": "반격",
+        "full_name": "반격",
+        "tooltip": "Deal damage back when attacked.",
+        "format": [
+            "(prob)% 확률로 [(type.counterWave!=0){파동/열파를 포함한 모든}(type.counterWave==0){일반}] 공격으로부터 피격 시 ",
+            "[(type.useOwnDamage){발동자의}(!type.useOwnDamage){받은 공격의}] 공격력의 (damage)% 만큼 [(type.procType!=0&type.counterWave==2){열파/파동 능력을 포함하여 }]",
+            "[(type.procType==0){아무 능력 없이}(type.procType==1){받은 공격의 능력과 함께}(type.procType==2){발동자 공격의 능력과 함께}(type.procType==3){발동자 공격과 받은 공격의 모든 능력과 함께}] ",
+            "[(type.outRange){[(type.areaAttack){적군}(!type.areaAttack){공격자}] 위치에 상관없이}(!type.outRange){[(type.areaAttack){적군이}(!type.areaAttack){공격자가}] [(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) 사이에 있으면}(minRange==0&maxRange==0){발동자 범위 내에 있으면}]}]",
+            " 범위 내 [(type.areaAttack){모든 적군한테}(!type.areaAttack){공격자한테}] 반격한다"
+        ],
+        "class": {
+            "prob": {
+                "name": "확률",
+                "tooltip": "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "damage": {
+                "name": "데미지 퍼센트",
+                "tooltip": "타격 시 받은 데미지의 퍼센트로 반격할 수 있도록 설정합니다"
+            },
+            "minRange": {
+                "name": "최소 사거리",
+                "tooltip": "이 사거리보다 가까이 있는 적은 맞지 않습니다. 최대 사거리와 이 값을 0으로 설정하면 발동자의 범위를 따릅니다"
+            },
+            "maxRange": {
+                "name": "최대 사거리",
+                "tooltip": "이 사거리보다 멀리 있는 적은 맞지 않습니다. 최대 사거리와 이 값을 0으로 설정하면 발동자의 범위를 따릅니다"
+            },
+            "type.procType": {
+                "name": "능력 타입",
+                "tooltip": "반격 시 능력을 어떻게 다룰지 정합니다\n\n0 = 모든 능력을 제거한 상태로 반격합니다\n1 = 받은 공격의 능력과 함께 반격합니다\n2 = 발동자의 능력과 함께 반격합니다\n3 = 받은 공격과 발동자 모두의 능력과 함께 반격합니다\n\n받은 공격이 이미 반격일 경우 무시됩니다"
+            },
+            "type.counterWave": {
+                "name": "파동 반격",
+                "tooltip": "파동/열파 공격에 맞을 시 어떻게 다룰지 정합니다\n0 = 아무것도 하지 않습니다\n1 = 반격 합니다\n2 = 능력 복사 시 파동/열파 능력 복사를 허용합니다"
+            },
+            "type.useOwnDamage": {
+                "name": "발동자 공격 사용",
+                "tooltip": "반격 시 받은 공격이 아닌 발동자의 공격력을 사용합니다"
+            },
+            "type.outRange": {
+                "name": "거리 무시",
+                "tooltip": "해당 값을 설정하면 사거리에 상관없이 항상 상대한테 반격이 가능해집니다"
+            },
+            "type.areaAttack": {
+                "name": "범위 공격",
+                "tooltip": "해당 값이 켜져있을 경우 설정된 범위 내의 모든 적들한테 반격이 가능해집니다. 꺼져 있을 경우 공격을 가한 개체만 반격 당합니다"
+            }
+        }
+    },
+    "BARRIER" : {
+        "abbr_name" : "베리어",
+        "full_name" : "베리어",
+        "tooltip" : "베리어의 체력보다 낮은 모든 공격을 무효화 합니다. 만약 베리어의 체력보다 높은 공격을 맞을 경우 베리어는 부숴집니다",
+        "format" : ["베리어 (_left)(health) 체력을 갖고 있[(regentime>0|timeout>0){고, }(regentime==0&timeout==0){다}][(regentime>0){파괴 후 (_dispTime(regentime)) 후에 다시 생성[(timeout==0){된다}(timeout>0){되며, }]}][(timeout>0){생성 후 (_dispTime(timeout)) 후에 파괴된다}](_right)"
+        ],
+        "class" : {
+            "health" : {
+                "name" : "체력",
+                "tooltip" : "베리어의 체력을 정합니다"
+            },
+            "regentime" : {
+                "name" : "회복 시간",
+                "tooltip" : "특정 시간이 지나면 베리어를 회복합니다. 0으로 설정하여 비활성화할 수 있습니다"
+            },
+            "timeout" : {
+                "name" : "시간 초과",
+                "tooltip" : "특정 시간이 지나면 베리어가 자동으로 부숴집니다. 0으로 설정하여 비활성화할 수 있습니다"
+            }
+        }
+    },
+    "DMGCUT" : {
+        "abbr_name" : "슈퍼 아머",
+        "full_name" : "슈퍼 아머",
+        "tooltip" : "설정된 값보다 낮은 공격력을 무효화 합니다. 설정된 값에 따라 공격력만 무시하고 능력은 받아들일 수도 있습니다",
+        "format" : "(prob)% 확률로 (dmg)보다 낮은 공격력을 [(type.traitIgnore&!_isEnemy){적 속성에 상관 없이 }][(type.procs){공격의 능력과 함께 }]무효화한다",
+        "class" : {
+            "prob" : {
+                "name" : "확률",
+                "tooltip" : "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "dmg" : {
+                "name" : "데미지",
+                "tooltip" : "무시 가능한 최대 데미지를 정합니다"
+            },
+            "type.traitIgnore" : {
+                "name" : "속성 무시",
+                "tooltip" : "아군 한정 설정입니다. 켜져 있을 경우 적 속성에 상관없이 능력이 발동 가능해집니다"
+            },
+            "type.procs" : {
+                "name" : "능력 무시",
+                "tooltip" : "켜져 있을 경우 받은 공격의 능력 또한 같이 무효화됩니다"
+            }
+        }
+    },
+    "DMGCAP" : {
+        "abbr_name" : "마법 쉴드",
+        "full_name" : "마법 쉴드",
+        "tooltip" : "설정된 값보다 높은 공격을 무시하거나 그 설정된 값의 공격력으로 받아들입니다",
+        "format" : "(prob)% 확률료 (dmg) 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){(dmg) 로 받아들인다}]",
+        "class" : {
+            "prob" : {
+                "name" : "확률",
+                "tooltip" : "타겟에게 해당 능력을 발동시킬 확률입니다"
+            },
+            "dmg" : {
+                "name" : "데미지",
+                "tooltip" : "능력이 발동 가능한 최소 데미지를 정합니다"
+            },
+            "type.traitIgnore" : {
+                "name" : "속성 무시",
+                "tooltip" : "아군 한정 설정입니다. 켜져 있을 경우 적 속성에 상관없이 능력이 발동 가능해집니다"
+            },
+            "type.nullify" : {
+                "name" : "공격력 무시",
+                "tooltip" : "켜져 있을 경우 공격력을 0으로 무시하게 됩니다"
+            },
+            "type.procs" : {
+                "name" : "능력 무시",
+                "tooltip" : "켜져 있을 경우 받은 공격의 능력 또한 같이 무효화됩니다"
+            }
+        }
+    },
+    "IMUARMOR": {
+        "abbr_name": "방감 무효",
+        "full_name": "방어력 감소 무효",
+        "tooltip": "방어력 감소 능력을 무효화합니다. 설정된 값에 따라 버프만 받아들이게 할 수도 있습니다",
+        "format": [
+            "[(block==0){방어력 감소[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){방어력 감소 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)방어력 감소 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 방어력 감소 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "방어력 감소 시간을 퍼센트로 감소합니다"
+            },
+            "block": {
+                "name": "방어력 감소 삭제",
+                "tooltip": "받은 공격 자체의 방어력 감소 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줄 수 있습니다. 100 으로 설정하여 완전히 막아냅니다"
+            },
+            "smartImu": {
+                "name": "무시",
+                "tooltip": "0 = 버프 디버프 상관없이 전부 무시합니다\n1 = 디버프만 무시합니다\n-1 = 버프만 무시합니다"
+            }
+        }
+    },
+    "IMUSPEED": {
+        "abbr_name": "속증 무효",
+        "full_name": "속도 증가 무효",
+        "tooltip": "속도 증가 능력을 무효화합니다. 설정된 값에 따라 버프만 받아들이게 할 수도 있습니다",
+        "format": [
+            "[(block==0){속도 증가[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){속도 증가 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)속도 증가 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 속도 증가 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "속도 증가 시간을 퍼센트로 감소합니다"
+            },
+            "block": {
+                "name": "속도 증가 삭제",
+                "tooltip": "받은 공격 자체의 속도 증가 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
+            },
+            "smartImu": {
+                "name": "무시",
+                "tooltip": "0 = 버프 디버프 상관없이 전부 무시합니다\n1 = 디버프만 무시합니다\n-1 = 버프만 무시합니다"
+            }
+        }
+    },
+    "IMUPOI": {
+        "abbr_name": "맹독 무효",
+        "full_name": "맹독 무효",
+        "tooltip": "맹독 능력을 무효화합니다. 설정된 값에 따라 버프만 받아들이게 할 수도 있습니다",
+        "format": [
+            "[(block==0){맹독[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){맹독 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)맹독 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 맹독 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "맹독 시간을 퍼센트로 감소합니다"
+            },
+            "block": {
+                "name": "맹독 삭제",
+                "tooltip": "받은 공격 자체의 맹독 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
+            },
+            "smartImu": {
+                "name": "무시",
+                "tooltip": "0 = 버프 디버프 상관없이 전부 무시합니다\n1 = 디버프만 무시합니다\n-1 = 버프만 무시합니다"
+            }
+        }
+    },
+    "IMUMOVING": {
+        "abbr_name": "이동 공격 무효",
+        "full_name": "이동 공격 무효",
+        "tooltip": "이동 공격을 무효화 합니다",
+        "format": "이동 공격[(mult==100){ 무효}(mult>0&mult<100){ 내성}(mult<0){에 약함}][(mult!=100){ (_left)이동 공격 데미지 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}]",
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "이동 공격의 데미지를 퍼센트로 감소합니다"
+            }
+        }
+    },
+    "IMUSUMMON": {
+        "abbr_name": "소환 무효",
+        "full_name": "소환 무효",
+        "tooltip": "소환 능력을 무효화합니다. 소환 능력에 \"공격 시\" 와 \"사망 시\" 라는 설정이 켜져있을 때에만 발동합니다.",
+        "format": [
+            "[(block==0){소환[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){소환 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)소환될 개체의 배율을 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군으로부터 소환될 개체의 배율을 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "소환될 개체의 배율을 감소합니다"
+            },
+            "block": {
+                "name": "소환 삭제",
+                "tooltip": "받은 공격 자체의 소환 배율을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
+            }
+        }
+    },
+    "IMUSEAL": {
+        "abbr_name": "봉인 무효",
+        "full_name": "봉인 무효",
+        "tooltip": "봉인 능력을 무효화합니다",
+        "format": [
+            "[(block==0){봉인[(mult==100){ 무효}(mult<100&mult>0){ 내성}(mult<0){에 약함}]}(block!=0){봉인 [(block>0&block<100){약화}(block==100){삭제}(block<0){강화}]}]",
+            "[(block==0&mult!=0&mult<100){ (_left)봉인 시간 (_abs(mult))% 만큼 [(mult>0){감소}(mult<0){증가}](_right)}(block<100&block!=0){ (_left)공격 받는 모든 아군의 봉인 시간 (_abs(block))% 만큼 [(block>0){감소}(block<0){증가}](_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "퍼센트",
+                "tooltip": "봉인 시간을 퍼센트로 감소합니다"
+            },
+            "block": {
+                "name": "봉인 삭제",
+                "tooltip": "받은 공격 자체의 봉인 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
             }
         }
     }

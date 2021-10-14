@@ -38,8 +38,6 @@ object Interpret : Data() {
      */
     var ABIS = Array(0) { "" }
 
-    var PROC = Array(0) { "" }
-
     var ATK = ""
 
     /**
@@ -48,8 +46,8 @@ object Interpret : Data() {
     private val P_INDEX = intArrayOf(P_WEAK, P_STOP, P_SLOW, P_KB, P_WARP, P_CURSE, P_IMUATK,
             P_STRONG, P_LETHAL, P_CRIT, P_BREAK, P_SHIELDBREAK, P_SATK, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK,
             P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK,
-            P_POIATK, P_DEMONSHIELD, P_DEATHSURGE, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE, P_THEME,
-            P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_CRITI)
+            P_POIATK, P_BARRIER, P_DEMONSHIELD, P_DEATHSURGE, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE, P_THEME,
+            P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_COUNTER, P_DMGCUT, P_DMGCAP, P_CRITI, P_IMUPOI, P_IMUSEAL, P_IMUMOVING, P_IMUSUMMON, P_IMUARMOR, P_IMUSPEED)
 
     /**
      * treasure max
@@ -61,30 +59,13 @@ object Interpret : Data() {
             "STRONG", "LETHAL", "CRIT", "BREAK", "SHIELDBREAK", "SATK", "MINIWAVE", "WAVE", "VOLC", "IMUWEAK",
             "IMUSTOP", "IMUSLOW", "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK",
             "POIATK", "DEMONSHIELD", "DEATHSURGE", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME",
-            "POISON", "BOSS", "ARMOR", "SPEED", "CRITI")
+            "POISON", "BOSS", "ARMOR", "SPEED", "CRITI", "IMUPOI", "IMUSEAL", "IMUMOVING", "IMUSUMMON", "IMUARMOR", "IMUSPEED")
 
     private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK, P_IMUVOLC)
 
     val traitMask = intArrayOf(TRAIT_RED, TRAIT_FLOAT, TRAIT_BLACK, TRAIT_METAL, TRAIT_ANGEL,
         TRAIT_ALIEN, TRAIT_ZOMBIE, TRAIT_DEMON, TRAIT_RELIC, TRAIT_WHITE, TRAIT_EVA, TRAIT_WITCH
     )
-
-    fun getTrait(type: Int, star: Int): String {
-        val ans = StringBuilder()
-        for (i in TRAIT.indices)
-            if (type shr traitMask[i] and 1 > 0) {
-                if (i == 6 && star == 1)
-                    ans.append(TRAIT[i]).append(" ")
-                        .append("(")
-                        .append(STAR[star])
-                        .append(")")
-                        .append(", ")
-                else
-                    ans.append(TRAIT[i])
-                        .append(", ")
-            }
-        return ans.toString()
-    }
 
     fun getTrait(traits: List<Trait>, star: Int): String {
         val ans = StringBuilder()
@@ -110,18 +91,12 @@ object Interpret : Data() {
     }
 
     fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean, magnif: DoubleArray): List<String> {
-        val res: MutableList<Int> = ArrayList()
-
         val lang = Locale.getDefault().language
 
         val common = if(du is CustomEntity)
             du.common
         else
             true
-
-        for (i in immune.indices.reversed()) {
-            res.add(PROC.size - i)
-        }
 
         val l: MutableList<String> = ArrayList()
 

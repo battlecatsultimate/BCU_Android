@@ -34,7 +34,6 @@ import kotlin.collections.ArrayList
 object Definer {
     private val colorid = StaticStore.colorid
     private val starid = StaticStore.starid
-    private val procid = StaticStore.procid
     private val abiid = StaticStore.abiid
 
     fun define(context: Context, prog: Consumer<Double>, text: Consumer<String>) {
@@ -109,14 +108,6 @@ object Definer {
                 }
 
                 Interpret.STAR = startString
-            }
-
-            if(Interpret.PROC.isEmpty()) {
-                val procString = Array(procid.size) {
-                    context.getString(procid[it])
-                }
-
-                Interpret.PROC = procString
             }
 
             if(Interpret.ABIS.isEmpty()) {
@@ -313,10 +304,6 @@ object Definer {
                 context.getString(starid[it-1])
         }
 
-        val procString = Array(procid.size) {
-            context.getString(procid[it])
-        }
-
         val abiString = Array(abiid.size) {
             context.getString(abiid[it])
         }
@@ -324,7 +311,6 @@ object Definer {
         Interpret.ATK = context.getString(R.string.unit_info_atks)
         Interpret.TRAIT = colorString
         Interpret.STAR = startString
-        Interpret.PROC = procString
         Interpret.ABIS = abiString
     }
 
