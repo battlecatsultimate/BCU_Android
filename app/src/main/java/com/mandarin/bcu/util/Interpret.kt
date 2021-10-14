@@ -270,10 +270,10 @@ object Interpret : Data() {
                         2 -> l.add(ABIS[i] + addition[2])
                         4 -> l.add(ABIS[i] + addition[3])
                         5 -> l.add(ABIS[i] + addition[4])
-                        14 -> l.add(ABIS[i] + addition[5])
-                        17 -> l.add(ABIS[i] + addition[6])
-                        20 -> l.add(ABIS[i] + addition[7])
-                        21 -> l.add(ABIS[i] + addition[8])
+                        12 -> l.add(ABIS[i] + addition[5])
+                        15 -> l.add(ABIS[i] + addition[6])
+                        17 -> l.add(ABIS[i] + addition[7])
+                        18 -> l.add(ABIS[i] + addition[8])
                         else -> l.add(ABIS[i])
                     }
                 }
