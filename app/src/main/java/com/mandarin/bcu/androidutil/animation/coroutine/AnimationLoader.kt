@@ -604,6 +604,8 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
             "breaker" -> a.getString(R.string.eff_breaker)
             "broken" -> a.getString(R.string.eff_broken)
             "regeneration" -> a.getString(R.string.eff_regen)
+            "fail" -> a.getString(R.string.eff_fail)
+            "success" -> a.getString(R.string.eff_success)
             else -> a.getString(R.string.eff_def)
         }
     }

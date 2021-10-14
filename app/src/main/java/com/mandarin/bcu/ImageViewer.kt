@@ -7,12 +7,9 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -24,7 +21,6 @@ import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.animation.coroutine.AnimationLoader
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.animation.coroutine.EAnimationLoader
 import com.mandarin.bcu.androidutil.animation.coroutine.UAnimationLoader
 import com.mandarin.bcu.androidutil.io.AContext
@@ -32,6 +28,7 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.MediaScanner
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import common.io.json.JsonDecoder
 import common.pack.Identifier

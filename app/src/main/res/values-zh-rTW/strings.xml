@@ -893,4 +893,13 @@
     <string name="sch_abi_imsp">Imu.Haste</string>
     <string name="sch_abi_cut">Super Armor</string>
     <string name="sch_abi_cap">Magic Shield</string>
+    <string name="eff_seale">Seal Enemy Side</string>
+    <string name="eff_cou">Counter</string>
+    <string name="eff_coue">Counter Enemy Side</string>
+    <string name="eff_cut">Super Armor</string>
+    <string name="eff_cap">Magic Shield</string>
+    <string name="eff_cute">Super Armor Enemy Side</string>
+    <string name="eff_cape">Magic Shield Enemy Side</string>
+    <string name="eff_fail">Fail</string>
+    <string name="eff_success">Success</string>
 </resources>
