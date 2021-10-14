@@ -566,6 +566,7 @@ object StaticStore {
         stgenem = ArrayList()
         stgenemorand = true
         stgmusic = ""
+        stgbg = ""
         stgstar = 0
         stgbh = -1
         bhop = -1
