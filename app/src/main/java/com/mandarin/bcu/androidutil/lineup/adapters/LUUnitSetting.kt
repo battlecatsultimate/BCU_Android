@@ -18,7 +18,6 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.battle.BasisSet
 import common.io.json.JsonEncoder
 import common.util.unit.Form
-import java.util.*
 
 class LUUnitSetting : Fragment() {
     companion object {
@@ -79,45 +78,51 @@ class LUUnitSetting : Fragment() {
                 BasisSet.synchronizeOrb(f!!.unit)
             }
 
+            val f = this.f ?: return
+
             setAppear(spinners[0], spinners[1], plus, row, t, tal, chform, levt)
 
             val s = GetStrings(requireContext())
 
-            fid = f?.fid ?: 0
+            fid = f.fid
 
-            if (f?.unit?.maxp == 0)
+            if (f.unit.maxp == 0)
                 setDisappear(spinners[1], plus)
 
             val id = intArrayOf(R.id.lineupp, R.id.lineupp1, R.id.lineupp2, R.id.lineupp3, R.id.lineupp4)
 
-            val talents = arrayOfNulls<Spinner>(id.size)
-
-            for (i in id.indices) {
-                talents[i] = v.findViewById(id[i])
+            val talents = Array<Spinner>(id.size) {
+                v.findViewById(id[it])
             }
 
-            if (f?.du?.pCoin != null) {
-                pcoin = BasisSet.current().sele.lu.getLv(f)?.lvs ?: return
+            if (f.du.pCoin != null) {
+                pcoin = BasisSet.current().sele.lu.getLv(f).lvs ?: return
 
-                val max = f?.du?.pCoin?.max
+                val max = f.du.pCoin.max
 
-                for (i in 1 until (max?.size ?: 1)) {
-                    val ii = i - 1
+                for(i in talents.indices) {
+                    if(i >= f.du.pCoin.info.size) {
+                        talents[i].isEnabled = false
+                        talents[i].adapter = null
+                        continue
+                    } else if(!talents[i].isEnabled) {
+                        talents[i].isEnabled = true
+                    }
 
                     val list = ArrayList<Int>()
 
-                    for (j in 0 until (max?.get(i) ?: 0) + 1)
+                    for(j in 0 until max[i+1] + 1)
                         list.add(j)
 
                     val adapter = ArrayAdapter(requireContext(), R.layout.spinneradapter, list)
 
-                    talents[i - 1]?.adapter = adapter
+                    talents[i].adapter = adapter
 
-                    talents[i - 1]?.setSelection(getIndex(talents[i - 1], pcoin[i]))
+                    talents[i].setSelection(getIndex(talents[i], pcoin[i + 1]))
 
-                    talents[i - 1]?.setOnLongClickListener {
-                        talents[ii]?.isClickable = false
-                        StaticStore.showShortMessage(context, s.getTalentName(ii, f))
+                    talents[i].setOnLongClickListener {
+                        talents[i].isClickable = false
+                        StaticStore.showShortMessage(context, s.getTalentName(i, f))
 
                         true
                     }
@@ -130,10 +135,10 @@ class LUUnitSetting : Fragment() {
             val levs = ArrayList<Int>()
             val levp = ArrayList<Int>()
 
-            for (i in 1 until (f?.unit?.max ?: 0) + 1)
+            for (i in 1 until (f.unit.max) + 1)
                 levs.add(i)
 
-            for (i in 0 until (f?.unit?.maxp ?: -1) + 1)
+            for (i in 0 until (f.unit.maxp) + 1)
                 levp.add(i)
 
             val adapter = ArrayAdapter(requireContext(), R.layout.spinneradapter, levs)
@@ -142,13 +147,13 @@ class LUUnitSetting : Fragment() {
             spinners[0].adapter = adapter
             spinners[1].adapter = adapter1
 
-            var loadlev = BasisSet.current().sele.lu.getLv(f)?.lvs?.get(0) ?: return
+            var loadlev = BasisSet.current().sele.lu.getLv(f).lvs[0]
 
             var loadlevp = 0
 
-            if (loadlev > (f?.unit?.max ?: 0)) {
-                loadlevp = loadlev - (f?.unit?.max ?: 0)
-                loadlev = (f?.unit?.max ?: 0)
+            if (loadlev > f.unit.max) {
+                loadlevp = loadlev - f.unit.max
+                loadlev = f.unit.max
             }
 
             spinners[0].setSelection(getIndex(spinners[0], loadlev))
@@ -162,16 +167,15 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
 
                     if (t.isChecked) {
-                        hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     } else {
                         removePCoin()
-                        hp.text = s.getHP(f, BasisSet.current().t(), f != null && f?.du?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f != null && f?.du?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     }
 
-                    if (f != null)
-                        BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
+                    BasisSet.current().sele.lu.setLv(f.unit, pcoin)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -185,23 +189,22 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
 
                     if (t.isChecked) {
-                        hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     } else {
                         removePCoin()
-                        hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                        atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                        hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                        atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     }
 
-                    if(f != null)
-                        BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
+                    BasisSet.current().sele.lu.setLv(f.unit, pcoin)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
             for (i in talents.indices) {
-                talents[i]?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                talents[i].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
                         pcoin[i + 1] = position
 
@@ -211,17 +214,15 @@ class LUUnitSetting : Fragment() {
                         pcoin[0] = lev + levp1
 
                         if (t.isChecked) {
-                            hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                            atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                            hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                            atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                         } else {
                             removePCoin()
-                            hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                            atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                            hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                            atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                         }
 
-                        if(f != null) {
-                            BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
-                        }
+                        BasisSet.current().sele.lu.setLv(f.unit, pcoin)
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
@@ -233,20 +234,18 @@ class LUUnitSetting : Fragment() {
 
                 info.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
-                        val form = f ?: return
-
-                        val uid = form.unit.id
+                        val uid = f.unit.id
 
                         val intent = Intent(context, UnitInfo::class.java)
 
                         intent.putExtra("Data", JsonEncoder.encode(uid).toString())
-                        context?.startActivity(intent)
+                        requireContext().startActivity(intent)
                     }
                 })
             }
 
-            hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-            atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+            hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+            atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
 
             t.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -267,10 +266,10 @@ class LUUnitSetting : Fragment() {
 
                     pcoin[0] = lev + levp1
 
-                    BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
+                    BasisSet.current().sele.lu.setLv(f.unit, pcoin)
 
-                    hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                    atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                    hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                    atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
 
                 } else {
                     val anim = ValueAnimator.ofInt(StaticStore.dptopx(64f, requireContext()), 0)
@@ -291,14 +290,14 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
                     removePCoin()
 
-                    BasisSet.current().sele.lu.setLv(f?.unit, pcoin)
+                    BasisSet.current().sele.lu.setLv(f.unit, pcoin)
 
-                    hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                    atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                    hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                    atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                 }
             }
 
-            if (f?.du?.pCoin != null) {
+            if (f.du.pCoin != null) {
                 if (pcoin[1] == 0 && pcoin[2] == 0 && pcoin[3] == 0 && pcoin[4] == 0 && pcoin[5] == 0) {
                     t.isChecked = false
                     val params = tal.layoutParams
@@ -313,11 +312,11 @@ class LUUnitSetting : Fragment() {
                 fid++
 
                 if (StaticStore.position[0] != 100 && StaticStore.position[1] != 100 && StaticStore.position[0] != -1 && StaticStore.position[1] != -1)
-                    BasisSet.current().sele.lu.fs[StaticStore.position[0]][StaticStore.position[1]] = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
+                    BasisSet.current().sele.lu.fs[StaticStore.position[0]][StaticStore.position[1]] = f.unit.forms[fid % f.unit.forms.size]
                 else
-                    line.repform = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
+                    line.repform = f.unit.forms[fid % f.unit.forms.size]
 
-                f = f?.unit?.forms?.get(fid % (f?.unit?.forms?.size ?: 2))
+                this.f = f.unit.forms[fid % f.unit.forms.size]
 
                 line.updateLineUp()
                 line.toFormArray()
@@ -327,18 +326,18 @@ class LUUnitSetting : Fragment() {
 
                 pcoin[0] = lev + levp1
 
-                hp.text = s.getHP(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
-                atk.text = s.getAtk(f, BasisSet.current().t(), f?.du?.pCoin != null && t.isChecked, pcoin)
+                hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
 
-                if (f?.du?.pCoin == null) {
+                if (f.du.pCoin == null) {
                     setDisappear(t, tal)
                     pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
                 } else {
                     setAppear(t, tal)
 
-                    pcoin = BasisSet.current().sele.lu.getLv(f)?.lvs ?: return@setOnClickListener
+                    pcoin = BasisSet.current().sele.lu.getLv(f).lvs ?: return@setOnClickListener
 
-                    val max = f?.du?.pCoin?.max ?: intArrayOf(0)
+                    val max = f.du.pCoin.max ?: intArrayOf(0)
 
                     for (i in 1 until max.size) {
                         val ii = i - 1
@@ -350,12 +349,12 @@ class LUUnitSetting : Fragment() {
 
                         val adapter2 = ArrayAdapter(requireContext(), R.layout.spinneradapter, list)
 
-                        talents[i - 1]?.adapter = adapter2
+                        talents[i - 1].adapter = adapter2
 
-                        talents[i - 1]?.setSelection(getIndex(talents[i-1], pcoin[i]))
+                        talents[i - 1].setSelection(getIndex(talents[i-1], pcoin[i]))
 
-                        talents[i - 1]?.setOnLongClickListener {
-                            talents[ii]?.isClickable = false
+                        talents[i - 1].setOnLongClickListener {
+                            talents[ii].isClickable = false
                             StaticStore.showShortMessage(context, s.getTalentName(ii, f))
 
                             true
@@ -393,11 +392,11 @@ class LUUnitSetting : Fragment() {
         this.line = line
     }
 
-    private fun getIndex(spinner: Spinner?, lev: Int): Int {
+    private fun getIndex(spinner: Spinner, lev: Int): Int {
         var index = 0
 
-        for (i in 0 until (spinner?.count ?: 0))
-            if (lev == spinner?.getItemAtPosition(i) as Int)
+        for (i in 0 until spinner.count)
+            if (lev == spinner.getItemAtPosition(i) as Int)
                 index = i
 
         return index
