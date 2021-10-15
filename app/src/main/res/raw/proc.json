@@ -725,9 +725,9 @@
         "full_name": "Immunity to Critical Hit",
         "tooltip": null,
         "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Critical Hits",
-            "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
+            "[(mult<100&mult>0){ (_left)Decreases damage taken by (mult)%(_right)}(mult<0){ (_left)Increases damage taken by (_abs(mult))%(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Critical Hit [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
-            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
+            "[(block<100&block>0){ (_left)Decreases damage taken by (block)%(_right)}(block<0){ (_left)Increases damage taken by (_abs(block))%(_right)}]}]"],
         "class": {
             "mult": {
                 "name": "percent",

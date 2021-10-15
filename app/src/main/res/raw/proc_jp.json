@@ -1032,10 +1032,10 @@
     "full_name": "反撃",
     "tooltip": "攻撃されたとき、このキャラを攻撃した敵を攻撃する。",
     "format": ["(prob)%の確率で反撃し、(damage)%[(!type.useOwnDamage){攻撃で受けたダメージの}(type.useOwnDamage){このキャラクターの攻撃力の}]を返す。",
-      "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks.}] This counterattack will ",
-      "[(type.procType<2|type.procType==3){[(type.procType==0){not }]have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. ",
-      "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
-      "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
+      "[(type.counterWave!=0){この事業体は反[(type.counterWave==1){撃}(type.counterWave==2){射}]波動/烈波も。}]",
+      "この反撃は元の攻撃の能力[(type.procType==2){をこのユニットの能力で置き換える}(type.procType!=2){[(type.procType==3){とこのユニットの能力}]を持[(type.procType==0){たない}(type.procType!=0){つ}]}]。",
+      "この反撃は、[(type.areaAttack){このエンティティ[(minRange==0&maxRange==0){の範囲内に立っているすべての敵にヒットします}(minRange!=0|maxRange!=0){から(minRange)~(maxRange)距離離れて立っているすべての敵に当たる}]}",
+      "(!type.areaAttack){攻撃者がこのエンティティ[(minRange==0&maxRange==0){の範囲内に立っている場合、攻撃者のみにヒットします}(minRange!=0|maxRange!=0){から(minRange)~(maxRange)距離離れた場所に立っている場合、攻撃者のみにヒットする}]}]。"],
     "class": {
       "prob": {
         "name": "確率",
