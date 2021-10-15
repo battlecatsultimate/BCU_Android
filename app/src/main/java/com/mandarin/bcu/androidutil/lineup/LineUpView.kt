@@ -5,6 +5,7 @@ import android.graphics.*
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
@@ -643,8 +644,9 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
-            (adapter.fragments[0] as LUUnitList).update()
+        if(adapter != null && adapter is LUAdder.LUTab) {
+            adapter.updateFragment(0)
+        }
     }
 
     fun updateUnitSetting() {
@@ -653,7 +655,7 @@ class LineUpView : View {
         val adapter = pager?.adapter
 
         if(adapter != null && adapter is LUAdder.LUTab)
-            (adapter.fragments[1] as LUUnitSetting).update()
+            adapter.updateFragment(1)
     }
 
     fun updateUnitOrb() {
@@ -662,7 +664,7 @@ class LineUpView : View {
         val adapter = pager?.adapter
 
         if(adapter != null && adapter is LUAdder.LUTab)
-            (adapter.fragments[2] as LUOrbSetting).update()
+            adapter.updateFragment(2)
     }
 
     fun updateCastleSetting() {
@@ -671,7 +673,7 @@ class LineUpView : View {
         val adapter = pager?.adapter
 
         if(adapter != null && adapter is LUAdder.LUTab)
-            (adapter.fragments[3] as LUCastleSetting).update()
+            adapter.updateFragment(3)
     }
 
     fun updateTreasureSetting() {
@@ -680,7 +682,7 @@ class LineUpView : View {
         val adapter = pager?.adapter
 
         if(adapter != null && adapter is LUAdder.LUTab)
-            (adapter.fragments[4] as LUTreasureSetting).update()
+            adapter.updateFragment(4)
     }
 
     fun updateConstructionSetting() {
@@ -689,6 +691,6 @@ class LineUpView : View {
         val adapter = pager?.adapter
 
         if(adapter != null && adapter is LUAdder.LUTab)
-            (adapter.fragments[5] as LUConstruction).update()
+            adapter.updateFragment(5)
     }
 }

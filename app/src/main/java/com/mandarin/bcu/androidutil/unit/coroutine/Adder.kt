@@ -130,10 +130,8 @@ class Adder(context: Activity, private val fm : FragmentManager, private val lc:
                             }
                         }
 
-                        if(name.isEmpty()) {
+                        name.ifEmpty {
                             keys[position]
-                        } else {
-                            name
                         }
                     }
                 }.attach()

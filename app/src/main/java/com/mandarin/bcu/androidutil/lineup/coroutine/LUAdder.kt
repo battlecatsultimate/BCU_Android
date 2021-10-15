@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -763,23 +764,43 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
         for (v in view) v.visibility = View.VISIBLE
     }
 
-    inner class LUTab(fm: FragmentManager, lc: Lifecycle, private val lineup: LineUpView) : FragmentStateAdapter(fm, lc) {
-        val fragments = arrayOf(
-            LUUnitList.newInstance(lineup), LUUnitSetting.newInstance(lineup),
-            LUOrbSetting.newInstance(lineup), LUCastleSetting.newInstance(),
-            LUTreasureSetting.newInstance(lineup), LUConstruction.newInstance(),
-            LUCatCombo.newInstance(lineup)
-        )
+    inner class LUTab(private val fm: FragmentManager, lc: Lifecycle, private val lineup: LineUpView) : FragmentStateAdapter(fm, lc) {
+        fun updateFragment(i: Int) {
+            if(i >= 6) {
+                Log.w("LUAdder::LUTab", "Fragment updating index must not exceed 5!")
+                return
+            }
+
+            val frag = fm.findFragmentByTag("f$i")
+
+            if(frag == null) {
+                Log.e("LUAdder:LUTab", "Failed to get fragment : $i")
+            } else {
+                when(i) {
+                    0 -> (frag as LUUnitList).update()
+                    1 -> (frag as LUUnitSetting).update()
+                    2 -> (frag as LUOrbSetting).update()
+                    3 -> (frag as LUCastleSetting).update()
+                    4 -> (frag as LUTreasureSetting).update()
+                    5 -> (frag as LUConstruction).update()
+                }
+            }
+        }
 
         override fun getItemCount(): Int {
             return 7
         }
 
         override fun createFragment(i: Int): Fragment {
-            return if(i < fragments.size)
-                fragments[i]
-            else
-                LUUnitList.newInstance(lineup)
+            return when(i) {
+                0 -> LUUnitList.newInstance(lineup)
+                1 -> LUUnitSetting.newInstance(lineup)
+                2 -> LUOrbSetting.newInstance(lineup)
+                3 -> LUCastleSetting.newInstance()
+                4 -> LUTreasureSetting.newInstance(lineup)
+                5 -> LUConstruction.newInstance()
+                else -> LUCatCombo.newInstance(lineup)
+            }
         }
     }
 }
