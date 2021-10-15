@@ -33,7 +33,6 @@ import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
-import common.battle.data.CustomUnit
 import common.battle.data.MaskUnit
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -41,7 +40,6 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Form
 import common.util.unit.Unit
 import java.util.*
-import kotlin.collections.ArrayList
 
 class UnitinfPager : Fragment() {
     companion object {
@@ -175,16 +173,7 @@ class UnitinfPager : Fragment() {
 
             pcoinlev = intArrayOf(0, 0, 0, 0, 0, 0)
         } else {
-            val max = if(f.du is CustomUnit) {
-                IntArray(f.du.pCoin.max.size) {
-                    if(it == 0 || it - 1 >= f.du.pCoin.info.size)
-                        0
-                    else
-                        f.du.pCoin.info[it - 1][1]
-                }
-            } else {
-                f.du.pCoin.max
-            }
+            val max = f.du.pCoin.max
 
             pcoinlev = IntArray(max.size)
 
@@ -894,16 +883,7 @@ class UnitinfPager : Fragment() {
             }
         }
         npreset.setOnClickListener {
-            val max = if(f.du is CustomUnit) {
-                IntArray(f.du.pCoin.max.size) {
-                    if(it == 0 || it - 1 >= f.du.pCoin.info.size)
-                        0
-                    else
-                        f.du.pCoin.info[it -1][1]
-                }
-            } else {
-                f.du.pCoin.max
-            }
+            val max = f.du.pCoin.max
 
             for (i in pcoins.indices) {
                 if(i >= f.du.pCoin.info.size)
