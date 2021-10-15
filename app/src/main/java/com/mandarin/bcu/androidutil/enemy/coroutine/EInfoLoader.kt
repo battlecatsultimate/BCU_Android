@@ -59,12 +59,13 @@ class EInfoLoader : CoroutineTask<String> {
         if(e !is Enemy)
             return
 
-        if (MultiLangCont.getStatic().EEXP.getCont(e) == null) {
+        if (MultiLangCont.getStatic().EEXP.getCont(e) == null && (e.id.pack == Identifier.DEF || e.desc.isBlank())) {
             val view1 = activity.findViewById<View>(R.id.enemviewtop)
             val view2 = activity.findViewById<View>(R.id.enemviewbot)
             val viewPager: ViewPager = activity.findViewById(R.id.eneminfexp)
             val exptext = activity.findViewById<TextView>(R.id.eneminfexptx)
             val eanim = activity.findViewById<Button>(R.id.eanimanim)
+
             if (view1 != null) {
                 view1.visibility = View.GONE
                 view2.visibility = View.GONE

@@ -37,27 +37,33 @@ class DynamicExplanation : Fragment() {
 
         val data = StaticStore.transformIdentifier<Unit>(arg.getString("Data")) ?: return view
 
-        val `val` = arg.getInt("Number", 0)
+        val fid = arg.getInt("Number", 0)
 
         val u = data.get() ?: return view
 
-        var explanation = MultiLangCont.getStatic().FEXP.getCont(u.forms[`val`])
+        var explanation = if(u.id.pack == Identifier.DEF) {
+            MultiLangCont.getStatic().FEXP.getCont(u.forms[fid])
+        } else {
+            u.forms[fid].explanation.split("<br>").toTypedArray()
+        }
 
-        if (explanation == null) {
-            explanation = arrayOf<String?>("", "", "")
+        println(explanation.contentToString())
+
+        if(explanation == null) {
+            explanation = arrayOf("", "", "", "")
         }
 
         val unitname = view.findViewById<TextView>(R.id.unitexname)
 
-        val lineid = intArrayOf(R.id.unitex0, R.id.unitex1, R.id.unitex2)
+        val lineid = intArrayOf(R.id.unitex0, R.id.unitex1, R.id.unitex2, R.id.unitex3)
 
-        val explains = Array<TextView>(3) {
+        val explains = Array<TextView>(lineid.size) {
             view.findViewById(lineid[it])
         }
 
-        explains[2].setPadding(0, 0, 0, StaticStore.dptopx(24f,requireActivity()))
+        explains[3].setPadding(0, 0, 0, StaticStore.dptopx(24f,requireActivity()))
 
-        var name = MultiLangCont.get(u.forms[`val`]) ?: u.forms[`val`].name
+        var name = MultiLangCont.get(u.forms[fid]) ?: u.forms[fid].name
 
         if (name == null)
             name = ""
@@ -66,7 +72,7 @@ class DynamicExplanation : Fragment() {
 
         for (i in explains.indices) {
             if (i >= explanation.size) {
-                explains[i].text = ""
+                explains[i].visibility = View.GONE
             } else {
                 if (explanation[i] != null) explains[i].text = explanation[i]
             }

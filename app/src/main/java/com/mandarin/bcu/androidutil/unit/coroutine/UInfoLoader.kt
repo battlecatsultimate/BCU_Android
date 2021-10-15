@@ -394,7 +394,7 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
         val view2 = activity.findViewById<View>(R.id.view2)
         val exp = activity.findViewById<TextView>(R.id.unitinfexp)
 
-        if (MultiLangCont.getStatic().FEXP.getCont(u.forms[0]) == null) {
+        if (MultiLangCont.getStatic().FEXP.getCont(u.forms[0]) == null && (u.id.pack == Identifier.DEF || u.forms[0].explanation.isBlank())) {
             viewPager.visibility = View.GONE
             view.visibility = View.GONE
             view2.visibility = View.GONE

@@ -34,7 +34,11 @@ class DynamicEmExplanation(private val activity: Activity, private val data: Ide
         for (i in txid.indices)
             exps[i] = layout.findViewById(txid[i])
 
-        var explanation = MultiLangCont.getStatic().EEXP.getCont(e)
+        var explanation = if(e.id.pack == Identifier.DEF) {
+            MultiLangCont.getStatic().EEXP.getCont(e)
+        } else {
+            e.desc.split("<br>").toTypedArray()
+        }
 
         if (explanation == null)
             explanation = arrayOf("", "", "", "")
