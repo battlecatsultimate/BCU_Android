@@ -428,7 +428,7 @@ object FilterEntity {
                 if(StaticStore.entityname.isNotEmpty()) {
                     var added = false
 
-                    for(j  in u.forms.indices) {
+                    for(j in u.forms.indices) {
                         if(added)
                             continue
 
@@ -437,7 +437,7 @@ object FilterEntity {
                         if(name == null)
                             name = ""
 
-                        name = Data.trio(j) + "-" + name.lowercase()
+                        name = Data.trio(u.id.id) + " - " + name.lowercase()
 
                         added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
                             KoreanFilter.filter(name, StaticStore.entityname)
