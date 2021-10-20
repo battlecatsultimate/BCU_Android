@@ -18,6 +18,7 @@ import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.ECastle;
+import common.battle.entity.EEnemy;
 import common.battle.entity.Entity;
 import common.battle.entity.WaprCont;
 import common.pack.Identifier;
@@ -554,8 +555,9 @@ public interface BattleBox {
 
             double shake = 0.0;
 
-            if(sb.ebase.health <= 0)
-                shake = 2 + (sb.time % 2 * -4);
+            if(sb.ebase.health <= 0 || (drawCast ? ((EEnemy) sb.ebase).hit : ((ECastle) sb.ebase).hit) > 0) {
+                shake = (2 + (sb.time % 2 * -4)) * siz;
+            }
 
             if (!drawCast) {
                 Identifier<CastleImg> cind = sb.st.castle;
@@ -585,8 +587,9 @@ public interface BattleBox {
 
             shake = 0.0;
 
-            if(sb.ubase.health <= 0)
-                shake = 2 + (sb.time % 2 * -4);
+            if(sb.ubase.health <= 0 || ((ECastle)sb.ubase).hit > 0) {
+                shake = (2 + (sb.time % 2 * -4)) * siz;
+            }
 
             posx -= castw * siz / 2;
             posy -= casth * siz;
