@@ -125,7 +125,7 @@ class SearchTraitAdapter(private val context: Context, private val tool: Array<S
             else
                 null
         } else {
-            if(trait.icon != null)
+            if(trait.icon != null && trait.icon.img != null)
                 getDrawable(trait.icon.img.bimg() as Bitmap)
             else
                 getDrawable(CommonStatic.getBCAssets().dummyTrait.img.bimg() as Bitmap)
