@@ -610,6 +610,14 @@
             "type.unstackable": {
                 "name": "중첩 불가능",
                 "tooltip": "해당 특성이 활성화되면 중첩이 불가능해집니다"
+            },
+            "type.ignoreMetal": {
+                "name": "Bypass Metal",
+                "tooltip": "Activate this to deal regular damage to metal enemies."
+            },
+            "type.modifAffected": {
+                "name": "Consider Abilities",
+                "tooltip": "Toggle this to make poison damage affected by damage-modifying abilities such as strong against or critical."
             }
         }
     },
@@ -923,7 +931,7 @@
         "abbr_name" : "베리어",
         "full_name" : "베리어",
         "tooltip" : "베리어의 체력보다 낮은 모든 공격을 무효화 합니다. 만약 베리어의 체력보다 높은 공격을 맞을 경우 베리어는 부숴집니다",
-        "format" : ["베리어 (_left)(health) 체력을 갖고 있[(regentime>0|timeout>0){고, }(regentime==0&timeout==0){다}][(regentime>0){파괴 후 (_dispTime(regentime)) 후에 다시 생성[(timeout==0){된다}(timeout>0){되며, }]}][(timeout>0){생성 후 (_dispTime(timeout)) 후에 파괴된다}](_right)"
+        "format" : ["베리어 (_left)[(type.magnif){(_shield(health))}(!type.magnif){(health)}] 체력을 갖고 있[(regentime>0|timeout>0){고, }(regentime==0&timeout==0){다}][(regentime>0){파괴 후 (_dispTime(regentime)) 후에 다시 생성[(timeout==0){된다}(timeout>0){되며, }]}][(timeout>0){생성 후 (_dispTime(timeout)) 후에 파괴된다}](_right)"
         ],
         "class" : {
             "health" : {
@@ -937,6 +945,10 @@
             "timeout" : {
                 "name" : "시간 초과",
                 "tooltip" : "특정 시간이 지나면 베리어가 자동으로 부숴집니다. 0으로 설정하여 비활성화할 수 있습니다"
+            },
+            "type.magnif" : {
+                "name" : "배율 고려",
+                "tooltip" : "개체의 체력 배율에 따라서 베리어의 체력도 같이 증가하게 만듭니다"
             }
         }
     },
@@ -944,7 +956,7 @@
         "abbr_name" : "슈퍼 아머",
         "full_name" : "슈퍼 아머",
         "tooltip" : "설정된 값보다 낮은 공격력을 무효화 합니다. 설정된 값에 따라 공격력만 무시하고 능력은 받아들일 수도 있습니다",
-        "format" : "(prob)% 확률로 (dmg)보다 낮은 공격력을 [(type.traitIgnore&!_isEnemy){적 속성에 상관 없이 }][(type.procs){공격의 능력과 함께 }]무효화한다",
+        "format" : "(prob)% 확률로 [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]보다 낮은 공격력을 [(type.traitIgnore&!_isEnemy){적 속성에 상관 없이 }][(type.procs){공격의 능력과 함께 }]무효화한다",
         "class" : {
             "prob" : {
                 "name" : "확률",
@@ -961,6 +973,10 @@
             "type.procs" : {
                 "name" : "능력 무시",
                 "tooltip" : "켜져 있을 경우 받은 공격의 능력 또한 같이 무효화됩니다"
+            },
+            "type.magnif" : {
+                "name" : "배율 고려",
+                "tooltip" : "개체의 체력 배율에 따라서 베리어의 체력도 같이 증가하게 만듭니다"
             }
         }
     },
@@ -968,7 +984,7 @@
         "abbr_name" : "마법 쉴드",
         "full_name" : "마법 쉴드",
         "tooltip" : "설정된 값보다 높은 공격을 무시하거나 그 설정된 값의 공격력으로 받아들입니다",
-        "format" : "(prob)% 확률료 (dmg) 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){(dmg) 로 받아들인다}]",
+        "format" : "(prob)% 확률료 [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){(dmg) 로 받아들인다}]",
         "class" : {
             "prob" : {
                 "name" : "확률",
@@ -989,6 +1005,10 @@
             "type.procs" : {
                 "name" : "능력 무시",
                 "tooltip" : "켜져 있을 경우 받은 공격의 능력 또한 같이 무효화됩니다"
+            },
+            "type.magnif" : {
+                "name" : "배율 고려",
+                "tooltip" : "개체의 체력 배율에 따라서 베리어의 체력도 같이 증가하게 만듭니다"
             }
         }
     },

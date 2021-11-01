@@ -655,7 +655,7 @@
             "(type.damage_type>0){a damage of (damage)% of target's ",
             "[(type.damage_type==1){total}(type.damage_type==2){current}(type.damage_type==3){lost}]",
             " health}] every (_dispTime(itv)). ",
-            "This effect is [(type.unstackable){not }]stackable."
+            "This effect is [(type.unstackable){not }]stackable[(type.ignoreMetal){, [(!type.modifAffected){and }]bypasses metal ability}][(type.modifAffected){, and it's damage is affected by anything that modifies the original attack's damage}]."
         ],
         "class": {
             "prob": {
@@ -681,6 +681,14 @@
             "type.unstackable": {
                 "name": "unstackable",
                 "tooltip": null
+            },
+            "type.ignoreMetal": {
+                "name": "Bypass Metal",
+                "tooltip": "Activate this to deal regular damage to metal enemies."
+            },
+            "type.modifAffected": {
+                "name": "Consider Abilities",
+                "tooltip": "Toggle this to make poison damage affected by damage-modifying abilities such as strong against or critical."
             }
         }
     },
@@ -964,7 +972,7 @@
         "abbr_name" : "Spr. Armor",
         "full_name" : "Super Armor",
         "tooltip" : "This ability reduces all damage that is below certain amount to zero.",
-        "format" : "(prob)% chance to nullify[(type.traitIgnore){ all}] damage lower than (dmg)[(type.procs){ and also the attack's procs}]",
+        "format" : "(prob)% chance to [(reduction>=0){reduce}(reduction<0){increase}] [(type.traitIgnore){all }]damage lower than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] by (reduction)% [(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -974,21 +982,29 @@
                 "name" : "damage",
                 "tooltip" : "The maximum amount of damage to be negated."
             },
+            "reduction" : {
+                "name" : "reduction %",
+                "tooltip" : "Percentage of the damage to reduce it by."
+            },
             "type.traitIgnore" : {
                 "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+                "tooltip" : "When this is checked, this ability can trigger regardless of the attacker's trait."
             },
             "type.procs" : {
                 "name" : "ignore procs",
                 "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
+            },
+            "type.magnif" : {
+                "name" : "Use Magnification",
+                "tooltip" : "Activate this to make armor's HP affected by the entity's HP magnification."
             }
         }
     },
     "DMGCAP" : {
         "abbr_name" : "M.Shield",
-        "full_name" : "Magic Shield",
+        "full_name" : "Mystic Shield",
         "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than (dmg)[(!type.nullify){ to (dmg)}(type.nullify&type.procs){ and also the attack's procs}]",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to (dmg)}(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -1000,7 +1016,7 @@
             },
             "type.traitIgnore" : {
                 "name" : "ignore traits",
-                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait. Only applicable on cat units"
+                "tooltip" : "When this is checked, this ability can trigger regardless of the enemy's trait."
             },
             "type.nullify" : {
                 "name" : "nullify damage",
@@ -1008,7 +1024,11 @@
             },
             "type.procs" : {
                 "name" : "ignore procs",
-                "tooltip" : "When this is checked, procs from nullified attacks will also be negated. Only works if 'nullify damage' is checked"
+                "tooltip" : "When this is checked, procs from nullified attacks will also be negated."
+            },
+            "type.magnif" : {
+                "name" : "Use Magnification",
+                "tooltip" : "Activate this to make shield's HP affected by the entity's HP magnification."
             }
         }
     },
@@ -1016,7 +1036,7 @@
         "abbr_name" : "barrier",
         "full_name" : "Barrier",
         "tooltip" : "Blocks all damage lower than the barrier's HP. Will break if an attack deals more damage than it's HP",
-        "format" : ["Barrier (_left)Barrier has (health) HP",
+        "format" : ["Barrier (_left)Barrier has [(type.magnif){(_shield(health))}(!type.magnif){(health)}] HP",
             "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
             "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
         ],
@@ -1032,6 +1052,10 @@
             "timeout" : {
                 "name" : "Timeout",
                 "tooltip" : "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
+            },
+            "type.magnif" : {
+                "name" : "Use Magnification",
+                "tooltip" : "Activate this to make barrier's HP affected by the entity's HP magnification."
             }
         }
     },

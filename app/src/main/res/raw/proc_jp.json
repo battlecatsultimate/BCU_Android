@@ -656,6 +656,14 @@
       "type.unstackable": {
         "name": "重複不可",
         "tooltip": null
+      },
+      "type.ignoreMetal": {
+        "name": "バイパスメタル",
+        "tooltip": "発動すると、金属製の敵に通常のダメージを与えます。"
+      },
+      "type.modifAffected": {
+        "name": "ATKアビリティ使用",
+        "tooltip": "毒のダメージを「めっぽう強い」や「クリティカル」などのダメージ修正能力の影響を受けるようにするには、これをトグルする。"
       }
     }
   },
@@ -928,7 +936,7 @@
     "abbr_name": "超装甲",
     "full_name": "スーパー装甲",
     "tooltip": "このアビリティは、一定量以下のすべてのダメージを0にする。",
-    "format": "(prob)%の確率で(dmg)以下のダメージを無効化する[(type.traitIgnore){ (_left)属性に関わらず(_right)}][(type.procs){ (_left)攻撃の能力も無効にする(_right)}]",
+    "format": "(prob)%の確率で[(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]以下のダメージを(reduction)%で[(reduction>=0){軽減}(reduction<0){増加}]する[(type.traitIgnore){ (_left)属性に関わらず(_right)}][(type.procs){ (_left)攻撃の能力も無効にする(_right)}]",
     "class": {
       "prob": {
         "name": "確率",
@@ -938,21 +946,29 @@
         "name": "攻撃力",
         "tooltip": "無効化されるダメージの最小値。"
       },
+      "reduction" : {
+        "name" : "ダメージ軽減%",
+        "tooltip" : "ダメージを軽減する割合"
+      },
       "type.traitIgnore": {
         "name": "属性無視",
-        "tooltip": "これがチェックされると、この能力は敵の属性に関係なく発動できる。味方のユニットにのみ適用されます。"
+        "tooltip": "これがチェックされると、この能力は敵の属性に関係なく発動できる。"
       },
       "type.procs": {
         "name": "能力を無視する",
         "tooltip": "これをチェックすると、無効化された攻撃による能力も無効化されます。"
+      },
+      "type.magnif" : {
+        "name" : "HP倍率を考える",
+        "tooltip" : "発動するとスーパー装甲のHPが実体のHP倍率の影響を受けるようになる。"
       }
     }
   },
   "DMGCAP": {
-    "abbr_name": "魔法の盾",
-    "full_name": "魔法の盾",
+    "abbr_name": "魔法盾",
+    "full_name": "魔法盾",
     "tooltip": "このアビリティは、一定量以上のすべてのダメージを当該量に軽減する（「ダメージを無効にする」がチェックされている場合は無効にする）。",
-    "format": "(prob)%の確率で(dmg)以上のダメージを[(!type.nullify){(dmg)に}(type.nullify){無効化}]する[(type.traitIgnore){ (_left)属性に関わらず(_right)}][(type.nullify&type.procs){ (_left)攻撃の能力も無効にする(_right)}]",
+    "format": "(prob)%の確率で[(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]以上のダメージを[(!type.nullify){に}(type.nullify){無効化}]する[(type.traitIgnore){ (_left)属性に関わらず(_right)}][(type.procs){ (_left)攻撃の能力も無効にする(_right)}]",
     "class": {
       "prob": {
         "name": "確率",
@@ -964,7 +980,7 @@
       },
       "type.traitIgnore": {
         "name": "属性無視",
-        "tooltip": "これがチェックされると、この能力は敵の属性に関係なく発動できる。味方のユニットにのみ適用されます。"
+        "tooltip": "これがチェックされると、この能力は敵の属性に関係なく発動できる。"
       },
       "type.nullify": {
         "name": "ダメージを無効にする",
@@ -973,6 +989,10 @@
       "type.procs": {
         "name": "能力を無視する",
         "tooltip": "これをチェックすると、無効化された攻撃による能力も無効化されます。"
+      },
+      "type.magnif" : {
+        "name" : "HP倍率を考える",
+        "tooltip" : "発動すると魔法盾のHPが実体のHP倍率の影響を受けるようになる。"
       }
     }
   },
@@ -980,7 +1000,7 @@
     "abbr_name" : "バリア",
     "full_name" : "バリア",
     "tooltip" : "バリアのHP以下のダメージを全て遮断します。HP以上のダメージを与える攻撃を受けると壊れます。",
-    "format" : ["バリア(_left)HP:(health)",
+    "format" : ["バリア(_left)HP:[(type.magnif){(_shield(health))}(!type.magnif){(health)}]",
       "[(regentime>0){, 壊されても(_dispTime(regentime))後には再生されます}]",
       "[(timeout>0){, (_dispTime(timeout))後にバリアが切れる}](_right)"
     ],
@@ -996,6 +1016,10 @@
       "timeout" : {
         "name" : "タイムアウト",
         "tooltip" : "時間が経つとバリアがブレイクされます。 0に設定すると、この能力は無効になります。"
+      },
+      "type.magnif" : {
+        "name" : "HP倍率を考える",
+        "tooltip" : "発動するとバリアのHPが実体のHP倍率の影響を受けるようになる。"
       }
     }
   },
