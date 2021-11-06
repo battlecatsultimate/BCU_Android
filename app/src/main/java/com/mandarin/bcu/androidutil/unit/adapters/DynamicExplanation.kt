@@ -73,8 +73,13 @@ class DynamicExplanation : Fragment() {
         for (i in explains.indices) {
             if (i >= explanation.size) {
                 explains[i].visibility = View.GONE
+
+                if(i > 1) {
+                    explains[i - 1].setPadding(0, 0, 0, StaticStore.dptopx(24f, requireActivity()))
+                }
             } else {
-                if (explanation[i] != null) explains[i].text = explanation[i]
+                if (explanation[i] != null)
+                    explains[i].text = explanation[i]
             }
         }
         return view
