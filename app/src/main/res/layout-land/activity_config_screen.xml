@@ -530,7 +530,8 @@
                 android:textColor="?attr/ErrorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/configbgeff"
+                app:layout_constraintTop_toBottomOf="@+id/configdelay"
+                app:layout_constraintVertical_bias="1.0"
                 app:strokeColor="?attr/ErrorPrimary" />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -543,6 +544,18 @@
                 app:layout_constraintEnd_toEndOf="@+id/configrow"
                 app:layout_constraintStart_toStartOf="@+id/configrow"
                 app:layout_constraintTop_toBottomOf="@+id/configrow" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configdelay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/config_delay"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configbgeff"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/configbgeff"
+                app:layout_constraintTop_toBottomOf="@+id/configbgeff" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

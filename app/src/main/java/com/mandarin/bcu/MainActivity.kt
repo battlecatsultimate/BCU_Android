@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().levelLimit = shared.getInt("levelLimit", 0)
         CommonStatic.getConfig().plus = shared.getBoolean("unlockPlus", true)
         CommonStatic.getConfig().drawBGEffect = shared.getBoolean("bgeff", true)
+        CommonStatic.getConfig().buttonDelay = shared.getBoolean("unitDelay", true)
 
         val result = intent
         var conf = false

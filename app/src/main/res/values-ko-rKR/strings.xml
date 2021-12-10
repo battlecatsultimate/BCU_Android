@@ -902,4 +902,5 @@
     <string name="eff_cape">마법 쉴드 적 측면</string>
     <string name="eff_fail">실패</string>
     <string name="eff_success">성공</string>
+    <string name="config_delay">유닛 소환 버튼 딜레이</string>
 </resources>

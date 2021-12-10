@@ -901,4 +901,5 @@
     <string name="eff_cape">Magic Shield Enemy Side</string>
     <string name="eff_fail">Fail</string>
     <string name="eff_success">Success</string>
+    <string name="config_delay">Unit deploy button delay</string>
 </resources>

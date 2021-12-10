@@ -208,6 +208,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("unitDelay")) {
+            ed.putBoolean("unitDelay", true)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)

@@ -538,6 +538,19 @@ open class ConfigScreen : AppCompatActivity() {
         }
 
         bgEff.isChecked = shared.getBoolean("bgeff", true)
+
+        val unitDelay = findViewById<SwitchCompat>(R.id.configdelay)
+
+        unitDelay.setOnCheckedChangeListener { _, c ->
+            CommonStatic.getConfig().buttonDelay = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("unitDelay", c)
+            editor.apply()
+        }
+
+        unitDelay.isChecked = shared.getBoolean("unitDelay", true)
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {
