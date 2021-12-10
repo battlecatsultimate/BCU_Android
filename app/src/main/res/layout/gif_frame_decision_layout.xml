@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="?attr/TILtheme"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,12 +12,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
         android:textColor="?attr/TextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.appyvet.materialrangebar.RangeBar
+    <com.google.android.material.slider.RangeSlider
         android:id="@+id/gifrange"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,13 +27,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/gifswitch"
         app:layout_constraintStart_toStartOf="@+id/gifswitch"
-        app:layout_constraintTop_toBottomOf="@+id/gifswitch"
-        app:mrb_connectingLineColor="?attr/HintPrimary"
-        app:mrb_connectingLineWeight="1dp"
-        app:mrb_leftThumbColor="?attr/colorAccent"
-        app:mrb_pinColor="?attr/colorAccent"
-        app:mrb_pinMaxFont="12sp"
-        app:mrb_pinRadius="12dp"
-        app:mrb_pinTextColor="?attr/TextPrimary"
-        app:mrb_rightThumbColor="?attr/colorAccent" />
+        app:layout_constraintTop_toBottomOf="@+id/gifswitch" />
 </androidx.constraintlayout.widget.ConstraintLayout>

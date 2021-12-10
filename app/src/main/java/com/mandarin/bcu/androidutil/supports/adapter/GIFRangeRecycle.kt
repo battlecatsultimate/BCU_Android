@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.appyvet.materialrangebar.RangeBar
+import com.google.android.material.slider.RangeSlider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticJava
@@ -28,7 +28,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
     }
 
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val range: RangeBar = row.findViewById(R.id.gifrange)
+        val range: RangeSlider = row.findViewById(R.id.gifrange)
         val switch: SwitchMaterial = row.findViewById(R.id.gifswitch)
     }
 
@@ -46,32 +46,30 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.range.tickStart = 0f
+        holder.range.valueFrom = 0f
 
         val anim = getEAnimD(position)
 
-        holder.range.tickEnd =  (anim.len() - 1).toFloat()
+        holder.range.valueTo =  (anim.len() - 1).toFloat()
+        holder.range.setLabelFormatter { it.toInt().toString() }
+        holder.range.stepSize = 1f
+        holder.range.minSeparation = 1f
 
-        holder.range.setDrawTicks(false)
+        holder.range.values = listOf(holder.range.valueFrom, holder.range.valueTo)
 
-        data[position][0] = holder.range.leftIndex
-        data[position][1] = holder.range.rightIndex
+        holder.range.isTickVisible = false
 
-        holder.range.setOnRangeBarChangeListener(object : RangeBar.OnRangeBarChangeListener {
-            override fun onRangeChangeListener(rangeBar: RangeBar?, leftPinIndex: Int, rightPinIndex: Int, leftPinValue: String?, rightPinValue: String?) {
+        data[position][0] = holder.range.left
+        data[position][1] = holder.range.right
+
+        holder.range.addOnChangeListener { slider, _, fromUser ->
+            if(fromUser) {
                 holder.switch.text = generateRangeName(holder.adapterPosition, holder.range)
 
-                data[holder.adapterPosition][0] = leftPinIndex
-                data[holder.adapterPosition][1] = rightPinIndex
+                data[holder.adapterPosition][0] = slider.values[0].toInt()
+                data[holder.adapterPosition][1] = slider.values[1].toInt()
             }
-
-            override fun onTouchStarted(rangeBar: RangeBar?) {
-            }
-
-            override fun onTouchEnded(rangeBar: RangeBar?) {
-            }
-
-        })
+        }
 
         holder.switch.setOnCheckedChangeListener { _, b ->
             holder.range.isEnabled = b
@@ -86,8 +84,10 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
         return name.size
     }
 
-    private fun generateRangeName(ind: Int, range: RangeBar) : String {
-        return "${name[ind]} : ${range.leftIndex} ~ ${range.rightIndex}"
+    private fun generateRangeName(ind: Int, range: RangeSlider) : String {
+        val values = range.values
+
+        return "${name[ind]} : ${values[0].toInt()} ~ ${values[1].toInt()}"
     }
 
     private fun getEAnimD(ind: Int) : EAnimD<*> {
