@@ -77,7 +77,7 @@ public class BBCtrl extends BattleBox.BBPainter {
             FakeImage left = aux.battle[0][0].getImg();
             FakeImage right = aux.battle[1][0].getImg();
 
-            float ratio = dpi/58f;
+            float ratio = dpi/42f;
 
             int ih = (int) (hr * left.getHeight());
             int iw = (int) (hr * left.getWidth());
@@ -94,7 +94,7 @@ public class BBCtrl extends BattleBox.BBPainter {
                 int cw = (int)(bimg.getWidth()*ratio);
                 int ch = (int)(bimg.getHeight()*ratio);
                 int mh = (int)(CommonStatic.getBCAssets().num[0][0].getImg().getHeight()*ratio);
-                if (!new PP(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
+                if (!new PP(p).out(new P(w - cw - cutout, mh), new P(w - cutout, mh + ch), 0))
                     ctrl.action.add(-3);
             }
         } else if (action == ACTION_LONG) {
