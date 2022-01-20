@@ -903,4 +903,5 @@
     <string name="eff_fail">失敗</string>
     <string name="eff_success">成功</string>
     <string name="config_delay">Unit deploy button delay</string>
+    <string name="sch_bar">Baron</string>
 </resources>

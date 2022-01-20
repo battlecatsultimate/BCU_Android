@@ -14,12 +14,14 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.CommonStatic
 import common.pack.Identifier
+import common.system.files.VFile
 import common.util.unit.Trait
 import kotlin.math.ceil
 
 class SearchTraitAdapter(private val context: Context, private val tool: Array<String>, private val colors: Array<Identifier<Trait>>) : RecyclerView.Adapter<SearchTraitAdapter.ViewHolder>() {
     companion object {
-        private val BCTrait = intArrayOf(219, 220, 221, 222, 223, 224, 225, 294, 226, 227)
+        private val BCTrait = intArrayOf(77, 78, 79, 80, 81, 82, 83, 85, 84, 86, -1, -1, -1, -1)
+        private val BCTraitFile = arrayOf("", "", "", "", "", "", "", "", "", "", "Eva", "Witch", "Baron", "Base")
     }
 
     private val up = ArrayList<Int>()
@@ -121,7 +123,12 @@ class SearchTraitAdapter(private val context: Context, private val tool: Array<S
     private fun getIcon(trait: Trait): Drawable? {
         return if(trait.id.pack == Identifier.DEF) {
             if(trait.id.id < BCTrait.size)
-                getResizeDraw(BCTrait[trait.id.id], if(isLandscape()) 40f else 32f)
+                if(BCTrait[trait.id.id] != -1)
+                    getResizeDraw(BCTrait[trait.id.id], if(isLandscape()) 40f else 32f)
+                else if(BCTraitFile[trait.id.id].isNotBlank())
+                    getResizeDraw(BCTraitFile[trait.id.id], if(isLandscape()) 40f else 32f)
+                else
+                    null
             else
                 null
         } else {
@@ -146,6 +153,16 @@ class SearchTraitAdapter(private val context: Context, private val tool: Array<S
 
     private fun getResizeDraw(id: Int, dp: Float) : Drawable {
         val icon = StaticStore.img15?.get(id)?.bimg() ?: StaticStore.empty(context, dp, dp)
+        val bd = BitmapDrawable(context.resources, StaticStore.getResizeb(icon as Bitmap, context, dp))
+
+        bd.isFilterBitmap = true
+        bd.setAntiAlias(true)
+
+        return bd
+    }
+
+    private fun getResizeDraw(file: String, dp: Float) : Drawable {
+        val icon = VFile.get("./org/page/icons/$file.png")?.data?.img?.bimg() ?: StaticStore.empty(context, dp, dp)
         val bd = BitmapDrawable(context.resources, StaticStore.getResizeb(icon as Bitmap, context, dp))
 
         bd.isFilterBitmap = true
