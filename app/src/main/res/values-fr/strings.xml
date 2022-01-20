@@ -903,4 +903,5 @@
     <string name="eff_success">Success</string>
     <string name="config_delay">Unit deploy button delay</string>
     <string name="sch_bar">Baron</string>
+    <string name="sch_abi_bk">Baron Killer</string>
 </resources>
