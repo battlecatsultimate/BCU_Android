@@ -1,7 +1,10 @@
 package com.mandarin.bcu.androidutil.fakeandroid
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import com.mandarin.bcu.androidutil.StaticStore
+import common.system.fake.FakeGraphics
 import common.system.fake.FakeImage
 import common.system.fake.ImageBuilder
 import java.io.IOException
@@ -96,6 +99,14 @@ class FIBM : FakeImage {
             copy.recycle()
 
         return FIBM(copy)
+    }
+
+    override fun getGraphics(): FakeGraphics {
+        val p = Paint()
+
+        p.isFilterBitmap = true
+
+        return CVGraphics(Canvas(bit), p, Paint(), false)
     }
 
     companion object {
