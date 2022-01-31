@@ -53,7 +53,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
         holder.range.valueTo =  (anim.len() - 1).toFloat()
         holder.range.setLabelFormatter { it.toInt().toString() }
         holder.range.stepSize = 1f
-        holder.range.minSeparation = 1f
+        holder.range.setMinSeparationValue(1f)
 
         holder.range.values = listOf(holder.range.valueFrom, holder.range.valueTo)
 
