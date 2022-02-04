@@ -165,9 +165,29 @@ class AContext : Context {
                     list.add(info[1])
 
                     PackConflict(PackConflict.ID_UNSUPPORTED_CORE_VERSION, list, true)
+                } else if(msg.contains("parent packs ")) {
+                    val p = msg.split(") requires")[0]
+
+                    var op = ""
+
+                    for(i in p.length -1 downTo 0) {
+                        if(p[i] == '(')
+                            break
+                        else
+                            op += p[i]
+                    }
+
+                    op = op.reversed() + ".pack.bcuzip"
+
+                    val info = msg.split("[")[1].split("]")[0]
+
+                    val list = ArrayList<String>()
+
+                    list.add(op)
+                    list.add(info)
+
+                    PackConflict(PackConflict.ID_PARENT, list, msg.contains("parent packs "))
                 }
-
-
 
             } else if(t == Context.ErrType.ERROR || t == Context.ErrType.FATAL) {
                 Log.e("AContext", str ?: "")
