@@ -31,6 +31,7 @@ import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
+import common.util.pack.EffAnim;
 import common.util.stage.CastleImg;
 import common.util.unit.Form;
 
@@ -683,7 +684,9 @@ public interface BattleBox {
 
                     gra.setTransform(at);
 
-                    sb.le.get(j).anim.drawEff(gra, setP(p, y), siz);
+                    if(sb.le.get(j).anim.corpse == null || sb.le.get(j).anim.corpse.type == EffAnim.ZombieEff.BACK) {
+                        sb.le.get(j).anim.drawEff(gra, setP(p, y), siz);
+                    }
                 }
 
             for(int i = 0; i < sb.le.size(); i++) {
@@ -841,7 +844,9 @@ public interface BattleBox {
 
                         gra.setTransform(at);
 
-                        sb.le.get(j).anim.drawEff(gra, setP(p, y), siz);
+                        if(sb.le.get(j).anim.corpse == null || sb.le.get(j).anim.corpse.type == EffAnim.ZombieEff.BACK) {
+                            sb.le.get(j).anim.drawEff(gra, setP(p, y), siz);
+                        }
 
                         if(((CVGraphics)gra).neg) {
                             gra.setComposite(FakeGraphics.GRAY, 0, 0);
