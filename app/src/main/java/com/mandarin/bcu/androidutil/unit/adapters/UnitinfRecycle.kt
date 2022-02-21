@@ -47,9 +47,14 @@ class UnitinfRecycle(private val context: Activity,
             StaticStore.getAttributeColor(context, R.attr.TextPrimary)
     )
     private var talents = false
-    private var pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
+    private var pcoins = ArrayList<Int>()
 
     private var isRaw = false
+
+    init {
+        for(i in 0 until 6)
+            pcoins.add(0)
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pack: Button = itemView.findViewById(R.id.unitinfpack)
@@ -87,12 +92,6 @@ class UnitinfRecycle(private val context: Activity,
         var npresetrow: TableRow = itemView.findViewById(R.id.talresetrow)
         var npreset: Button = itemView.findViewById(R.id.unitinftalreset)
         var nprow: TableRow = itemView.findViewById(R.id.talenrow)
-
-        private var ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
-
-        var pcoins = Array<Spinner>(ids.size) { i ->
-            itemView.findViewById(ids[i])
-        }
 
         init {
             unitplus.text = " + "
@@ -132,21 +131,44 @@ class UnitinfRecycle(private val context: Activity,
             fs = 1
             viewHolder.frse.text = context.getString(R.string.unit_info_sec)
         }
+
         val t = BasisSet.current().t()
         val f = forms[viewHolder.adapterPosition]
+
+        val vpcoins = if(f.du.pCoin != null) {
+            Array(f.du.pCoin.max.size - 1) {
+                val spin = Spinner(context)
+
+                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (f.du.pCoin.max.size - 1)).toFloat())
+
+                spin.layoutParams = param
+                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                viewHolder.nprow.addView(spin)
+
+                spin
+            }
+        } else {
+            arrayOf()
+        }
+
         if (f.du.pCoin == null) {
             viewHolder.unittalen.visibility = View.GONE
             viewHolder.npreset.visibility = View.GONE
             viewHolder.nprow.visibility = View.GONE
-            pcoins = intArrayOf(0, 0, 0, 0, 0, 0)
+            pcoins = ArrayList()
+
+            for(ii in 0 until 6)
+                pcoins.add(0)
         } else {
             val max = f.du.pCoin.max
 
-            pcoins = IntArray(max.size)
+            pcoins = max
 
-            for (j in viewHolder.pcoins.indices) {
+            for (j in vpcoins.indices) {
                 if(j >= f.du.pCoin.info.size) {
-                    viewHolder.pcoins[j].isEnabled = false
+                    vpcoins[j].isEnabled = false
                     continue
                 }
 
@@ -157,8 +179,8 @@ class UnitinfRecycle(private val context: Activity,
 
                 val adapter = ArrayAdapter(context, R.layout.spinneradapter, plev)
 
-                viewHolder.pcoins[j].adapter = adapter
-                viewHolder.pcoins[j].setSelection(getIndex(viewHolder.pcoins[j], max[j + 1]))
+                vpcoins[j].adapter = adapter
+                vpcoins[j].setSelection(getIndex(vpcoins[j], max[j + 1]))
 
                 pcoins[j + 1] = max[j + 1]
             }
@@ -218,11 +240,11 @@ class UnitinfRecycle(private val context: Activity,
             viewHolder.unitabil.visibility = View.GONE
         }
 
-        listeners(viewHolder)
+        listeners(viewHolder, vpcoins)
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun listeners(viewHolder: ViewHolder) {
+    private fun listeners(viewHolder: ViewHolder, vpcoins: Array<Spinner>) {
         val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
@@ -794,18 +816,18 @@ class UnitinfRecycle(private val context: Activity,
             }
         }
 
-        for (i in viewHolder.pcoins.indices) {
-            viewHolder.pcoins[i].onItemSelectedListener = object : OnItemSelectedListener {
+        for (i in vpcoins.indices) {
+            vpcoins[i].onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    pcoins[i+1] = viewHolder.pcoins[i].selectedItem as Int
+                    pcoins[i+1] = vpcoins[i].selectedItem as Int
                     validate(viewHolder, f, t)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            viewHolder.pcoins[i].setOnLongClickListener {
-                viewHolder.pcoins[i].isClickable = false
+            vpcoins[i].setOnLongClickListener {
+                vpcoins[i].isClickable = false
 
                 StaticStore.showShortMessage(context, s.getTalentName(i, f))
 
@@ -816,11 +838,11 @@ class UnitinfRecycle(private val context: Activity,
         viewHolder.npreset.setOnClickListener {
             val max = f.du.pCoin.max
 
-            for (i in viewHolder.pcoins.indices) {
+            for (i in vpcoins.indices) {
                 if(i >= f.du.pCoin.info.size)
                     continue
 
-                viewHolder.pcoins[i].setSelection(getIndex(viewHolder.pcoins[i], max[i + 1]))
+                vpcoins[i].setSelection(getIndex(vpcoins[i], max[i + 1]))
 
                 pcoins[i + 1] = max[i + 1]
             }

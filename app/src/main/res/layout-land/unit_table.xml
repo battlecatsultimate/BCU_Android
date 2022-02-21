@@ -26,43 +26,7 @@
         android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unitinffrse">
-
-        <Spinner
-            android:id="@+id/talent0"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="0.2"
-            android:popupBackground="?attr/backgroundPrimary" />
-
-        <Spinner
-            android:id="@+id/talent1"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="0.2"
-            android:popupBackground="?attr/backgroundPrimary" />
-
-        <Spinner
-            android:id="@+id/talent2"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="0.2"
-            android:popupBackground="?attr/backgroundPrimary" />
-
-        <Spinner
-            android:id="@+id/talent3"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="0.2"
-            android:popupBackground="?attr/backgroundPrimary" />
-
-        <Spinner
-            android:id="@+id/talent4"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="0.2"
-            android:popupBackground="?attr/backgroundPrimary" />
-    </TableRow>
+        app:layout_constraintTop_toBottomOf="@+id/unitinffrse"/>
 
     <TableLayout
         android:id="@+id/tables"

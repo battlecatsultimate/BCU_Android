@@ -40,6 +40,7 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Form
 import common.util.unit.Unit
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UnitinfPager : Fragment() {
     companion object {
@@ -66,10 +67,14 @@ class UnitinfPager : Fragment() {
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray = IntArray(1)
     private var talents = false
-    private var pcoinlev: IntArray = intArrayOf(0, 0, 0, 0, 0, 0)
-    private val ids = intArrayOf(R.id.talent0, R.id.talent1, R.id.talent2, R.id.talent3, R.id.talent4)
+    private var pcoinlev = ArrayList<Int>()
     
     private var isRaw = false
+
+    init {
+        for(i in 0 until 6)
+            pcoinlev.add(i)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.unit_table, container, false)
@@ -97,12 +102,6 @@ class UnitinfPager : Fragment() {
         val unittalen = view.findViewById<CheckBox>(R.id.unitinftalen)
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
-        val pcoins = Array<Spinner>(ids.size) { i ->
-            view.findViewById(ids[i])
-        }
-
-        for (i in ids.indices)
-            pcoins[i] = view.findViewById(ids[i])
 
         val activity = requireActivity()
 
@@ -166,16 +165,40 @@ class UnitinfPager : Fragment() {
 
         val f = u.forms[form]
 
+        val pcoins = if(f.du.pCoin != null) {
+            Array(f.du.pCoin.max.size - 1) {
+                val spin = Spinner(context)
+
+                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (f.du.pCoin.max.size - 1)).toFloat())
+
+                spin.layoutParams = param
+                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                nprow.addView(spin)
+
+                spin
+            }
+        } else {
+            arrayOf()
+        }
+
         if (f.du.pCoin == null) {
             unittalen.visibility = View.GONE
             npreset.visibility = View.GONE
             nprow.visibility = View.GONE
 
-            pcoinlev = intArrayOf(0, 0, 0, 0, 0, 0)
+            pcoinlev = ArrayList()
+
+            for(i in 0 until 6)
+                pcoinlev.add(0)
         } else {
             val max = f.du.pCoin.max
 
-            pcoinlev = IntArray(max.size)
+            pcoinlev = ArrayList()
+
+            for(i in max.indices)
+                pcoinlev.add(0)
 
             pcoinlev[0] = 0
 
@@ -266,13 +289,13 @@ class UnitinfPager : Fragment() {
             unitabil.visibility = View.GONE
         }
 
-        listeners(view)
+        listeners(view, pcoins)
 
         return view
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun listeners(view: View) {
+    private fun listeners(view: View, pcoins: Array<Spinner>) {
         val activity = activity ?: return
         val cdlev: TextInputLayout = Objects.requireNonNull<Activity>(activity).findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = activity.findViewById(R.id.cdtrea)
@@ -308,9 +331,6 @@ class UnitinfPager : Fragment() {
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val npresetrow = view.findViewById<TableRow>(R.id.talresetrow)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
-        val pcoins = Array<Spinner>(ids.size) { i ->
-            view.findViewById(ids[i])
-        }
 
         val t = BasisSet.current().t()
 

@@ -30,11 +30,17 @@ class LUUnitSetting : Fragment() {
     }
 
     private lateinit var line: LineUpView
-    private var pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
+    private lateinit var talents: Array<Spinner>
+    private var pcoin = ArrayList<Int>()
 
     private var fid = 0
 
     var f: Form? = null
+
+    init {
+        for(i in 0 until 6)
+            pcoin.add(0)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View {
         val view = inflater.inflate(R.layout.lineup_unit_set, group, false)
@@ -89,16 +95,28 @@ class LUUnitSetting : Fragment() {
             if (f.unit.maxp == 0)
                 setDisappear(spinners[1], plus)
 
-            val id = intArrayOf(R.id.lineupp, R.id.lineupp1, R.id.lineupp2, R.id.lineupp3, R.id.lineupp4)
-
-            val talents = Array<Spinner>(id.size) {
-                v.findViewById(id[it])
-            }
-
             if (f.du.pCoin != null) {
-                pcoin = BasisSet.current().sele.lu.getLv(f).lvs ?: return
-
                 val max = f.du.pCoin.max
+
+                if(this::talents.isInitialized && talents.isNotEmpty()) {
+                    tal.removeAllViews()
+                }
+
+                talents = Array(max.size - 1) {
+                    val spin = Spinner(context)
+
+                    val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (f.du.pCoin.max.size - 1)).toFloat())
+
+                    spin.layoutParams = param
+                    spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                    spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                    tal.addView(spin)
+
+                    spin
+                }
+
+                pcoin = BasisSet.current().sele.lu.getLv(f).lvs ?: return
 
                 for(i in talents.indices) {
                     if(i >= f.du.pCoin.info.size) {
@@ -127,8 +145,55 @@ class LUUnitSetting : Fragment() {
                         true
                     }
                 }
+
+                for (i in talents.indices) {
+                    talents[i].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
+                            pcoin[i + 1] = position
+
+                            val lev = spinners[0].selectedItem as Int
+                            val levp1 = spinners[1].selectedItem as Int
+
+                            pcoin[0] = lev + levp1
+
+                            if (t.isChecked) {
+                                hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                                atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                            } else {
+                                removePCoin()
+                                hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                                atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
+                            }
+
+                            BasisSet.current().sele.lu.setLv(f.unit, pcoin)
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>) {
+
+                        }
+                    }
+
+                    val info = v.findViewById<ImageButton>(R.id.lineupunitinfo)
+
+                    info.setOnClickListener(object : SingleClick() {
+                        override fun onSingleClick(v: View?) {
+                            val uid = f.unit.id
+
+                            val intent = Intent(context, UnitInfo::class.java)
+
+                            intent.putExtra("Data", JsonEncoder.encode(uid).toString())
+                            requireContext().startActivity(intent)
+                        }
+                    })
+                }
             } else {
-                pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
+                talents = arrayOf()
+
+                pcoin = ArrayList()
+
+                for(i in 0 until 6)
+                    pcoin.add(0)
+
                 setDisappear(t, tal)
             }
 
@@ -201,47 +266,6 @@ class LUUnitSetting : Fragment() {
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
-
-            for (i in talents.indices) {
-                talents[i].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
-                        pcoin[i + 1] = position
-
-                        val lev = spinners[0].selectedItem as Int
-                        val levp1 = spinners[1].selectedItem as Int
-
-                        pcoin[0] = lev + levp1
-
-                        if (t.isChecked) {
-                            hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
-                            atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
-                        } else {
-                            removePCoin()
-                            hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
-                            atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
-                        }
-
-                        BasisSet.current().sele.lu.setLv(f.unit, pcoin)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>) {
-
-                    }
-                }
-
-                val info = v.findViewById<ImageButton>(R.id.lineupunitinfo)
-
-                info.setOnClickListener(object : SingleClick() {
-                    override fun onSingleClick(v: View?) {
-                        val uid = f.unit.id
-
-                        val intent = Intent(context, UnitInfo::class.java)
-
-                        intent.putExtra("Data", JsonEncoder.encode(uid).toString())
-                        requireContext().startActivity(intent)
-                    }
-                })
             }
 
             hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
@@ -331,13 +355,16 @@ class LUUnitSetting : Fragment() {
 
                 if (f.du.pCoin == null) {
                     setDisappear(t, tal)
-                    pcoin = intArrayOf(0, 0, 0, 0, 0, 0)
+                    pcoin = ArrayList()
+
+                    for(i in 0 until 6)
+                        pcoin.add(0)
                 } else {
                     setAppear(t, tal)
 
                     pcoin = BasisSet.current().sele.lu.getLv(f).lvs ?: return@setOnClickListener
 
-                    val max = f.du.pCoin.max ?: intArrayOf(0)
+                    val max = f.du.pCoin.max
 
                     for (i in 1 until max.size) {
                         val ii = i - 1
@@ -361,7 +388,7 @@ class LUUnitSetting : Fragment() {
                         }
                     }
 
-                    if (pcoin[1] == 0 && pcoin[2] == 0 && pcoin[3] == 0 && pcoin[4] == 0 && pcoin[5] == 0) {
+                    if (allZero(pcoin)) {
                         t.isChecked = false
                         val params = tal.layoutParams
                         params.height = 0
@@ -406,5 +433,13 @@ class LUUnitSetting : Fragment() {
         for(i in 1 until pcoin.size) {
             pcoin[i] = 0
         }
+    }
+
+    private fun allZero(l: List<Int>) : Boolean {
+        for(e in l)
+            if(e != 0)
+                return false
+
+        return true
     }
 }

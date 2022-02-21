@@ -17,7 +17,6 @@ import common.util.stage.SCDef
 import common.util.unit.Enemy
 import common.util.unit.Form
 import java.text.DecimalFormat
-import java.util.*
 import kotlin.math.roundToInt
 
 class GetStrings(private val c: Context) {
@@ -404,11 +403,11 @@ class GetStrings(private val c: Context) {
         return true
     }
 
-    fun getCD(f: Form?, t: Treasure?, frse: Int, talent: Boolean, lvs: IntArray?): String {
+    fun getCD(f: Form?, t: Treasure?, frse: Int, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null || t == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
                 f.du.pCoin.improve(lvs)
             else
@@ -422,7 +421,7 @@ class GetStrings(private val c: Context) {
             DecimalFormat("#.##").format(t.getFinRes(du.respawn).toDouble() / 30) + "s"
     }
 
-    fun getAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: IntArray): String {
+    fun getAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null || t == null)
             return ""
 
@@ -450,11 +449,11 @@ class GetStrings(private val c: Context) {
             getTotAtk(em, multi)
     }
 
-    fun getSpd(f: Form?, talent: Boolean, lvs: IntArray?): String {
+    fun getSpd(f: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
                 f.du.pCoin.improve(lvs)
             else
@@ -479,11 +478,11 @@ class GetStrings(private val c: Context) {
             em.de.proc.BARRIER.health.toString()
     }
 
-    fun getHB(f: Form?, talent: Boolean, lvs: IntArray?): String {
+    fun getHB(f: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
                 f.du.pCoin.improve(lvs)
             else
@@ -498,7 +497,7 @@ class GetStrings(private val c: Context) {
         return em?.de?.hb?.toString() ?: ""
     }
 
-    fun getHP(f: Form?, t: Treasure?, talent: Boolean, lvs: IntArray): String {
+    fun getHP(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null || t == null)
             return ""
 
@@ -526,7 +525,7 @@ class GetStrings(private val c: Context) {
         return (em.de.multi(BasisSet.current()) * em.de.hp * multi / 100).toInt().toString()
     }
 
-    fun getTotAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: IntArray): String {
+    fun getTotAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null || t == null)
             return ""
 
@@ -552,7 +551,7 @@ class GetStrings(private val c: Context) {
         return (em.de.multi(BasisSet.current()) * em.de.allAtk() * multi / 100).toInt().toString()
     }
 
-    fun getDPS(f: Form?, t: Treasure?, talent: Boolean, lvs: IntArray): String {
+    fun getDPS(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
         return if (f == null || t == null)
             ""
         else
@@ -566,10 +565,10 @@ class GetStrings(private val c: Context) {
             DecimalFormat("#.##").format(getTotAtk(em, multi).toDouble() / (em.de.itv.toDouble() / 30)).toString()
     }
 
-    fun getTrait(ef: Form?, talent: Boolean, lvs: IntArray?): String {
+    fun getTrait(ef: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (ef == null) return ""
 
-        val du: MaskUnit = if (lvs != null && ef.du.pCoin != null && talent)
+        val du: MaskUnit = if (ef.du.pCoin != null && talent)
             ef.du.pCoin.improve(lvs)
         else
             ef.du
@@ -630,11 +629,11 @@ class GetStrings(private val c: Context) {
         return result
     }
 
-    fun getCost(f: Form?, talent: Boolean, lvs: IntArray?): String {
+    fun getCost(f: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null)
             return ""
 
-        val du: MaskUnit = if (lvs != null && f.du.pCoin != null)
+        val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
                 f.du.pCoin.improve(lvs)
             else
@@ -652,7 +651,7 @@ class GetStrings(private val c: Context) {
         return (em.de.drop * t.dropMulti / 100).toInt().toString()
     }
 
-    private fun getAtks(f: Form?, t: Treasure?, talent: Boolean, lvs: IntArray): String {
+    private fun getAtks(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
         if (f == null || t == null)
             return ""
 
@@ -895,11 +894,11 @@ class GetStrings(private val c: Context) {
                     continue
 
                 if (i == l.group.set.size - 1) {
-                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id.id
+                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: ("Unit"+u[i].id.id)
 
                     units.append(f)
                 } else {
-                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: "Unit"+u[i].id.id
+                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: ("Unit"+u[i].id.id)
 
                     units.append(f).append(", ")
                 }

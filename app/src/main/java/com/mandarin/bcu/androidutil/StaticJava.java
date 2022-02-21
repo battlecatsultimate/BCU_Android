@@ -14,11 +14,11 @@ public class StaticJava {
         if(data instanceof EffAnim<?>) {
             ((EffAnim<?>) data).load();
 
-            return new EAnimD((EffAnim<?>) data, ((EffAnim<?>) data).mamodel, ((EffAnim<?>) data).anims[index]);
+            return new EAnimD((EffAnim<?>) data, ((EffAnim<?>) data).mamodel, ((EffAnim<?>) data).anims[index], ((EffAnim<?>) data).types[index]);
         } else if(data instanceof Soul) {
             ((Soul) data).load();
 
-            return new EAnimD((Soul) data, ((Soul) data).mamodel, ((Soul) data).anims[index]);
+            return new EAnimD((Soul) data, ((Soul) data).mamodel, ((Soul) data).anims[index], ((Soul) data).types[index]);
         } else if(data instanceof NyCastle) {
             ((NyCastle) data).load();
 
@@ -32,7 +32,7 @@ public class StaticJava {
         } else if(data instanceof DemonSoul) {
             ((DemonSoul) data).load();
 
-            return new EAnimD((DemonSoul) data, ((DemonSoul) data).mamodel, ((DemonSoul) data).anims[index]);
+            return new EAnimD((DemonSoul) data, ((DemonSoul) data).mamodel, ((DemonSoul) data).anims[index], ((DemonSoul) data).types[index]);
         }
 
         return UserProfile.getBCData().units.get(0).forms[0].getEAnim(AnimU.UType.WALK);

@@ -84,53 +84,7 @@
                 android:layout_marginEnd="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lineupchform">
-
-                <Spinner
-                    android:id="@+id/lineupp"
-                    style="@style/Platform.Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="0.2"
-                    android:backgroundTint="?attr/TableBorder"
-                    android:popupBackground="?attr/backgroundPrimary" />
-
-                <Spinner
-                    android:id="@+id/lineupp1"
-                    style="@style/Platform.Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="0.2"
-                    android:backgroundTint="?attr/TableBorder"
-                    android:popupBackground="?attr/backgroundPrimary" />
-
-                <Spinner
-                    android:id="@+id/lineupp2"
-                    style="@style/Platform.Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="0.2"
-                    android:backgroundTint="?attr/TableBorder"
-                    android:popupBackground="?attr/backgroundPrimary" />
-
-                <Spinner
-                    android:id="@+id/lineupp3"
-                    style="@style/Platform.Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="0.2"
-                    android:backgroundTint="?attr/TableBorder"
-                    android:popupBackground="?attr/backgroundPrimary" />
-
-                <Spinner
-                    android:id="@+id/lineupp4"
-                    style="@style/Platform.Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="0.2"
-                    android:backgroundTint="?attr/TableBorder"
-                    android:popupBackground="?attr/backgroundPrimary" />
-            </TableRow>
+                app:layout_constraintTop_toBottomOf="@+id/lineupchform"/>
 
             <TableRow
                 android:id="@+id/lineupunittable"
