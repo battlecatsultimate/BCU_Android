@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.mandarin.bcu.androidutil
 
 import android.annotation.SuppressLint
@@ -158,7 +160,7 @@ object StaticStore {
     var addition: Array<String> = Array(0) {""}
 
     /** Imgcut index list of ablities  */
-    var anumber = intArrayOf(203, 204, 206, 202, 205, 200, 209, 218, 227, 227, 227, 260, 258, 227, 227, 110, 227, 122, 114, 297)
+    var anumber = intArrayOf(203, 204, 206, 202, 205, 200, 209, 218, 227, 227, 227, 260, 258, 227, 227, 110, 227, 122, 114, 297, 300)
 
     /** Imgcut index list of procs  */
     var pnumber = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 201, 264, 296, 229, 293, 208, 239, 213, 214, 215, 216, 210, 243, 262, 116, 237, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 43, 45, 47, 49, 51, 53, 109, 235, 241)
@@ -176,7 +178,7 @@ object StaticStore {
     var starid = intArrayOf(R.string.unit_info_starred, R.string.unit_info_god1, R.string.unit_info_god2, R.string.unit_info_god3)
 
     /** String ID list of abilities  */
-    var abiid = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.sch_abi_ws, R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id, R.string.sch_abi_bk)
+    var abiid = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_em, R.string.sch_abi_bd, R.string.sch_abi_me, R.string.sch_abi_ws, R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id, R.string.sch_abi_bk, R.string.sch_abi_ck)
 
     //Variables for Unit
 
@@ -467,7 +469,7 @@ object StaticStore {
                 matrix.setScale(-1f, -1f)
             } else if (w < 0) {
                 matrix.setScale(-1f, 1f)
-            } else if (h < 0) {
+            } else {
                 matrix.setScale(1f, -1f)
             }
         }
