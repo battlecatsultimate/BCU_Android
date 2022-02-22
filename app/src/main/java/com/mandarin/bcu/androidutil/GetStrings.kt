@@ -7,8 +7,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
-import common.battle.data.CustomEntity
-import common.battle.data.MaskUnit
+import common.battle.data.*
 import common.pack.Identifier
 import common.util.Data
 import common.util.lang.MultiLangCont
@@ -312,33 +311,65 @@ class GetStrings(private val c: Context) {
 
         val tb = f.du.range
 
-        val du = if(f.unit.id.pack != Identifier.DEF) {
-            f.du as CustomEntity
-        } else {
-            f.du
-        }
+        if(!f.du.isLD && !f.du.isOmni)
+            return tb.toString()
 
-        val ma = if(du.atkCount == 1) {
-            du.getAtkModel(0)
-        } else {
-            if(du is CustomEntity && allRangeSame(du)) {
+        if(f.unit.id.pack != Identifier.DEF) {
+            val du = f.du as CustomEntity
+
+            val ma = if(du.atkCount == 1) {
+                du.getAtkModel(0)
+            } else if(allRangeSame(du)) {
                 du.getAtkModel(0)
             } else {
                 du.repAtk
             }
+
+            val lds = ma.shortPoint
+
+            val ldr = ma.longPoint - ma.shortPoint
+
+            val start = lds.coerceAtMost(lds + ldr)
+            val end = lds.coerceAtLeast(lds + ldr)
+
+            return "$tb | $start ~ $end"
+        } else {
+            val du = f.du as DataUnit
+
+            if(du.atkCount == 0 || allRangeSame(du)) {
+                val ma = du.getAtkModel(0)
+
+                val lds = ma.shortPoint
+
+                val ldr = ma.longPoint - ma.shortPoint
+
+                val start = lds.coerceAtMost(lds + ldr)
+                val end = lds.coerceAtLeast(lds + ldr)
+
+                return "$tb | $start ~ $end"
+            } else {
+                val builder = StringBuilder("$tb | ")
+
+                for(i in 0 until du.atkCount) {
+                    val ma = du.getAtkModel(i)
+
+                    val lds = ma.shortPoint
+
+                    val ldr = ma.longPoint - ma.shortPoint
+
+                    val start = lds.coerceAtMost(lds + ldr)
+                    val end = lds.coerceAtLeast(lds + ldr)
+
+                    builder.append("$start ~ $end")
+
+                    if(i < du.atkCount - 1) {
+                        builder.append(" / ")
+                    }
+                }
+
+                return builder.toString()
+            }
         }
-
-        val lds = ma.shortPoint
-
-        val ldr = ma.longPoint - ma.shortPoint
-
-        val start = lds.coerceAtMost(lds + ldr)
-        val end = lds.coerceAtLeast(lds + ldr)
-
-        return if (du.isLD || du.isOmni)
-            "$tb / $start ~ $end"
-        else
-            tb.toString()
     }
 
     fun getRange(em: Enemy?): String {
@@ -347,36 +378,66 @@ class GetStrings(private val c: Context) {
 
         val tb = em.de.range
 
-        val de = if(em.id.pack != Identifier.DEF) {
-            em.de as CustomEntity
-        } else {
-            em.de
-        }
+        if(!em.de.isLD && !em.de.isOmni)
+            return tb.toString()
 
-        val ma = if(de.atkCount == 1) {
-            de.getAtkModel(0)
-        } else {
-            if(de is CustomEntity && allRangeSame(de)) {
+        if(em.id.pack != Identifier.DEF) {
+            val de = em.de as CustomEntity
+
+            val ma = if(de.atkCount == 1 || allRangeSame(de)) {
                 de.getAtkModel(0)
             } else {
                 de.repAtk
             }
+
+            val lds = ma.shortPoint
+
+            val ldr = ma.longPoint - ma.shortPoint
+
+            val start = lds.coerceAtMost(lds + ldr)
+            val end = lds.coerceAtLeast(lds + ldr)
+
+            return "$tb | $start ~ $end"
+        } else {
+            val de = em.de as DataEnemy
+
+            if(de.atkCount == 0 || allRangeSame(de)) {
+                val ma = de.getAtkModel(0)
+
+                val lds = ma.shortPoint
+
+                val ldr = ma.longPoint - ma.shortPoint
+
+                val start = lds.coerceAtMost(lds + ldr)
+                val end = lds.coerceAtLeast(lds + ldr)
+
+                return "$tb | $start ~ $end"
+            } else {
+                val builder = StringBuilder("$tb | ")
+
+                for(i in 0 until de.atkCount) {
+                    val ma = de.getAtkModel(i)
+
+                    val lds = ma.shortPoint
+
+                    val ldr = ma.longPoint - ma.shortPoint
+
+                    val start = lds.coerceAtMost(lds + ldr)
+                    val end = lds.coerceAtLeast(lds + ldr)
+
+                    builder.append("$start ~ $end")
+
+                    if(i < de.atkCount - 1) {
+                        builder.append(" / ")
+                    }
+                }
+
+                return builder.toString()
+            }
         }
-
-        val lds = ma.shortPoint
-
-        val ldr = ma.longPoint - ma.shortPoint
-
-        val start = lds.coerceAtMost(lds + ldr)
-        val end = lds.coerceAtLeast(lds + ldr)
-
-        return if (de.isLD || de.isOmni)
-            "$tb / $start ~ $end"
-        else
-            tb.toString()
     }
 
-    private fun allRangeSame(de: CustomEntity) : Boolean {
+    private fun allRangeSame(de: MaskEntity) : Boolean {
         val near = ArrayList<Int>()
         val far = ArrayList<Int>()
 
