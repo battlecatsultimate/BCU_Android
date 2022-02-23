@@ -904,7 +904,7 @@
     <string name="eff_success">성공</string>
     <string name="config_delay">유닛 소환 버튼 딜레이</string>
     <string name="sch_bar">초생명체</string>
-    <string name="sch_abi_bk">초생명체 킬러</string>
+    <string name="sch_abi_bk">초생명체 특효</string>
     <string name="fruit18">횡금 개다래 씨앗</string>
     <string name="sch_abi_ck">영혼 공격</string>
 </resources>

@@ -903,8 +903,8 @@
     <string name="eff_fail">失敗</string>
     <string name="eff_success">成功</string>
     <string name="config_delay">Unit deploy button delay</string>
-    <string name="sch_bar">Baron</string>
-    <string name="sch_abi_bk">Baron Killer</string>
+    <string name="sch_bar">Colossus</string>
+    <string name="sch_abi_bk">Colossus Slayer</string>
     <string name="fruit18">Gold Cafruit Seed</string>
     <string name="sch_abi_ck">Corpse Killer</string>
 </resources>
