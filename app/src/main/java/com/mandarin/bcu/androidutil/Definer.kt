@@ -1,11 +1,9 @@
 package com.mandarin.bcu.androidutil
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.os.Build
 import android.util.Log
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
@@ -29,7 +27,6 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import java.util.function.Consumer
-import kotlin.collections.ArrayList
 
 object Definer {
     private val colorid = StaticStore.colorid
@@ -314,7 +311,6 @@ object Definer {
         Interpret.ABIS = abiString
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun getString(context: Context, id: Int, lang: String): String {
         val locale = Locale(lang)
         val configuration = Configuration(context.resources.configuration)
@@ -377,13 +373,11 @@ object Definer {
                     val info = value.split("-")
 
                     if(info.size != 2) {
-                        if(info.size != 2) {
-                            Log.w("Definer::extractMusic", "Invalid music file format : $info")
+                        Log.w("Definer::extractMusic", "Invalid music file format : $info")
 
-                            continue
-                        }
-
-                        notExisting.add(info[0])
+                        continue
+                    } else {
+                        CommonStatic.parseIntN(info[1])
                     }
                 } else {
                     notExisting.add(value)
@@ -431,6 +425,8 @@ object Definer {
             if(!f.exists()) {
                 val result = StaticStore.extractMusic(m, f)
 
+                Log.i("Definer::extractMusic", "Created new music file : ${result.absolutePath} | ${result.exists()}")
+
                 editor.putString(result.name, StaticStore.fileToMD5(result))
             } else {
                 val md5 = shared.getString(f.name, "")
@@ -472,7 +468,7 @@ object Definer {
                 continue
             }
 
-            val music = p.musics[CommonStatic.parseIntN(info[1])]
+            val music = p.musics.getRaw(CommonStatic.parseIntN(info[1]))
 
             if(music == null) {
                 Log.i("Definer::extractMusic", "Deleted music : ${m.absolutePath}")
