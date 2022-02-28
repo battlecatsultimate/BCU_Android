@@ -171,19 +171,6 @@ class LUUnitSetting : Fragment() {
 
                         }
                     }
-
-                    val info = v.findViewById<ImageButton>(R.id.lineupunitinfo)
-
-                    info.setOnClickListener(object : SingleClick() {
-                        override fun onSingleClick(v: View?) {
-                            val uid = f.unit.id
-
-                            val intent = Intent(context, UnitInfo::class.java)
-
-                            intent.putExtra("Data", JsonEncoder.encode(uid).toString())
-                            requireContext().startActivity(intent)
-                        }
-                    })
                 }
             } else {
                 talents = arrayOf()
@@ -195,6 +182,19 @@ class LUUnitSetting : Fragment() {
 
                 setDisappear(t, tal)
             }
+
+            val info = v.findViewById<ImageButton>(R.id.lineupunitinfo)
+
+            info.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    val uid = f.unit.id
+
+                    val intent = Intent(context, UnitInfo::class.java)
+
+                    intent.putExtra("Data", JsonEncoder.encode(uid).toString())
+                    requireContext().startActivity(intent)
+                }
+            })
 
             val levs = ArrayList<Int>()
             val levp = ArrayList<Int>()
