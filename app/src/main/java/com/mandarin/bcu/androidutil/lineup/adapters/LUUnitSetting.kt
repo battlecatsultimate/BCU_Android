@@ -95,12 +95,11 @@ class LUUnitSetting : Fragment() {
             if (f.unit.maxp == 0)
                 setDisappear(spinners[1], plus)
 
+            if(this::talents.isInitialized && talents.isNotEmpty())
+                tal.removeAllViews()
+
             if (f.du.pCoin != null) {
                 val max = f.du.pCoin.max
-
-                if(this::talents.isInitialized && talents.isNotEmpty()) {
-                    tal.removeAllViews()
-                }
 
                 talents = Array(max.size - 1) {
                     val spin = Spinner(context)
