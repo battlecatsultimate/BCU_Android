@@ -59,8 +59,15 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
         holder.range.isTickVisible = false
 
-        data[position][0] = holder.range.left
-        data[position][1] = holder.range.right
+        data[position][0] = if(holder.range.values.size > 0)
+            holder.range.values[0].toInt()
+        else
+            0
+
+        data[position][1] = if(holder.range.values.size > 1)
+            holder.range.values[1].toInt()
+        else
+            data[position][0]
 
         holder.range.addOnChangeListener { slider, _, fromUser ->
             if(fromUser) {
