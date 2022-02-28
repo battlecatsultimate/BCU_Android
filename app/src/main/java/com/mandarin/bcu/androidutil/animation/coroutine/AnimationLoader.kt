@@ -606,6 +606,7 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
             "regeneration" -> a.getString(R.string.eff_regen)
             "fail" -> a.getString(R.string.eff_fail)
             "success" -> a.getString(R.string.eff_success)
+            "back" -> a.getString(R.string.eff_back)
             else -> a.getString(R.string.eff_def)
         }
     }

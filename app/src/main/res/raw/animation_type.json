@@ -53,7 +53,8 @@
     },
     "ZombieEff": {
         "DOWN": "knock down",
-        "REVIVE": "revive"
+        "REVIVE": "revive",
+        "BACK" : "back"
     },
     "SoulType": {
         "DEF": "default"
