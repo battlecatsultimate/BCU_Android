@@ -132,8 +132,9 @@ object SoundHandler {
         play[ind] = true
     }
 
-    fun setBGM(music: Identifier<Music>, loop: Long) {
+    fun setBGM(music: Identifier<Music>) {
         val m = StaticStore.getMusicDataSource(Identifier.get(music)) ?: return
+        val loop = music.get().loop
 
         if(MUSIC.isInitialized) {
             MUSIC.stop()
