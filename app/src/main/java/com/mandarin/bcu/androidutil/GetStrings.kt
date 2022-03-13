@@ -79,7 +79,7 @@ class GetStrings(private val c: Context) {
                 R.string.sch_abi_imsu, //55: Imu. Surge
                 R.string.sch_abi_surge, //56: Surge Attack,
                 R.string.sch_de, //57: Aku
-                R.string.sch_abi_sb, //58: Shield breaker
+                R.string.sch_abi_shb, //58: Shield breaker
                 R.string.sch_abi_ck //59: Corpse killer
         )
         private lateinit var talTool: Array<String>
