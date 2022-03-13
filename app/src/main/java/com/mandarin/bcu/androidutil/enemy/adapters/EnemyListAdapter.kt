@@ -49,7 +49,7 @@ class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<
 
         holder.id.text = generateName(name[position])
 
-        holder.title.text = MultiLangCont.get(e) ?: e.name ?: ""
+        holder.title.text = MultiLangCont.get(e) ?: e.names.toString()
 
         val icon = e.anim?.edi?.img?.bimg()
 

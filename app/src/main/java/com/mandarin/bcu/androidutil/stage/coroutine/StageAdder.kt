@@ -115,7 +115,10 @@ open class StageAdder(activity: Activity, private val data: Identifier<Stage>) :
                     }
                 })
 
-                title.text = MultiLangCont.get(stage) ?: stage.name ?: getStageName(stage.id.id)
+                title.text = MultiLangCont.get(stage) ?: stage.names.toString()
+
+                if(title.text.isBlank())
+                    title.text = getStageName(stage.id.id)
 
                 val stgscroll = activity.findViewById<ScrollView>(R.id.stginfoscroll)
 

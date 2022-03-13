@@ -35,14 +35,14 @@ object FilterStage {
                     val nam = if(stmname != "") {
                         if(name != "") {
                             val stmnam = (MultiLangCont.get(stm) ?: stm.name ?: "").lowercase().contains(stmname.lowercase())
-                            val stnam = (MultiLangCont.get(s) ?: s.name ?: "").lowercase().contains(name.lowercase())
+                            val stnam = (MultiLangCont.get(s) ?: s.names.toString()).lowercase().contains(name.lowercase())
 
                             stmnam && stnam
                         } else {
                             (MultiLangCont.get(stm) ?: stm.name ?: "").lowercase().contains(stmname.lowercase())
                         }
                     } else {
-                        (MultiLangCont.get(s) ?: s.name ?: "").lowercase().contains(name.lowercase())
+                        (MultiLangCont.get(s) ?: s.names.toString()).lowercase().contains(name.lowercase())
                     }
 
                     val es = ArrayList<Identifier<AbEnemy>>()

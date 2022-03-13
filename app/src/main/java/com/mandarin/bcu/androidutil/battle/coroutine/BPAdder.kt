@@ -153,7 +153,11 @@ open class BPAdder : CoroutineTask<String> {
                 val st = Identifier.get(this.data) ?: return
                 val stm = st.cont ?: return
 
-                stname.text = MultiLangCont.get(st) ?: st.name ?: getStageName(this.data.id)
+                stname.text = MultiLangCont.get(st) ?: st.names.toString()
+
+                if(stname.text.isBlank())
+                    stname.text = getStageName(this.data.id)
+
                 val stars = ArrayList<String>()
                 var i = 0
                 while (i < stm.stars.size) {

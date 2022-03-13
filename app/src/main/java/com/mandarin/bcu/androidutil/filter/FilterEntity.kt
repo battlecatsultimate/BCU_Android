@@ -121,10 +121,7 @@ object FilterEntity {
                     if (added)
                         continue
 
-                    var name = MultiLangCont.get(u.forms[j]) ?: u.forms[j].name
-
-                    if (name == null)
-                        name = ""
+                    var name = MultiLangCont.get(u.forms[j]) ?: u.forms[j].names.toString()
 
                     name = Data.trio(i) + " - " + name.lowercase()
 
@@ -264,10 +261,7 @@ object FilterEntity {
                 val e = p.enemies.list[i]
 
                 if (StaticStore.entityname.isNotEmpty()) {
-                    var name = MultiLangCont.get(e) ?: e.name
-
-                    if (name == null)
-                        name = ""
+                    var name = MultiLangCont.get(e) ?: e.names.toString()
 
                     name = Data.trio(i) + " - " + name.lowercase()
 
@@ -432,10 +426,7 @@ object FilterEntity {
                         if(added)
                             continue
 
-                        var name = MultiLangCont.get(u.forms[j]) ?: u.forms[j].name
-
-                        if(name == null)
-                            name = ""
+                        var name = MultiLangCont.get(u.forms[j]) ?: u.forms[j].names.toString()
 
                         name = Data.trio(u.id.id) + " - " + name.lowercase()
 

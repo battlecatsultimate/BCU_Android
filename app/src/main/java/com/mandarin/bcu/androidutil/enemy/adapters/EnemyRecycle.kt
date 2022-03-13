@@ -154,7 +154,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             til.setHelperTextColor(ColorStateList(states, color))
         }
 
-        viewHolder.name.text = MultiLangCont.get(em) ?: em.name
+        viewHolder.name.text = MultiLangCont.get(em) ?: em.names.toString()
 
         val name = StaticStore.trio(em.id.id)
 

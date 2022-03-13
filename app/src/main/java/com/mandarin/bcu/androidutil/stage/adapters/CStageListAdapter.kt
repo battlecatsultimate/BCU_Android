@@ -38,7 +38,10 @@ class CStageListAdapter(activity: Activity, private val stages: Array<Identifier
 
         val st = Identifier.get(stages[position]) ?: return row
 
-        holder.name.text = MultiLangCont.get(st) ?: st.name ?: getStageName(position)
+        holder.name.text = MultiLangCont.get(st) ?: st.names.toString()
+
+        if(holder.name.text.isBlank())
+            holder.name.text = getStageName(position)
 
         val ids = getid(st.data)
 

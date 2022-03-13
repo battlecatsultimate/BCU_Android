@@ -83,7 +83,7 @@ class EnemyInfo : AppCompatActivity() {
             val e = Identifier.get(data)
 
             if(e is Enemy) {
-                title.text = MultiLangCont.get(e) ?: e.name
+                title.text = MultiLangCont.get(e) ?: e.names.toString()
             }
 
             val eanim = findViewById<Button>(R.id.eanimanim)

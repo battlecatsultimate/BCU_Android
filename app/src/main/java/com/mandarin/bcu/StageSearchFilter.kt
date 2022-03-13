@@ -521,7 +521,7 @@ class StageSearchFilter : AppCompatActivity() {
 
     private fun getEnemyName(id: Enemy): String {
         try {
-            val name = MultiLangCont.get(id) ?: id.name ?: ""
+            val name = MultiLangCont.get(id) ?: id.names.toString()
 
             val pack = StaticStore.getPackName(id.id.pack)
 

@@ -43,7 +43,11 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
 
         println(MultiLangCont.get(st))
 
-        holder.name.text = MultiLangCont.get(st) ?: st.name ?: getStageName(stages[position].id)
+        holder.name.text = MultiLangCont.get(st) ?: st.names.toString()
+
+        if(holder.name.text.isBlank())
+            holder.name.text = getStageName(stages[position].id)
+
         holder.images.clear()
         holder.icons.removeAllViews()
 
@@ -54,7 +58,7 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
         for (i in ids.indices) {
             icons[i] = ImageView(activity)
             icons[i]?.layoutParams = FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            if(ids[i].id < StaticStore.eicons?.size ?: 0) {
+            if(ids[i].id < (StaticStore.eicons?.size ?: 0)) {
                 val ic = StaticStore.eicons?.get(ids[i].id) ?: StaticStore.empty(1,1)
                 icons[i]?.setImageBitmap(ic)
             } else {
