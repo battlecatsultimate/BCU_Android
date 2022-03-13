@@ -105,7 +105,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
 
         if(painter.bf.sb.st.mus0 != null) {
-            SoundHandler.lop = painter.bf.sb.st.loop0
+            SoundHandler.lop = painter.bf.sb.st.mus0.get().loop
         }
 
         for (e in painter.bf.sb.st.data.allEnemy)
@@ -217,14 +217,14 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                                                 SoundHandler.timer?.cancel()
                                             }
 
-                                            if(painter.bf.sb.st.loop1 > 0 && painter.bf.sb.st.loop1 < SoundHandler.MUSIC.duration) {
+                                            if(painter.bf.sb.st.mus1.get().loop > 0 && painter.bf.sb.st.mus1.get().loop < SoundHandler.MUSIC.duration) {
                                                 SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
                                                     override fun onFinish() {
-                                                        SoundHandler.MUSIC.seekTo(painter.bf.sb.st.loop1.toInt(), true)
+                                                        SoundHandler.MUSIC.seekTo(painter.bf.sb.st.mus1.get().loop.toInt(), true)
 
-                                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-painter.bf.sb.st.loop1, (SoundHandler.MUSIC.duration-1).toLong()-painter.bf.sb.st.loop1, true) {
+                                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-painter.bf.sb.st.mus1.get().loop, (SoundHandler.MUSIC.duration-1).toLong()-painter.bf.sb.st.mus1.get().loop, true) {
                                                             override fun onFinish() {
-                                                                SoundHandler.MUSIC.seekTo(painter.bf.sb.st.loop1.toInt(), true)
+                                                                SoundHandler.MUSIC.seekTo(painter.bf.sb.st.mus1.get().loop.toInt(), true)
 
                                                                 SoundHandler.timer?.create()
                                                             }

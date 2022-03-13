@@ -505,7 +505,14 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             SoundHandler.MUSIC.start()
                         }
 
-                        if(SoundHandler.timer == null && (battleView.painter.bf.sb.st.loop0 > 0 || battleView.painter.bf.sb.st.loop1 > 0)) {
+                        var loop0 : Long = 0
+                        if (battleView.painter.bf.sb.st.mus0 != null)
+                            loop0 = battleView.painter.bf.sb.st.mus0.get().loop
+                        var loop1 : Long = 0
+                        if (battleView.painter.bf.sb.st.mus1 != null)
+                            loop1 = battleView.painter.bf.sb.st.mus1.get().loop
+
+                        if(SoundHandler.timer == null && (loop0 > 0 || loop1 > 0)) {
                             val lop = if(SoundHandler.twoMusic && SoundHandler.Changed) {
                                 SoundHandler.lop1
                             } else {
@@ -696,12 +703,15 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 SoundHandler.MUSIC.setVolume(muvol, muvol)
 
-                SoundHandler.twoMusic = battleView.painter.bf.sb.st.mush != 0 && battleView.painter.bf.sb.st.mush != 100 && battleView.painter.bf.sb.st.mus0 != battleView.painter.bf.sb.st.mus1
+                SoundHandler.twoMusic = battleView.painter.bf.sb.st.mush != 0 && battleView.painter.bf.sb.st.mush != 100 && battleView.painter.bf.sb.st.mus0 != battleView.painter.bf.sb.st.mus1 && battleView.painter.bf.sb.st.mus1 != null
 
-                SoundHandler.lop = battleView.painter.bf.sb.st.loop0
+                if (battleView.painter.bf.sb.st.mus0 != null)
+                    SoundHandler.lop = battleView.painter.bf.sb.st.mus0.get().loop
+                else
+                    SoundHandler.lop = 0
 
                 if (SoundHandler.twoMusic) {
-                    SoundHandler.lop1 = battleView.painter.bf.sb.st.loop1
+                    SoundHandler.lop1 = battleView.painter.bf.sb.st.mus1.get().loop
                     SoundHandler.mu1 = StaticStore.getMusicDataSource(Identifier.get(battleView.painter.bf.sb.st.mus1))
                 }
 
@@ -716,15 +726,15 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                         SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
                             override fun prepare(mp: MediaPlayer?) {
                                 if (SoundHandler.musicPlay) {
-                                    if(battleView.painter.bf.sb.st.loop0 > 0) {
-                                        if(battleView.painter.bf.sb.st.loop0 < SoundHandler.MUSIC.duration) {
+                                    if(battleView.painter.bf.sb.st.mus0.get().loop > 0) {
+                                        if(battleView.painter.bf.sb.st.mus0.get().loop < SoundHandler.MUSIC.duration) {
                                             SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
                                                 override fun onFinish() {
-                                                    SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
+                                                    SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.mus0.get().loop.toInt(), true)
 
-                                                    SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, (SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.loop0, true) {
+                                                    SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.mus0.get().loop, (SoundHandler.MUSIC.duration-1).toLong()-battleView.painter.bf.sb.st.mus0.get().loop, true) {
                                                         override fun onFinish() {
-                                                            SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.loop0.toInt(), true)
+                                                            SoundHandler.MUSIC.seekTo(battleView.painter.bf.sb.st.mus0.get().loop.toInt(), true)
 
                                                             SoundHandler.timer?.create()
                                                         }

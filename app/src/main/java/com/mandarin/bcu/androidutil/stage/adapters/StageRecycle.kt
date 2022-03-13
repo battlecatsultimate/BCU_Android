@@ -256,9 +256,11 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             true
         }
 
-        viewHolder.loop.text = convertTime(st.loop0)
+        if (st.mus0 != null)
+            viewHolder.loop.text = convertTime(st.mus0.get().loop)
 
-        viewHolder.loop1.text = convertTime(st.loop1)
+        if (st.mus1 != null)
+            viewHolder.loop1.text = convertTime(st.mus1.get().loop)
 
         viewHolder.background.text = StaticStore.generateIdName(st.bg, activity)
 
