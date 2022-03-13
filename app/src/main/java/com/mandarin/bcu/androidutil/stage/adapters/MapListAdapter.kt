@@ -61,7 +61,7 @@ class MapListAdapter(private val activity: Activity, private val maps: ArrayList
     private fun withID(name: Identifier<StageMap>): String {
         val stm = Identifier.get(name) ?: return Data.trio(name.id)
 
-        val n = MultiLangCont.get(stm) ?: stm.name ?: ""
+        val n = MultiLangCont.get(stm) ?: stm.names.toString()
 
         return if (n == "") {
             Data.trio(name.id)

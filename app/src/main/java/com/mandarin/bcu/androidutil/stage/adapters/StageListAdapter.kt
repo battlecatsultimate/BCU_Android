@@ -43,7 +43,11 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
 
         println(MultiLangCont.get(st))
 
-        holder.name.text = MultiLangCont.get(st) ?: st.name ?: getStageName(stages[position].id)
+        holder.name.text = MultiLangCont.get(st) ?: st.names.toString()
+
+        if (holder.name.text.isEmpty())
+            holder.name.text = getStageName(position)
+
         holder.images.clear()
         holder.icons.removeAllViews()
 

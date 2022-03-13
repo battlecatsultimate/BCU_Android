@@ -44,7 +44,7 @@ class DynamicExplanation : Fragment() {
         var explanation = if(u.id.pack == Identifier.DEF) {
             MultiLangCont.getStatic().FEXP.getCont(u.forms[fid])
         } else {
-            u.forms[fid].explanation.split("<br>").toTypedArray()
+            u.forms[fid].description.toString().split("<br>").toTypedArray()
         }
 
         println(explanation.contentToString())
@@ -63,10 +63,7 @@ class DynamicExplanation : Fragment() {
 
         explains[3].setPadding(0, 0, 0, StaticStore.dptopx(24f,requireActivity()))
 
-        var name = MultiLangCont.get(u.forms[fid]) ?: u.forms[fid].name
-
-        if (name == null)
-            name = ""
+        val name = MultiLangCont.get(u.forms[fid]) ?: u.forms[fid].names.toString()
 
         unitname.text = name
 

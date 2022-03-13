@@ -24,10 +24,7 @@ class DynamicEmExplanation(private val activity: Activity, private val data: Ide
 
         if(e !is Enemy) return layout
 
-        var name = MultiLangCont.get(e) ?: e.name
-
-        if (name == null)
-            name = ""
+        val name = MultiLangCont.get(e) ?: e.names.toString()
 
         title.text = name
         val exps = arrayOfNulls<TextView>(4)
@@ -37,7 +34,7 @@ class DynamicEmExplanation(private val activity: Activity, private val data: Ide
         var explanation = if(e.id.pack == Identifier.DEF) {
             MultiLangCont.getStatic().EEXP.getCont(e)
         } else {
-            e.desc.split("<br>").toTypedArray()
+            e.description.toString().split("<br>").toTypedArray()
         }
 
         if (explanation == null)

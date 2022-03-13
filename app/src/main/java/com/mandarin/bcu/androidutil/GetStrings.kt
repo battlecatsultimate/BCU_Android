@@ -123,10 +123,7 @@ class GetStrings(private val c: Context) {
 
         val result = StringBuilder()
 
-        var name = MultiLangCont.get(f) ?: f.name
-
-        if (name == null)
-            name = ""
+        val name = MultiLangCont.get(f) ?: f.names.toString()
 
         val rarity: String = when (f.unit.rarity) {
             0 -> c.getString(R.string.sch_rare_ba)
@@ -956,11 +953,15 @@ class GetStrings(private val c: Context) {
                     continue
 
                 if (i == l.group.set.size - 1) {
-                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: ("Unit"+u[i].id.id)
+                    var f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].names.toString()
+                    if (f.isEmpty())
+                        f = "Unit"+u[i].id.id
 
                     units.append(f)
                 } else {
-                    val f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].name ?: ("Unit"+u[i].id.id)
+                    var f = MultiLangCont.get(u[i].forms[0]) ?: u[i].forms[0].names.toString()
+                    if (f.isEmpty())
+                        f = "Unit"+u[i].id.id
 
                     units.append(f).append(", ")
                 }

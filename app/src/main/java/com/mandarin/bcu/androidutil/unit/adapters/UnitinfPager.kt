@@ -238,10 +238,7 @@ class UnitinfPager : Fragment() {
 
         val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
-        var name = MultiLangCont.get(f) ?: f.name
-
-        if (name == null)
-            name = ""
+        var name = MultiLangCont.get(f) ?: f.names.toString()
 
         val uni = f.anim.uni
 

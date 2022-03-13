@@ -249,7 +249,7 @@ class StageSearchFilter : AppCompatActivity() {
             val bg = i.bgs.list
 
             for(b in bg) {
-                backgrounds.add(i.desc.name + " - "+ number(b.id.id))
+                backgrounds.add(i.desc.names.toString() + " - "+ number(b.id.id))
                 bdata.add(StaticStore.getPackName(b.id.pack) + " - "+number(b.id.id))
             }
         }
@@ -521,7 +521,7 @@ class StageSearchFilter : AppCompatActivity() {
 
     private fun getEnemyName(id: Enemy): String {
         try {
-            val name = MultiLangCont.get(id) ?: id.name ?: ""
+            val name = MultiLangCont.get(id) ?: id.names.toString()
 
             val pack = StaticStore.getPackName(id.id.pack)
 

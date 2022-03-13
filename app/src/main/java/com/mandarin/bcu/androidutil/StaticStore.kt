@@ -1113,8 +1113,10 @@ object StaticStore {
     fun getPackName(id: String): String {
         return if (id == Identifier.DEF) {
             Identifier.DEF
-        } else {
-            UserProfile.getUserPack(id)?.desc?.name ?: id
+        } else if (UserProfile.getUserPack(id)?.desc?.names.toString().isEmpty()) {
+            UserProfile.getUserPack(id)?.desc?.names.toString()
+        }  else {
+            id
         }
     }
 

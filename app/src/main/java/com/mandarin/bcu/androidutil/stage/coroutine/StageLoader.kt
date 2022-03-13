@@ -82,7 +82,10 @@ class StageLoader(activity: Activity, private val data: Identifier<StageMap>, pr
 
                 val name = activity.findViewById<TextView>(R.id.stglistname)
 
-                val stname = MultiLangCont.get(stm) ?: stm.name ?: Data.trio(this.data.id)
+                var stname = MultiLangCont.get(stm) ?: stm.names.toString()
+
+                if (stname.isBlank())
+                    stname = Data.trio(this.data.id)
 
                 name.text = stname
 

@@ -49,7 +49,7 @@ class LUUnitListAdapter(context: Context, private val numbers: ArrayList<Identif
 
         holder.id.text = generateID(numbers[position])
 
-        holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].name ?: ""
+        holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].names.toString()
 
         if(icon != null) {
             holder.image.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap , 48f))

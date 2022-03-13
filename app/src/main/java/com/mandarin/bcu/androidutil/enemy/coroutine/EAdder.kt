@@ -133,7 +133,7 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
                                 weakReference.get()?.getString(R.string.pack_default) ?: "Default"
                             }
                             is PackData.UserPack -> {
-                                pack.desc.name ?: ""
+                                pack.desc.names.toString()
                             }
                             else -> {
                                 ""
