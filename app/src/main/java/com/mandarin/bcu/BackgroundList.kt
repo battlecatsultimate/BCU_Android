@@ -79,7 +79,7 @@ class BackgroundList : AppCompatActivity() {
                     keys[position]
                 }
 
-                val name = pack?.desc?.name ?: ""
+                val name = pack?.desc?.names.toString()
 
                 if (name.isEmpty()) {
                     keys[position]
