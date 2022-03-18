@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import java.lang.IllegalStateException
+import kotlin.math.sqrt
 
 class ColorPickerView : View {
     enum class MODE {
@@ -26,7 +26,7 @@ class ColorPickerView : View {
     private val rgb = intArrayOf(255, 0, 0)
 
     private var colorField = Bitmap.createBitmap(360, 360, Bitmap.Config.ARGB_8888)
-    private var colorBar = Bitmap.createBitmap(360, 360, Bitmap.Config.ARGB_8888)
+    private var colorBar = Bitmap.createBitmap(36, 360, Bitmap.Config.ARGB_8888)
 
     private var circleX = 0
     private var circleY = 0
@@ -40,9 +40,21 @@ class ColorPickerView : View {
 
     constructor(context: Context) : super(context) {
         p.isAntiAlias = true
+
+        updateBar();
+        updateField();
+
+        changeCirclePos();
+        changeBarPos();
     }
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         p.isAntiAlias = true
+
+        updateBar();
+        updateField();
+
+        changeCirclePos();
+        changeBarPos();
     }
 
     override fun draw(canvas: Canvas?) {
@@ -54,9 +66,99 @@ class ColorPickerView : View {
         val h = height
 
 
-        //Portrait
+        val ihw = if(w < h) {
+            (w * 0.9).toInt()
+        } else {
+            (h * 0.9).toInt()
+        }
+
+        val iGap = if(w < h) {
+            (w * 0.05).toInt()
+        } else {
+            (h * 0.05).toInt()
+        }
+
+        val gap = if(w < h) {
+            (w * 0.075).toInt()
+        } else {
+            (h * 0.075).toInt()
+        }
+        val barH = (ihw / 10.0).toInt()
+        val triangleSize = (gap / sqrt(3.0) * 4.0).toInt()
+        val outerCircle = (ihw * 0.05 / 2.0).toInt()
+        val innerCircle = (ihw * 0.0125 / 2.0).toInt()
+
+        val cx = (circleX * ihw / 360.0).toInt()
+        val cy = (circleY * ihw / 360.0).toInt()
+        val bp = (barPos * ihw / 360.0).toInt()
+
+        canvas.drawBitmap(colorField, null, Rect(iGap, iGap, iGap + ihw, iGap + ihw), p)
+
         if(w < h) {
-            val ihw = (w * 0.9).toInt()
+            //Portrait
+            canvas.drawBitmap(colorBar, null, Rect(iGap, iGap + ihw + gap, iGap + ihw, iGap + ihw + gap + barH), p)
+        } else {
+            //Landscape
+            canvas.drawBitmap(colorBar, null, Rect(0, 0, barH, ihw), p)
+        }
+
+        p.color = getPointerColor()
+
+        p.style = Paint.Style.STROKE
+        p.strokeWidth = if(w < h) {
+            w * 0.001f
+        } else {
+            h * 0.001f
+        }
+
+        canvas.drawCircle((iGap + cx - outerCircle).toFloat(), (iGap + cy - outerCircle).toFloat(), outerCircle.toFloat(), p)
+
+        p.style = Paint.Style.FILL
+
+        canvas.drawCircle((iGap + cx - innerCircle).toFloat(), (iGap + cy - innerCircle).toFloat(), innerCircle.toFloat(), p)
+
+        if(w < h) {
+            //Portrait
+            canvas.drawLine((iGap + bp).toFloat(), (iGap + gap + ihw).toFloat(), (iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat(), p)
+
+            p.style = Paint.Style.FILL
+
+            canvas.drawPoints(floatArrayOf(
+                (iGap + bp).toFloat(), (iGap + gap + ihw).toFloat(),
+                (iGap + (bp - triangleSize / 2.0)).toFloat(), (iGap + ihw + gap * 0.875).toFloat(),
+                (iGap + (bp + triangleSize / 2.0)).toFloat(), (iGap + ihw + gap * 0.875).toFloat()
+            ), p)
+
+            canvas.drawPoints(floatArrayOf(
+                (iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat(),
+                (iGap + (bp - triangleSize / 2.0)).toFloat(), (iGap + ihw + barH + gap * 1.125).toFloat(),
+                (iGap + (bp + triangleSize / 2.0)).toFloat(), (iGap + ihw + barH + gap * 1.125).toFloat()
+            ), p)
+
+            p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
+
+            canvas.drawRect(Rect(iGap, iGap + ihw + gap + barH + gap, iGap * 2, barH), p)
+        } else {
+            //Landscape
+            canvas.drawLine((iGap + gap + ihw).toFloat(), (iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat(), (iGap + bp).toFloat(), p)
+
+            p.style = Paint.Style.FILL
+
+            canvas.drawPoints(floatArrayOf(
+                (iGap + gap + ihw).toFloat(), (iGap + bp).toFloat(),
+                (iGap + ihw + gap * 0.875).toFloat(), (iGap + (bp - triangleSize / 2.0)).toFloat(),
+                (iGap + ihw + gap * 0.875).toFloat(), (iGap + (bp + triangleSize / 2.0)).toFloat()
+            ), p)
+
+            canvas.drawPoints(floatArrayOf(
+                (iGap + gap + ihw + barH).toFloat(), (iGap + bp).toFloat(),
+                (iGap + ihw + barH + gap * 1.125).toFloat(), (iGap + (bp - triangleSize / 2.0)).toFloat(),
+                (iGap + ihw + barH + gap * 1.125).toFloat(), (iGap + (bp + triangleSize / 2.0)).toFloat()
+            ), p)
+
+            p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
+
+            canvas.drawRect(Rect(iGap + ihw + gap + barH + gap, iGap, barH, iGap * 2), p)
         }
     }
 
@@ -150,5 +252,14 @@ class ColorPickerView : View {
                 circleY = ((255 - rgb[1]) * 360 / 255.0).toInt()
             }
         }
+    }
+
+    private fun getPointerColor() : Int {
+        val sum = ((rgb[0] + rgb[1] + rgb[2]) / 3.0).toInt()
+
+        return if(sum > 128)
+            0x141414
+        else
+            0xFFFFFF
     }
 }

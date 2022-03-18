@@ -1,6 +1,7 @@
 package com.mandarin.bcu
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.Editor
@@ -551,6 +552,24 @@ open class ConfigScreen : AppCompatActivity() {
         }
 
         unitDelay.isChecked = shared.getBoolean("unitDelay", true)
+
+        val viewColor = findViewById<MaterialButton>(R.id.viewcolpick)
+
+        viewColor.setOnClickListener(object : SingleClick() {
+            override fun onSingleClick(v: View?) {
+                StaticStore.fixOrientation(this@ConfigScreen)
+
+                val dialog = Dialog(this@ConfigScreen)
+
+                dialog.setContentView(R.layout.color_picker_popup)
+
+                dialog.show()
+
+                dialog.setOnDismissListener {
+                    StaticStore.unfixOrientation(this@ConfigScreen)
+                }
+            }
+        })
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {

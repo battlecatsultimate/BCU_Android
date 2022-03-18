@@ -374,7 +374,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/configmus"
-                app:layout_constraintTop_toBottomOf="@+id/configgifseek" />
+                app:layout_constraintTop_toBottomOf="@+id/viewcolpick" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configmus"
@@ -556,6 +556,41 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/configbgeff"
                 app:layout_constraintTop_toBottomOf="@+id/configbgeff" />
+
+            <TextView
+                android:id="@+id/viewercolor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/config_viewcol"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/viewcolpick"
+                app:layout_constraintStart_toStartOf="@+id/configgif"
+                app:layout_constraintTop_toTopOf="@+id/viewcolpick" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewcolpick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:text="@string/change"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configgifseek"
+                app:layout_constraintTop_toBottomOf="@+id/configgifseek" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewcolreset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="?attr/ButtonPrimary"
+                android:text="@string/reset"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/viewcolpick"
+                app:layout_constraintEnd_toStartOf="@+id/viewcolpick"
+                app:layout_constraintTop_toTopOf="@+id/viewcolpick" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

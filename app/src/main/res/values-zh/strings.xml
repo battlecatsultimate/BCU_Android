@@ -908,4 +908,7 @@
     <string name="fruit18">Gold Cafruit Seed</string>
     <string name="sch_abi_ck">Corpse Killer</string>
     <string name="eff_back">Back</string>
+    <string name="reset">Reset</string>
+    <string name="change">Change</string>
+    <string name="config_viewcol">Viewer Background Color</string>
 </resources>

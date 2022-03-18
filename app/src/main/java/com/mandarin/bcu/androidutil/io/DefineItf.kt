@@ -73,7 +73,7 @@ class DefineItf : Itf {
     }
 
     override fun setBGM(mus: Identifier<Music>) {
-        SoundHandler.setBGM(mus, mus.get()?.loop ?: 0)
+        SoundHandler.setBGM(mus)
     }
 
     override fun getMusicReader(pid: Int, mid: Int): CommonStatic.ImgReader {

@@ -134,7 +134,7 @@ object SoundHandler {
 
     fun setBGM(music: Identifier<Music>) {
         val m = StaticStore.getMusicDataSource(Identifier.get(music)) ?: return
-        val loop = music.get().loop
+        val loop = music.get()?.loop ?: 0
 
         if(MUSIC.isInitialized) {
             MUSIC.stop()
