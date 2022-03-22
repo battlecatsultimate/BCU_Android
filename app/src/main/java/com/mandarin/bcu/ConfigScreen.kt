@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
+import android.view.WindowManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -564,6 +565,8 @@ open class ConfigScreen : AppCompatActivity() {
                 dialog.setContentView(R.layout.color_picker_popup)
 
                 dialog.show()
+
+                dialog.window?.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
 
                 dialog.setOnDismissListener {
                     StaticStore.unfixOrientation(this@ConfigScreen)
