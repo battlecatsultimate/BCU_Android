@@ -3,7 +3,11 @@ package com.mandarin.bcu.androidutil.supports
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.round
 import kotlin.math.sqrt
 
 class ColorPickerView : View {
@@ -34,27 +38,144 @@ class ColorPickerView : View {
     private var barPos = 0
 
     private var dragMode = DRAGMODE.NONE
-    private var mode = MODE.HUE
+    private var mode = MODE.RED
 
     private val p = Paint()
 
     constructor(context: Context) : super(context) {
         p.isAntiAlias = true
 
-        updateBar();
-        updateField();
+        updateBar()
+        updateField()
 
-        changeCirclePos();
-        changeBarPos();
+        changeCirclePos()
+        changeBarPos()
+
+        setOnTouchListener { _, motionEvent ->
+            val w = width
+            val h = height
+
+
+            val ihw = if(w < h) {
+                (w * 0.9).toInt()
+            } else {
+                (h * 0.9).toInt()
+            }
+
+            val iGap = if(w < h) {
+                (w * 0.05).toInt()
+            } else {
+                (h * 0.05).toInt()
+            }
+
+            val gap = if(w < h) {
+                (w * 0.075).toInt()
+            } else {
+                (h * 0.075).toInt()
+            }
+
+            val barH = (ihw / 10.0).toInt()
+
+            val filteredX = min(360, max(0, ((motionEvent.x - iGap) * 360f / ihw).toInt()))
+            val filteredY = min(360, max(0, ((ihw - (motionEvent.y - iGap)) * 360f / ihw).toInt()))
+
+            if(motionEvent.action == MotionEvent.ACTION_DOWN) {
+
+                println("iGap : $iGap | ihw : $ihw | barH : $barH | X : ${motionEvent.x} | Y : ${motionEvent.y}")
+
+                if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
+                    dragMode = DRAGMODE.FIELD
+
+                    println("FIELD")
+
+                    updateColorByPos(filteredX, filteredY, width < height)
+                } else if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
+                    dragMode = DRAGMODE.BAR
+
+                    println("BAR")
+
+                    updateColorByPos(filteredX, filteredY, width < height)
+                } else {
+                    dragMode = DRAGMODE.NONE
+                }
+            } else if(motionEvent.action == MotionEvent.ACTION_UP) {
+                dragMode = DRAGMODE.NONE
+
+                performClick()
+            } else if(motionEvent.action == MotionEvent.ACTION_MOVE) {
+                updateColorByPos(filteredX, filteredY, width < height)
+            }
+
+            return@setOnTouchListener true
+        }
     }
+
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         p.isAntiAlias = true
 
-        updateBar();
-        updateField();
+        updateBar()
+        updateField()
 
-        changeCirclePos();
-        changeBarPos();
+        changeCirclePos()
+        changeBarPos()
+
+        setOnTouchListener { _, motionEvent ->
+            val w = width
+            val h = height
+
+
+            val ihw = if(w < h) {
+                (w * 0.9).toInt()
+            } else {
+                (h * 0.9).toInt()
+            }
+
+            val iGap = if(w < h) {
+                (w * 0.05).toInt()
+            } else {
+                (h * 0.05).toInt()
+            }
+
+            val gap = if(w < h) {
+                (w * 0.075).toInt()
+            } else {
+                (h * 0.075).toInt()
+            }
+
+            val barH = (ihw / 10.0).toInt()
+
+            val filteredX = min(360, max(0, ((motionEvent.x - iGap) * 360f / ihw).toInt()))
+            val filteredY = min(360, max(0, ((ihw - (motionEvent.y - iGap)) * 360f / ihw).toInt()))
+
+            if(motionEvent.action == MotionEvent.ACTION_DOWN) {
+
+                println("iGap : $iGap | ihw : $ihw | barH : $barH | X : ${motionEvent.x} | Y : ${motionEvent.y}")
+
+                if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
+                    dragMode = DRAGMODE.FIELD
+
+                    println("FIELD")
+
+                    updateColorByPos(filteredX, filteredY, width < height)
+                } else if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
+                    dragMode = DRAGMODE.BAR
+
+                    println("BAR")
+
+                    updateColorByPos(filteredX, filteredY, width < height)
+                } else {
+                    dragMode = DRAGMODE.NONE
+                }
+            } else if(motionEvent.action == MotionEvent.ACTION_UP) {
+                dragMode = DRAGMODE.NONE
+
+                performClick()
+            } else if(motionEvent.action == MotionEvent.ACTION_MOVE) {
+                updateColorByPos(filteredX, filteredY, width < height)
+            }
+
+            return@setOnTouchListener true
+        }
     }
 
     override fun draw(canvas: Canvas?) {
@@ -83,8 +204,9 @@ class ColorPickerView : View {
         } else {
             (h * 0.075).toInt()
         }
+
         val barH = (ihw / 10.0).toInt()
-        val triangleSize = (gap / sqrt(3.0) * 4.0).toInt()
+        val triangleSize = (gap / sqrt(3.0)).toInt()
         val outerCircle = (ihw * 0.05 / 2.0).toInt()
         val innerCircle = (ihw * 0.0125 / 2.0).toInt()
 
@@ -96,65 +218,78 @@ class ColorPickerView : View {
 
         if(w < h) {
             //Portrait
-            canvas.drawBitmap(colorBar, null, Rect(iGap, iGap + ihw + gap, iGap + ihw, iGap + ihw + gap + barH), p)
+            canvas.save()
+
+            canvas.translate((iGap).toFloat(), (iGap + ihw + gap + barH).toFloat())
+            canvas.rotate(-90f)
+
+            p.color = Color.argb(255, 0, 0, 0)
+
+            canvas.drawBitmap(colorBar, null, Rect(0, 0,  barH, ihw), p)
+
+            canvas.restore()
         } else {
             //Landscape
-            canvas.drawBitmap(colorBar, null, Rect(0, 0, barH, ihw), p)
+            canvas.drawBitmap(colorBar, null, Rect(iGap , 0, barH, ihw), p)
         }
 
-        p.color = getPointerColor()
+        getPointerColor()
 
         p.style = Paint.Style.STROKE
         p.strokeWidth = if(w < h) {
-            w * 0.001f
+            w * 0.005f
         } else {
-            h * 0.001f
+            h * 0.005f
         }
 
-        canvas.drawCircle((iGap + cx - outerCircle).toFloat(), (iGap + cy - outerCircle).toFloat(), outerCircle.toFloat(), p)
+        canvas.drawCircle((iGap + cx).toFloat(), (iGap + cy).toFloat(), outerCircle.toFloat(), p)
 
         p.style = Paint.Style.FILL
 
-        canvas.drawCircle((iGap + cx - innerCircle).toFloat(), (iGap + cy - innerCircle).toFloat(), innerCircle.toFloat(), p)
+        canvas.drawCircle((iGap + cx).toFloat(), (iGap + cy).toFloat(), innerCircle.toFloat(), p)
 
         if(w < h) {
             //Portrait
+            reverseColor()
+
             canvas.drawLine((iGap + bp).toFloat(), (iGap + gap + ihw).toFloat(), (iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat(), p)
 
             p.style = Paint.Style.FILL
 
-            canvas.drawPoints(floatArrayOf(
-                (iGap + bp).toFloat(), (iGap + gap + ihw).toFloat(),
-                (iGap + (bp - triangleSize / 2.0)).toFloat(), (iGap + ihw + gap * 0.875).toFloat(),
-                (iGap + (bp + triangleSize / 2.0)).toFloat(), (iGap + ihw + gap * 0.875).toFloat()
-            ), p)
+            val triangle = Path()
 
-            canvas.drawPoints(floatArrayOf(
-                (iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat(),
-                (iGap + (bp - triangleSize / 2.0)).toFloat(), (iGap + ihw + barH + gap * 1.125).toFloat(),
-                (iGap + (bp + triangleSize / 2.0)).toFloat(), (iGap + ihw + barH + gap * 1.125).toFloat()
-            ), p)
+            triangle.moveTo((iGap + bp).toFloat(), (iGap + gap + ihw).toFloat())
+            triangle.lineTo((iGap + bp - triangleSize / 2.0).toFloat(), (iGap + ihw + gap * 0.5).toFloat())
+            triangle.lineTo((iGap + bp + triangleSize / 2.0).toFloat(), (iGap + ihw + gap * 0.5).toFloat())
+
+            triangle.moveTo((iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat())
+            triangle.lineTo((iGap + bp - triangleSize / 2.0).toFloat(), (iGap + ihw + barH + gap * 1.5).toFloat())
+            triangle.lineTo((iGap + bp + triangleSize / 2.0).toFloat(), (iGap + ihw + barH + gap * 1.5).toFloat())
+
+            canvas.drawPath(triangle, p)
 
             p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
 
-            canvas.drawRect(Rect(iGap, iGap + ihw + gap + barH + gap, iGap * 2, barH), p)
+            canvas.drawRect(Rect(iGap, iGap + ihw + gap + barH + gap, (iGap + w * 0.1).toInt(), iGap + ihw + gap + barH * 2 + gap), p)
         } else {
             //Landscape
+            reverseColor()
+
             canvas.drawLine((iGap + gap + ihw).toFloat(), (iGap + bp).toFloat(), (iGap + gap + ihw + barH).toFloat(), (iGap + bp).toFloat(), p)
 
             p.style = Paint.Style.FILL
 
-            canvas.drawPoints(floatArrayOf(
-                (iGap + gap + ihw).toFloat(), (iGap + bp).toFloat(),
-                (iGap + ihw + gap * 0.875).toFloat(), (iGap + (bp - triangleSize / 2.0)).toFloat(),
-                (iGap + ihw + gap * 0.875).toFloat(), (iGap + (bp + triangleSize / 2.0)).toFloat()
-            ), p)
+            val triangle = Path()
 
-            canvas.drawPoints(floatArrayOf(
-                (iGap + gap + ihw + barH).toFloat(), (iGap + bp).toFloat(),
-                (iGap + ihw + barH + gap * 1.125).toFloat(), (iGap + (bp - triangleSize / 2.0)).toFloat(),
-                (iGap + ihw + barH + gap * 1.125).toFloat(), (iGap + (bp + triangleSize / 2.0)).toFloat()
-            ), p)
+            triangle.moveTo((iGap + gap + ihw).toFloat(), (iGap + bp).toFloat())
+            triangle.lineTo((iGap + ihw + gap * 0.5).toFloat(), (iGap + bp - triangleSize / 2.0).toFloat())
+            triangle.lineTo((iGap + ihw + gap * 0.5).toFloat(), (iGap + bp + triangleSize / 2.0).toFloat())
+
+            triangle.moveTo((iGap + gap + ihw + barH).toFloat(), (iGap + bp).toFloat())
+            triangle.lineTo((iGap + ihw + barH + gap * 1.5).toFloat(), (iGap + bp - triangleSize / 2.0).toFloat())
+            triangle.lineTo((iGap + ihw + barH + gap * 1.5).toFloat(), (iGap + bp + triangleSize / 2.0).toFloat())
+
+            canvas.drawPath(triangle, p)
 
             p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
 
@@ -202,9 +337,9 @@ class ColorPickerView : View {
                     colorBar.setPixel(x, y, c)
             } else {
                 val hsv = when(mode) {
-                    MODE.HUE -> floatArrayOf(1f - y / 360f, 1f, 1f)
-                    MODE.SATURATION -> floatArrayOf(hsb[0], 1f - y / 360f, hsb[2])
-                    MODE.BRIGHTNESS -> floatArrayOf(hsb[0], hsb[1], 1f - y / 360f)
+                    MODE.HUE -> floatArrayOf(360f - y, 1f, 1f)
+                    MODE.SATURATION -> floatArrayOf(hsb[0] * 360f, 1f - y / 360f, hsb[2])
+                    MODE.BRIGHTNESS -> floatArrayOf(hsb[0] * 360f, hsb[1], 1f - y / 360f)
                     else -> break
                 }
 
@@ -216,7 +351,7 @@ class ColorPickerView : View {
 
     private fun changeBarPos() {
         barPos = when(mode) {
-            MODE.HUE -> ((1f - hsb[0]) * 360.0).toInt()
+            MODE.HUE -> (360f - hsb[0]).toInt()
             MODE.SATURATION -> ((1f - hsb[1]) * 360.0).toInt()
             MODE.BRIGHTNESS -> ((1f - hsb[2]) * 360.0).toInt()
             MODE.RED -> ((255 - rgb[0]) * 360.0 / 255.0).toInt()
@@ -254,12 +389,105 @@ class ColorPickerView : View {
         }
     }
 
-    private fun getPointerColor() : Int {
+    private fun getPointerColor() {
         val sum = ((rgb[0] + rgb[1] + rgb[2]) / 3.0).toInt()
 
-        return if(sum > 128)
-            0x141414
+        if(sum > 128)
+            p.color = Color.argb(255, 20, 20, 20)
         else
-            0xFFFFFF
+            p.color = Color.argb(255, 255, 255, 255)
+    }
+
+    private fun reverseColor() {
+        p.color = Color.argb(255, 255 - rgb[0], 255 - rgb[1], 255 - rgb[2])
+    }
+
+    private fun updateRgb() {
+        val c = Color.HSVToColor(hsb)
+
+        rgb[0] = Color.red(c)
+        rgb[1] = Color.green(c)
+        rgb[2] = Color.blue(c)
+    }
+
+    private fun updateHsb() {
+        Color.colorToHSV(Color.rgb(rgb[0], rgb[1], rgb[2]), hsb)
+    }
+
+    private fun updateColorByPos(x: Int, y: Int, portrait: Boolean) {
+        when(mode) {
+            MODE.HUE -> {
+                if(dragMode == DRAGMODE.FIELD) {
+                    hsb[1] = x / 360f
+                    hsb[2] = y / 360f
+                } else if(dragMode == DRAGMODE.BAR) {
+                    hsb[0] = 360f - (if(portrait) x else y)
+                }
+
+                updateRgb()
+            }
+            MODE.SATURATION -> {
+                if(dragMode == DRAGMODE.FIELD) {
+                    hsb[0] = x.toFloat()
+                    hsb[2] = y / 360f
+                } else if(dragMode == DRAGMODE.BAR) {
+                    hsb[1] = (360f - (if(portrait) x else y)) / 360f
+                }
+
+                updateRgb()
+            }
+            MODE.BRIGHTNESS -> {
+                if(dragMode == DRAGMODE.FIELD) {
+                    hsb[0] = x.toFloat()
+                    hsb[1] = y / 360f
+                } else if(dragMode == DRAGMODE.BAR) {
+                    hsb[2] = (360f - (if(portrait) x else y)) / 360f
+                }
+
+                updateRgb()
+            }
+            MODE.RED -> {
+                if(dragMode == DRAGMODE.FIELD) {
+                    rgb[1] = round(x / 360f * 255).toInt()
+                    rgb[2] = round(y * 255 / 360f).toInt()
+                } else if(dragMode == DRAGMODE.BAR) {
+                    rgb[0] = round((360 - (if(portrait) x else y)) * 255 / 360f).toInt()
+                }
+
+                updateHsb()
+            }
+            MODE.GREEN -> {
+                if(dragMode == DRAGMODE.FIELD) {
+                    rgb[0] = round(x / 360f * 255).toInt()
+                    rgb[2] = round(y * 255 / 360f).toInt()
+                } else if(dragMode == DRAGMODE.BAR) {
+                    rgb[1] = round((360 - (if(portrait) x else y)) * 255 / 360f).toInt()
+                }
+
+                updateHsb()
+            }
+            MODE.BLUE -> {
+                if(dragMode == DRAGMODE.FIELD) {
+                    rgb[0] = round(x / 360f * 255).toInt()
+                    rgb[1] = round(y * 255 / 360f).toInt()
+                } else if(dragMode == DRAGMODE.BAR) {
+                    rgb[2] = round((360 - (if(portrait) x else y)) * 255 / 360f).toInt()
+                }
+
+                updateHsb()
+            }
+        }
+
+        if(dragMode == DRAGMODE.FIELD) {
+            changeCirclePos()
+
+            if(mode != MODE.HUE)
+                updateBar()
+        } else if(dragMode == DRAGMODE.BAR) {
+            changeBarPos()
+            updateField()
+        }
+
+        invalidate()
     }
 }
