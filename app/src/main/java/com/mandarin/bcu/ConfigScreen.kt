@@ -558,18 +558,20 @@ open class ConfigScreen : AppCompatActivity() {
 
         viewColor.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
-                StaticStore.fixOrientation(this@ConfigScreen)
+                if(shared.getBoolean("DEV_MODE", false)) {
+                    StaticStore.fixOrientation(this@ConfigScreen)
 
-                val dialog = Dialog(this@ConfigScreen)
+                    val dialog = Dialog(this@ConfigScreen)
 
-                dialog.setContentView(R.layout.color_picker_popup)
+                    dialog.setContentView(R.layout.color_picker_popup)
 
-                dialog.show()
+                    dialog.show()
 
-                dialog.window?.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+                    dialog.window?.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
 
-                dialog.setOnDismissListener {
-                    StaticStore.unfixOrientation(this@ConfigScreen)
+                    dialog.setOnDismissListener {
+                        StaticStore.unfixOrientation(this@ConfigScreen)
+                    }
                 }
             }
         })
