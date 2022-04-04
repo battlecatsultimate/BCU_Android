@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.mandarin.bcu.androidutil.StaticStore
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
@@ -38,7 +39,7 @@ class ColorPickerView : View {
     private var barPos = 0
 
     private var dragMode = DRAGMODE.NONE
-    private var mode = MODE.RED
+    private var mode = MODE.HUE
 
     private val p = Paint()
 
@@ -80,7 +81,6 @@ class ColorPickerView : View {
             val filteredY = min(360, max(0, ((ihw - (motionEvent.y - iGap)) * 360f / ihw).toInt()))
 
             if(motionEvent.action == MotionEvent.ACTION_DOWN) {
-
                 println("iGap : $iGap | ihw : $ihw | barH : $barH | X : ${motionEvent.x} | Y : ${motionEvent.y}")
 
                 if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
@@ -89,14 +89,22 @@ class ColorPickerView : View {
                     println("FIELD")
 
                     updateColorByPos(filteredX, filteredY, width < height)
-                } else if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
-                    dragMode = DRAGMODE.BAR
-
-                    println("BAR")
-
-                    updateColorByPos(filteredX, filteredY, width < height)
                 } else {
-                    dragMode = DRAGMODE.NONE
+                    if(width < height && iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
+                        dragMode = DRAGMODE.BAR
+
+                        println("BAR")
+
+                        updateColorByPos(filteredX, filteredY, width < height)
+                    } else if(width >= height && iGap + ihw + gap <= motionEvent.x && motionEvent.x <= iGap + ihw + gap + barH && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
+                        dragMode = DRAGMODE.BAR
+
+                        println("BAR")
+
+                        updateColorByPos(filteredX, filteredY, width < height)
+                    } else {
+                        dragMode = DRAGMODE.NONE
+                    }
                 }
             } else if(motionEvent.action == MotionEvent.ACTION_UP) {
                 dragMode = DRAGMODE.NONE
@@ -123,7 +131,6 @@ class ColorPickerView : View {
             val w = width
             val h = height
 
-
             val ihw = if(w < h) {
                 (w * 0.9).toInt()
             } else {
@@ -148,7 +155,6 @@ class ColorPickerView : View {
             val filteredY = min(360, max(0, ((ihw - (motionEvent.y - iGap)) * 360f / ihw).toInt()))
 
             if(motionEvent.action == MotionEvent.ACTION_DOWN) {
-
                 println("iGap : $iGap | ihw : $ihw | barH : $barH | X : ${motionEvent.x} | Y : ${motionEvent.y}")
 
                 if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
@@ -157,14 +163,22 @@ class ColorPickerView : View {
                     println("FIELD")
 
                     updateColorByPos(filteredX, filteredY, width < height)
-                } else if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
-                    dragMode = DRAGMODE.BAR
-
-                    println("BAR")
-
-                    updateColorByPos(filteredX, filteredY, width < height)
                 } else {
-                    dragMode = DRAGMODE.NONE
+                    if(width < height && iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
+                        dragMode = DRAGMODE.BAR
+
+                        println("BAR")
+
+                        updateColorByPos(filteredX, filteredY, width < height)
+                    } else if(width >= height && iGap + ihw + gap <= motionEvent.x && motionEvent.x <= iGap + ihw + gap + barH && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
+                        dragMode = DRAGMODE.BAR
+
+                        println("BAR")
+
+                        updateColorByPos(filteredX, filteredY, width < height)
+                    } else {
+                        dragMode = DRAGMODE.NONE
+                    }
                 }
             } else if(motionEvent.action == MotionEvent.ACTION_UP) {
                 dragMode = DRAGMODE.NONE
@@ -216,6 +230,8 @@ class ColorPickerView : View {
 
         canvas.drawBitmap(colorField, null, Rect(iGap, iGap, iGap + ihw, iGap + ihw), p)
 
+        p.color = Color.argb(255, 0, 0, 0)
+
         if(w < h) {
             //Portrait
             canvas.save()
@@ -223,14 +239,12 @@ class ColorPickerView : View {
             canvas.translate((iGap).toFloat(), (iGap + ihw + gap + barH).toFloat())
             canvas.rotate(-90f)
 
-            p.color = Color.argb(255, 0, 0, 0)
-
             canvas.drawBitmap(colorBar, null, Rect(0, 0,  barH, ihw), p)
 
             canvas.restore()
         } else {
             //Landscape
-            canvas.drawBitmap(colorBar, null, Rect(iGap , 0, barH, ihw), p)
+            canvas.drawBitmap(colorBar, null, Rect(iGap + ihw + gap , iGap, iGap + ihw + gap + barH, iGap + ihw), p)
         }
 
         getPointerColor()
@@ -293,8 +307,71 @@ class ColorPickerView : View {
 
             p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
 
-            canvas.drawRect(Rect(iGap + ihw + gap + barH + gap, iGap, barH, iGap * 2), p)
+            canvas.drawRect(Rect(iGap + ihw + gap + barH + gap, iGap,iGap + ihw + gap + barH * 2 + gap, iGap * 2), p)
         }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val wm = MeasureSpec.getMode(widthMeasureSpec)
+        val ws = MeasureSpec.getSize(widthMeasureSpec)
+        val hm = MeasureSpec.getMode(heightMeasureSpec)
+        val hs = MeasureSpec.getSize(heightMeasureSpec)
+
+        val w = if(StaticStore.isLandscape(context)) {
+            ws * 0.5
+        } else {
+            ws.toDouble()
+        }
+
+        val h = if(StaticStore.isLandscape(context)) {
+            hs.toDouble()
+        } else {
+            hs * 0.75
+        }
+
+        val ihw = if(w < h) {
+            w * 0.9
+        } else {
+            h * 0.9
+        }
+
+        val iGap = if(w < h) {
+            w * 0.05
+        } else {
+            h * 0.05
+        }
+
+        val gap = if(w < h) {
+            w * 0.075
+        } else {
+            h * 0.075
+        }
+
+        val barH = ihw / 10.0
+
+        val dw = if(StaticStore.isLandscape(context))
+            (iGap * 2 + ihw + gap * 2 + barH * 2).toInt()
+        else
+            (iGap * 2 + ihw).toInt()
+
+        val dh = if(StaticStore.isLandscape(context))
+            (iGap * 2 + ihw).toInt()
+        else
+            (iGap * 2 + ihw + gap * 2 + barH * 2).toInt()
+
+        val fw = when (wm) {
+            MeasureSpec.EXACTLY -> ws
+            MeasureSpec.AT_MOST -> min(dw, ws)
+            else -> dw
+        }
+
+        val fh = when (hm) {
+            MeasureSpec.EXACTLY -> hs
+            MeasureSpec.AT_MOST -> min(dh, hs)
+            else -> dh
+        }
+
+        setMeasuredDimension(fw, fh)
     }
 
     private fun updateField() {
@@ -421,7 +498,7 @@ class ColorPickerView : View {
                     hsb[1] = x / 360f
                     hsb[2] = y / 360f
                 } else if(dragMode == DRAGMODE.BAR) {
-                    hsb[0] = 360f - (if(portrait) x else y)
+                    hsb[0] = 360f - (if(portrait) x else 360 - y)
                 }
 
                 updateRgb()
@@ -431,7 +508,7 @@ class ColorPickerView : View {
                     hsb[0] = x.toFloat()
                     hsb[2] = y / 360f
                 } else if(dragMode == DRAGMODE.BAR) {
-                    hsb[1] = (360f - (if(portrait) x else y)) / 360f
+                    hsb[1] = (360f - (if(portrait) x else 360 - y)) / 360f
                 }
 
                 updateRgb()
@@ -441,7 +518,7 @@ class ColorPickerView : View {
                     hsb[0] = x.toFloat()
                     hsb[1] = y / 360f
                 } else if(dragMode == DRAGMODE.BAR) {
-                    hsb[2] = (360f - (if(portrait) x else y)) / 360f
+                    hsb[2] = (360f - (if(portrait) x else 360 - y)) / 360f
                 }
 
                 updateRgb()
@@ -451,7 +528,7 @@ class ColorPickerView : View {
                     rgb[1] = round(x / 360f * 255).toInt()
                     rgb[2] = round(y * 255 / 360f).toInt()
                 } else if(dragMode == DRAGMODE.BAR) {
-                    rgb[0] = round((360 - (if(portrait) x else y)) * 255 / 360f).toInt()
+                    rgb[0] = round((360 - (if(portrait) x else 360 - y)) * 255 / 360f).toInt()
                 }
 
                 updateHsb()
@@ -461,7 +538,7 @@ class ColorPickerView : View {
                     rgb[0] = round(x / 360f * 255).toInt()
                     rgb[2] = round(y * 255 / 360f).toInt()
                 } else if(dragMode == DRAGMODE.BAR) {
-                    rgb[1] = round((360 - (if(portrait) x else y)) * 255 / 360f).toInt()
+                    rgb[1] = round((360 - (if(portrait) x else 360 - y)) * 255 / 360f).toInt()
                 }
 
                 updateHsb()
@@ -471,7 +548,7 @@ class ColorPickerView : View {
                     rgb[0] = round(x / 360f * 255).toInt()
                     rgb[1] = round(y * 255 / 360f).toInt()
                 } else if(dragMode == DRAGMODE.BAR) {
-                    rgb[2] = round((360 - (if(portrait) x else y)) * 255 / 360f).toInt()
+                    rgb[2] = round((360 - (if(portrait) x else 360 - y)) * 255 / 360f).toInt()
                 }
 
                 updateHsb()
