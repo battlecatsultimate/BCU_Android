@@ -910,5 +910,5 @@
     <string name="eff_back">Back</string>
     <string name="reset">Reset</string>
     <string name="change">Change</string>
-    <string name="config_viewcol">Viewer Background Color</string>
+    <string name="config_viewcol">Viewer Background Color (WIP)</string>
 </resources>

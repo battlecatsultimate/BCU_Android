@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
@@ -1328,5 +1329,9 @@ object StaticStore {
                 d.heightPixels
             }
         }
+    }
+
+    fun isLandscape(c: Context) : Boolean {
+        return c.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
 }
