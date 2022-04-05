@@ -571,6 +571,10 @@
                 "name": "배경 ID",
                 "tooltip": "능력 발동 시 변경될 배경을 정합니다"
             },
+            "mus": {
+                "name": "BGM ID",
+                "tooltip": null
+            },
             "type.kill": {
                 "name": "개체 제거",
                 "tooltip": "능력 발동 시 해당 필드의 모든 개체를 제거합니다"
@@ -1128,6 +1132,24 @@
             "block": {
                 "name": "봉인 삭제",
                 "tooltip": "받은 공격 자체의 봉인 시간을 퍼센트로 조정하여 다른 아군들한테도 영향을 줍니다. 100으로 설정하여 완전히 막아냅니다"
+            }
+        }
+    },
+    "IMUCANNON": {
+        "abbr_name": "Imu.Cannon",
+        "full_name": "Cannon Immunity",
+        "tooltip": null,
+        "format": ["Immune to [(type!=127){[(type#1){regular cannon waves[(type>2){, }]}",
+            "(type&2>0){slow beam[(type>4){, }]}",
+            "(type&4>0){thunderbolt[(type>8){, }]}",
+            "(type&8>0){waterblast[(type>16){, }]}",
+            "(type&16>0){holy blast[(type>32){, }]}",
+            "(type&32>0){breakerblast[(type>64){, and}]}",
+            "(type&64>0){curseblast}]}(type==127){cannon attacks}]"],
+        "class": {
+            "type": {
+                "name": "type",
+                "tooltip": "+1 for regular cannon immunity, +2 for slow beam immunity, +4 for thunderbolt immunity, +8 for waterblast immunity, +16 for holy blast immunity, +32 for breakerblast immunity, +64 for curseblast immunity"
             }
         }
     }

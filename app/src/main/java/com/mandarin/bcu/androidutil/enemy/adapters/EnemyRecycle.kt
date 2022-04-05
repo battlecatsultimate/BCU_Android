@@ -188,7 +188,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(em.de)
 
@@ -656,7 +656,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enemhp.text = s.getHP(em, multi)
         viewHolder.enematk.text = s.getAtk(em, amulti)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
 
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
 
@@ -685,7 +685,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, false, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
 
         val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
 

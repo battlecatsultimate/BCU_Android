@@ -400,8 +400,8 @@
     "full_name": "召喚無効/耐性",
     "tooltip": null,
     "format": ["「オンヒット」と「オンキル」召喚[(mult==100){無効}(mult<100&mult>0){耐性 (_left)召喚された実体の強さを(mult)%減少させる(_right)}",
-      "(mult<0){脆弱性 (_left)召喚された実体は(_abs(mult))%強くなる(_right)}][(mult!=0&block!=0){と}][(block==100){ストッパー}",
-      "(block<100&block>0){アブソーバー (_left)召喚された実体の強さを(block)%減少させる(_right)}(mult<0){強化 (_left)召喚された実体は(_abs(block))%強くなる(_right)}]"],
+            "(mult<0){脆弱性 (_left)召喚された実体は(_abs(mult))%強くなる(_right)}][(mult!=0&block!=0){と}][(block==100){ストッパー}",
+            "(block<100&block>0){アブソーバー (_left)召喚された実体の強さを(block)%減少させる(_right)}(mult<0){強化 (_left)召喚された実体は(_abs(block))%強くなる(_right)}]"],
     "class": {
       "mult": {
         "name": "割合",
@@ -614,6 +614,10 @@
       },
       "id": {
         "name": "背景ID",
+        "tooltip": null
+      },
+      "mus": {
+        "name": "BGM ID",
         "tooltip": null
       },
       "type.kill": {
@@ -1120,6 +1124,29 @@
       "time": {
         "name": "発生期間",
         "tooltip": null
+      }
+    }
+  },
+  "IMUCANNON": {
+    "abbr_name": "にゃんこ砲無効",
+    "full_name": "にゃんこ砲無効/耐性",
+    "tooltip": null,
+    "format": ["[(type!=127){[(type&1>0){デフォルトにゃんこ砲の波動[(type>2){、}]}",
+      "(type&2>0){スロウ砲[(type>4){、}]}",
+      "(type&4>0){かみなり砲[(type>8){、}]}",
+      "(type&8>0){水鉄砲[(type>16){、}]}",
+      "(type&16>0){エンジェル砲[(type>32){、}]}",
+      "(type&32>0){ブレイク砲[(type>64){と}]}",
+      "(type&64>0){呪い砲}]}(type==127){にゃんこ砲}]",
+      "[(mult==100){無効}(mult<100&mult>0){(mult)%耐性}(mult<0){(_abs(mult))%脆弱性}]"],
+    "class": {
+      "mult": {
+        "name": "割合",
+        "tooltip": null
+      },
+      "type": {
+        "name": "種類",
+        "tooltip": "+1 = デフォルトにゃんこ砲の波動、+2 = スロウ砲無効、+4 = かみなり砲無効、+8 = 水鉄砲無効、+16 = エンジェル砲無効、+32 = ブレイク砲無効、+64 = 呪い砲無効"
       }
     }
   }

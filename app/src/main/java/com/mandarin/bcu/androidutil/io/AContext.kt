@@ -233,6 +233,9 @@ class AContext : Context {
             3 -> {
                 a.resources.openRawResource(R.raw.proc_jp)
             }
+            8 -> {
+                a.resources.openRawResource(R.raw.proc_es)
+            }
             else -> {
                 a.resources.openRawResource(R.raw.proc)
             }
