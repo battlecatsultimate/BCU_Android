@@ -891,6 +891,7 @@
     <string name="sch_abi_cou">반격</string>
     <string name="sch_abi_imar">방어력 감소 무효</string>
     <string name="sch_abi_imsp">속도 증가 무효</string>
+    <string name="sch_abi_imcn">Imu.Cannon</string>
     <string name="sch_abi_cut">슈퍼 아머</string>
     <string name="sch_abi_cap">마법 쉴드</string>
     <string name="eff_seale">봉인 적 측면</string>

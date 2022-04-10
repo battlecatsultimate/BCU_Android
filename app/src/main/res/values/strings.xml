@@ -890,6 +890,7 @@
     <string name="sch_abi_cou">Counter Attack</string>
     <string name="sch_abi_imar">Imu.Armor Break</string>
     <string name="sch_abi_imsp">Imu.Haste</string>
+    <string name="sch_abi_imcn">Imu.Cannon</string>
     <string name="sch_abi_cut">Super Armor</string>
     <string name="sch_abi_cap">Magic Shield</string>
     <string name="eff_seale">Seal Enemy Side</string>

@@ -891,6 +891,7 @@
     <string name="sch_abi_cou">反擊</string>
     <string name="sch_abi_imar">脆弱無效</string>
     <string name="sch_abi_imsp">催促無效</string>
+    <string name="sch_abi_imcn">Imu.Cannon</string>
     <string name="sch_abi_cut">金甲</string>
     <string name="sch_abi_cap">天罩</string>
     <string name="eff_seale">禁咒 敵方</string>

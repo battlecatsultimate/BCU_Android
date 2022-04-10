@@ -890,6 +890,7 @@
     <string name="sch_abi_cou">反撃</string>
     <string name="sch_abi_imar">アーマーブレイク無効</string>
     <string name="sch_abi_imsp">軽率無効</string>
+    <string name="sch_abi_imcn">にゃんこ砲無効</string>
     <string name="sch_abi_cut">スーパー装甲</string>
     <string name="sch_abi_cap">魔法盾</string>
     <string name="eff_seale">敵側の封印</string>
