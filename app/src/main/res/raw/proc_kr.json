@@ -1136,20 +1136,20 @@
         }
     },
     "IMUCANNON": {
-        "abbr_name": "Imu.Cannon",
-        "full_name": "Cannon Immunity",
+        "abbr_name": "성 파동 무효",
+        "full_name": "성 파동 무효",
         "tooltip": null,
-        "format": ["Immune to [(type!=127){[(type#1){regular cannon waves[(type>2){, }]}",
-            "(type&2>0){slow beam[(type>4){, }]}",
-            "(type&4>0){thunderbolt[(type>8){, }]}",
-            "(type&8>0){waterblast[(type>16){, }]}",
-            "(type&16>0){holy blast[(type>32){, }]}",
-            "(type&32>0){breakerblast[(type>64){, and}]}",
-            "(type&64>0){curseblast}]}(type==127){cannon attacks}]"],
+        "format": ["[(type!=127){[(type#1){일반 성 파동[(type>2){, }]}",
+            "(type&2>0){슬로우포[(type>4){, }]}",
+            "(type&4>0){천둥포[(type>8){, }]}",
+            "(type&8>0){물총포[(type>16){, }]}",
+            "(type&16>0){천사포[(type>32){, }]}",
+            "(type&32>0){캐논포[(type>64){, and}]}",
+            "(type&64>0){저주포}]}(type==127){모든 성 파동}] 에 무효"],
         "class": {
             "type": {
-                "name": "type",
-                "tooltip": "+1 for regular cannon immunity, +2 for slow beam immunity, +4 for thunderbolt immunity, +8 for waterblast immunity, +16 for holy blast immunity, +32 for breakerblast immunity, +64 for curseblast immunity"
+                "name": "타입",
+                "tooltip": "1을 더하여 일반 성 파동으로부터, 2를 더하여 슬로우포로부터, 4를 더하여 천둥포로부터, 8을 더하여 물총포로부터, 16을 더하여 천사포로부터, 32를 더하여 캐논포로부터, 64를 더하여 저주포로부터의 무효를 활성화 시킵니다"
             }
         }
     }
