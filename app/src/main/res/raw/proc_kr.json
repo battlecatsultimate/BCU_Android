@@ -708,7 +708,7 @@
         "abbr_name": "열파 공격",
         "full_name": "열파 공격",
         "tooltip": "한 자리에서 계속 일정 간격으로 공격하는 열파를 만들어냅니다",
-        "format": "(prob)% 확률로 (_dispTime(time)) 동안 열파 공격 (_left) (dis_0) ~ (dis_1) 사이에서 랜덤으로 생성(_right)",
+        "format": "(prob)% 확률로 Lv. (time/20) 열파 공격 (_left) (_dispTime(time)) 동안 발동되며 (dis_0) ~ (dis_1) 사이에서 랜덤으로 생성(_right)",
         "class": {
             "prob": {
                 "name": "확률",
