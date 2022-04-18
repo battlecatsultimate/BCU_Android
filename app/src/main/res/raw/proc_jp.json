@@ -400,8 +400,8 @@
     "full_name": "召喚無効/耐性",
     "tooltip": null,
     "format": ["「オンヒット」と「オンキル」召喚[(mult==100){無効}(mult<100&mult>0){耐性 (_left)召喚された実体の強さを(mult)%減少させる(_right)}",
-      "(mult<0){脆弱性 (_left)召喚された実体は(_abs(mult))%強くなる(_right)}][(mult!=0&block!=0){と}][(block==100){ストッパー}",
-      "(block<100&block>0){アブソーバー (_left)召喚された実体の強さを(block)%減少させる(_right)}(mult<0){強化 (_left)召喚された実体は(_abs(block))%強くなる(_right)}]"],
+            "(mult<0){脆弱性 (_left)召喚された実体は(_abs(mult))%強くなる(_right)}][(mult!=0&block!=0){と}][(block==100){ストッパー}",
+            "(block<100&block>0){アブソーバー (_left)召喚された実体の強さを(block)%減少させる(_right)}(mult<0){強化 (_left)召喚された実体は(_abs(block))%強くなる(_right)}]"],
     "class": {
       "mult": {
         "name": "割合",
@@ -1147,6 +1147,30 @@
       "type": {
         "name": "種類",
         "tooltip": "+1 = デフォルトにゃんこ砲の波動、+2 = スロウ砲無効、+4 = かみなり砲無効、+8 = 水鉄砲無効、+16 = エンジェル砲無効、+32 = ブレイク砲無効、+64 = 呪い砲無効"
+      }
+    }
+  },
+  "BOUNTY": {
+    "abbr_name": "撃破時お金x2",
+    "full_name": "撃破時お金アップ",
+    "tooltip": null,
+    "format": "撃破時お金(_abs(mult))%[(mult>0){UP}(mult<0){DOWN}]",
+    "class": {
+      "mult": {
+        "name": "割合",
+        "tooltip": null
+      }
+    }
+  },
+  "ATKBASE": {
+    "abbr_name": "城破壊得意",
+    "full_name": "城破壊が得意",
+    "tooltip": null,
+    "format": "対 お城 与ダメ[(mult>0){+}](mult)%",
+    "class": {
+      "mult": {
+        "name": "割合",
+        "tooltip": null
       }
     }
   }

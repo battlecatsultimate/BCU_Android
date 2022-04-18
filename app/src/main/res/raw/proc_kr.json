@@ -1152,5 +1152,29 @@
                 "tooltip": "1을 더하여 일반 성 파동으로부터, 2를 더하여 슬로우포로부터, 4를 더하여 천둥포로부터, 8을 더하여 물총포로부터, 16을 더하여 천사포로부터, 32를 더하여 캐논포로부터, 64를 더하여 저주포로부터의 무효를 활성화 시킵니다"
             }
         }
+    },
+    "BOUNTY": {
+        "abbr_name": "2x Money",
+        "full_name": "Money Multiplier",
+        "tooltip": null,
+        "format": "[(mult>0){Greedy Sweep}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "ATKBASE": {
+        "abbr_name": "Vs. Base",
+        "full_name": "Base Destroyer",
+        "tooltip": null,
+        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
     }
 }
