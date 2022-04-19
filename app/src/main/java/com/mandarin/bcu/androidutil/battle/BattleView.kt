@@ -217,7 +217,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                                                 SoundHandler.timer?.cancel()
                                             }
 
-                                            if((painter.bf.sb.st.mus1.get()?.loop ?: 0) > 0 && (painter.bf.sb.st.mus1.get()?.loop ?: 0) < SoundHandler.MUSIC.duration) {
+                                            if((painter.bf.sb.st.mus1?.get()?.loop ?: 0) > 0 && (painter.bf.sb.st.mus1.get()?.loop ?: 0) < SoundHandler.MUSIC.duration) {
                                                 SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
                                                     override fun onFinish() {
                                                         SoundHandler.MUSIC.seekTo((painter.bf.sb.st.mus1.get()?.loop ?: 0).toInt(), true)

@@ -505,7 +505,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             SoundHandler.MUSIC.start()
                         }
 
-                        if(SoundHandler.timer == null && ((battleView.painter.bf.sb.st.mus0.get()?.loop ?: 0) > 0 || (battleView.painter.bf.sb.st.mus1.get()?.loop ?: 0) > 0)) {
+                        if(SoundHandler.timer == null && ((battleView.painter.bf.sb.st.mus0?.get()?.loop ?: 0) > 0 || (battleView.painter.bf.sb.st.mus1?.get()?.loop ?: 0) > 0)) {
                             val lop = if(SoundHandler.twoMusic && SoundHandler.Changed) {
                                 SoundHandler.lop1
                             } else {
@@ -698,10 +698,10 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 SoundHandler.twoMusic = battleView.painter.bf.sb.st.mush != 0 && battleView.painter.bf.sb.st.mush != 100 && battleView.painter.bf.sb.st.mus0 != battleView.painter.bf.sb.st.mus1
 
-                SoundHandler.lop = battleView.painter.bf.sb.st.mus0.get()?.loop ?: 0
+                SoundHandler.lop = battleView.painter.bf.sb.st.mus0?.get()?.loop ?: 0
 
                 if (SoundHandler.twoMusic) {
-                    SoundHandler.lop1 = (battleView.painter.bf.sb.st.mus1.get()?.loop ?: 0)
+                    SoundHandler.lop1 = (battleView.painter.bf.sb.st.mus1?.get()?.loop ?: 0)
                     SoundHandler.mu1 = StaticStore.getMusicDataSource(Identifier.get(battleView.painter.bf.sb.st.mus1))
                 }
 
