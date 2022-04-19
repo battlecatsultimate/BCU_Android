@@ -44,11 +44,11 @@ object Interpret : Data() {
      * Converts Data Proc index to BCU Android Proc Index
      */
     private val P_INDEX = intArrayOf(P_WEAK, P_STOP, P_SLOW, P_KB, P_WARP, P_CURSE, P_IMUATK, P_STRONG, P_LETHAL,
-            P_CRIT, P_BREAK, P_SHIELDBREAK, P_SATK, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK, P_IMUSTOP, P_IMUSLOW,
-            P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK, P_POIATK, P_BARRIER, P_DEMONSHIELD,
-            P_DEATHSURGE, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE, P_THEME, P_POISON,
-            P_BOSS, P_ARMOR, P_SPEED, P_COUNTER, P_DMGCUT, P_DMGCAP, P_CRITI, P_IMUPOI, P_IMUSEAL, P_IMUMOVING,
-            P_IMUSUMMON, P_IMUARMOR, P_IMUSPEED, P_IMUCANNON)
+            P_ATKBASE, P_CRIT, P_BREAK, P_SHIELDBREAK, P_SATK, P_BOUNTY, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK,
+            P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK, P_POIATK,
+            P_BARRIER, P_DEMONSHIELD, P_DEATHSURGE, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE,
+            P_THEME, P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_COUNTER, P_DMGCUT, P_DMGCAP, P_CRITI, P_IMUPOI, P_IMUSEAL,
+            P_IMUMOVING, P_IMUSUMMON, P_IMUARMOR, P_IMUSPEED, P_IMUCANNON)
 
     /**
      * treasure max
@@ -154,7 +154,7 @@ object Interpret : Data() {
 
                         val inds = atkMap[ans] ?: ArrayList()
 
-                        inds.add(i)
+                        inds.add(k)
 
                         atkMap[ans] = inds
                     }

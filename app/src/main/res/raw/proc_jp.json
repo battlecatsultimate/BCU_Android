@@ -1173,5 +1173,25 @@
         "tooltip": null
       }
     }
+  },
+  "BSTHUNT": {
+    "abbr_name": "獣特効",
+    "full_name": "超獣特効",
+    "tooltip": null,
+    "format": "超獣特効(_left)与ダメx2.5 被ダメx0.3[(prob>0){&(prob)%の確率で(_dispTime(time))の間攻撃を無効にする}](_right)",
+    "class": {
+      "type.active": {
+        "name": "対 超獣敵めっぽう強い",
+        "tooltip": null
+      },
+      "prob": {
+        "name": "超獣の攻撃無効の確率",
+        "tooltip": null
+      },
+      "time": {
+        "name": "発生期間",
+        "tooltip": null
+      }
+    }
   }
 }

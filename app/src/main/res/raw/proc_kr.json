@@ -1157,7 +1157,7 @@
         "abbr_name": "2x Money",
         "full_name": "Money Multiplier",
         "tooltip": null,
-        "format": "[(mult>0){Greedy Sweep}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "format": "[(mult>0){Extra Money}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
         "class": {
             "mult": {
                 "name": "percent",
@@ -1173,6 +1173,26 @@
         "class": {
             "mult": {
                 "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "BSTHUNT": {
+        "abbr_name": "BST Kill",
+        "full_name": "Beast Hunter",
+        "tooltip": null,
+        "format": "Super Beast Hunter (_left)Deals 2.5x damage to Beasts and only takes 0.3x damage from Beasts[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "class": {
+            "type.active": {
+                "name": "Stronger Vs. Beast",
+                "tooltip": null
+            },
+            "prob": {
+                "name": "dodge chance",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
                 "tooltip": null
             }
         }
