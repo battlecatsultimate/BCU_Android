@@ -44,11 +44,11 @@ object Interpret : Data() {
      * Converts Data Proc index to BCU Android Proc Index
      */
     private val P_INDEX = intArrayOf(P_WEAK, P_STOP, P_SLOW, P_KB, P_WARP, P_CURSE, P_IMUATK, P_STRONG, P_LETHAL,
-            P_ATKBASE, P_CRIT, P_BREAK, P_SHIELDBREAK, P_SATK, P_BOUNTY, P_MINIWAVE, P_WAVE, P_VOLC, P_IMUWEAK,
-            P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK, P_POIATK,
-            P_BARRIER, P_DEMONSHIELD, P_DEATHSURGE, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON, P_MOVEWAVE,
-            P_THEME, P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_COUNTER, P_DMGCUT, P_DMGCAP, P_CRITI, P_IMUPOI, P_IMUSEAL,
-            P_IMUMOVING, P_IMUSUMMON, P_IMUARMOR, P_IMUSPEED, P_IMUCANNON)
+            P_ATKBASE, P_CRIT, P_BREAK, P_SHIELDBREAK, P_SATK, P_BOUNTY, P_MINIWAVE, P_WAVE, P_VOLC, P_BSTHUNT,
+            P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUVOLC, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK,
+            P_POIATK, P_BARRIER, P_DEMONSHIELD, P_DEATHSURGE, P_BURROW, P_REVIVE, P_SNIPER, P_SEAL, P_TIME, P_SUMMON,
+            P_MOVEWAVE, P_THEME, P_POISON, P_BOSS, P_ARMOR, P_SPEED, P_COUNTER, P_DMGCUT, P_DMGCAP, P_CRITI, P_IMUPOI,
+            P_IMUSEAL, P_IMUMOVING, P_IMUSUMMON, P_IMUARMOR, P_IMUSPEED, P_IMUCANNON)
 
     /**
      * treasure max
@@ -57,11 +57,11 @@ object Interpret : Data() {
             100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 30, 30, 20, 30, 30, 30)
 
     private val PROCIND = arrayOf("WEAK", "STOP", "SLOW", "KB", "WARP", "CURSE", "IMUATK", "STRONG", "LETHAL",
-            "CRIT", "BREAK", "SHIELDBREAK", "SATK", "MINIWAVE", "WAVE", "VOLC", "IMUWEAK", "IMUSTOP", "IMUSLOW",
-            "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK", "POIATK", "BARRIER", "DEMONSHIELD",
-            "DEATHSURGE", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME", "SUMMON", "MOVEWAVE", "THEME", "POISON",
-            "BOSS", "ARMOR", "SPEED", "COUNTER", "DMGCUT", "DMGCAP", "CRITI", "IMUPOI", "IMUSEAL", "IMUMOVING",
-            "IMUSUMMON", "IMUARMOR", "IMUSPEED", "IMUCANNON")
+            "ATKBASE", "CRIT", "BREAK", "SHIELDBREAK", "SATK", "BOUNTY", "MINIWAVE", "WAVE", "VOLC", "BSTHUNT",
+            "IMUWEAK", "IMUSTOP", "IMUSLOW", "IMUKB", "IMUWAVE", "IMUVOLC", "IMUWARP", "IMUCURSE", "IMUPOIATK",
+            "POIATK", "BARRIER", "DEMONSHIELD", "DEATHSURGE", "BURROW", "REVIVE", "SNIPER", "SEAL", "TIME",
+            "SUMMON", "MOVEWAVE", "THEME", "POISON", "BOSS", "ARMOR", "SPEED", "COUNTER", "DMGCUT", "DMGCAP",
+            "CRITI", "IMUPOI", "IMUSEAL", "IMUMOVING", "IMUSUMMON", "IMUARMOR", "IMUSPEED", "IMUCANNON")
 
     private val immune = listOf(P_IMUWEAK, P_IMUSTOP, P_IMUSLOW, P_IMUKB, P_IMUWAVE, P_IMUWARP, P_IMUCURSE, P_IMUPOIATK, P_IMUVOLC)
 
@@ -270,12 +270,10 @@ object Interpret : Data() {
                         0 -> l.add(ABIS[i] + addition[0])
                         1 -> l.add(ABIS[i] + addition[1])
                         2 -> l.add(ABIS[i] + addition[2])
-                        4 -> l.add(ABIS[i] + addition[3])
-                        5 -> l.add(ABIS[i] + addition[4])
-                        12 -> l.add(ABIS[i] + addition[5])
-                        15 -> l.add(ABIS[i] + addition[6])
-                        17 -> l.add(ABIS[i] + addition[7])
-                        18 -> l.add(ABIS[i] + addition[8])
+                        10 -> l.add(ABIS[i] + addition[3])
+                        13 -> l.add(ABIS[i] + addition[4])
+                        15 -> l.add(ABIS[i] + addition[5])
+                        16 -> l.add(ABIS[i] + addition[6])
                         else -> l.add(ABIS[i])
                     }
                 }
