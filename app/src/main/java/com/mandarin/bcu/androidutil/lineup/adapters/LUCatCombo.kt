@@ -15,6 +15,7 @@ import com.mandarin.bcu.androidutil.lineup.LineUpView
 import common.battle.BasisSet
 import common.pack.Identifier
 import common.pack.UserProfile
+import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.unit.Combo
 
@@ -50,9 +51,9 @@ class LUCatCombo : Fragment() {
 
         val names = Array<String>(StaticStore.combos.size) {
             if(StaticStore.combos[it].id.pack == Identifier.DEF) {
-                MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[it])
+                MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[it]) ?: Data.trio(StaticStore.combos[it].id.id)
             } else {
-                StaticStore.combos[it].name
+                StaticStore.combos[it].name ?: ""
             }
         }
 
