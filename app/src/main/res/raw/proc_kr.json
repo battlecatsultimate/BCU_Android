@@ -1138,7 +1138,7 @@
     "IMUCANNON": {
         "abbr_name": "성 파동 무효",
         "full_name": "성 파동 무효",
-        "tooltip": null,
+        "tooltip": "특정한 아군 성 공격을 무효화 시키는 능력입니다",
         "format": ["[(type!=127){[(type#1){일반 성 파동[(type>2){, }]}",
             "(type&2>0){슬로우포[(type>4){, }]}",
             "(type&4>0){천둥포[(type>8){, }]}",
