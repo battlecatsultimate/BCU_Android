@@ -359,7 +359,7 @@ object StaticStore {
     fun resetUserPacks() {
         UserProfile.unloadAllUserPacks()
 
-        mapcode = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027"))
+        mapcode = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031"))
         mapcolcname.clear()
         PackConflict.conflicts.clear()
 
