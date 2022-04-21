@@ -1154,46 +1154,46 @@
         }
     },
     "BOUNTY": {
-        "abbr_name": "2x Money",
-        "full_name": "Money Multiplier",
-        "tooltip": null,
-        "format": "[(mult>0){Extra Money}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "abbr_name": "추가 머니",
+        "full_name": "추가 머니",
+        "tooltip": "적을 처지 시 얻는 돈을 퍼센트로 더 혹은 덜 획득하게 만드는 능력입니다",
+        "format": "[(mult>0){추가 머니}(mult<0){머니 획득 감소}] (_left)(적 처치 시 돈을 _abs(mult))% 만큼 [(mult>0){더}(mult<0){덜}] 획득(_right)",
         "class": {
             "mult": {
-                "name": "percent",
-                "tooltip": null
+                "name": "퍼센트",
+                "tooltip": "돈을 얼만큼 얻을지 퍼센트로 정합니다. 1%라면 원래 돈의 101%만큼 얻게됩니다"
             }
         }
     },
     "ATKBASE": {
-        "abbr_name": "Vs. Base",
-        "full_name": "Base Destroyer",
-        "tooltip": null,
-        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "abbr_name": "성 파괴가 특기",
+        "full_name": "성 파괴가 특기",
+        "tooltip": "적 성에게 추가 혹은 감소된 데미지를 가하도록 하는 능력입니다",
+        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)적 성에게 (_abs(mult))% 만큼 [(mult>0){추가}(mult<0){감소된}] 데미지(_right)",
         "class": {
             "mult": {
-                "name": "percent",
-                "tooltip": null
+                "name": "퍼센트",
+                "tooltip": "적 성에게 데미지를 얼만큼 가할지 퍼센트로 정합니다. 1%라면 원래 공격의 101%가 됩니다"
             }
         }
     },
     "BSTHUNT": {
-        "abbr_name": "BST Kill",
-        "full_name": "Beast Hunter",
-        "tooltip": null,
-        "format": "Super Beast Hunter (_left)Deals 2.5x damage to Beasts and only takes 0.3x damage from Beasts[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "abbr_name": "초수 킬러",
+        "full_name": "초수 킬러",
+        "tooltip": "초수 특성을 가진 적에게 추가적인 데미지를 가하고 감소된 데미지를 입습니다. 확률적으로 공격 무효도 발동됩니다",
+        "format": "초수 킬러 (_left)피격 시 데미지 0.6배, 공격 시 데미지 2.5배로 적용[(prob>0){되고, (prob)% 확률로 (_dispTime(time)) 동안 공격 무효}(prob==0){된다}](_right)",
         "class": {
             "type.active": {
-                "name": "Stronger Vs. Beast",
-                "tooltip": null
+                "name": "초수 특효",
+                "tooltip": "활성화 시 초수에게 들어오는 데미지가 감소되고 가하는 데미지가 증가합니다"
             },
             "prob": {
-                "name": "dodge chance",
-                "tooltip": null
+                "name": "확률",
+                "tooltip": "타겟에게 공격 무효를 발동시킬 확률입니다"
             },
             "time": {
-                "name": "duration",
-                "tooltip": null
+                "name": "시간",
+                "tooltip": "공격 무효가 얼마동안 발동될지 정합니다"
             }
         }
     }
