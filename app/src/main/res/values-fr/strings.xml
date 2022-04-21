@@ -907,7 +907,7 @@
     <string name="sch_bar">Colossus</string>
     <string name="sch_abi_bk">Colossus Slayer</string>
     <string name="fruit18">Gold Cafruit Seed</string>
-    <string name="sch_abi_ck">Corpse Killer</string>
+    <string name="sch_abi_ck">Soulstrike</string>
     <string name="eff_back">Back</string>
     <string name="reset">Reset</string>
     <string name="change">Change</string>
@@ -918,4 +918,5 @@
     <string name="fruit21">Blue Beast Stone</string>
     <string name="fruit22">Green Beast Stone</string>
     <string name="fruit23">Yellow Beast Stone</string>
+    <string name="sch_abi_bh">Beast Hunter</string>
 </resources>
