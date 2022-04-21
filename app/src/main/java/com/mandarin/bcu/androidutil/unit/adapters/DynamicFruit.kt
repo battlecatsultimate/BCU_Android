@@ -22,9 +22,16 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
     private val fruittext = arrayOfNulls<TextView>(6)
     private val cfdesc = arrayOfNulls<TextView>(3)
 
-    private val ids = listOf(30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164)
+    private val ids = listOf(30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 160, 161, 164, 167, 168, 169, 170, 171)
 
-    private val cftooltip = intArrayOf(R.string.fruit1, R.string.fruit2, R.string.fruit3, R.string.fruit4, R.string.fruit5, R.string.fruit6, R.string.fruit7, R.string.fruit8, R.string.fruit9, R.string.fruit10, R.string.fruit11, R.string.fruit12, R.string.fruit13, R.string.fruit14, R.string.fruit15, R.string.fruit16, R.string.fruit1, R.string.fruit18)
+    private val cftooltip = intArrayOf(
+        R.string.fruit1, R.string.fruit2, R.string.fruit3, R.string.fruit4,
+        R.string.fruit5, R.string.fruit6, R.string.fruit7, R.string.fruit8, R.string.fruit9,
+        R.string.fruit10, R.string.fruit11, R.string.fruit12, R.string.fruit13,
+        R.string.fruit14, R.string.fruit15, R.string.fruit16, R.string.fruit1,
+        R.string.fruit18, R.string.fruit19, R.string.fruit20, R.string.fruit21, R.string.fruit22,
+        R.string.fruit23
+    )
     private val exist = booleanArrayOf(false, false, false, false, false, true)
 
     override fun instantiateItem(group: ViewGroup, position: Int): Any {

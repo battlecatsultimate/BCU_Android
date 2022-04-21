@@ -913,4 +913,9 @@
     <string name="change">Change</string>
     <string name="config_viewcol">Viewer Background Color (仕掛品)</string>
     <string name="sch_bst">超獣</string>
+    <string name="fruit19">紫獣石</string>
+    <string name="fruit20">紅獣石</string>
+    <string name="fruit21">蒼獣石</string>
+    <string name="fruit22">翠獣石</string>
+    <string name="fruit23">黄獣石</string>
 </resources>

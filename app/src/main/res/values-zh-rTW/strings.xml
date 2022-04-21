@@ -914,4 +914,9 @@
     <string name="change">Change</string>
     <string name="config_viewcol">Viewer Background Color (WIP)</string>
     <string name="sch_bst">Beast</string>
+    <string name="fruit19">Purple Beast Stone</string>
+    <string name="fruit20">Red Beast Stone</string>
+    <string name="fruit21">Blue Beast Stone</string>
+    <string name="fruit22">Green Beast Stone</string>
+    <string name="fruit23">Yellow Beast Stone</string>
 </resources>

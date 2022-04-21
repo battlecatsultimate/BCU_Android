@@ -130,9 +130,15 @@ object Definer {
             if (StaticStore.fruit == null) {
                 val path1 = "./org/page/catfruit/"
 
-                val names = arrayOf("gatyaitemD_30_f.png", "gatyaitemD_31_f.png", "gatyaitemD_32_f.png", "gatyaitemD_33_f.png", "gatyaitemD_34_f.png", "gatyaitemD_35_f.png", "gatyaitemD_36_f.png"
-                        , "gatyaitemD_37_f.png", "gatyaitemD_38_f.png", "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png", "gatyaitemD_42_f.png", "gatyaitemD_43_f.png", "gatyaitemD_44_f.png"
-                        , "gatyaitemD_160_f.png", "gatyaitemD_161_f.png", "gatyaitemD_164_f.png", "xp.png"
+                val names = arrayOf(
+                    "gatyaitemD_30_f.png", "gatyaitemD_31_f.png", "gatyaitemD_32_f.png",
+                    "gatyaitemD_33_f.png", "gatyaitemD_34_f.png", "gatyaitemD_35_f.png",
+                    "gatyaitemD_36_f.png", "gatyaitemD_37_f.png", "gatyaitemD_38_f.png",
+                    "gatyaitemD_39_f.png", "gatyaitemD_40_f.png", "gatyaitemD_41_f.png",
+                    "gatyaitemD_42_f.png", "gatyaitemD_43_f.png", "gatyaitemD_44_f.png",
+                    "gatyaitemD_160_f.png", "gatyaitemD_161_f.png", "gatyaitemD_164_f.png",
+                    "gatyaitemD_167_f.png", "gatyaitemD_168_f.png", "gatyaitemD_169_f.png",
+                    "gatyaitemD_170_f.png", "gatyaitemD_171_f.png", "xp.png"
                 )
 
                 StaticStore.fruit = Array(names.size) {i ->
