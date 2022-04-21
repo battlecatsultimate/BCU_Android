@@ -154,7 +154,7 @@ object Interpret : Data() {
 
                         val inds = atkMap[ans] ?: ArrayList()
 
-                        inds.add(k)
+                        inds.add(k + 1)
 
                         atkMap[ans] = inds
                     }
