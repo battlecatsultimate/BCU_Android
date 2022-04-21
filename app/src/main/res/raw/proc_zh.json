@@ -774,106 +774,6 @@
             }
         }
     },
-    "DEMONSHIELD" : {
-        "abbr_name" : "d.shield",
-        "full_name" : "Demon Shield",
-        "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
-        "format" : "Demon Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
-        "class" : {
-            "hp" : {
-                "name" : "health",
-                "tooltip" : "Health of shield"
-            },
-            "regen" : {
-                "name" : "regeneration",
-                "tooltip" : "Percentage of shield hp which will be regenerated when hitbacked"
-            }
-        }
-    },
-    "SHIELDBREAK" : {
-        "abbr_name" : "shield breaker",
-        "full_name" : "Shield Breaker",
-        "tooltip" : "Directly breaks demon shield. Be aware that this doesn't prevent shield from regenerated when hitbacked.",
-        "format" : "(prob)% chance to break demon shield",
-        "class" : {
-            "prob" : {
-                "name" : "chance",
-                "tooltip" : null
-            }
-        }
-    },
-    "COUNTER" : {
-        "abbr_name": "Counter",
-        "full_name": "Counter Attack",
-        "tooltip": "Deal damage back when attacked.",
-        "format": ["(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back.",
-            "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks.}] This counterattack will ",
-            "[(type.procType<2|type.procType==3){[(type.procType==0){not }]have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. ",
-            "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
-            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
-        "class": {
-            "prob": {
-                "name": "chance",
-                "tooltip": null
-            },
-            "damage": {
-                "name": "Damage%",
-                "tooltip": "The percentage of damage to reflect when getting hit."
-            },
-            "minRange": {
-                "name": "Blindspot",
-                "tooltip": "The counter won't hit anything standing below this number. Leave this and Max Range in 0 to use the unit's normal range."
-            },
-            "maxRange": {
-                "name": "Max Range",
-                "tooltip": "The counter will hit anything standing below this number. Leave this and Blindspot in 0 to use the unit's normal range."
-            },
-            "type.procType": {
-                "name": "Proc Type",
-                "tooltip": "The parameter here affects how attack procs are handled. 0 = Removes all procs. 1 = Reflects all procs back to the attacker. 2 = Replaces all the attack's procs with this unit's procs. 3 = Uses both this entity and the attacker's procs. Useless if there's a hit registered as counter"
-            },
-            "type.counterWave": {
-                "name": "Counter Waves",
-                "tooltip": "Toggle response when hit with a Wave or Surge. 0 = Do Nothing. 1 = Counter. 2 = Reflect."
-            },
-            "type.useOwnDamage": {
-                "name": "Use Own Damage",
-                "tooltip": "Use this unit's damage for counters instead of received damage."
-            },
-            "type.outRange": {
-                "name": "Ignore Distance",
-                "tooltip": "Toggle this on and the unit will counter regardless of how far away the attacker is."
-            },
-            "type.areaAttack": {
-                "name": "Area Attack",
-                "tooltip": "Toggle this on and the counter will target all units in the counter's range. If left off, only the attacker will receive damage."
-            }
-        }
-    },
-    "DEATHSURGE": {
-        "abbr_name": "D.Surge",
-        "full_name": "Death Surge",
-        "tooltip": null,
-        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) when killed (_left)Created within (dis_0) ~ (dis_1) range(_right)",
-        "class": {
-            "prob": {
-                "name": "chance",
-                "tooltip": null
-            },
-            "dis_0": {
-                "name": "point near",
-                "tooltip": null
-            },
-            "dis_1": {
-                "name": "point far",
-                "tooltip": null
-            },
-            "time": {
-                "name": "duration",
-                "tooltip": null
-            }
-        }
-    },
     "IMUSPEED": {
         "abbr_name": "Imu.Haste",
         "full_name": "Immune/Resistant to Haste",
@@ -980,6 +880,174 @@
             "timeout" : {
                 "name" : "Timeout",
                 "tooltip" : "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
+            }
+        }
+    },
+    "DEMONSHIELD" : {
+        "abbr_name" : "D.Shield",
+        "full_name" : "Aku Shield",
+        "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
+        "format" : "Aku Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
+        "class" : {
+            "hp" : {
+                "name" : "health",
+                "tooltip" : "Health of the shield"
+            },
+            "regen" : {
+                "name" : "regen",
+                "tooltip" : "Percentage of the base HP it regenerates upon HB"
+            }
+        }
+    },
+    "SHIELDBREAK" : {
+        "abbr_name": "Shield Pierce",
+        "full_name": "Shield Piercer",
+        "tooltip": "Directly breaks Aku shield. Be aware that this doesn't prevent shield from regenerating when hitbacked.",
+        "format": "(prob)% chance to break Aku shield",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            }
+        }
+    },
+    "COUNTER" : {
+        "abbr_name": "Counter",
+        "full_name": "Counter Attack",
+        "tooltip": "Deal damage back when attacked.",
+        "format": ["(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back. ",
+            "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks. }][(type.procType!=0){This counterattack will ",
+            "[(type.procType==1|type.procType==3){have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. }]",
+            "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
+            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "damage": {
+                "name": "Damage%",
+                "tooltip": "The percentage of damage to reflect when getting hit."
+            },
+            "minRange": {
+                "name": "Blindspot",
+                "tooltip": "The counter won't hit anything standing below this number. Leave this and Max Range in 0 to use the unit's normal range."
+            },
+            "maxRange": {
+                "name": "Max Range",
+                "tooltip": "The counter will hit anything standing below this number. Leave this and Blindspot in 0 to use the unit's normal range."
+            },
+            "type.procType": {
+                "name": "Proc Type",
+                "tooltip": "The parameter here affects how attack procs are handled. 0 = Removes all procs. 1 = Reflects all procs back to the attacker. 2 = Replaces all the attack's procs with this unit's procs. 3 = Uses both this entity and the attacker's procs. Useless if there's a hit registered as counter"
+            },
+            "type.counterWave": {
+                "name": "Counter Waves",
+                "tooltip": "Toggle response when hit with a Wave or Surge. 0 = Do Nothing. 1 = Counter. 2 = Reflect."
+            },
+            "type.useOwnDamage": {
+                "name": "Use Own Damage",
+                "tooltip": "Use this unit's damage for counters instead of received damage."
+            },
+            "type.outRange": {
+                "name": "Ignore Distance",
+                "tooltip": "Toggle this on and the unit will counter regardless of how far away the attacker is."
+            },
+            "type.areaAttack": {
+                "name": "Area Attack",
+                "tooltip": "Toggle this on and the counter will target all units in the counter's range. If left off, only the attacker will receive damage."
+            }
+        }
+    },
+    "DEATHSURGE": {
+        "abbr_name": "D.Surge",
+        "full_name": "Death Surge",
+        "tooltip": null,
+        "format": "(prob)% chance to make a surge attack for (_dispTime(time)) when killed (_left)Created within (dis_0) ~ (dis_1) range(_right)",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": "point near",
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": "point far",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            }
+        }
+    },
+    "IMUCANNON": {
+        "abbr_name": "Imu.Cannon",
+        "full_name": "Cannon Immunity",
+        "tooltip": null,
+        "format": ["[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to ",
+            "[(type!=127){[(type&1>0){regular cannon waves[(type>2){, }]}",
+            "(type&2>0){slow beam[(type>4){, }]}",
+            "(type&4>0){thunderbolt[(type>8){, }]}",
+            "(type&8>0){waterblast[(type>16){, }]}",
+            "(type&16>0){holy blast[(type>32){, }]}",
+            "(type&32>0){breakerblast[(type>64){, and}]}",
+            "(type&64>0){curseblast}]}(type==127){cannon attacks}]",
+            "[(mult!=100){ (_left)[(mult>0){Reduces}(mult<0){Increases}] damage taken and procs by (_abs(mult))%(_right)}]"],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            },
+            "type": {
+                "name": "type",
+                "tooltip": "+1 for regular cannon immunity, +2 for slow beam immunity, +4 for thunderbolt immunity, +8 for waterblast immunity, +16 for holy blast immunity, +32 for breakerblast immunity, +64 for curseblast immunity"
+            }
+        }
+    },
+    "BOUNTY": {
+        "abbr_name": "2x Money",
+        "full_name": "Money Multiplier",
+        "tooltip": null,
+        "format": "[(mult>0){Extra Money}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "ATKBASE": {
+        "abbr_name": "Vs. Base",
+        "full_name": "Base Destroyer",
+        "tooltip": null,
+        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": null
+            }
+        }
+    },
+    "BSTHUNT": {
+        "abbr_name": "BST Kill",
+        "full_name": "Beast Hunter",
+        "tooltip": null,
+        "format": "Super Beast Hunter (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "class": {
+            "type.active": {
+                "name": "Stronger Vs. Beast",
+                "tooltip": null
+            },
+            "prob": {
+                "name": "dodge chance",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
             }
         }
     }

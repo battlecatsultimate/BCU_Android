@@ -1211,7 +1211,7 @@
         "abbr_name": "BST Kill",
         "full_name": "Beast Hunter",
         "tooltip": null,
-        "format": "Super Beast Hunter (_left)Deals 2.5x damage to Beasts and only takes 0.3x damage from Beasts[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "format": "Super Beast Hunter (_left)Deals 2.5x damage to Beasts and only takes 0.6x damage from Beasts[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
         "class": {
             "type.active": {
                 "name": "Stronger Vs. Beast",
