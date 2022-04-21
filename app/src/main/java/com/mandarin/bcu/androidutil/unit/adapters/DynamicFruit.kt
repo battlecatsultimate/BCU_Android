@@ -76,9 +76,11 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
                 fruits[i]!!.setImageBitmap(StaticStore.empty(activity, 48f, 48f))
             }
 
-            fruits[i]!!.setOnLongClickListener {
-                StaticStore.showShortMessage(activity, activity.getString(cftooltip[ids.indexOf(evo[i + 1][0])]))
-                true
+            if(evo[i + 1][0] != 0) {
+                fruits[i]!!.setOnLongClickListener {
+                    StaticStore.showShortMessage(activity, activity.getString(cftooltip[ids.indexOf(evo[i + 1][0])]))
+                    true
+                }
             }
 
             if (exist[i])
