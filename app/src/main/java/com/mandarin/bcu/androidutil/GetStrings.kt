@@ -80,11 +80,12 @@ class GetStrings(private val c: Context) {
                 R.string.sch_abi_surge, //56: Surge Attack,
                 R.string.sch_de, //57: Aku
                 R.string.sch_abi_shb, //58: Shield breaker
-                R.string.sch_abi_ck //59: Corpse killer
+                R.string.sch_abi_ck, //59: Corpse killer
+                R.string.sch_abi_cu //60: Curse
         )
         private lateinit var talTool: Array<String>
-        private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA")
-        val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027")
+        private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA", "Q")
+        val mapcodes = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031")
         private val allColor: String
         private val allTrait: String
 

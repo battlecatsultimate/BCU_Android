@@ -605,9 +605,10 @@
     <string name="stage_challenge">Challenge Stages</string>
     <string name="stage_uncanny">Uncanny Legends</string>
     <string name="stage_night">Night Stages</string>
-    <string name="stage_baron">Baron Stages</string>
+    <string name="stage_baron">Gauntlet Stages</string>
     <string name="stage_enigma">Enigma Stages</string>
-    <string name="stage_CA">Collaboration Baron Stages</string>
+    <string name="stage_CA">Collaboration Gauntlet Stages</string>
+    <string name="stage_Q">Beast Quest Stages</string>
     <string name="stg_enem_num">"_ "</string>
     <string name="main_pack_castle">"Extracting Castle… : "</string>
     <string name="pack_conf">Pack Conflicts</string>

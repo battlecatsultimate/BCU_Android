@@ -609,6 +609,7 @@
     <string name="stage_baron">강습 스테이지</string>
     <string name="stage_enigma">발굴 스테이지</string>
     <string name="stage_CA">콜라보레이션 강습 스테이지</string>
+    <string name="stage_Q">Beast Quest Stages</string>
     <string name="stg_enem_num">적 _ 종류</string>
     <string name="main_pack_castle">"팩 성 추출중… : "</string>
     <string name="pack_conf">팩 충돌</string>

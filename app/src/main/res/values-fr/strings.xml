@@ -608,6 +608,7 @@
     <string name="stage_baron">L\'Attaque du Baron-Phoque</string>
     <string name="stage_enigma">Étages D\'Énigmes</string>
     <string name="stage_CA">Barons des Collaborations</string>
+    <string name="stage_Q">Beast Quest Stages</string>
     <string name="stg_enem_num">"_ "</string>
     <string name="main_pack_castle">"Extraction des Bases Adveraires En Cours : "</string>
     <string name="pack_conf">Conflit des Paquets</string>
