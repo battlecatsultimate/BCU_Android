@@ -911,4 +911,5 @@
     <string name="reset">Reset</string>
     <string name="change">Change</string>
     <string name="config_viewcol">Viewer Background Color (WIP)</string>
+    <string name="sch_bst">Beast</string>
 </resources>

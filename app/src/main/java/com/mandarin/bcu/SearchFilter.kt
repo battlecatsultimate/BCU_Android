@@ -52,8 +52,8 @@ class SearchFilter : AppCompatActivity() {
             intArrayOf(1, Data.P_LETHAL), intArrayOf(1, Data.P_ATKBASE), intArrayOf(1, Data.P_CRIT),
             intArrayOf(0, Data.AB_ZKILL), intArrayOf(0, Data.AB_CKILL), intArrayOf(1, Data.P_BREAK), intArrayOf(1, Data.P_SHIELDBREAK), intArrayOf(1, Data.P_SATK),
             intArrayOf(1, Data.P_BOUNTY), intArrayOf(0, Data.AB_METALIC), intArrayOf(1, Data.P_MINIWAVE), intArrayOf(1, Data.P_WAVE),
-            intArrayOf(1, Data.P_VOLC), intArrayOf(0, Data.AB_WAVES), intArrayOf(0, Data.AB_BAKILL), intArrayOf(1, Data.P_IMUWEAK), intArrayOf(1, Data.P_IMUSTOP),
-            intArrayOf(1, Data.P_IMUSLOW), intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_IMUVOLC),
+            intArrayOf(1, Data.P_VOLC), intArrayOf(0, Data.AB_WAVES), intArrayOf(0, Data.AB_BAKILL), intArrayOf(1, Data.P_BSTHUNT), intArrayOf(1, Data.P_IMUWEAK),
+            intArrayOf(1, Data.P_IMUSTOP), intArrayOf(1, Data.P_IMUSLOW), intArrayOf(1, Data.P_IMUKB), intArrayOf(1, Data.P_IMUWAVE), intArrayOf(1, Data.P_IMUVOLC),
             intArrayOf(1, Data.P_IMUWARP), intArrayOf(1, Data.P_IMUCURSE), intArrayOf(1, Data.P_IMUPOIATK),
             intArrayOf(0, Data.AB_WKILL), intArrayOf(0, Data.AB_EKILL), intArrayOf(1, Data.P_POIATK), intArrayOf(1, Data.P_BARRIER), intArrayOf(1, Data.P_DEMONSHIELD), intArrayOf(1, Data.P_DEATHSURGE),
             intArrayOf(0, Data.AB_GLASS), intArrayOf(1, Data.P_BURROW), intArrayOf(1, Data.P_REVIVE), intArrayOf(0, Data.AB_GHOST),
@@ -66,8 +66,8 @@ class SearchFilter : AppCompatActivity() {
     private val rarities = arrayOfNulls<CheckBox>(rareid.size)
     private val attacks = arrayOfNulls<CheckBox>(atkid.size)
     private val atkdraw = intArrayOf(212, 112)
-    private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 260, 300, 264, 296, 229, 205, 209, 293, 208, 239, 218, 297, 213, 214, 215, 216, 210, 243, 262, 116, 237, 258, 110, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX")
+    private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 260, 300, 264, 296, 229, 205, 209, 293, 208, 239, 218, 297, 302, 213, 214, 215, 216, 210, 243, 262, 116, 237, 258, 110, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+    private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX")
     private lateinit var abilAdapter: SearchAbilityAdapter
     private lateinit var traitAdapter: SearchTraitAdapter
 

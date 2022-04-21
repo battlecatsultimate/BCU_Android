@@ -912,4 +912,5 @@
     <string name="reset">초기화</string>
     <string name="change">변경</string>
     <string name="config_viewcol">뷰어 배경 색 (작업 중)</string>
+    <string name="sch_bst">Beast</string>
 </resources>
