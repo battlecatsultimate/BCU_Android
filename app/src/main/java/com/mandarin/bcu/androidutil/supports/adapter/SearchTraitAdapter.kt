@@ -20,8 +20,8 @@ import kotlin.math.ceil
 
 class SearchTraitAdapter(private val context: Context, private val tool: Array<String>, private val colors: Array<Identifier<Trait>>) : RecyclerView.Adapter<SearchTraitAdapter.ViewHolder>() {
     companion object {
-        private val BCTrait = intArrayOf(77, 78, 79, 80, 81, 82, 83, 85, 84, 86, -1, -1, -1, -1)
-        private val BCTraitFile = arrayOf("", "", "", "", "", "", "", "", "", "", "Eva", "Witch", "Baron", "Base")
+        private val BCTrait = intArrayOf(77, 78, 79, 80, 81, 82, 83, 85, 84, 86, -1, -1, -1, -1, -1)
+        private val BCTraitFile = arrayOf("", "", "", "", "", "", "", "", "", "", "Eva", "Witch", "Baron", "Beast", "Base")
     }
 
     private val up = ArrayList<Int>()
