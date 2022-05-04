@@ -870,6 +870,10 @@ object StaticStore {
         return getExternalPath(c) + "backups/"
     }
 
+    fun getExternalFont(c: Context?) : String {
+        return getExternalPath(c) + "fonts/"
+    }
+
     fun checkFolders(vararg pathes: String) {
         for (path in pathes) {
             val f = File(path)

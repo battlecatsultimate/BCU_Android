@@ -245,11 +245,11 @@
             "type.range_type": {
                 "name": "tipo de alcance",
                 "tooltip": [
-                    "Aplicable solo cuando revivir a otros esté activado",
+                    "Aplicable solo cuando revivir a otros esté activado. ",
                     "0 para ser efectivo en el alcance establecido en estado normal. ",
                     "1 para ser efectivo en el alcance establecido cuando esté presente en la fase. ",
                     "2 para ser efectivo para aliados una vez pasado el alcance siempre y cuando esté en la fase. ",
-                    "3 para ser efectivo para aliados una vez pasado el alcance permanentemente"
+                    "3 para ser efectivo para aliados una vez pasado el alcance permanentemente."
                 ]
             },
             "type.imu_zkill": {
@@ -485,8 +485,8 @@
         "tooltip": null,
         "format": [
             "Probabilidad del (prob)% de invocar un (_entity(id)) con una fuerza de [(!type.fix_buff){(_summonMagnification(mult))}(type.fix_buff){[(_isEnemy){(mult)%}(!_isEnemy){Nv(mult)}]}] tras (_dispTime(time)), ",
-            "uno invocado a un alcance de (dis) alejado de ",
-            "[(type.on_kill|type.on_hit){cada objetivo}",
+            "uno invocado a un alcance de (dis) alejado de",
+            "[(type.on_kill|type.on_hit){ cada objetivo}",
             "(!type.on_hit&!type.on_kill){l invocador}] ",
             "[(type.on_hit){golpeado}",
             "(type.on_kill&!type.on_hit){eliminado}",
@@ -638,6 +638,10 @@
                 "name": "ID fondo",
                 "tooltip": null
             },
+            "mus": {
+                "name": "ID Música",
+                "tooltip": null
+            },
             "type.kill": {
                 "name": "eliminar",
                 "tooltip": "Eliminar a todas las entidades de la fase"
@@ -651,7 +655,7 @@
         "format": [
             "Probabilidad del (prob)% de [(type.damage_type==0){quemar}(type.damage_type==1){envenenar}",
             "(type.damage_type==2){hacer sangrar}(type.damage_type==3){corroer}] al objetivo por (_dispTime(time)), ",
-            "realizando [(type.damage_type==0){un daño de (damage)}",
+            "realizando [(type.damage_type==0){un daño de (damage) cada }",
             "(type.damage_type>0){un daño igual al (damage)% de la salud ",
             "[(type.damage_type==1){total}(type.damage_type==2){actual}(type.damage_type==3){perdida}]",
             " cada }](_dispTime(itv)).",
@@ -668,7 +672,7 @@
             },
             "damage": {
                 "name": "daño",
-                "tooltip": "si es porcentual o no depende del tipo de daño"
+                "tooltip": "Si es porcentual o no depende del tipo de daño"
             },
             "itv": {
                 "name": "intervalo",
@@ -1039,7 +1043,7 @@
         "format" : ["Barrera (_left)La barrera tiene [(type.magnif){(_shield(health))}(!type.magnif){(health)}] HP",
             "[(regentime>0){, se regenera (_dispTime(regentime)) después de ser quebrada}]",
             "[(timeout>0){, la barrera se rompe después de (_dispTime(timeout))}](_right)"
-            ],
+        ],
         "class" : {
             "health" : {
                 "name" : "Salud",
@@ -1051,7 +1055,7 @@
             },
             "timeout" : {
                 "name" : "Límite",
-                "tooltip" : "La barrera de la entidad se romperá después de que transcurra un período de tiempo. Fija a 0 para descativar esta habilidad."
+                "tooltip" : "La barrera de la entidad se romperá después de que transcurra un período de tiempo. Fija a 0 para desactivar esta habilidad."
             },
             "type.magnif" : {
                 "name" : "Usar Fuerza",
@@ -1092,10 +1096,10 @@
         "full_name": "Contraataque",
         "tooltip": "Inflige daño tras ser atacado.",
         "format": ["Probabilidad del (prob)% de contraatacar, infligiendo un (damage)% [(!type.useOwnDamage){del daño recibido de un ataque. }(type.useOwnDamage){del ataque de esta entidad. }]",
-                    "[(type.counterWave!=0){ Esta entidad también [(type.counterWave==1){contraatacará}(type.counterWave==2){reflejará}] oleadas/réplicas. }][(type.procType!=0){Este contraataque ",
-                    "[(type.procType==1|type.procType==3){tendrá}(type.procType==2){reemplazará}] las habilidades del ataque original[(type.procType==2){ con las habilidades de esta entidad}(type.procType==3){ y las habilidades de esta entidad}]. }]",
-                    "El contraataque golpeará a [(type.areaAttack){ todos los enemigos}(!type.areaAttack){ solo el atacante}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ si se encuentran}]",
-                    "[(minRange!=0|maxRange!=0){ de (minRange) a (maxRange) unidades de esta entidad}(minRange==0&maxRange==0){ en el alcance de esta entidad}]}]."],
+            "[(type.counterWave!=0){ Esta entidad también [(type.counterWave==1){contraatacará}(type.counterWave==2){reflejará}] oleadas/réplicas. }][(type.procType!=0){Este contraataque ",
+            "[(type.procType==1|type.procType==3){tendrá}(type.procType==2){reemplazará}] las habilidades del ataque original[(type.procType==2){ con las habilidades de esta entidad}(type.procType==3){ y las habilidades de esta entidad}]. }]",
+            "El contraataque golpeará a [(type.areaAttack){ todos los enemigos}(!type.areaAttack){ solo el atacante}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ si se encuentran}]",
+            "[(minRange!=0|maxRange!=0){ de (minRange) a (maxRange) unidades de esta entidad}(minRange==0&maxRange==0){ en el alcance de esta entidad}]}]."],
         "class": {
             "prob": {
                 "name": "probabilidad",
@@ -1169,9 +1173,9 @@
             "(type&4>0){ráfagas del cañón inmovilizador[(type>8){, }]}",
             "(type&8>0){ráfagas de la chorrimanguera[(type>16){, }]}",
             "(type&16>0){oleadas del cañón ráfaga[(type>32){, }]}",
-            "(type&32>0){ráfagas del cañón rompebarreras[(type>64){, y}]}",
-            "(type&64>0){ráfagas del cañón maldecidor}]}(type==127){.}]",
-            "[(mult!=100){ (_left)[(mult>0){Reduce}(mult<0){Aumenta}] el daño recibido y los efectos por un (_abs(mult))%(_right)}]"],
+            "(type&32>0){ráfagas del cañón rompebarreras[(type>64){, y }]}",
+            "(type&64>0){ráfagas del cañón maldecidor}]}(type==127){oleadas de cualquier cañón}]",
+            "[(mult!=100){ (_left)[(mult>0){Reduce}(mult<0){Aumenta}] el daño recibido y los efectos un (_abs(mult))%(_right)}]"],
         "class": {
             "mult": {
                 "name": "porcentaje",
@@ -1184,45 +1188,45 @@
         }
     },
     "BOUNTY": {
-        "abbr_name": "2x Money",
-        "full_name": "Money Multiplier",
+        "abbr_name": "x2 Dinero",
+        "full_name": "Multiplicador de Dinero",
         "tooltip": null,
-        "format": "[(mult>0){Extra Money}(mult<0){Theft}] (_left)(_abs(mult))% [(mult>0){more}(mult<0){less}] money received upon defeating enemies(_right)",
+        "format": "[(mult>0){Dinero Extra}(mult<0){Pérdida}] (_left)Recibe un (_abs(mult))% [(mult>0){más}(mult<0){menos}] de dinero tras derrotar enemigos(_right)",
         "class": {
             "mult": {
-                "name": "percent",
+                "name": "porcentaje",
                 "tooltip": null
             }
         }
     },
     "ATKBASE": {
         "abbr_name": "Vs. Base",
-        "full_name": "Base Destroyer",
+        "full_name": "Destructor de Bases",
         "tooltip": null,
-        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "format": "[(mult>0){Eficaz en la destrucción de castillos}(mult<0){Ineficaz en la destrucción de castillos}] (_left)Inflige un (_abs(mult))% [(mult>0){más}(mult<0){menos}] de daño al castillo enemigo(_right)",
         "class": {
             "mult": {
-                "name": "percent",
+                "name": "porcentaje",
                 "tooltip": null
             }
         }
     },
     "BSTHUNT": {
-        "abbr_name": "BST Kill",
-        "full_name": "Beast Hunter",
+        "abbr_name": "Mata BST",
+        "full_name": "Cazador de Bestias",
         "tooltip": null,
-        "format": "Super Beast Hunter (_left)Deals 2.5x damage to Beasts and only takes 0.6x damage from Beasts[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "format": "Cazador de Bestias (_left)Inflige 2.5x de daño[(prob>0){, }(prob==0){ y }]sólo recibe 0.6x de daño[(prob>0){, y una probabilidad del (prob)% de evadir sus ataques por (_dispTime(time))}](_right)",
         "class": {
             "type.active": {
-                "name": "Stronger Vs. Beast",
+                "name": "Mayor fuerza contra Bestias",
                 "tooltip": null
             },
             "prob": {
-                "name": "dodge chance",
+                "name": "prob. de evasión",
                 "tooltip": null
             },
             "time": {
-                "name": "duration",
+                "name": "duración",
                 "tooltip": null
             }
         }

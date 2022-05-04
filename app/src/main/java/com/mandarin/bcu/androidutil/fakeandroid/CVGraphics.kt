@@ -69,6 +69,10 @@ class CVGraphics : FakeGraphics {
         this.c = c
     }
 
+    fun getCanvas() : Canvas {
+        return c
+    }
+
     override fun drawImage(bimg: FakeImage, x: Double, y: Double) {
         val b = bimg.bimg() as Bitmap
         c.drawBitmap(b, x.toFloat(), y.toFloat(), bp)

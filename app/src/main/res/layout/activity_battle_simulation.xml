@@ -87,6 +87,7 @@
         android:clickable="true"
         android:contentDescription="@null"
         android:focusable="true"
+        android:src="@drawable/battlepause"
         android:transitionName="Battle"
         app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
@@ -94,8 +95,6 @@
         app:fabSize="mini"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_pause_black_24dp"
-        app:tint="@color/iconPrimaryN"
         tools:ignore="DuplicateClickableBoundsCheck,ImageContrastCheck,ImageContrastCheck" />
 
 
