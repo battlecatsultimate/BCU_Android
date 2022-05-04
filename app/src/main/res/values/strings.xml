@@ -919,4 +919,6 @@
     <string name="fruit22">Green Beast Stone</string>
     <string name="fruit23">Yellow Beast Stone</string>
     <string name="sch_abi_bh">Beast Hunter</string>
+    <string name="main_file_font">Font Update Found</string>
+    <string name="down_state_font">"Downloading Font… : "</string>
 </resources>

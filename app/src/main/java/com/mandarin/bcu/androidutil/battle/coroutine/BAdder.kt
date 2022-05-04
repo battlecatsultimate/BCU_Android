@@ -33,6 +33,7 @@ import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics.Companion.clear
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
 import com.mandarin.bcu.util.page.BBCtrl
 import common.CommonStatic
 import common.battle.BasisSet
@@ -42,6 +43,7 @@ import common.io.json.JsonDecoder
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.system.P
+import common.util.lang.MultiLangCont
 import common.util.stage.Stage
 import java.lang.ref.WeakReference
 import java.util.*
@@ -104,6 +106,22 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 val r = Random(System.currentTimeMillis())
 
+                var stgName = MultiLangCont.get(stg)
+                var locale = MultiLangCont.getGrabbedLocale(stg)
+
+                if(stgName == null || stgName.isBlank()) {
+                    stgName = stg.names.toString()
+                    locale = stg.names.grabbedLocale
+                }
+
+                if(stgName.isBlank())
+                    stgName = ""
+
+                val fontMod = when(locale) {
+                    0 -> StageBitmapGenerator.FONTMODE.EN
+                    else -> StageBitmapGenerator.FONTMODE.GLOBAL
+                }
+
                 JsonDecoder.inject(JsonEncoder.encode(BasisSet.current().t()), Treasure::class.java, BasisSet.current().sele.t())
 
                 val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current().sele, intArrayOf(item), r.nextLong())
@@ -112,7 +130,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 val axis = shared.getBoolean("Axis", true)
 
-                val view = BattleView(activity, ctrl, 1, axis,activity, getCutoutWidth(activity))
+                val view = BattleView(activity, ctrl, 1, axis,activity, getCutoutWidth(activity), stgName, fontMod)
 
                 view.painter.cutout = getCutoutWidth(activity)
 

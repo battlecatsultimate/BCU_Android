@@ -920,4 +920,6 @@
     <string name="fruit22">초록 수석</string>
     <string name="fruit23">노랑 수석</string>
     <string name="sch_abi_bh">초수 헌터</string>
+    <string name="down_state_font">"폰트 다운로드중… : "</string>
+    <string name="main_file_font">폰트 업데이트 발견</string>
 </resources>

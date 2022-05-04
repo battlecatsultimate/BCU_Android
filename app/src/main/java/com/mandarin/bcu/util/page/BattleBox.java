@@ -110,6 +110,8 @@ public interface BattleBox {
         private double groundHeight = -1;
 
         public int dpi = -1;
+        public int stmImageOffset = -1;
+        public int stmImageYOffset = 0;
         public double cutout = 0;
 
         private final BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -121,6 +123,8 @@ public interface BattleBox {
 
         public double preSiz = 1.0;
         public int prePos = 0;
+
+        public FakeImage stageImage = null;
 
         public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
             page = bip;
@@ -196,6 +200,9 @@ public interface BattleBox {
             if(bf.sb.st.timeLimit != 0) {
                 drawTime(g);
             }
+
+            if(stageImage != null)
+                g.drawImage(stageImage, stmImageOffset, stmImageYOffset);
 
             sb = null;
         }

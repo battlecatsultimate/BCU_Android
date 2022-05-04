@@ -919,4 +919,6 @@
     <string name="fruit22">翠獣石</string>
     <string name="fruit23">黄獣石</string>
     <string name="sch_abi_bh">超獣特効</string>
+    <string name="down_state_font">"Downloading Font… : "</string>
+    <string name="main_file_font">Font Update Found</string>
 </resources>

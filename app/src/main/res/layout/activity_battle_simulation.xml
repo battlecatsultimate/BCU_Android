@@ -40,62 +40,70 @@
         app:layout_constraintStart_toStartOf="@+id/prog"
         app:layout_constraintTop_toBottomOf="@+id/prog" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/battleslow"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorAccent"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_fast_rewind_black_24dp"
-        app:backgroundTint="@color/colorAccent"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
-        app:fabSize="mini"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/iconPrimaryN"
-        android:contentDescription="@null" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/battlefast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:backgroundTint="@color/colorAccent"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_fast_forward_black_24dp"
-        app:backgroundTint="@color/colorAccent"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
-        app:fabSize="mini"
-        app:layout_constraintStart_toEndOf="@+id/battleslow"
-        app:layout_constraintTop_toTopOf="@+id/battleslow"
-        app:tint="@color/iconPrimaryN"
-        android:contentDescription="@null" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/battleslow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:focusable="true"
+            android:src="@drawable/speeddown"
+            app:backgroundTint="@color/Transparent"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:fabSize="mini"
+            app:maxImageSize="36dp"
+            app:tint="@null"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/battlefast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:focusable="true"
+            android:src="@drawable/speedup"
+            app:backgroundTint="@color/Transparent"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:fabSize="mini"
+            app:maxImageSize="36dp"
+            app:tint="@null"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/battlepause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/Transparent"
         android:clickable="true"
         android:contentDescription="@null"
         android:focusable="true"
         android:src="@drawable/battlepause"
         android:transitionName="Battle"
-        app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="mini"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="DuplicateClickableBoundsCheck,ImageContrastCheck,ImageContrastCheck" />
+        app:maxImageSize="36dp"
+        app:tint="@null"
+        tools:ignore="DuplicateClickableBoundsCheck,ImageContrastCheck,ImageContrastCheck,SpeakableTextPresentCheck" />
 
 
     <RelativeLayout

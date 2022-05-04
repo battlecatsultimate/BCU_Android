@@ -24,6 +24,7 @@ import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
 import com.mandarin.bcu.util.page.BBCtrl
 import com.mandarin.bcu.util.page.BattleBox
 import com.mandarin.bcu.util.page.BattleBox.BBPainter
@@ -44,7 +45,7 @@ import kotlin.math.round
 import kotlin.math.tan
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double) : View(context), BattleBox, OuterBox {
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context), BattleBox, OuterBox {
     @JvmField
     var painter: BBPainter = if (type == 0)
         BBPainter(this, field, this)
@@ -70,7 +71,22 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private var continued = false
 
     init {
+        var default = false
+
+        val stgImage = if(stageName.isBlank())
+            null
+        else {
+            val generator = StageBitmapGenerator(context, fontMode, stageName)
+
+            default = generator.default
+
+            generator.generateTextImage()
+        }
+
+        painter.stageImage = stgImage
         painter.dpi = StaticStore.dptopx(32f, context)
+        painter.stmImageOffset = StaticStore.dptopx(52f, context)
+        painter.stmImageYOffset = StaticStore.dptopx(if(default) 6f else 9f, context)
         CommonStatic.getConfig().ref = axis
         updater = Updater()
 
