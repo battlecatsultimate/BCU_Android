@@ -39,10 +39,7 @@ import common.pack.UserProfile
 import common.system.P
 import common.util.Data
 import common.util.anim.ImgCut
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.round
-import kotlin.math.tan
+import kotlin.math.*
 
 @SuppressLint("ViewConstructor")
 class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context), BattleBox, OuterBox {
@@ -207,7 +204,11 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
     override fun callBack(o: Any) {}
     private inner class Updater : Runnable {
+        var pauseTime = 1000L / 30L
+
         override fun run() {
+            val start = System.currentTimeMillis()
+
             if (!paused)
                 invalidate()
 
@@ -282,7 +283,12 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 checkWin()
                 checkLose()
             }
-            postDelayed(this, 1000L / 30L)
+
+            val end = System.currentTimeMillis()
+
+            pauseTime = min(0, (pauseTime * 0.5 + (1000/30.0 - (end - start)) * 0.5).toLong())
+
+            postDelayed(this, pauseTime)
         }
     }
 
