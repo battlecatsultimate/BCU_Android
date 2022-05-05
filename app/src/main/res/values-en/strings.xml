@@ -597,14 +597,14 @@
     <string name="stage_sol">Story of Legends</string>
     <string name="stage_event">Regular Event Stages</string>
     <string name="stage_collabo">Collaboration Stages</string>
-    <string name="stage_eoc">Empire of Cats</string>
+    <string name="stage_eoc">Story Chapters</string>
     <string name="stage_ex">Extra Stages</string>
     <string name="stage_dojo">Dojo Stages</string>
     <string name="stage_heavenly">Heavenly Tower</string>
     <string name="stage_ranking">Ranking Dojo Stages</string>
     <string name="stage_challenge">Challenge Stages</string>
     <string name="stage_uncanny">Uncanny Legends</string>
-    <string name="stage_night">Night Stages</string>
+    <string name="stage_night">Catamin Stages</string>
     <string name="stage_baron">Gauntlet Stages</string>
     <string name="stage_enigma">Enigma Stages</string>
     <string name="stage_CA">Collaboration Gauntlet Stages</string>
@@ -911,7 +911,7 @@
     <string name="eff_back">Back</string>
     <string name="reset">Reset</string>
     <string name="change">Change</string>
-    <string name="config_viewcol">Viewer Background Color (WIP)</string>
+    <string name="config_viewcol">Viewer Background Color</string>
     <string name="sch_bst">Beast</string>
     <string name="fruit19">Purple Beast Stone</string>
     <string name="fruit20">Red Beast Stone</string>
@@ -919,6 +919,12 @@
     <string name="fruit22">Green Beast Stone</string>
     <string name="fruit23">Yellow Beast Stone</string>
     <string name="sch_abi_bh">Beast Hunter</string>
-    <string name="down_state_font">"Downloading Font… : "</string>
-    <string name="main_file_font">Font Update Found</string>
+    <string name="color_hue">Hue</string>
+    <string name="color_satu">Saturation</string>
+    <string name="color_brigh">Brightness</string>
+    <string name="color_red">Red</string>
+    <string name="color_gre">Green</string>
+    <string name="color_blu">Blue</string>
+    <string name="color_hex">Hex Code</string>
+    <string name="config_currcol">"Current Color : "</string>
 </resources>

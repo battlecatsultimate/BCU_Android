@@ -912,7 +912,7 @@
     <string name="eff_back">밀쳐남</string>
     <string name="reset">초기화</string>
     <string name="change">변경</string>
-    <string name="config_viewcol">뷰어 배경 색 (작업 중)</string>
+    <string name="config_viewcol">뷰어 배경 색</string>
     <string name="sch_bst">초수</string>
     <string name="fruit19">보라 수석</string>
     <string name="fruit20">빨강 수석</string>
@@ -920,6 +920,12 @@
     <string name="fruit22">초록 수석</string>
     <string name="fruit23">노랑 수석</string>
     <string name="sch_abi_bh">초수 헌터</string>
-    <string name="down_state_font">"폰트 다운로드중… : "</string>
-    <string name="main_file_font">폰트 업데이트 발견</string>
+    <string name="color_hue">색조</string>
+    <string name="color_satu">채도</string>
+    <string name="color_brigh">밝기</string>
+    <string name="color_red">빨강</string>
+    <string name="color_gre">초록</string>
+    <string name="color_blu">파랑</string>
+    <string name="color_hex">헥스 코드</string>
+    <string name="config_currcol">"현재 색깔 : "</string>
 </resources>
