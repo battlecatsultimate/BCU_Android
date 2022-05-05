@@ -103,9 +103,9 @@ class StageBitmapGenerator(c: Context, m: FONTMODE, texts: String) {
             FIBM.builder.build(StaticStore.getResizebp(resized, resized.width * ratio * 0.66f, defaultTextHeight))
         } else {
             if(default) {
-                FIBM.builder.build(StaticStore.getResizebp(result, w * ratio * 0.66f, defaultTextHeight))
+                FIBM.builder.build(StaticStore.getResizebp(result, result.width * ratio * 0.66f, defaultTextHeight))
             } else {
-                FIBM.builder.build(StaticStore.getResizebp(result, w * ratio, defaultTextHeight))
+                FIBM.builder.build(StaticStore.getResizebp(result, result.width * ratio, defaultTextHeight))
             }
         }
     }
