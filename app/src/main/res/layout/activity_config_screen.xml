@@ -579,7 +579,7 @@
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintStart_toEndOf="@+id/viewcolreset"
-                app:layout_constraintTop_toBottomOf="@+id/viewercolor" />
+                app:layout_constraintTop_toBottomOf="@+id/viewcolcurr" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewcolreset"
@@ -592,6 +592,25 @@
                 app:layout_constraintBottom_toBottomOf="@+id/viewcolpick"
                 app:layout_constraintStart_toStartOf="@+id/viewercolor"
                 app:layout_constraintTop_toTopOf="@+id/viewcolpick" />
+
+            <TextView
+                android:id="@+id/viewcolcurr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/config_currcol"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="@+id/viewercolor"
+                app:layout_constraintTop_toBottomOf="@+id/viewercolor" />
+
+            <TextView
+                android:id="@+id/viewcurrentcol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/viewcolcurr"
+                app:layout_constraintStart_toEndOf="@+id/viewcolcurr"
+                app:layout_constraintTop_toTopOf="@+id/viewcolcurr" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

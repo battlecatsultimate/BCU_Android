@@ -104,12 +104,17 @@ class AnimationCView : View {
             anim.setTime(StaticStore.frame)
             CommonStatic.getConfig().ref = axis
             range.style = Paint.Style.STROKE
-            if (night) {
-                p.color = Color.argb(255, 54, 54, 54)
-                range.color = Color.GREEN
+            if(CommonStatic.getConfig().viewerColor != -1) {
+                p.color = CommonStatic.getConfig().viewerColor
+                range.color = 0xFFFFFF - CommonStatic.getConfig().viewerColor
             } else {
-                p.color = Color.argb(255, 255, 255, 255)
-                range.color = Color.RED
+                if (night) {
+                    p.color = Color.argb(255, 54, 54, 54)
+                    range.color = Color.GREEN
+                } else {
+                    p.color = Color.argb(255, 255, 255, 255)
+                    range.color = Color.RED
+                }
             }
             p1.isFilterBitmap = true
             p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())

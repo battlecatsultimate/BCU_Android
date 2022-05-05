@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().plus = shared.getBoolean("unlockPlus", true)
         CommonStatic.getConfig().drawBGEffect = shared.getBoolean("bgeff", true)
         CommonStatic.getConfig().buttonDelay = shared.getBoolean("unitDelay", true)
+        CommonStatic.getConfig().viewerColor = shared.getInt("viewerColor", -1)
 
         val result = intent
         var conf = false
@@ -315,9 +316,6 @@ class MainActivity : AppCompatActivity() {
 
                     if(i > 2)
                         index --
-
-                    if(i > 5)
-                        index--
 
                     val card = CardView(this)
 

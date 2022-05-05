@@ -5,7 +5,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.mandarin.bcu.androidutil.StaticStore
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
@@ -27,8 +26,10 @@ class ColorPickerView : View {
         BAR
     }
 
-    private val hsb = floatArrayOf(0f, 1f, 1f)
-    private val rgb = intArrayOf(255, 0, 0)
+    val hsb = floatArrayOf(0f, 1f, 1f)
+    val rgb = intArrayOf(255, 0, 0)
+
+    lateinit var callBack: Runnable
 
     private var colorField = Bitmap.createBitmap(360, 360, Bitmap.Config.ARGB_8888)
     private var colorBar = Bitmap.createBitmap(36, 360, Bitmap.Config.ARGB_8888)
@@ -55,7 +56,6 @@ class ColorPickerView : View {
         setOnTouchListener { _, motionEvent ->
             val w = width
             val h = height
-
 
             val ihw = if(w < h) {
                 (w * 0.9).toInt()
@@ -192,6 +192,41 @@ class ColorPickerView : View {
         }
     }
 
+    fun getColor() : Int {
+        return Color.rgb(rgb[0], rgb[1], rgb[2])
+    }
+
+    fun changeMode(mode: MODE) {
+        this.mode = mode
+
+        updateField()
+        updateBar()
+
+        changeBarPos()
+        changeCirclePos()
+
+        invalidate()
+    }
+
+    fun setHex(hex: Int) {
+        rgb[2] = hex and 0xFF
+        rgb[1] = (hex shr 8) and 0xFF
+        rgb[0] = (hex shr 16) and 0xFF
+
+        Color.colorToHSV(hex, hsb)
+
+        updateField()
+        updateBar()
+
+        changeBarPos()
+        changeCirclePos()
+
+        invalidate()
+
+        if(this::callBack.isInitialized)
+            callBack.run()
+    }
+
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
 
@@ -199,7 +234,6 @@ class ColorPickerView : View {
 
         val w = width
         val h = height
-
 
         val ihw = if(w < h) {
             (w * 0.9).toInt()
@@ -308,6 +342,9 @@ class ColorPickerView : View {
             p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
 
             canvas.drawRect(Rect(iGap + ihw + gap + barH + gap, iGap,iGap + ihw + gap + barH * 2 + gap, iGap * 2), p)
+
+            if(this::callBack.isInitialized && dragMode != DRAGMODE.NONE)
+                callBack.run()
         }
     }
 
@@ -317,17 +354,8 @@ class ColorPickerView : View {
         val hm = MeasureSpec.getMode(heightMeasureSpec)
         val hs = MeasureSpec.getSize(heightMeasureSpec)
 
-        val w = if(StaticStore.isLandscape(context)) {
-            ws * 0.5
-        } else {
-            ws.toDouble()
-        }
-
-        val h = if(StaticStore.isLandscape(context)) {
-            hs.toDouble()
-        } else {
-            hs * 0.75
-        }
+        val w = ws.toDouble()
+        val h = hs.toDouble()
 
         val ihw = if(w < h) {
             w * 0.9
@@ -349,12 +377,12 @@ class ColorPickerView : View {
 
         val barH = ihw / 10.0
 
-        val dw = if(StaticStore.isLandscape(context))
+        val dw = if(w >= h)
             (iGap * 2 + ihw + gap * 2 + barH * 2).toInt()
         else
             (iGap * 2 + ihw).toInt()
 
-        val dh = if(StaticStore.isLandscape(context))
+        val dh = if(w >= h)
             (iGap * 2 + ihw).toInt()
         else
             (iGap * 2 + ihw + gap * 2 + barH * 2).toInt()
@@ -362,7 +390,7 @@ class ColorPickerView : View {
         val fw = when (wm) {
             MeasureSpec.EXACTLY -> ws
             MeasureSpec.AT_MOST -> min(dw, ws)
-            else -> dw
+            else -> min(dh, ws)
         }
 
         val fh = when (hm) {
@@ -389,8 +417,8 @@ class ColorPickerView : View {
                 } else {
                     val hsv = when(mode) {
                         MODE.HUE -> floatArrayOf(hsb[0], x / 360f, (360f - y) / 360f)
-                        MODE.SATURATION -> floatArrayOf(x / 360f, hsb[1], (360f - y) / 360f)
-                        MODE.BRIGHTNESS -> floatArrayOf(x / 360f, (360f - y) / 360f, hsb[2])
+                        MODE.SATURATION -> floatArrayOf(x.toFloat(), hsb[1], (360f - y) / 360f)
+                        MODE.BRIGHTNESS -> floatArrayOf(x.toFloat(), (360f - y) / 360f, hsb[2])
                         else -> break
                     }
 
@@ -415,8 +443,8 @@ class ColorPickerView : View {
             } else {
                 val hsv = when(mode) {
                     MODE.HUE -> floatArrayOf(360f - y, 1f, 1f)
-                    MODE.SATURATION -> floatArrayOf(hsb[0] * 360f, 1f - y / 360f, hsb[2])
-                    MODE.BRIGHTNESS -> floatArrayOf(hsb[0] * 360f, hsb[1], 1f - y / 360f)
+                    MODE.SATURATION -> floatArrayOf(hsb[0], 1f - y / 360f, hsb[2])
+                    MODE.BRIGHTNESS -> floatArrayOf(hsb[0], hsb[1], 1f - y / 360f)
                     else -> break
                 }
 

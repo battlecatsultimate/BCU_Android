@@ -7,11 +7,16 @@ import android.content.Intent
 import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -20,16 +25,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.Revalidater
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.ColorPickerView
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 open class ConfigScreen : AppCompatActivity() {
     companion object {
@@ -38,8 +48,18 @@ open class ConfigScreen : AppCompatActivity() {
 
     private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr, R.string.def_lang_it, R.string.def_lang_es, R.string.def_lang_de)
     private val langCode = arrayOf("","en","zh","ko","ja","ru","fr","it","es","de")
+
+    private val df: DecimalFormat
+
     private var started = false
     private var changed = false
+
+    init {
+        val nf = NumberFormat.getInstance(Locale.US)
+        df = nf as DecimalFormat
+
+        df.applyPattern("#.##")
+    }
 
     @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -554,16 +574,242 @@ open class ConfigScreen : AppCompatActivity() {
 
         unitDelay.isChecked = shared.getBoolean("unitDelay", true)
 
+        val currentColorText = findViewById<TextView>(R.id.viewcurrentcol)
+
+        val viewerColor = shared.getInt("viewerColor", -1)
+
+        currentColorText.text = if(viewerColor == -1)
+            getString(R.string.unit_info_t_none)
+        else
+            toSixHexString(Integer.toHexString(viewerColor and 0xFFFFFF))
+
+        if(viewerColor != -1) {
+            currentColorText.setTextColor(viewerColor)
+        }
+
         val viewColor = findViewById<MaterialButton>(R.id.viewcolpick)
 
         viewColor.setOnClickListener(object : SingleClick() {
+            @SuppressLint("SetTextI18n")
             override fun onSingleClick(v: View?) {
                 if(shared.getBoolean("DEV_MODE", false)) {
+                    var currentColor = shared.getInt("viewerColor", Color.RED)
+
+                    if(currentColor == -1)
+                        currentColor = Color.RED
+
                     StaticStore.fixOrientation(this@ConfigScreen)
 
                     val dialog = Dialog(this@ConfigScreen)
 
                     dialog.setContentView(R.layout.color_picker_popup)
+
+                    val picker = dialog.findViewById<ColorPickerView>(R.id.picker)
+
+                    val confirm = dialog.findViewById<Button>(R.id.colorconf)
+                    val cancel = dialog.findViewById<Button>(R.id.colorcanc)
+
+                    val modeIDs = intArrayOf(
+                        R.id.colorhue, R.id.colorsatu, R.id.colorbrigh,
+                        R.id.colorred, R.id.colorgre, R.id.colorblu
+                    )
+
+                    val textIDs = intArrayOf(
+                        R.id.colorhuet, R.id.colorsatut, R.id.colorbright,
+                        R.id.colorredt, R.id.colorgret, R.id.colorblut
+                    )
+
+                    val modes = Array<RadioButton>(modeIDs.size) {
+                        dialog.findViewById(modeIDs[it])
+                    }
+
+                    val texts = Array<TextInputEditText>(textIDs.size) {
+                        dialog.findViewById(textIDs[it])
+                    }
+
+                    val hex = dialog.findViewById<TextInputEditText>(R.id.colorhext)
+
+                    texts[0].setText(picker.hsb[0].roundToInt().toString())
+                    texts[1].setText((picker.hsb[1] * 100).roundToInt().toString())
+                    texts[2].setText((picker.hsb[2] * 100).roundToInt().toString())
+                    texts[3].setText(picker.rgb[0].toString())
+                    texts[4].setText(picker.rgb[1].toString())
+                    texts[5].setText(picker.rgb[2].toString())
+
+                    hex.setText(toSixHexString(Integer.toHexString(picker.getColor() and 0xFFFFFF)))
+
+                    val modeData = arrayOf(
+                        ColorPickerView.MODE.HUE, ColorPickerView.MODE.SATURATION, ColorPickerView.MODE.BRIGHTNESS,
+                        ColorPickerView.MODE.RED, ColorPickerView.MODE.GREEN, ColorPickerView.MODE.BLUE
+                    )
+
+                    var editing = true
+
+                    for(m in modes.indices) {
+                        modes[m].setOnClickListener {
+                            for(n in modes.indices) {
+                                if(n != m) {
+                                    modes[n].isChecked = false
+                                }
+                            }
+
+                            picker.changeMode(modeData[m])
+                        }
+
+                        texts[m].addTextChangedListener(object: TextWatcher {
+                            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                            override fun afterTextChanged(p0: Editable?) {
+                                if(!editing)
+                                    return
+
+                                val maxValue = when(m) {
+                                    0 -> 360
+                                    1 -> 100
+                                    2 -> 100
+                                    else -> 255
+                                }
+
+                                var number = p0?.toString() ?: "0"
+
+                                if(number.isBlank())
+                                    number = "0"
+
+                                var value = CommonStatic.safeParseInt(number)
+
+                                println(value)
+
+                                if(value > maxValue) {
+                                    value = maxValue
+                                }
+
+                                println(value)
+
+                                when(m) {
+                                    0, 1, 2 -> {
+                                        val fa = when(m) {
+                                            0 -> floatArrayOf(value.toFloat(), picker.hsb[1], picker.hsb[2])
+                                            1 -> floatArrayOf(picker.hsb[0], value / 100f, picker.hsb[2])
+                                            else -> floatArrayOf(picker.hsb[0], picker.hsb[1], value / 100f)
+                                        }
+
+                                        picker.setHex(Color.HSVToColor(fa) and 0xFFFFFF)
+                                    }
+                                    else -> {
+                                        val c = when(m) {
+                                            3 -> Color.rgb(value, picker.rgb[1], picker.rgb[2])
+                                            4 -> Color.rgb(picker.rgb[0], value, picker.rgb[2])
+                                            else -> Color.rgb(picker.rgb[0], picker.rgb[1], value)
+                                        }
+
+                                        picker.setHex(c and 0xFFFFFF)
+                                    }
+                                }
+                            }
+                        })
+
+                        texts[m].setOnEditorActionListener { _, action, _ ->
+                            if(action == EditorInfo.IME_ACTION_DONE) {
+                                val view = dialog.currentFocus
+
+                                if(view != null) {
+                                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+                                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                                }
+
+                                texts[m].postDelayed( {
+                                    texts[m].clearFocus()
+                                }, 10)
+
+                                return@setOnEditorActionListener true
+                            }
+
+                            return@setOnEditorActionListener false
+                        }
+                    }
+
+                    hex.setOnEditorActionListener { _, action, _ ->
+                        if(action == EditorInfo.IME_ACTION_DONE) {
+                            val s = hex.text?.toString() ?: "0"
+
+                            if(s.matches(Regex("-?[0-9a-fA-F]+"))) {
+                                var value = Integer.parseInt(s, 16)
+
+                                if(value > 0xFFFFFF) {
+                                    value = 0xFFFFFF
+                                }
+
+                                picker.setHex(value)
+                            } else {
+                                hex.setText(toSixHexString(Integer.toHexString(picker.getColor() and 0xFFFFFF)))
+                            }
+
+                            val view = dialog.currentFocus
+
+                            if(view != null) {
+                                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+                                imm.hideSoftInputFromWindow(view.windowToken, 0)
+                            }
+
+                            if(hex.hasFocus())
+                                hex.clearFocus()
+
+                            return@setOnEditorActionListener true
+                        }
+
+                        return@setOnEditorActionListener false
+                    }
+
+                    confirm.setOnClickListener {
+                        val editor = shared.edit()
+
+                        editor.putInt("viewerColor", picker.getColor())
+                        editor.apply()
+
+                        CommonStatic.getConfig().viewerColor = picker.getColor()
+
+                        currentColorText.text = toSixHexString(Integer.toHexString(picker.getColor() and 0xFFFFFF))
+                        currentColorText.setTextColor(picker.getColor())
+
+                        dialog.dismiss()
+                    }
+
+                    cancel.setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                    val callback = Runnable {
+                        runOnUiThread {
+                            println("HMM")
+
+                            editing = false
+
+                            texts[0].setText(picker.hsb[0].roundToInt().toString())
+                            texts[1].setText((picker.hsb[1] * 100).roundToInt().toString())
+                            texts[2].setText((picker.hsb[2] * 100).roundToInt().toString())
+                            texts[3].setText(picker.rgb[0].toString())
+                            texts[4].setText(picker.rgb[1].toString())
+                            texts[5].setText(picker.rgb[2].toString())
+
+                            for(m in 0..5) {
+                                if(texts[m].hasFocus())
+                                    texts[m].setSelection(texts[m].text?.toString()?.length ?: 0)
+                            }
+
+                            hex.setText(toSixHexString(Integer.toHexString(picker.getColor() and 0xFFFFFF)))
+
+                            editing = true
+                        }
+                    }
+
+                    picker.callBack = callback
+                    picker.setHex(currentColor)
+
+                    modes[0].isChecked = true
 
                     dialog.show()
 
@@ -575,6 +821,20 @@ open class ConfigScreen : AppCompatActivity() {
                 }
             }
         })
+
+        val viewColorReset = findViewById<Button>(R.id.viewcolreset)
+
+        viewColorReset.setOnClickListener {
+            val editor = shared.edit()
+
+            editor.putInt("viewerColor", -1)
+            editor.apply()
+
+            CommonStatic.getConfig().viewerColor = -1
+
+            currentColorText.text = getString(R.string.unit_info_t_none)
+            currentColorText.setTextColor(StaticStore.getAttributeColor(this@ConfigScreen, R.attr.TextPrimary))
+        }
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {
@@ -632,5 +892,18 @@ open class ConfigScreen : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
+    }
+
+    private fun toSixHexString(hex: String) : String {
+        val builder = StringBuilder()
+
+        val len = 6 - hex.length
+
+        for(n in 0 until len)
+            builder.append("0")
+
+        builder.append(hex)
+
+        return builder.toString().uppercase()
     }
 }

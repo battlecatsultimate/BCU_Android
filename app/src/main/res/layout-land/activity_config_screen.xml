@@ -45,10 +45,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -561,23 +561,33 @@
                 android:id="@+id/viewercolor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@string/config_viewcol"
                 android:textColor="?attr/TextPrimary"
-                app:layout_constraintBottom_toBottomOf="@+id/viewcolpick"
                 app:layout_constraintStart_toStartOf="@+id/configgif"
-                app:layout_constraintTop_toTopOf="@+id/viewcolpick" />
+                app:layout_constraintTop_toBottomOf="@+id/configgifseek" />
+
+            <TextView
+                android:id="@+id/viewcolcurr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/config_currcol"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="@+id/viewercolor"
+                app:layout_constraintTop_toBottomOf="@+id/viewercolor" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewcolpick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:backgroundTint="?attr/ButtonPrimary"
                 android:text="@string/change"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/viewcolcurr"
                 app:layout_constraintEnd_toEndOf="@+id/configgifseek"
-                app:layout_constraintTop_toBottomOf="@+id/configgifseek" />
+                app:layout_constraintTop_toTopOf="@+id/viewercolor" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewcolreset"
@@ -591,6 +601,15 @@
                 app:layout_constraintBottom_toBottomOf="@+id/viewcolpick"
                 app:layout_constraintEnd_toStartOf="@+id/viewcolpick"
                 app:layout_constraintTop_toTopOf="@+id/viewcolpick" />
+
+            <TextView
+                android:id="@+id/viewcurrentcol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/viewcolcurr"
+                app:layout_constraintStart_toEndOf="@+id/viewcolcurr"
+                app:layout_constraintTop_toTopOf="@+id/viewcolcurr" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

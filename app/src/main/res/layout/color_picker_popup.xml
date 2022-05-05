@@ -1,94 +1,478 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/backgroundPrimary">
+    android:background="?attr/backgroundPrimary"
+    android:orientation="vertical"
+    android:theme="?attr/TILtheme">
 
     <com.mandarin.bcu.androidutil.supports.ColorPickerView
         android:id="@+id/picker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/colorcanc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="?attr/ButtonPrimary"
-        android:text="@string/main_file_cancel"
-        android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/colorconf"
-        app:layout_constraintEnd_toStartOf="@+id/colorconf" />
-
-    <Button
-        android:id="@+id/colorconf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="?attr/ButtonPrimary"
-        android:text="@string/main_confirm"
-        android:textAllCaps="false"
-        android:textColor="?attr/TextPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView5" />
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.55" />
 
     <ScrollView
         android:id="@+id/scrollView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/picker">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.35">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
 
-            <RadioGroup
+            <TextView
+                android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/color_hex"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow14" />
+
+            <TableRow
+                android:id="@+id/tableRow11"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="Hue"
-                    android:textColor="?attr/TextPrimary" />
+                    android:id="@+id/colorhue"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="0.33"
+                    android:minHeight="48dp"
+                    android:text="@string/color_hue"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
 
                 <RadioButton
-                    android:id="@+id/radioButton4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Saturation"
-                    android:textColor="?attr/TextPrimary" />
+                    android:id="@+id/colorsatu"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="0.33"
+                    android:minHeight="48dp"
+                    android:text="@string/color_satu"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
 
                 <RadioButton
-                    android:id="@+id/radioButton5"
+                    android:id="@+id/colorbrigh"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="0.34"
+                    android:text="@string/color_brigh"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow12"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/tableRow11"
+                app:layout_constraintStart_toStartOf="@+id/tableRow11"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow11">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:suffixText="°"
+                    app:suffixTextColor="?attr/HintPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/colorhuet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
+                        app:errorEnabled="true"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:errorTextColor="?attr/ErrorPrimary"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:suffixText="%"
+                    app:suffixTextColor="?attr/HintPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/colorsatut"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
+                        app:errorEnabled="true"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:errorTextColor="?attr/ErrorPrimary"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.34"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:suffixText="%"
+                    app:suffixTextColor="?attr/HintPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/colorbright"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
+                        app:errorEnabled="true"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:errorTextColor="?attr/ErrorPrimary"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow13"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow12">
+
+                <RadioButton
+                    android:id="@+id/colorred"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:minHeight="48dp"
+                    android:text="@string/color_red"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/colorgre"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:minHeight="48dp"
+                    android:text="@string/color_gre"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/colorblu"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="0.34"
+                    android:text="@string/color_blu"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow14"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/tableRow11"
+                app:layout_constraintStart_toStartOf="@+id/tableRow11"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow13">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/colorredt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
+                        app:errorEnabled="true"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:errorTextColor="?attr/ErrorPrimary"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/colorgret"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
+                        app:errorEnabled="true"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:errorTextColor="?attr/ErrorPrimary"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.34"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextAppearance="@style/CounterStyle"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/colorblut"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/TextPrimary"
+                        android:foregroundTint="?attr/TextPrimary"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="?attr/TextPrimary"
+                        android:textColorHint="?attr/TextPrimary"
+                        android:textSize="14sp"
+                        app:boxStrokeColor="?attr/colorAccent"
+                        app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                        app:counterOverflowTextColor="?attr/ErrorPrimary"
+                        app:counterTextColor="?attr/TextPrimary"
+                        app:errorEnabled="true"
+                        app:errorIconTint="?attr/ErrorPrimary"
+                        app:errorTextColor="?attr/ErrorPrimary"
+                        app:helperTextTextColor="?attr/TextPrimary"
+                        app:hintTextColor="?attr/TextPrimary"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </TableRow>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="0.33"
+                android:foregroundTint="?attr/TextPrimary"
+                android:textColorHint="?attr/TextPrimary"
+                app:boxStrokeColor="?attr/colorAccent"
+                app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                app:counterOverflowTextColor="?attr/ErrorPrimary"
+                app:counterTextAppearance="@style/CounterStyle"
+                app:counterTextColor="?attr/TextPrimary"
+                app:errorEnabled="true"
+                app:errorIconTint="?attr/ErrorPrimary"
+                app:errorTextColor="?attr/ErrorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/colorhext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="Brightness"
-                    android:textColor="?attr/TextPrimary" />
-            </RadioGroup>
+                    android:backgroundTint="?attr/TextPrimary"
+                    android:foregroundTint="?attr/TextPrimary"
+                    android:imeOptions="actionDone|flagNoExtractUi"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/TextPrimary"
+                    android:textColorHint="?attr/TextPrimary"
+                    android:textSize="14sp"
+                    app:boxStrokeColor="?attr/colorAccent"
+                    app:boxStrokeErrorColor="?attr/ErrorPrimary"
+                    app:counterOverflowTextColor="?attr/ErrorPrimary"
+                    app:counterTextColor="?attr/TextPrimary"
+                    app:errorEnabled="true"
+                    app:errorIconTint="?attr/ErrorPrimary"
+                    app:errorTextColor="?attr/ErrorPrimary"
+                    app:helperTextTextColor="?attr/TextPrimary"
+                    app:hintTextColor="?attr/TextPrimary"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/colorcanc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/ButtonPrimary"
+                android:text="@string/main_file_cancel"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                tools:ignore="ButtonStyle,TouchTargetSizeCheck" />
+
+            <Button
+                android:id="@+id/colorconf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:background="?attr/ButtonPrimary"
+                android:text="@string/main_confirm"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                tools:ignore="ButtonStyle,TouchTargetSizeCheck" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
