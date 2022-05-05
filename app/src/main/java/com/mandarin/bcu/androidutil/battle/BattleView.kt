@@ -286,7 +286,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
             val end = System.currentTimeMillis()
 
-            pauseTime = min(0, (pauseTime * 0.5 + (1000/30.0 - (end - start)) * 0.5).toLong())
+            pauseTime = max(0, (pauseTime * 0.5 + (1000/30.0 - (end - start)) * 0.5).toLong())
 
             postDelayed(this, pauseTime)
         }
