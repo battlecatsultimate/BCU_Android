@@ -97,10 +97,14 @@ class StageBitmapGenerator(c: Context, m: FONTMODE, texts: String) {
             drawText(text, offset, h + offset, fontPaint)
         }
 
-        return if(default && w > 255f * resizer) {
+        return if(w > 255f * resizer) {
             val resized = StaticStore.getResizebp(result, 255f * resizer, h)
 
-            FIBM.builder.build(StaticStore.getResizebp(resized, resized.width * ratio * 0.66f, defaultTextHeight))
+            if(default) {
+                FIBM.builder.build(StaticStore.getResizebp(resized, resized.width * ratio * 0.66f, defaultTextHeight))
+            } else {
+                FIBM.builder.build(StaticStore.getResizebp(resized, resized.width * ratio, defaultTextHeight))
+            }
         } else {
             if(default) {
                 FIBM.builder.build(StaticStore.getResizebp(result, result.width * ratio * 0.66f, defaultTextHeight))
