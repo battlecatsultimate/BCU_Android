@@ -312,7 +312,7 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                                 velocity?.computeCurrentVelocity(1000/30)
 
                                 if(!twoTouched && !vertical && (horizontal || (!battleView.isInSlideRange() && abs(velocity?.xVelocity ?: 0f) > abs(velocity?.yVelocity ?: 0f) && abs(velocity?.xVelocity ?: 0f) > six))) {
-                                    battleView.painter.pos += x2 - preX
+                                    battleView.painter.bf.sb.pos += x2 - preX
                                     horizontal = true
                                 } else {
                                     battleView.checkSlideUpDown()
@@ -839,12 +839,12 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             val firstDistance = realFX - previousX
 
-            cView.painter.siz *= detector.scaleFactor.toDouble()
+            cView.painter.bf.sb.siz *= detector.scaleFactor.toDouble()
             cView.painter.regulate()
 
-            val difference = firstDistance * (cView.painter.siz / previousScale - 1)
+            val difference = firstDistance * (cView.painter.bf.sb.siz / previousScale - 1)
 
-            cView.painter.pos = (previousX - difference).toInt()
+            cView.painter.bf.sb.pos = (previousX - difference).toInt()
 
             if (cView.paused) {
                 cView.invalidate()
@@ -856,8 +856,8 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
         override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
             if(updateScale) {
                 realFX = detector.focusX
-                previousX = cView.painter.pos.toFloat()
-                previousScale = cView.painter.siz.toFloat()
+                previousX = cView.painter.bf.sb.pos.toFloat()
+                previousScale = cView.painter.bf.sb.siz.toFloat()
 
                 updateScale = false
             }

@@ -188,7 +188,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     resetSE()
                 }
 
-                painter.pos += velocity.toInt()
+                painter.bf.sb.pos += velocity.toInt()
             }
         }
     }
@@ -417,8 +417,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         intent.putExtra("Data", JsonEncoder.encode(painter.bf.sb.st.id).toString())
         intent.putExtra("star",painter.bf.sb.est.star)
         intent.putExtra("item",painter.bf.sb.conf[0])
-        intent.putExtra("size", painter.siz)
-        intent.putExtra("pos", painter.pos)
+        intent.putExtra("size", painter.bf.sb.siz)
+        intent.putExtra("pos", painter.bf.sb.pos)
 
         if(SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
             if(SoundHandler.MUSIC.isRunning || SoundHandler.MUSIC.isPlaying) {
