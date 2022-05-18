@@ -1008,7 +1008,7 @@
         "abbr_name" : "M.Shield",
         "full_name" : "Mystic Shield",
         "tooltip" : "This ability reduces all damage that is above certain amount to said amount (Or nullifies, if 'nullify damage' is checked).",
-        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to (dmg)}(type.procs){ and ignore the attack's procs}]",
+        "format" : "(prob)% chance to [(type.nullify){nullify[(type.traitIgnore){ all}]}(!type.nullify){set}] damage higher than [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ to [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]}(type.procs){ and ignore the attack's procs}]",
         "class" : {
             "prob" : {
                 "name" : "chance",
@@ -1043,7 +1043,7 @@
         "format" : ["Barrier (_left)Barrier has [(type.magnif){(_shield(health))}(!type.magnif){(health)}] HP",
             "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
             "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
-            ],
+        ],
         "class" : {
             "health" : {
                 "name" : "Health",
@@ -1096,10 +1096,10 @@
         "full_name": "Counter Attack",
         "tooltip": "Deal damage back when attacked.",
         "format": ["(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back. ",
-                    "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks. }][(type.procType!=0){This counterattack will ",
-                    "[(type.procType==1|type.procType==3){have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. }]",
-                    "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
-                    "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
+            "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks. }][(type.procType!=0){This counterattack will ",
+            "[(type.procType==1|type.procType==3){have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. }]",
+            "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
+            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
         "class": {
             "prob": {
                 "name": "chance",
@@ -1203,7 +1203,7 @@
         "abbr_name": "Vs. Base",
         "full_name": "Base Destroyer",
         "tooltip": null,
-        "format": "[(mult>0){Good}(mult<0){Bad}] at castle destruction (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
+        "format": "[(mult>0){Base Destroyer}(mult<0){Bad at castle destruction}] (_left)Deals (_abs(mult))% [(mult>0){more}(mult<0){less}] damage to the Enemy Base(_right)",
         "class": {
             "mult": {
                 "name": "percent",
@@ -1213,12 +1213,12 @@
     },
     "BSTHUNT": {
         "abbr_name": "BST Kill",
-        "full_name": "Beast Hunter",
+        "full_name": "Behemoth Slayer",
         "tooltip": null,
-        "format": "Super Beast Hunter (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
+        "format": "Behemoth Slayer (_left)Deals 2.5x damage[(prob>0){, }(prob==0){ and }]only takes 0.6x damage[(prob>0){, and (prob)% chance to dodge their attacks for (_dispTime(time))}](_right)",
         "class": {
             "type.active": {
-                "name": "Stronger Vs. Beast",
+                "name": "Stronger Vs. Behemoth",
                 "tooltip": null
             },
             "prob": {

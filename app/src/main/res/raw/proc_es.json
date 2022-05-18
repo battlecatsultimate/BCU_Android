@@ -637,7 +637,7 @@
             "id": {
                 "name": "ID fondo",
                 "tooltip": null
-            },
+			},
             "mus": {
                 "name": "ID Música",
                 "tooltip": null
@@ -1008,7 +1008,7 @@
         "abbr_name" : "Escudo M.",
         "full_name" : "Escudo Místico",
         "tooltip" : "Esta habilidad reduce todo el daño que esté por encima de cierta cantidad a dicha cantidad (O lo anula, si 'anular daño' está activado).",
-        "format" : "Probabilidad del (prob)% de [(type.nullify){anular[(type.traitIgnore){ todo}]}(!type.nullify){fijar}] daño mayor que [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ a (dmg)}(type.procs){ e ignorar los efectos del ataque}]",
+        "format" : "Probabilidad del (prob)% de [(type.nullify){anular[(type.traitIgnore){ todo}]}(!type.nullify){fijar}] daño mayor que [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}][(!type.nullify){ a [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}]}(type.procs){ e ignorar los efectos del ataque}]",
         "class" : {
             "prob" : {
                 "name" : "probabilidad",
@@ -1043,7 +1043,7 @@
         "format" : ["Barrera (_left)La barrera tiene [(type.magnif){(_shield(health))}(!type.magnif){(health)}] HP",
             "[(regentime>0){, se regenera (_dispTime(regentime)) después de ser quebrada}]",
             "[(timeout>0){, la barrera se rompe después de (_dispTime(timeout))}](_right)"
-        ],
+            ],
         "class" : {
             "health" : {
                 "name" : "Salud",
@@ -1096,10 +1096,10 @@
         "full_name": "Contraataque",
         "tooltip": "Inflige daño tras ser atacado.",
         "format": ["Probabilidad del (prob)% de contraatacar, infligiendo un (damage)% [(!type.useOwnDamage){del daño recibido de un ataque. }(type.useOwnDamage){del ataque de esta entidad. }]",
-            "[(type.counterWave!=0){ Esta entidad también [(type.counterWave==1){contraatacará}(type.counterWave==2){reflejará}] oleadas/réplicas. }][(type.procType!=0){Este contraataque ",
-            "[(type.procType==1|type.procType==3){tendrá}(type.procType==2){reemplazará}] las habilidades del ataque original[(type.procType==2){ con las habilidades de esta entidad}(type.procType==3){ y las habilidades de esta entidad}]. }]",
-            "El contraataque golpeará a [(type.areaAttack){ todos los enemigos}(!type.areaAttack){ solo el atacante}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ si se encuentran}]",
-            "[(minRange!=0|maxRange!=0){ de (minRange) a (maxRange) unidades de esta entidad}(minRange==0&maxRange==0){ en el alcance de esta entidad}]}]."],
+                    "[(type.counterWave!=0){ Esta entidad también [(type.counterWave==1){contraatacará}(type.counterWave==2){reflejará}] oleadas/réplicas. }][(type.procType!=0){Este contraataque ",
+                    "[(type.procType==1|type.procType==3){tendrá}(type.procType==2){reemplazará}] las habilidades del ataque original[(type.procType==2){ con las habilidades de esta entidad}(type.procType==3){ y las habilidades de esta entidad}]. }]",
+                    "El contraataque golpeará a [(type.areaAttack){ todos los enemigos}(!type.areaAttack){ solo el atacante}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ si se encuentran}]",
+                    "[(minRange!=0|maxRange!=0){ de (minRange) a (maxRange) unidades de esta entidad}(minRange==0&maxRange==0){ en el alcance de esta entidad}]}]."],
         "class": {
             "prob": {
                 "name": "probabilidad",
