@@ -46,7 +46,9 @@ class DefineItf : Itf {
         SoundHandler.setSE(ind)
     }
 
-    override fun setBGM(mus: Identifier<Music>) {
+    override fun setBGM(mus: Identifier<Music>?) {
+        mus ?: return
+
         SoundHandler.setBGM(mus)
     }
 
