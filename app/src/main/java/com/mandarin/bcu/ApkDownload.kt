@@ -63,7 +63,7 @@ class ApkDownload : AppCompatActivity() {
             val result = intent
 
             if (result.getStringExtra("ver") != null) {
-                val ver = result.getStringExtra("ver") ?: StaticStore.VER
+                val ver = (result.getStringExtra("ver") ?: StaticStore.VER).replace(Regex("b_.+?\$"), "")
                 val filestart = "BCU_Android_"
                 val apk = ".apk"
                 val realpath = path + filestart + ver + apk

@@ -448,7 +448,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         val ac = w.get() ?: return null
         val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
-        val ver = ac.packageManager.getPackageInfo(ac.packageName, 0).versionName
+        val ver = ac.packageManager.getPackageInfo(ac.packageName, 0).versionName.replace(Regex("b_.+?\$"), "")
         val allowTest = shared.getBoolean("apktest", false)
 
         for(apk in apks.reversedArray()) {
