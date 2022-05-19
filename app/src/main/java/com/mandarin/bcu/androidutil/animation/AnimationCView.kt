@@ -102,8 +102,11 @@ class AnimationCView : View {
             anim = u.forms[form].getEAnim(value)
 
             anim.setTime(StaticStore.frame)
+
             CommonStatic.getConfig().ref = axis
+
             range.style = Paint.Style.STROKE
+
             if(CommonStatic.getConfig().viewerColor != -1) {
                 p.color = CommonStatic.getConfig().viewerColor
                 range.color = 0xFFFFFF - CommonStatic.getConfig().viewerColor
@@ -117,9 +120,12 @@ class AnimationCView : View {
                 }
             }
             p1.isFilterBitmap = true
+
             p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
             cv = CVGraphics(Canvas(), p1, bp, night)
+
             this.night = night
+
             StaticStore.keepDoing = true
         } else {
             throw IllegalStateException("Not a unit! : $data")
@@ -130,6 +136,7 @@ class AnimationCView : View {
 
     constructor(context: Activity?, data: Identifier<AbEnemy>, mode: Int, night: Boolean, axis: Boolean, textView: TextView, seekBar: SeekBar, fpsind: TextView, gif: TextView) : super(context) {
         val e = data.get() ?: UserProfile.getBCData().enemies[0]
+
         activity = context
 
         this.data = data
@@ -149,16 +156,27 @@ class AnimationCView : View {
 
             anim = e.getEAnim(value)
             anim.setTime(StaticStore.frame)
+
             CommonStatic.getConfig().ref = axis
-            if (night) {
-                p.color = 0x363636
+
+            if(CommonStatic.getConfig().viewerColor != -1) {
+                p.color = CommonStatic.getConfig().viewerColor
+                range.color = 0xFFFFFF - CommonStatic.getConfig().viewerColor
             } else {
-                p.color = Color.WHITE
+                if (night) {
+                    p.color = 0x363636
+                } else {
+                    p.color = Color.WHITE
+                }
             }
+
             p1.isFilterBitmap = true
             p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
+
             cv = CVGraphics(Canvas(), p1, bp, night)
+
             this.night = night
+
             StaticStore.keepDoing = true
         } else {
             throw IllegalStateException("Not a enemy! : $data")
@@ -215,21 +233,33 @@ class AnimationCView : View {
         this.anim = StaticJava.generateEAnimD(data , 0)
 
         CommonStatic.getConfig().ref = axis
-        if (night) {
-            p.color = 0x363636
+
+        if(CommonStatic.getConfig().viewerColor != -1) {
+            p.color = CommonStatic.getConfig().viewerColor
+            range.color = 0xFFFFFF - CommonStatic.getConfig().viewerColor
         } else {
-            p.color = Color.WHITE
+            if (night) {
+                p.color = 0x363636
+            } else {
+                p.color = Color.WHITE
+            }
         }
+
         p1.isFilterBitmap = true
+
         p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
         cv = CVGraphics(Canvas(), p1, bp, night)
+
         this.night = night
+
         StaticStore.keepDoing = true
     }
 
     public override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
         postDelayed(renderer, 0)
+
         started = true
     }
 
@@ -238,14 +268,20 @@ class AnimationCView : View {
         if (StaticStore.gifisSaving && !StaticStore.keepDoing) {
             StaticStore.keepDoing = true
         }
+
         if (StaticStore.enableGIF) {
             animP = P.newP((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
+
             val empty = gifTask.isEmpty()
+
             gifTask.add(AddGIF(activity, width, height, animP, size, night, data, type, index))
+
             if(empty)
                 trigger()
+
             StaticStore.gifFrame++
         }
+
         if (StaticStore.play) {
             if (t1 != -1L && t - t1 != 0L) {
                 fps = 1000L / (t - t1)
@@ -303,9 +339,12 @@ class AnimationCView : View {
     private inner class Renderer : Runnable {
         override fun run() {
             t = System.currentTimeMillis()
+
             invalidate()
+
             textView.text = context.getText(R.string.anim_frame).toString().replace("-", "" + StaticStore.frame)
             fpsind.text = context.getText(R.string.def_fps).toString().replace("-", "" + fps)
+
             seekBar.progress = if(StaticStore.frame >= seekBar.max && StaticStore.play) {
                 StaticStore.frame = 0
                 0
@@ -318,13 +357,16 @@ class AnimationCView : View {
                     context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame) + " (" + (AddGIF.frame.toFloat() / StaticStore.gifFrame.toFloat() * 100f).toInt() + "%)"
                 else
                     context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame)
+
                 gif.text = giftext
             } else {
                 if(gif.visibility != GONE) {
                     gif.visibility = GONE
                 }
             }
-            if (started) postDelayed(this, 1000L / 30L + sleeptime)
+
+            if (started)
+                postDelayed(this, 1000L / 30L + sleeptime)
         }
     }
 }
