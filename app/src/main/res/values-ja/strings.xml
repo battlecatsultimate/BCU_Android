@@ -927,4 +927,14 @@
     <string name="color_blu">Blue</string>
     <string name="color_hex">Hex Code</string>
     <string name="config_currcol">"Current Color : "</string>
+    <string name="stg_info_wait">You have to wait _ minute(s) to play this map for each clear</string>
+    <string name="stg_info_reset">Reset mode flag _</string>
+    <string name="stg_info_hidden">This map will be hidden after fully cleared</string>
+    <string name="stg_info_numbplay">Number you can play this map : _</string>
+    <string name="stg_info_reset3">Number of plays can be done will be reset upon each appearance</string>
+    <string name="stg_info_reset2">Clear status will be reset upon each appearance</string>
+    <string name="stg_info_reset1">Reward will be reset upon each appearance</string>
+    <string name="stg_info_misc">Misc.</string>
+    <string name="stg_info_ex">EX Stage</string>
+    <string name="stg_info_mapst">Map / Stage</string>
 </resources>

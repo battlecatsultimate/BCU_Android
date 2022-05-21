@@ -59,6 +59,10 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val music2: Button = itemView.findViewById(R.id.stginfomusic2r)
         val background: Button = itemView.findViewById(R.id.stginfobgr)
         val castle: Button = itemView.findViewById(R.id.stginfoctr)
+        val extitle: TextView = itemView.findViewById(R.id.stginfoex)
+        val ex: RecyclerView = itemView.findViewById(R.id.exrec)
+        val exrow: TableRow = itemView.findViewById(R.id.ex)
+        val exscroll: NestedScrollView = itemView.findViewById(R.id.exscroll)
         val droptitle: TextView = itemView.findViewById(R.id.stginfodrop)
         val drop: RecyclerView = itemView.findViewById(R.id.droprec)
         val droprow: TableRow = itemView.findViewById(R.id.drop)
@@ -69,6 +73,9 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val limitNone: TextView = itemView.findViewById(R.id.stginfononer)
         val limitrec: RecyclerView = itemView.findViewById(R.id.stginfolimitrec)
         val limitscroll: NestedScrollView = itemView.findViewById(R.id.limitscroll)
+        val miscrec: RecyclerView = itemView.findViewById(R.id.stginfomiscrec)
+        val miscnone: TextView = itemView.findViewById(R.id.miscnone)
+        val miscscroll: NestedScrollView = itemView.findViewById(R.id.miscscroll)
         val chanceText: TextView = itemView.findViewById(R.id.stfinfochance)
         val loop: TextView = itemView.findViewById(R.id.stginfoloopt)
         val loop1: TextView = itemView.findViewById(R.id.stginfoloop1t)
@@ -318,6 +325,20 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         viewHolder.minres.text = toFrame(st.minSpawn, st.maxSpawn)
 
         if (st.info != null) {
+            if(st.info.exConnection || st.info.exStages != null) {
+                val linearLayoutManager = LinearLayoutManager(activity)
+
+                linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
+                viewHolder.ex.layoutManager = linearLayoutManager
+
+                viewHolder.ex.adapter = ExRecycle(st, activity)
+            } else {
+                viewHolder.exrow.visibility = View.GONE
+                viewHolder.exscroll.visibility = View.GONE
+                viewHolder.extitle.visibility = View.GONE
+            }
+
             if (st.info.drop.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -333,6 +354,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 viewHolder.droprow.visibility = View.GONE
                 viewHolder.dropscroll.visibility = View.GONE
             }
+
             if (st.info.time.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -352,6 +374,9 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 viewHolder.droptitle.visibility = View.GONE
             }
         } else {
+            viewHolder.exrow.visibility = View.GONE
+            viewHolder.exscroll.visibility = View.GONE
+            viewHolder.extitle.visibility = View.GONE
             viewHolder.droprow.visibility = View.GONE
             viewHolder.dropscroll.visibility = View.GONE
             viewHolder.scorerow.visibility = View.GONE
@@ -379,6 +404,24 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                     viewHolder.limitrec.adapter = limitRecycle
                 }
             }
+        }
+
+        val misc = s.getMiscellaneous(st)
+
+        if(misc.isEmpty()) {
+            viewHolder.miscscroll.visibility = View.GONE
+            viewHolder.miscnone.visibility = View.VISIBLE
+        } else {
+            viewHolder.miscscroll.visibility = View.VISIBLE
+            viewHolder.miscnone.visibility = View.GONE
+
+            viewHolder.miscrec.layoutManager = LinearLayoutManager(activity)
+
+            ViewCompat.setNestedScrollingEnabled(viewHolder.miscrec, false)
+
+            val miscRecycle = MiscRecycle(activity, misc)
+
+            viewHolder.miscrec.adapter = miscRecycle
         }
 
         val stlev: TextInputLayout = activity.findViewById(R.id.stlev)

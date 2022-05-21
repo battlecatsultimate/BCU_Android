@@ -13,6 +13,7 @@ import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.Limit
 import common.util.stage.SCDef
+import common.util.stage.Stage
 import common.util.unit.Enemy
 import common.util.unit.Form
 import java.text.DecimalFormat
@@ -982,5 +983,33 @@ class GetStrings(private val c: Context) {
             "" + (xp * t.xpMult * 9).toInt()
         else
             "" + (xp * t.xpMult).toInt()
+    }
+
+    fun getMiscellaneous(st: Stage) : ArrayList<String> {
+        val res = ArrayList<String>()
+
+        st.info ?: return res
+
+        if(st.cont.info.hiddenUponClear)
+            res.add(c.getString(R.string.stg_info_hidden))
+
+        if(st.cont.info.resetMode != -1) {
+            when(st.cont.info.resetMode) {
+                1 -> res.add(c.getString(R.string.stg_info_reset1))
+                2 -> res.add(c.getString(R.string.stg_info_reset2))
+                3 -> res.add(c.getString(R.string.stg_info_reset3))
+                else -> res.add(c.getString(R.string.stg_info_reset).replace("_", st.cont.info.resetMode.toString()))
+            }
+        }
+
+        if(st.cont.info.waitTime != -1) {
+            res.add(c.getString(R.string.stg_info_wait).replace("_", st.cont.info.waitTime.toString()))
+        }
+
+        if(st.cont.info.clearLimit != -1) {
+            res.add(c.getString(R.string.stg_info_numbplay).replace("_", st.cont.info.clearLimit.toString()))
+        }
+
+        return res
     }
 }

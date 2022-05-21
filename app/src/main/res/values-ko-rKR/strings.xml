@@ -928,4 +928,14 @@
     <string name="color_blu">파랑</string>
     <string name="color_hex">헥스 코드</string>
     <string name="config_currcol">"현재 색깔 : "</string>
+    <string name="stg_info_ex">EX 스테이지</string>
+    <string name="stg_info_wait">클리어 마다 _분씩 대기 필요</string>
+    <string name="stg_info_reset">보상 리셋 모드 _</string>
+    <string name="stg_info_hidden">스테이지 전부 클리어시 맵 숨겨짐</string>
+    <string name="stg_info_numbplay">_번의 스테이지 클리어 이후 맵 숨겨짐</string>
+    <string name="stg_info_reset3">맵 등장 마다 이 맵을 플레이할 수 있는 횟수 초기화</string>
+    <string name="stg_info_reset2">맵 등장 마다 클리어 상태 초기화</string>
+    <string name="stg_info_reset1">맵 등장 마다 보상 획득 상태 초기화</string>
+    <string name="stg_info_misc">기타 정보</string>
+    <string name="stg_info_mapst">맵 / 스테이지</string>
 </resources>

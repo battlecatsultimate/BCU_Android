@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,8 +42,8 @@
                 android:background="@drawable/button_shape"
                 android:gravity="center|top"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/unit_inf_pack"
                 android:textAllCaps="false"
@@ -70,8 +71,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/unit_info_id"
                 android:textColor="?attr/TextPrimary"
@@ -102,8 +103,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_energy"
                 android:textColor="?attr/TextPrimary"
@@ -128,8 +129,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_star"
                 android:textColor="?attr/TextPrimary"
@@ -164,8 +165,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bh"
                 android:textColor="?attr/TextPrimary"
@@ -190,8 +191,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_xp"
                 android:textColor="?attr/TextPrimary"
@@ -221,8 +222,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_inf_diff"
                 android:textColor="?attr/TextPrimary"
@@ -247,8 +248,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_cont"
                 android:textColor="?attr/TextPrimary"
@@ -278,8 +279,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_len"
                 android:textColor="?attr/TextPrimary"
@@ -304,8 +305,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_maxen"
                 android:textColor="?attr/TextPrimary"
@@ -335,8 +336,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_music"
                 android:textColor="?attr/TextPrimary"
@@ -369,8 +370,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/def_music2"
                 android:textColor="?attr/TextPrimary"
@@ -430,8 +431,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_loop1"
                 android:textColor="?attr/TextPrimary"
@@ -463,8 +464,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_bg"
                 android:textColor="?attr/TextPrimary"
@@ -521,7 +522,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/stginfominres"
@@ -564,8 +565,8 @@
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
-                android:paddingEnd="4dp"
                 android:paddingTop="12dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="12dp"
                 android:text="@string/stg_info_limit"
                 android:textColor="?attr/TextPrimary"
@@ -611,7 +612,60 @@
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
             </TableRow>
+        </TableRow>
 
+        <TableRow>
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="12dp"
+                android:text="@string/stg_info_misc"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TableRow android:layout_span="3">
+
+                <TextView
+                    android:id="@+id/miscnone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/cell_shape"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/unit_info_t_none"
+                    android:textColor="?attr/TextPrimary"
+                    android:textSize="12sp" />
+
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/miscscroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/stginfomiscrec"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overScrollMode="never" />
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+            </TableRow>
         </TableRow>
 
     </TableLayout>
@@ -627,7 +681,94 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exscroll" />
+
+    <TextView
+        android:id="@+id/stginfoex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/stg_info_ex"
+        android:textColor="?attr/TextPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout2" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/exscroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ex">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exrec"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <TableRow
+        android:id="@+id/ex"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stginfoex">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="@drawable/cell_shape"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/stg_info_chance"
+            android:textColor="?attr/TextPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.675"
+            android:background="@drawable/cell_shape"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/stg_info_mapst"
+            android:textColor="?attr/TextPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.125"
+            android:background="@drawable/cell_shape"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/stg_info_info"
+            android:textColor="?attr/TextPrimary"
+            android:textStyle="bold" />
+    </TableRow>
 
     <TableRow
         android:id="@+id/drop"
@@ -715,7 +856,8 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dropscroll">
+        app:layout_constraintTop_toBottomOf="@+id/dropscroll"
+        tools:ignore="TooManyViews">
 
         <TextView
             android:id="@+id/textView10"
