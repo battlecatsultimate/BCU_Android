@@ -37,13 +37,16 @@ object Revalidater {
                 if(i is PackData.DefPack)
                     continue
                 else if(i is PackData.UserPack) {
-                    var k = i.desc.names.toString()
+                    if(i.mc.maps.list.isNotEmpty()) {
+                        var k = i.desc.names.toString()
 
-                    if(k.isEmpty()) {
-                        k = i.desc.id
+                        if(k.isEmpty()) {
+                            k = i.desc.id
+                        }
+
+                        StaticStore.mapcolcname.add(k)
+
                     }
-
-                    StaticStore.mapcolcname.add(k)
                 }
             }
         }
