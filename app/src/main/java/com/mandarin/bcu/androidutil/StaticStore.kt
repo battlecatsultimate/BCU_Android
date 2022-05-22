@@ -72,7 +72,7 @@ import kotlin.math.ln
 object StaticStore {
     //System & IO variables
     /**Version of Application */
-    const val VER = "0.16.9"
+    const val VER = "0.16.9b_02"
 
     /**File ID of google drive log folder */
     const val ERR_FILE_ID = "1F60YLwsJ_zrJOh0IczUuf-Q1QyJftWzK"
@@ -1118,7 +1118,12 @@ object StaticStore {
         return if (id == Identifier.DEF) {
             Identifier.DEF
         } else if (UserProfile.getUserPack(id)?.desc?.names.toString().isNotEmpty()) {
-            UserProfile.getUserPack(id)?.desc?.names.toString()
+            var n = UserProfile.getUserPack(id)?.desc?.names.toString()
+
+            if(n.isBlank())
+                n = id
+
+            n
         }  else {
             id
         }
