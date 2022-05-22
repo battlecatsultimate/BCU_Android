@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SPLITTER_PROPORTION" value="0.70251715" />
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config>
+        <device id="3.7 FWVGA slider" />
+        <device id="_device_class_tablet" />
+        <device id="_device_class_foldable" />
+        <device id="_device_class_phone" />
+        <device id="4.7in WXGA" />
+        <device id="4.65in 720p (Galaxy Nexus)" />
+        <device id="4in WVGA (Nexus S)" />
+        <device id="5.4in FWVGA" />
+        <device id="7in WSVGA (Tablet)" />
+        <device id="5.1in WVGA" />
+        <locale>en</locale>
+        <option name="nonWearDeviceLastStateName" value="landscape" />
+      </config>
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="out" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6db52728-91d4-4480-b2e0-c5e457146788" name="Default Changelist" comment="update build.gradle">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/common" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/common" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\user\.android\avd\Pixel_4_API_30.avd]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="BCU_Android_json" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="AnnotationType" />
+        <option value="Kotlin File" />
+        <option value="Kotlin Object" />
+        <option value="valueResourceFile" />
+        <option value="Class" />
+        <option value="resourceFile" />
+        <option value="Kotlin Class" />
+        <option value="layoutResourceFile" />
+      </list>
+    </option>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="C:\Users\user\Desktop\Utility\Plan\KeyStore\keystore.jks" />
+    <option name="KEY_ALIAS" value="key0" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+    <option name="BUILD_TARGET_KEY" value="apk" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="1g885zjRKz98byPyU73soNcd9jA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="AnalyzeApkAction.lastApkPath" value="$USER_HOME$/Downloads/jinjibamiaojiang_2265.com.apk" />
+    <property name="ApkExportedModule" value="BCU_Android_json.app" />
+    <property name="DEBUGGABLE_DEVICE" value="Asus_ZenFone_Live_API_24 [emulator-5554]" />
+    <property name="DEBUGGABLE_PROCESS" value="com.mandarin.bcu" />
+    <property name="DEBUGGER_ID" value="Java" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="VirtualDevicePath@C:\Users\user\.android\avd\Asus_ZenFone_Live_API_24.avd" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-01-24T08:51:38.080975500Z" />
+    <property name="ExportApk.ApkPath" value="C:\Users\user\AndroidStudioProjects\BCU_Android_json\app" />
+    <property name="ExportApk.BuildVariants" value="release" />
+    <property name="ExportApk.SignV2" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="SHOW_ALL_PROCESSES" value="false" />
+    <property name="ScreenshotViewer.SavePath" value="$USER_HOME$/Desktop" />
+    <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="android-custom-viewC:/Users/user/.gradle/caches/modules-2/files-2.1/androidx.cardview/cardview/1.0.0/c9f3ce7ca74ad2c978230f4094ba6804c5166f9c/cardview-1.0.0-sources.jar!/androidx/cardview/widget/CardView.java_SELECTED" value="CardView" />
+    <property name="android-custom-viewC:/Users/user/.gradle/caches/modules-2/files-2.1/androidx.gridlayout/gridlayout/1.0.0/44dc9d588fcd92b642a06fcc2aa8b7b9645de52c/gridlayout-1.0.0-sources.jar!/androidx/gridlayout/widget/GridLayout.java_SELECTED" value="GridLayout" />
+    <property name="android-custom-viewC:/Users/user/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_RecyclerView_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-viewC:/Users/user/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED" value="RecyclerView" />
+    <property name="android-custom-viewC:/Users/user/.gradle/caches/modules-2/files-2.1/androidx.viewpager2/viewpager2/1.0.0/3c3569044e6969f1ee5c3aa03b08e6717a2d782f/viewpager2-1.0.0-sources.jar!/androidx/viewpager2/widget/ViewPager2.java_SELECTED" value="ViewPager2" />
+    <property name="android-custom-viewC:/Users/user/.gradle/caches/modules-2/files-2.1/androidx.viewpager2/viewpager2/1.0.0/3c3569044e6969f1ee5c3aa03b08e6717a2d782f/viewpager2-1.0.0-sources.jar!/androidx/viewpager2/widget/ViewPager2.java_ViewPager2_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/adapters/AutoMarquee.java_SELECTED" value="AutoMarquee" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/adapters/AutoMarquee.kt_SELECTED" value="AutoMarquee" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/adapters/MeasureViewPager.kt_SELECTED" value="MeasureViewPager" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/supports/AutoMarquee.kt_SELECTED" value="AutoMarquee" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/supports/ColorPickerView.kt_ColorPickerView_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/supports/ColorPickerView.kt_SELECTED" value="ColorPickerView" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/supports/MeasureViewPager.kt_MeasureViewPager_DIMENSIONS" value="1080&#10;1920" />
+    <property name="android-custom-viewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/supports/MeasureViewPager.kt_SELECTED" value="MeasureViewPager" />
+    <property name="android-custom-viewC:/Users/user/AppData/Local/Android/Sdk/sources/android-29/android/view/View.java_SELECTED" value="View" />
+    <property name="android-custom-viewC:/Users/user/AppData/Local/Android/Sdk/sources/android-30/android/view/View.java_SELECTED" value="View" />
+    <property name="android-custom-viewC:/Users/user/AppData/Local/Android/Sdk/sources/android-30/android/widget/EditText.java_SELECTED" value="EditText" />
+    <property name="android-custom-viewC:/Users/user/AppData/Local/Android/Sdk/sources/android-30/android/widget/TextView.java_SELECTED" value="TextView" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="com.intellij.openapi.externalSystem.service.settings.ExternalSystemGroupConfigurable" value="ALL" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="ignore.preview.features.used" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/raw" />
+    <property name="ml.local.models.training.notification.expired" value="true" />
+    <property name="multi-representation-previewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/adapters/AutoMarquee.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/adapters/AutoMarquee.kt_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/user/AndroidStudioProjects/BCU_Android_json/app/src/main/java/com/mandarin/bcu/androidutil/adapters/MeasureViewPager.kt_selected" value="Custom views" />
+    <property name="project.structure.last.edited" value="Dependencies" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="PsdUISettings">
+    <option name="MODULE_TAB" value="Default Config" />
+    <option name="BUILD_VARIANTS_TAB" value="Build Types" />
+    <option name="LAST_EDITED_SIGNING_CONFIG" value="release" />
+    <option name="LAST_EDITED_BUILD_TYPE" value="release" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\src\main\res\raw" />
+    </key>
+    <key name="android.template.-12590728">
+      <recent name="com.mandarin.bcu" />
+    </key>
+    <key name="android.template.-1098306880">
+      <recent name="com.mandarin.bcu" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\src\main\res\font" />
+      <recent name="C:\Users\user\AndroidStudioProjects\BCU_Android_json\app\src\main\res\raw" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.mandarin.bcu.androidutil.supports.adapter" />
+      <recent name="com.mandarin.bcu.androidutil.supports" />
+      <recent name="com.mandarin.bcu.androidutil" />
+    </key>
+    <key name="android.template.1567620443">
+      <recent name="com.mandarin.bcu" />
+    </key>
+    <key name="android.template.77853888">
+      <recent name="com.mandarin.bcu" />
+    </key>
+    <key name="android.template.-2140264616">
+      <recent name="com.mandarin.bcu" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="BCU_Android_json.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+        <option name="PROFILING_MODE" value="NOT_SET" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6db52728-91d4-4480-b2e0-c5e457146788" name="Default Changelist" comment="" />
+      <created>1597484679897</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1597484679897</updated>
+    </task>
+    <task id="LOCAL-00365" summary="update text">
+      <created>1649090024114</created>
+      <option name="number" value="00365" />
+      <option name="presentableId" value="LOCAL-00365" />
+      <option name="project" value="LOCAL" />
+      <updated>1649090024114</updated>
+    </task>
+    <task id="LOCAL-00366" summary="finish up color picker">
+      <created>1649090040096</created>
+      <option name="number" value="00366" />
+      <option name="presentableId" value="LOCAL-00366" />
+      <option name="project" value="LOCAL" />
+      <updated>1649090040096</updated>
+    </task>
+    <task id="LOCAL-00367" summary="temporarily disable wip feature">
+      <created>1649090057638</created>
+      <option name="number" value="00367" />
+      <option name="presentableId" value="LOCAL-00367" />
+      <option name="project" value="LOCAL" />
+      <updated>1649090057638</updated>
+    </task>
+    <task id="LOCAL-00368" summary="sync common">
+      <created>1649090065656</created>
+      <option name="number" value="00368" />
+      <option name="presentableId" value="LOCAL-00368" />
+      <option name="project" value="LOCAL" />
+      <updated>1649090065656</updated>
+    </task>
+    <task id="LOCAL-00369" summary="0.16.8">
+      <created>1649090138055</created>
+      <option name="number" value="00369" />
+      <option name="presentableId" value="LOCAL-00369" />
+      <option name="project" value="LOCAL" />
+      <updated>1649090138055</updated>
+    </task>
+    <task id="LOCAL-00370" summary="add proc file, update proc icon data">
+      <created>1649598012990</created>
+      <option name="number" value="00370" />
+      <option name="presentableId" value="LOCAL-00370" />
+      <option name="project" value="LOCAL" />
+      <updated>1649598012991</updated>
+    </task>
+    <task id="LOCAL-00371" summary="update proc kr text">
+      <created>1649772942753</created>
+      <option name="number" value="00371" />
+      <option name="presentableId" value="LOCAL-00371" />
+      <option name="project" value="LOCAL" />
+      <updated>1649772942754</updated>
+    </task>
+    <task id="LOCAL-00372" summary="sync common">
+      <created>1649772950793</created>
+      <option name="number" value="00372" />
+      <option name="presentableId" value="LOCAL-00372" />
+      <option name="project" value="LOCAL" />
+      <updated>1649772950793</updated>
+    </task>
+    <task id="LOCAL-00373" summary="update text data">
+      <created>1650563411270</created>
+      <option name="number" value="00373" />
+      <option name="presentableId" value="LOCAL-00373" />
+      <option name="project" value="LOCAL" />
+      <updated>1650563411271</updated>
+    </task>
+    <task id="LOCAL-00374" summary="handle null when empty combo name">
+      <created>1650563424727</created>
+      <option name="number" value="00374" />
+      <option name="presentableId" value="LOCAL-00374" />
+      <option name="project" value="LOCAL" />
+      <updated>1650563424727</updated>
+    </task>
+    <task id="LOCAL-00375" summary="sync common">
+      <created>1650563431759</created>
+      <option name="number" value="00375" />
+      <option name="presentableId" value="LOCAL-00375" />
+      <option name="project" value="LOCAL" />
+      <updated>1650563431759</updated>
+    </task>
+    <task id="LOCAL-00376" summary="add beast stones">
+      <created>1650567523827</created>
+      <option name="number" value="00376" />
+      <option name="presentableId" value="LOCAL-00376" />
+      <option name="project" value="LOCAL" />
+      <updated>1650567523827</updated>
+    </task>
+    <task id="LOCAL-00377" summary="make empty catfruit cell try to show tooltip">
+      <created>1650567714613</created>
+      <option name="number" value="00377" />
+      <option name="presentableId" value="LOCAL-00377" />
+      <option name="project" value="LOCAL" />
+      <updated>1650567714613</updated>
+    </task>
+    <task id="LOCAL-00378" summary="update kr proc desc">
+      <created>1650568294267</created>
+      <option name="number" value="00378" />
+      <option name="presentableId" value="LOCAL-00378" />
+      <option name="project" value="LOCAL" />
+      <updated>1650568294268</updated>
+    </task>
+    <task id="LOCAL-00379" summary="change beast hunter ability desc">
+      <created>1650579474970</created>
+      <option name="number" value="00379" />
+      <option name="presentableId" value="LOCAL-00379" />
+      <option name="project" value="LOCAL" />
+      <updated>1650579474970</updated>
+    </task>
+    <task id="LOCAL-00380" summary="add kr tooltip for imu. cannon">
+      <created>1650579530952</created>
+      <option name="number" value="00380" />
+      <option name="presentableId" value="LOCAL-00380" />
+      <option name="project" value="LOCAL" />
+      <updated>1650579530952</updated>
+    </task>
+    <task id="LOCAL-00381" summary="readd tooltips back">
+      <created>1650579545390</created>
+      <option name="number" value="00381" />
+      <option name="presentableId" value="LOCAL-00381" />
+      <option name="project" value="LOCAL" />
+      <updated>1650579545390</updated>
+    </task>
+    <task id="LOCAL-00382" summary="add kr tooltip for imu.cannon">
+      <created>1650579598085</created>
+      <option name="number" value="00382" />
+      <option name="presentableId" value="LOCAL-00382" />
+      <option name="project" value="LOCAL" />
+      <updated>1650579598085</updated>
+    </task>
+    <task id="LOCAL-00383" summary="sync common">
+      <created>1650579604441</created>
+      <option name="number" value="00383" />
+      <option name="presentableId" value="LOCAL-00383" />
+      <option name="project" value="LOCAL" />
+      <updated>1650579604441</updated>
+    </task>
+    <task id="LOCAL-00384" summary="add tooltip for beast hunter in searchfilter">
+      <created>1650579965920</created>
+      <option name="number" value="00384" />
+      <option name="presentableId" value="LOCAL-00384" />
+      <option name="project" value="LOCAL" />
+      <updated>1650579965920</updated>
+    </task>
+    <task id="LOCAL-00385" summary="change beast hunter name for kr">
+      <created>1650580017513</created>
+      <option name="number" value="00385" />
+      <option name="presentableId" value="LOCAL-00385" />
+      <option name="project" value="LOCAL" />
+      <updated>1650580017514</updated>
+    </task>
+    <task id="LOCAL-00386" summary="sync common">
+      <created>1650580026325</created>
+      <option name="number" value="00386" />
+      <option name="presentableId" value="LOCAL-00386" />
+      <option name="project" value="LOCAL" />
+      <updated>1650580026325</updated>
+    </task>
+    <task id="LOCAL-00387" summary="add beast trait into search filter">
+      <created>1650871790901</created>
+      <option name="number" value="00387" />
+      <option name="presentableId" value="LOCAL-00387" />
+      <option name="project" value="LOCAL" />
+      <updated>1650871790902</updated>
+    </task>
+    <task id="LOCAL-00388" summary="prepare battle layout change">
+      <created>1651676001336</created>
+      <option name="number" value="00388" />
+      <option name="presentableId" value="LOCAL-00388" />
+      <option name="project" value="LOCAL" />
+      <updated>1651676001337</updated>
+    </task>
+    <task id="LOCAL-00389" summary="implement stage name displaying">
+      <created>1651692285282</created>
+      <option name="number" value="00389" />
+      <option name="presentableId" value="LOCAL-00389" />
+      <option name="project" value="LOCAL" />
+      <updated>1651692285282</updated>
+    </task>
+    <task id="LOCAL-00390" summary="sync common">
+      <created>1651692396387</created>
+      <option name="number" value="00390" />
+      <option name="presentableId" value="LOCAL-00390" />
+      <option name="project" value="LOCAL" />
+      <updated>1651692396387</updated>
+    </task>
+    <task id="LOCAL-00391" summary="scale down stage name image properly">
+      <created>1651738773174</created>
+      <option name="number" value="00391" />
+      <option name="presentableId" value="LOCAL-00391" />
+      <option name="project" value="LOCAL" />
+      <updated>1651738773175</updated>
+    </task>
+    <task id="LOCAL-00392" summary="make pause time in battle dynamic">
+      <created>1651740357009</created>
+      <option name="number" value="00392" />
+      <option name="presentableId" value="LOCAL-00392" />
+      <option name="project" value="LOCAL" />
+      <updated>1651740357009</updated>
+    </task>
+    <task id="LOCAL-00393" summary="fix pause time formula in battle">
+      <created>1651740541014</created>
+      <option name="number" value="00393" />
+      <option name="presentableId" value="LOCAL-00393" />
+      <option name="project" value="LOCAL" />
+      <updated>1651740541014</updated>
+    </task>
+    <task id="LOCAL-00394" summary="finish implementing color picker for viewer color">
+      <created>1651779554594</created>
+      <option name="number" value="00394" />
+      <option name="presentableId" value="LOCAL-00394" />
+      <option name="project" value="LOCAL" />
+      <updated>1651779554595</updated>
+    </task>
+    <task id="LOCAL-00395" summary="change map collection names">
+      <created>1651779568815</created>
+      <option name="number" value="00395" />
+      <option name="presentableId" value="LOCAL-00395" />
+      <option name="project" value="LOCAL" />
+      <updated>1651779568815</updated>
+    </task>
+    <task id="LOCAL-00396" summary="make EN stage names scaled down as well">
+      <created>1651780042692</created>
+      <option name="number" value="00396" />
+      <option name="presentableId" value="LOCAL-00396" />
+      <option name="project" value="LOCAL" />
+      <updated>1651780042692</updated>
+    </task>
+    <task id="LOCAL-00397" summary="sync common">
+      <created>1651780065212</created>
+      <option name="number" value="00397" />
+      <option name="presentableId" value="LOCAL-00397" />
+      <option name="project" value="LOCAL" />
+      <updated>1651780065212</updated>
+    </task>
+    <task id="LOCAL-00398" summary="remove pos and siz from Battlebox">
+      <created>1652009111179</created>
+      <option name="number" value="00398" />
+      <option name="presentableId" value="LOCAL-00398" />
+      <option name="project" value="LOCAL" />
+      <updated>1652009111179</updated>
+    </task>
+    <task id="LOCAL-00399" summary="add money sign to BattleBox">
+      <created>1652290311927</created>
+      <option name="number" value="00399" />
+      <option name="presentableId" value="LOCAL-00399" />
+      <option name="project" value="LOCAL" />
+      <updated>1652290311927</updated>
+    </task>
+    <task id="LOCAL-00400" summary="sync common">
+      <created>1652290320214</created>
+      <option name="number" value="00400" />
+      <option name="presentableId" value="LOCAL-00400" />
+      <option name="project" value="LOCAL" />
+      <updated>1652290320214</updated>
+    </task>
+    <task id="LOCAL-00401" summary="update text data">
+      <created>1652872924117</created>
+      <option name="number" value="00401" />
+      <option name="presentableId" value="LOCAL-00401" />
+      <option name="project" value="LOCAL" />
+      <updated>1652872924117</updated>
+    </task>
+    <task id="LOCAL-00402" summary="sync common">
+      <created>1652872941289</created>
+      <option name="number" value="00402" />
+      <option name="presentableId" value="LOCAL-00402" />
+      <option name="project" value="LOCAL" />
+      <updated>1652872941289</updated>
+    </task>
+    <task id="LOCAL-00403" summary="perform beta version system">
+      <created>1652873888194</created>
+      <option name="number" value="00403" />
+      <option name="presentableId" value="LOCAL-00403" />
+      <option name="project" value="LOCAL" />
+      <updated>1652873888194</updated>
+    </task>
+    <task id="LOCAL-00404" summary="put null-safety to music changer">
+      <created>1652874242682</created>
+      <option name="number" value="00404" />
+      <option name="presentableId" value="LOCAL-00404" />
+      <option name="project" value="LOCAL" />
+      <updated>1652874242682</updated>
+    </task>
+    <task id="LOCAL-00405" summary="apply zh text">
+      <created>1652878196984</created>
+      <option name="number" value="00405" />
+      <option name="presentableId" value="LOCAL-00405" />
+      <option name="project" value="LOCAL" />
+      <updated>1652878196984</updated>
+    </task>
+    <task id="LOCAL-00406" summary="allow color picker for all">
+      <created>1652887586652</created>
+      <option name="number" value="00406" />
+      <option name="presentableId" value="LOCAL-00406" />
+      <option name="project" value="LOCAL" />
+      <updated>1652887586652</updated>
+    </task>
+    <task id="LOCAL-00407" summary="update zh text">
+      <created>1652887625298</created>
+      <option name="number" value="00407" />
+      <option name="presentableId" value="LOCAL-00407" />
+      <option name="project" value="LOCAL" />
+      <updated>1652887625298</updated>
+    </task>
+    <task id="LOCAL-00408" summary="make custom viewer bg color applied to other viewr modes">
+      <created>1652978795068</created>
+      <option name="number" value="00408" />
+      <option name="presentableId" value="LOCAL-00408" />
+      <option name="project" value="LOCAL" />
+      <updated>1652978795069</updated>
+    </task>
+    <task id="LOCAL-00409" summary="fix kr behemoth stone names">
+      <created>1653124064645</created>
+      <option name="number" value="00409" />
+      <option name="presentableId" value="LOCAL-00409" />
+      <option name="project" value="LOCAL" />
+      <updated>1653124064646</updated>
+    </task>
+    <task id="LOCAL-00410" summary="revalidate pack name in map list properly">
+      <created>1653151575110</created>
+      <option name="number" value="00410" />
+      <option name="presentableId" value="LOCAL-00410" />
+      <option name="project" value="LOCAL" />
+      <updated>1653151575110</updated>
+    </task>
+    <task id="LOCAL-00411" summary="perform ex stage display">
+      <created>1653159298741</created>
+      <option name="number" value="00411" />
+      <option name="presentableId" value="LOCAL-00411" />
+      <option name="project" value="LOCAL" />
+      <updated>1653159298741</updated>
+    </task>
+    <task id="LOCAL-00412" summary="add ex stage continuation feature in battle">
+      <created>1653214682892</created>
+      <option name="number" value="00412" />
+      <option name="presentableId" value="LOCAL-00412" />
+      <option name="project" value="LOCAL" />
+      <updated>1653214682893</updated>
+    </task>
+    <task id="LOCAL-00413" summary="update build.gradle">
+      <created>1653229486949</created>
+      <option name="number" value="00413" />
+      <option name="presentableId" value="LOCAL-00413" />
+      <option name="project" value="LOCAL" />
+      <updated>1653229486949</updated>
+    </task>
+    <option name="localTasksCounter" value="414" />
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/app/src/main/java/BCU_java_util_common" />
+    </ignored-roots>
+    <MESSAGE value="change beast hunter name for kr" />
+    <MESSAGE value="add beast trait into search filter" />
+    <MESSAGE value="prepare battle layout change" />
+    <MESSAGE value="implement stage name displaying" />
+    <MESSAGE value="scale down stage name image properly" />
+    <MESSAGE value="make pause time in battle dynamic" />
+    <MESSAGE value="fix pause time formula in battle" />
+    <MESSAGE value="finish implementing color picker for viewer color" />
+    <MESSAGE value="change map collection names" />
+    <MESSAGE value="make EN stage names scaled down as well" />
+    <MESSAGE value="remove pos and siz from Battlebox" />
+    <MESSAGE value="add money sign to BattleBox" />
+    <MESSAGE value="update text data" />
+    <MESSAGE value="sync common" />
+    <MESSAGE value="perform beta version system" />
+    <MESSAGE value="put null-safety to music changer" />
+    <MESSAGE value="apply zh text" />
+    <MESSAGE value="allow color picker for all" />
+    <MESSAGE value="update zh text" />
+    <MESSAGE value="make custom viewer bg color applied to other viewr modes" />
+    <MESSAGE value="fix kr behemoth stone names" />
+    <MESSAGE value="revalidate pack name in map list properly" />
+    <MESSAGE value="perform ex stage display" />
+    <MESSAGE value="add ex stage continuation feature in battle" />
+    <MESSAGE value="update build.gradle" />
+    <option name="LAST_COMMIT_MESSAGE" value="update build.gradle" />
+  </component>
+</project>

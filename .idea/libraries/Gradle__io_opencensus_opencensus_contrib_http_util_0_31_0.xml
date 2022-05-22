@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: io.opencensus:opencensus-contrib-http-util:0.31.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opencensus/opencensus-contrib-http-util/0.31.0/3c8c3ead38d762d7f50c5571b05baf724474c5a5/opencensus-contrib-http-util-0.31.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opencensus/opencensus-contrib-http-util/0.31.0/d2d753659facfefad62fd4dd3a554dd13481fc83/opencensus-contrib-http-util-0.31.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opencensus/opencensus-contrib-http-util/0.31.0/efb7439cf746dfd72f5b9887a50cd5b1d35a78f/opencensus-contrib-http-util-0.31.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
