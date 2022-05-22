@@ -833,6 +833,19 @@ open class ConfigScreen : AppCompatActivity() {
             currentColorText.text = getString(R.string.unit_info_t_none)
             currentColorText.setTextColor(StaticStore.getAttributeColor(this@ConfigScreen, R.attr.TextPrimary))
         }
+
+        val exContinue = findViewById<SwitchCompat>(R.id.configex)
+
+        exContinue.isChecked = shared.getBoolean("exContinue", true)
+
+        exContinue.setOnCheckedChangeListener { _, c ->
+            CommonStatic.getConfig().exContinuation = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("exContinue", c)
+            editor.apply()
+        }
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {

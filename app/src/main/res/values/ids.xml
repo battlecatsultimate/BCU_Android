@@ -8,4 +8,5 @@
     <item name="enemyshowlist" type="id"/>
     <item name="enemychip" type="id"/>
     <item name="downloadnotification" type="id"/>
+    <item name="exstage" type="id"/>
 </resources>

@@ -937,4 +937,7 @@
     <string name="stg_info_reset1">Reward will be reset upon each appearance</string>
     <string name="stg_info_misc">Misc.</string>
     <string name="stg_info_mapst">Map / Stage</string>
+    <string name="config_ex">Show EX stage continuation pop-up</string>
+    <string name="ex_desc">You can select one of EX stage below to continue the battle</string>
+    <string name="ex_found">EX stages found</string>
 </resources>

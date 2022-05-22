@@ -487,14 +487,14 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                             val dialog = alert.create()
                             cancel.setOnClickListener { dialog.cancel() }
                             exit.setOnClickListener {
-                                battleView.retry()
+                                battleView.reopenStage(battleView.painter.bf.sb.st, false)
                                 P.stack.clear()
                                 clear()
                                 dialog.dismiss()
                             }
                             dialog.show()
                         } else {
-                            battleView.retry()
+                            battleView.reopenStage(battleView.painter.bf.sb.st, false)
                         }
                     }
 

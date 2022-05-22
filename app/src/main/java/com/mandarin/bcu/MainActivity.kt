@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().drawBGEffect = shared.getBoolean("bgeff", true)
         CommonStatic.getConfig().buttonDelay = shared.getBoolean("unitDelay", true)
         CommonStatic.getConfig().viewerColor = shared.getInt("viewerColor", -1)
+        CommonStatic.getConfig().exContinuation = shared.getBoolean("exContinue", true)
 
         val result = intent
         var conf = false

@@ -218,6 +218,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("exContinue")) {
+            ed.putBoolean("exContinue", true)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
