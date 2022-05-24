@@ -49,9 +49,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db52728-91d4-4480-b2e0-c5e457146788" name="Default Changelist" comment="update build.gradle">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/common" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/common" afterDir="false" />
+    <list default="true" id="6db52728-91d4-4480-b2e0-c5e457146788" name="Default Changelist" comment="add .idea folder">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -295,13 +294,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1597484679897</updated>
-    </task>
-    <task id="LOCAL-00365" summary="update text">
-      <created>1649090024114</created>
-      <option name="number" value="00365" />
-      <option name="presentableId" value="LOCAL-00365" />
-      <option name="project" value="LOCAL" />
-      <updated>1649090024114</updated>
     </task>
     <task id="LOCAL-00366" summary="finish up color picker">
       <created>1649090040096</created>
@@ -639,7 +631,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653229486949</updated>
     </task>
-    <option name="localTasksCounter" value="414" />
+    <task id="LOCAL-00414" summary="add .idea folder">
+      <created>1653233047634</created>
+      <option name="number" value="00414" />
+      <option name="presentableId" value="LOCAL-00414" />
+      <option name="project" value="LOCAL" />
+      <updated>1653233047634</updated>
+    </task>
+    <option name="localTasksCounter" value="415" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -660,7 +659,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/app/src/main/java/BCU_java_util_common" />
     </ignored-roots>
-    <MESSAGE value="change beast hunter name for kr" />
     <MESSAGE value="add beast trait into search filter" />
     <MESSAGE value="prepare battle layout change" />
     <MESSAGE value="implement stage name displaying" />
@@ -685,6 +683,7 @@
     <MESSAGE value="perform ex stage display" />
     <MESSAGE value="add ex stage continuation feature in battle" />
     <MESSAGE value="update build.gradle" />
-    <option name="LAST_COMMIT_MESSAGE" value="update build.gradle" />
+    <MESSAGE value="add .idea folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="add .idea folder" />
   </component>
 </project>
