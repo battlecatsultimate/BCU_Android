@@ -45,6 +45,7 @@ import common.util.anim.ImgCut
 import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
 import common.util.stage.Stage
+import common.util.stage.info.DefStageInfo
 import kotlin.math.*
 
 @SuppressLint("ViewConstructor")
@@ -522,7 +523,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private fun showBattleResult(win: Boolean) {
         val st = painter.bf.sb.st
 
-        if(CommonStatic.getConfig().exContinuation && st.info != null && (st.info.exConnection || st.info.exStages != null)) {
+        if(CommonStatic.getConfig().exContinuation && st.info != null && (st.info.exConnection() || st.info.exStages != null)) {
             val dialog = Dialog(context)
 
             dialog.setContentView(R.layout.battle_ex_continue_popup)
@@ -641,11 +642,12 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private fun getEXStages(st: Stage) : List<Stage> {
         val res = ArrayList<Stage>()
 
-        if(st.info.exConnection) {
-            val min = st.info.exStageIDMin
-            val max = st.info.exStageIDMax
+        if(st.info.exConnection()) {
+            val inf = st.info as DefStageInfo
+            val min = inf.exStageIDMin
+            val max = inf.exStageIDMax
 
-            val map = MapColc.DefMapColc.getMap(4000 + st.info.exMapID) ?: return res
+            val map = MapColc.DefMapColc.getMap(4000 + inf.exMapID) ?: return res
 
             for(i in min..max) {
                 val stg = map.list.list[i] ?: return res

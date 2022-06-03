@@ -11,6 +11,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import common.util.lang.MultiLangCont
 import common.util.stage.Stage
+import common.util.stage.info.DefStageInfo
 import java.text.DecimalFormat
 
 class DropRecycle(private val st: Stage, private val activity: Activity) : RecyclerView.Adapter<DropRecycle.ViewHolder>() {
@@ -32,19 +33,20 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+        val info = st.info as DefStageInfo
         val c = when {
             dropData.isEmpty() -> {
                 (i+1).toString()
             }
             i >= dropData.size -> {
-                st.info.drop[i][0].toString() + "%"
+                info.drop[i][0].toString() + "%"
             }
             else -> {
                 dropData[i] + "%"
             }
         }
 
-        val data = st.info.drop[i]
+        val data = info.drop[i]
         viewHolder.chance.text = c
         var reward = MultiLangCont.getStatic().RWNAME.getCont(data[1])
         if (reward == null) reward = data[1].toString()
@@ -55,7 +57,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
                 bd.setAntiAlias(true)
                 viewHolder.item.setCompoundDrawablesWithIntrinsicBounds(null, null, bd, null)
             }
-            if (st.info.rand == 1 || data[1] >= 1000) {
+            if (info.rand == 1 || data[1] >= 1000) {
                 reward += activity.getString(R.string.stg_info_once)
                 viewHolder.item.text = reward
             } else {
@@ -68,13 +70,14 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
     }
 
     override fun getItemCount(): Int {
-        return st.info.drop.size
+        return (st.info as DefStageInfo).drop.size
     }
 
     private fun handleDrops() : List<String> {
+        val info = st.info as DefStageInfo
         val res = ArrayList<String>()
 
-        val data = st.info.drop
+        val data = info.drop
 
         var sum = 0
 
@@ -87,12 +90,12 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         if(sum == 1000) {
             for(i in data)
                 res.add(df.format(i[0].toDouble()/10))
-        } else if((sum == data.size && sum != 1) || st.info.rand == -3) {
+        } else if((sum == data.size && sum != 1) || info.rand == -3) {
             return res
         } else if(sum == 100) {
             for(i in data)
                 res.add(i[0].toString())
-        } else if(sum > 100 && (st.info.rand == 0 || st.info.rand == 1)) {
+        } else if(sum > 100 && (info.rand == 0 || info.rand == 1)) {
             var rest = 100.0
 
             if(data[0][0] == 100) {
@@ -112,7 +115,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
                     res.add(df.format(filter))
                 }
             }
-        } else if(st.info.rand == -4) {
+        } else if(info.rand == -4) {
             var total = 0
 
             for(i in data) {
