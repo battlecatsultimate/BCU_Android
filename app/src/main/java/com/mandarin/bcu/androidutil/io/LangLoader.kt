@@ -8,6 +8,7 @@ import common.system.files.VFile
 import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
+import common.util.stage.info.DefStageInfo
 import common.util.unit.Combo
 import java.io.File
 
@@ -256,7 +257,7 @@ object LangLoader {
                     val st = stm.list[id2]
 
                     if(st.info != null) {
-                        st.info.diff = num.toInt()
+                        (st.info as DefStageInfo).diff = num.toInt()
                     }
                 }
             }

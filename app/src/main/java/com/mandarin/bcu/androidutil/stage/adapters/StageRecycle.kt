@@ -28,6 +28,7 @@ import common.pack.Identifier
 import common.util.Data
 import common.util.stage.Limit
 import common.util.stage.Stage
+import common.util.stage.info.DefStageInfo
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -103,12 +104,13 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             stars.add(s)
         }
 
-        if(st.info != null && st.info.drop != null) {
-            if(st.info.drop.size >= 2 || st.info.rand == -3) {
+        if(st.info != null && st.info is DefStageInfo && (st.info as DefStageInfo).drop != null) {
+            val info = st.info as DefStageInfo
+            if(info.drop.size >= 2 || info.rand == -3) {
                 var same = true
-                val d = st.info.drop[0][0]
+                val d = info.drop[0][0]
 
-                for(data in st.info.drop) {
+                for(data in info.drop) {
                     if(d != data[0])
                         same = false
                 }
@@ -175,24 +177,25 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             viewHolder.star.setSelection(StaticStore.stageSpinner)
         }
 
-        if (st.info != null) {
+        if (st.info != null && st.info is DefStageInfo) {
+            val info = st.info as DefStageInfo
             if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
-                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                viewHolder.xp.text = s.getXP(info.xp, t, true)
             else
-                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                viewHolder.xp.text = s.getXP(info.xp, t, false)
         } else {
             viewHolder.xp.text = "0"
         }
 
-        if (st.info != null)
-            viewHolder.energy.text = st.info.energy.toString()
+        if (st.info != null && st.info is DefStageInfo)
+            viewHolder.energy.text = (st.info as DefStageInfo).energy.toString()
         else
             viewHolder.energy.text = "0"
 
         viewHolder.health.text = st.health.toString()
 
-        if (st.info != null)
-            viewHolder.difficulty.text = s.getDifficulty(st.info.diff, activity)
+        if (st.info != null && st.info is DefStageInfo)
+            viewHolder.difficulty.text = s.getDifficulty((st.info as DefStageInfo).diff, activity)
         else
             viewHolder.difficulty.setText(R.string.unit_info_t_none)
 
@@ -325,7 +328,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         viewHolder.minres.text = toFrame(st.minSpawn, st.maxSpawn)
 
         if (st.info != null) {
-            if(st.info.exConnection || st.info.exStages != null) {
+            if(st.info.exConnection() || st.info.exStages != null) {
                 val linearLayoutManager = LinearLayoutManager(activity)
 
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -339,7 +342,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 viewHolder.extitle.visibility = View.GONE
             }
 
-            if (st.info.drop.isNotEmpty()) {
+            if (st.info is DefStageInfo && (st.info as DefStageInfo).drop.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
 
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -355,7 +358,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 viewHolder.dropscroll.visibility = View.GONE
             }
 
-            if (st.info.time.isNotEmpty()) {
+            if (st.info is DefStageInfo && (st.info as DefStageInfo).time.isNotEmpty()) {
                 val linearLayoutManager = LinearLayoutManager(activity)
 
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -370,7 +373,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 viewHolder.scorerow.visibility = View.GONE
                 viewHolder.scorescroll.visibility = View.GONE
             }
-            if (st.info.drop.isEmpty() && st.info.time.isEmpty()) {
+            if (st.info is DefStageInfo && (st.info as DefStageInfo).drop.isEmpty() && (st.info as DefStageInfo).time.isEmpty()) {
                 viewHolder.droptitle.visibility = View.GONE
             }
         } else {
@@ -490,11 +493,12 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
                         t.tech[Data.LV_XP] = lev
 
-                        if (st.info != null) {
+                        if (st.info != null && st.info is DefStageInfo) {
+                            val info = st.info as DefStageInfo
                             if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
-                                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                                viewHolder.xp.text = s.getXP(info.xp, t, true)
                             else
-                                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                                viewHolder.xp.text = s.getXP(info.xp, t, false)
                         } else {
                             viewHolder.xp.text = "0"
                         }
@@ -542,11 +546,12 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
                         t.trea[Data.T_XP1] = lev
 
-                        if (st.info != null) {
+                        if (st.info != null && st.info is DefStageInfo) {
+                            val info = st.info as DefStageInfo
                             if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
-                                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                                viewHolder.xp.text = s.getXP(info.xp, t, true)
                             else
-                                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                                viewHolder.xp.text = s.getXP(info.xp, t, false)
                         } else {
                             viewHolder.xp.text = "0"
                         }
@@ -593,11 +598,12 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
                         t.trea[Data.T_XP2] = lev
 
-                        if (st.info != null) {
+                        if (st.info != null && st.info is DefStageInfo) {
+                            val info = st.info as DefStageInfo
                             if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
-                                viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                                viewHolder.xp.text = s.getXP(info.xp, t, true)
                             else
-                                viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                                viewHolder.xp.text = s.getXP(info.xp, t, false)
                         } else {
                             viewHolder.xp.text = "0"
                         }
@@ -615,11 +621,12 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             sttreat.setText(t.trea[Data.T_XP1].toString())
             sttreat2.setText(t.trea[Data.T_XP2].toString())
 
-            if (st.info != null) {
+            if (st.info != null && st.info is DefStageInfo) {
+                val info = st.info as DefStageInfo
                 if (st.cont.cont.sid == "000000" || st.cont.cont.sid == "000013")
-                    viewHolder.xp.text = s.getXP(st.info.xp, t, true)
+                    viewHolder.xp.text = s.getXP(info.xp, t, true)
                 else
-                    viewHolder.xp.text = s.getXP(st.info.xp, t, false)
+                    viewHolder.xp.text = s.getXP(info.xp, t, false)
             } else {
                 viewHolder.xp.text = "0"
             }

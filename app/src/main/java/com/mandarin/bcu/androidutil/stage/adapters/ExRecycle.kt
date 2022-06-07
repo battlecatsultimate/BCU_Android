@@ -16,6 +16,7 @@ import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.stage.MapColc.DefMapColc
 import common.util.stage.Stage
+import common.util.stage.info.DefStageInfo
 import java.text.DecimalFormat
 
 class ExRecycle(private val st: Stage, private val activity: Activity) : RecyclerView.Adapter<ExRecycle.ViewHolder>() {
@@ -60,16 +61,17 @@ class ExRecycle(private val st: Stage, private val activity: Activity) : Recycle
     private fun handleChance() : List<String> {
         val res = ArrayList<String>()
 
-        if(st.info.exConnection) {
-            val min = st.info.exStageIDMin
-            val max = st.info.exStageIDMax
+        if(st.info.exConnection()) {
+            val info = st.info as DefStageInfo
+            val min = info.exStageIDMin
+            val max = info.exStageIDMax
 
             val n = max - min + 1
 
             val df = DecimalFormat("#.##")
 
             for(i in 0 until n) {
-                res.add(df.format(st.info.exChance * 1.0 / n)+"%")
+                res.add(df.format(info.exChance * 1.0 / n)+"%")
             }
         } else {
             val df = DecimalFormat("#.##")
@@ -85,11 +87,12 @@ class ExRecycle(private val st: Stage, private val activity: Activity) : Recycle
     private fun handleStage() : List<Stage> {
         val res = ArrayList<Stage>()
 
-        if(st.info.exConnection) {
-            val min = st.info.exStageIDMin
-            val max = st.info.exStageIDMax
+        if(st.info.exConnection()) {
+            val info = st.info as DefStageInfo
+            val min = info.exStageIDMin
+            val max = info.exStageIDMax
 
-            val map = DefMapColc.getMap(4000 + st.info.exMapID) ?: return res
+            val map = DefMapColc.getMap(4000 + info.exMapID) ?: return res
 
             for(i in min..max) {
                 val st = map.list.list[i] ?: return res

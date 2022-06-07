@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
 import common.util.lang.MultiLangCont
 import common.util.stage.Stage
+import common.util.stage.info.DefStageInfo
 
 class ScoreRecycle internal constructor(private val st: Stage, private val activity: Activity) : RecyclerView.Adapter<ScoreRecycle.ViewHolder>() {
 
@@ -25,7 +26,7 @@ class ScoreRecycle internal constructor(private val st: Stage, private val activ
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        val data = st.info.time[i]
+        val data = (st.info as DefStageInfo).time[i]
         viewHolder.score.text = data[0].toString()
         var reward = MultiLangCont.getStatic().RWNAME.getCont(data[1])
         if (reward == null) reward = data[1].toString()
@@ -34,7 +35,7 @@ class ScoreRecycle internal constructor(private val st: Stage, private val activ
     }
 
     override fun getItemCount(): Int {
-        return st.info.time.size
+        return (st.info as DefStageInfo).time.size
     }
 
 }
