@@ -44,7 +44,6 @@ class ApkDownload : AppCompatActivity() {
             }
         }
 
-
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +13,11 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.DataResetHandler
@@ -26,13 +25,11 @@ import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.adapter.DataResetAdapter
 import common.CommonStatic
-import common.system.fake.ImageBuilder
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
-import java.lang.Exception
-import java.lang.Runnable
 import java.util.*
-import kotlin.collections.ArrayList
 
 class DataResetManager : AppCompatActivity() {
     var performed = false
@@ -65,10 +62,6 @@ class DataResetManager : AppCompatActivity() {
         AContext.check()
 
         (CommonStatic.ctx as AContext).updateActivity(this)
-
-        setContentView(R.layout.activity_animation_viewer)
-
-        ImageBuilder.builder = BMBuilder()
 
         setContentView(R.layout.activity_data_reset_manager)
 
