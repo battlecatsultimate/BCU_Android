@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.*
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -111,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().buttonDelay = shared.getBoolean("unitDelay", true)
         CommonStatic.getConfig().viewerColor = shared.getInt("viewerColor", -1)
         CommonStatic.getConfig().exContinuation = shared.getBoolean("exContinue", true)
+        CommonStatic.getConfig().realEx = shared.getBoolean("realEx", false)
 
         val result = intent
         var conf = false
@@ -379,6 +381,16 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         })
+
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                isRunning = false
+
+                StaticStore.dialogisShowed = false
+
+                StaticStore.clear()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -403,16 +415,6 @@ class MainActivity : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        isRunning = false
-
-        StaticStore.dialogisShowed = false
-
-        StaticStore.clear()
-
-        super.onBackPressed()
     }
 
     public override fun onDestroy() {

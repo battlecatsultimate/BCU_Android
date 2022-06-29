@@ -14,6 +14,7 @@ import common.util.lang.MultiLangCont
 import common.util.stage.Limit
 import common.util.stage.SCDef
 import common.util.stage.Stage
+import common.util.stage.info.DefStageInfo
 import common.util.unit.Enemy
 import common.util.unit.Form
 import java.text.DecimalFormat
@@ -989,6 +990,9 @@ class GetStrings(private val c: Context) {
         val res = ArrayList<String>()
 
         st.info ?: return res
+
+        if(st.info !is DefStageInfo)
+            return res
 
         if(st.cont.info.hiddenUponClear)
             res.add(c.getString(R.string.stg_info_hidden))

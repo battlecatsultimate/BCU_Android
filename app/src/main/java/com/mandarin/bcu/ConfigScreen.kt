@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
@@ -846,6 +847,25 @@ open class ConfigScreen : AppCompatActivity() {
             editor.putBoolean("exContinue", c)
             editor.apply()
         }
+
+        val realEx = findViewById<SwitchCompat>(R.id.configrealex)
+
+        realEx.isChecked = shared.getBoolean("realEx", false)
+
+        realEx.setOnCheckedChangeListener {_, c ->
+            CommonStatic.getConfig().realEx = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("realEx", c)
+            editor.apply()
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                back.performClick()
+            }
+        })
     }
 
     private fun getIndex(spinner: Spinner, lev: Int): Int {
@@ -884,11 +904,6 @@ open class ConfigScreen : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        val back = findViewById<FloatingActionButton>(R.id.configback)
-        back!!.performClick()
     }
 
     public override fun onDestroy() {

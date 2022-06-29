@@ -524,119 +524,156 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         val st = painter.bf.sb.st
 
         if(CommonStatic.getConfig().exContinuation && st.info != null && (st.info.exConnection() || st.info.exStages != null)) {
-            val dialog = Dialog(context)
+            if(CommonStatic.getConfig().realEx) {
+                val stage = pickOneEXStage()
 
-            dialog.setContentView(R.layout.battle_ex_continue_popup)
+                if(stage != null) {
+                    val dialog = Dialog(context)
 
-            dialog.setCancelable(true)
+                    dialog.setContentView(R.layout.battle_ex_picked_popup)
 
-            val exGroup = dialog.findViewById<RadioGroup>(R.id.exgroup)
+                    dialog.setCancelable(true)
 
-            val stageData = getEXStages(st)
+                    val cont = dialog.findViewById<Button>(R.id.excontinue)
+                    val cancel = dialog.findViewById<Button>(R.id.excancel)
+                    val content = dialog.findViewById<TextView>(R.id.exdesc)
 
-            for(s in stageData.indices) {
-                val radioButton = RadioButton(context)
+                    content.text = context.getString(R.string.ex_picked).replace("_", getMapStageName(stage))
 
-                radioButton.id = R.id.exstage + stageData[s].hashCode()
+                    cont.setOnClickListener(object : SingleClick() {
+                        override fun onSingleClick(v: View?) {
+                            reopenStage(stage, true)
 
-                radioButton.setTextColor(StaticStore.getAttributeColor(context, R.attr.TextPrimary))
+                            dialog.dismiss()
+                        }
+                    })
 
-                radioButton.text = getMapStageName(stageData[s])
+                    cancel.setOnClickListener(object : SingleClick() {
+                        override fun onSingleClick(v: View?) {
+                            dialog.dismiss()
+                        }
+                    })
 
-                exGroup.addView(radioButton)
+                    dialog.show()
 
-                if(s == 0)
-                    radioButton.isChecked = true
-            }
-
-            val cont = dialog.findViewById<Button>(R.id.excontinue)
-            val cancel = dialog.findViewById<Button>(R.id.excancel)
-
-            dialog.show()
-
-            cont.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    val ind = exGroup.indexOfChild(exGroup.findViewById(exGroup.checkedRadioButtonId))
-
-                    if(ind > 0 && ind < stageData.size) {
-                        reopenStage(stageData[ind], true)
-
-                        dialog.dismiss()
-                    } else {
-                        dialog.dismiss()
-                    }
+                    return
                 }
-            })
-
-            cancel.setOnClickListener(object : SingleClick() {
-                override fun onSingleClick(v: View?) {
-                    dialog.dismiss()
-                }
-            })
-        } else {
-            val dialog = BottomSheetDialog(context)
-
-            dialog.setContentView(R.layout.battle_result_bottom_dialog)
-
-            dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-
-            dialog.setCanceledOnTouchOutside(false)
-
-            dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-            val text = dialog.findViewById<TextView>(R.id.resulttext) ?: return
-
-            val primary = dialog.findViewById<Button>(R.id.resultprimary) ?: return
-            val secondary = dialog.findViewById<Button>(R.id.resultsecondary) ?: return
-
-            var dismissed = false
-
-            if(win) {
-                text.setText(R.string.battle_won)
-
-                primary.visibility = GONE
-                secondary.visibility = GONE
             } else {
-                val bh = getBossHealth()
+                val dialog = Dialog(context)
 
-                if(bh == -1)
-                    text.setText(R.string.battle_lost)
-                else {
-                    val t = activity.getText(R.string.battle_lost_boss).toString().replace("_", bh.toString())
+                dialog.setContentView(R.layout.battle_ex_continue_popup)
 
-                    text.text = t
+                dialog.setCancelable(true)
+
+                val exGroup = dialog.findViewById<RadioGroup>(R.id.exgroup)
+                val cont = dialog.findViewById<Button>(R.id.excontinue)
+                val cancel = dialog.findViewById<Button>(R.id.excancel)
+
+                val stageData = getEXStages(st)
+
+                for(s in stageData.indices) {
+                    val radioButton = RadioButton(context)
+
+                    radioButton.id = R.id.exstage + stageData[s].hashCode()
+
+                    radioButton.setTextColor(StaticStore.getAttributeColor(context, R.attr.TextPrimary))
+
+                    radioButton.text = getMapStageName(stageData[s])
+
+                    exGroup.addView(radioButton)
+
+                    if(s == 0)
+                        radioButton.isChecked = true
                 }
 
-                if(painter.bf.sb.st.non_con) {
-                    secondary.visibility = GONE
-                } else {
-                    secondary.setOnClickListener {
-                        dialog.dismiss()
-
-                        continueBattle()
-                    }
-                }
-
-                primary.setOnClickListener(object : SingleClick() {
+                cont.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
-                        dialog.dismiss()
+                        val ind = exGroup.indexOfChild(exGroup.findViewById(exGroup.checkedRadioButtonId))
 
-                        reopenStage(painter.bf.sb.st, false)
+                        if(ind > 0 && ind < stageData.size) {
+                            reopenStage(stageData[ind], true)
+
+                            dialog.dismiss()
+                        } else {
+                            dialog.dismiss()
+                        }
                     }
                 })
+
+                cancel.setOnClickListener(object : SingleClick() {
+                    override fun onSingleClick(v: View?) {
+                        dialog.dismiss()
+                    }
+                })
+
+                dialog.show()
+
+                return
             }
-
-            dialog.setOnDismissListener {
-                dismissed = true
-            }
-
-            dialog.show()
-
-            postDelayed({
-                if(!dismissed)
-                    dialog.dismiss()
-            }, 6000)
         }
+
+        val dialog = BottomSheetDialog(context)
+
+        dialog.setContentView(R.layout.battle_result_bottom_dialog)
+
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+        dialog.setCanceledOnTouchOutside(false)
+
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        val text = dialog.findViewById<TextView>(R.id.resulttext) ?: return
+
+        val primary = dialog.findViewById<Button>(R.id.resultprimary) ?: return
+        val secondary = dialog.findViewById<Button>(R.id.resultsecondary) ?: return
+
+        var dismissed = false
+
+        if(win) {
+            text.setText(R.string.battle_won)
+
+            primary.visibility = GONE
+            secondary.visibility = GONE
+        } else {
+            val bh = getBossHealth()
+
+            if(bh == -1)
+                text.setText(R.string.battle_lost)
+            else {
+                val t = activity.getText(R.string.battle_lost_boss).toString().replace("_", bh.toString())
+
+                text.text = t
+            }
+
+            if(painter.bf.sb.st.non_con) {
+                secondary.visibility = GONE
+            } else {
+                secondary.setOnClickListener {
+                    dialog.dismiss()
+
+                    continueBattle()
+                }
+            }
+
+            primary.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    dialog.dismiss()
+
+                    reopenStage(painter.bf.sb.st, false)
+                }
+            })
+        }
+
+        dialog.setOnDismissListener {
+            dismissed = true
+        }
+
+        dialog.show()
+
+        postDelayed({
+            if(!dismissed)
+                dialog.dismiss()
+        }, 6000)
     }
 
     private fun getEXStages(st: Stage) : List<Stage> {
@@ -681,5 +718,37 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
 
         return "$mapName - $stageName"
+    }
+
+    private fun pickOneEXStage() : Stage? {
+        val chance = painter.bf.sb.r.nextDouble() * 100.0
+
+        val st = painter.bf.sb.st
+
+        if(st.info.exConnection()) {
+            val inf = st.info as DefStageInfo
+            val min = inf.exStageIDMin
+            val max = inf.exStageIDMax
+
+            val map = MapColc.DefMapColc.getMap(4000 + inf.exMapID) ?: return null
+
+            for(i in 0..max - min) {
+                if(chance < inf.exChance * 1.0 * (i + 1) / (max - min + 1))
+                    return map.list[i]
+            }
+        } else if(st.info.exStages != null) {
+            val inf = st.info
+
+            var sum = 0f
+
+            for(i in inf.exStages.indices) {
+                sum += inf.exChances[i]
+
+                if(chance < sum)
+                    return inf.exStages[i]
+            }
+        }
+
+        return null
     }
 }
