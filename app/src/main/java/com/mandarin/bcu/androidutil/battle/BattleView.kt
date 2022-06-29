@@ -590,7 +590,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     override fun onSingleClick(v: View?) {
                         val ind = exGroup.indexOfChild(exGroup.findViewById(exGroup.checkedRadioButtonId))
 
-                        if(ind > 0 && ind < stageData.size) {
+                        if(ind >= 0 && ind < stageData.size) {
                             reopenStage(stageData[ind], true)
 
                             dialog.dismiss()
