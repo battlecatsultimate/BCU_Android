@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -565,12 +566,14 @@ class PackConflictDetail : AppCompatActivity() {
                 acdesc2.visibility = View.GONE
             }
         }
-    }
 
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.packconfdbck)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val bck = findViewById<FloatingActionButton>(R.id.packconfdbck)
 
-        bck.performClick()
+                bck.performClick()
+            }
+        })
     }
 
     public override fun onDestroy() {

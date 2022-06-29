@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -150,6 +151,14 @@ open class EnemySearchFilter : AppCompatActivity() {
         checker()
 
         listeners()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val back = findViewById<FloatingActionButton>(R.id.eschbck)
+
+                back.performClick()
+            }
+        })
     }
 
     private fun getResizeDraw(id: Int, dp: Float): BitmapDrawable {
@@ -279,12 +288,6 @@ open class EnemySearchFilter : AppCompatActivity() {
             if (StaticStore.attack.contains(atks[i]))
                 attacks[i]?.isChecked = true
         }
-    }
-
-    override fun onBackPressed() {
-        val back = findViewById<FloatingActionButton>(R.id.eschbck)
-
-        back.performClick()
     }
 
     override fun attachBaseContext(newBase: Context) {

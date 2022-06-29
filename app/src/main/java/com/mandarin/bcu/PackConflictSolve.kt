@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
 import android.widget.ProgressBar
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -131,6 +132,12 @@ class PackConflictSolve : AppCompatActivity() {
 
             resultLauncher.launch(intent)
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                bck.performClick()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -155,12 +162,6 @@ class PackConflictSolve : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.packconfbck)
-
-        bck.performClick()
     }
 
     public override fun onDestroy() {

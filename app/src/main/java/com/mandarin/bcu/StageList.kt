@@ -5,6 +5,7 @@ import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -61,6 +62,14 @@ class StageList : AppCompatActivity() {
 
             stageLoader.execute()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val bck = findViewById<FloatingActionButton>(R.id.stglistbck)
+
+                bck.performClick()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -85,12 +94,6 @@ class StageList : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.stglistbck)
-
-        bck.performClick()
     }
 
     public override fun onDestroy() {

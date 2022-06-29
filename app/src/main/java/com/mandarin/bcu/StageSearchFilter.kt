@@ -15,6 +15,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
@@ -484,11 +485,12 @@ class StageSearchFilter : AppCompatActivity() {
 
             return@setOnEditorActionListener false
         }
-    }
 
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.statschbck)
-        bck.performClick()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                bck.performClick()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {

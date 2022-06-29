@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -279,6 +280,12 @@ class ImageViewer : AppCompatActivity() {
             CANNON -> AnimationLoader(this, AnimationCView.CANNON, index).execute()
             DEMONSOUL -> AnimationLoader(this, AnimationCView.DEMONSOUL, index).execute()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                bck.performClick()
+            }
+        })
     }
 
     private fun getImg(bg: Background, height: Int, param: Float): Bitmap {
@@ -332,12 +339,6 @@ class ImageViewer : AppCompatActivity() {
                 0
             }
         }
-    }
-
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.imgviewerbck)
-
-        bck.performClick()
     }
 
     override fun attachBaseContext(newBase: Context) {

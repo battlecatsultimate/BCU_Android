@@ -5,6 +5,7 @@ import android.content.*
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -99,11 +100,14 @@ class MusicPlayer : AppCompatActivity() {
             ErrorLogWriter.writeLog(e, StaticStore.upload, this@MusicPlayer)
             finish()
         }
-    }
 
-    override fun onBackPressed() {
-        val back: FloatingActionButton = findViewById(R.id.musicbck)
-        back.performClick()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val back: FloatingActionButton = findViewById(R.id.musicbck)
+
+                back.performClick()
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -148,6 +152,7 @@ class MusicPlayer : AppCompatActivity() {
         super.onResume()
     }
 
+    @Suppress("unused")
     class MusicReceiver : BroadcastReceiver {
         private var unregister = false
         private var rotated = true

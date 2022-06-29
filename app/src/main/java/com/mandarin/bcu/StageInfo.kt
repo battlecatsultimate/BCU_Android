@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -73,6 +74,18 @@ class StageInfo : AppCompatActivity() {
 
             StageAdder(this, data).execute()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(StaticStore.SisOpen) {
+                    val treasure = findViewById<FloatingActionButton>(R.id.stginfotrea)
+
+                    treasure.performClick()
+                } else {
+                    bck.performClick()
+                }
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -97,18 +110,6 @@ class StageInfo : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        if(StaticStore.SisOpen) {
-            val treasure = findViewById<FloatingActionButton>(R.id.stginfotrea)
-
-            treasure.performClick()
-        } else {
-            val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
-
-            bck.performClick()
-        }
     }
 
     override fun onResume() {

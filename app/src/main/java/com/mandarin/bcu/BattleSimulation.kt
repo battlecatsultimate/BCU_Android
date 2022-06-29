@@ -11,6 +11,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.Button
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
@@ -89,6 +90,14 @@ class BattleSimulation : AppCompatActivity() {
 
             BAdder(this, data, star, item, siz, pos).execute()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val exit = findViewById<Button>(R.id.battleexit)
+
+                exit.performClick()
+            }
+        })
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -96,11 +105,6 @@ class BattleSimulation : AppCompatActivity() {
         if (hasFocus) {
             hideSystemUI()
         }
-    }
-
-    override fun onBackPressed() {
-        val exit = findViewById<Button>(R.id.battleexit)
-        exit.performClick()
     }
 
     override fun attachBaseContext(newBase: Context) {

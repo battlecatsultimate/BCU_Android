@@ -17,6 +17,7 @@ import android.view.View
 import android.view.Window
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -48,6 +49,7 @@ class PackManagement : AppCompatActivity() {
         var needReload = false
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if(result.resultCode == RESULT_OK) {
             val path = result.data?.data ?: return@registerForActivityResult
@@ -217,12 +219,12 @@ class PackManagement : AppCompatActivity() {
                 run.run()
             }
         }
-    }
 
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.pmanbck)
-
-        bck.performClick()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                bck.performClick()
+            }
+        })
     }
 
     override fun onResume() {

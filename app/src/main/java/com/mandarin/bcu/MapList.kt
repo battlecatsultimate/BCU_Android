@@ -12,6 +12,7 @@ import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -231,6 +232,14 @@ class MapList : AppCompatActivity() {
         val mapAdder = MapAdder(this)
 
         mapAdder.execute()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val bck = findViewById<FloatingActionButton>(R.id.stgbck)
+
+                bck.performClick()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -255,11 +264,6 @@ class MapList : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.stgbck)
-        bck.performClick()
     }
 
     public override fun onDestroy() {

@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -164,6 +165,14 @@ class SearchFilter : AppCompatActivity() {
         checker()
 
         listeners()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val back = findViewById<FloatingActionButton>(R.id.schbck)
+
+                back.performClick()
+            }
+        })
     }
 
     @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
@@ -301,12 +310,6 @@ class SearchFilter : AppCompatActivity() {
         bd.setAntiAlias(true)
 
         return bd
-    }
-
-    override fun onBackPressed() {
-        val back = findViewById<FloatingActionButton>(R.id.schbck)
-
-        back.performClick()
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -11,8 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -218,6 +218,12 @@ class DataResetManager : AppCompatActivity() {
                 }
             }
         })
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                bck.performClick()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -256,11 +262,5 @@ class DataResetManager : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
-    }
-
-    override fun onBackPressed() {
-        val bck = findViewById<FloatingActionButton>(R.id.dataresetbck)
-
-        bck.performClick()
     }
 }

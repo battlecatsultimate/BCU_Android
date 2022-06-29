@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ListView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -32,6 +33,7 @@ class AssetBrowser : AppCompatActivity() {
         var current: VFile? = null
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if(result.resultCode == RESULT_OK) {
             val data = result.data
@@ -161,6 +163,16 @@ class AssetBrowser : AppCompatActivity() {
             path = "./org"
             finish()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(path != "./org") {
+                    fileList.performItemClick(fileList.getChildAt(0), 0, fileList.adapter.getItemId(0))
+                } else {
+                    bck.performClick()
+                }
+            }
+        })
     }
 
     private fun generateFileList() {
@@ -234,18 +246,6 @@ class AssetBrowser : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        if(path != "./org") {
-            val fileList = findViewById<ListView>(R.id.assetlist)
-
-            fileList.performItemClick(fileList.getChildAt(0), 0, fileList.adapter.getItemId(0))
-        } else {
-            val bck = findViewById<FloatingActionButton>(R.id.assetbck)
-
-            bck.performClick()
-        }
     }
 
     private fun isFile(f: VFile) : Boolean {
