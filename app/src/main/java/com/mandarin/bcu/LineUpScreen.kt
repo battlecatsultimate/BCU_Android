@@ -92,6 +92,8 @@ class LineUpScreen : AppCompatActivity() {
                 StaticStore.lu = null
 
                 StaticStore.combos.clear()
+
+                finish()
             }
         })
     }

@@ -107,8 +107,7 @@ open class EnemyList : AppCompatActivity() {
             this,
             object: OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    StaticStore.filterReset()
-                    StaticStore.entityname = ""
+                    back.performClick()
                 }
             }
         )

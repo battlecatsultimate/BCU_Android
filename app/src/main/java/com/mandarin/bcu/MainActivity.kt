@@ -389,6 +389,8 @@ class MainActivity : AppCompatActivity() {
                 StaticStore.dialogisShowed = false
 
                 StaticStore.clear()
+
+                finish()
             }
         })
     }
