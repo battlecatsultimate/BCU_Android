@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -75,6 +76,24 @@ class LineUpScreen : AppCompatActivity() {
         layout.addView(line)
 
         LUAdder(this, supportFragmentManager, lifecycle).execute()
+
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                try {
+                    StaticStore.saveLineUp(this@LineUpScreen)
+                } catch(e: Exception) {
+                    ErrorLogWriter.writeLog(e, StaticStore.upload, this@LineUpScreen)
+                    StaticStore.showShortMessage(this@LineUpScreen, R.string.err_lusave_fail)
+                }
+
+                StaticStore.filterReset()
+                StaticStore.entityname = ""
+                StaticStore.set = null
+                StaticStore.lu = null
+
+                StaticStore.combos.clear()
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -99,24 +118,6 @@ class LineUpScreen : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        try {
-            StaticStore.saveLineUp(this)
-        } catch(e: Exception) {
-            ErrorLogWriter.writeLog(e, StaticStore.upload, this)
-            StaticStore.showShortMessage(this, R.string.err_lusave_fail)
-        }
-
-        StaticStore.filterReset()
-        StaticStore.entityname = ""
-        StaticStore.set = null
-        StaticStore.lu = null
-
-        StaticStore.combos.clear()
-
-        super.onBackPressed()
     }
 
     public override fun onDestroy() {

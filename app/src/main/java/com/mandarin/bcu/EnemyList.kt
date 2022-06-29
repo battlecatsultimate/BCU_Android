@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -101,6 +102,16 @@ open class EnemyList : AppCompatActivity() {
         })
 
         EAdder(this, mode, supportFragmentManager, lifecycle).execute()
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object: OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    StaticStore.filterReset()
+                    StaticStore.entityname = ""
+                }
+            }
+        )
     }
 
     protected fun gotoFilter() {
@@ -131,12 +142,6 @@ open class EnemyList : AppCompatActivity() {
         config.setLocale(loc)
         applyOverrideConfiguration(config)
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
-    }
-
-    override fun onBackPressed() {
-        StaticStore.filterReset()
-        StaticStore.entityname = ""
-        super.onBackPressed()
     }
 
     public override fun onDestroy() {

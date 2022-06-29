@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -102,10 +103,18 @@ class EnemyInfo : AppCompatActivity() {
             else
                 EInfoLoader(this, data).execute()
         }
-    }
 
-    override fun onBackPressed() {
-        if (StaticStore.EisOpen) treasure!!.performClick() else super.onBackPressed()
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (StaticStore.EisOpen)
+                        treasure!!.performClick()
+                    else
+                        finish()
+                }
+            }
+        )
     }
 
     override fun attachBaseContext(newBase: Context) {

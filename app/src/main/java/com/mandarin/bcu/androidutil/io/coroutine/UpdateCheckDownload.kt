@@ -5,7 +5,9 @@ import android.app.AlertDialog
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.os.Build
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -448,7 +450,12 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         val ac = w.get() ?: return null
         val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
-        val ver = ac.packageManager.getPackageInfo(ac.packageName, 0).versionName.replace(Regex("b_.+?\$"), "")
+        val ver = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ac.packageManager.getPackageInfo(ac.packageName, PackageManager.PackageInfoFlags.of(0)).versionName.replace(Regex("b_.+?\$"), "")
+        } else {
+            @Suppress("DEPRECATION")
+            ac.packageManager.getPackageInfo(ac.packageName, 0).versionName.replace(Regex("b_.+?\$"), "")
+        }
         val allowTest = shared.getBoolean("apktest", false)
 
         for(apk in apks.reversedArray()) {

@@ -10,11 +10,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.GetStrings
@@ -168,16 +168,18 @@ class UnitInfo : AppCompatActivity() {
         })
 
         UInfoLoader(this, data, supportFragmentManager, lifecycle).execute()
-    }
 
-    override fun onBackPressed() {
-        if (StaticStore.UisOpen) {
-            treasure!!.performClick()
-        } else {
-            super.onBackPressed()
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (StaticStore.UisOpen) {
+                    treasure!!.performClick()
+                } else {
+                    StaticStore.unitinfreset = true
 
-            StaticStore.unitinfreset = true
-        }
+                    finish()
+                }
+            }
+        })
     }
 
     override fun attachBaseContext(newBase: Context) {

@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -96,6 +97,16 @@ class AnimationViewer : AppCompatActivity() {
         })
 
         Adder(this, supportFragmentManager, lifecycle).execute()
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    StaticStore.filterReset()
+                    StaticStore.entityname = ""
+                }
+            }
+        )
     }
 
     private fun gotoFilter() {
@@ -140,11 +151,5 @@ class AnimationViewer : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        StaticStore.filterReset()
-        StaticStore.entityname = ""
     }
 }
