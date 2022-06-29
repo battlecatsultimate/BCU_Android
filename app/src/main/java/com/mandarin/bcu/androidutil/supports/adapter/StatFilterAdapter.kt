@@ -121,7 +121,7 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
             v.visibility = View.VISIBLE
 
             v.animate().alpha(1f).setDuration(time.toLong()).setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     v.visibility = View.VISIBLE
                 }
             })
@@ -130,7 +130,7 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
                     .alpha(0f)
                     .setDuration(time.toLong())
                     .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
+                        override fun onAnimationEnd(animation: Animator) {
                             v.visibility = View.GONE
                         }
                     })

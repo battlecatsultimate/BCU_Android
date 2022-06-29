@@ -460,6 +460,10 @@
             "time": {
                 "name": "duración",
                 "tooltip": null
+            },
+            "intensity": {
+                "name": "intensity",
+                "tooltip": "The power of the timestop. If the intensity is lower than the duration, there will be certain intervals where units will be able to move. Set to negative to speed up entities with time stop immunity"
             }
         }
     },
@@ -493,8 +497,8 @@
             "(!type.on_kill&!type.on_hit){en este ataque}], ",
             "[(type.same_health){Las entidades invocadas tendrán la misma salud que esta entidad, }]",
             "y[(type.ignore_limit){ no}] se ven restrictas por el límite de entidades de la fase. ",
-            "Las entidades invocadas estarán en [(!type.random_layer){la misma capa que esta entidad}",
-            "(type.random_layer){una capa aleatoria}]. ",
+            "Las entidades invocadas estarán en [(min_layer==max_layer){la misma capa que esta entidad}",
+            "(min_layer!=max_layer){una capa aleatoria}]. ",
             "La invocación mostrará [(type.anim_type==0){cero animaciones}(type.anim_type==1){la animación de abducción}(type.anim_type>=2){la animación de escarbar}]",
             "[(type.anim_type==3){ y desactivará escarbar para las entidades invocadas}]."
         ],
@@ -511,9 +515,25 @@
                 "name": "distancia",
                 "tooltip": "Distancia desde esta entidad por defecto, la distancia desde el objetivo si Tras golpear o Tras eliminar está activado"
             },
+            "max_dis": {
+                "name": "max distance",
+                "tooltip": "Max distance from this entity by default, or from the target if on hit or on kill is enabled"
+            },
             "mult": {
                 "name": "fuerza",
                 "tooltip": "La fuerza de la entidad invocada, relativa a esta entidad por defecto, la fuerza será fija si activas el parámetro"
+            },
+            "time": {
+                "name": "demora",
+                "tooltip": "La demora de esta invocación"
+            },
+            "min_layer": {
+                "name": "min layer",
+                "tooltip": "lowest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
+            },
+            "max_layer": {
+                "name": "max layer",
+                "tooltip": "highest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
             },
             "type.anim_type": {
                 "name": "anim. invocar",
@@ -538,9 +558,9 @@
                 "name": "misma salud",
                 "tooltip": "Establece que la unidad invocada tenga la misma salud que esta entidad."
             },
-            "type.random_layer": {
-                "name": "capa aleatoria",
-                "tooltip": "Por defecto, la entidad tendrá la misma capa que esta entidad. Activa esto para aleatorizar su capa."
+            "type.bond_hp": {
+                "name": "Bond health",
+                "tooltip": "When activated, the summoner will receive all damage and procs the summoned entity receives"
             },
             "type.on_hit": {
                 "name": "tras golpear",
@@ -557,10 +577,6 @@
                     " Invocación por cada objetivo eliminado, las distancias de origen son relativas a las posiciones de los blancos.",
                     " Las invocaciones múltiples son posibles para ataques de área."
                 ]
-            },
-            "time": {
-                "name": "demora",
-                "tooltip": "La demora de esta invocación"
             },
             "form": {
                 "name": "Forma",
@@ -637,7 +653,7 @@
             "id": {
                 "name": "ID fondo",
                 "tooltip": null
-			},
+            },
             "mus": {
                 "name": "ID Música",
                 "tooltip": null
@@ -1043,7 +1059,7 @@
         "format" : ["Barrera (_left)La barrera tiene [(type.magnif){(_shield(health))}(!type.magnif){(health)}] HP",
             "[(regentime>0){, se regenera (_dispTime(regentime)) después de ser quebrada}]",
             "[(timeout>0){, la barrera se rompe después de (_dispTime(timeout))}](_right)"
-            ],
+        ],
         "class" : {
             "health" : {
                 "name" : "Salud",
@@ -1096,10 +1112,10 @@
         "full_name": "Contraataque",
         "tooltip": "Inflige daño tras ser atacado.",
         "format": ["Probabilidad del (prob)% de contraatacar, infligiendo un (damage)% [(!type.useOwnDamage){del daño recibido de un ataque. }(type.useOwnDamage){del ataque de esta entidad. }]",
-                    "[(type.counterWave!=0){ Esta entidad también [(type.counterWave==1){contraatacará}(type.counterWave==2){reflejará}] oleadas/réplicas. }][(type.procType!=0){Este contraataque ",
-                    "[(type.procType==1|type.procType==3){tendrá}(type.procType==2){reemplazará}] las habilidades del ataque original[(type.procType==2){ con las habilidades de esta entidad}(type.procType==3){ y las habilidades de esta entidad}]. }]",
-                    "El contraataque golpeará a [(type.areaAttack){ todos los enemigos}(!type.areaAttack){ solo el atacante}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ si se encuentran}]",
-                    "[(minRange!=0|maxRange!=0){ de (minRange) a (maxRange) unidades de esta entidad}(minRange==0&maxRange==0){ en el alcance de esta entidad}]}]."],
+            "[(type.counterWave!=0){ Esta entidad también [(type.counterWave==1){contraatacará}(type.counterWave==2){reflejará}] oleadas/réplicas. }][(type.procType!=0){Este contraataque ",
+            "[(type.procType==1|type.procType==3){tendrá}(type.procType==2){reemplazará}] las habilidades del ataque original[(type.procType==2){ con las habilidades de esta entidad}(type.procType==3){ y las habilidades de esta entidad}]. }]",
+            "El contraataque golpeará a [(type.areaAttack){ todos los enemigos}(!type.areaAttack){ solo el atacante}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ si se encuentran}]",
+            "[(minRange!=0|maxRange!=0){ de (minRange) a (maxRange) unidades de esta entidad}(minRange==0&maxRange==0){ en el alcance de esta entidad}]}]."],
         "class": {
             "prob": {
                 "name": "probabilidad",

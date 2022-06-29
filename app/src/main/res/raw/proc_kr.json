@@ -419,6 +419,10 @@
             "time": {
                 "name": "시간",
                 "tooltip": "능력이 얼마동안 발동될지 정합니다"
+            },
+            "intensity": {
+                "name": "intensity",
+                "tooltip": "The power of the timestop. If the intensity is lower than the duration, there will be certain intervals where units will be able to move. Set to negative to speed up entities with time stop immunity"
             }
         }
     },
@@ -443,16 +447,16 @@
         "full_name": "소환",
         "tooltip": "특정 발동 조건을 만족하면 일정 시간가 거리에 정해진 아군을 소환합니다. 유닛의 경우, 첫번째 형태로만 소환됩니다",
         "format": [
-            "(prob)% 확률로 (_dispTime(time)) 후에 [(!type.on_kill&!type.on_hit){거리 (dis) [(dis<0){뒤}(dis>=0){앞}]에서}] [(_isEnemy){(mult)% 배율로}] (_entity(id)) 소환 (_left)",
+            "(prob)% 확률로 (_dispTime(time)) 후에 [(!type.on_kill&!type.on_hit){거리 (dis)~(max_dis) [(dis<0){뒤}(dis>=0){앞}]에서}] [(_isEnemy){(mult)% 배율로}] (_entity(id)) 소환 (_left)",
             "[(!type.fix_buff&_isEnemy){소환자의 배율에 상대적으로 소환되고}] ",
             "[(type.anim_type==3){ 버로우 능력을 지우고 }]",
             "[(type.on_hit|type.on_kill){[(type.on_hit){매 공격마다}",
             "(type.on_kill&!type.on_hit){상대를 죽일 때마다}]",
             " 상대로부터 거리 (dis) [(dis<0){뒤}(dis>=0){앞}]에서 }]",
             "[(type.ignore_limit){스테이지 제한에 상관없이}] ",
-            "[(!type.random_layer){소환자의 레이어와 같은 곳에}",
-            "(type.random_layer){렌덤한 레이어에}] ",
-            "[(type.same_health){소환자와 같은 체력으로} ]",
+            "[(min_layer==max_layer){소환자의 레이어와 같은 곳에}",
+            "(min_layer!=max_layer){렌덤한 레이어 (min_layer)~(max_layer) 사이에}] ",
+            "[(type.same_health){소환자와 같은 체력[(type.bond_hp){이고 소환자화 연동된 상태로}(!type.bond_hp){으로}] ]",
             "[(type.anim_type==0){평범하게 소환}(type.anim_type==1){워프 에니메이션과 함께 소환}(type.anim_type>=2){버로우 애니메이션과 함께 소환}](_right)"
         ],
         "class": {
@@ -465,12 +469,28 @@
                 "tooltip": "소환할 상대를 정합니다"
             },
             "dis": {
-                "name": "거리",
-                "tooltip": "소환자로부터의 거리를 정합니다. \"매 공격마다\" 혹은 \"매 킬마다\" 가 활성화 되어있으면 공격받은 상대로부터의 거리입니다"
+                "name": "최소 거리",
+                "tooltip": "소환자로부터의 최소 거리를 정합니다. \"매 공격마다\" 혹은 \"매 킬마다\" 가 활성화 되어있으면 공격받은 상대로부터의 거리입니다"
+            },
+            "max_dis": {
+                "name": "최대 거리",
+                "tooltip": "소환자로부터의 최대 거리를 정합니다. \"매 공격마다\" 혹은 \"매 킬마다\" 가 활성화 되어있으면 공격받은 상대로부터의 거리입니다"
             },
             "mult": {
                 "name": "배율",
                 "tooltip": "소환되는 상대의 배율을 정합니다. 적을 위한 값이며 유닛은 따르지 않습니다. \"고정된 버프\"를 활성화 시키면 소환자의 배율에 상대적으로 소환됩니다"
+            },
+            "time": {
+                "name": "지연 시간",
+                "tooltip": "정해진 시간 뒤에 개체가 소환됩니다"
+            },
+            "min_layer": {
+                "name": "최소 레이어",
+                "tooltip": "개체가 소환될 최소 레이어 값입니다. -1로 설정하여 항상 소환자의 레이어와 같은 레이어에서 소환되도록 만들 수 있습니다"
+            },
+            "max_layer": {
+                "name": "최대 레이어",
+                "tooltip": "개체가 소환될 최대 레이어 값입니다. -1로 설정하여 항상 소환자의 레이어와 같은 레이어에서 소환되도록 만들 수 있습니다"
             },
             "type.anim_type": {
                 "name": "소환 애니메이션",
@@ -495,9 +515,9 @@
                 "name": "같은 체력으로 소환",
                 "tooltip": "소환될 상대가 소환자와 같은 체력으로 소환됩니다"
             },
-            "type.random_layer": {
-                "name": "랜덤 레이어",
-                "tooltip": "해당 특성이 활성화 되어있으면 소환자의 레이어를 따르지 않고 랜덤한 레이어에 소환됩니다"
+            "type.bond_hp": {
+                "name": "동기화",
+                "tooltip": "소환자가 소환된 개체가 데이미지를 입거나 디버프에 걸리면 같은 디버프와 데미지를 입게 됩니다"
             },
             "type.on_hit": {
                 "name": "매 공격마다",
@@ -514,10 +534,6 @@
                     " 해당 특성을 활성화하면 죽게 되는 타겟 앞에 특정된 거리 앞에 소환되게 됩니다.",
                     " 소환자가 범위 공격을 가지고 있으면 한번에 여러마리의 개체를 소환할 수 있습니다"
                 ]
-            },
-            "time": {
-                "name": "지연 시간",
-                "tooltip": "정해진 시간 뒤에 개체가 소환됩니다"
             }
         }
     },
@@ -988,7 +1004,7 @@
         "abbr_name" : "마법 쉴드",
         "full_name" : "마법 쉴드",
         "tooltip" : "설정된 값보다 높은 공격을 무시하거나 그 설정된 값의 공격력으로 받아들입니다",
-        "format" : "(prob)% 확률료 [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){[(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 로 받아들인다}]",
+        "format" : "(prob)% 확률료 [(type.magnif){(_shield(dmg))}(!type.magnif){(dmg)}] 보다 높은 공격력을 [(type.traitIgnore){속성에 상관없이 }][(type.procs){공격의 능력을 무효화한 채로 }]공격력을 [(type.nullify){무시한다}(!type.nullify){(dmg) 로 받아들인다}]",
         "class" : {
             "prob" : {
                 "name" : "확률",
@@ -1169,7 +1185,7 @@
         "abbr_name": "성 파괴가 특기",
         "full_name": "성 파괴가 특기",
         "tooltip": "적 성에게 추가 혹은 감소된 데미지를 가하도록 하는 능력입니다",
-        "format": "[성 파괴(mult>0){가 특기}(mult<0){에 약함}] (_left)적 성에게 (_abs(mult))% 만큼 [(mult>0){추가}(mult<0){감소된}] 데미지(_right)",
+        "format": "성 파괴[(mult>0){가 특기}(mult<0){에 약함}] (_left)적 성에게 (_abs(mult))% 만큼 [(mult>0){추가}(mult<0){감소된}] 데미지(_right)",
         "class": {
             "mult": {
                 "name": "퍼센트",

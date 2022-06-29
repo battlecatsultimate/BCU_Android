@@ -270,14 +270,14 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                         line.updateUnitOrb()
 
                         if (position == 0) {
-                            menu.getItem(5).subMenu.getItem(0).isEnabled = false
-                            menu.getItem(3).subMenu.getItem(0).isEnabled = false
+                            menu.getItem(5).subMenu?.getItem(0)?.isEnabled = false
+                            menu.getItem(3).subMenu?.getItem(0)?.isEnabled = false
                         } else {
-                            menu.getItem(5).subMenu.getItem(0).isEnabled = true
-                            menu.getItem(3).subMenu.getItem(0).isEnabled = true
+                            menu.getItem(5).subMenu?.getItem(0)?.isEnabled = true
+                            menu.getItem(3).subMenu?.getItem(0)?.isEnabled = true
                         }
 
-                        menu.getItem(5).isEnabled = !(!menu.getItem(5).subMenu.getItem(0).isEnabled && !menu.getItem(5).subMenu.getItem(1).isEnabled)
+                        menu.getItem(5).isEnabled = !(!(menu.getItem(5).subMenu?.getItem(0)?.isEnabled ?: false) && !(menu.getItem(5).subMenu?.getItem(1)?.isEnabled ?: false))
 
                         line.invalidate()
                     }
@@ -317,8 +317,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                         line.updateUnitSetting()
                         line.updateUnitOrb()
 
-                        menu.getItem(5).subMenu.getItem(1).isEnabled = BasisSet.current().lb.size != 1
-                        menu.getItem(5).isEnabled = !(!menu.getItem(5).subMenu.getItem(0).isEnabled && !menu.getItem(5).subMenu.getItem(1).isEnabled)
+                        menu.getItem(5).subMenu?.getItem(1)?.isEnabled = BasisSet.current().lb.size != 1
+                        menu.getItem(5).isEnabled = !(!(menu.getItem(5).subMenu?.getItem(0)?.isEnabled ?: false) && !(menu.getItem(5).subMenu?.getItem(1)?.isEnabled ?: false))
 
                         line.invalidate()
                     }
@@ -328,8 +328,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
 
                 if (StaticStore.set == null && StaticStore.lu == null) {
                     menu.getItem(2).isEnabled = false
-                    menu.getItem(2).subMenu.getItem(0).isEnabled = false
-                    menu.getItem(2).subMenu.getItem(1).isEnabled = false
+                    menu.getItem(2).subMenu?.getItem(0)?.isEnabled = false
+                    menu.getItem(2).subMenu?.getItem(1)?.isEnabled = false
                 }
 
                 schname.addTextChangedListener(object : TextWatcher {
@@ -463,7 +463,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                             StaticStore.showShortMessage(activity, R.string.lineup_set_copied)
 
                             menu.getItem(2).isEnabled = true
-                            menu.getItem(2).subMenu.getItem(0).isEnabled = true
+                            menu.getItem(2).subMenu?.getItem(0)?.isEnabled = true
 
                             return@setOnMenuItemClickListener true
                         }
@@ -471,7 +471,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                             StaticStore.lu = BasisSet.current().sele.copy()
                             StaticStore.showShortMessage(activity, R.string.lineup_lu_copied)
                             menu.getItem(2).isEnabled = true
-                            menu.getItem(2).subMenu.getItem(1).isEnabled = true
+                            menu.getItem(2).subMenu?.getItem(1)?.isEnabled = true
                             return@setOnMenuItemClickListener true
                         }
                         R.id.lineup_paste_set -> {

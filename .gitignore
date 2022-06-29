@@ -6,3 +6,4 @@ local.properties
 /app/.externalNativeBuild/*
 /app/release/*
 /build/*
+/.idea/

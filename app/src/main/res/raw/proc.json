@@ -451,7 +451,7 @@
         "abbr_name": "time",
         "full_name": "Stop Time",
         "tooltip": "Unlike Stop, this ability freezes everything including waves, money gain, cat and enemy cool down, etc",
-        "format": "(prob)% chance to stop time for (_dispTime(time))",
+        "format": "(prob)% chance to [(intensity>0){stop}(intensity<0){speed up}] time for (_dispTime(time)), with a intensity of (_abs(intensity))",
         "class": {
             "prob": {
                 "name": "chance",
@@ -460,6 +460,10 @@
             "time": {
                 "name": "duration",
                 "tooltip": null
+            },
+            "intensity": {
+                "name": "intensity",
+                "tooltip": "The power of the timestop. If the intensity is lower than the duration, there will be certain intervals where units will be able to move. Set to negative to speed up entities with time stop immunity"
             }
         }
     },
@@ -485,16 +489,17 @@
         "tooltip": null,
         "format": [
             "(prob)% chance to summon a [(!type.fix_buff){(_summonMagnification(mult))}(type.fix_buff){[(_isEnemy){(mult)%}(!_isEnemy){Lv(mult)}]}] (_entity(id)) after (_dispTime(time)), ",
-            "one summoned (dis) range away from ",
+            "one summoned (dis)[(max_dis!=dis){ ~ (max_dis)}] range away from ",
             "[(type.on_kill|type.on_hit){each target}",
             "(!type.on_hit&!type.on_kill){the summoner}] ",
             "[(type.on_hit){hit}",
             "(type.on_kill&!type.on_hit){killed}",
             "(!type.on_kill&!type.on_hit){on this attack}], ",
-            "[(type.same_health){Summoned entities will have the same health as this entity, }]",
+            "[(type.same_health){each entity will have the same hp as the summoner, }]",
+            "[(type.bond_hp){the summoner's hp will be bound with each summoned entity's hp, }]",
             "and is[(type.ignore_limit){n't}] restricted by the stage entity limit. ",
-            "Summoned entities will be in [(!type.random_layer){the same layer as this entity}",
-            "(type.random_layer){a random layer}]. ",
+            "Summoned entities will be in [(min_layer==max_layer){[(min_layer==-1){the same layer as this entity}(min_layer!=-1){layer (min_layer)}]}",
+            "(min_layer!=max_layer){a random layer between (min_layer) and (max_layer)}]. ",
             "Summon will display [(type.anim_type==0){no}(type.anim_type==1){warp}(type.anim_type>=2){burrow}]",
             " animation[(type.anim_type==3){ and disable burrow for summoned entities}]."
         ],
@@ -508,12 +513,28 @@
                 "tooltip": null
             },
             "dis": {
-                "name": "distance",
-                "tooltip": "Distance from this entity by default, distance from the target if on hit or on kill is enabled"
+                "name": "min distance",
+                "tooltip": "Minimum distance from this entity by default, or from the target if on hit or on kill is enabled"
+            },
+            "max_dis": {
+                "name": "max distance",
+                "tooltip": "Max distance from this entity by default, or from the target if on hit or on kill is enabled"
             },
             "mult": {
                 "name": "buff",
                 "tooltip": "Buff of the summoned entity, relative to this entity by default, fixed buff if you enable fix buff"
+            },
+            "time": {
+                "name": "delay",
+                "tooltip": "delay of this summon"
+            },
+            "min_layer": {
+                "name": "min layer",
+                "tooltip": "lowest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
+            },
+            "max_layer": {
+                "name": "max layer",
+                "tooltip": "highest layer the summoned entity will be at. Set to -1 to use same layer as this entity"
             },
             "type.anim_type": {
                 "name": "summon anim",
@@ -538,9 +559,9 @@
                 "name": "same health",
                 "tooltip": "Set the summoned entity to have the same health as this entity."
             },
-            "type.random_layer": {
-                "name": "random layer",
-                "tooltip": "By default, summoned entity will have the same layer as this entity. Enable this to make the layer randomized."
+            "type.bond_hp": {
+                "name": "Bond health",
+                "tooltip": "When activated, the summoner will receive all damage and procs the summoned entity receives"
             },
             "type.on_hit": {
                 "name": "on hit",
@@ -557,10 +578,6 @@
                     " Summon per target killed, distance origins are set to the targets' positions.",
                     " Multiple summon possible for ranged attack."
                 ]
-            },
-            "time": {
-                "name": "delay",
-                "tooltip": "delay of this summon"
             },
             "form": {
                 "name": "Form",
