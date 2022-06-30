@@ -342,10 +342,10 @@ class ColorPickerView : View {
             p.color = Color.rgb(rgb[0], rgb[1], rgb[2])
 
             canvas.drawRect(Rect(iGap + ihw + gap + barH + gap, iGap,iGap + ihw + gap + barH * 2 + gap, iGap * 2), p)
-
-            if(this::callBack.isInitialized && dragMode != DRAGMODE.NONE)
-                callBack.run()
         }
+
+        if(this::callBack.isInitialized && dragMode != DRAGMODE.NONE)
+            callBack.run()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
