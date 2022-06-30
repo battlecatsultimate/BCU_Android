@@ -941,6 +941,6 @@
     <string name="config_ex">跳出EX關卡接續視窗</string>
     <string name="ex_desc">選擇任一EX關卡繼續挑戰</string>
     <string name="ex_found">找到EX關卡</string>
-    <string name="config_realex">Perform realistic EX stage calculation</string>
-    <string name="ex_picked">EX stage which you can continue is found :\n\n_</string>
+    <string name="config_realex">執行真實EX關卡掉落計算</string>
+    <string name="ex_picked">找到可接續的EX關卡:\n\n_</string>
 </resources>
