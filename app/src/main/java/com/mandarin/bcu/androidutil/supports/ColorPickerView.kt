@@ -472,11 +472,11 @@ class ColorPickerView : View {
                 circleY = ((1 - hsb[2]) * 360).toInt()
             }
             MODE.SATURATION -> {
-                circleX = (hsb[0] * 360).toInt()
+                circleX = hsb[0].toInt()
                 circleY = ((1 - hsb[2]) * 360).toInt()
             }
             MODE.BRIGHTNESS -> {
-                circleX = (hsb[0] * 360).toInt()
+                circleX = hsb[0].toInt()
                 circleY = ((1 - hsb[1]) * 360).toInt()
             }
             MODE.RED -> {
