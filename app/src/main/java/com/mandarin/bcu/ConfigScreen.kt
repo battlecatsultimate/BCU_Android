@@ -784,8 +784,6 @@ open class ConfigScreen : AppCompatActivity() {
 
                 val callback = Runnable {
                     runOnUiThread {
-                        println("HMM")
-
                         editing = false
 
                         texts[0].setText(picker.hsb[0].roundToInt().toString())
