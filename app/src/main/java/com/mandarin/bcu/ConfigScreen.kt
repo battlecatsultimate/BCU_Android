@@ -25,7 +25,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.Revalidater
@@ -735,7 +734,7 @@ open class ConfigScreen : AppCompatActivity() {
                     if(action == EditorInfo.IME_ACTION_DONE) {
                         val s = hex.text?.toString() ?: "0"
 
-                        if(s.matches(Regex("-?[0-9a-fA-F]+"))) {
+                        if(s.matches(Regex("-?[\\da-fA-F]+"))) {
                             var value = Integer.parseInt(s, 16)
 
                             if(value > 0xFFFFFF) {
