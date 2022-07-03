@@ -16,7 +16,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 33
         versionCode 1
-        versionName "0.16.10b_00"
+        versionName "0.16.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "YOU_CANT_FIND_PASSWORD", "\"" + getPassword() + "\""
