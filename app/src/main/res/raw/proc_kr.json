@@ -456,7 +456,7 @@
             "[(type.ignore_limit){스테이지 제한에 상관없이}] ",
             "[(min_layer==max_layer){소환자의 레이어와 같은 곳에}",
             "(min_layer!=max_layer){렌덤한 레이어 (min_layer)~(max_layer) 사이에}] ",
-            "[(type.same_health){소환자와 같은 체력[(type.bond_hp){이고 소환자화 연동된 상태로}(!type.bond_hp){으로}] ]",
+            "[(type.same_health){소환자와 같은 체력[(type.bond_hp){이고 소환자화 연동된 상태로}(!type.bond_hp){으로}] }]",
             "[(type.anim_type==0){평범하게 소환}(type.anim_type==1){워프 에니메이션과 함께 소환}(type.anim_type>=2){버로우 애니메이션과 함께 소환}](_right)"
         ],
         "class": {
