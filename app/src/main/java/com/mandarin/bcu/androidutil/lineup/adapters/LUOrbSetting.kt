@@ -23,6 +23,8 @@ import common.battle.BasisSet
 import common.battle.data.Orb
 import common.util.Data
 import common.util.unit.Form
+import common.util.unit.Level
+import common.util.unit.Trait
 
 class LUOrbSetting : Fragment() {
     companion object {
@@ -34,7 +36,7 @@ class LUOrbSetting : Fragment() {
         }
     }
 
-    private var f: Form? = null
+    private lateinit var f: Form
     private var orb = ArrayList<IntArray>()
     private lateinit var line: LineUpView
 
@@ -113,9 +115,7 @@ class LUOrbSetting : Fragment() {
         val image = v.findViewById<ImageView>(R.id.orbimage)
         val desc = v.findViewById<TextView>(R.id.orbdesc)
 
-        f ?: return
-
-        val o = f?.orbs ?: return
+        val o = f.orbs ?: return
 
         val c = context ?: return
 
@@ -129,13 +129,15 @@ class LUOrbSetting : Fragment() {
                     return
                 }
 
-                updateSpinners(type, trait, grade, slot, orb[position])
+                val l = BasisSet.current().sele.lu.getLv(f)
+
+                updateSpinners(type, trait, grade, slot, orb[position], l)
                 generateImage(orb[position], image)
 
                 if(orb[position].isNotEmpty() && orb[position][0] == 0) {
                     val orbMap = CommonStatic.getBCAssets().ORB[orb[position][Data.ORB_TYPE]] ?: return
 
-                    generateTraitData(orbMap)
+                    generateTraitData(orbMap, slot, f, l, needTraitFiltering(orb[position]))
                 }
             }
         }
@@ -260,23 +262,65 @@ class LUOrbSetting : Fragment() {
                 setAppear(image, trait, grade)
 
                 val od = CommonStatic.getBCAssets().ORB[data[Data.ORB_TYPE]] ?: return
+                val l = BasisSet.current().sele.lu.getLv(f)
 
-                generateTraitData(od)
-
-                if(!od.containsKey(data[1])) {
-                    data[1] = Data.TB_RED
-                }
+                generateTraitData(od, slot, f, l, needTraitFiltering(data))
 
                 val t = ArrayList<String>()
 
-                for(i in od.keys) {
-                    val r = Orb.reverse(i)
+                val traitList = ArrayList<Trait>()
 
-                    if(r >= traits.size) {
-                        Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : $i")
-                        return
+                if (slot) {
+                    val mu = if (f.du?.pCoin != null) {
+                        f.du?.pCoin?.improve(l.lvs) ?: return
                     } else {
-                        t.add(c.getString(traits[r]))
+                        f.du ?: return
+                    }
+
+                    for(tr in mu.traits) {
+                        if(tr.BCTrait)
+                            traitList.add(tr)
+                    }
+                } else {
+                    for(form in f.unit.forms) {
+                        val mu = if (f.du.pCoin != null) {
+                            f.du?.pCoin?.improve(l.lvs) ?: return
+                        } else {
+                            f.du ?: return
+                        }
+
+                        for(tr in mu.traits) {
+                            if(tr.BCTrait && !traitList.contains(tr))
+                                traitList.add(tr)
+                        }
+                    }
+                }
+
+                if(needTraitFiltering(data)) {
+                    for(tr in traitList) {
+                        if(od.contains(Orb.traitToOrb(tr.id.id))) {
+                            val r = Orb.reverse(Orb.traitToOrb(tr.id.id))
+
+                            if(r >= traits.size) {
+                                Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : ${Orb.traitToOrb(tr.id.id)}")
+                                return
+                            } else {
+                                t.add(c.getString(traits[r]))
+                            }
+                        }
+                    }
+                }
+
+                if(t.isEmpty()) {
+                    for(i in od.keys) {
+                        val r = Orb.reverse(i)
+
+                        if(r >= traits.size) {
+                            Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : $i")
+                            return
+                        } else {
+                            t.add(c.getString(traits[r]))
+                        }
                     }
                 }
 
@@ -403,15 +447,17 @@ class LUOrbSetting : Fragment() {
 
     private fun update(v: View) {
         f = if (StaticStore.position[0] == -1)
-            null
+            return
         else if (StaticStore.position[0] == 100)
-            line.repform
+            line.repform ?: return
         else {
             if (StaticStore.position[0] * 5 + StaticStore.position[1] >= StaticStore.currentForms.size)
-                null
+                return
             else
-                StaticStore.currentForms[StaticStore.position[0] * 5 + StaticStore.position[1]]
+                StaticStore.currentForms[StaticStore.position[0] * 5 + StaticStore.position[1]] ?: return
         }
+
+        updateOrbData()
 
         val orbs = v.findViewById<Spinner>(R.id.orbspinner)
         val type = v.findViewById<Spinner>(R.id.orbtype)
@@ -422,7 +468,7 @@ class LUOrbSetting : Fragment() {
         val image = v.findViewById<ImageView>(R.id.orbimage)
         val desc = v.findViewById<TextView>(R.id.orbdesc)
 
-        if(f == null || f?.orbs == null) {
+        if(f.orbs == null) {
             setDisappear(orbs, type, trait, grade, add, remove, image, desc)
 
             synchronized(obj) {
@@ -433,17 +479,6 @@ class LUOrbSetting : Fragment() {
             return
         } else {
             setAppear(orbs, type)
-        }
-
-        val f = this.f
-
-        if(f == null) {
-            synchronized(obj) {
-                isUpdating = false
-                obj.notifyAll()
-            }
-
-            return
         }
 
         val l = BasisSet.current().sele.lu.getLv(f)
@@ -548,8 +583,6 @@ class LUOrbSetting : Fragment() {
     }
 
     private fun parseData() {
-        f ?: return
-
         orb.clear()
 
         val data = BasisSet.current().sele.lu.getLv(f).orbs ?: return
@@ -559,26 +592,52 @@ class LUOrbSetting : Fragment() {
         }
     }
 
-    private fun updateSpinners(v: Spinner, v1: Spinner, v2: Spinner, slot: Boolean, data: IntArray) {
+    private fun updateSpinners(type: Spinner, trait: Spinner, grade: Spinner, slot: Boolean, data: IntArray, lv: Level) {
         val c = context ?: return
 
-        val u = f?.unit ?: return
+        val u = f.unit ?: return
 
         var str = false
         var mas = false
         var res = false
 
+        val traitList = ArrayList<Trait>()
+
         if (slot) {
-            val abi = f?.du?.abi ?: 0
+            val mu = if (f.du?.pCoin != null) {
+                f.du?.pCoin?.improve(lv.lvs) ?: return
+            } else {
+                f.du ?: return
+            }
+
+            val abi = mu.abi
 
             str = (abi and Data.AB_GOOD) != 0
             mas = (abi and Data.AB_MASSIVE) != 0
             res = (abi and Data.AB_RESIST) != 0
+
+            for(t in mu.traits) {
+                if(t.BCTrait)
+                    traitList.add(t)
+            }
         } else {
             for(form in u.forms) {
-                str = str or ((form.du.abi and Data.AB_GOOD) != 0)
-                mas = mas or ((form.du.abi and Data.AB_MASSIVE) != 0)
-                res = res or ((form.du.abi and Data.AB_RESIST) != 0)
+                val mu = if (f.du?.pCoin != null) {
+                    f.du?.pCoin?.improve(lv.lvs) ?: return
+                } else {
+                    f.du ?: return
+                }
+
+                val abi = mu.abi
+
+                str = str or ((abi and Data.AB_GOOD) != 0)
+                mas = mas or ((abi and Data.AB_MASSIVE) != 0)
+                res = res or ((abi and Data.AB_RESIST) != 0)
+
+                for(t in mu.traits) {
+                    if(t.BCTrait && !traitList.contains(t))
+                        traitList.add(t)
+                }
             }
         }
 
@@ -612,16 +671,16 @@ class LUOrbSetting : Fragment() {
 
         val a0 = ArrayAdapter(c, R.layout.spinnersmall, types.toTypedArray())
 
-        v.adapter = a0
+        type.adapter = a0
 
         if(data.isEmpty()) {
             if(slot) {
-                v.setSelection(0, false)
+                type.setSelection(0, false)
 
-                setDisappear(v1, v2)
+                setDisappear(trait, grade)
 
-                v1.isEnabled = false
-                v2.isEnabled = false
+                trait.isEnabled = false
+                grade.isEnabled = false
 
                 return
             } else {
@@ -629,40 +688,57 @@ class LUOrbSetting : Fragment() {
                 return
             }
         } else {
-            v1.isEnabled = true
-            v2.isEnabled = true
+            trait.isEnabled = true
+            grade.isEnabled = true
 
             if(slot) {
-                v.setSelection(typeData.indexOf(data[0])+1, false)
+                type.setSelection(typeData.indexOf(data[0])+1, false)
             } else {
-                v.setSelection(typeData.indexOf(data[0]), false)
+                type.setSelection(typeData.indexOf(data[0]), false)
             }
         }
 
-        setAppear(v1, v2)
+        setAppear(trait, grade)
 
         val od = CommonStatic.getBCAssets().ORB[data[Data.ORB_TYPE]] ?: return
 
         val t = ArrayList<String>()
 
-        for(i in od.keys) {
-            val r = Orb.reverse(i)
+        if(data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT) {
+            for(tr in traitList) {
+                if(od.contains(Orb.traitToOrb(tr.id.id))) {
+                    val r = Orb.reverse(Orb.traitToOrb(tr.id.id))
 
-            if(r >= traits.size) {
-                Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : $i")
-                return
-            } else {
-                t.add(c.getString(traits[r]))
+                    if(r >= traits.size) {
+                        Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : ${Orb.traitToOrb(tr.id.id)}")
+                        return
+                    } else {
+                        t.add(c.getString(traits[r]))
+                    }
+                }
+            }
+        }
+
+        if(t.isEmpty()) {
+            for(i in od.keys) {
+                val r = Orb.reverse(i)
+
+                if(r >= traits.size) {
+                    Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : $i")
+                    return
+                } else {
+                    t.add(c.getString(traits[r]))
+                }
             }
         }
 
         val a1 = ArrayAdapter(c, R.layout.spinnersmall, t.toTypedArray())
 
-        v1.adapter = a1
+        trait.adapter = a1
 
-        generateTraitData(od)
+        generateTraitData(od, slot, f, lv, needTraitFiltering(data))
 
-        v1.setSelection(traitData.indexOf(data[1]), false)
+        trait.setSelection(traitData.indexOf(data[1]), false)
 
         val g = od[data[1]] ?: return
 
@@ -679,9 +755,9 @@ class LUOrbSetting : Fragment() {
 
         val a2 = ArrayAdapter(c, R.layout.spinnersmall, gr.toTypedArray())
 
-        v2.adapter = a2
+        grade.adapter = a2
 
-        v2.setSelection(data[2], false)
+        grade.setSelection(data[2], false)
     }
 
     private fun generateOrbTexts() : List<String> {
@@ -689,9 +765,7 @@ class LUOrbSetting : Fragment() {
 
         val c = context ?: return res
 
-        f ?: return res
-
-        val o = f?.orbs ?: return res
+        val o = f.orbs ?: return res
 
         if(o.slots != -1) {
             val l = BasisSet.current().sele.lu.getLv(f)
@@ -738,9 +812,7 @@ class LUOrbSetting : Fragment() {
     private fun generateOrbTextAt(index: Int) : String {
         val c = context ?: return ""
 
-        f ?: return ""
-
-        val o = f?.orbs ?: return ""
+        val o = f.orbs ?: return ""
 
         if(o.slots != -1) {
             val l = BasisSet.current().sele.lu.getLv(f)
@@ -836,8 +908,6 @@ class LUOrbSetting : Fragment() {
     }
 
     private fun setData() {
-        f ?: return
-
         val o = BasisSet.current().sele.lu.getLv(f) ?: return
 
         o.orbs = orb.toTypedArray()
@@ -884,11 +954,48 @@ class LUOrbSetting : Fragment() {
         v.setImageBitmap(b)
     }
 
-    private fun generateTraitData(data: Map<Int, List<Int>>) {
+    private fun generateTraitData(data: Map<Int, List<Int>>, slot: Boolean, f: Form, lv: Level, filter: Boolean) {
+        val traitList = ArrayList<Trait>()
+
+        if (slot) {
+            val mu = if (f.du?.pCoin != null) {
+                f.du.pCoin?.improve(lv.lvs) ?: return
+            } else {
+                f.du ?: return
+            }
+
+            for(t in mu.traits) {
+                if(t.BCTrait)
+                    traitList.add(t)
+            }
+        } else {
+            for(form in f.unit.forms) {
+                val mu = if (f.du?.pCoin != null) {
+                    f.du.pCoin?.improve(lv.lvs) ?: return
+                } else {
+                    f.du ?: return
+                }
+
+                for(t in mu.traits) {
+                    if(t.BCTrait && !traitList.contains(t))
+                        traitList.add(t)
+                }
+            }
+        }
+
         traitData.clear()
 
-        for(i in data.keys) {
-            traitData.add(i)
+        if(filter) {
+            for(t in traitList) {
+                if (data.containsKey(Orb.traitToOrb(t.id.id)))
+                    traitData.add(Orb.traitToOrb(t.id.id))
+            }
+        }
+
+        if(traitData.isEmpty()) {
+            for(t in data.keys) {
+                traitData.add(t)
+            }
         }
     }
 
@@ -920,8 +1027,6 @@ class LUOrbSetting : Fragment() {
     }
 
     private fun setLevel() {
-        f ?: return
-
         val o = Array(orb.size) { i -> orb[i]}
 
         val l = BasisSet.current().sele.lu.getLv(f) ?: return
@@ -959,8 +1064,103 @@ class LUOrbSetting : Fragment() {
                 .replace("_", Data.ORB_RESISTANT_MULTI[data[Data.ORB_GRADE]].toString())
         }
 
-
         text.visibility = View.VISIBLE
         text.text = s
+    }
+
+    private fun updateOrbData() {
+        if(!this::f.isInitialized)
+            return
+
+        var str = false
+        var mas = false
+        var res = false
+
+        val possibleTraits = ArrayList<Int>()
+
+        val o = f.orbs ?: return
+
+        val l = BasisSet.current().sele.lu.getLv(f)
+
+        if(o.slots == -1) {
+            for(form in f.unit.forms) {
+                val mu = if(form.du.pCoin != null) {
+                    form.du.pCoin.improve(l.lvs)
+                } else {
+                    form.du
+                }
+
+                str = str or ((mu.abi and Data.AB_GOOD) != 0)
+                mas = mas or ((mu.abi and Data.AB_MASSIVE) != 0)
+                res = res or ((mu.abi and Data.AB_RESIST) != 0)
+
+                for(t in mu.traits) {
+                    if(!t.BCTrait)
+                        continue
+
+                    val bitMask = 1 shl t.id.id
+
+                    if(!possibleTraits.contains(bitMask))
+                        possibleTraits.add(bitMask)
+                }
+            }
+        } else {
+            val mu = if(f.du.pCoin != null) {
+                f.du.pCoin.improve(l.lvs)
+            } else {
+                f.du
+            }
+
+            str = (mu.abi and Data.AB_GOOD) != 0
+            mas = (mu.abi and Data.AB_MASSIVE) != 0
+            res = (mu.abi and Data.AB_RESIST) != 0
+
+            for(t in mu.traits) {
+                if(!t.BCTrait)
+                    continue
+
+                val bitMask = 1 shl t.id.id
+
+                if(!possibleTraits.contains(bitMask))
+                    possibleTraits.add(bitMask)
+            }
+        }
+
+        if(l.orbs != null) {
+            for(data in l.orbs) {
+                if(data.isEmpty())
+                    continue
+
+                if(!str && data[Data.ORB_TYPE] == Data.ORB_STRONG)
+                    data[Data.ORB_TYPE] = Data.ORB_ATK
+
+                if(!mas && data[Data.ORB_TYPE] == Data.ORB_MASSIVE)
+                    data[Data.ORB_TYPE] = Data.ORB_ATK
+
+                if(!res && data[Data.ORB_TYPE] == Data.ORB_RESISTANT)
+                    data[Data.ORB_TYPE] = Data.ORB_ATK
+
+                if(needTraitFiltering(data)) {
+                    val allTraits = CommonStatic.getBCAssets().ORB[data[0]]?.keys ?: continue
+
+                    val traits = ArrayList<Int>()
+
+                    for(t in possibleTraits) {
+                        if(allTraits.contains(t))
+                            traits.add(t)
+                    }
+
+                    if(traits.isNotEmpty())
+                        traits.sortWith(Int::compareTo)
+
+                    if(traits.isNotEmpty() && !traits.contains(data[Data.ORB_TRAIT]))
+                        data[Data.ORB_TRAIT] = traits[0]
+                }
+            }
+        }
+    }
+
+    private fun needTraitFiltering(data: IntArray) : Boolean {
+        return data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT
     }
 }

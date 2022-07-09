@@ -165,11 +165,10 @@ class LUUnitSetting : Fragment() {
                             }
 
                             BasisSet.current().sele.lu.setLv(f.unit, pcoin)
+                            line.updateUnitOrb()
                         }
 
-                        override fun onNothingSelected(parent: AdapterView<*>) {
-
-                        }
+                        override fun onNothingSelected(parent: AdapterView<*>) {}
                     }
                 }
             } else {
@@ -240,6 +239,7 @@ class LUUnitSetting : Fragment() {
                     }
 
                     BasisSet.current().sele.lu.setLv(f.unit, pcoin)
+                    line.updateUnitOrb()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -290,6 +290,7 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
 
                     BasisSet.current().sele.lu.setLv(f.unit, pcoin)
+                    line.updateUnitOrb()
 
                     hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
@@ -314,6 +315,7 @@ class LUUnitSetting : Fragment() {
                     removePCoin()
 
                     BasisSet.current().sele.lu.setLv(f.unit, pcoin)
+                    line.updateUnitOrb()
 
                     hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
