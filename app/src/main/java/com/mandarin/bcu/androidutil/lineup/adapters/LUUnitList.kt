@@ -1,8 +1,6 @@
 package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +8,13 @@ import android.widget.AdapterView
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.filter.FilterEntity
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import common.battle.BasisSet
 import common.pack.Identifier
 import common.util.unit.Form
 import common.util.unit.Unit
-import kotlin.collections.ArrayList
 
 class LUUnitList : Fragment() {
     private lateinit var line: LineUpView
@@ -96,7 +93,7 @@ class LUUnitList : Fragment() {
         return false
     }
 
-    private fun setArguments(line: LineUpView) {
+    fun setArguments(line: LineUpView) {
         this.line = line
     }
 

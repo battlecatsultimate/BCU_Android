@@ -165,7 +165,10 @@ class LUUnitSetting : Fragment() {
                             }
 
                             BasisSet.current().sele.lu.setLv(f.unit, pcoin)
-                            line.updateUnitOrb()
+
+                            if(this@LUUnitSetting::line.isInitialized) {
+                                line.updateUnitOrb()
+                            }
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -239,7 +242,10 @@ class LUUnitSetting : Fragment() {
                     }
 
                     BasisSet.current().sele.lu.setLv(f.unit, pcoin)
-                    line.updateUnitOrb()
+
+                    if(this@LUUnitSetting::line.isInitialized) {
+                        line.updateUnitOrb()
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -294,7 +300,6 @@ class LUUnitSetting : Fragment() {
 
                     hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
-
                 } else {
                     val anim = ValueAnimator.ofInt(StaticStore.dptopx(64f, requireContext()), 0)
                     anim.addUpdateListener { animation ->
@@ -416,7 +421,7 @@ class LUUnitSetting : Fragment() {
             v.visibility = View.VISIBLE
     }
 
-    private fun setVariable(line: LineUpView) {
+    fun setVariable(line: LineUpView) {
         this.line = line
     }
 

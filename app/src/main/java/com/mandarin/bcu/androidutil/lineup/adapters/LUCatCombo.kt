@@ -144,7 +144,7 @@ class LUCatCombo : Fragment() {
         return view
     }
 
-    private fun setVariables(line: LineUpView) {
+    fun setVariables(line: LineUpView) {
         this.line = line
     }
 

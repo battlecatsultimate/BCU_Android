@@ -787,6 +787,26 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
             }
         }
 
+        fun reassignVariables(line: LineUpView) {
+            val required = intArrayOf(0, 1, 2, 4, 6)
+
+            for(i in required) {
+                val frag = fm.findFragmentByTag("f$i")
+
+                if(frag == null) {
+                    Log.e("LUAdder:LUTab", "Failed to get fragment : $i")
+                } else {
+                    when(i) {
+                        0 -> (frag as LUUnitList).setArguments(line)
+                        1 -> (frag as LUUnitSetting).setVariable(line)
+                        2 -> (frag as LUOrbSetting).setLineup(line)
+                        4 -> (frag as LUTreasureSetting).setVariable(line)
+                        else -> (frag as LUCatCombo).setVariables(line)
+                    }
+                }
+            }
+        }
+
         override fun getItemCount(): Int {
             return 7
         }

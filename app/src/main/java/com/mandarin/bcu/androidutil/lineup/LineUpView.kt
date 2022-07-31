@@ -5,18 +5,15 @@ import android.graphics.*
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.lineup.adapters.*
 import com.mandarin.bcu.androidutil.lineup.coroutine.LUAdder
 import common.battle.BasisSet
 import common.battle.LineUp
 import common.system.files.VFile
 import common.util.unit.Form
-import java.util.*
 
 class LineUpView : View {
     val pager: ViewPager2?
@@ -27,6 +24,10 @@ class LineUpView : View {
 
     constructor(context: Context?, pager: ViewPager2) : super(context) {
         this.pager = pager
+
+        if(pager.adapter is LUAdder.LUTab) {
+            (pager.adapter as LUAdder.LUTab).reassignVariables(this)
+        }
     }
 
     private val postionReplace = 600
