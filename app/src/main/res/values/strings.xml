@@ -678,12 +678,12 @@
     <string name="main_file_text">Text Update Found</string>
     <string name="main_file_music">Music Update Found</string>
     <string name="main_file_asset">Asset Update Found</string>
-    <string name="main_notif_down">Downloaing Files</string>
+    <string name="main_notif_down">Downloading Files</string>
     <string name="main_notif_music">Downloading Music</string>
     <string name="main_file_merge">Merging Files…</string>
     <string name="main_rev_check">Checking Old Files…</string>
     <string name="main_rev_remove">Removing Old Files…</string>
-    <string name="main_rev_reformat">Reformtting Pack Files…</string>
+    <string name="main_rev_reformat">Reformatting Pack Files…</string>
     <string name="unit_inf_pack">Pack</string>
     <string name="load_bascimg">Loading Basic Images…</string>
     <string name="load_enemy">Loading Enemy Data…</string>
@@ -850,7 +850,7 @@
     <string name="datareset_musicreset">Resetting music data…</string>
     <string name="datareset_lineupreset">Resetting lineup data…</string>
     <string name="datareset_logreset">Resetting log files…</string>
-    <string name="datareset_packreset">Restting pack data…</string>
+    <string name="datareset_packreset">Resetting pack data…</string>
     <string name="treasure_st_trea">Study Treasure (EoC)</string>
     <string name="treasure_st_lev">Study Level</string>
     <string name="treasure_st_trea2">Study Treasure (CotC)</string>
