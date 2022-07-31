@@ -285,7 +285,7 @@ public interface BattleBox {
             int time = bf.sb.s_stop == 0 ? (bf.sb.time / 5) % 2 : 1;
             int mtype = bf.sb.money < bf.sb.upgradeCost ? 0 : time == 0 ? 1 : 2;
 
-            if (bf.sb.work_lv == 8)
+            if (bf.sb.work_lv >= 8)
                 mtype = 2;
 
             FakeImage left = aux.battle[0][mtype].getImg();
