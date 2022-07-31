@@ -25,6 +25,7 @@ class CVGraphics : FakeGraphics {
         private val add = PorterDuffXfermode(PorterDuff.Mode.ADD)
         private val multi = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
         private val screen = PorterDuffXfermode(PorterDuff.Mode.SCREEN)
+        private val darken = PorterDuffXfermode(PorterDuff.Mode.DARKEN)
     }
 
     private var c: Canvas
@@ -67,10 +68,6 @@ class CVGraphics : FakeGraphics {
 
     fun setCanvas(c: Canvas) {
         this.c = c
-    }
-
-    fun getCanvas() : Canvas {
-        return c
     }
 
     override fun drawImage(bimg: FakeImage, x: Double, y: Double) {
@@ -224,6 +221,10 @@ class CVGraphics : FakeGraphics {
                     }
                     3 -> {
                         bp.xfermode = screen
+                        bp.alpha = alpha
+                    }
+                    -1 -> {
+                        bp.xfermode = darken
                         bp.alpha = alpha
                     }
                 }
