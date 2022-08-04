@@ -943,4 +943,7 @@
     <string name="ex_found">找到EX關卡</string>
     <string name="config_realex">執行真實EX關卡掉落計算</string>
     <string name="ex_picked">找到可接續的EX關卡:\n\n_</string>
+    <string name="config_shake">Shake battle upon base hit and boss appearance</string>
+    <string name="config_showst">Show stage name image in battle</string>
+    <string name="stg_info_killcount">Kill Count</string>
 </resources>

@@ -113,6 +113,8 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().viewerColor = shared.getInt("viewerColor", -1)
         CommonStatic.getConfig().exContinuation = shared.getBoolean("exContinue", true)
         CommonStatic.getConfig().realEx = shared.getBoolean("realEx", false)
+        CommonStatic.getConfig().shake = shared.getBoolean("shake", true)
+        CommonStatic.getConfig().stageName = shared.getBoolean("showst", true)
 
         val result = intent
         var conf = false

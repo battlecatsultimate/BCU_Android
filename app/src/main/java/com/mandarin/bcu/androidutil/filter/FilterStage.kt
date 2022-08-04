@@ -154,7 +154,7 @@ object FilterStage {
             val def = st.data ?: return false
 
             for (i in def.datas) {
-                if (i.boss == 1)
+                if (i.boss >= 1)
                     return true
             }
         } catch(e: Exception) {

@@ -942,4 +942,7 @@
     <string name="ex_found">EX stages found</string>
     <string name="config_realex">Perform realistic EX stage calculation</string>
     <string name="ex_picked">EX stage which you can continue is found :\n\n_</string>
+    <string name="config_shake">Shake battle upon base hit and boss appearance</string>
+    <string name="config_showst">Show stage name image in battle</string>
+    <string name="stg_info_killcount">Kill Count</string>
 </resources>

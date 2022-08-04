@@ -858,6 +858,32 @@ open class ConfigScreen : AppCompatActivity() {
             editor.apply()
         }
 
+        val shake = findViewById<SwitchCompat>(R.id.configshake)
+
+        shake.isChecked = shared.getBoolean("shake", true)
+
+        shake.setOnCheckedChangeListener {_, c ->
+            CommonStatic.getConfig().shake = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("shake", c)
+            editor.apply()
+        }
+
+        val showst = findViewById<SwitchCompat>(R.id.configshowst)
+
+        showst.isChecked = shared.getBoolean("showst", true)
+
+        showst.setOnCheckedChangeListener { _, c ->
+            CommonStatic.getConfig().stageName = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("showst", c)
+            editor.apply()
+        }
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 back.performClick()

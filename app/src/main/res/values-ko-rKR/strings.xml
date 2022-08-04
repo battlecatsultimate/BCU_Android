@@ -943,4 +943,7 @@
     <string name="ex_found">EX 스테이지 발견</string>
     <string name="config_realex">실제 EX 스테이지 확률을 고려</string>
     <string name="ex_picked">계속 진행할 수 있는 EX 스테이지가 발견되었습니다 :\n\n_</string>
+    <string name="config_shake">유닛 성 히트 및 보스 등장 시 전투 흔들림 표시</string>
+    <string name="config_showst">전투 내 스테이지 이름 이미지 표시</string>
+    <string name="stg_info_killcount">킬 카운트</string>
 </resources>

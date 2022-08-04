@@ -31,7 +31,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             StaticStore.infoOpened = BooleanArray(st.data.datas.size) {
                 false
             }
-        } else if (StaticStore.infoOpened?.size ?: 0 < st.data.datas.size) {
+        } else if ((StaticStore.infoOpened?.size ?: 0) < st.data.datas.size) {
             StaticStore.infoOpened = BooleanArray(st.data.datas.size) {
                 false
             }
@@ -123,8 +123,8 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, EnemyInfo::class.java)
                 intent.putExtra("Data", JsonEncoder.encode(em.id).toString())
-                intent.putExtra("Multiply", (data[viewHolder.adapterPosition]?.multiple?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
-                intent.putExtra("AMultiply", (data[viewHolder.adapterPosition]?.mult_atk?.toFloat() ?: 0 * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("Multiply", ((data[viewHolder.adapterPosition]?.multiple?.toFloat() ?: 0f) * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("AMultiply", ((data[viewHolder.adapterPosition]?.mult_atk?.toFloat() ?: 0f) * multi.toFloat() / 100.toFloat()).toInt())
                 activity.startActivity(intent)
             }
         })
@@ -133,7 +133,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
 
         viewHolder.bh.text = s.getBaseHealth(data[viewHolder.adapterPosition] ?: SCDef.Line())
 
-        if (data[viewHolder.adapterPosition]?.boss ?: -1 == 0)
+        if ((data[viewHolder.adapterPosition]?.boss ?: -1) == 0)
             viewHolder.isboss.text = activity.getString(R.string.unit_info_false)
         else
             viewHolder.isboss.text = activity.getString(R.string.unit_info_true)
@@ -157,6 +157,8 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
         }
 
         viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), frse)
+
+        viewHolder.killcount.text = (data[viewHolder.adapterPosition] ?: SCDef.Line()).kill_count.toString()
     }
 
     override fun getItemCount(): Int {
@@ -164,20 +166,20 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
     }
 
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        var expand: ImageButton = row.findViewById(R.id.stgenlistexp)
-        var icon: ImageView = row.findViewById(R.id.stgenlisticon)
-        var multiply: TextView = row.findViewById(R.id.stgenlistmultir)
-        var number: TextView = row.findViewById(R.id.stgenlistnumr)
-        var info: ImageButton = row.findViewById(R.id.stgenlistinfo)
-        var bh: TextView = row.findViewById(R.id.enemlistbhr)
-        var isboss: TextView = row.findViewById(R.id.enemlistibr)
-        var layer: TextView = row.findViewById(R.id.enemlistlayr)
-        var startb: Button = row.findViewById(R.id.enemlistst)
-        var start: TextView = row.findViewById(R.id.enemliststr)
-        var respawnb: Button = row.findViewById(R.id.enemlistres)
-        var respawn: TextView = row.findViewById(R.id.enemlistresr)
-        var moreinfo: TableLayout = row.findViewById(R.id.stgenlistmi)
-
+        val expand: ImageButton = row.findViewById(R.id.stgenlistexp)
+        val icon: ImageView = row.findViewById(R.id.stgenlisticon)
+        val multiply: TextView = row.findViewById(R.id.stgenlistmultir)
+        val number: TextView = row.findViewById(R.id.stgenlistnumr)
+        val info: ImageButton = row.findViewById(R.id.stgenlistinfo)
+        val bh: TextView = row.findViewById(R.id.enemlistbhr)
+        val isboss: TextView = row.findViewById(R.id.enemlistibr)
+        val layer: TextView = row.findViewById(R.id.enemlistlayr)
+        val startb: Button = row.findViewById(R.id.enemlistst)
+        val start: TextView = row.findViewById(R.id.enemliststr)
+        val respawnb: Button = row.findViewById(R.id.enemlistres)
+        val respawn: TextView = row.findViewById(R.id.enemlistresr)
+        val moreinfo: TableLayout = row.findViewById(R.id.stgenlistmi)
+        val killcount: TextView = row.findViewById(R.id.enemlistkilcr)
     }
 
     private fun reverse(data: Array<SCDef.Line>): Array<SCDef.Line?> {

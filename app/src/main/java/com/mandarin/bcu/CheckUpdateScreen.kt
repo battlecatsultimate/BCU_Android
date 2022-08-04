@@ -228,6 +228,16 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("shake")) {
+            ed.putBoolean("shake", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("showst")) {
+            ed.putBoolean("showst", true)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)

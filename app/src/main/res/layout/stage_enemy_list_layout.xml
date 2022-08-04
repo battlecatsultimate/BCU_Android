@@ -203,15 +203,26 @@
                 android:textStyle="bold"
                 tools:ignore="ButtonStyle" />
 
-            <Button
-                android:id="@+id/enemlistres"
+            <TextView
+                android:id="@+id/enemlistkilc"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.625"
-                android:background="@drawable/button_shape"
+                android:layout_weight="0.25"
+                android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
+                android:text="@string/stg_info_killcount"
+                android:textColor="?attr/TextPrimary"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/enemlistres"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.375"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
                 android:text="@string/stg_info_respawn"
                 android:textAllCaps="false"
                 android:textColor="?attr/TextPrimary"
@@ -226,8 +237,20 @@
             <TextView
                 android:id="@+id/enemliststr"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.375"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/def_minus"
+                android:textColor="?attr/TextPrimary" />
+
+            <TextView
+                android:id="@+id/enemlistkilcr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="8dp"
@@ -238,8 +261,8 @@
             <TextView
                 android:id="@+id/enemlistresr"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.625"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.375"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="8dp"

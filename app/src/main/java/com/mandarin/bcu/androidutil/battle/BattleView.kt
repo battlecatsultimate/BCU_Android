@@ -87,7 +87,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             generator.generateTextImage()
         }
 
-        painter.stageImage = stgImage
+        if(CommonStatic.getConfig().stageName)
+            painter.stageImage = stgImage
+
         painter.dpi = StaticStore.dptopx(32f, context)
         painter.stmImageOffset = StaticStore.dptopx(52f, context)
         painter.stmImageYOffset = StaticStore.dptopx(if(default) 6f else 9f, context)

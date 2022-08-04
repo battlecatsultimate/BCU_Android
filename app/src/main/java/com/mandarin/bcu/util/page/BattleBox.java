@@ -168,7 +168,7 @@ public interface BattleBox {
 
             ImgCore.set(g);
 
-            bf.sb.bg.draw(g, setP(box.getWidth(), box.getHeight()), bf.sb.pos, midh, bf.sb.siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+            bf.sb.bg.draw(g, setP(box.getWidth(), box.getHeight()), bf.sb.pos, midh, bf.sb.siz, (int) Math.ceil(groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0) - bf.sb.shakeOffset));
 
             if(CommonStatic.getConfig().drawBGEffect && bf.sb.bgEffect != null) {
                 bf.sb.bgEffect.preDraw(g, setP(bf.sb.pos, y), bf.sb.siz, midY);
@@ -197,7 +197,7 @@ public interface BattleBox {
                 drawTime(g);
             }
 
-            if(stageImage != null)
+            if(CommonStatic.getConfig().stageName && stageImage != null)
                 g.drawImage(stageImage, stmImageOffset, stmImageYOffset);
         }
 
@@ -262,6 +262,8 @@ public interface BattleBox {
             if(CommonStatic.getConfig().twoRow) {
                 midh -= h * 0.75 / 10.0;
             }
+
+            midh += bf.sb.shakeOffset * dpi / 32.0;
         }
 
         public void reset() {
@@ -661,14 +663,17 @@ public interface BattleBox {
 
             CommonStatic.getConfig().battle = true;
 
-            for (int j = 0; j < bf.sb.le.size(); j++)
-                if ((bf.sb.s_stop == 0 || (bf.sb.le.get(j).getAbi() & Data.AB_TIMEI) == 0)) {
-                    int dep = bf.sb.le.get(j).layer * DEP;
+            for (int i = 0; i < bf.sb.le.size(); i++) {
+                if(bf.sb.le.get(i).dead)
+                    continue;
 
-                    while(efList.size() > 0) {
+                if ((bf.sb.s_stop == 0 || (bf.sb.le.get(i).getAbi() & Data.AB_TIMEI) == 0)) {
+                    int dep = bf.sb.le.get(i).layer * DEP;
+
+                    while (efList.size() > 0) {
                         ContAb wc = efList.get(0);
 
-                        if(wc.layer + 1 <= bf.sb.le.get(j).layer) {
+                        if (wc.layer + 1 <= bf.sb.le.get(i).layer) {
                             drawEff(gra, wc, at, psiz);
 
                             efList.remove(0);
@@ -678,20 +683,24 @@ public interface BattleBox {
 
                     gra.setTransform(at);
 
-                    double p = getX(bf.sb.le.get(j).pos);
+                    double p = getX(bf.sb.le.get(i).pos);
                     double y = midh - (road_h - dep) * bf.sb.siz;
 
-                    bf.sb.le.get(j).anim.draw(gra, setP(p, y), psiz);
+                    bf.sb.le.get(i).anim.draw(gra, setP(p, y), psiz);
 
                     gra.setTransform(at);
 
-                    if(bf.sb.le.get(j).anim.corpse == null || bf.sb.le.get(j).anim.corpse.type == EffAnim.ZombieEff.BACK) {
-                        bf.sb.le.get(j).anim.drawEff(gra, setP(p, y), bf.sb.siz);
+                    if (bf.sb.le.get(i).anim.corpse == null || bf.sb.le.get(i).anim.corpse.type == EffAnim.ZombieEff.BACK) {
+                        bf.sb.le.get(i).anim.drawEff(gra, setP(p, y), bf.sb.siz);
                     }
                 }
+            }
 
             for(int i = 0; i < bf.sb.le.size(); i++) {
                 Entity e = bf.sb.le.get(i);
+
+                if(e.dead)
+                    continue;
 
                 if(e.anim.smoke != null && !e.anim.smoke.done()) {
                     gra.setTransform(at);
@@ -828,31 +837,35 @@ public interface BattleBox {
                     }
                 }
 
-                for (int j = 0; j < bf.sb.le.size(); j++)
-                    if ((bf.sb.le.get(j).getAbi() & Data.AB_TIMEI) > 0) {
-                        int dep = bf.sb.le.get(j).layer * DEP;
+                for (int i = 0; i < bf.sb.le.size(); i++) {
+                    if(bf.sb.le.get(i).dead)
+                        continue;
+                    
+                    if ((bf.sb.le.get(i).getAbi() & Data.AB_TIMEI) > 0) {
+                        int dep = bf.sb.le.get(i).layer * DEP;
 
-                        if(((CVGraphics)gra).neg) {
+                        if (((CVGraphics) gra).neg) {
                             gra.setComposite(CVGraphics.POSITIVE, 0, 0);
                         }
 
                         gra.setTransform(at);
 
-                        double p = getX(bf.sb.le.get(j).pos);
+                        double p = getX(bf.sb.le.get(i).pos);
                         double y = midh - (road_h - dep) * bf.sb.siz;
 
-                        bf.sb.le.get(j).anim.draw(gra, setP(p, y), psiz);
+                        bf.sb.le.get(i).anim.draw(gra, setP(p, y), psiz);
 
                         gra.setTransform(at);
 
-                        if(bf.sb.le.get(j).anim.corpse == null || bf.sb.le.get(j).anim.corpse.type == EffAnim.ZombieEff.BACK) {
-                            bf.sb.le.get(j).anim.drawEff(gra, setP(p, y), bf.sb.siz);
+                        if (bf.sb.le.get(i).anim.corpse == null || bf.sb.le.get(i).anim.corpse.type == EffAnim.ZombieEff.BACK) {
+                            bf.sb.le.get(i).anim.drawEff(gra, setP(p, y), bf.sb.siz);
                         }
 
-                        if(((CVGraphics)gra).neg) {
+                        if (((CVGraphics) gra).neg) {
                             gra.setComposite(FakeGraphics.GRAY, 0, 0);
                         }
                     }
+                }
             }
 
             gra.setTransform(at);
@@ -880,26 +893,54 @@ public interface BattleBox {
             g.setComposite(CVGraphics.POSITIVE, 0, 0);
 
             int w = box.getWidth();
+
             double ratio = dpi / 42.0;
+
             setSym(g, ratio, w-aux.num[0][0].getImg().getWidth()*0.2 - cutout, aux.num[0][0].getImg().getHeight()*0.2, 1);
+
             P p = Res.getMoney(bf.sb.getMoney(), bf.sb.getMaxMoney(), sym);
-            int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
+
+            int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight() * 0.2 * ratio);
             int n = 0;
+
             FakeImage bimg = aux.battle[2][1].getImg();
-            int cw = (int) (bimg.getWidth() * ratio);
+
+            int cw = (int) (bimg.getWidth() * ratio * 1.025);
+
             if ((bf.sb.conf[0] & 2) > 0 && bf.sb.sniper != null) {
                 bimg = aux.battle[2][bf.sb.sniper.enabled ? 2 : 4].getImg();
                 g.drawImage(bimg, w - cw - cutout, ih, dpi, dpi);
                 n++;
             }
+
             bimg = aux.battle[2][1].getImg();
+
             if ((bf.sb.conf[0] & 1) > 0) {
                 g.drawImage(bimg, w - cw * (n + 1) - cutout, ih, dpi, dpi);
                 n++;
             }
-            bimg = aux.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
-            for (int i = 0; i < Math.abs(page.getSpeed()); i++)
-                g.drawImage(bimg, w - cw * (i + 1 + n) - cutout, ih, dpi, dpi);
+
+            if(page.getSpeed() > 0) {
+                if(page.getSpeed() != 1) {
+                    bimg = aux.battle[2][page.getSpeed() + 3].getImg();
+
+                    double speedRatio = bimg.getHeight() * 1.0 / aux.battle[2][0].getImg().getHeight();
+                    double iconRatio = dpi * 1.0 / aux.battle[2][0].getImg().getHeight();
+
+                    double offset = 11 * iconRatio;
+
+                    g.drawImage(bimg, w - cw * (1 + n) - offset - cutout, ih - offset, dpi * speedRatio, dpi * speedRatio);
+                } else {
+                    bimg = aux.battle[2][0].getImg();
+
+                    g.drawImage(bimg, w - cw * (1 + n) - cutout, ih, dpi, dpi);
+                }
+            } else {
+                bimg = aux.battle[2][3].getImg();
+
+                for (int i = 0; i < Math.abs(page.getSpeed()); i++)
+                    g.drawImage(bimg, w - cw * (i + 1 + n) - cutout, ih, dpi, dpi);
+            }
 
             if(((CVGraphics)g).neg) {
                 g.setComposite(FakeGraphics.GRAY, 0, 0);
@@ -979,10 +1020,6 @@ public interface BattleBox {
 
         int getSpeed();
 
-    }
-
-    default void click(Point p, int button) {
-        getPainter().click(p, button);
     }
 
     int getHeight();
