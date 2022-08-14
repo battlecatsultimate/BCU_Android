@@ -296,7 +296,10 @@ class LUUnitSetting : Fragment() {
                     pcoin[0] = lev + levp1
 
                     BasisSet.current().sele.lu.setLv(f.unit, pcoin)
-                    line.updateUnitOrb()
+
+                    if(this::line.isInitialized) {
+                        line.updateUnitOrb()
+                    }
 
                     hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
                     atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, pcoin)
