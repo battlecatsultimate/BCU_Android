@@ -24,10 +24,6 @@ class LineUpView : View {
 
     constructor(context: Context?, pager: ViewPager2) : super(context) {
         this.pager = pager
-
-        if(pager.adapter is LUAdder.LUTab) {
-            (pager.adapter as LUAdder.LUTab).reassignVariables(this)
-        }
     }
 
     private val postionReplace = 600

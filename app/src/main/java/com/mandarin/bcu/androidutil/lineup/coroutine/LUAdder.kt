@@ -720,6 +720,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                 tabs.getTabAt(StaticStore.LUtabPosition)?.select()
                 setspin.setSelection(setn)
                 luspin.setSelection(lun)
+
+                tab?.reassignVariables(line)
             }
             lu -> {
                 st.setText(R.string.lineup_reading)
