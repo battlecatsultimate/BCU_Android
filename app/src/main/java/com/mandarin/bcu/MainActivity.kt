@@ -33,7 +33,6 @@ import common.CommonStatic
 import java.io.File
 import java.util.*
 
-@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     private var sendcheck = false
     private var notshowcheck = false
@@ -115,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().realEx = shared.getBoolean("realEx", false)
         CommonStatic.getConfig().shake = shared.getBoolean("shake", true)
         CommonStatic.getConfig().stageName = shared.getBoolean("showst", true)
+        StaticStore.showResult = shared.getBoolean("showres", true)
 
         val result = intent
         var conf = false

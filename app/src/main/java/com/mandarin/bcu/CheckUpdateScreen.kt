@@ -238,6 +238,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("showres")) {
+            ed.putBoolean("showres", true)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)
@@ -410,7 +415,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
             val f = File(datapath)
 
-            val lit = f.listFiles() ?: return result
+            val lit = f.listFiles() ?: return false
 
             for(fs in lit) {
                 if(fs.name != "files" && names.contains(fs.name)) {

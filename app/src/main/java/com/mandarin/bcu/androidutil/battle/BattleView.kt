@@ -614,6 +614,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             }
         }
 
+        if(!StaticStore.showResult)
+            return
+
         val dialog = BottomSheetDialog(context)
 
         dialog.setContentView(R.layout.battle_result_bottom_dialog)

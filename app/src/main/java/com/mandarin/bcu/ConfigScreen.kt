@@ -884,6 +884,19 @@ open class ConfigScreen : AppCompatActivity() {
             editor.apply()
         }
 
+        val showres = findViewById<SwitchCompat>(R.id.configshowres)
+
+        showres.isChecked = shared.getBoolean("showres", true)
+
+        showres.setOnCheckedChangeListener { _, c ->
+            StaticStore.showResult = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("showres", c)
+            editor.apply()
+        }
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 back.performClick()

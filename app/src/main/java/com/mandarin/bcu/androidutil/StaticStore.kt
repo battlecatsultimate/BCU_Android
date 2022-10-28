@@ -280,6 +280,10 @@ object StaticStore {
     var stmschname = ""
     var filterEntityList = BooleanArray(1)
 
+    //Variables for battle
+
+    var showResult = false
+
     /**
      * Resets all values stored in StaticStore<br></br>
      * It will also reset whole data of BCU
