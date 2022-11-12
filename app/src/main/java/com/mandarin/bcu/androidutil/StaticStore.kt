@@ -195,11 +195,11 @@ object StaticStore {
     //Variables for Map/Stage
 
     var SisOpen = false
-    var bcMapNames = intArrayOf(R.string.stage_sol, R.string.stage_event, R.string.stage_collabo, R.string.stage_eoc, R.string.stage_ex, R.string.stage_dojo, R.string.stage_heavenly, R.string.stage_ranking, R.string.stage_challenge, R.string.stage_uncanny, R.string.stage_night, R.string.stage_baron, R.string.stage_enigma, R.string.stage_CA, R.string.stage_Q)
+    var bcMapNames = intArrayOf(R.string.stage_sol, R.string.stage_event, R.string.stage_collabo, R.string.stage_eoc, R.string.stage_ex, R.string.stage_dojo, R.string.stage_heavenly, R.string.stage_ranking, R.string.stage_challenge, R.string.stage_uncanny, R.string.stage_night, R.string.stage_baron, R.string.stage_enigma, R.string.stage_CA, R.string.stage_Q, R.string.stage_L)
     var mapcolcname: ArrayList<String> = ArrayList()
-    var mapcode: ArrayList<String> = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031"))
+    var mapcode: ArrayList<String> = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031", "000032"))
     var BCmaps = mapcode.size
-    val BCMapCode = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031")
+    val BCMapCode = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031", "000032")
     var eicons: Array<Bitmap>? = null
     var maplistClick = SystemClock.elapsedRealtime()
     var stglistClick = SystemClock.elapsedRealtime()
@@ -362,7 +362,7 @@ object StaticStore {
     fun resetUserPacks() {
         UserProfile.unloadAllUserPacks()
 
-        mapcode = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031"))
+        mapcode = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031", "000032"))
         mapcolcname.clear()
         PackConflict.conflicts.clear()
 

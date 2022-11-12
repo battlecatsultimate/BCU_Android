@@ -947,4 +947,5 @@
     <string name="config_showst">전투 내 스테이지 이름 이미지 표시</string>
     <string name="stg_info_killcount">킬 카운트</string>
     <string name="config_showres">전투 끝날 때 결과 표시</string>
+    <string name="stage_L">미궁 스테이지</string>
 </resources>

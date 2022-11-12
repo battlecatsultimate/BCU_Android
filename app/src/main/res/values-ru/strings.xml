@@ -581,7 +581,7 @@
     <string name="stage_baron">Уровни Гаунтлетов</string>
     <string name="stage_enigma">Уровни Энигмы</string>
     <string name="stage_CA">Коллаб. Уровни Гаунт.</string>
-    <string name="stage_Q">Super Beast Stages</string>
+    <string name="stage_Q">Behemoth Culling Stages</string>
     <string name="stg_enem_num">"_ "</string>
     <string name="main_pack_castle">"Извлекаем Замок… : "</string>
     <string name="pack_conf">Паки Конфликтуют</string>
@@ -946,4 +946,5 @@
     <string name="config_showst">Show stage name image in battle</string>
     <string name="stg_info_killcount">Kill Count</string>
     <string name="config_showres">Show battle results upon ends</string>
+    <string name="stage_L">Labyrinth Stages</string>
 </resources>

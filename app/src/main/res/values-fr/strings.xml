@@ -608,7 +608,7 @@
     <string name="stage_baron">L\'Attaque du Baron-Phoque</string>
     <string name="stage_enigma">Étages D\'Énigmes</string>
     <string name="stage_CA">Barons des Collaborations</string>
-    <string name="stage_Q">Super Beast Stages</string>
+    <string name="stage_Q">Behemoth Culling Stages</string>
     <string name="stg_enem_num">"_ "</string>
     <string name="main_pack_castle">"Extraction des Bases Adveraires En Cours : "</string>
     <string name="pack_conf">Conflit des Paquets</string>
@@ -946,4 +946,5 @@
     <string name="config_showst">Show stage name image in battle</string>
     <string name="stg_info_killcount">Kill Count</string>
     <string name="config_showres">Show battle results upon ends</string>
+    <string name="stage_L">Labyrinth Stages</string>
 </resources>
