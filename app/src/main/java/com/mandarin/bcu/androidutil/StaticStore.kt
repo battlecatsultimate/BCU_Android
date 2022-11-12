@@ -1244,7 +1244,7 @@ object StaticStore {
         var result = true
 
         if(f.isFile) {
-            result = result and f.delete()
+            result = f.delete()
         } else if(f.isDirectory) {
             val lit = f.listFiles()
 
