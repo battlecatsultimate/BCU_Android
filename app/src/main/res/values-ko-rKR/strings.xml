@@ -947,5 +947,12 @@
     <string name="config_showst">전투 내 스테이지 이름 이미지 표시</string>
     <string name="stg_info_killcount">킬 카운트</string>
     <string name="config_showres">전투 끝날 때 결과 표시</string>
-    <string name="stage_L">미궁 스테이지</string>
+    <string name="stage_L">바닥 미궁 스테이지</string>
+    <string name="stage_ND">레전드 스토리 0</string>
+    <string name="fruit24">자수결정</string>
+    <string name="fruit25">홍수결정</string>
+    <string name="fruit26">청수결정</string>
+    <string name="fruit27">녹수결정</string>
+    <string name="fruit28">황수결정</string>
+    <string name="fruit29">무지개 수석</string>
 </resources>
