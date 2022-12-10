@@ -179,7 +179,7 @@ class AContext : Context {
 
                     op = op.reversed() + ".pack.bcuzip"
 
-                    val info = msg.split("[")[1].split("]")[0]
+                    val info = msg.split(": ")[1]
 
                     val list = ArrayList<String>()
 

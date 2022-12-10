@@ -561,7 +561,7 @@ class AnimationLoader(activity: Activity, private val type: Int, private val ind
                 }
             }
             is DemonSoul -> {
-                for(t in content.names()) {
+                for(t in content.anim.names()) {
                     res.add(seekName(t))
                 }
             }

@@ -29,6 +29,7 @@ object SoundHandler {
     var TOUCH : SoundPool? = SoundPool.Builder().build()
 
     var play: BooleanArray = BooleanArray(0)
+    var playCustom = HashMap<Identifier<Music>, Boolean>()
 
     var inBattle = false
 
@@ -61,6 +62,7 @@ object SoundHandler {
     var speed = 0
 
     var map = HashMap<Int, Int>()
+    private var customMap = HashMap<Identifier<Music>, Int>()
 
     private val atk = listOf(20, 21)
     private val ui = listOf(10, 15, 19, 27, 28)
@@ -132,6 +134,35 @@ object SoundHandler {
         play[ind] = true
     }
 
+    @JvmStatic
+    fun setSE(mus: Identifier<Music>) {
+        if (speed > 3)
+            return
+
+        if (playCustom.containsKey(mus) && playCustom[mus] == true)
+            return
+
+        if (battleEnd)
+            return
+
+        check()
+
+        val id = customMap[mus]
+
+        if(id == null) {
+            val result = load(mus, play = true)
+
+            if(result == -1)
+                return
+
+            customMap[mus] = result
+        } else {
+            SE?.play(id, se_vol, se_vol, 0, 0, 1f)
+        }
+
+        playCustom[mus] = true
+    }
+
     fun setBGM(music: Identifier<Music>) {
         val m = StaticStore.getMusicDataSource(Identifier.get(music)) ?: return
         val loop = music.get()?.loop ?: 0
@@ -188,6 +219,7 @@ object SoundHandler {
     @Synchronized
     fun releaseAll() {
         map.clear()
+        customMap.clear()
         SE?.release()
         SE = null
         ATK?.release()
@@ -202,6 +234,7 @@ object SoundHandler {
     fun resetHandler() {
         releaseAll()
         for (i in play.indices) play[i] = false
+        playCustom.clear()
         inBattle = false
         battleEnd = false
         twoMusic = false
@@ -352,5 +385,27 @@ object SoundHandler {
                 return -1
             }
         }
+    }
+
+    fun load(mus: Identifier<Music>, play: Boolean) : Int {
+        mus.get() ?: return -1
+
+        val f = StaticStore.getMusicDataSource(mus.get()) ?: return -1
+
+        check()
+
+        if(!sePlay)
+            return -1
+
+        SE?.setOnLoadCompleteListener {
+                s, i, _ ->
+            val id = customMap[mus] ?: return@setOnLoadCompleteListener
+
+            if(play && id == i) {
+                s.play(i, se_vol, se_vol, 0, 0, 1f)
+            }
+        }
+
+        return SE?.load(f.absolutePath, 0) ?: -1
     }
 }

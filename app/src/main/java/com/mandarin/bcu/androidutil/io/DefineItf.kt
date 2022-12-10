@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.mandarin.bcu.androidutil.io
 
 import android.content.Context
@@ -44,6 +42,12 @@ class DefineItf : Itf {
 
     override fun setSE(ind: Int) {
         SoundHandler.setSE(ind)
+    }
+
+    override fun setSE(mus: Identifier<Music>?) {
+        mus ?: return
+
+        SoundHandler.setSE(mus)
     }
 
     override fun setBGM(mus: Identifier<Music>?) {

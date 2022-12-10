@@ -318,6 +318,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private fun resetSE() {
         for (i in SoundHandler.play.indices)
             SoundHandler.play[i] = false
+
+        SoundHandler.playCustom.clear()
     }
 
     private fun checkWin() {

@@ -16,9 +16,9 @@ public class StaticJava {
 
             return new EAnimD((EffAnim<?>) data, ((EffAnim<?>) data).mamodel, ((EffAnim<?>) data).anims[index], ((EffAnim<?>) data).types[index]);
         } else if(data instanceof Soul) {
-            ((Soul) data).load();
+            ((Soul) data).anim.load();
 
-            return new EAnimD((Soul) data, ((Soul) data).mamodel, ((Soul) data).anims[index], ((Soul) data).types[index]);
+            return new EAnimD(((Soul) data).anim, ((Soul) data).anim.mamodel, ((Soul) data).anim.anims[index], ((Soul) data).anim.types[index]);
         } else if(data instanceof NyCastle) {
             ((NyCastle) data).load();
 
@@ -30,9 +30,9 @@ public class StaticJava {
                 return ((NyCastle) data).getEAnim(NyCastle.NyType.EXT);
             }
         } else if(data instanceof DemonSoul) {
-            ((DemonSoul) data).load();
+            ((DemonSoul) data).anim.load();
 
-            return new EAnimD((DemonSoul) data, ((DemonSoul) data).mamodel, ((DemonSoul) data).anims[index], ((DemonSoul) data).types[index]);
+            return new EAnimD(((DemonSoul) data).anim, ((DemonSoul) data).anim.mamodel, ((DemonSoul) data).anim.anims[index], ((DemonSoul) data).anim.types[index]);
         }
 
         return UserProfile.getBCData().units.get(0).forms[0].getEAnim(AnimU.UType.WALK);

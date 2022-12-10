@@ -19,10 +19,9 @@ import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.adapter.EffListPager
-import common.util.pack.DemonSoul
+import common.util.anim.AnimU
 import common.util.pack.EffAnim
 import common.util.pack.NyCastle
-import common.util.pack.Soul
 import java.lang.ref.WeakReference
 
 class EffListAdder(activity: Activity, private val fm: FragmentManager, private val lc: Lifecycle) : CoroutineTask<String>() {
@@ -127,8 +126,8 @@ class EffListAdder(activity: Activity, private val fm: FragmentManager, private 
         override fun createFragment(position: Int): Fragment {
             return when(position) {
                 0 -> EffListPager.newInstance<EffAnim<*>>(AnimationCView.EFFECT)
-                1 -> EffListPager.newInstance<Soul>(AnimationCView.SOUL)
-                2 -> EffListPager.newInstance<DemonSoul>(AnimationCView.DEMONSOUL)
+                1 -> EffListPager.newInstance<AnimU<*>>(AnimationCView.SOUL)
+                2 -> EffListPager.newInstance<AnimU<*>>(AnimationCView.DEMONSOUL)
                 3 -> EffListPager.newInstance<NyCastle>(AnimationCView.CANNON)
                 else -> EffListPager.newInstance<EffAnim<*>>(AnimationCView.EFFECT)
             }
