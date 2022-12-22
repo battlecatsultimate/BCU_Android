@@ -138,7 +138,9 @@ object Definer {
                     "gatyaitemD_42_f.png", "gatyaitemD_43_f.png", "gatyaitemD_44_f.png",
                     "gatyaitemD_160_f.png", "gatyaitemD_161_f.png", "gatyaitemD_164_f.png",
                     "gatyaitemD_167_f.png", "gatyaitemD_168_f.png", "gatyaitemD_169_f.png",
-                    "gatyaitemD_170_f.png", "gatyaitemD_171_f.png", "xp.png"
+                    "gatyaitemD_170_f.png", "gatyaitemD_171_f.png", "gatyaitemD_179_f.png",
+                    "gatyaitemD_180_f.png", "gatyaitemD_181_f.png", "gatyaitemD_182_f.png",
+                    "gatyaitemD_183_f.png", "gatyaitemD_184_f.png", "xp.png"
                 )
 
                 StaticStore.fruit = Array(names.size) {i ->
