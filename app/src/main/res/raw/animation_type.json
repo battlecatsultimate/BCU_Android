@@ -12,7 +12,8 @@
         "BURROW_DOWN": "burrow down",
         "ENTER": "enter",
         "ATK": "attack",
-        "WALK": "walk"
+        "WALK": "walk",
+        "SOUL": "soul"
     },
     "VolcEff": {
         "DURING": "on",
@@ -55,9 +56,6 @@
         "DOWN": "knock down",
         "REVIVE": "revive",
         "BACK" : "back"
-    },
-    "SoulType": {
-        "DEF": "default"
     },
     "SniperEff": {
         "IDLE": "idle",
