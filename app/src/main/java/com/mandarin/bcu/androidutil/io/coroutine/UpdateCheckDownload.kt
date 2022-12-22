@@ -23,6 +23,7 @@ import common.CommonStatic
 import common.io.assets.AssetLoader
 import common.io.assets.UpdateCheck
 import common.pack.UserProfile
+import common.util.Data
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -65,6 +66,7 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
         val ac = w.get() ?: return
 
         val langShared = ac.getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
+        val musicShared = ac.getSharedPreferences(StaticStore.MUSIC, Context.MODE_PRIVATE)
 
         try {
             publishProgress(ac.getString(R.string.main_check_up), StaticStore.TEXT)
@@ -93,8 +95,6 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
 
             val assetList = UpdateCheck.checkAsset(updateJson, "android")
 
-            val musicList = UpdateCheck.checkMusic(updateJson.music)
-
             val langFiles = ArrayList<String>()
 
             langFiles.add("Difficulty.txt")
@@ -109,7 +109,14 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 }
             }
 
+            val musicCount = updateJson?.music ?: 0
+
+            for(i in 0 until musicCount) {
+                CommonStatic.getConfig().localMusicMap[i] = musicShared.getString(Data.trio(i), "")
+            }
+
             val langList = UpdateCheck.checkLang(langFiles.toTypedArray()).get()
+            val musicList = UpdateCheck.checkMusic(musicCount).get()
 
             if(!retry && (assetList.isNotEmpty() || musicList.isNotEmpty() || langList.isNotEmpty())) {
                 val file = File(StaticStore.getExternalAsset(ac)+"assets/")
@@ -164,8 +171,12 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                 downloadStarted = true
                 mustShow = true
 
+                val editor = musicShared.edit()
+
                 for(music in musicList) {
                     publishProgress(ac.getString(R.string.down_state_music)+music.target.name, StaticStore.TEXT)
+
+                    val name = music.target.name.replace(".ogg", "")
 
                     notifyBuilder.setContentTitle(ac.getString(R.string.main_notif_music))
                     notifyBuilder.setContentText(music.target.name).setOngoing(true)
@@ -173,7 +184,11 @@ class UpdateCheckDownload(ac: Activity, private val fromConfig: Boolean, private
                     notifyManager.notify(NOTIF, R.id.downloadnotification, notifyBuilder.build())
 
                     music.run(this::updateText)
+
+                    editor.putString(name, CommonStatic.getConfig().localMusicMap[name.toInt()])
                 }
+
+                editor.apply()
             }
 
             if(langList.isNotEmpty()) {

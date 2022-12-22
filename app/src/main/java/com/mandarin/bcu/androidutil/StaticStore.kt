@@ -94,6 +94,8 @@ object StaticStore {
     const val PROG = "prog"
     const val TEXT = "text"
 
+    const val MUSIC = "music"
+
     /**
      * This value prevents button is performed less than every 1 sec<br></br>
      * Used when preventing activity is opened double
