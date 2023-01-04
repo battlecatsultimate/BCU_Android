@@ -80,7 +80,7 @@ object LangLoader {
                             if (strs.size == 1) {
                                 continue
                             }
-                            val lines = strs[1].split("<br>").toTypedArray()
+                            val lines = strs[1].replace("<br>", "\n")
                             MultiLangCont.getStatic().CFEXP.put(l.substring(1, l.length - 1), u.info, lines)
                         }
                         "ComboName.txt" -> for (str in qs) {
