@@ -64,11 +64,11 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
             fruits[5]!!.setImageBitmap(StaticStore.getResizeb(icon, activity, 40f))
         }
 
-        fruittext[5]!!.text = evo[0][0].toString()
+        fruittext[5]!!.text = u.info.xp.toString()
 
         for (i in 0 until fruits.size - 1) {
             try {
-                val ic = StaticStore.fruit?.get(ids.indexOf(evo[i + 1][0])) ?: StaticStore.empty(1,1)
+                val ic = StaticStore.fruit?.get(ids.indexOf(evo[i][0])) ?: StaticStore.empty(1,1)
 
                 if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     fruits[i]!!.setImageBitmap(StaticStore.getResizeb(ic, activity, 48f))
@@ -81,20 +81,20 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
                 fruits[i]!!.setImageBitmap(StaticStore.empty(activity, 48f, 48f))
             }
 
-            if(evo[i + 1][0] != 0) {
+            if(evo[i][0] != 0) {
                 fruits[i]!!.setOnLongClickListener {
-                    StaticStore.showShortMessage(activity, activity.getString(cftooltip[ids.indexOf(evo[i + 1][0])]))
+                    StaticStore.showShortMessage(activity, activity.getString(cftooltip[ids.indexOf(evo[i][0])]))
                     true
                 }
             }
 
             if (exist[i])
-                fruittext[i]!!.text = evo[i + 1][1].toString()
+                fruittext[i]!!.text = evo[i][1].toString()
             else
                 fruittext[i]!!.text = ""
         }
 
-        val lines = u.info.catfruitExplanation
+        val lines = u.info.catfruitExplanation.split("\n")
 
         for (i in cfdesc.indices) {
             if (i >= lines.size) {
