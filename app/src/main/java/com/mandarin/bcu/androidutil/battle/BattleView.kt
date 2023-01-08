@@ -527,7 +527,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private fun showBattleResult(win: Boolean) {
         val st = painter.bf.sb.st
 
-        if(CommonStatic.getConfig().exContinuation && st.info != null && (st.info.exConnection() || st.info.exStages != null)) {
+        if(win && CommonStatic.getConfig().exContinuation && st.info != null && (st.info.exConnection() || st.info.exStages != null)) {
             if(CommonStatic.getConfig().realEx) {
                 val stage = pickOneEXStage()
 
