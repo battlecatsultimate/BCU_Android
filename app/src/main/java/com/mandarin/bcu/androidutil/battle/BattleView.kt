@@ -394,7 +394,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         for(entity in painter.bf.sb.le) {
             if(entity.dire == 1) {
 
-                if ((entity as EEnemy).mark == 1) {
+                if ((entity as EEnemy).mark > 0) {
                     bosses.add(entity)
                 }
             }
