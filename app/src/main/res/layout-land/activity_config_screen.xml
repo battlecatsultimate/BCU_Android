@@ -530,7 +530,7 @@
                 android:textColor="?attr/ErrorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/configshowres"
+                app:layout_constraintTop_toBottomOf="@+id/configreallv"
                 app:layout_constraintVertical_bias="1.0"
                 app:strokeColor="?attr/ErrorPrimary" />
 
@@ -616,6 +616,18 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/configbgeff"
                 app:layout_constraintTop_toBottomOf="@+id/configshowst" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configreallv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/config_reallv"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configbgeff"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/configbgeff"
+                app:layout_constraintTop_toBottomOf="@+id/configshowres" />
 
             <TextView
                 android:id="@+id/viewercolor"

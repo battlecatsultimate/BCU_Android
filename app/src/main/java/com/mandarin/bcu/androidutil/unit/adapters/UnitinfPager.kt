@@ -1,6 +1,5 @@
 package com.mandarin.bcu.androidutil.unit.adapters
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
@@ -16,10 +15,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,8 +26,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.supports.AnimatorConst
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
+import com.mandarin.bcu.androidutil.supports.ScaleAnimator
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
 import com.mandarin.bcu.util.Interpret
+import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
@@ -38,9 +39,9 @@ import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Form
+import common.util.unit.Level
 import common.util.unit.Unit
 import java.util.*
-import kotlin.collections.ArrayList
 
 class UnitinfPager : Fragment() {
     companion object {
@@ -67,14 +68,11 @@ class UnitinfPager : Fragment() {
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray = IntArray(1)
     private var talents = false
-    private var pcoinlev = ArrayList<Int>()
+    private val level = Level(8)
     
     private var isRaw = false
-
-    init {
-        for(i in 0 until 6)
-            pcoinlev.add(i)
-    }
+    private val talentIndex = ArrayList<Int>()
+    private val superTalentIndex = ArrayList<Int>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?): View? {
         val view = inflater.inflate(R.layout.unit_table, container, false)
@@ -102,6 +100,7 @@ class UnitinfPager : Fragment() {
         val unittalen = view.findViewById<CheckBox>(R.id.unitinftalen)
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
+        val supernprow = view.findViewById<TableRow>(R.id.supertalenrow)
 
         val activity = requireActivity()
 
@@ -165,64 +164,8 @@ class UnitinfPager : Fragment() {
 
         val f = u.forms[form]
 
-        val pcoins = if(f.du.pCoin != null) {
-            Array(f.du.pCoin.max.size - 1) {
-                val spin = Spinner(context)
-
-                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (f.du.pCoin.max.size - 1)).toFloat())
-
-                spin.layoutParams = param
-                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
-                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
-
-                nprow.addView(spin)
-
-                spin
-            }
-        } else {
-            arrayOf()
-        }
-
-        if (f.du.pCoin == null) {
-            unittalen.visibility = View.GONE
-            npreset.visibility = View.GONE
-            nprow.visibility = View.GONE
-
-            pcoinlev = ArrayList()
-
-            for(i in 0 until 6)
-                pcoinlev.add(0)
-        } else {
-            val max = f.du.pCoin.max
-
-            pcoinlev = ArrayList()
-
-            for(i in max.indices)
-                pcoinlev.add(0)
-
-            pcoinlev[0] = 0
-
-            for (j in pcoins.indices) {
-                if(j >= f.du.pCoin.info.size) {
-                    pcoins[j].isEnabled = false
-                    continue
-                }
-
-                val plev: MutableList<Int> = ArrayList()
-
-                for (k in 0 until max[j + 1] + 1)
-                    plev.add(k)
-
-                val adapter = ArrayAdapter(activity, R.layout.spinneradapter, plev)
-
-                pcoins[j].adapter = adapter
-                pcoins[j].setSelection(getIndex(pcoins[j], max[j + 1]))
-
-                pcoinlev[j + 1] = max[j + 1]
-            }
-        }
-
-        pcoinlev[0] = f.unit.prefLv
+        level.setLevel(f.unit.preferredLevel)
+        level.setPlusLevel(f.unit.preferredPlusLevel)
 
         val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(f.du)
@@ -259,19 +202,19 @@ class UnitinfPager : Fragment() {
 
         unitpack.text = s.getPackName(f.unit.id, isRaw)
         unitid.text = s.getID(form, StaticStore.trio(u.id.id))
-        unithp.text = s.getHP(f, t, false, pcoinlev)
-        unithb.text = s.getHB(f, false, pcoinlev)
-        unitatk.text = s.getTotAtk(f, t, false, pcoinlev)
-        unittrait.text = s.getTrait(f, false, pcoinlev)
-        unitcost.text = s.getCost(f, false, pcoinlev)
+        unithp.text = s.getHP(f, t, false, level)
+        unithb.text = s.getHB(f, false, level)
+        unitatk.text = s.getTotAtk(f, t, false, level)
+        unittrait.text = s.getTrait(f, false, level)
+        unitcost.text = s.getCost(f, false, level)
         unitsimu.text = s.getSimu(f)
-        unitspd.text = s.getSpd(f, false, pcoinlev)
-        unitcd.text = s.getCD(f, t, fs, false, pcoinlev)
+        unitspd.text = s.getSpd(f, false, level)
+        unitcd.text = s.getCD(f, t, fs, false, level)
         unitrang.text = s.getRange(f)
         unitpreatk.text = s.getPre(f, fs)
         unitpost.text = s.getPost(f, fs)
-        unittba.text = s.getTBA(f, fs)
-        unitatkt.text = s.getAtkTime(f, fs)
+        unittba.text = s.getTBA(f, talents, fs, level)
+        unitatkt.text = s.getAtkTime(f, talents, fs, level)
         unitabilt.text = s.getAbilT(f)
 
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
@@ -286,14 +229,112 @@ class UnitinfPager : Fragment() {
             unitabil.visibility = View.GONE
         }
 
-        listeners(view, pcoins)
+        if(f.du.pCoin != null) {
+            for(i in f.du.pCoin.info.indices) {
+                if(f.du.pCoin.info[i][13] == 1)
+                    superTalentIndex.add(i)
+                else
+                    talentIndex.add(i)
+            }
+
+            val talent = Array(talentIndex.size) {
+                val spin = Spinner(context)
+
+                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (talentIndex.size)).toFloat())
+
+                spin.layoutParams = param
+                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                nprow.addView(spin)
+
+                spin
+            }
+
+            val superTalent = Array(superTalentIndex.size) {
+                val spin = Spinner(context)
+
+                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (superTalentIndex.size)).toFloat())
+
+                spin.layoutParams = param
+                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                supernprow.addView(spin)
+
+                spin
+            }
+
+            val max = f.du.pCoin.max
+
+            for(i in max.indices)
+                level.talents[i] = max[i]
+
+            for(i in talent.indices) {
+                if(talentIndex[i] >= f.du.pCoin.info.size) {
+                    talent[i].isEnabled = false
+                    continue
+                }
+
+                val talentLevels = ArrayList<Int>()
+
+                for(j in 0 until max[talentIndex[i]] + 1)
+                    talentLevels.add(j)
+
+                val adapter = ArrayAdapter(activity, R.layout.spinneradapter, talentLevels)
+
+                talent[i].adapter = adapter
+                talent[i].setSelection(getIndex(talent[i], max[talentIndex[i]]))
+
+                level.talents[talentIndex[i]] = max[talentIndex[i]]
+            }
+
+            for(i in superTalent.indices) {
+                if(superTalentIndex[i] >= f.du.pCoin.info.size) {
+                    superTalent[i].isEnabled = false
+                    continue
+                }
+
+                val superTalentLevels = ArrayList<Int>()
+
+                for(j in 0 until max[superTalentIndex[i]] + 1)
+                    superTalentLevels.add(j)
+
+                val adapter = ArrayAdapter(activity, R.layout.spinneradapter, superTalentLevels)
+
+                superTalent[i].adapter = adapter
+                superTalent[i].setSelection(getIndex(superTalent[i], max[superTalentIndex[i]]))
+
+                level.talents[superTalentIndex[i]] = max[superTalentIndex[i]]
+
+                if(CommonStatic.getConfig().realLevel) {
+                    changeSpinner(superTalent[i], level.lv + level.plusLv >= 60)
+                }
+            }
+
+            if(superTalent.isEmpty())
+                supernprow.visibility = View.GONE
+
+            listeners(view, talent, superTalent)
+        } else {
+            unittalen.visibility = View.GONE
+            npreset.visibility = View.GONE
+            nprow.visibility = View.GONE
+            supernprow.visibility = View.GONE
+
+            for (i in 0 until level.talents.size)
+                level.talents[i] = 0
+
+            listeners(view, arrayOf(), arrayOf())
+        }
 
         return view
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun listeners(view: View, pcoins: Array<Spinner>) {
+    private fun listeners(view: View, talent: Array<Spinner>, superTalent: Array<Spinner>) {
         val activity = activity ?: return
+
         val cdlev: TextInputLayout = Objects.requireNonNull<Activity>(activity).findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = activity.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = activity.findViewById(R.id.atktrea)
@@ -328,6 +369,7 @@ class UnitinfPager : Fragment() {
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val npresetrow = view.findViewById<TableRow>(R.id.talresetrow)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
+        val supernprow = view.findViewById<TableRow>(R.id.supertalenrow)
 
         val t = BasisSet.current().t()
 
@@ -368,21 +410,21 @@ class UnitinfPager : Fragment() {
 
         val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
-        pcoinlev[0] = when {
-            shared.getInt("default_level", 50) > f.unit.max -> f.unit.max
-            f.unit.rarity != 0 -> shared.getInt("default_level", 50)
-            else -> f.unit.max
-        }
+        level.setLevel(
+            when {
+                shared.getInt("default_level", 50) > f.unit.max -> f.unit.max
+                f.unit.rarity != 0 -> shared.getInt("default_level", 50)
+                else -> f.unit.max
+            }
+        )
+
+        level.setPlusLevel(f.unit.preferredPlusLevel)
 
         unitlevel.adapter = arrayAdapter
-        unitlevel.setSelection(getIndex(unitlevel, pcoinlev[0]))
+        unitlevel.setSelection(getIndex(unitlevel, level.lv))
 
         unitlevelp.adapter = arrayAdapterp
-        if (f.unit.prefLv - f.unit.max < 0) {
-            unitlevelp.setSelection(getIndex(unitlevelp, 0))
-        } else {
-            unitlevelp.setSelection(getIndex(unitlevelp, f.unit.prefLv - f.unit.max))
-        }
+        unitlevelp.setSelection(getIndex(unitlevelp, level.plusLv))
 
         if (levelsp.size == 1) {
             unitlevelp.visibility = View.GONE
@@ -399,16 +441,11 @@ class UnitinfPager : Fragment() {
             if (fs == 0) {
                 fs = 1
 
-                unitcd.text = s.getCD(f, t, fs, talents, pcoinlev)
-
+                unitcd.text = s.getCD(f, t, fs, talents, level)
                 unitpreatk.text = s.getPre(f, fs)
-
                 unitpost.text = s.getPost(f, fs)
-
-                unittba.text = s.getTBA(f, fs)
-
-                unitatkt.text = s.getAtkTime(f, fs)
-
+                unittba.text = s.getTBA(f, talents, fs, level)
+                unitatkt.text = s.getAtkTime(f, talents, fs, level)
                 frse.text = activity.getString(R.string.unit_info_sec)
 
                 if (unitabil.visibility != View.GONE) {
@@ -416,7 +453,7 @@ class UnitinfPager : Fragment() {
 
                     if (f.du.pCoin != null)
                         du = if (talents)
-                            f.du.pCoin.improve(pcoinlev)
+                            f.du.pCoin.improve(level.talents)
                         else
                             f.du
 
@@ -441,16 +478,11 @@ class UnitinfPager : Fragment() {
             } else {
                 fs = 0
 
-                unitcd.text = s.getCD(f, t, fs, talents, pcoinlev)
-
+                unitcd.text = s.getCD(f, t, fs, talents, level)
                 unitpreatk.text = s.getPre(f, fs)
-
                 unitpost.text = s.getPost(f, fs)
-
-                unittba.text = s.getTBA(f, fs)
-
-                unitatkt.text = s.getAtkTime(f, fs)
-
+                unittba.text = s.getTBA(f, talents, fs, level)
+                unitatkt.text = s.getAtkTime(f, talents, fs, level)
                 frse.text = activity.getString(R.string.unit_info_fr)
 
                 if (unitabil.visibility != View.GONE) {
@@ -458,7 +490,7 @@ class UnitinfPager : Fragment() {
 
                     if (f.du.pCoin != null)
                         du = if (talents)
-                            f.du.pCoin.improve(pcoinlev)
+                            f.du.pCoin.improve(level.talents)
                         else
                             f.du
 
@@ -485,9 +517,9 @@ class UnitinfPager : Fragment() {
 
         unitcdb.setOnClickListener {
             if (unitcd.text.toString().endsWith("f"))
-                unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 1, talents, level)
             else
-                unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 0, talents, level)
         }
 
         unitpreatkb.setOnClickListener {
@@ -506,46 +538,55 @@ class UnitinfPager : Fragment() {
 
         unittbab.setOnClickListener {
             if (unittba.text.toString().endsWith("f"))
-                unittba.text = s.getTBA(f, 1)
+                unittba.text = s.getTBA(f, talents, 1, level)
             else
-                unittba.text = s.getTBA(f, 0)
+                unittba.text = s.getTBA(f, talents, 0, level)
         }
 
         unitatkb.setOnClickListener {
             if (unitatkb.text == activity.getString(R.string.unit_info_atk)) {
                 unitatkb.text = activity.getString(R.string.unit_info_dps)
-                unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                unitatk.text = s.getDPS(f, t, talents, level)
             } else {
                 unitatkb.text = activity.getString(R.string.unit_info_atk)
-                unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                unitatk.text = s.getAtk(f, t, talents, level)
             }
         }
+
         unitatktb.setOnClickListener {
             if (unitatkt.text.toString().endsWith("f"))
-                unitatkt.text = s.getAtkTime(f, 1)
+                unitatkt.text = s.getAtkTime(f, talents, 1, level)
             else
-                unitatkt.text = s.getAtkTime(f, 0)
+                unitatkt.text = s.getAtkTime(f, talents, 0, level)
         }
 
         unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
 
-                pcoinlev[0] = level + levelp
+                this@UnitinfPager.level.setLevel(level)
 
-                unithp.text = s.getHP(f, t, talents, pcoinlev)
+                unithp.text = s.getHP(f, t, talents, this@UnitinfPager.level)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, talents, this@UnitinfPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
                 } else {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getTotAtk(f, t, talents, pcoinlev)
+                        unitatk.text = s.getTotAtk(f, t, talents, this@UnitinfPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
+                }
+
+                if(CommonStatic.getConfig().realLevel) {
+                    for(i in superTalent.indices) {
+                        changeSpinner(superTalent[i], level + levelp >= 60)
+                    }
+
+                    validate(view, f, t)
                 }
             }
 
@@ -553,24 +594,32 @@ class UnitinfPager : Fragment() {
         }
 
         unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
 
-                pcoinlev[0] = level + levelp
+                this@UnitinfPager.level.setPlusLevel(levelp)
 
-                unithp.text = s.getHP(f, t, talents, pcoinlev)
+                unithp.text = s.getHP(f, t, talents, this@UnitinfPager.level)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, talents, this@UnitinfPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
                 } else {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, talents, this@UnitinfPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
+                }
+
+                if(CommonStatic.getConfig().realLevel) {
+                    for(i in superTalent.indices) {
+                        changeSpinner(superTalent[i], level + levelp >= 60)
+                    }
+
+                    validate(view, f, t)
                 }
             }
 
@@ -620,22 +669,23 @@ class UnitinfPager : Fragment() {
                         t.tech[0] = lev
 
                         if (unitcd.text.toString().endsWith("s")) {
-                            unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 1, talents, level)
                         } else {
-                            unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 0, talents, level)
                         }
                     }
                 } else {
                     t.tech[0] = 1
 
                     if (unitcd.text.toString().endsWith("s")) {
-                        unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 1, talents, level)
                     } else {
-                        unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 0, talents, level)
                     }
                 }
             }
         })
+
         cdtreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -672,21 +722,22 @@ class UnitinfPager : Fragment() {
                         val trea = text.toString().toInt()
                         t.trea[2] = trea
                         if (unitcd.text.toString().endsWith("s")) {
-                            unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 1, talents, level)
                         } else {
-                            unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+                            unitcd.text = s.getCD(f, t, 0, talents, level)
                         }
                     }
                 } else {
                     t.trea[2] = 0
                     if (unitcd.text.toString().endsWith("s")) {
-                        unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 1, talents, level)
                     } else {
-                        unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+                        unitcd.text = s.getCD(f, t, 0, talents, level)
                     }
                 }
             }
         })
+
         atktreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -723,22 +774,23 @@ class UnitinfPager : Fragment() {
                         t.trea[0] = text.toString().toInt()
 
                         if (unitatkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
-                            unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                            unitatk.text = s.getDPS(f, t, talents, level)
                         } else {
-                            unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                            unitatk.text = s.getAtk(f, t, talents, level)
                         }
                     }
                 } else {
                     t.trea[0] = 0
 
                     if (unitatkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
-                        unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                        unitatk.text = s.getDPS(f, t, talents, level)
                     } else {
-                        unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                        unitatk.text = s.getAtk(f, t, talents, level)
                     }
                 }
             }
         })
+
         healtreat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -774,15 +826,16 @@ class UnitinfPager : Fragment() {
                     if (text.toString().toInt() <= 300) {
                         t.trea[1] = text.toString().toInt()
 
-                        unithp.text = s.getHP(f, t, talents, pcoinlev)
+                        unithp.text = s.getHP(f, t, talents, level)
                     }
                 } else {
                     t.trea[1] = 0
 
-                    unithp.text = s.getHP(f, t, talents, pcoinlev)
+                    unithp.text = s.getHP(f, t, talents, level)
                 }
             }
         })
+
         reset.setOnClickListener {
             t.tech[0] = 30
             t.trea[0] = 300
@@ -795,96 +848,56 @@ class UnitinfPager : Fragment() {
             healtreat.setText(t.trea[2].toString())
 
             if (unitcd.text.toString().endsWith("s")) {
-                unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 1, talents, level)
             } else {
-                unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+                unitcd.text = s.getCD(f, t, 0, talents, level)
             }
 
             if (unitatkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
-                unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+                unitatk.text = s.getDPS(f, t, talents, level)
             } else {
-                unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+                unitatk.text = s.getAtk(f, t, talents, level)
             }
 
-            unithp.text = s.getHP(f, t, talents, pcoinlev)
+            unithp.text = s.getHP(f, t, talents, level)
         }
+
         unittalen.setOnCheckedChangeListener { _, isChecked ->
-            talents = true
+            talents = isChecked
 
             validate(view, f, t)
 
             if (isChecked) {
-                val anim = ValueAnimator.ofInt(0, StaticStore.dptopx(100f, activity))
-
-                anim.addUpdateListener { animation ->
-                    val `val` = animation.animatedValue as Int
-                    val layout = npresetrow.layoutParams
-                    layout.width = `val`
-                    npresetrow.layoutParams = layout
-                }
-                anim.duration = 300
-                anim.interpolator = DecelerateInterpolator()
+                val anim = ScaleAnimator(npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(100f, activity))
                 anim.start()
-                val anim2 = ValueAnimator.ofInt(0, StaticStore.dptopx(48f, activity))
-                anim2.addUpdateListener { animation ->
-                    val params = nprow.layoutParams as ConstraintLayout.LayoutParams
-                    params.height = animation.animatedValue as Int
-                    nprow.layoutParams = params
-                }
-                anim2.duration = 300
-                anim2.interpolator = DecelerateInterpolator()
+
+                val anim2 = ScaleAnimator(nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, activity))
                 anim2.start()
-                val anim3 = ValueAnimator.ofInt(0, StaticStore.dptopx(16f, activity))
-                anim3.addUpdateListener { animation ->
-                    val params = nprow.layoutParams as ConstraintLayout.LayoutParams
-                    params.topMargin = animation.animatedValue as Int
-                    nprow.layoutParams = params
-                }
-                anim3.duration = 300
-                anim3.interpolator = DecelerateInterpolator()
+
+                val anim3 = ScaleAnimator(nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(16f, activity))
                 anim3.start()
+
+                val anim4 = ScaleAnimator(supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, activity))
+                anim4.start()
             } else {
-                talents = false
-                validate(view, f, t)
-                val anim = ValueAnimator.ofInt(StaticStore.dptopx(100f, activity), 0)
-                anim.addUpdateListener { animation ->
-                    val `val` = animation.animatedValue as Int
-                    val layout = npresetrow.layoutParams
-                    layout.width = `val`
-                    npresetrow.layoutParams = layout
-                }
-                anim.duration = 300
-                anim.interpolator = DecelerateInterpolator()
+                val anim = ScaleAnimator(npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(100f, activity), 0)
                 anim.start()
-                val anim2 = ValueAnimator.ofInt(StaticStore.dptopx(48f, activity), 0)
-                anim2.addUpdateListener { animation ->
-                    val params = nprow.layoutParams as ConstraintLayout.LayoutParams
-                    params.height = animation.animatedValue as Int
-                    nprow.layoutParams = params
-                }
-                anim2.duration = 300
-                anim2.interpolator = DecelerateInterpolator()
+
+                val anim2 = ScaleAnimator(nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, activity), 0)
                 anim2.start()
 
-                val anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f, activity), 0)
-
-                anim3.addUpdateListener { animation ->
-                    val params = nprow.layoutParams as ConstraintLayout.LayoutParams
-
-                    params.topMargin = animation.animatedValue as Int
-                    nprow.layoutParams = params
-                }
-
-                anim3.duration = 300
-                anim3.interpolator = DecelerateInterpolator()
+                val anim3 = ScaleAnimator(nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(16f, activity), 0)
                 anim3.start()
+
+                val anim4 = ScaleAnimator(supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, activity), 0)
+                anim4.start()
             }
         }
 
-        for (i in pcoins.indices) {
-            pcoins[i].onItemSelectedListener = object : OnItemSelectedListener {
+        for (i in talent.indices) {
+            talent[i].onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
-                    pcoinlev[i+1] = pcoins[i].selectedItem as Int
+                    level.talents[talentIndex[i]] = talent[i].selectedItem as Int
 
                     validate(view, f, t)
                 }
@@ -892,23 +905,46 @@ class UnitinfPager : Fragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            pcoins[i].setOnLongClickListener {
-                pcoins[i].isClickable = false
+            talent[i].setOnLongClickListener {
+                talent[i].isClickable = false
 
-                StaticStore.showShortMessage(activity, s.getTalentName(i, f))
+                StaticStore.showShortMessage(activity, s.getTalentName(talentIndex[i], f))
                 true
             }
         }
+
+        for(i in superTalent.indices) {
+            superTalent[i].onItemSelectedListener = object : OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
+                    level.talents[superTalentIndex[i]] = superTalent[i].selectedItem as Int
+
+                    validate(view, f, t)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+            superTalent[i].setOnLongClickListener {
+                superTalent[i].isClickable = false
+
+                StaticStore.showShortMessage(activity, s.getTalentName(superTalentIndex[i], f))
+                true
+            }
+        }
+
         npreset.setOnClickListener {
             val max = f.du.pCoin.max
 
-            for (i in pcoins.indices) {
-                if(i >= f.du.pCoin.info.size)
-                    continue
+            for(i in max.indices) {
+                level.talents[i] = max[i]
+            }
 
-                pcoins[i].setSelection(getIndex(pcoins[i], max[i + 1]))
+            for (i in talent.indices) {
+                talent[i].setSelection(getIndex(talent[i], max[talentIndex[i]]))
+            }
 
-                pcoinlev[i + 1] = max[i + 1]
+            for (i in superTalent.indices) {
+                superTalent[i].setSelection(getIndex(superTalent[i], max[superTalentIndex[i]]))
             }
 
             validate(view, f, t)
@@ -928,34 +964,39 @@ class UnitinfPager : Fragment() {
         val unitcost = view.findViewById<TextView>(R.id.unitinfcostr)
         val unitspd = view.findViewById<TextView>(R.id.unitinfspdr)
         val unitcd = view.findViewById<TextView>(R.id.unitinfcdr)
+        val unittba = view.findViewById<TextView>(R.id.unitinftbar)
+        val unitatkt = view.findViewById<TextView>(R.id.unitinfatktimer)
         val none = view.findViewById<TextView>(R.id.unitabilnone)
         val unitabil: RecyclerView = view.findViewById(R.id.unitinfabilr)
 
         val level = unitlevel.selectedItem as Int
         val levelp = unitlevelp.selectedItem as Int
 
-        pcoinlev[0] = level + levelp
+        this.level.setLevel(level)
+        this.level.setPlusLevel(levelp)
 
-        unithp.text = s.getHP(f, t, talents, pcoinlev)
-        unithb.text = s.getHB(f, talents, pcoinlev)
+        unithp.text = s.getHP(f, t, talents, this.level)
+        unithb.text = s.getHB(f, talents, this.level)
 
         if (unitatkb.text.toString() == "DPS")
-            unitatk.text = s.getDPS(f, t, talents, pcoinlev)
+            unitatk.text = s.getDPS(f, t, talents, this.level)
         else
-            unitatk.text = s.getAtk(f, t, talents, pcoinlev)
+            unitatk.text = s.getAtk(f, t, talents, this.level)
 
-        unitcost.text = s.getCost(f, talents, pcoinlev)
+        unitcost.text = s.getCost(f, talents, this.level)
 
         if (unitcd.text.toString().endsWith("s"))
-            unitcd.text = s.getCD(f, t, 1, talents, pcoinlev)
+            unitcd.text = s.getCD(f, t, 1, talents, this.level)
         else
-            unitcd.text = s.getCD(f, t, 0, talents, pcoinlev)
+            unitcd.text = s.getCD(f, t, 0, talents, this.level)
 
-        unittrait.text = s.getTrait(f, talents, pcoinlev)
-        unitspd.text = s.getSpd(f, talents, pcoinlev)
+        unittrait.text = s.getTrait(f, talents, this.level)
+        unitspd.text = s.getSpd(f, talents, this.level)
+        unittba.text = s.getTBA(f, talents, fs, this.level)
+        unitatkt.text = s.getAtkTime(f, talents, fs, this.level)
 
         val du: MaskUnit = if (f.du.pCoin != null && talents)
-            f.du.pCoin.improve(pcoinlev)
+            f.du.pCoin.improve(this.level.talents)
         else
             f.du
 
@@ -991,5 +1032,17 @@ class UnitinfPager : Fragment() {
         for (i in 0 until spinner!!.count)
             if (lev == spinner.getItemAtPosition(i) as Int) index = i
         return index
+    }
+
+    private fun changeSpinner(spinner: Spinner, enable: Boolean) {
+        spinner.isEnabled = enable
+        spinner.background.alpha = if(enable)
+            255
+        else
+            64
+
+        if(spinner.childCount >= 1 && spinner.getChildAt(0) is AutoMarquee) {
+            (spinner.getChildAt(0) as AutoMarquee).setTextColor((spinner.getChildAt(0) as AutoMarquee).textColors.withAlpha(if(enable) 255 else 64))
+        }
     }
 }

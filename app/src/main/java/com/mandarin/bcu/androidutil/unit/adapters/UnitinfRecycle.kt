@@ -1,23 +1,19 @@
 package com.mandarin.bcu.androidutil.unit.adapters
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,13 +22,18 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.supports.AnimatorConst
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
+import com.mandarin.bcu.androidutil.supports.ScaleAnimator
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
 import com.mandarin.bcu.util.Interpret
+import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.MaskUnit
 import common.pack.Identifier
 import common.util.unit.Form
+import common.util.unit.Level
 import common.util.unit.Unit
 
 class UnitinfRecycle(private val context: Activity,
@@ -46,15 +47,13 @@ class UnitinfRecycle(private val context: Activity,
     private val color: IntArray = intArrayOf(
             StaticStore.getAttributeColor(context, R.attr.TextPrimary)
     )
+    
     private var talents = false
-    private var pcoins = ArrayList<Int>()
+    private val level = Level(8)
 
     private var isRaw = false
-
-    init {
-        for(i in 0 until 6)
-            pcoins.add(0)
-    }
+    private val talentIndex = java.util.ArrayList<Int>()
+    private val superTalentIndex = java.util.ArrayList<Int>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pack: Button = itemView.findViewById(R.id.unitinfpack)
@@ -92,6 +91,7 @@ class UnitinfRecycle(private val context: Activity,
         var npresetrow: TableRow = itemView.findViewById(R.id.talresetrow)
         var npreset: Button = itemView.findViewById(R.id.unitinftalreset)
         var nprow: TableRow = itemView.findViewById(R.id.talenrow)
+        var supernprow: TableRow = itemView.findViewById(R.id.supertalenrow)
 
         init {
             unitplus.text = " + "
@@ -103,7 +103,7 @@ class UnitinfRecycle(private val context: Activity,
         return ViewHolder(row)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val u = data.get() ?: return
 
         val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
@@ -119,11 +119,14 @@ class UnitinfRecycle(private val context: Activity,
         atktrea.counterMaxLength = 3
         healtrea.isCounterEnabled = true
         healtrea.counterMaxLength = 3
+        
         cdlev.setHelperTextColor(ColorStateList(states, color))
         cdtrea.setHelperTextColor(ColorStateList(states, color))
         atktrea.setHelperTextColor(ColorStateList(states, color))
         healtrea.setHelperTextColor(ColorStateList(states, color))
+
         val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        
         if (shared.getBoolean("frame", true)) {
             fs = 0
             viewHolder.frse.text = context.getString(R.string.unit_info_fr)
@@ -133,60 +136,11 @@ class UnitinfRecycle(private val context: Activity,
         }
 
         val t = BasisSet.current().t()
+        
         val f = forms[viewHolder.adapterPosition]
 
-        val vpcoins = if(f.du.pCoin != null) {
-            Array(f.du.pCoin.max.size - 1) {
-                val spin = Spinner(context)
-
-                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (f.du.pCoin.max.size - 1)).toFloat())
-
-                spin.layoutParams = param
-                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
-                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
-
-                viewHolder.nprow.addView(spin)
-
-                spin
-            }
-        } else {
-            arrayOf()
-        }
-
-        if (f.du.pCoin == null) {
-            viewHolder.unittalen.visibility = View.GONE
-            viewHolder.npreset.visibility = View.GONE
-            viewHolder.nprow.visibility = View.GONE
-            pcoins = ArrayList()
-
-            for(ii in 0 until 6)
-                pcoins.add(0)
-        } else {
-            val max = f.du.pCoin.max
-
-            pcoins = max
-
-            for (j in vpcoins.indices) {
-                if(j >= f.du.pCoin.info.size) {
-                    vpcoins[j].isEnabled = false
-                    continue
-                }
-
-                val plev: MutableList<Int> = ArrayList()
-
-                for (k in 0 until max[j + 1] + 1)
-                    plev.add(k)
-
-                val adapter = ArrayAdapter(context, R.layout.spinneradapter, plev)
-
-                vpcoins[j].adapter = adapter
-                vpcoins[j].setSelection(getIndex(vpcoins[j], max[j + 1]))
-
-                pcoins[j + 1] = max[j + 1]
-            }
-        }
-
-        pcoins[0] = f.unit.prefLv
+        level.setLevel(f.unit.preferredLevel)
+        level.setPlusLevel(f.unit.preferredPlusLevel)
 
         val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0)
         val abilityicon = Interpret.getAbiid(f.du)
@@ -210,22 +164,22 @@ class UnitinfRecycle(private val context: Activity,
             viewHolder.uniticon.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap, 48f))
         }
 
-        viewHolder.unitname.text = names[i]
+        viewHolder.unitname.text = names[position]
         viewHolder.unitpack.text = s.getPackName(f.unit.id, isRaw)
         viewHolder.unitid.text = s.getID(viewHolder, StaticStore.trio(u.id.id))
-        viewHolder.unithp.text = s.getHP(f, t, false, pcoins)
-        viewHolder.unithb.text = s.getHB(f, false, pcoins)
-        viewHolder.unitatk.text = s.getTotAtk(f, t, false, pcoins)
-        viewHolder.unittrait.text = s.getTrait(f, false, pcoins)
-        viewHolder.unitcost.text = s.getCost(f, false, pcoins)
+        viewHolder.unithp.text = s.getHP(f, t, false, level)
+        viewHolder.unithb.text = s.getHB(f, false, level)
+        viewHolder.unitatk.text = s.getTotAtk(f, t, false, level)
+        viewHolder.unittrait.text = s.getTrait(f, false, level)
+        viewHolder.unitcost.text = s.getCost(f, false, level)
         viewHolder.unitsimu.text = s.getSimu(f)
-        viewHolder.unitspd.text = s.getSpd(f, false, pcoins)
-        viewHolder.unitcd.text = s.getCD(f, t, fs, false, pcoins)
+        viewHolder.unitspd.text = s.getSpd(f, false, level)
+        viewHolder.unitcd.text = s.getCD(f, t, fs, false, level)
         viewHolder.unitrang.text = s.getRange(f)
         viewHolder.unitpreatk.text = s.getPre(f, fs)
         viewHolder.unitpost.text = s.getPost(f, fs)
-        viewHolder.unittba.text = s.getTBA(f, fs)
-        viewHolder.unitatkt.text = s.getAtkTime(f, fs)
+        viewHolder.unittba.text = s.getTBA(f, false, fs, level)
+        viewHolder.unitatkt.text = s.getAtkTime(f, false, fs, level)
         viewHolder.unitabilt.text = s.getAbilT(f)
 
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
@@ -240,11 +194,107 @@ class UnitinfRecycle(private val context: Activity,
             viewHolder.unitabil.visibility = View.GONE
         }
 
-        listeners(viewHolder, vpcoins)
+        if (f.du.pCoin == null) {
+            viewHolder.unittalen.visibility = View.GONE
+            viewHolder.npreset.visibility = View.GONE
+            viewHolder.nprow.visibility = View.GONE
+            viewHolder.supernprow.visibility = View.GONE
+
+            for(i in level.talents.indices)
+                level.talents[i] = 0
+
+            listeners(viewHolder, arrayOf(), arrayOf())
+        } else {
+            for(i in f.du.pCoin.info.indices) {
+                if(f.du.pCoin.info[i][13] == 1)
+                    superTalentIndex.add(i)
+                else
+                    talentIndex.add(i)
+            }
+
+            val talent = Array(talentIndex.size) {
+                val spin = Spinner(context)
+
+                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (talentIndex.size)).toFloat())
+
+                spin.layoutParams = param
+                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                viewHolder.nprow.addView(spin)
+
+                spin
+            }
+
+            val superTalent = Array(superTalentIndex.size) {
+                val spin = Spinner(context)
+
+                val param = TableRow.LayoutParams(0, StaticStore.dptopx(56f, context), (1.0 / (superTalentIndex.size)).toFloat())
+
+                spin.layoutParams = param
+                spin.setPopupBackgroundResource(R.drawable.spinner_popup)
+                spin.setBackgroundResource(androidx.appcompat.R.drawable.abc_spinner_mtrl_am_alpha)
+
+                viewHolder.supernprow.addView(spin)
+
+                spin
+            }
+
+            val max = f.du.pCoin.max
+
+            for(i in max.indices)
+                level.talents[i] = max[i]
+
+            for(i in talent.indices) {
+                if(talentIndex[i] >= f.du.pCoin.info.size) {
+                    talent[i].isEnabled = false
+                    continue
+                }
+
+                val talentLevels = java.util.ArrayList<Int>()
+
+                for(j in 0 until max[talentIndex[i]] + 1)
+                    talentLevels.add(j)
+
+                val adapter = ArrayAdapter(context, R.layout.spinneradapter, talentLevels)
+
+                talent[i].adapter = adapter
+                talent[i].setSelection(getIndex(talent[i], max[talentIndex[i]]))
+
+                level.talents[talentIndex[i]] = max[talentIndex[i]]
+            }
+
+            for(i in superTalent.indices) {
+                if(superTalentIndex[i] >= f.du.pCoin.info.size) {
+                    superTalent[i].isEnabled = false
+                    continue
+                }
+
+                val superTalentLevels = java.util.ArrayList<Int>()
+
+                for(j in 0 until max[superTalentIndex[i]] + 1)
+                    superTalentLevels.add(j)
+
+                val adapter = ArrayAdapter(context, R.layout.spinneradapter, superTalentLevels)
+
+                superTalent[i].adapter = adapter
+                superTalent[i].setSelection(getIndex(superTalent[i], max[superTalentIndex[i]]))
+
+                level.talents[superTalentIndex[i]] = max[superTalentIndex[i]]
+
+                if(CommonStatic.getConfig().realLevel)
+                    changeSpinner(superTalent[i], level.lv + level.plusLv >= 60)
+            }
+
+            if(superTalent.isEmpty())
+                viewHolder.supernprow.visibility = View.GONE
+
+            listeners(viewHolder, talent, superTalent)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun listeners(viewHolder: ViewHolder, vpcoins: Array<Spinner>) {
+    private fun listeners(viewHolder: ViewHolder, talent: Array<Spinner>, superTalent: Array<Spinner>) {
         val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
         val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
         val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
@@ -255,6 +305,23 @@ class UnitinfRecycle(private val context: Activity,
         val healtreat: TextInputEditText = context.findViewById(R.id.healtreat)
         val reset = context.findViewById<Button>(R.id.treasurereset)
 
+        val t = BasisSet.current().t()
+        
+        val f = forms[viewHolder.adapterPosition]
+
+        val levels: MutableList<Int> = ArrayList()
+
+        for (j in 1 until f.unit.max + 1)
+            levels.add(j)
+
+        val levelsp = ArrayList<Int>()
+
+        for (j in 0 until f.unit.maxp + 1)
+            levelsp.add(j)
+
+        val arrayAdapter = ArrayAdapter(context, R.layout.spinneradapter, levels)
+        val arrayAdapterp = ArrayAdapter(context, R.layout.spinneradapter, levelsp)
+
         viewHolder.unitname.setOnLongClickListener {
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText(null, viewHolder.unitname.text)
@@ -263,32 +330,23 @@ class UnitinfRecycle(private val context: Activity,
             true
         }
 
-        val t = BasisSet.current().t()
-        val f = forms[viewHolder.adapterPosition]
-        val levels: MutableList<Int> = ArrayList()
-        for (j in 1 until f.unit.max + 1) levels.add(j)
-        val levelsp = ArrayList<Int>()
-        for (j in 0 until f.unit.maxp + 1) levelsp.add(j)
-        val arrayAdapter = ArrayAdapter(context, R.layout.spinneradapter, levels)
-        val arrayAdapterp = ArrayAdapter(context, R.layout.spinneradapter, levelsp)
-
         val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
-        pcoins[0] = when {
-            shared.getInt("default_level", 50) > f.unit.max -> f.unit.max
-            f.unit.rarity != 0 -> shared.getInt("default_level", 50)
-            else -> f.unit.max
-        }
+        level.setLevel(
+            when {
+                shared.getInt("default_level", 50) > f.unit.max -> f.unit.max
+                f.unit.rarity != 0 -> shared.getInt("default_level", 50)
+                else -> f.unit.max
+            }
+        )
+
+        level.setPlusLevel(f.unit.preferredPlusLevel)
 
         viewHolder.unitlevel.adapter = arrayAdapter
-        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel, pcoins[0]))
+        viewHolder.unitlevel.setSelection(getIndex(viewHolder.unitlevel, level.lv))
+        
         viewHolder.unitlevelp.adapter = arrayAdapterp
-
-        if (f.unit.prefLv - f.unit.max < 0) {
-            viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, 0))
-        } else {
-            viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, f.unit.prefLv - f.unit.max))
-        }
+        viewHolder.unitlevelp.setSelection(getIndex(viewHolder.unitlevelp, level.plusLv))
 
         if (levelsp.size == 1) {
             viewHolder.unitlevelp.visibility = View.GONE
@@ -305,11 +363,11 @@ class UnitinfRecycle(private val context: Activity,
             if (fs == 0) {
                 fs = 1
 
-                viewHolder.unitcd.text = s.getCD(f, t, fs, talents, pcoins)
+                viewHolder.unitcd.text = s.getCD(f, t, fs, talents, level)
                 viewHolder.unitpreatk.text = s.getPre(f, fs)
                 viewHolder.unitpost.text = s.getPost(f, fs)
-                viewHolder.unittba.text = s.getTBA(f, fs)
-                viewHolder.unitatkt.text = s.getAtkTime(f, fs)
+                viewHolder.unittba.text = s.getTBA(f, talents, fs, level)
+                viewHolder.unitatkt.text = s.getAtkTime(f, talents, fs, level)
                 viewHolder.frse.text = context.getString(R.string.unit_info_sec)
 
                 if (viewHolder.unitabil.visibility != View.GONE) {
@@ -317,7 +375,7 @@ class UnitinfRecycle(private val context: Activity,
 
                     if (f.du.pCoin != null)
                         du = if (talents)
-                            f.du.pCoin.improve(pcoins)
+                            f.du.pCoin.improve(level.talents)
                         else
                             f.du
 
@@ -342,11 +400,11 @@ class UnitinfRecycle(private val context: Activity,
             } else {
                 fs = 0
 
-                viewHolder.unitcd.text = s.getCD(f, t, fs, talents, pcoins)
+                viewHolder.unitcd.text = s.getCD(f, t, fs, talents, level)
                 viewHolder.unitpreatk.text = s.getPre(f, fs)
                 viewHolder.unitpost.text = s.getPost(f, fs)
-                viewHolder.unittba.text = s.getTBA(f, fs)
-                viewHolder.unitatkt.text = s.getAtkTime(f, fs)
+                viewHolder.unittba.text = s.getTBA(f, talents, fs, level)
+                viewHolder.unitatkt.text = s.getAtkTime(f, talents, fs, level)
                 viewHolder.frse.text = context.getString(R.string.unit_info_fr)
 
                 if (viewHolder.unitabil.visibility != View.GONE) {
@@ -354,7 +412,7 @@ class UnitinfRecycle(private val context: Activity,
 
                     if (f.du.pCoin != null)
                         du = if (talents)
-                            f.du.pCoin.improve(pcoins)
+                            f.du.pCoin.improve(level.talents)
                         else
                             f.du
 
@@ -381,9 +439,9 @@ class UnitinfRecycle(private val context: Activity,
 
         viewHolder.unitcdb.setOnClickListener {
             if (viewHolder.unitcd.text.toString().endsWith("f"))
-                viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+                viewHolder.unitcd.text = s.getCD(f, t, 1, talents, level)
             else
-                viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+                viewHolder.unitcd.text = s.getCD(f, t, 0, talents, level)
         }
 
         viewHolder.unitpreatkb.setOnClickListener {
@@ -402,28 +460,28 @@ class UnitinfRecycle(private val context: Activity,
 
         viewHolder.unittbab.setOnClickListener {
             if (viewHolder.unittba.text.toString().endsWith("f"))
-                viewHolder.unittba.text = s.getTBA(f, 1)
+                viewHolder.unittba.text = s.getTBA(f, talents, 1, level)
             else
-                viewHolder.unittba.text = s.getTBA(f, 0)
+                viewHolder.unittba.text = s.getTBA(f, talents, 0, level)
         }
 
         viewHolder.unitatkb.setOnClickListener {
             if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk)) {
                 viewHolder.unitatkb.text = context.getString(R.string.unit_info_dps)
 
-                viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                viewHolder.unitatk.text = s.getDPS(f, t, talents, level)
             } else {
                 viewHolder.unitatkb.text = context.getString(R.string.unit_info_atk)
 
-                viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                viewHolder.unitatk.text = s.getAtk(f, t, talents, level)
             }
         }
 
         viewHolder.unitatktb.setOnClickListener {
             if (viewHolder.unitatkt.text.toString().endsWith("f"))
-                viewHolder.unitatkt.text = s.getAtkTime(f, 1)
+                viewHolder.unitatkt.text = s.getAtkTime(f, talents, 1, level)
             else
-                viewHolder.unitatkt.text = s.getAtkTime(f, 0)
+                viewHolder.unitatkt.text = s.getAtkTime(f, talents, 0, level)
         }
 
         viewHolder.unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
@@ -431,20 +489,30 @@ class UnitinfRecycle(private val context: Activity,
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
 
-                pcoins[0] = level + levelp
+                this@UnitinfRecycle.level.setLevel(level)
 
-                viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
+                viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
                 } else {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getTotAtk(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getTotAtk(f, t, this@UnitinfRecycle.talents,
+                            this@UnitinfRecycle.level
+                        )
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                }
+
+                if(CommonStatic.getConfig().realLevel) {
+                    for(i in superTalent.indices) {
+                        changeSpinner(superTalent[i], level + levelp >= 60)
+                    }
+
+                    validate(viewHolder, f, t)
                 }
             }
 
@@ -456,19 +524,27 @@ class UnitinfRecycle(private val context: Activity,
                 val level = viewHolder.unitlevel.selectedItem as Int
                 val levelp = viewHolder.unitlevelp.selectedItem as Int
 
-                pcoins[0] = level + levelp
+                this@UnitinfRecycle.level.setPlusLevel(levelp)
 
-                viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
+                viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
                 if (f.du.rawAtkData().size > 1) {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
                 } else {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                }
+
+                if(CommonStatic.getConfig().realLevel) {
+                    for(i in superTalent.indices) {
+                        changeSpinner(superTalent[i], level + levelp >= 60)
+                    }
+
+                    validate(viewHolder, f, t)
                 }
             }
 
@@ -519,18 +595,20 @@ class UnitinfRecycle(private val context: Activity,
                         t.tech[0] = lev
 
                         if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                            viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+                            viewHolder.unitcd.text = s.getCD(f, t, 1,
+                                this@UnitinfRecycle.talents, level)
                         } else {
-                            viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+                            viewHolder.unitcd.text = s.getCD(f, t, 0,
+                                this@UnitinfRecycle.talents, level)
                         }
                     }
                 } else {
                     t.tech[0] = 1
 
                     if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                        viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+                        viewHolder.unitcd.text = s.getCD(f, t, 1, this@UnitinfRecycle.talents, level)
                     } else {
-                        viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+                        viewHolder.unitcd.text = s.getCD(f, t, 0, this@UnitinfRecycle.talents, level)
                     }
                 }
             }
@@ -574,18 +652,20 @@ class UnitinfRecycle(private val context: Activity,
                         t.trea[2] = trea
 
                         if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                            viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+                            viewHolder.unitcd.text = s.getCD(f, t, 1,
+                                this@UnitinfRecycle.talents, level)
                         } else {
-                            viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+                            viewHolder.unitcd.text = s.getCD(f, t, 0,
+                                this@UnitinfRecycle.talents, level)
                         }
                     }
                 } else {
                     t.trea[2] = 0
 
                     if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                        viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+                        viewHolder.unitcd.text = s.getCD(f, t, 1, this@UnitinfRecycle.talents, level)
                     } else {
-                        viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+                        viewHolder.unitcd.text = s.getCD(f, t, 0, this@UnitinfRecycle.talents, level)
                     }
                 }
             }
@@ -627,18 +707,20 @@ class UnitinfRecycle(private val context: Activity,
                         t.trea[0] = text.toString().toInt()
 
                         if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                            viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                            viewHolder.unitatk.text = s.getDPS(f, t,
+                                this@UnitinfRecycle.talents, level)
                         } else {
-                            viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                            viewHolder.unitatk.text = s.getAtk(f, t,
+                                this@UnitinfRecycle.talents, level)
                         }
                     }
                 } else {
                     t.trea[0] = 0
 
                     if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                        viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, level)
                     } else {
-                        viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, level)
                     }
                 }
             }
@@ -679,12 +761,12 @@ class UnitinfRecycle(private val context: Activity,
                     if (text.toString().toInt() <= 300) {
                         t.trea[1] = text.toString().toInt()
 
-                        viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
+                        viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, level)
                     }
                 } else {
                     t.trea[1] = 0
 
-                    viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
+                    viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, level)
                 }
             }
         })
@@ -701,18 +783,18 @@ class UnitinfRecycle(private val context: Activity,
             healtreat.setText(t.trea[2].toString())
 
             if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
+                viewHolder.unitcd.text = s.getCD(f, t, 1, talents, level)
             } else {
-                viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
+                viewHolder.unitcd.text = s.getCD(f, t, 0, talents, level)
             }
 
             if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
+                viewHolder.unitatk.text = s.getDPS(f, t, talents, level)
             } else {
-                viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
+                viewHolder.unitatk.text = s.getAtk(f, t, talents, level)
             }
 
-            viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
+            viewHolder.unithp.text = s.getHP(f, t, talents, level)
         }
 
         viewHolder.unittalen.setOnCheckedChangeListener { _, isChecked ->
@@ -721,116 +803,66 @@ class UnitinfRecycle(private val context: Activity,
             validate(viewHolder, f, t)
 
             if (isChecked) {
-                val anim = ValueAnimator.ofInt(0, StaticStore.dptopx(100f, context))
-
-                anim.addUpdateListener { animation ->
-                    val `val` = animation.animatedValue as Int
-                    val layout = viewHolder.npresetrow.layoutParams
-                    layout.width = `val`
-                    viewHolder.npresetrow.layoutParams = layout
-                }
-
-                anim.duration = 300
-                anim.interpolator = DecelerateInterpolator()
-
+                val anim = ScaleAnimator(viewHolder.npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(100f, context))
                 anim.start()
 
-                val anim2: ValueAnimator = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    ValueAnimator.ofInt(0, StaticStore.dptopx(48f, context))
-                } else {
-                    ValueAnimator.ofInt(0, StaticStore.dptopx(56f, context))
-                }
-                anim2.addUpdateListener { animation ->
-                    val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
-
-                    params.height = animation.animatedValue as Int
-
-                    viewHolder.nprow.layoutParams = params
-                }
-
-                anim2.duration = 300
-                anim2.interpolator = DecelerateInterpolator()
-
+                val anim2 = ScaleAnimator(viewHolder.nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, context))
                 anim2.start()
 
-                val anim3 = ValueAnimator.ofInt(0, StaticStore.dptopx(16f, context))
-
-                anim3.addUpdateListener { animation ->
-                    val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
-                    params.topMargin = animation.animatedValue as Int
-                    viewHolder.nprow.layoutParams = params
-                }
-
-                anim3.duration = 300
-                anim3.interpolator = DecelerateInterpolator()
-
+                val anim3 = ScaleAnimator(viewHolder.nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(16f, context))
                 anim3.start()
+
+                val anim4 = ScaleAnimator(viewHolder.supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, context))
+                anim4.start()
             } else {
-                talents = false
-
-                validate(viewHolder, f, t)
-
-
-                val anim = ValueAnimator.ofInt(StaticStore.dptopx(100f, context), 0)
-
-                anim.addUpdateListener { animation ->
-                    val `val` = animation.animatedValue as Int
-                    val layout = viewHolder.npresetrow.layoutParams
-                    layout.width = `val`
-                    viewHolder.npresetrow.layoutParams = layout
-                }
-
-                anim.duration = 300
-                anim.interpolator = DecelerateInterpolator()
-
+                val anim = ScaleAnimator(viewHolder.npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(100f, context), 0)
                 anim.start()
 
-                val anim2: ValueAnimator = if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                    ValueAnimator.ofInt(StaticStore.dptopx(48f, context), 0)
-                else
-                    ValueAnimator.ofInt(StaticStore.dptopx(56f, context), 0)
-
-                anim2.addUpdateListener { animation ->
-                    val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
-                    params.height = animation.animatedValue as Int
-                    viewHolder.nprow.layoutParams = params
-                }
-
-                anim2.duration = 300
-                anim2.interpolator = DecelerateInterpolator()
-
+                val anim2 = ScaleAnimator(viewHolder.nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, context), 0)
                 anim2.start()
 
-                val anim3 = ValueAnimator.ofInt(StaticStore.dptopx(16f, context), 0)
-
-                anim3.addUpdateListener { animation ->
-                    val params = viewHolder.nprow.layoutParams as ConstraintLayout.LayoutParams
-                    params.topMargin = animation.animatedValue as Int
-                    viewHolder.nprow.layoutParams = params
-                }
-
-                anim3.duration = 300
-                anim3.interpolator = DecelerateInterpolator()
-
+                val anim3 = ScaleAnimator(viewHolder.nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(16f, context), 0)
                 anim3.start()
+
+                val anim4 = ScaleAnimator(viewHolder.supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, context), 0)
+                anim4.start()
             }
         }
 
-        for (i in vpcoins.indices) {
-            vpcoins[i].onItemSelectedListener = object : OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    pcoins[i+1] = vpcoins[i].selectedItem as Int
+        for (i in talent.indices) {
+            talent[i].onItemSelectedListener = object : OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
+                    level.talents[talentIndex[i]] = talent[i].selectedItem as Int
+
                     validate(viewHolder, f, t)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            vpcoins[i].setOnLongClickListener {
-                vpcoins[i].isClickable = false
+            talent[i].setOnLongClickListener {
+                talent[i].isClickable = false
 
-                StaticStore.showShortMessage(context, s.getTalentName(i, f))
+                StaticStore.showShortMessage(context, s.getTalentName(talentIndex[i], f))
+                true
+            }
+        }
 
+        for(i in superTalent.indices) {
+            superTalent[i].onItemSelectedListener = object : OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, views: View?, position: Int, id: Long) {
+                    level.talents[superTalentIndex[i]] = superTalent[i].selectedItem as Int
+
+                    validate(viewHolder, f, t)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+            superTalent[i].setOnLongClickListener {
+                superTalent[i].isClickable = false
+
+                StaticStore.showShortMessage(context, s.getTalentName(superTalentIndex[i], f))
                 true
             }
         }
@@ -838,14 +870,18 @@ class UnitinfRecycle(private val context: Activity,
         viewHolder.npreset.setOnClickListener {
             val max = f.du.pCoin.max
 
-            for (i in vpcoins.indices) {
-                if(i >= f.du.pCoin.info.size)
-                    continue
-
-                vpcoins[i].setSelection(getIndex(vpcoins[i], max[i + 1]))
-
-                pcoins[i + 1] = max[i + 1]
+            for(i in max.indices) {
+                level.talents[i] = max[i]
             }
+
+            for (i in talent.indices) {
+                talent[i].setSelection(getIndex(talent[i], max[talentIndex[i]]))
+            }
+
+            for (i in superTalent.indices) {
+                superTalent[i].setSelection(getIndex(superTalent[i], max[superTalentIndex[i]]))
+            }
+
             validate(viewHolder, f, t)
         }
     }
@@ -865,35 +901,40 @@ class UnitinfRecycle(private val context: Activity,
     }
 
     private fun validate(viewHolder: ViewHolder, f: Form, t: Treasure) {
+        viewHolder.unithp.text = s.getHP(f, t, talents, level)
+
+        viewHolder.unithb.text = s.getHB(f, talents, level)
+
+        if (viewHolder.unitatkb.text.toString() == "DPS")
+            viewHolder.unitatk.text = s.getDPS(f, t, talents, level)
+        else
+            viewHolder.unitatk.text = s.getAtk(f, t, talents, level)
+
+        viewHolder.unitcost.text = s.getCost(f, talents, level)
+
+        if (viewHolder.unitcd.text.toString().endsWith("s"))
+            viewHolder.unitcd.text = s.getCD(f, t, 1, talents, level)
+        else
+            viewHolder.unitcd.text = s.getCD(f, t, 0, talents, level)
+
+        viewHolder.unittrait.text = s.getTrait(f, talents, level)
+
+        viewHolder.unitspd.text = s.getSpd(f, talents, level)
+
+        viewHolder.unittba.text = s.getTBA(f, talents, fs, level)
+
+        viewHolder.unitatkt.text = s.getAtkTime(f, talents, fs, level)
+
+        val du: MaskUnit = if (f.du.pCoin != null && talents)
+            f.du.pCoin.improve(level.talents)
+        else
+            f.du
+
         val level = viewHolder.unitlevel.selectedItem as Int
         val levelp = viewHolder.unitlevelp.selectedItem as Int
 
-        pcoins[0] = level + levelp
-
-        viewHolder.unithp.text = s.getHP(f, t, talents, pcoins)
-
-        viewHolder.unithb.text = s.getHB(f, talents, pcoins)
-
-        if (viewHolder.unitatkb.text.toString() == "DPS")
-            viewHolder.unitatk.text = s.getDPS(f, t, talents, pcoins)
-        else
-            viewHolder.unitatk.text = s.getAtk(f, t, talents, pcoins)
-
-        viewHolder.unitcost.text = s.getCost(f, talents, pcoins)
-
-        if (viewHolder.unitcd.text.toString().endsWith("s"))
-            viewHolder.unitcd.text = s.getCD(f, t, 1, talents, pcoins)
-        else
-            viewHolder.unitcd.text = s.getCD(f, t, 0, talents, pcoins)
-
-        viewHolder.unittrait.text = s.getTrait(f, talents, pcoins)
-
-        viewHolder.unitspd.text = s.getSpd(f, talents, pcoins)
-
-        val du: MaskUnit = if (f.du.pCoin != null && talents)
-            f.du.pCoin.improve(pcoins)
-        else
-            f.du
+        this.level.setLevel(level)
+        this.level.setPlusLevel(levelp)
 
         val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
 
@@ -917,6 +958,18 @@ class UnitinfRecycle(private val context: Activity,
             ViewCompat.setNestedScrollingEnabled(viewHolder.unitabil, false)
         } else {
             viewHolder.unitabil.visibility = View.GONE
+        }
+    }
+
+    private fun changeSpinner(spinner: Spinner, enable: Boolean) {
+        spinner.isEnabled = enable
+        spinner.background.alpha = if(enable)
+            255
+        else
+            64
+
+        if(spinner.childCount >= 1 && spinner.getChildAt(0) is AutoMarquee) {
+            (spinner.getChildAt(0) as AutoMarquee).setTextColor((spinner.getChildAt(0) as AutoMarquee).textColors.withAlpha(if(enable) 255 else 64))
         }
     }
 }

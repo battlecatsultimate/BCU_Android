@@ -954,4 +954,5 @@
     <string name="fruit27">Green Behemoth Crystal</string>
     <string name="fruit28">Yellow Behemoth Crystal</string>
     <string name="fruit29">Epic Behemoth Stone</string>
+    <string name="config_reallv">Perform realistic leveling in battle</string>
 </resources>

@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().shake = shared.getBoolean("shake", true)
         CommonStatic.getConfig().stageName = shared.getBoolean("showst", true)
         StaticStore.showResult = shared.getBoolean("showres", true)
+        CommonStatic.getConfig().realLevel = shared.getBoolean("reallv", false)
 
         val result = intent
         var conf = false

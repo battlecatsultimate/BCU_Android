@@ -96,6 +96,14 @@ class AContext : Context {
         return File(StaticStore.getExternalBackup(a) + string)
     }
 
+    override fun getBCUFolder(): File {
+        val wac = c ?: return File("")
+
+        val a = wac.get() ?: return File("")
+
+        return File(StaticStore.getExternalPath(a))
+    }
+
     override fun getAuthor(): String {
         return ""
     }
@@ -263,43 +271,5 @@ class AContext : Context {
         } else {
             File(StaticStore.dataPath+"music/"+m.id.pack+"-"+Data.trio(m.id.id)+".ogg")
         }
-    }
-
-    fun extractImage(path: String) : File? {
-        Log.i("Acontext::extractImage","Extract start : $path")
-        synchronized(stopper) {
-            while(c == null) {
-                stopper.wait()
-            }
-        }
-
-        val wac = c ?: return null
-
-        val a = wac.get() ?: return null
-
-        val target = File(path)
-
-        if(!target.exists()) {
-            Log.e("AContext::extractImage", "File not existing : ${target.absolutePath}")
-
-            return null
-        }
-
-        val parent = target.parentFile?.name ?: return null
-
-        val shared = a.getSharedPreferences(parent, android.content.Context.MODE_PRIVATE)
-
-        if(!shared.contains(path)) {
-            Log.e("AContext::extractImage", "Key not existing : $path")
-
-            return null
-        }
-
-        val password = shared.getString(path, "") ?: ""
-
-        if(password.isEmpty())
-            return null
-
-        return File(StaticStore.decryptPNG(path, password, StaticStore.IV))
     }
 }

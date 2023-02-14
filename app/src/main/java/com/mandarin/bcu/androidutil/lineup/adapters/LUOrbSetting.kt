@@ -44,7 +44,11 @@ class LUOrbSetting : Fragment() {
 
     private val obj = Object()
 
-    private val traits = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo)
+    private val traits = intArrayOf(
+        R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an,
+        R.string.sch_al, R.string.sch_zo, R.string.sch_re, R.string.sch_wh, R.string.esch_witch,
+        R.string.esch_eva, R.string.sch_de
+    )
     private val grades = arrayOf("D", "C", "B", "A", "S")
 
     private val traitData = ArrayList<Int>()
@@ -101,8 +105,6 @@ class LUOrbSetting : Fragment() {
         }
 
         const.visibility = View.VISIBLE
-
-
     }
 
     private fun listeners(v: View) {
@@ -271,8 +273,8 @@ class LUOrbSetting : Fragment() {
                 val traitList = ArrayList<Trait>()
 
                 if (slot) {
-                    val mu = if (f.du?.pCoin != null) {
-                        f.du?.pCoin?.improve(l.lvs) ?: return
+                    val mu = if (f.du.pCoin != null) {
+                        f.du.pCoin.improve(l.talents) ?: return
                     } else {
                         f.du ?: return
                     }
@@ -284,7 +286,7 @@ class LUOrbSetting : Fragment() {
                 } else {
                     for(form in f.unit.forms) {
                         val mu = if (f.du.pCoin != null) {
-                            f.du?.pCoin?.improve(l.lvs) ?: return
+                            f.du.pCoin.improve(l.talents) ?: return
                         } else {
                             f.du ?: return
                         }
@@ -298,11 +300,11 @@ class LUOrbSetting : Fragment() {
 
                 if(needTraitFiltering(data)) {
                     for(tr in traitList) {
-                        if(od.contains(Orb.traitToOrb(tr.id.id))) {
-                            val r = Orb.reverse(Orb.traitToOrb(tr.id.id))
+                        if(od.contains(1 shl tr.id.id)) {
+                            val r = getTextIndex(1 shl tr.id.id)
 
-                            if(r >= traits.size) {
-                                Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : ${Orb.traitToOrb(tr.id.id)}")
+                            if(r >= traits.size || r < 0) {
+                                Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : ${tr.id.id}")
                                 return
                             } else {
                                 t.add(c.getString(traits[r]))
@@ -313,7 +315,7 @@ class LUOrbSetting : Fragment() {
 
                 if(t.isEmpty()) {
                     for(i in od.keys) {
-                        val r = Orb.reverse(i)
+                        val r = getTextIndex(i)
 
                         if(r >= traits.size) {
                             Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : $i")
@@ -593,6 +595,9 @@ class LUOrbSetting : Fragment() {
     }
 
     private fun updateSpinners(type: Spinner, trait: Spinner, grade: Spinner, slot: Boolean, data: IntArray, lv: Level) {
+        if(!this::f.isInitialized)
+            return
+
         val c = context ?: return
 
         val u = f.unit ?: return
@@ -604,8 +609,8 @@ class LUOrbSetting : Fragment() {
         val traitList = ArrayList<Trait>()
 
         if (slot) {
-            val mu = if (f.du?.pCoin != null) {
-                f.du?.pCoin?.improve(lv.lvs) ?: return
+            val mu = if (f.du.pCoin != null) {
+                f.du.pCoin.improve(lv.talents) ?: return
             } else {
                 f.du ?: return
             }
@@ -622,8 +627,8 @@ class LUOrbSetting : Fragment() {
             }
         } else {
             for(form in u.forms) {
-                val mu = if (f.du?.pCoin != null) {
-                    f.du?.pCoin?.improve(lv.lvs) ?: return
+                val mu = if (f.du.pCoin != null) {
+                    f.du.pCoin.improve(lv.talents) ?: return
                 } else {
                     f.du ?: return
                 }
@@ -704,13 +709,13 @@ class LUOrbSetting : Fragment() {
 
         val t = ArrayList<String>()
 
-        if(data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT) {
+        if(needTraitFiltering(data)) {
             for(tr in traitList) {
-                if(od.contains(Orb.traitToOrb(tr.id.id))) {
-                    val r = Orb.reverse(Orb.traitToOrb(tr.id.id))
+                if(od.contains(1 shl tr.id.id)) {
+                    val r = getTextIndex(1 shl tr.id.id)
 
                     if(r >= traits.size) {
-                        Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : ${Orb.traitToOrb(tr.id.id)}")
+                        Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : ${tr.id.id}")
                         return
                     } else {
                         t.add(c.getString(traits[r]))
@@ -721,9 +726,9 @@ class LUOrbSetting : Fragment() {
 
         if(t.isEmpty()) {
             for(i in od.keys) {
-                val r = Orb.reverse(i)
+                val r = getTextIndex(i)
 
-                if(r >= traits.size) {
+                if(r >= traits.size || r < 0) {
                     Log.e("LUOrbSetting", "Invalid trait data in updateSpinners() : $i")
                     return
                 } else {
@@ -797,7 +802,7 @@ class LUOrbSetting : Fragment() {
                     val data = l.orbs[i]
 
                     if(data.isEmpty()) {
-                        Log.e("LUOrbSetting","Invalid format detected in generateOrbTexts() ! : ${l.orbs?.contentDeepToString()}")
+                        Log.e("LUOrbSetting","Invalid format detected in generateOrbTexts() ! : ${l.orbs.contentDeepToString()}")
                         return res
                     } else {
                         res.add(c.getString(R.string.lineup_orb)+" ${i+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}")
@@ -840,7 +845,7 @@ class LUOrbSetting : Fragment() {
                 val data = orb[index]
 
                 if(data.isEmpty()) {
-                    Log.e("LUOrbSetting","Invalid format detected in generateOrbTexts() ! : ${l.orbs?.contentDeepToString()}")
+                    Log.e("LUOrbSetting","Invalid format detected in generateOrbTexts() ! : ${l.orbs.contentDeepToString()}")
                     ""
                 } else {
                     c.getString(R.string.lineup_orb)+"${index+1} - {${getType(data[0])}, ${getTrait(data[1])}, ${getGrade(data[2])}}"
@@ -941,7 +946,7 @@ class LUOrbSetting : Fragment() {
 
         val p = Paint()
 
-        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TRAITS[Orb.reverse(data[Data.ORB_TRAIT])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
+        cv.drawBitmap(StaticStore.getResizeb(CommonStatic.getBCAssets().TRAITS[getTextIndex(data[Data.ORB_TRAIT])].bimg() as Bitmap, c, 96f), 0f, 0f, p)
 
         p.alpha = (255 * 0.75).toInt()
 
@@ -958,8 +963,8 @@ class LUOrbSetting : Fragment() {
         val traitList = ArrayList<Trait>()
 
         if (slot) {
-            val mu = if (f.du?.pCoin != null) {
-                f.du.pCoin?.improve(lv.lvs) ?: return
+            val mu = if (f.du.pCoin != null) {
+                f.du.pCoin.improve(lv.talents) ?: return
             } else {
                 f.du ?: return
             }
@@ -970,8 +975,8 @@ class LUOrbSetting : Fragment() {
             }
         } else {
             for(form in f.unit.forms) {
-                val mu = if (f.du?.pCoin != null) {
-                    f.du.pCoin?.improve(lv.lvs) ?: return
+                val mu = if (f.du.pCoin != null) {
+                    f.du.pCoin.improve(lv.talents) ?: return
                 } else {
                     f.du ?: return
                 }
@@ -987,8 +992,8 @@ class LUOrbSetting : Fragment() {
 
         if(filter) {
             for(t in traitList) {
-                if (data.containsKey(Orb.traitToOrb(t.id.id)))
-                    traitData.add(Orb.traitToOrb(t.id.id))
+                if (data.containsKey(1 shl t.id.id))
+                    traitData.add(1 shl t.id.id)
             }
         }
 
@@ -1085,7 +1090,7 @@ class LUOrbSetting : Fragment() {
         if(o.slots == -1) {
             for(form in f.unit.forms) {
                 val mu = if(form.du.pCoin != null) {
-                    form.du.pCoin.improve(l.lvs)
+                    form.du.pCoin.improve(l.talents)
                 } else {
                     form.du
                 }
@@ -1106,7 +1111,7 @@ class LUOrbSetting : Fragment() {
             }
         } else {
             val mu = if(f.du.pCoin != null) {
-                f.du.pCoin.improve(l.lvs)
+                f.du.pCoin.improve(l.talents)
             } else {
                 f.du
             }
@@ -1162,5 +1167,13 @@ class LUOrbSetting : Fragment() {
 
     private fun needTraitFiltering(data: IntArray) : Boolean {
         return data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT
+    }
+    
+    private fun getTextIndex(id: Int) : Int {
+        for(i in Orb.orbTrait.indices)
+            if(id == (1 shl Orb.orbTrait[i]))
+                return i
+        
+        return -1
     }
 }

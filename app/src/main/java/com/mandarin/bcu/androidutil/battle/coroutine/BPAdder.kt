@@ -411,13 +411,26 @@ open class BPAdder : CoroutineTask<String> {
 
                     val level = lu.lu.map[form.unit.id] ?: continue
 
-                    for(i in level.lvs.indices) {
-                        val temp = level.lvs[i]
+                    var temp = level.lv
 
-                        level.lvs[i] = min(level.lvs[i], st.lim.lvr.all[i])
-                        level.lvs[i] = min(level.lvs[i], st.lim.lvr.rares[form.unit.rarity][i])
+                    level.setLevel(min(level.lv, st.lim.lvr.all[0]))
 
-                        if(!changed && temp != level.lvs[i])
+                    if(!changed && temp != level.lv)
+                        changed = true
+
+                    temp = level.plusLv
+
+                    level.setLevel(min(level.plusLv, st.lim.lvr.all[1]))
+
+                    if(!changed && temp != level.plusLv)
+                        changed = true
+
+                    for(i in 2 until st.lim.lvr.all.size) {
+                        temp = level.talents[i - 2]
+
+                        level.talents[i - 2] = min(level.talents[i - 2], st.lim.lvr.all[i])
+
+                        if(!changed && temp != level.talents[i - 2])
                             changed = true
                     }
                 }

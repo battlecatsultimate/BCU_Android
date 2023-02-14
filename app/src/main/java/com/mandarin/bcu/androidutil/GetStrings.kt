@@ -17,6 +17,7 @@ import common.util.stage.Stage
 import common.util.stage.info.DefStageInfo
 import common.util.unit.Enemy
 import common.util.unit.Form
+import common.util.unit.Level
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -83,7 +84,8 @@ class GetStrings(private val c: Context) {
                 R.string.sch_de, //57: Aku
                 R.string.sch_abi_shb, //58: Shield breaker
                 R.string.sch_abi_ck, //59: Corpse killer
-                R.string.sch_abi_cu //60: Curse
+                R.string.sch_abi_cu, //60: Curse
+                R.string.unit_info_tba //61: TBA
         )
         private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA", "Q")
@@ -140,9 +142,19 @@ class GetStrings(private val c: Context) {
         return if (name == "") rarity else result.append(rarity).append(" - ").append(name).toString()
     }
 
-    fun getAtkTime(f: Form?, frse: Int): String {
-        if (f == null) return ""
-        return if (frse == 0) f.du.itv.toString() + "f" else DecimalFormat("#.##").format(f.du.itv.toDouble() / 30) + "s"
+    fun getAtkTime(f: Form?, talent: Boolean, frse: Int, lvs: Level): String {
+        if (f == null)
+            return ""
+
+        val du = if(f.du.pCoin != null && talent)
+            f.du.pCoin.improve(lvs.talents)
+        else
+            f.du
+
+        return if (frse == 0)
+            du.itv.toString() + "f"
+        else
+            DecimalFormat("#.##").format(du.itv.toDouble() / 30) + "s"
     }
 
     fun getAtkTime(em: Enemy?, frse: Int): String {
@@ -188,9 +200,19 @@ class GetStrings(private val c: Context) {
         return if (frse == 0) em.de.post.toString() + "f" else DecimalFormat("#.##").format(em.de.post.toDouble() / 30) + "s"
     }
 
-    fun getTBA(f: Form?, frse: Int): String {
-        if (f == null) return ""
-        return if (frse == 0) f.du.tba.toString() + "f" else DecimalFormat("#.##").format(f.du.tba.toDouble() / 30) + "s"
+    fun getTBA(f: Form?, talent: Boolean, frse: Int, lvs: Level): String {
+        if (f == null)
+            return ""
+
+        val du = if(f.du.pCoin != null && talent)
+            f.du.pCoin.improve(lvs.talents)
+        else
+            f.du
+
+        return if (frse == 0)
+            du.tba.toString() + "f"
+        else
+            DecimalFormat("#.##").format(du.tba.toDouble() / 30) + "s"
     }
 
     fun getTBA(em: Enemy?, frse: Int): String {
@@ -465,13 +487,13 @@ class GetStrings(private val c: Context) {
         return true
     }
 
-    fun getCD(f: Form?, t: Treasure?, frse: Int, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getCD(f: Form?, t: Treasure?, frse: Int, talent: Boolean, lvs: Level): String {
         if (f == null || t == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
@@ -483,13 +505,13 @@ class GetStrings(private val c: Context) {
             DecimalFormat("#.##").format(t.getFinRes(du.respawn).toDouble() / 30) + "s"
     }
 
-    fun getAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
         if (f == null || t == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
@@ -511,13 +533,13 @@ class GetStrings(private val c: Context) {
             getTotAtk(em, multi)
     }
 
-    fun getSpd(f: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getSpd(f: Form?, talent: Boolean, lvs: Level): String {
         if (f == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
@@ -540,13 +562,13 @@ class GetStrings(private val c: Context) {
             em.de.proc.BARRIER.health.toString()
     }
 
-    fun getHB(f: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getHB(f: Form?, talent: Boolean, lvs: Level): String {
         if (f == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
@@ -559,22 +581,22 @@ class GetStrings(private val c: Context) {
         return em?.de?.hb?.toString() ?: ""
     }
 
-    fun getHP(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getHP(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
         if (f == null || t == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
             f.du
 
         val result = if(f.du.pCoin != null && talent) {
-            (((du.hp * f.unit.lv.getMult(lvs[0])).roundToInt() * t.defMulti).toInt() * (f.du.pCoin.getHPMultiplication(lvs))).toInt()
+            (((du.hp * f.unit.lv.getMult(lvs.lv + lvs.plusLv)).roundToInt() * t.defMulti).toInt() * (f.du.pCoin.getHPMultiplication(lvs.talents))).toInt()
         } else {
-            ((du.hp * f.unit.lv.getMult(lvs[0])).roundToInt() * t.defMulti).toInt()
+            ((du.hp * f.unit.lv.getMult(lvs.lv + lvs.plusLv)).roundToInt() * t.defMulti).toInt()
         }
 
         return result.toString()
@@ -587,20 +609,20 @@ class GetStrings(private val c: Context) {
         return (em.de.multi(BasisSet.current()) * em.de.hp * multi / 100).toInt().toString()
     }
 
-    fun getTotAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getTotAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
         if (f == null || t == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du else f.du
 
         val result: Int = if(f.du.pCoin != null && talent) {
-            (((du.allAtk() * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt() * f.du.pCoin.getAtkMultiplication(lvs)).toInt()
+            (((du.allAtk() * f.unit.lv.getMult(lvs.lv + lvs.plusLv)).roundToInt() * t.atkMulti).toInt() * f.du.pCoin.getAtkMultiplication(lvs.talents)).toInt()
         } else {
-            ((du.allAtk() * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt()
+            ((du.allAtk() * f.unit.lv.getMult(lvs.lv + lvs.plusLv)).roundToInt() * t.atkMulti).toInt()
         }
 
         return result.toString()
@@ -613,11 +635,17 @@ class GetStrings(private val c: Context) {
         return (em.de.multi(BasisSet.current()) * em.de.allAtk() * multi / 100).toInt().toString()
     }
 
-    fun getDPS(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getDPS(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
         return if (f == null || t == null)
             ""
-        else
-            DecimalFormat("#.##").format(getTotAtk(f, t, talent, lvs).toDouble() / (f.du.itv.toDouble() / 30)).toString()
+        else {
+            val du = if(talent && f.du.pCoin != null)
+                f.du.pCoin.improve(lvs.talents)
+            else
+                f.du
+
+            DecimalFormat("#.##").format(getTotAtk(f, t, talent, lvs).toDouble() / (du.itv / 30.0)).toString()
+        }
     }
 
     fun getDPS(em: Enemy?, multi: Int): String {
@@ -627,11 +655,11 @@ class GetStrings(private val c: Context) {
             DecimalFormat("#.##").format(getTotAtk(em, multi).toDouble() / (em.de.itv.toDouble() / 30)).toString()
     }
 
-    fun getTrait(ef: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getTrait(ef: Form?, talent: Boolean, lvs: Level): String {
         if (ef == null) return ""
 
         val du: MaskUnit = if (ef.du.pCoin != null && talent)
-            ef.du.pCoin.improve(lvs)
+            ef.du.pCoin.improve(lvs.talents)
         else
             ef.du
 
@@ -691,13 +719,13 @@ class GetStrings(private val c: Context) {
         return result
     }
 
-    fun getCost(f: Form?, talent: Boolean, lvs: ArrayList<Int>): String {
+    fun getCost(f: Form?, talent: Boolean, lvs: Level): String {
         if (f == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
@@ -713,13 +741,13 @@ class GetStrings(private val c: Context) {
         return (em.de.drop * t.dropMulti / 100).toInt().toString()
     }
 
-    private fun getAtks(f: Form?, t: Treasure?, talent: Boolean, lvs: ArrayList<Int>): String {
+    private fun getAtks(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
         if (f == null || t == null)
             return ""
 
         val du: MaskUnit = if (f.du.pCoin != null)
             if (talent)
-                f.du.pCoin.improve(lvs)
+                f.du.pCoin.improve(lvs.talents)
             else
                 f.du
         else
@@ -731,9 +759,9 @@ class GetStrings(private val c: Context) {
 
         for (atk in atks) {
             val result: Int = if(f.du.pCoin != null && talent) {
-                (((atk[0] * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt() * f.du.pCoin.getAtkMultiplication(lvs)).toInt()
+                (((atk[0] * f.unit.lv.getMult(lvs.lv + lvs.plusLv)).roundToInt() * t.atkMulti).toInt() * f.du.pCoin.getAtkMultiplication(lvs.talents)).toInt()
             } else {
-                ((atk[0] * f.unit.lv.getMult(lvs[0])).roundToInt() * t.atkMulti).toInt()
+                ((atk[0] * f.unit.lv.getMult(lvs.lv + lvs.plusLv)).roundToInt() * t.atkMulti).toInt()
             }
 
             damges.add(result)

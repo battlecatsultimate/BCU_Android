@@ -8,8 +8,8 @@ buildscript {
     }
     dependencies {
 
-        classpath 'com.android.tools.build:gradle:8.0.0-alpha06'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:8.1.0-alpha04'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20-Beta"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -23,6 +23,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean') {
     delete rootProject.buildDir
 }

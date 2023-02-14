@@ -243,6 +243,11 @@ open class CheckUpdateScreen : AppCompatActivity() {
             ed.apply()
         }
 
+        if(!shared.contains("reallv")) {
+            ed.putBoolean("reallv", false)
+            ed.apply()
+        }
+
         LeakCanaryManager.initCanary(shared)
 
         DefineItf.check(this)

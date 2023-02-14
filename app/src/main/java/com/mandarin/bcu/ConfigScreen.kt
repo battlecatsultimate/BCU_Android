@@ -897,6 +897,19 @@ open class ConfigScreen : AppCompatActivity() {
             editor.apply()
         }
 
+        val reallv = findViewById<SwitchCompat>(R.id.configreallv)
+
+        reallv.isChecked = shared.getBoolean("reallv", false)
+
+        reallv.setOnCheckedChangeListener { _, c ->
+            CommonStatic.getConfig().realLevel = c
+
+            val editor = shared.edit()
+
+            editor.putBoolean("reallv", c)
+            editor.apply()
+        }
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 back.performClick()

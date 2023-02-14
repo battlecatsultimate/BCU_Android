@@ -954,4 +954,5 @@
     <string name="fruit27">翠獣結晶</string>
     <string name="fruit28">黄獣結晶</string>
     <string name="fruit29">虹獣石</string>
+    <string name="config_reallv">Perform realistic leveling in battle</string>
 </resources>

@@ -955,4 +955,5 @@
     <string name="fruit27">녹수결정</string>
     <string name="fruit28">황수결정</string>
     <string name="fruit29">무지개 수석</string>
+    <string name="config_reallv">실제 냥코의 레벨 시스템 적용</string>
 </resources>
