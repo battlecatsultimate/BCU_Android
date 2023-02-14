@@ -2,7 +2,7 @@ package com.mandarin.bcu.androidutil.filter
 
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.util.Interpret
+import com.mandarin.bcu.androidutil.Interpret
 import common.CommonStatic
 import common.battle.data.MaskEntity
 import common.pack.Identifier

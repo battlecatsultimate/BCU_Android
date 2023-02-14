@@ -1,4 +1,4 @@
-package com.mandarin.bcu.util;
+package com.mandarin.bcu.androidutil.supports;
 
 import android.graphics.Point;
 import android.graphics.Rect;

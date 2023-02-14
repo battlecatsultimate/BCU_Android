@@ -47,8 +47,6 @@ class DynamicExplanation : Fragment() {
             u.forms[fid].description.toString().split("<br>").toTypedArray()
         }
 
-        println(explanation.contentToString())
-
         if(explanation == null) {
             explanation = arrayOf("", "", "", "")
         }

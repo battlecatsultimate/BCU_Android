@@ -452,7 +452,6 @@ class LUUnitSetting : Fragment() {
                         talent[i].setSelection(getIndex(talent[i], level.talents[talentIndex[i]]))
 
                         talent[i].setOnLongClickListener {
-                            println("Gwa???")
                             talent[i].isClickable = false
                             StaticStore.showShortMessage(context, s.getTalentName(talentIndex[i], f))
 

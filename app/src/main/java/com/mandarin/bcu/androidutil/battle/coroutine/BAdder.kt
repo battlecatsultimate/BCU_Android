@@ -34,7 +34,7 @@ import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
-import com.mandarin.bcu.util.page.BBCtrl
+import com.mandarin.bcu.androidutil.battle.BBCtrl
 import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.SBCtrl

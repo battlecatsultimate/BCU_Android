@@ -81,25 +81,16 @@ class ColorPickerView : View {
             val filteredY = min(360, max(0, ((ihw - (motionEvent.y - iGap)) * 360f / ihw).toInt()))
 
             if(motionEvent.action == MotionEvent.ACTION_DOWN) {
-                println("iGap : $iGap | ihw : $ihw | barH : $barH | X : ${motionEvent.x} | Y : ${motionEvent.y}")
-
                 if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
                     dragMode = DRAGMODE.FIELD
-
-                    println("FIELD")
-
                     updateColorByPos(filteredX, filteredY, width < height)
                 } else {
                     if(width < height && iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
                         dragMode = DRAGMODE.BAR
 
-                        println("BAR")
-
                         updateColorByPos(filteredX, filteredY, width < height)
                     } else if(width >= height && iGap + ihw + gap <= motionEvent.x && motionEvent.x <= iGap + ihw + gap + barH && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
                         dragMode = DRAGMODE.BAR
-
-                        println("BAR")
 
                         updateColorByPos(filteredX, filteredY, width < height)
                     } else {
@@ -155,25 +146,17 @@ class ColorPickerView : View {
             val filteredY = min(360, max(0, ((ihw - (motionEvent.y - iGap)) * 360f / ihw).toInt()))
 
             if(motionEvent.action == MotionEvent.ACTION_DOWN) {
-                println("iGap : $iGap | ihw : $ihw | barH : $barH | X : ${motionEvent.x} | Y : ${motionEvent.y}")
-
                 if(iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
                     dragMode = DRAGMODE.FIELD
-
-                    println("FIELD")
 
                     updateColorByPos(filteredX, filteredY, width < height)
                 } else {
                     if(width < height && iGap <= motionEvent.x && motionEvent.x <= iGap + ihw && iGap + ihw + gap <= motionEvent.y && motionEvent.y <= iGap + ihw + gap + barH) {
                         dragMode = DRAGMODE.BAR
 
-                        println("BAR")
-
                         updateColorByPos(filteredX, filteredY, width < height)
                     } else if(width >= height && iGap + ihw + gap <= motionEvent.x && motionEvent.x <= iGap + ihw + gap + barH && iGap <= motionEvent.y && motionEvent.y <= iGap + ihw) {
                         dragMode = DRAGMODE.BAR
-
-                        println("BAR")
 
                         updateColorByPos(filteredX, filteredY, width < height)
                     } else {

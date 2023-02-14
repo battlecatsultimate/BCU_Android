@@ -26,7 +26,7 @@ import com.mandarin.bcu.androidutil.supports.AnimatorConst
 import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.ScaleAnimator
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
-import com.mandarin.bcu.util.Interpret
+import com.mandarin.bcu.androidutil.Interpret
 import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.Treasure

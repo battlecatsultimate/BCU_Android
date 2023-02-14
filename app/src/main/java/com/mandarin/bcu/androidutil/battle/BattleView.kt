@@ -28,10 +28,8 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
-import com.mandarin.bcu.util.page.BBCtrl
-import com.mandarin.bcu.util.page.BattleBox
-import com.mandarin.bcu.util.page.BattleBox.BBPainter
-import com.mandarin.bcu.util.page.BattleBox.OuterBox
+import com.mandarin.bcu.androidutil.battle.BattleBox.BBPainter
+import com.mandarin.bcu.androidutil.battle.BattleBox.OuterBox
 import common.CommonStatic
 import common.battle.BattleField
 import common.battle.SBCtrl
@@ -49,12 +47,19 @@ import common.util.stage.info.DefStageInfo
 import kotlin.math.*
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context), BattleBox, OuterBox {
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context),
+    BattleBox, OuterBox {
     @JvmField
     var painter: BBPainter = if (type == 0)
         BBPainter(this, field, this)
     else
-        BBCtrl(this, field as SBCtrl?, this, StaticStore.dptopx(32f, context).toFloat(), cutout)
+        BBCtrl(
+            this,
+            field as SBCtrl?,
+            this,
+            StaticStore.dptopx(32f, context).toFloat(),
+            cutout
+        )
 
     var initialized = false
     var paused = false
@@ -490,9 +495,11 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
             if(painter is BBCtrl) {
                 if(v < 0) {
-                    (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_UP)
+                    (painter as BBCtrl).perform(
+                        BBCtrl.ACTION_LINEUP_CHANGE_UP)
                 } else {
-                    (painter as BBCtrl).perform(BBCtrl.ACTION_LINEUP_CHANGE_DOWN)
+                    (painter as BBCtrl).perform(
+                        BBCtrl.ACTION_LINEUP_CHANGE_DOWN)
                 }
             } else {
                 painter.bf.sb.lineupChanging = true

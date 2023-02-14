@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
-import com.mandarin.bcu.util.Interpret
 import common.battle.BasisSet
 import common.battle.Treasure
 import common.battle.data.*

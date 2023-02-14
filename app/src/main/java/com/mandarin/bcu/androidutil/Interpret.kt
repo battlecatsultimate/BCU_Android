@@ -1,9 +1,8 @@
-package com.mandarin.bcu.util
+package com.mandarin.bcu.androidutil
 
 import android.content.Context
 import android.util.Log
 import com.mandarin.bcu.R
-import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.StaticStore.isEnglish
 import common.battle.data.*
 import common.pack.Identifier

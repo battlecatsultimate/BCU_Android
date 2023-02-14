@@ -1,9 +1,9 @@
-package com.mandarin.bcu.util.page;
+package com.mandarin.bcu.androidutil.battle;
 
 import android.graphics.Point;
 import android.view.MotionEvent;
 
-import com.mandarin.bcu.util.PP;
+import com.mandarin.bcu.androidutil.supports.PP;
 
 import common.CommonStatic;
 import common.battle.SBCtrl;

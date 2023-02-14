@@ -678,13 +678,9 @@ open class ConfigScreen : AppCompatActivity() {
 
                             var value = CommonStatic.safeParseInt(number)
 
-                            println(value)
-
                             if(value > maxValue) {
                                 value = maxValue
                             }
-
-                            println(value)
 
                             when(m) {
                                 0, 1, 2 -> {

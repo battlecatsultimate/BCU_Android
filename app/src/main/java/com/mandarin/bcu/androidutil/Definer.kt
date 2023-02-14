@@ -13,7 +13,6 @@ import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
 import com.mandarin.bcu.androidutil.pack.PackConflict
-import com.mandarin.bcu.util.Interpret
 import common.CommonStatic
 import common.io.assets.AssetLoader
 import common.pack.PackData

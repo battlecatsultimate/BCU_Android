@@ -25,7 +25,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
-import com.mandarin.bcu.util.Interpret
+import com.mandarin.bcu.androidutil.Interpret
 import common.battle.BasisSet
 import common.pack.Identifier
 import common.util.lang.MultiLangCont

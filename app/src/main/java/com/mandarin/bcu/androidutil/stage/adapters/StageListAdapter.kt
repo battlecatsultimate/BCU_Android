@@ -41,8 +41,6 @@ class StageListAdapter(private val activity: Activity, private val stages: Array
 
         val st = Identifier.get(stages[position]) ?: return row
 
-        println(MultiLangCont.get(st))
-
         holder.name.text = MultiLangCont.get(st) ?: st.names.toString()
 
         if(holder.name.text.isBlank())

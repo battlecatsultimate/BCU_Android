@@ -1,4 +1,4 @@
-package com.mandarin.bcu.util.page;
+package com.mandarin.bcu.androidutil.battle;
 
 import android.graphics.Point;
 

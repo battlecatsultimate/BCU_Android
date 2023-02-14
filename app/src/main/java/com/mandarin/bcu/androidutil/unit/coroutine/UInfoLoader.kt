@@ -37,7 +37,7 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
-import com.mandarin.bcu.util.Interpret
+import com.mandarin.bcu.androidutil.Interpret
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Unit
