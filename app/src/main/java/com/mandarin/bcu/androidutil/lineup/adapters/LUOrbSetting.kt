@@ -534,7 +534,14 @@ class LUOrbSetting : Fragment() {
 
                 (vi as TextView).text = generateOrbTextAt(position)
 
+                if(CommonStatic.getConfig().realLevel && f.orbs != null && f.orbs.slots != -1 && f.orbs.limits[position] == 1 && l.lv + l.plusLv < 60)
+                    vi.setTextColor(vi.textColors.withAlpha(64))
+
                 return vi
+            }
+
+            override fun isEnabled(position: Int): Boolean {
+                return f.orbs == null || f.orbs.slots == -1 || !CommonStatic.getConfig().realLevel || f.orbs.limits[position] != 1 || l.lv + l.plusLv >= 60
             }
         }
 
