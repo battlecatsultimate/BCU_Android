@@ -124,7 +124,12 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
 
                 JsonDecoder.inject(JsonEncoder.encode(BasisSet.current().t()), Treasure::class.java, BasisSet.current().sele.t())
 
-                val ctrl = SBCtrl(AndroidKeys(), stg, star, BasisSet.current().sele, intArrayOf(item), r.nextLong())
+                val lu = BasisSet.current().sele.copy()
+
+                if(CommonStatic.getConfig().realLevel)
+                    lu.performRealisticLeveling()
+
+                val ctrl = SBCtrl(AndroidKeys(), stg, star, lu, intArrayOf(item), r.nextLong())
 
                 val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
