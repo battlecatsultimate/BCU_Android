@@ -700,7 +700,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                 option.setOnClickListener { popupMenu.show() }
 
                 pager.adapter = tab
-                pager.offscreenPageLimit = 5
+                pager.offscreenPageLimit = 1
 
                 TabLayoutMediator(tabs, pager) { tab, position ->
                     tab.text = names[position]
