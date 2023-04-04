@@ -12,6 +12,7 @@ android {
         }
     }
     compileSdkVersion 33
+    compileSdkPreview "UpsideDownCake"
     defaultConfig {
         applicationId "com.mandarin.bcu"
         minSdkVersion 24

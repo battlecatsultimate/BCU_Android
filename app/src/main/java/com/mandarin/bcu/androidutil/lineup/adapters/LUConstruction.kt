@@ -2,8 +2,6 @@ package com.mandarin.bcu.androidutil.lineup.adapters
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -167,8 +165,6 @@ class LUConstruction : Fragment() {
         })
 
         setListenersFortextInputEditText(construction, text, constructions, texts)
-
-        initialized = true
     }
 
     private fun setListenerforTextInputLayouts(layouts: Array<TextInputLayout?>) {

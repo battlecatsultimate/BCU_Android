@@ -398,7 +398,7 @@
     <string name="trea_alienfr">외계의 과실</string>
     <string name="sch_abi_poi">독 데미지</string>
     <string name="unit_info_text18">" (타겟 체력의 _% 만큼 공격)"</string>
-    <string name="lineup_const">오토토 레벨</string>
+    <string name="lineup_const">대포 레벨</string>
     <string name="lineup_const_breaker">캐논포 레벨</string>
     <string name="lineup_const_castle">냥코 성 레벨</string>
     <string name="lineup_const_slow">슬로우포 레벨</string>
@@ -956,4 +956,22 @@
     <string name="fruit28">황수결정</string>
     <string name="fruit29">무지개 수석</string>
     <string name="config_reallv">실제 냥코의 레벨 시스템 적용</string>
+    <string name="lineup_base">성 토대</string>
+    <string name="lineup_decoration">성 장식</string>
+    <string name="lineup_slfd">슬로우포 토대 레벨</string>
+    <string name="lineup_iwfd">철벽포 토대 레벨</string>
+    <string name="lineup_thfd">천둥포 토대 레벨</string>
+    <string name="lineup_wtfd">물총포 토대 레벨</string>
+    <string name="lineup_hbfd">천사포 토대 레벨</string>
+    <string name="lineup_bbfd">캐논포 토대 레벨</string>
+    <string name="lineup_cbfd">저주포 토대 레벨</string>
+    <string name="lineup_sldc">슬로우포 장식 레벨</string>
+    <string name="lineup_iwdc">철벽포 장식 레벨</string>
+    <string name="lineup_thdc">천둥포 장식 레벨</string>
+    <string name="lineup_wtdc">물총포 장식 레벨</string>
+    <string name="lineup_hbdc">천사포 장식 레벨</string>
+    <string name="lineup_bbdc">캐논포 장식 레벨</string>
+    <string name="lineup_cbdc">저주포 장식 레벨</string>
+    <string name="lineup_dc">장식 레벨</string>
+    <string name="lineup_fd">토대 레벨</string>
 </resources>

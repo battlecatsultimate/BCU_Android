@@ -956,4 +956,22 @@
     <string name="fruit28">黃獸結晶</string>
     <string name="fruit29">彩虹獸石</string>
     <string name="config_reallv">Perform realistic leveling in battle</string>
+    <string name="lineup_base">Foundation</string>
+    <string name="lineup_decoration">Decoration</string>
+    <string name="lineup_slfd">Slow Beam Foundatoin Level</string>
+    <string name="lineup_iwfd">Iron Wall Foundation Level</string>
+    <string name="lineup_thfd">Thunderbolt Foundation Level</string>
+    <string name="lineup_wtfd">Waterblast Foundation Level</string>
+    <string name="lineup_hbfd">Holy Blast Foundation Level</string>
+    <string name="lineup_bbfd">Breakerblast Foundation Level</string>
+    <string name="lineup_cbfd">Curseblast Foundation Level</string>
+    <string name="lineup_sldc">Slow Beam Decoration Level</string>
+    <string name="lineup_iwdc">Iron Wall Decoration Level</string>
+    <string name="lineup_thdc">Thunderbolt Decoration Level</string>
+    <string name="lineup_wtdc">Waterblast Decoration Level</string>
+    <string name="lineup_hbdc">Holy Blast Decoration Level</string>
+    <string name="lineup_bbdc">Breakerblast Decoration Level</string>
+    <string name="lineup_cbdc">Curseblast Decoration Level</string>
+    <string name="lineup_dc">Decoration Level</string>
+    <string name="lineup_fd">Foundation Level</string>
 </resources>

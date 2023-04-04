@@ -47,7 +47,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
     private var prePosit = 0
     private var initialized = false
     private var tab: LUTab? = null
-    private val ids = intArrayOf(R.string.lineup_list, R.string.lineup_unit, R.string.lineup_orb, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_combo)
+    private val ids = intArrayOf(R.string.lineup_list, R.string.lineup_unit, R.string.lineup_orb, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_base, R.string.lineup_decoration, R.string.lineup_combo)
     private val names = arrayOfNulls<String>(ids.size)
     
     private val lu = "0"
@@ -768,7 +768,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
 
     inner class LUTab(private val fm: FragmentManager, lc: Lifecycle, private val lineup: LineUpView) : FragmentStateAdapter(fm, lc) {
         fun updateFragment(i: Int) {
-            if(i >= 6) {
+            if(i >= 8) {
                 Log.w("LUAdder::LUTab", "Fragment updating index must not exceed 5!")
                 return
             }
@@ -785,12 +785,14 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                     3 -> (frag as LUCastleSetting).update()
                     4 -> (frag as LUTreasureSetting).update()
                     5 -> (frag as LUConstruction).update()
+                    6 -> (frag as LUFoundationDecoration).update()
+                    7 -> (frag as LUFoundationDecoration).update()
                 }
             }
         }
 
         fun reassignVariables(line: LineUpView) {
-            val required = intArrayOf(0, 1, 2, 4, 6)
+            val required = intArrayOf(0, 1, 2, 4, 8)
 
             for(i in required) {
                 val frag = fm.findFragmentByTag("f$i")
@@ -810,7 +812,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
         }
 
         override fun getItemCount(): Int {
-            return 7
+            return 9
         }
 
         override fun createFragment(i: Int): Fragment {
@@ -821,6 +823,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                 3 -> LUCastleSetting.newInstance()
                 4 -> LUTreasureSetting.newInstance(lineup)
                 5 -> LUConstruction.newInstance()
+                6 -> LUFoundationDecoration.newInstances(true)
+                7 -> LUFoundationDecoration.newInstances(false)
                 else -> LUCatCombo.newInstance(lineup)
             }
         }

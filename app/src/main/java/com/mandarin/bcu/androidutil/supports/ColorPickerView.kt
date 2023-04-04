@@ -210,10 +210,8 @@ class ColorPickerView : View {
             callBack.run()
     }
 
-    override fun draw(canvas: Canvas?) {
+    override fun draw(canvas: Canvas) {
         super.draw(canvas)
-
-        canvas ?: return
 
         val w = width
         val h = height
