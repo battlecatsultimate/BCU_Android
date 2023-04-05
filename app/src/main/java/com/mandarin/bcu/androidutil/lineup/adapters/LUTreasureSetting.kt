@@ -74,6 +74,8 @@ class LUTreasureSetting : Fragment() {
 
         color = intArrayOf(StaticStore.getAttributeColor(requireContext(), R.attr.TextPrimary))
 
+        initialized = false
+
         listeners(view)
 
         val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
@@ -114,10 +116,7 @@ class LUTreasureSetting : Fragment() {
             view.findViewById(maskeid[it])
         }
 
-
         val t = BasisSet.current().t()
-
-        initialized = false
 
         itfcrye.setText(t.alien.toString())
         cotccrye.setText(t.star.toString())
@@ -172,6 +171,8 @@ class LUTreasureSetting : Fragment() {
     fun update() {
         val view = view ?: return
 
+        initialized = false
+
         val teche = view.findViewById<TextInputEditText>(R.id.statschmultiedit)
         val canatke = view.findViewById<TextInputEditText>(R.id.canatklevt)
         val canrangee = view.findViewById<TextInputEditText>(R.id.canrangelevt)
@@ -211,8 +212,6 @@ class LUTreasureSetting : Fragment() {
         }
 
         val t = BasisSet.current().t()
-
-        initialized = false
 
         itfcrye.setText(t.alien.toString())
         cotccrye.setText(t.star.toString())
@@ -438,26 +437,23 @@ class LUTreasureSetting : Fragment() {
             maskes[i].setText(t.gods[i].toString())
         }
 
-
         if (valuesAllSame(0))
-            teche.post { teche.setText(t.tech[0].toString()) }
+            teche.setText(t.tech[0].toString())
 
         if (valuesAllSame(1))
-            eoce.post { eoce.setText(t.trea[0].toString()) }
+            eoce.setText(t.trea[0].toString())
 
         if (valuesAllSame(2))
-            eocitfe.post { eocitfe.setText(t.trea[6].toString()) }
+            eocitfe.setText(t.trea[6].toString())
 
         if (valuesAllSame(3))
-            itfe.post { itfe.setText(t.fruit[0].toString()) }
+            itfe.setText(t.fruit[0].toString())
 
         if (valuesAllSame(4))
-            cotce.post { cotce.setText(t.fruit[4].toString()) }
+            cotce.setText(t.fruit[4].toString())
 
         setListenerforTextInputEditText(view, teche, canatke, canrangee, eoce, eocitfe, itfe, cotce, itfcrye, cotccrye)
         setListenerforTextInptEditTexts(view, teches, eoces, eocitfes, itfes, cotces, maskes)
-
-        initialized = true
     }
 
     private fun valuesAllSame(mode: Int): Boolean {
@@ -657,7 +653,7 @@ class LUTreasureSetting : Fragment() {
                             }
                         }
 
-                        if(::line.isInitialized)
+                        if(::line.isInitialized && i == 3)
                             line.updateUnitSetting()
 
                         canbeEdited = true
@@ -731,6 +727,9 @@ class LUTreasureSetting : Fragment() {
                     }
 
                     override fun afterTextChanged(s: Editable) {
+                        if(!initialized)
+                            return
+
                         if (s.toString().isNotEmpty()) {
                             val t = BasisSet.current().t()
 
@@ -779,7 +778,7 @@ class LUTreasureSetting : Fragment() {
                                 }
                             }
 
-                            if(::line.isInitialized)
+                            if(::line.isInitialized && i == 1 && j in 0..1)
                                 line.updateUnitSetting()
 
                             val c = context ?: return

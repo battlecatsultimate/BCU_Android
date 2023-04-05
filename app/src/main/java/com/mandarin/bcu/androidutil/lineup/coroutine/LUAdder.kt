@@ -268,6 +268,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                         line.updateConstructionSetting()
                         line.updateCastleSetting()
                         line.updateUnitOrb()
+                        line.updateFoundationSetting()
+                        line.updateDecorationSetting()
 
                         if (position == 0) {
                             menu.getItem(5).subMenu?.getItem(0)?.isEnabled = false
@@ -388,6 +390,8 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 line.updateConstructionSetting()
                                 line.updateCastleSetting()
                                 line.updateUnitOrb()
+                                line.updateFoundationSetting()
+                                line.updateDecorationSetting()
 
                                 StaticStore.saveLineUp(activity)
 

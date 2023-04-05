@@ -88,6 +88,8 @@ class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
 
         if(valueAllSame(values))
             text.setText(values[0].toString())
+        else
+            text.setText("")
 
         for(i in values.indices)
             texts[i].setText(values[i].toString())
@@ -155,6 +157,9 @@ class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
+                if(!initialized)
+                    return
+
                 val t = s.toString()
 
                 if(t.isNotBlank()) {

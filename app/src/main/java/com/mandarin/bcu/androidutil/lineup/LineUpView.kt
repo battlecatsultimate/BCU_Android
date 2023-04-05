@@ -690,4 +690,22 @@ class LineUpView : View {
         if(adapter != null && adapter is LUAdder.LUTab)
             adapter.updateFragment(5)
     }
+
+    fun updateFoundationSetting() {
+        Log.i("LineupView", "Updating foundation setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            adapter.updateFragment(6)
+    }
+
+    fun updateDecorationSetting() {
+        Log.i("LineupView", "Updating decoration setting...")
+
+        val adapter = pager?.adapter
+
+        if(adapter != null && adapter is LUAdder.LUTab)
+            adapter.updateFragment(7)
+    }
 }
