@@ -693,7 +693,14 @@ object StaticStore {
      * Saves lineup file.
      */
     @Throws(Exception::class)
-    fun saveLineUp(c: Context) {
+    fun saveLineUp(c: Context, force: Boolean) {
+        if(!force) {
+            val shared = c.getSharedPreferences(CONFIG, Context.MODE_PRIVATE)
+
+            if(shared.getBoolean("lazylineup", false))
+                return
+        }
+
         val direct = getExternalUser(c)
         val path = "${direct}basis.json"
         val g = File(direct)

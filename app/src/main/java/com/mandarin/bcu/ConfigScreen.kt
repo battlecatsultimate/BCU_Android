@@ -183,30 +183,31 @@ open class ConfigScreen : AppCompatActivity() {
 
         senderr.isChecked = shared.getBoolean("upload", false)
 
+        val lazylineup = findViewById<SwitchCompat>(R.id.linesave)
+
+        lazylineup.isChecked = shared.getBoolean("lazylineup", false)
+
         senderr.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                val ed1 = shared.edit()
-                ed1.putBoolean("upload", true)
-                ed1.apply()
-            } else {
-                val ed1 = shared.edit()
-                ed1.putBoolean("upload", false)
-                ed1.apply()
-            }
+            val ed1 = shared.edit()
+            ed1.putBoolean("upload", isChecked)
+            ed1.apply()
 
             StaticStore.upload = shared.getBoolean("upload",false) || shared.getBoolean("ask_upload",true)
         }
 
         apktest.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                val ed1 = shared.edit()
-                ed1.putBoolean("apktest", true)
-                ed1.apply()
-            } else {
-                val ed1 = shared.edit()
-                ed1.putBoolean("apktest", false)
-                ed1.apply()
-            }
+            val ed1 = shared.edit()
+
+            ed1.putBoolean("apktest", isChecked)
+            ed1.apply()
+        }
+
+
+        lazylineup.setOnCheckedChangeListener { _, isChecked ->
+            val editor = shared.edit()
+
+            editor.putBoolean("lazylineup", isChecked)
+            editor.apply()
         }
 
         val language = findViewById<Spinner>(R.id.configlangsp)

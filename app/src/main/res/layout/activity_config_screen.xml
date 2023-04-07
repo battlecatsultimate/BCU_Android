@@ -75,7 +75,7 @@
                 android:layout_marginEnd="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/apktest">
+                app:layout_constraintTop_toBottomOf="@+id/linesave">
 
                 <TextView
                     android:id="@+id/configdeflev"
@@ -198,6 +198,21 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/senderror" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/linesave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/config_lazy"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/apktest" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/senderror"
@@ -352,6 +367,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/configinfport"
                 app:layout_constraintStart_toStartOf="@+id/textView21"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configfps"

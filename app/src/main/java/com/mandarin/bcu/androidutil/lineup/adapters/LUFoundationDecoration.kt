@@ -59,11 +59,13 @@ class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
         else
             BasisSet.current().t().deco
 
-        if(valueAllSame(values))
-            text.setText(values[0].toString())
-
         for(i in values.indices)
             texts[i].setText(values[i].toString())
+
+        if(valueAllSame(values))
+            text.setText(values[0].toString())
+        else
+            text.setText("")
 
         initialized = true
 
@@ -86,13 +88,13 @@ class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
         else
             BasisSet.current().t().deco
 
+        for(i in values.indices)
+            texts[i].setText(values[i].toString())
+
         if(valueAllSame(values))
             text.setText(values[0].toString())
         else
             text.setText("")
-
-        for(i in values.indices)
-            texts[i].setText(values[i].toString())
 
         initialized = true
     }
@@ -253,7 +255,7 @@ class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
                             layout.isErrorEnabled = false
                         }
 
-                        StaticStore.saveLineUp(requireContext())
+                        StaticStore.saveLineUp(requireContext(), false)
                     }
                 }
             })

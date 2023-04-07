@@ -46,14 +46,16 @@ class LUConstruction : Fragment() {
 
         val text = view.findViewById<TextInputEditText>(R.id.constlevt)
 
-        if (valuesAllSame())
-            text.setText(BasisSet.current().t().bslv[0].toString())
-
         val vals = BasisSet.current().t().bslv
 
         for (i in vals.indices) {
             texts[i].setText(vals[i].toString())
         }
+
+        if (valuesAllSame())
+            text.setText(vals[0].toString())
+        else
+            text.setText("")
 
         initialized = true
 
@@ -71,14 +73,16 @@ class LUConstruction : Fragment() {
 
         val text = view.findViewById<TextInputEditText>(R.id.constlevt)
 
-        if (valuesAllSame())
-            text.setText(BasisSet.current().t().bslv[0].toString())
-
         val vals = BasisSet.current().t().bslv
 
         for (i in vals.indices) {
             texts[i].setText(vals[i].toString())
         }
+
+        if (valuesAllSame())
+            text.setText(vals[0].toString())
+        else
+            text.setText("")
 
         initialized = true
     }
@@ -240,7 +244,7 @@ class LUConstruction : Fragment() {
 
                         val c = context ?: return
 
-                        StaticStore.saveLineUp(c)
+                        StaticStore.saveLineUp(c, false)
                     }
                 }
             })

@@ -974,4 +974,5 @@
     <string name="lineup_cbdc">저주포 장식 레벨</string>
     <string name="lineup_dc">장식 레벨</string>
     <string name="lineup_fd">토대 레벨</string>
+    <string name="config_lazy">편성표 데이터 자동 저장 빈도 감소</string>
 </resources>

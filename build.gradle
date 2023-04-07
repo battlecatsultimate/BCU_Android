@@ -16,6 +16,10 @@ buildscript {
     }
 }
 
+ext {
+    materialVersion = '1.9.0-beta01'
+}
+
 allprojects {
     repositories {
         google()

@@ -660,7 +660,7 @@ class LUTreasureSetting : Fragment() {
 
                         val c = context ?: return
 
-                        StaticStore.saveLineUp(c)
+                        StaticStore.saveLineUp(c, false)
                     }
                 }
             })
@@ -783,7 +783,7 @@ class LUTreasureSetting : Fragment() {
 
                             val c = context ?: return
 
-                            StaticStore.saveLineUp(c)
+                            StaticStore.saveLineUp(c, false)
                         }
                     }
                 })

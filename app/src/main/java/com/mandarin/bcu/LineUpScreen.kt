@@ -80,7 +80,7 @@ class LineUpScreen : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 try {
-                    StaticStore.saveLineUp(this@LineUpScreen)
+                    StaticStore.saveLineUp(this@LineUpScreen, true)
                 } catch(e: Exception) {
                     ErrorLogWriter.writeLog(e, StaticStore.upload, this@LineUpScreen)
                     StaticStore.showShortMessage(this@LineUpScreen, R.string.err_lusave_fail)

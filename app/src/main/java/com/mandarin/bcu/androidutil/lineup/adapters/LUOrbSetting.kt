@@ -1047,7 +1047,7 @@ class LUOrbSetting : Fragment() {
 
         val c = context ?: return
 
-        StaticStore.saveLineUp(c)
+        StaticStore.saveLineUp(c, false)
     }
 
     private fun updateDescription(data: IntArray, text: TextView) {

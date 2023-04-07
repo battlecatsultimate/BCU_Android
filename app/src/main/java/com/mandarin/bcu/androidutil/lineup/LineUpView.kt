@@ -494,7 +494,7 @@ class LineUpView : View {
         BasisSet.current().sele.lu.renew()
 
         try {
-            StaticStore.saveLineUp(context)
+            StaticStore.saveLineUp(context, false)
         } catch(e: Exception) {
             ErrorLogWriter.writeLog(e, StaticStore.upload, context)
             StaticStore.showShortMessage(context, R.string.err_lusave_fail)

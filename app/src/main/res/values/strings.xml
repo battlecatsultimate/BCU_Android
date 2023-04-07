@@ -973,4 +973,5 @@
     <string name="lineup_cbdc">Curseblast Decoration Level</string>
     <string name="lineup_fd">Foundation Level</string>
     <string name="lineup_dc">Decoration Level</string>
+    <string name="config_lazy">Perform lazy saving in lineup screen</string>
 </resources>

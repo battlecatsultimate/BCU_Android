@@ -152,7 +152,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                 setDisappear(prog, st)
 
                 bck.setOnClickListener {
-                    StaticStore.saveLineUp(activity)
+                    StaticStore.saveLineUp(activity, true)
                     StaticStore.filterReset()
                     StaticStore.entityname = ""
 
@@ -393,7 +393,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 line.updateFoundationSetting()
                                 line.updateDecorationSetting()
 
-                                StaticStore.saveLineUp(activity)
+                                StaticStore.saveLineUp(activity, true)
 
                                 dialog.dismiss()
                             }
@@ -443,7 +443,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
 
                                 line.updateUnitSetting()
                                 line.updateUnitOrb()
-                                StaticStore.saveLineUp(activity)
+                                StaticStore.saveLineUp(activity, true)
 
                                 dialog.dismiss()
                             }
@@ -516,7 +516,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                                 luspin.adapter = adapter11
                                 StaticStore.showShortMessage(activity, R.string.lineup_paste_set_done)
-                                StaticStore.saveLineUp(activity)
+                                StaticStore.saveLineUp(activity, true)
                             }
                             builder.setNegativeButton(R.string.main_file_cancel) { _: DialogInterface?, _: Int -> }
                             builder.show()
@@ -538,7 +538,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 line.updateLineUp()
                                 line.invalidate()
                                 StaticStore.showShortMessage(activity, R.string.lineup_paste_lu_done)
-                                StaticStore.saveLineUp(activity)
+                                StaticStore.saveLineUp(activity, true)
                             }
                             builder.setNegativeButton(R.string.main_file_cancel) { _: DialogInterface?, _: Int -> }
                             builder.show()
@@ -568,7 +568,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                     val pos = setspin.selectedItemPosition
                                     setspin.adapter = adapter22
                                     setspin.setSelection(pos)
-                                    StaticStore.saveLineUp(activity)
+                                    StaticStore.saveLineUp(activity, true)
                                 }
                                 dialog.dismiss()
                             }
@@ -599,7 +599,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                     val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                                     luspin.adapter = adapter11
                                     luspin.setSelection(BasisSet.current().lb.size - 1)
-                                    StaticStore.saveLineUp(activity)
+                                    StaticStore.saveLineUp(activity, true)
                                 }
                                 dialog.dismiss()
                             }
@@ -620,7 +620,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                             val adapter22 = ArrayAdapter(activity, R.layout.spinneradapter, setname1)
                             setspin.adapter = adapter22
                             setspin.setSelection(BasisSet.list().size - 1)
-                            StaticStore.saveLineUp(activity)
+                            StaticStore.saveLineUp(activity, true)
                             StaticStore.showShortMessage(activity, R.string.lineup_cloned_set)
                             return@setOnMenuItemClickListener true
                         }
@@ -637,7 +637,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                             val adapter11 = ArrayAdapter(activity, R.layout.spinneradapter, luname1)
                             luspin.adapter = adapter11
                             luspin.setSelection(BasisSet.current().lb.size - 1)
-                            StaticStore.saveLineUp(activity)
+                            StaticStore.saveLineUp(activity, true)
                             StaticStore.showShortMessage(activity, R.string.lineup_cloned_lineup)
                             return@setOnMenuItemClickListener true
                         }
@@ -659,7 +659,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 if (pos >= BasisSet.list().size) setspin.setSelection(BasisSet.list().size - 1) else setspin.setSelection(pos)
 
                                 try {
-                                    StaticStore.saveLineUp(activity)
+                                    StaticStore.saveLineUp(activity, true)
                                 } catch(e: Exception) {
                                     ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                                     StaticStore.showShortMessage(activity, R.string.err_lusave_fail)
@@ -687,7 +687,7 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
                                 if (pos >= BasisSet.current().lb.size) luspin.setSelection(BasisSet.current().lb.size - 1) else luspin.setSelection(pos)
 
                                 try {
-                                    StaticStore.saveLineUp(activity)
+                                    StaticStore.saveLineUp(activity, true)
                                 } catch(e: Exception) {
                                     ErrorLogWriter.writeLog(e, StaticStore.upload, activity)
                                     StaticStore.showShortMessage(activity, R.string.err_lusave_fail)

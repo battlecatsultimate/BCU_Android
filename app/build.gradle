@@ -12,13 +12,12 @@ android {
         }
     }
     compileSdkVersion 33
-    compileSdkPreview "UpsideDownCake"
     defaultConfig {
         applicationId "com.mandarin.bcu"
         minSdkVersion 24
         targetSdkVersion 33
         versionCode 1
-        versionName "0.16.28"
+        versionName "0.16.28b_01"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         android.buildFeatures.buildConfig = true
@@ -76,7 +75,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'com.google.android.material:material:1.10.0-alpha01'
+    implementation "com.google.android.material:material:$materialVersion"
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation ('com.google.apis:google-api-services-drive:v3-rev20220709-2.0.0') {
