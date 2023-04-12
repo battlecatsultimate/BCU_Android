@@ -974,5 +974,5 @@
     <string name="lineup_cbdc">詛咒砲裝飾等級</string>
     <string name="lineup_dc">貓咪砲裝飾等級 快速設定</string>
     <string name="lineup_fd">貓咪砲裝飾等級 快速設定</string>
-    <string name="config_lazy">Perform lazy saving in lineup screen</string>
+    <string name="config_lazy">"在隊伍編成中換使用被動式自動儲存 "</string>
 </resources>
