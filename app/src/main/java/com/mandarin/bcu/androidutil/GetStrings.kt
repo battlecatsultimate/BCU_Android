@@ -85,7 +85,9 @@ class GetStrings(private val c: Context) {
                 R.string.sch_abi_ck, //59: Corpse killer
                 R.string.sch_abi_cu, //60: Curse
                 R.string.unit_info_tba, //61: TBA
-                R.string.sch_abi_mw
+                R.string.sch_abi_mw, //62: Mini Wave
+                R.string.sch_abi_bk, //63: Colossus Slayer
+                R.string.sch_abi_bh
         )
         private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA", "Q")

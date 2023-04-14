@@ -754,23 +754,23 @@
             }
         }
     },
-    "MINIWAVE" : {
-        "abbr_name" : "mini-wave",
-        "full_name" : "Mini-Wave",
-        "tooltip" : "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
-        "format" : "(prob)% chance to (lv) lv. mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
-        "class" : {
-            "prob" : {
-                "name" : "chance",
-                "tooltip" : null
+    "MINIWAVE": {
+        "abbr_name": "mini-wave",
+        "full_name": "Mini-Wave",
+        "tooltip": "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
+        "format": "(prob)% chance to (lv) lv. mini-wave (_left)Gives target (multi)% of activator's damage(_right)",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
             },
-            "lv" : {
-                "name" : "level",
-                "tooltip" : null
+            "lv": {
+                "name": "level",
+                "tooltip": null
             },
-            "multi" : {
-                "name" : "multi",
-                "tooltip" : "Percentage of activator's damage.<br>If multi is 20, it will have 20% of activator's damage. Negative values are allowed"
+            "multi": {
+                "name": "multi",
+                "tooltip": "Percentage of activator's damage.<br>If multi is 20, it will have 20% of activator's damage. Negative values are allowed"
             }
         }
     },
@@ -778,11 +778,13 @@
         "abbr_name": "Imu.Haste",
         "full_name": "Immune/Resistant to Haste",
         "tooltip": null,
-        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Haste",
+        "format": [
+            "[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Haste",
             "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Haste [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
             "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
-            "[(smartImu!=0){Only affects speed [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"],
+            "[(smartImu!=0){Only affects speed [(smartImu>0){debuffs}(smartImu<0){buffs}]}]"
+        ],
         "class": {
             "mult": {
                 "name": "percent",
@@ -802,11 +804,13 @@
         "abbr_name": "Imu. ABreak",
         "full_name": "Immune/Resistant to Armor Break",
         "tooltip": null,
-        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Armor Break",
+        "format": [
+            "[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Armor Break",
             "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Armor Break [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
             "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]",
-            "[(smartImu!=0){Only affects armor [(smartImu>0){buffs}(smartImu<0){debuffs}]}]"],
+            "[(smartImu!=0){Only affects armor [(smartImu>0){buffs}(smartImu<0){debuffs}]}]"
+        ],
         "class": {
             "mult": {
                 "name": "percent",
@@ -826,10 +830,12 @@
         "abbr_name": "imu. Summon",
         "full_name": "Immune/Resistant to Summon",
         "tooltip": null,
-        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon",
+        "format": [
+            "[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to On Hit/On Kill Summon",
             "[(mult<100&mult>0){ (_left)Reduces (mult)% of the summoned entity's strength(_right)}(mult<0){ (_left)Summoned entities will be (_abs(mult))% stronger(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Summon [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
-            "[(block<100&block>0){ (_left)Reduces (block)% of the summoned entity's strength(_right)}(block<0){ (_left)Summoned entities will be (_abs(block))% stronger(_right)}]}]"],
+            "[(block<100&block>0){ (_left)Reduces (block)% of the summoned entity's strength(_right)}(block<0){ (_left)Summoned entities will be (_abs(block))% stronger(_right)}]}]"
+        ],
         "class": {
             "mult": {
                 "name": "percent",
@@ -845,10 +851,12 @@
         "abbr_name": "imu. Seal",
         "full_name": "Immune/Resistant to Seal",
         "tooltip": null,
-        "format": ["[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal",
+        "format": [
+            "[(mult!=0){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to Seal",
             "[(mult<100&mult>0){ (_left)Decreases duration by (mult)%(_right)}(mult<0){ (_left)Increases duration by (_abs(mult))%(_right)}] ",
             "[(block!=0){& }]}][(block!=0){Seal [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
-            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"],
+            "[(block<100&block>0){ (_left)Decreases duration by (block)%(_right)}(block<0){ (_left)Increases duration by (_abs(block))%(_right)}]}]"
+        ],
         "class": {
             "mult": {
                 "name": "percent",
@@ -860,46 +868,47 @@
             }
         }
     },
-    "BARRIER" : {
-        "abbr_name" : "barrier",
-        "full_name" : "Barrier",
-        "tooltip" : "Blocks all damage lower than the barrier's HP. Will break if an attack deals more damage than it's HP",
-        "format" : ["Barrier (_left)Barrier has (health) HP",
+    "BARRIER": {
+        "abbr_name": "barrier",
+        "full_name": "Barrier",
+        "tooltip": "Blocks all damage lower than the barrier's HP. Will break if an attack deals more damage than it's HP",
+        "format": [
+            "Barrier (_left)Barrier has (health) HP",
             "[(regentime>0){, regenerates (_dispTime(regentime)) after being broken}]",
             "[(timeout>0){, barrier breaks after (_dispTime(timeout))}](_right)"
         ],
-        "class" : {
-            "health" : {
-                "name" : "Health",
-                "tooltip" : "Health of the barrier"
+        "class": {
+            "health": {
+                "name": "Health",
+                "tooltip": "Health of the barrier"
             },
-            "regentime" : {
-                "name" : "Regeneration Time",
-                "tooltip" : "The entity's barrier will regenerate after a period of time passes. Set to 0 to deactivate this ability."
+            "regentime": {
+                "name": "Regeneration Time",
+                "tooltip": "The entity's barrier will regenerate after a period of time passes. Set to 0 to deactivate this ability."
             },
-            "timeout" : {
-                "name" : "Timeout",
-                "tooltip" : "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
+            "timeout": {
+                "name": "Timeout",
+                "tooltip": "The entity's barrier will break after a period of time passes. Set to 0 to deactivate this ability."
             }
         }
     },
-    "DEMONSHIELD" : {
-        "abbr_name" : "D.Shield",
-        "full_name" : "Aku Shield",
-        "tooltip" : "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
-        "format" : "Aku Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
-        "class" : {
-            "hp" : {
-                "name" : "health",
-                "tooltip" : "Health of the shield"
+    "DEMONSHIELD": {
+        "abbr_name": "D.Shield",
+        "full_name": "Aku Shield",
+        "tooltip": "Blocks a certain amount of damage. Unlike barrier, it absorbs damage instead of negating it.",
+        "format": "Aku Shield (_left)Shield has (_shield(hp)) HP, regenerates with (regen)% of its original HP when unit gets hitbacked(_right)",
+        "class": {
+            "hp": {
+                "name": "health",
+                "tooltip": "Health of the shield"
             },
-            "regen" : {
-                "name" : "regen",
-                "tooltip" : "Percentage of the base HP it regenerates upon HB"
+            "regen": {
+                "name": "regen",
+                "tooltip": "Percentage of the base HP it regenerates upon HB"
             }
         }
     },
-    "SHIELDBREAK" : {
+    "SHIELDBREAK": {
         "abbr_name": "Shield Pierce",
         "full_name": "Shield Piercer",
         "tooltip": "Directly breaks Aku shield. Be aware that this doesn't prevent shield from regenerating when hitbacked.",
@@ -911,15 +920,17 @@
             }
         }
     },
-    "COUNTER" : {
+    "COUNTER": {
         "abbr_name": "Counter",
         "full_name": "Counter Attack",
         "tooltip": "Deal damage back when attacked.",
-        "format": ["(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back. ",
+        "format": [
+            "(prob)% chance to counterattack, dealing (damage)% [(!type.useOwnDamage){of the damage received from an attack}(type.useOwnDamage){of this unit's damage}] back. ",
             "[(type.counterWave!=0){ This unit will also [(type.counterWave==1){counter}(type.counterWave==2){reflect}] wave/surge attacks. }][(type.procType!=0){This counterattack will ",
             "[(type.procType==1|type.procType==3){have}(type.procType==2){replace}] the original attack's procs[(type.procType==2){ with this unit's procs}(type.procType==3){ and this entity's procs}]. }]",
             "The counter will hit [(type.areaAttack){ all enemies}(!type.areaAttack){ only the attacker}][(type.areaAttack|!type.outRange){[(!type.areaAttack){ if they're}] standing ",
-            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."],
+            "[(minRange!=0|maxRange!=0){(minRange) ~ (maxRange) units away from this entity}(minRange==0&maxRange==0){on this entity's range}]}]."
+        ],
         "class": {
             "prob": {
                 "name": "chance",
@@ -987,7 +998,8 @@
         "abbr_name": "Imu.Cannon",
         "full_name": "Cannon Immunity",
         "tooltip": null,
-        "format": ["[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to ",
+        "format": [
+            "[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to ",
             "[(type!=127){[(type&1>0){regular cannon waves[(type>2){, }]}",
             "(type&2>0){slow beam[(type>4){, }]}",
             "(type&4>0){thunderbolt[(type>8){, }]}",
@@ -995,7 +1007,8 @@
             "(type&16>0){holy blast[(type>32){, }]}",
             "(type&32>0){breakerblast[(type>64){, and}]}",
             "(type&64>0){curseblast}]}(type==127){cannon attacks}]",
-            "[(mult!=100){ (_left)[(mult>0){Reduces}(mult<0){Increases}] damage taken and procs by (_abs(mult))%(_right)}]"],
+            "[(mult!=100){ (_left)[(mult>0){Reduces}(mult<0){Increases}] damage taken and procs by (_abs(mult))%(_right)}]"
+        ],
         "class": {
             "mult": {
                 "name": "percent",
@@ -1047,6 +1060,34 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            }
+        }
+    },
+    "MINIVOLC": {
+        "abbr_name": "m. surge",
+        "full_name": "Mini Surge",
+        "tooltip": "Creates small surge that does exactly same behavior of normal surge, but with less damage",
+        "format": "(prob)% chance to make a Lv (time/20) mini surge attack (_left)Lasts (_dispTime(time)), created within (dis_0) ~ (dis_1) range, with (mult)% damage of attacker(_right)",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": "point near",
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": "point far",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "multiplier",
                 "tooltip": null
             }
         }

@@ -1206,5 +1206,33 @@
         "tooltip": null
       }
     }
+  },
+  "MINIVOLC" : {
+    "abbr_name": "m. surge",
+    "full_name": "Mini Surge",
+    "tooltip": "Creates small surge that does exactly same behavior of normal surge, but with less damage",
+    "format": "(prob)% chance to make a Lv (time/20) mini surge attack (_left)Lasts (_dispTime(time)), created within (dis_0) ~ (dis_1) range, with (mult)% damage of attacker(_right)",
+    "class": {
+      "prob": {
+        "name": "chance",
+        "tooltip": null
+      },
+      "dis_0": {
+        "name": "point near",
+        "tooltip": null
+      },
+      "dis_1": {
+        "name": "point far",
+        "tooltip": null
+      },
+      "time": {
+        "name": "duration",
+        "tooltip": null
+      },
+      "mult" : {
+        "name": "multiplier",
+        "tooltip": null
+      }
+    }
   }
 }

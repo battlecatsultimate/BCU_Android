@@ -975,4 +975,7 @@
     <string name="lineup_dc">장식 레벨</string>
     <string name="lineup_fd">토대 레벨</string>
     <string name="config_lazy">편성표 데이터 자동 저장 빈도 감소</string>
+    <string name="sch_abi_ms">소열파</string>
+    <string name="eff_misu">소열파</string>
+    <string name="eff_misue">소열파 적 측면</string>
 </resources>

@@ -94,19 +94,29 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
                 fruittext[i]!!.text = ""
         }
 
-        val lines = u.info.catfruitExplanation.split("\n")
+        val catfruitExplanation = u.info.catfruitExplanation
 
-        for (i in cfdesc.indices) {
-            if (i >= lines.size) {
+        if(catfruitExplanation != null) {
+            val lines = u.info.catfruitExplanation.split("\n")
+
+            for (i in cfdesc.indices) {
+                if (i >= lines.size) {
+                    cfdesc[i]!!.visibility = View.GONE
+                    cfdesc[i]!!.setPadding(0, 0, 0, 0)
+                } else {
+                    if (i == lines.size - 1 && i != cfdesc.size - 1)
+                        cfdesc[i]!!.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
+
+                    cfdesc[i]!!.text = lines[i]
+                }
+            }
+        } else {
+            for (i in cfdesc.indices) {
                 cfdesc[i]!!.visibility = View.GONE
-                cfdesc[i]!!.setPadding(0, 0, 0, 0)
-            } else {
-                if (i == lines.size - 1 && i != cfdesc.size - 1)
-                    cfdesc[i]!!.setPadding(0, 0, 0, StaticStore.dptopx(24f, activity))
-
-                cfdesc[i]!!.text = lines[i]
             }
         }
+
+
 
         group.addView(layout)
 
