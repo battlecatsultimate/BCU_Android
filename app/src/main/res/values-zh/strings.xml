@@ -975,7 +975,7 @@
     <string name="lineup_dc">貓咪砲裝飾等級 快速設定</string>
     <string name="lineup_fd">貓咪砲裝飾等級 快速設定</string>
     <string name="config_lazy">"在隊伍編成中換使用被動式自動儲存 "</string>
-    <string name="sch_abi_ms">Mini-Surge</string>
-    <string name="eff_misu">Mini-Surge</string>
-    <string name="eff_misue">Mini-Surge Enemy Side</string>
+    <string name="sch_abi_ms">小烈波</string>
+    <string name="eff_misu">小烈波</string>
+    <string name="eff_misue">小烈波 敵方</string>
 </resources>

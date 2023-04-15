@@ -974,7 +974,7 @@
     <string name="lineup_dc">Decoration Level</string>
     <string name="lineup_fd">Foundation Level</string>
     <string name="config_lazy">Perform lazy saving in lineup screen</string>
-    <string name="sch_abi_ms">Mini-Surge</string>
-    <string name="eff_misu">Mini-Surge</string>
-    <string name="eff_misue">Mini-Surge Enemy Side</string>
+    <string name="sch_abi_ms">小烈波</string>
+    <string name="eff_misu">小烈波</string>
+    <string name="eff_misue">敵側の小烈波</string>
 </resources>
