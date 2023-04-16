@@ -56,7 +56,7 @@ open class EnemySearchFilter : AppCompatActivity() {
             intArrayOf(0, Data.AB_THEMEI), intArrayOf(1, Data.P_IMUSEAL), intArrayOf(0, Data.AB_IMUSW), intArrayOf(1, Data.P_CRITI), intArrayOf(1, Data.P_IMUSUMMON), intArrayOf(1, Data.P_IMUARMOR), intArrayOf(1, Data.P_IMUSPEED), intArrayOf(1, Data.P_IMUCANNON))
     private val atkdraw = intArrayOf(212, 112)
     private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 300, 264, 296, 293, 208, 310, 239, 213, 214, 215, 216, 210, 243, 237, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX", "CannonX")
+    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX", "CannonX")
     private lateinit var abAdapter: SearchAbilityAdapter
     private lateinit var trAdapter: SearchTraitAdapter
 
