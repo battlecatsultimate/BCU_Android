@@ -426,6 +426,9 @@ open class BPAdder : CoroutineTask<String> {
                         changed = true
 
                     for(i in 2 until st.lim.lvr.all.size) {
+                        if (i - 2 >= level.talents.size)
+                            break
+
                         temp = level.talents[i - 2]
 
                         level.talents[i - 2] = min(level.talents[i - 2], st.lim.lvr.all[i])
