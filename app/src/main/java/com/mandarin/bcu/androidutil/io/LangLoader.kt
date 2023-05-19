@@ -145,6 +145,7 @@ object LangLoader {
 
     fun readStageLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/","/fr/","/it/","/es/","/de/")
+
         val file = "StageName.txt"
         val diff = "Difficulty.txt"
         val rewa = "RewardName.txt"
@@ -155,6 +156,7 @@ object LangLoader {
 
         for (l in lan) {
             val f = File("${StaticStore.getExternalAsset(c)}lang$l$file")
+
             if (f.exists()) {
                 val qs = VFile.getFile(f).data.readLine()
 
@@ -172,7 +174,6 @@ object LangLoader {
                             continue
 
                         val ids = id.split("-").toTypedArray()
-
                         val id0 = CommonStatic.parseIntN(ids[0].trim { it <= ' ' })
 
                         val mc = MapColc.get(Data.hex(id0)) ?: continue
@@ -191,20 +192,29 @@ object LangLoader {
 
                         if (ids.size == 2) {
                             MultiLangCont.getStatic().SMNAME.put(l.substring(1, l.length - 1), stm, name)
+
                             continue
                         }
+
                         val id2 = CommonStatic.parseIntN(ids[2].trim { it <= ' ' })
-                        if (id2 >= stm.list.list.size || id2 < 0) continue
+
+                        if (id2 >= stm.list.list.size || id2 < 0)
+                            continue
+
                         val st = stm.list.list[id2]
+
                         MultiLangCont.getStatic().STNAME.put(l.substring(1, l.length - 1), st, name)
                     }
                 }
             }
         }
+
         for (l in lan) {
             val f = File("${StaticStore.getExternalAsset(c)}lang$l$rewa")
+
             if (f.exists()) {
                 val qs = VFile.getFile(f).data.readLine()
+
                 if (qs != null) {
                     for (s in qs) {
                         val strs = s.trim { it <= ' ' }.split("\t").toTypedArray()
@@ -212,11 +222,17 @@ object LangLoader {
                         if (strs.size <= 1)
                             continue
 
-                        val id = strs[0].trim { it <= ' ' }
+                        val ids = strs[0].trim { it <= ' ' }.split("|")
 
                         val name = strs[1].trim { it <= ' ' }
 
-                        MultiLangCont.getStatic().RWNAME.put(l.substring(1, l.length - 1), id.toInt(), name)
+                        for (id in ids) {
+                            when {
+                                CommonStatic.isInteger(id) -> MultiLangCont.getStatic().RWNAME.put(l.substring(1, l.length - 1), id.toInt(), name)
+                                id.startsWith("S") -> MultiLangCont.getStatic().RWSTNAME.put(l.substring(1, l.length - 1), id.replace("S", "").toInt(), name)
+                                id.startsWith("I") -> MultiLangCont.getStatic().RWSVNAME.put(l.substring(1, l.length - 1), id.replace("I", "").toInt(), name)
+                            }
+                        }
                     }
                 }
             }
@@ -280,11 +296,14 @@ object LangLoader {
                 if (qs != null) {
                     for (str in qs) {
                         val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+
                         if (strs.size == 1) {
                             continue
                         }
+
                         val id = strs[0].trim { it <= ' ' }.toInt()
                         val name = strs[1].trim { it <= ' ' }
+
                         StaticStore.MEDNAME.put(l.substring(1, l.length - 1), id, name)
                     }
                 }
@@ -298,11 +317,14 @@ object LangLoader {
                 if (qs != null) {
                     for (str in qs) {
                         val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+
                         if (strs.size == 1) {
                             continue
                         }
+
                         val id = strs[0].trim { it <= ' ' }.toInt()
                         val name = strs[1].trim { it <= ' ' }
+
                         StaticStore.MEDEXP.put(l.substring(1, l.length - 1), id, name)
                     }
                 }
