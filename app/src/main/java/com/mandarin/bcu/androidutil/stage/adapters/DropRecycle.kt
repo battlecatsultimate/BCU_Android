@@ -29,11 +29,13 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val row = LayoutInflater.from(activity).inflate(R.layout.drop_info_layout, viewGroup, false)
+
         return ViewHolder(row)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val info = st.info as DefStageInfo
+
         val c = when {
             dropData.isEmpty() -> {
                 (i+1).toString()
@@ -47,18 +49,27 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         }
 
         val data = info.drop[i]
+
         viewHolder.chance.text = c
-        var reward = MultiLangCont.getStatic().RWNAME.getCont(data[1])
-        if (reward == null) reward = data[1].toString()
+
+        var reward = MultiLangCont.getStageDrop(data[1])
+
+        if (reward == null)
+            reward = data[1].toString()
+
         if (i == 0) {
             if (data[0] != 100) {
                 val bd = BitmapDrawable(activity.resources, StaticStore.getResizeb(StaticStore.treasure, activity, 24f))
+
                 bd.isFilterBitmap = true
                 bd.setAntiAlias(true)
+
                 viewHolder.item.setCompoundDrawablesWithIntrinsicBounds(null, null, bd, null)
             }
+
             if (info.rand == 1 || data[1] >= 1000) {
                 reward += activity.getString(R.string.stg_info_once)
+
                 viewHolder.item.text = reward
             } else {
                 viewHolder.item.text = reward
@@ -66,6 +77,7 @@ class DropRecycle(private val st: Stage, private val activity: Activity) : Recyc
         } else {
             viewHolder.item.text = reward
         }
+
         viewHolder.amount.text = data[2].toString()
     }
 

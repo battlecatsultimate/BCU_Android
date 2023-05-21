@@ -22,14 +22,20 @@ class ScoreRecycle internal constructor(private val st: Stage, private val activ
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val row = LayoutInflater.from(activity).inflate(R.layout.drop_info_layout, viewGroup, false)
+
         return ViewHolder(row)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val data = (st.info as DefStageInfo).time[i]
+
         viewHolder.score.text = data[0].toString()
-        var reward = MultiLangCont.getStatic().RWNAME.getCont(data[1])
-        if (reward == null) reward = data[1].toString()
+
+        var reward = MultiLangCont.getStageDrop(data[1])
+
+        if (reward == null)
+            reward = data[1].toString()
+
         viewHolder.item.text = reward
         viewHolder.amount.text = data[2].toString()
     }
