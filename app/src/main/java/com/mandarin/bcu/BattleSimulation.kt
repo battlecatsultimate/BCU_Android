@@ -82,11 +82,6 @@ class BattleSimulation : AppCompatActivity() {
             val item = bundle.getInt("item")
             val siz = bundle.getDouble("size", 1.0)
             val pos = bundle.getInt("pos", 0)
-            val restricted = bundle.getBoolean("restricted", false)
-
-            if(restricted) {
-                StaticStore.showShortMessage(this, R.string.battle_restricted)
-            }
 
             BAdder(this, data, star, item, siz, pos).execute()
         }

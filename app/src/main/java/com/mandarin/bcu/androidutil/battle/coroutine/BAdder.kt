@@ -36,6 +36,7 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
 import com.mandarin.bcu.androidutil.battle.BBCtrl
 import common.CommonStatic
+import common.battle.BasisLU
 import common.battle.BasisSet
 import common.battle.SBCtrl
 import common.battle.Treasure
@@ -49,6 +50,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.ln
+import kotlin.math.min
 
 class BAdder(activity: Activity, private val data: Identifier<Stage>, private val star: Int, private val item: Int, private val siz: Double, private val pos: Int) : CoroutineTask<String>() {
     private val weakReference: WeakReference<Activity> = WeakReference(activity)
@@ -125,6 +127,12 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                 JsonDecoder.inject(JsonEncoder.encode(BasisSet.current().t()), Treasure::class.java, BasisSet.current().sele.t())
 
                 val lu = BasisSet.current().sele.copy()
+
+                val restricted = restrictLevel(stg, lu)
+
+                if(restricted) {
+                    StaticStore.showShortMessage(activity, R.string.battle_restricted)
+                }
 
                 if(CommonStatic.getConfig().realLevel)
                     lu.performRealisticLeveling()
@@ -896,5 +904,47 @@ class BAdder(activity: Activity, private val data: Identifier<Stage>, private va
                 0.0
             }
         }
+    }
+
+    private fun restrictLevel(st: Stage, lu: BasisLU) : Boolean {
+        var changed = false
+
+        if(st.lim != null && st.lim.lvr != null) {
+            for(forms in lu.lu.fs) {
+                for(form in forms) {
+                    form ?: continue
+
+                    val level = lu.lu.map[form.unit.id] ?: continue
+
+                    var temp = level.lv
+
+                    level.setLevel(min(level.lv, st.lim.lvr.all[0]))
+
+                    if(!changed && temp != level.lv)
+                        changed = true
+
+                    temp = level.plusLv
+
+                    level.setLevel(min(level.plusLv, st.lim.lvr.all[1]))
+
+                    if(!changed && temp != level.plusLv)
+                        changed = true
+
+                    for(i in 2 until st.lim.lvr.all.size) {
+                        if (i - 2 >= level.talents.size)
+                            break
+
+                        temp = level.talents[i - 2]
+
+                        level.talents[i - 2] = min(level.talents[i - 2], st.lim.lvr.all[i])
+
+                        if(!changed && temp != level.talents[i - 2])
+                            changed = true
+                    }
+                }
+            }
+        }
+
+        return changed
     }
 }

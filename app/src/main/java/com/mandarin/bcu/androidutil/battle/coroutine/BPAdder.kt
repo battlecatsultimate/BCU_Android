@@ -27,7 +27,6 @@ import common.util.lang.MultiLangCont
 import common.util.stage.Stage
 import java.lang.ref.WeakReference
 import kotlin.math.max
-import kotlin.math.min
 
 open class BPAdder : CoroutineTask<String> {
     private val weakReference: WeakReference<Activity>
@@ -208,14 +207,11 @@ open class BPAdder : CoroutineTask<String> {
 
                 start.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
-                        val restricted = restrictLevel(st)
-
                         val intent = Intent(activity, BattleSimulation::class.java)
 
                         intent.putExtra("Data", JsonEncoder.encode(this@BPAdder.data).toString())
                         intent.putExtra("star", star.selectedItemPosition)
                         intent.putExtra("item", item)
-                        intent.putExtra("restricted", restricted)
 
                         activity.startActivity(intent)
                         BattlePrepare.rich = false
@@ -397,49 +393,5 @@ open class BPAdder : CoroutineTask<String> {
                 num.toString()
             }
         }
-    }
-
-    private fun restrictLevel(st: Stage) : Boolean {
-        var changed = false
-
-        if(st.lim != null && st.lim.lvr != null) {
-            val lu = BasisSet.current().sele
-
-            for(forms in lu.lu.fs) {
-                for(form in forms) {
-                    form ?: continue
-
-                    val level = lu.lu.map[form.unit.id] ?: continue
-
-                    var temp = level.lv
-
-                    level.setLevel(min(level.lv, st.lim.lvr.all[0]))
-
-                    if(!changed && temp != level.lv)
-                        changed = true
-
-                    temp = level.plusLv
-
-                    level.setLevel(min(level.plusLv, st.lim.lvr.all[1]))
-
-                    if(!changed && temp != level.plusLv)
-                        changed = true
-
-                    for(i in 2 until st.lim.lvr.all.size) {
-                        if (i - 2 >= level.talents.size)
-                            break
-
-                        temp = level.talents[i - 2]
-
-                        level.talents[i - 2] = min(level.talents[i - 2], st.lim.lvr.all[i])
-
-                        if(!changed && temp != level.talents[i - 2])
-                            changed = true
-                    }
-                }
-            }
-        }
-
-        return changed
     }
 }
