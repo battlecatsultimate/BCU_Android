@@ -14,12 +14,10 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.battle.BasisSet
-import common.util.lang.MultiLangCont
 import common.util.unit.Combo
 import java.text.DecimalFormat
-import java.util.*
 
-class ComboListAdapter internal constructor(activity: Activity, names: Array<String>) : ArrayAdapter<String>(activity, R.layout.combo_list_layout, names) {
+class ComboListAdapter internal constructor(activity: Activity, private val names: Array<String>) : ArrayAdapter<String>(activity, R.layout.combo_list_layout, names) {
     private class ViewHolder constructor(view: View) {
         var comboname: TextView = view.findViewById(R.id.comboname)
         var combodesc: TextView = view.findViewById(R.id.combodesc)
@@ -45,7 +43,7 @@ class ComboListAdapter internal constructor(activity: Activity, names: Array<Str
         }
 
         try {
-            holder.comboname.text = MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[position])
+            holder.comboname.text = names[position]
             val occ = context.getString(R.string.combo_occu) + " : " + BasisSet.current().sele.lu.occupance(StaticStore.combos[position])
             holder.comboocc.text = occ
             holder.combodesc.text = getDescription(StaticStore.combos[position])

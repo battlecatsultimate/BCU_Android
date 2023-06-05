@@ -53,7 +53,7 @@ class LUCatCombo : Fragment() {
             if(StaticStore.combos[it].id.pack == Identifier.DEF) {
                 MultiLangCont.getStatic().COMNAME.getCont(StaticStore.combos[it]) ?: Data.trio(StaticStore.combos[it].id.id)
             } else {
-                StaticStore.combos[it].name ?: ""
+                StaticStore.combos[it].getName() ?: ""
             }
         }
 
