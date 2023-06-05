@@ -978,4 +978,7 @@
     <string name="sch_abi_ms">소열파</string>
     <string name="eff_misu">소열파</string>
     <string name="eff_misue">소열파 적 측면</string>
+    <string name="eff_cosu">열파 반격</string>
+    <string name="eff_cosue">열파 반격 적 측면</string>
+    <string name="sch_abi_cs">열파 반격</string>
 </resources>

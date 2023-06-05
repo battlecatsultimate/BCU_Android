@@ -977,4 +977,7 @@
     <string name="sch_abi_ms">Mini-Surge</string>
     <string name="eff_misu">Mini-Surge</string>
     <string name="eff_misue">Mini-Surge Enemy Side</string>
+    <string name="eff_cosu">Counter Surge</string>
+    <string name="eff_cosue">Counter Surge Enemy Side</string>
+    <string name="sch_abi_cs">Counter Surge</string>
 </resources>

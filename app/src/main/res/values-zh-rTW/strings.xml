@@ -978,4 +978,7 @@
     <string name="sch_abi_ms">小烈波</string>
     <string name="eff_misu">小烈波</string>
     <string name="eff_misue">小烈波 敵方</string>
+    <string name="eff_cosu">Counter Surge</string>
+    <string name="eff_cosue">Counter Surge Enemy Side</string>
+    <string name="sch_abi_cs">Counter Surge</string>
 </resources>
