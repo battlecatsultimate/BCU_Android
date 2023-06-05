@@ -323,7 +323,7 @@ object LangLoader {
                         }
 
                         val id = strs[0].trim { it <= ' ' }.toInt()
-                        val name = strs[1].trim { it <= ' ' }
+                        val name = strs[1].trim { it <= ' ' }.replace("<br>", "\n")
 
                         StaticStore.MEDEXP.put(l.substring(1, l.length - 1), id, name)
                     }
