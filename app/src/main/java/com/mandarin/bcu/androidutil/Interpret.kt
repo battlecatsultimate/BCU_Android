@@ -273,6 +273,7 @@ object Interpret : Data() {
                         13 -> l.add(ABIS[i] + addition[4])
                         15 -> l.add(ABIS[i] + addition[5])
                         16 -> l.add(ABIS[i] + addition[6])
+                        17 -> l.add(ABIS[i] + addition[7])
                         else -> l.add(ABIS[i])
                     }
                 }
