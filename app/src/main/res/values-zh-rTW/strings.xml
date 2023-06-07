@@ -981,5 +981,5 @@
     <string name="eff_cosu">模仿烈波</string>
     <string name="eff_cosue">模仿烈波 敵方</string>
     <string name="sch_abi_cs">模仿烈波</string>
-    <string name="unit_info_colo">" (受到傷害 x0. / 輸出傷害 x1.6)"</string>
+    <string name="unit_info_colo">" (受到傷害 x0.7 / 輸出傷害 x1.6)"</string>
 </resources>

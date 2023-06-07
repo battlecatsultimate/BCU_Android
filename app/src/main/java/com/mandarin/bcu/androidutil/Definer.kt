@@ -292,7 +292,7 @@ object Definer {
 
         ProcLang.clear()
 
-        val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas)
+        val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas, R.string.unit_info_colo)
         StaticStore.addition = Array(addid.size) { i ->
             getString(context, addid[i], lang)
         }
