@@ -981,4 +981,5 @@
     <string name="eff_cosue">Counter Surge Enemy Side</string>
     <string name="sch_abi_cs">Counter Surge</string>
     <string name="unit_info_colo">" (Takes damage 0.7x / Gives damage 1.6x)"</string>
+    <string name="stg_info_nocpu">You can\'t use gold CPU in this stage</string>
 </resources>

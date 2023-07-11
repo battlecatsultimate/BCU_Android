@@ -1045,6 +1045,10 @@ class GetStrings(private val c: Context) {
             res.add(c.getString(R.string.stg_info_numbplay).replace("_", st.cont.info.clearLimit.toString()))
         }
 
+        if (st.cont.info.cantUseGoldCPU) {
+            res.add(c.getString(R.string.stg_info_nocpu))
+        }
+
         return res
     }
 }
