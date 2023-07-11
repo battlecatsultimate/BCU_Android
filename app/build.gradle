@@ -15,11 +15,11 @@ android {
             keyPassword 'battlecatsultimate'
         }
     }
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId "com.mandarin.bcu"
         minSdkVersion 24
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "0.16.37"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.core:core-ktx:1.10.1'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -77,18 +77,18 @@ dependencies {
         exclude group:'com.google.guava'
     }
     implementation 'com.google.api-client:google-api-client:2.2.0'
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.16.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'com.nhaarman.supertooltips:library:3.0.0'
     implementation 'org.jcodec:jcodec:0.2.5'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2'
     annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2'
 
     implementation platform("com.google.firebase:firebase-bom:32.1.1")
 
-    implementation "com.google.firebase:firebase-crashlytics"
-    implementation "com.google.firebase:firebase-analytics"
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
 
 }
 
