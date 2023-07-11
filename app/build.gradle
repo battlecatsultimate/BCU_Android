@@ -1,6 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'org.jetbrains.kotlin.android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.gms.google-services'
+}
 
 android {
     signingConfigs {
@@ -80,7 +84,14 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
     annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+
+    implementation platform("com.google.firebase:firebase-bom:32.1.1")
+
+    implementation "com.google.firebase:firebase-crashlytics"
+    implementation "com.google.firebase:firebase-analytics"
+
 }
+
 repositories {
     mavenCentral()
 }

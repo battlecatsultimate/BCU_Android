@@ -2,18 +2,27 @@
 
 buildscript {
     ext.kotlin_version = '1.6.21'
+
     repositories {
         google()
+        gradlePluginPortal()
         mavenCentral()
     }
+
     dependencies {
 
         classpath 'com.android.tools.build:gradle:8.2.0-alpha11'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20-Beta"
+        classpath 'com.google.gms:google-services:4.3.15'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+
+plugins {
+    id 'com.google.gms.google-services' version '4.3.15' apply false
+    id 'com.google.firebase.crashlytics' version '2.9.6' apply false
 }
 
 ext {
@@ -23,10 +32,11 @@ ext {
 allprojects {
     repositories {
         google()
+        gradlePluginPortal()
         mavenCentral()
     }
 }
 
-tasks.register('clean') {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
