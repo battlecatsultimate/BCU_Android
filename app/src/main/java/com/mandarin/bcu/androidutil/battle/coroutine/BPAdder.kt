@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -132,7 +133,8 @@ open class BPAdder : CoroutineTask<String> {
                 prog.progress = data[1].toInt()
             }
             done -> {
-                val line: LineUpView = activity.findViewById(R.id.lineupView)
+                val line = LineUpView(activity)
+
                 val setname = activity.findViewById<TextView>(R.id.lineupname)
                 val star = activity.findViewById<Spinner>(R.id.battlestar)
                 val equip = activity.findViewById<Button>(R.id.battleequip)
@@ -143,6 +145,20 @@ open class BPAdder : CoroutineTask<String> {
                 val prog = activity.findViewById<ProgressBar>(R.id.prog)
                 val lvlim = activity.findViewById<Spinner>(R.id.battlelvlim)
                 val plus = activity.findViewById<CheckBox>(R.id.battleplus)
+                val layout = activity.findViewById<LinearLayout>(R.id.preparelineup)
+
+                line.id = R.id.lineupView
+
+                val w: Float = if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    StaticStore.getScreenWidth(activity, false).toFloat() / 2.0f
+                else
+                    StaticStore.getScreenWidth(activity, false).toFloat()
+
+                val h = w / 5.0f * 3
+
+                line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
+
+                layout.addView(line)
 
                 prog.isIndeterminate = true
 

@@ -67,23 +67,6 @@ class BattlePrepare : AppCompatActivity() {
 
         setContentView(R.layout.activity_battle_prepare)
 
-        val line = LineUpView(this)
-
-        line.id = R.id.lineupView
-
-        val layout = findViewById<LinearLayout>(R.id.preparelineup)
-
-        val w: Float = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            StaticStore.getScreenWidth(this, false).toFloat() / 2.0f
-        else
-            StaticStore.getScreenWidth(this, false).toFloat()
-
-        val h = w / 5.0f * 3
-
-        line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
-
-        layout.addView(line)
-
         val intent = intent
         val result = intent.extras
 
