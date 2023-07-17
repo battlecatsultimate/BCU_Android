@@ -983,4 +983,9 @@
     <string name="sch_abi_cs">模仿烈波</string>
     <string name="unit_info_colo">" (受到傷害 x0.7 / 輸出傷害 x1.6)"</string>
     <string name="stg_info_nocpu">You can\'t use gold CPU in this stage</string>
+    <string name="err_title">Error Happened</string>
+    <string name="err_reason">Reason</string>
+    <string name="err_solution">Possible Solution</string>
+    <string name="err_reason_asset">"Asset has been corrupted\n\nAssets contain BC data, which is very criical for app to be run. It seems app failed to download asset files or was interrupted by any factors, so asets got corrupted "</string>
+    <string name="err_solution_asset">1. Go to setting of your system, application, and select BCU Android. Tab button below to access it easily\n2. Reset data. This means you will have to redownload assets again\n\n- When you downloading assets, do not switch to other app, or turn off the screen. Make app keep running until the download finishes</string>
 </resources>

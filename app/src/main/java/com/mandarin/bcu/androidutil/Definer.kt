@@ -9,6 +9,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
+import com.mandarin.bcu.androidutil.io.AssetException
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
@@ -46,7 +47,11 @@ object Definer {
                 text.accept(context.getString(R.string.main_file_read))
                 AssetLoader.load(prog)
 
-                UserProfile.getBCData().load(text, prog)
+                try {
+                    UserProfile.getBCData().load(text, prog)
+                } catch (_: Exception) {
+                    throw AssetException("E/Definer::define - Failed to read asset")
+                }
 
                 StaticStore.init = true
             }

@@ -96,6 +96,9 @@ object StaticStore {
 
     const val MUSIC = "music"
 
+    /** asset error code **/
+    const val ERR_ASSET = "asset"
+
     /**
      * This value prevents button is performed less than every 1 sec<br></br>
      * Used when preventing activity is opened double

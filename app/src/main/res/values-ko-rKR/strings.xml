@@ -983,4 +983,9 @@
     <string name="sch_abi_cs">열파 반격</string>
     <string name="unit_info_colo">" (피격 시 x0.7 / 공격 시 x1.6)"</string>
     <string name="stg_info_nocpu">이 스테이지에서 황금 냥퓨터 사용 불가</string>
+    <string name="err_title">오류 발생</string>
+    <string name="err_reason">오류 사유</string>
+    <string name="err_solution">가능한 해결법</string>
+    <string name="err_reason_asset">에셋이 손상되었습니다\n\n에셋은 냥코 데이터를 갖고 있어 앱이 실행되는데 매우 중요한 파일들입니다. 앱이 에셋 다운로드에 실패했거나 다른 요소들에 의해 간섭을 받아 에셋이 손상된 것으로 보입니다</string>
+    <string name="err_solution_asset">1. 시스템 설정에 들어가신 뒤, 애플리케이션 -> BCU Android를 선택해 줍니다. 아래의 버튼을 탭하여 바로 접근하실 수 있습니다\n2. 데이터를 초기화 하여 에셋 파일들을 다시 다운받습니다\n\n- 에셋을 다시 다운받을 때 다른 앱으로 전환하거나 화면을 끄지 않도록하여 앱이 다운로드가 끝날 때까지 작동할 수 있도록 만들어줘야 합니다</string>
 </resources>

@@ -5,11 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.mandarin.bcu.ErrorScreen
 import com.mandarin.bcu.MainActivity
 import com.mandarin.bcu.PackConflictSolve
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.io.AssetException
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
@@ -44,7 +46,22 @@ class AddPathes internal constructor(activity: Activity, private val config: Boo
 
         UserProfile.profile()
 
-        Definer.define(activity, this::updateProgress, this::updateText)
+        try {
+            Definer.define(activity, this::updateProgress, this::updateText)
+        } catch (assetError: AssetException) {
+            val intent = Intent(activity, ErrorScreen::class.java)
+
+            intent.putExtra("reasonPhrase", activity.getString(R.string.err_reason_asset))
+            intent.putExtra("solution", activity.getString(R.string.err_solution_asset))
+            intent.putExtra("errorCode", StaticStore.ERR_ASSET)
+
+            activity.startActivity(intent)
+            activity.finish()
+
+            cancel()
+
+            return
+        }
 
         StaticStore.getLang(shared.getInt("Language", 0))
 

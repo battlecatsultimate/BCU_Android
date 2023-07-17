@@ -17,7 +17,7 @@ abstract class CoroutineTask<Data> {
     private var status = Status.READY
 
     private var index = -1
-    private var cancelled = false
+    private var canceled = false
     var out = false
 
     abstract fun prepare()
@@ -59,8 +59,10 @@ abstract class CoroutineTask<Data> {
                 status = Status.DONE
                 getOut()
 
+                println(canceled)
+
                 withContext(Dispatchers.Main) {
-                    if(!cancelled) {
+                    if(!canceled) {
                         finish()
                     }
                 }
@@ -72,11 +74,8 @@ abstract class CoroutineTask<Data> {
 
     fun cancel() {
         status = Status.DONE
-        cancelled = true
+        canceled = true
         getOut()
-        CoroutineScope(Dispatchers.Main).launch {
-            finish()
-        }
     }
 
     private fun getOut() {
