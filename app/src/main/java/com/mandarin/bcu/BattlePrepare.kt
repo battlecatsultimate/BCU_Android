@@ -2,13 +2,10 @@ package com.mandarin.bcu
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +19,7 @@ import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.battle.BasisSet
 import common.util.stage.Stage
-import java.util.*
+import java.util.Locale
 
 class BattlePrepare : AppCompatActivity() {
     companion object {

@@ -17,18 +17,15 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.unit.coroutine.UInfoLoader
 import common.CommonStatic
 import common.io.json.JsonEncoder
-import common.pack.Identifier
 import common.util.unit.Unit
 import java.util.*
 
