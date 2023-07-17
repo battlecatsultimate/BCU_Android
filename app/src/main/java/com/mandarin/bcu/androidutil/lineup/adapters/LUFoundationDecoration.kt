@@ -17,13 +17,19 @@ import common.battle.BasisSet
 import common.battle.Treasure
 import common.util.Data
 
-class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
+class LUFoundationDecoration : Fragment() {
 
     companion object {
         fun newInstances(isFoundation: Boolean) : LUFoundationDecoration {
-            return LUFoundationDecoration(isFoundation)
+            val fragment = LUFoundationDecoration()
+
+            fragment.setFoundation(isFoundation)
+
+            return fragment
         }
     }
+
+    private var isFoundation = false
 
     private var initialized = false
     private var editable = true
@@ -272,5 +278,9 @@ class LUFoundationDecoration(private val isFoundation: Boolean) : Fragment() {
         }
 
         return true
+    }
+
+    private fun setFoundation(isFoundation: Boolean) {
+        this.isFoundation = isFoundation
     }
 }
