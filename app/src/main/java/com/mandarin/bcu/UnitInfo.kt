@@ -130,7 +130,6 @@ class UnitInfo : AppCompatActivity() {
             }
         }
 
-        val unittitle = findViewById<AutoMarquee>(R.id.unitinfrarname)
         val back = findViewById<FloatingActionButton>(R.id.unitinfback)
 
         treasure = findViewById(R.id.treabutton)
@@ -145,11 +144,6 @@ class UnitInfo : AppCompatActivity() {
         val extra = result.extras ?: return
 
         val data = StaticStore.transformIdentifier<Unit>(extra.getString("Data")) ?: return
-        val s = GetStrings(this)
-
-        val u = Identifier.get(data) ?: return
-
-        unittitle.text = s.getTitle(u.forms[0])
 
         val anim = findViewById<Button>(R.id.animanim)
 

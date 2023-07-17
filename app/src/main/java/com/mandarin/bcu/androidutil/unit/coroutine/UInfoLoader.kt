@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.util.Log
 import android.view.View
@@ -29,8 +30,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.Definer
+import com.mandarin.bcu.androidutil.GetStrings
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.CoroutineTask
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
@@ -38,6 +41,9 @@ import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import com.mandarin.bcu.androidutil.Interpret
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
 import common.util.unit.Unit
@@ -232,6 +238,14 @@ class UInfoLoader(activity: Activity, private val data: Identifier<Unit>, privat
                 prog.progress = data[1].toInt()
             }
             "0" -> {
+                val s = GetStrings(activity)
+
+                val u = this.data.get() ?: return
+
+                val unittitle = activity.findViewById<AutoMarquee>(R.id.unitinfrarname)
+
+                unittitle.text = s.getTitle(u.forms[0])
+
                 val tabs: TabLayout = activity.findViewById(R.id.unitinfexplain)
                 val prog = activity.findViewById<ProgressBar>(R.id.prog)
 
