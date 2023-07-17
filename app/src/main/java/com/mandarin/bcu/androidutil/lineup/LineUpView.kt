@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
@@ -356,6 +357,10 @@ class LineUpView : View {
             units.add(to, b)
             StaticStore.currentForms.add(to, f)
         } else {
+            if (lastPosit - 1 < 0) {
+                FirebaseCrashlytics.getInstance().log("W/LineUpView::changeUnitPosition - Invalid lastPosit value\n\nLast Position : $lastPosit\nFrom : $from -> To : $to\nUnits : ${StaticStore.currentForms.filterNotNull().joinToString(", ") { form -> form.unit.id.pack + " - " + form.unit.id + " - " + form.fid }}}")
+            }
+
             units.removeAt(from)
             StaticStore.currentForms.removeAt(from)
             units.add(lastPosit - 1, b)
