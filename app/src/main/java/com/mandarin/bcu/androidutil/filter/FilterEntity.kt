@@ -12,6 +12,7 @@ import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
 import common.util.unit.Trait
 import common.util.unit.Unit
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -321,7 +322,11 @@ object FilterEntity {
         }
 
         for(info in StaticStore.ludata) {
-            val u = Identifier.get(info)
+            val u = try {
+                Identifier.get(info)
+            } catch (_: Exception) {
+                continue
+            }
 
             if(u == null) {
                 b0.add(false)
