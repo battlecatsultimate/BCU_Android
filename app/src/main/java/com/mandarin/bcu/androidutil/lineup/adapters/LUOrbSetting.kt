@@ -448,6 +448,9 @@ class LUOrbSetting : Fragment() {
     }
 
     private fun update(v: View) {
+        if (!this::line.isInitialized)
+            return
+
         f = if (StaticStore.position[0] == -1)
             return
         else if (StaticStore.position[0] == 100)
