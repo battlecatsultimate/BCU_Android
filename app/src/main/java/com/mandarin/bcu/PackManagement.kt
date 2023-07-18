@@ -49,10 +49,16 @@ class PackManagement : AppCompatActivity() {
         var needReload = false
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if(result.resultCode == RESULT_OK) {
             val path = result.data?.data ?: return@registerForActivityResult
+
+            val intent = result.data ?: return@registerForActivityResult
+
+            println(intent.action)
+            println(intent.scheme)
+            println(intent.categories.joinToString(", "))
+            println(intent.data)
 
             Log.i("PackManagement", "Got URI : $path")
 
@@ -187,36 +193,33 @@ class PackManagement : AppCompatActivity() {
 
             dialog.show()
 
-            val run = Runnable {
-
+            CoroutineScope(Dispatchers.IO).launch {
                 StaticStore.resetUserPacks()
 
-                Definer.define(this, {prog -> println(prog)}, this::updateText)
+                Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
 
                 dialog.dismiss()
 
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
                 handlingPacks = false
 
-                if(PackConflict.conflicts.isNotEmpty()) {
-                    val intent = Intent(this@PackManagement, PackConflictSolve::class.java)
+                withContext(Dispatchers.Main) {
+                    if(PackConflict.conflicts.isNotEmpty()) {
+                        val intent = Intent(this@PackManagement, PackConflictSolve::class.java)
 
-                    startActivity(intent)
+                        startActivity(intent)
 
-                    finish()
-                } else {
-                    val intent = Intent(this@PackManagement, MainActivity::class.java)
+                        finish()
+                    } else {
+                        val intent = Intent(this@PackManagement, MainActivity::class.java)
 
-                    startActivity(intent)
+                        startActivity(intent)
 
-                    finish()
+                        finish()
+                    }
                 }
 
                 needReload = false
-            }
-
-            CoroutineScope(Dispatchers.Main).launch {
-                run.run()
             }
         }
 
@@ -291,7 +294,7 @@ class PackManagement : AppCompatActivity() {
 
         dialog.show()
 
-        val run = Runnable {
+        CoroutineScope(Dispatchers.Main).launch {
             val total = ins.available().toLong()
             var prog = 0L
             val df = DecimalFormat("#.##")
@@ -331,7 +334,7 @@ class PackManagement : AppCompatActivity() {
 
             StaticStore.resetUserPacks()
 
-            Definer.define(this, {p -> println(p)}, this::updateText)
+            Definer.define(this@PackManagement, {p -> println(p)}, this@PackManagement::updateText)
 
             dialog.dismiss()
 
@@ -342,7 +345,7 @@ class PackManagement : AppCompatActivity() {
             }
 
             runOnUiThread {
-                list.adapter = PackManagementAdapter(this, packList)
+                list.adapter = PackManagementAdapter(this@PackManagement, packList)
             }
 
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
@@ -355,10 +358,6 @@ class PackManagement : AppCompatActivity() {
             if(PackConflict.conflicts.isNotEmpty()) {
                 StaticStore.showShortSnack(findViewById(R.id.pmanlayout), R.string.pack_manage_warn)
             }
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
-            run.run()
         }
     }
 
@@ -418,11 +417,11 @@ class PackManagement : AppCompatActivity() {
     }
 
     private fun byteToKB(bytes: Long, df: DecimalFormat) : String {
-        return df.format(bytes.toDouble()/1000.0)
+        return df.format(bytes.toDouble()/1024.0)
     }
 
     private fun byteToMB(bytes: Long, df: DecimalFormat) : String {
-        return df.format(bytes.toDouble()/1000000.0)
+        return df.format(bytes.toDouble()/(1024.0 * 1024))
     }
 
     private fun updateText(info: String) {
