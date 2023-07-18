@@ -30,6 +30,8 @@ class SoundPlayer : MediaPlayer() {
     var isReleased = false
         private set
 
+    var isPreparing = false
+
     /**
      * Improved MediaPlayer by releasing itself when it has to be finalized.
      */
@@ -50,6 +52,10 @@ class SoundPlayer : MediaPlayer() {
 
     override fun release() {
         isReleased = true
+
+        if (isPreparing)
+            return
+
         super.release()
     }
 
@@ -176,6 +182,8 @@ class SoundPlayer : MediaPlayer() {
         if(!isSafe()) {
             return
         }
+
+        isPreparing = true
 
         super.prepareAsync()
     }
