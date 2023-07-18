@@ -703,6 +703,9 @@ class LUAdder(activity: Activity, private val manager: FragmentManager, private 
 
                 option.setOnClickListener { popupMenu.show() }
 
+                pager.isSaveEnabled = false
+                pager.isSaveFromParentEnabled = false
+
                 pager.adapter = tab
                 pager.offscreenPageLimit = 1
 

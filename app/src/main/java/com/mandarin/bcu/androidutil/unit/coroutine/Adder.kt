@@ -103,6 +103,9 @@ class Adder(context: Activity, private val fm : FragmentManager, private val lc:
                     }
                 })
 
+                pager.isSaveEnabled = false
+                pager.isSaveFromParentEnabled = false
+
                 pager.adapter = UnitListTab()
                 pager.offscreenPageLimit = getExistingUnit()
 
