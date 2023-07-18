@@ -83,7 +83,7 @@ class LUUnitSetting : Fragment() {
             if (context == null)
                 return
 
-            val f = this.f ?: return
+            var f = this.f ?: return
 
             level = BasisSet.current().sele.lu.getLv(f) ?: return
 
@@ -425,6 +425,8 @@ class LUUnitSetting : Fragment() {
 
                 level.setLevel(lev)
                 level.setPlusLevel(levp1)
+
+                f = this.f ?: return@setOnClickListener
 
                 hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, level)
                 atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, level)
