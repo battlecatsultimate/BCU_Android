@@ -685,7 +685,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         dialog.show()
 
         postDelayed({
-            if(!dismissed)
+            if(!dismissed && !activity.isDestroyed)
                 dialog.dismiss()
         }, 6000)
     }
