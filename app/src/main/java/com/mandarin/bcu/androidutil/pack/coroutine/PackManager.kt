@@ -72,7 +72,7 @@ class PackManager(ac: Activity) : CoroutineTask<String>() {
                         val intent = Intent(Intent.ACTION_GET_CONTENT)
                         intent.addCategory(Intent.CATEGORY_DEFAULT)
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        intent.type = "*/*"
+                        intent.type = "application/octet-stream"
 
                         if(ac is PackManagement)
                             ac.resultLauncher.launch(Intent.createChooser(intent, "Choose Directory"))
