@@ -301,7 +301,9 @@ object LangLoader {
                             continue
                         }
 
-                        val id = strs[0].trim { it <= ' ' }.toInt()
+                        val idText = strs[0].trim { it <= ' ' }.replace(Regex("^0+"), "")
+
+                        val id = if (idText.isBlank()) 0 else idText.toInt()
                         val name = strs[1].trim { it <= ' ' }
 
                         StaticStore.MEDNAME.put(l.substring(1, l.length - 1), id, name)
@@ -322,7 +324,9 @@ object LangLoader {
                             continue
                         }
 
-                        val id = strs[0].trim { it <= ' ' }.toInt()
+                        val idText = strs[0].trim { it <= ' ' }.replace(Regex("^0+"), "")
+
+                        val id = if (idText.isBlank()) 0 else idText.toInt()
                         val name = strs[1].trim { it <= ' ' }.replace("<br>", "\n")
 
                         StaticStore.MEDEXP.put(l.substring(1, l.length - 1), id, name)
