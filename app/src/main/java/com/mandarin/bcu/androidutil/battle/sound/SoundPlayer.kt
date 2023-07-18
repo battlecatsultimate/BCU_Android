@@ -57,6 +57,7 @@ class SoundPlayer : MediaPlayer() {
     override fun setDataSource(path: String) {
         if(isReleased) {
             Log.e("SoundPlayerIllegal", "This SoundPlayer is already released")
+            return
         }
 
         if(isInitialized || isPrepared) {
@@ -70,6 +71,9 @@ class SoundPlayer : MediaPlayer() {
     }
 
     override fun reset() {
+        if (!isSafe())
+            return
+
         super.reset()
         isInitialized = false
         isRunning = false
@@ -156,7 +160,7 @@ class SoundPlayer : MediaPlayer() {
 
     private fun isSafe() : Boolean {
         if(isReleased) {
-            Log.e("SoundPlayerIllegal","This SoundPlaeyer is already released")
+            Log.e("SoundPlayerIllegal","This SoundPlayer is already released")
             return false
         }
 
