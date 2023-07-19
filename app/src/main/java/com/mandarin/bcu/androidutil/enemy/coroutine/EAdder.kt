@@ -113,6 +113,9 @@ class EAdder(activity: Activity, private val mode: Int, private val fm: Fragment
                     }
                 })
 
+                pager.isSaveEnabled = false
+                pager.isSaveFromParentEnabled = false
+
                 pager.adapter = EnemyListTab()
                 pager.offscreenPageLimit = UserProfile.getAllPacks().size
 

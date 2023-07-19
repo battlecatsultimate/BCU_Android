@@ -25,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
+import com.mandarin.bcu.androidutil.Revalidater
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
@@ -198,6 +199,9 @@ class PackManagement : AppCompatActivity() {
 
                 Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
 
+                val l = Locale.getDefault().language
+                Revalidater.validate(l, this@PackManagement)
+
                 dialog.dismiss()
 
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
@@ -336,6 +340,9 @@ class PackManagement : AppCompatActivity() {
 
             Definer.define(this@PackManagement, {p -> println(p)}, this@PackManagement::updateText)
 
+            val l = Locale.getDefault().language
+            Revalidater.validate(l, this@PackManagement)
+
             dialog.dismiss()
 
             val packList = ArrayList<PackData.UserPack>()
@@ -381,11 +388,13 @@ class PackManagement : AppCompatActivity() {
 
         dialog.show()
 
-        val run = Runnable {
-
+        CoroutineScope(Dispatchers.IO).launch {
             StaticStore.resetUserPacks()
 
-            Definer.define(this, {prog -> println(prog)}, this::updateText)
+            Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
+
+            val l = Locale.getDefault().language
+            Revalidater.validate(l, this@PackManagement)
 
             dialog.dismiss()
 
@@ -396,7 +405,7 @@ class PackManagement : AppCompatActivity() {
             }
 
             runOnUiThread {
-                list.adapter = PackManagementAdapter(this, packList)
+                list.adapter = PackManagementAdapter(this@PackManagement, packList)
             }
 
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
@@ -409,10 +418,6 @@ class PackManagement : AppCompatActivity() {
             if(PackConflict.conflicts.isNotEmpty()) {
                 StaticStore.showShortSnack(findViewById(R.id.pmanlayout), R.string.pack_manage_warn)
             }
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
-            run.run()
         }
     }
 
