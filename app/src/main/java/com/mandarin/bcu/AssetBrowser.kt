@@ -9,9 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
@@ -21,6 +25,11 @@ import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.system.files.VFile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -33,7 +42,6 @@ class AssetBrowser : AppCompatActivity() {
         var current: VFile? = null
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if(result.resultCode == RESULT_OK) {
             val data = result.data
@@ -119,60 +127,76 @@ class AssetBrowser : AppCompatActivity() {
 
         setContentView(R.layout.activity_asset_browser)
 
-        val fileList = findViewById<ListView>(R.id.assetlist)
-        val filepath = findViewById<AutoMarquee>(R.id.assetpath)
-        val bck = findViewById<FloatingActionButton>(R.id.assetbck)
+        lifecycleScope.launch {
+            val fileList = findViewById<ListView>(R.id.assetlist)
+            val filepath = findViewById<AutoMarquee>(R.id.assetpath)
+            val bck = findViewById<FloatingActionButton>(R.id.assetbck)
 
-        fileList.isFastScrollEnabled = true
+            StaticStore.setDisappear(fileList, filepath)
 
-        generateFileList()
+            val prog = findViewById<ProgressBar>(R.id.prog)
+            val text = findViewById<TextView>(R.id.text)
 
-        filepath.text = path
+            prog.max = 10000
 
-        val adapter = AssetListAdapter(this, list)
-
-        fileList.adapter = adapter
-
-        fileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, p, _ ->
-            if(isFile(list[p])) {
-                val intent = Intent(this@AssetBrowser, FileViewer::class.java)
-
-                intent.putExtra("path", list[p].path)
-
-                startActivity(intent)
-
-                return@OnItemClickListener
+            withContext(Dispatchers.IO) {
+                Definer.define(this@AssetBrowser, { p -> runOnUiThread { prog.progress = (p * 10000.0).toInt() } }, { t -> runOnUiThread { text.text = t } })
             }
 
-            path = if(path == list[p].path) {
-                list[p].parent.path
-            } else{
-                list[p].path
-            }
+            fileList.isFastScrollEnabled = true
 
             generateFileList()
 
-            adapter.notifyDataSetChanged()
-
             filepath.text = path
 
-            fileList.setSelection(0)
-        }
+            val adapter = AssetListAdapter(this@AssetBrowser, list)
 
-        bck.setOnClickListener {
-            path = "./org"
-            finish()
-        }
+            fileList.adapter = adapter
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if(path != "./org") {
-                    fileList.performItemClick(fileList.getChildAt(0), 0, fileList.adapter.getItemId(0))
-                } else {
-                    bck.performClick()
+            fileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, p, _ ->
+                if(isFile(list[p])) {
+                    val intent = Intent(this@AssetBrowser, FileViewer::class.java)
+
+                    intent.putExtra("path", list[p].path)
+
+                    startActivity(intent)
+
+                    return@OnItemClickListener
                 }
+
+                path = if(path == list[p].path) {
+                    list[p].parent.path
+                } else{
+                    list[p].path
+                }
+
+                generateFileList()
+
+                adapter.notifyDataSetChanged()
+
+                filepath.text = path
+
+                fileList.setSelection(0)
             }
-        })
+
+            bck.setOnClickListener {
+                path = "./org"
+                finish()
+            }
+
+            onBackPressedDispatcher.addCallback(this@AssetBrowser, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if(path != "./org") {
+                        fileList.performItemClick(fileList.getChildAt(0), 0, fileList.adapter.getItemId(0))
+                    } else {
+                        bck.performClick()
+                    }
+                }
+            })
+
+            StaticStore.setDisappear(prog, text)
+            StaticStore.setAppear(fileList, filepath)
+        }
     }
 
     private fun generateFileList() {

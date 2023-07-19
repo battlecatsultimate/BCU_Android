@@ -1358,4 +1358,12 @@ object StaticStore {
     fun isLandscape(c: Context) : Boolean {
         return c.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
+
+    fun setAppear(vararg views: View) {
+        views.forEach { v -> v.visibility = View.VISIBLE }
+    }
+
+    fun setDisappear(vararg views: View) {
+        views.forEach { v -> v.visibility = View.GONE }
+    }
 }

@@ -49,7 +49,9 @@ object Definer {
 
                 try {
                     UserProfile.getBCData().load(text, prog)
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    e.printStackTrace()
+
                     throw AssetException("E/Definer::define - Failed to read asset")
                 }
 

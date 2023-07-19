@@ -81,9 +81,13 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'com.nhaarman.supertooltips:library:3.0.0'
     implementation 'org.jcodec:jcodec:0.2.5'
+
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2'
     annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
 
     implementation platform("com.google.firebase:firebase-bom:32.1.1")
 
