@@ -94,6 +94,11 @@ class ComboListAdapter internal constructor(activity: Activity, private val name
             22, 23 -> multi = " ( +" + (100 + 100 * c.lv) + "% )"
             24 -> multi = " ( +" + (1 + c.lv) + "% )"
         }
-        return context.getString(comnames[c.type]) + " Lv. " + (c.lv + 1) + multi
+
+        return if (context.resources.getResourceName(comnames[c.type]) != null) {
+            context.getString(comnames[c.type]) + " Lv. " + (c.lv + 1) + multi
+        } else {
+            "Type ${c.type} Lv. " + (c.lv + 1) + multi
+        }
     }
 }
