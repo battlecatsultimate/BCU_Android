@@ -900,7 +900,7 @@ class GetStrings(private val c: Context) {
         val info = stage.info ?: return "0"
 
         return if (info is DefStageInfo) {
-            if (stage.cont.sid == "000014") {
+            if (stage.cont.cont.sid == "000014") {
                 if (info.energy < 1000) {
                     c.getString(R.string.stg_info_catamina, info.energy)
                 } else if(info.energy < 2000) {
