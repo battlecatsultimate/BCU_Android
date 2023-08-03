@@ -6,7 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.R
 import common.battle.BasisSet
 import common.battle.Treasure
-import common.battle.data.*
+import common.battle.data.CustomEntity
+import common.battle.data.DataEnemy
+import common.battle.data.DataUnit
+import common.battle.data.MaskEntity
+import common.battle.data.MaskUnit
 import common.pack.Identifier
 import common.util.Data
 import common.util.lang.MultiLangCont
@@ -890,6 +894,26 @@ class GetStrings(private val c: Context) {
             ac.getString(R.string.unit_info_t_none)
         else
             "★$diff"
+    }
+
+    fun getEnergy(stage: Stage, c: Context) : String {
+        val info = stage.info ?: return "0"
+
+        return if (info is DefStageInfo) {
+            if (stage.cont.sid == "000014") {
+                if (info.energy < 1000) {
+                    c.getString(R.string.stg_info_catamina, info.energy)
+                } else if(info.energy < 2000) {
+                    c.getString(R.string.stg_info_cataminb, info.energy - 1000)
+                } else {
+                    c.getString(R.string.stg_info_cataminc, info.energy - 2000)
+                }
+            } else {
+                info.energy.toString()
+            }
+        } else {
+            "0"
+        }
     }
 
     fun getLayer(data: SCDef.Line): String {

@@ -192,10 +192,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             viewHolder.xp.text = "0"
         }
 
-        if (st.info != null && st.info is DefStageInfo)
-            viewHolder.energy.text = (st.info as DefStageInfo).energy.toString()
-        else
-            viewHolder.energy.text = "0"
+        viewHolder.energy.text = s.getEnergy(st, activity)
 
         viewHolder.health.text = st.health.toString()
 

@@ -992,4 +992,7 @@
     <string name="main_internet_check_fail">Failed to check internet status…</string>
     <string name="main_internet_dialog_title">Internet is required</string>
     <string name="main_internet_dialog_content">BCU needs to downlod BC data and other required additional assets to perform its job properly. You won\'t need internet once you downloaded all required files, so please connect to internet, and turn the application on</string>
+    <string name="stg_info_catamina">%1$d Catamin A</string>
+    <string name="stg_info_cataminb">%1$d Catamin B</string>
+    <string name="stg_info_cataminc">%1$d Catamin C</string>
 </resources>

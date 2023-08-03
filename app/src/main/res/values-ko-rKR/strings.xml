@@ -992,4 +992,7 @@
     <string name="main_internet_check_fail">인터넷 상태 확인 실패…</string>
     <string name="main_internet_dialog_title">인터넷 연결 필요</string>
     <string name="main_internet_dialog_content">BCU가 제대로 작동하기 위해서 필수적인 파일들이나 추가적인 에셋을 다운받아야 합니다. 필수적인 파일들을 전부 다운받으면 그 뒤로는 인터넷 없이 사용할 수 있으니 인터넷에 연결한 뒤, 앱을 켜주세요</string>
+    <string name="stg_info_catamina">고양이 드링크 A %1$d개</string>
+    <string name="stg_info_cataminb">고양이 드링크 B %1$d개</string>
+    <string name="stg_info_cataminc">고양이 드링크 C %1$d개</string>
 </resources>
