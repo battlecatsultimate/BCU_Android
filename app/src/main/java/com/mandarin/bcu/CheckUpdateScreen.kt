@@ -583,7 +583,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
     private fun progressSmoothly(p: Double) {
         val progression = findViewById<ProgressBar>(R.id.prog)
 
-        CustomAnimator(100, AnimatorConst.Accelerator.DECELERATE, progression.progress.toFloat(), (p * 10000).toFloat()) { pg ->
+        CustomAnimator(500, AnimatorConst.Accelerator.DECELERATE, progression.progress.toFloat(), (p * 10000).toFloat()) { pg ->
             progression.progress = pg.toInt()
         }.start()
     }

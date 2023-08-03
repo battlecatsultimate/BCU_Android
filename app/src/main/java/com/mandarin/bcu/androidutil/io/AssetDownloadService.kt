@@ -24,6 +24,7 @@ import common.util.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
@@ -53,6 +54,8 @@ class AssetDownloadService : Service() {
 
     private var status = ""
     private var message = ""
+
+    private var lastNotificationTime = 0L
 
     override fun onBind(p0: Intent?): IBinder {
         return communicator.binder
@@ -163,7 +166,10 @@ class AssetDownloadService : Service() {
                             sendBroadcast(PROGRESS_PROGRESSION, p)
 
                             notifyBuilder.setProgress(10000, (p * 10000).toInt(), false)
-                            notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
+
+                            if (System.currentTimeMillis() - lastNotificationTime >= 1000L / 10) {
+                                notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
+                            }
                         }
                     }
                 }
@@ -185,7 +191,10 @@ class AssetDownloadService : Service() {
                             sendBroadcast(PROGRESS_PROGRESSION, p)
 
                             notifyBuilder.setProgress(10000, (p * 10000).toInt(), false)
-                            notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
+
+                            if (System.currentTimeMillis() - lastNotificationTime >= 1000L / 10) {
+                                notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
+                            }
                         }
 
                         editor.putString(name, CommonStatic.getConfig().localMusicMap[name.toInt()])
@@ -214,7 +223,10 @@ class AssetDownloadService : Service() {
                             sendBroadcast(PROGRESS_PROGRESSION, p)
 
                             notifyBuilder.setProgress(10000, (p * 10000).toInt(), false)
-                            notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
+
+                            if (System.currentTimeMillis() - lastNotificationTime >= 1000L / 10) {
+                                notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
+                            }
                         }
 
                         editor.putString(fileName, CommonStatic.getConfig().localLangMap[fileName])
@@ -235,6 +247,8 @@ class AssetDownloadService : Service() {
                     .setProgress(0, 0, false)
                     .setContentTitle(getString(R.string.down_state_ok))
 
+                delay(100L)
+
                 notifyManager.notify(NOTIFICATION_ID, R.id.downloadnotification, notifyBuilder.build())
             } catch (_: Exception) {
                 sendBroadcast(FAILED, getString(R.string.main_asset_fail))
@@ -247,7 +261,13 @@ class AssetDownloadService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        notifyBuilder.setOngoing(false)
+        notifyManager.cancelAll()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+
+        notifyManager.cancelAll()
     }
 
     private fun sendBroadcast(code: String, content: String) {
