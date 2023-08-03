@@ -5,12 +5,12 @@ import android.media.MediaPlayer.OnPreparedListener
 import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 
 abstract class MediaPrepare : OnPreparedListener {
-    abstract fun prepare(mp: MediaPlayer?)
+    abstract fun prepare(mp: MediaPlayer)
     override fun onPrepared(mp: MediaPlayer) {
         if (mp is SoundPlayer) {
             mp.apply {
-                isPrepared = false
-                isPreparing = true
+                isPrepared = true
+                isPreparing = false
             }
 
             if (mp.isReleased) {

@@ -12,6 +12,7 @@ import android.content.res.Resources
 import android.graphics.Point
 import android.graphics.Rect
 import android.media.MediaMetadataRetriever
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -42,6 +43,7 @@ import com.mandarin.bcu.androidutil.music.adapters.MusicListAdapter
 import com.mandarin.bcu.androidutil.supports.AlphaAnimator
 import com.mandarin.bcu.androidutil.supports.AnimatorConst
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.ScaleAnimator
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
@@ -131,7 +133,7 @@ class MusicPlayer : AppCompatActivity() {
                 val current = findViewById<TextView>(R.id.musiccurrent)
                 val max = findViewById<TextView>(R.id.musicmaxdu)
                 val muprog = findViewById<SeekBar>(R.id.musicprogress)
-                val mulist = findViewById<ListView>(R.id.musiclist)
+                val musicList = findViewById<ListView>(R.id.musiclist)
                 val mumenu = findViewById<FloatingActionButton>(R.id.musicmenu)
                 val close = findViewById<FloatingActionButton>(R.id.musicclose)
                 val album = findViewById<ImageView>(R.id.musicalbum)
@@ -140,7 +142,7 @@ class MusicPlayer : AppCompatActivity() {
                 val play = findViewById<FloatingActionButton>(R.id.musicplay)
                 val back = findViewById<FloatingActionButton>(R.id.musicbck)
                 val vol = findViewById<SeekBar>(R.id.musicsound)
-                val nextsong = findViewById<FloatingActionButton>(R.id.musicshuff)
+                val autoNext = findViewById<FloatingActionButton>(R.id.musicshuff)
                 val nex = findViewById<FloatingActionButton>(R.id.musicnext)
                 val prev = findViewById<FloatingActionButton>(R.id.musicprev)
                 val st = findViewById<TextView>(R.id.status)
@@ -157,6 +159,7 @@ class MusicPlayer : AppCompatActivity() {
 
                         sound.reset()
                     }
+
                     sound.setOnCompletionListener {
 
                     }
@@ -164,7 +167,7 @@ class MusicPlayer : AppCompatActivity() {
                     finish()
                 }
 
-                StaticStore.setDisappear(name, current, max, muprog, mulist, mumenu, close, album, playlayout, loop, play, vol, nextsong, nex, prev)
+                StaticStore.setDisappear(name, current, max, muprog, musicList, mumenu, close, album, playlayout, loop, play, vol, autoNext, nex, prev)
 
                 //Load Data
                 withContext(Dispatchers.IO) {
@@ -242,10 +245,13 @@ class MusicPlayer : AppCompatActivity() {
 
                 if (!sound.isPrepared) {
                     sound.prepareAsync()
-                    sound.setOnPreparedListener {
-                        sound.isPrepared = true
-                        sound.start()
-                    }
+                    sound.setOnPreparedListener(object : MediaPrepare() {
+                        override fun prepare(mp: MediaPlayer) {
+                            if (!paused) {
+                                mp.start()
+                            }
+                        }
+                    })
                 }
 
                 vol.max = 99
@@ -261,7 +267,7 @@ class MusicPlayer : AppCompatActivity() {
 
                     val constlay = playlayout.layoutParams
                     val allay = album.layoutParams
-                    val mullay = mulist.layoutParams
+                    val mullay = musicList.layoutParams
 
                     constlay.width = w / 2
                     allay.width = w / 2
@@ -269,7 +275,7 @@ class MusicPlayer : AppCompatActivity() {
 
                     playlayout.layoutParams = constlay
                     album.layoutParams = allay
-                    mulist.layoutParams = mullay
+                    musicList.layoutParams = mullay
                 }
 
                 vol.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -294,13 +300,18 @@ class MusicPlayer : AppCompatActivity() {
                 play.setOnClickListener {
                     if (sound.isPlaying || sound.isRunning) {
                         paused = true
+
                         sound.pause()
+
                         play.setImageDrawable(ContextCompat.getDrawable(this@MusicPlayer, R.drawable.ic_play_arrow_black_24dp))
                     } else {
                         paused = false
+
                         if (completed) {
                             sound.seekTo(0)
+
                             sound.start()
+
                             completed = false
                         } else {
                             sound.start()
@@ -350,8 +361,7 @@ class MusicPlayer : AppCompatActivity() {
                         muprog.progress = sound.currentPosition
                         current.text = getTime(sound.currentPosition)
 
-                        if (!paused)
-                            sound.start()
+                        sound.prepareAsync()
                     }
 
                 })
@@ -407,7 +417,7 @@ class MusicPlayer : AppCompatActivity() {
 
                 })
 
-                mulist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                musicList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                     completed = false
                     paused = false
 
@@ -502,7 +512,7 @@ class MusicPlayer : AppCompatActivity() {
                 }
 
                 val adapter = MusicListAdapter(this@MusicPlayer, names, m.pack, true)
-                mulist.adapter = adapter
+                musicList.adapter = adapter
 
                 loop.setOnClickListener {
                     if (sound.isLooping) {
@@ -512,17 +522,17 @@ class MusicPlayer : AppCompatActivity() {
                         loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.colorAccent))
                         next = false
                         looping = true
-                        nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.HintPrimary))
+                        autoNext.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.HintPrimary))
                     }
 
                     sound.isLooping = !sound.isLooping
                 }
 
-                nextsong.setOnClickListener {
+                autoNext.setOnClickListener {
                     if (next) {
-                        nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.HintPrimary))
+                        autoNext.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.HintPrimary))
                     } else {
-                        nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.colorAccent))
+                        autoNext.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.colorAccent))
                         sound.isLooping = false
                         looping = false
                         loop.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.HintPrimary))
@@ -600,11 +610,11 @@ class MusicPlayer : AppCompatActivity() {
                             val aalanim = AlphaAnimator(album, 200, AnimatorConst.Accelerator.ACCELDECEL, 1f, 0f)
                             aalanim.start()
 
-                            mulist.postDelayed({
-                                val mulanim = ScaleAnimator(mulist, AnimatorConst.Dimension.HEIGHT, 200, AnimatorConst.Accelerator.ACCELDECEL, 0, ch)
+                            musicList.postDelayed({
+                                val mulanim = ScaleAnimator(musicList, AnimatorConst.Dimension.HEIGHT, 200, AnimatorConst.Accelerator.ACCELDECEL, 0, ch)
                                 mulanim.start()
 
-                                val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.Accelerator.ACCELDECEL, 0f, 1f)
+                                val mulalanim = AlphaAnimator(musicList, 200, AnimatorConst.Accelerator.ACCELDECEL, 0f, 1f)
                                 mulalanim.start()
                             }, 200)
                         } else {
@@ -624,13 +634,13 @@ class MusicPlayer : AppCompatActivity() {
                         close.hide()
 
                         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                            val mulanim = ScaleAnimator(mulist, AnimatorConst.Dimension.HEIGHT, 200, AnimatorConst.Accelerator.ACCELDECEL, ch, 0)
+                            val mulanim = ScaleAnimator(musicList, AnimatorConst.Dimension.HEIGHT, 200, AnimatorConst.Accelerator.ACCELDECEL, ch, 0)
                             mulanim.start()
 
-                            val mulalanim = AlphaAnimator(mulist, 200, AnimatorConst.Accelerator.ACCELDECEL, 1f, 0f)
+                            val mulalanim = AlphaAnimator(musicList, 200, AnimatorConst.Accelerator.ACCELDECEL, 1f, 0f)
                             mulalanim.start()
 
-                            mulist.postDelayed({
+                            musicList.postDelayed({
                                 val aanim = ScaleAnimator(album, AnimatorConst.Dimension.WIDTH, 200, AnimatorConst.Accelerator.ACCELDECEL, 0, ah)
                                 aanim.start()
 
@@ -671,7 +681,7 @@ class MusicPlayer : AppCompatActivity() {
                 }
 
                 if (next) {
-                    nextsong.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.colorAccent))
+                    autoNext.imageTintList = ColorStateList.valueOf(StaticStore.getAttributeColor(this@MusicPlayer, R.attr.colorAccent))
                 }
 
                 if (paused || completed) {
@@ -684,7 +694,7 @@ class MusicPlayer : AppCompatActivity() {
                     }
                 })
 
-                StaticStore.setAppear(name, current, max, muprog, mulist, mumenu, close, album, playlayout, loop, play, vol, nextsong, nex, prev)
+                StaticStore.setAppear(name, current, max, muprog, musicList, mumenu, close, album, playlayout, loop, play, vol, autoNext, nex, prev)
                 StaticStore.setDisappear(progress, st)
             } catch (e: IllegalStateException) {
                 StaticStore.showShortMessage(this@MusicPlayer, R.string.music_err)

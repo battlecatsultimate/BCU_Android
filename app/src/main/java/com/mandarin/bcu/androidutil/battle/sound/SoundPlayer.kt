@@ -119,10 +119,12 @@ class SoundPlayer : MediaPlayer() {
         if (!isPrepared) {
             try {
                 Log.w("SoundPlayerIllegal", "Music isn't prepared, try to manually override")
+
                 prepareAsync()
+
                 setOnPreparedListener(object : MediaPrepare() {
-                    override fun prepare(mp: MediaPlayer?) {
-                        mp!!.start()
+                    override fun prepare(mp: MediaPlayer) {
+                        mp.start()
                     }
                 })
             } catch (e: IllegalStateException) {
@@ -131,6 +133,7 @@ class SoundPlayer : MediaPlayer() {
             }
         } else {
             super.start()
+
             isRunning = true
         }
     }
@@ -149,18 +152,20 @@ class SoundPlayer : MediaPlayer() {
     }
 
     override fun stop() {
-        if(!isSafe()) return
+        if(!isSafe())
+            return
 
         super.start()
+
         isRunning = false
     }
 
     override fun pause() {
-        if(!isSafe()) return
-
-
+        if(!isSafe())
+            return
 
         super.pause()
+
         isRunning = false
     }
 
