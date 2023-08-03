@@ -8,8 +8,13 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import android.widget.TableRow
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +36,7 @@ import common.util.stage.Stage
 import common.util.stage.info.DefStageInfo
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 class StageRecycle(private val activity: Activity, private val data: Identifier<Stage>) : RecyclerView.Adapter<StageRecycle.ViewHolder>() {
     private val s: GetStrings = GetStrings(activity)
@@ -278,6 +283,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
                 val intent = Intent(activity, ImageViewer::class.java)
 
+                intent.putExtra("Img", ImageViewer.ViewerType.BACKGROUND.name)
                 intent.putExtra("Data", JsonEncoder.encode(st.bg).toString())
 
                 activity.startActivity(intent)
@@ -307,7 +313,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
                 else {
                     val intent = Intent(activity, ImageViewer::class.java)
 
-                    intent.putExtra("Img", ImageViewer.CASTLE)
+                    intent.putExtra("Img", ImageViewer.ViewerType.CASTLE.name)
                     intent.putExtra("Data", JsonEncoder.encode(st.castle).toString())
 
                     st.castle.get().img

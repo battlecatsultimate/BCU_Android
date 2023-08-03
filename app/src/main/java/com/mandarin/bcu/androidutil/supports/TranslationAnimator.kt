@@ -1,30 +1,25 @@
 package com.mandarin.bcu.androidutil.supports
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 
-@SuppressLint("Recycle")
-class ScaleAnimator(target: View, mode: AnimatorConst.Dimension, duration: Int, animator: AnimatorConst.Accelerator, from: Int, to: Int) : ValueAnimator() {
-
+class TranslationAnimator(target: View, axis: AnimatorConst.Axis, duration: Int, animator: AnimatorConst.Accelerator, from: Float, to: Float) : ValueAnimator() {
     init {
-        setIntValues(from,to)
+        setFloatValues(from, to)
         addUpdateListener { animation ->
-            val v = animation.animatedValue as Int
-            val layout = target.layoutParams as MarginLayoutParams
+            val v = animation.animatedValue as Float
 
-            when(mode) {
-                AnimatorConst.Dimension.HEIGHT -> layout.height = v
-                AnimatorConst.Dimension.WIDTH -> layout.width = v
-                AnimatorConst.Dimension.TOP_MARGIN -> layout.topMargin = v
+            when(axis) {
+                AnimatorConst.Axis.X -> target.translationX = -v
+                AnimatorConst.Axis.Y -> target.translationY = -v
             }
 
-            target.layoutParams = layout
+            target.requestLayout()
         }
+
         this.duration = duration.toLong()
 
         interpolator = when(animator) {

@@ -33,7 +33,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonParser
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StatFilterElement.Companion.statFilter
-import com.mandarin.bcu.androidutil.animation.AnimationCView
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter.Companion.writeDriveLog
 import com.mandarin.bcu.androidutil.pack.PackConflict
@@ -356,8 +355,6 @@ object StaticStore {
         gifisSaving = false
         enableGIF = false
         keepDoing = true
-
-        AnimationCView.gifTask.clear()
 
         filterReset()
         stgFilterReset()
@@ -1359,11 +1356,11 @@ object StaticStore {
         return c.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
 
-    fun setAppear(vararg views: View) {
-        views.forEach { v -> v.visibility = View.VISIBLE }
+    fun setAppear(vararg views: View?) {
+        views.filterNotNull().forEach { v -> v.visibility = View.VISIBLE }
     }
 
-    fun setDisappear(vararg views: View) {
-        views.forEach { v -> v.visibility = View.GONE }
+    fun setDisappear(vararg views: View?) {
+        views.filterNotNull().forEach { v -> v.visibility = View.GONE }
     }
 }

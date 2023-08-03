@@ -69,7 +69,7 @@
     <string name="main_file_ok">確定</string>
     <string name="main_file_cancel">取消</string>
     <string name="down_wait">等待連線…</string>
-    <string name="down_state_doing">"下載檔案 : "</string>
+    <string name="down_state_doing">"下載檔案 : %1$s"</string>
     <string name="down_state_ok">下載完成!</string>
     <string name="down_state_no">下載失敗…</string>
     <string name="down_state_rea">準備完成</string>
@@ -511,7 +511,7 @@
     <string name="main_err_always">總是上傳錯誤紀錄報告給開發者</string>
     <string name="main_err_start">開始上傳錯誤紀錄報告…</string>
     <string name="config_send_err">總是上傳錯誤紀錄報告給開發者</string>
-    <string name="down_state_music">"下載音樂… : "</string>
+    <string name="down_state_music">下載音樂… : %1$s</string>
     <string name="err_send_log">上傳報告… : -/_</string>
     <string name="err_send_result">報告上傳 | 成功 : - / 失敗 : _</string>
     <string name="config_music">音樂</string>
@@ -988,4 +988,8 @@
     <string name="err_solution">Possible Solution</string>
     <string name="err_reason_asset">"Asset has been corrupted\n\nAssets contain BC data, which is very criical for app to be run. It seems app failed to download asset files or was interrupted by any factors, so asets got corrupted "</string>
     <string name="err_solution_asset">1. Go to setting of your system, application, and select BCU Android. Tab button below to access it easily\n2. Reset data. This means you will have to redownload assets again\n\n- When you downloading assets, do not switch to other app, or turn off the screen. Make app keep running until the download finishes</string>
+    <string name="main_asset_fail">Failed to download assets…</string>
+    <string name="main_internet_check_fail">Failed to check internet status…</string>
+    <string name="main_internet_dialog_title">Internet is required</string>
+    <string name="main_internet_dialog_content">BCU needs to downlod BC data and other required additional assets to perform its job properly. You won\'t need internet once you downloaded all required files, so please connect to internet, and turn the application on</string>
 </resources>

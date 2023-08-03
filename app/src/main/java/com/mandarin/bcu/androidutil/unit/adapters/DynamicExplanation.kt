@@ -16,7 +16,7 @@ import common.util.unit.Unit
 class DynamicExplanation : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(`val`: Int, data: Identifier<Unit>, titles: Array<String?>?): DynamicExplanation {
+        fun newInstance(`val`: Int, data: Identifier<Unit>, titles: Array<String>): DynamicExplanation {
             val explanation = DynamicExplanation()
             val bundle = Bundle()
 

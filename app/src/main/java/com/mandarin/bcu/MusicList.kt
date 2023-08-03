@@ -5,23 +5,43 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.SparseArray
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
-import com.mandarin.bcu.androidutil.music.coroutine.MusicAdder
+import com.mandarin.bcu.androidutil.music.adapters.MusicListPager
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
-import java.util.*
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
+import kotlin.math.round
 
 class MusicList : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val shared = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE)
         val ed: SharedPreferences.Editor
 
         if (!shared.contains("initial")) {
@@ -37,7 +57,7 @@ class MusicList : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -47,13 +67,142 @@ class MusicList : AppCompatActivity() {
 
         setContentView(R.layout.activity_music_list)
 
-        val bck: FloatingActionButton = findViewById(R.id.musicbck)
+        lifecycleScope.launch {
+            //Prepare
+            val bck = findViewById<FloatingActionButton>(R.id.musicbck)
 
-        bck.setOnClickListener {
-            finish()
+            bck.setOnClickListener {
+                finish()
+            }
+
+            val tab = findViewById<TabLayout>(R.id.mulisttab)
+            val pager = findViewById<ViewPager2>(R.id.mulistpager)
+            val st = findViewById<TextView>(R.id.status)
+            val prog = findViewById<ProgressBar>(R.id.prog)
+
+            StaticStore.setDisappear(tab, pager)
+
+            //Load Data
+            withContext(Dispatchers.IO) {
+                Definer.define(this@MusicList, { _ -> }, { t -> runOnUiThread { st.text = t }})
+            }
+
+            st.setText(R.string.load_music_duratoin)
+
+            withContext(Dispatchers.IO) {
+                if(StaticStore.musicnames.size != UserProfile.getAllPacks().size || StaticStore.musicData.isEmpty()) {
+                    StaticStore.musicnames.clear()
+                    StaticStore.musicData.clear()
+                    StaticStore.durations.clear()
+
+                    for (p in UserProfile.getAllPacks()) {
+                        val names = SparseArray<String>()
+
+                        for (j in p.musics.list.indices) {
+                            val m = p.musics.list[j]
+
+                            val f = StaticStore.getMusicDataSource(m) ?: continue
+
+                            val sp = SoundPlayer()
+
+                            sp.setDataSource(f.absolutePath)
+
+                            sp.prepare()
+
+                            StaticStore.durations.add(sp.duration)
+
+                            var time = sp.duration.toFloat() / 1000f
+
+                            sp.release()
+
+                            var min = (time / 60f).toInt()
+
+                            time -= min.toFloat() * 60f
+
+                            var sec = round(time).toInt()
+
+                            if (sec == 60) {
+                                min += 1
+                                sec = 0
+                            }
+
+                            val mins = min.toString()
+
+                            val secs = if (sec < 10) "0$sec"
+                            else sec.toString()
+
+                            names.append(m.id.id, "$mins:$secs")
+
+                            StaticStore.musicData.add(m.id)
+                        }
+
+                        if(p is PackData.DefPack) {
+                            StaticStore.musicnames[Identifier.DEF] = names
+                        } else if(p is PackData.UserPack) {
+                            StaticStore.musicnames[p.desc.id] = names
+                        }
+                    }
+                }
+            }
+
+            //Load UI
+            st.text = getString(R.string.medal_loading_data)
+
+            prog.isIndeterminate = true
+
+            pager.isSaveEnabled = false
+            pager.isSaveFromParentEnabled = false
+
+            pager.adapter = MusicListTab()
+            pager.offscreenPageLimit = existingPackNumber()
+
+            val keys = getExistingPack()
+
+            TabLayoutMediator(tab, pager) { t, position ->
+                t.text = if(position == 0) {
+                    "Default"
+                } else {
+                    val pack = UserProfile.getPack(keys[position])
+
+                    if(pack == null) {
+                        keys[position]
+                    }
+
+                    val name = when (pack) {
+                        is PackData.DefPack -> {
+                            getString(R.string.pack_default)
+                        }
+                        is PackData.UserPack -> {
+                            StaticStore.getPackName(pack.sid)
+                        }
+                        else -> {
+                            ""
+                        }
+                    }
+
+                    if(name.isEmpty()) {
+                        keys[position]
+                    } else {
+                        name
+                    }
+                }
+            }.attach()
+
+            StaticStore.setAppear(pager)
+            StaticStore.setDisappear(st, prog)
+
+            if(existingPackNumber() > 1) {
+                StaticStore.setAppear(tab)
+            } else {
+                val collapse = findViewById<CollapsingToolbarLayout>(R.id.muscollapse)
+
+                val param = collapse.layoutParams as AppBarLayout.LayoutParams
+
+                param.scrollFlags = 0
+
+                collapse.layoutParams = param
+            }
         }
-
-        MusicAdder(this, supportFragmentManager, lifecycle).execute()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -92,5 +241,47 @@ class MusicList : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
+    }
+
+    private fun existingPackNumber() : Int {
+        val packs = UserProfile.getAllPacks()
+
+        var res = 0
+
+        for(p in packs) {
+            if(p.musics.list.isNotEmpty())
+                res++
+        }
+
+        return res
+    }
+
+    private fun getExistingPack() : ArrayList<String> {
+        val packs = UserProfile.getAllPacks()
+        val res = ArrayList<String>()
+
+        for(p in packs) {
+            if(p.musics.list.isNotEmpty()) {
+                if(p is PackData.DefPack) {
+                    res.add(Identifier.DEF)
+                } else if(p is PackData.UserPack) {
+                    res.add(p.sid)
+                }
+            }
+        }
+
+        return res
+    }
+
+    inner class MusicListTab : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        private val keys = getExistingPack()
+
+        override fun getItemCount(): Int {
+            return keys.size
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return MusicListPager.newIntance(keys[position])
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -19,6 +20,7 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.gridlayout.widget.GridLayout
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
@@ -26,11 +28,15 @@ import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.io.coroutine.UploadLogs
+import com.mandarin.bcu.androidutil.io.drive.DriveUtil
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -71,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -116,6 +122,8 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().stageName = shared.getBoolean("showst", true)
         StaticStore.showResult = shared.getBoolean("showres", true)
         CommonStatic.getConfig().realLevel = shared.getBoolean("reallv", false)
+        CommonStatic.getConfig().deadOpa = 0
+        CommonStatic.getConfig().fullOpa = 100
 
         val result = intent
         var conf = false
@@ -216,9 +224,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 yes.setOnClickListener {
-                    UploadLogs(this@MainActivity).execute()
                     StaticStore.showShortMessage(this@MainActivity, R.string.main_err_start)
                     dialog.dismiss()
+
+                    uploadLog()
                 }
 
                 dialog.setOnDismissListener {
@@ -229,7 +238,7 @@ class MainActivity : AppCompatActivity() {
             } else if (shared.getBoolean("upload", false)) {
                 StaticStore.showShortMessage(this, R.string.main_err_upload)
 
-                UploadLogs(this@MainActivity).execute()
+                uploadLog()
             }
         }
 
@@ -422,7 +431,7 @@ class MainActivity : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         isRunning = false
 
         StaticStore.dialogisShowed = false
@@ -448,6 +457,66 @@ class MainActivity : AppCompatActivity() {
                 deleter(g)
         } else
             f.delete()
+    }
 
+    private fun uploadLog() {
+        lifecycleScope.launch {
+            val path = Environment.getDataDirectory().absolutePath + "/data/com.mandarin.bcu/upload/"
+
+            val upload = File(path)
+
+            val files = upload.listFiles()
+
+            val total = upload.listFiles()?.size ?: 0
+
+            var succeed = 0
+            var failed = 0
+
+            for (i in 0 until total) {
+                val f = files?.get(i) ?: return@launch
+
+                val str = getString(R.string.err_send_log).replace("-", (i + 1).toString()).replace("_", total.toString())
+                StaticStore.showShortMessage(this@MainActivity, str)
+
+                try {
+                    if (safeCheck(f)) {
+                        withContext(Dispatchers.IO) {
+                            val inputStream = resources.openRawResource(R.raw.service_key)
+                            val good = DriveUtil.upload(f, inputStream)
+
+                            if (good) {
+                                f.delete()
+                                succeed++
+                            } else {
+                                Log.e("uploadFailed", "Uploading " + f.name + " to server failed")
+                                failed++
+                            }
+                        }
+                    } else {
+                        f.delete()
+                        failed++
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    failed++
+                }
+            }
+
+            val str = getString(R.string.err_send_result).replace("-", succeed.toString()).replace("_", failed.toString())
+            StaticStore.showShortMessage(this@MainActivity, str)
+        }
+    }
+
+    private fun safeCheck(f: File): Boolean {
+        val name = f.name
+
+        if (!name.endsWith("txt"))
+            return false
+
+        val size = f.length()
+
+        val mb = size / 1024 / 1024
+
+        return mb <= 10
     }
 }

@@ -24,11 +24,11 @@ import common.util.pack.NyCastle
 
 class EffListPager<T> : Fragment() where T : AnimI<*, *> {
     companion object {
-        fun <T> newInstance(type: Int): EffListPager<T> where T : AnimI<*, *> {
+        fun <T> newInstance(type: AnimationCView.AnimationType): EffListPager<T> where T : AnimI<*, *> {
             val res = EffListPager<T>()
             val bundle = Bundle()
 
-            bundle.putInt("type", type)
+            bundle.putString("type", type.name)
 
             res.arguments = bundle
 
@@ -60,27 +60,28 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 , R.string.eff_cursec)
     }
 
-    private var type = 0
+    private var type = AnimationCView.AnimationType.UNIT
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        type = arguments?.getInt("type", 0) ?: 0
-
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
+
+        val key = arguments?.getString("type") ?: return view
+        type = AnimationCView.AnimationType.valueOf(key)
 
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
 
         val data = when(type) {
-            AnimationCView.EFFECT -> {
+            AnimationCView.AnimationType.EFFECT -> {
                 ArrayList<EffAnim<*>>(CommonStatic.getBCAssets().effas.values().toMutableList())
             }
-            AnimationCView.SOUL -> {
+            AnimationCView.AnimationType.SOUL -> {
                 UserProfile.getBCData().souls.list
             }
-            AnimationCView.CANNON -> {
+            AnimationCView.AnimationType.CANNON -> {
                 ArrayList<NyCastle>(CommonStatic.getBCAssets().atks.toMutableList())
             }
-            AnimationCView.DEMONSOUL -> {
+            AnimationCView.AnimationType.DEMON_SOUL -> {
                 UserProfile.getBCData().demonSouls.list
             }
             else -> {
@@ -91,7 +92,7 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
         val name = ArrayList<String>()
 
         when(type) {
-            AnimationCView.EFFECT -> {
+            AnimationCView.AnimationType.EFFECT -> {
                 for(id in data.indices) {
                     name.add(if(id >= effID.size)
                         generateEffName(id)
@@ -99,20 +100,23 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                         generateEffName(id, effID[id]))
                 }
             }
-            AnimationCView.SOUL -> {
+            AnimationCView.AnimationType.SOUL -> {
                 for(i in data.indices) {
                     name.add(requireContext().getString(R.string.eff_soul)+" - "+Data.trio(i))
                 }
             }
-            AnimationCView.CANNON -> {
+            AnimationCView.AnimationType.CANNON -> {
                 for(i in data.indices) {
                     name.add(requireContext().getString(R.string.eff_cannon) + " - "+Data.trio(i) + " : " + requireContext().getString(canonID[i]))
                 }
             }
-            AnimationCView.DEMONSOUL -> {
+            AnimationCView.AnimationType.DEMON_SOUL -> {
                 for(i in data.indices) {
                     name.add(requireContext().getString(R.string.eff_akusoul) + " - " + Data.trio(i))
                 }
+            }
+            else -> {
+
             }
         }
 
@@ -134,17 +138,20 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 val intent = Intent(requireActivity(), ImageViewer::class.java)
 
                 when(type) {
-                    AnimationCView.EFFECT -> {
-                        intent.putExtra("Img", ImageViewer.EFFECT)
+                    AnimationCView.AnimationType.EFFECT -> {
+                        intent.putExtra("Img", ImageViewer.ViewerType.EFFECT.name)
                     }
-                    AnimationCView.SOUL -> {
-                        intent.putExtra("Img", ImageViewer.SOUL)
+                    AnimationCView.AnimationType.SOUL -> {
+                        intent.putExtra("Img", ImageViewer.ViewerType.SOUL.name)
                     }
-                    AnimationCView.CANNON -> {
-                        intent.putExtra("Img", ImageViewer.CANNON)
+                    AnimationCView.AnimationType.CANNON -> {
+                        intent.putExtra("Img", ImageViewer.ViewerType.CANNON.name)
                     }
-                    AnimationCView.DEMONSOUL -> {
-                        intent.putExtra("Img", ImageViewer.DEMONSOUL)
+                    AnimationCView.AnimationType.DEMON_SOUL -> {
+                        intent.putExtra("Img", ImageViewer.ViewerType.DEMON_SOUL.name)
+                    }
+                    else -> {
+
                     }
                 }
 

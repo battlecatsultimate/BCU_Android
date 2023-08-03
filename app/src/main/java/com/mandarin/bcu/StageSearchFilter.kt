@@ -23,12 +23,11 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
-import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import common.pack.Identifier
 import common.pack.PackData
@@ -37,9 +36,7 @@ import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
 import common.util.unit.Enemy
-import java.lang.NumberFormatException
 import java.util.*
-import kotlin.collections.ArrayList
 
 class StageSearchFilter : AppCompatActivity() {
     companion object {
@@ -104,7 +101,7 @@ class StageSearchFilter : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -170,7 +167,7 @@ class StageSearchFilter : AppCompatActivity() {
         addenemy.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@StageSearchFilter, EnemyList::class.java)
-                intent.putExtra("mode", EAdder.MODE_SELECTION)
+                intent.putExtra("mode", EnemyList.Mode.SELECTION.name)
 
                 resultLauncher.launch(intent)
             }
@@ -517,7 +514,7 @@ class StageSearchFilter : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
     }

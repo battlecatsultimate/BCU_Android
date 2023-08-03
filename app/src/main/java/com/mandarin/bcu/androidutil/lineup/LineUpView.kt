@@ -1,16 +1,20 @@
 package com.mandarin.bcu.androidutil.lineup
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.mandarin.bcu.LineUpScreen
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
-import com.mandarin.bcu.androidutil.lineup.coroutine.LUAdder
 import common.battle.BasisSet
 import common.battle.LineUp
 import common.system.files.VFile
@@ -153,7 +157,7 @@ class LineUpView : View {
         timer.start()
     }
 
-    public override fun onDraw(c: Canvas) {
+    override fun onDraw(c: Canvas) {
         getPosition()
         drawUnits(c)
         drawDeleteBox(c)
@@ -628,7 +632,7 @@ class LineUpView : View {
     /**
      * Change specific unit's form
      */
-    fun changeFroms(lu: LineUp) {
+    fun changeForms(lu: LineUp) {
         for (i in lu.fs.indices) {
             System.arraycopy(lu.fs[i], 0, BasisSet.current().sele.lu.fs[i], 0, lu.fs[i].size)
         }
@@ -646,7 +650,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab) {
+        if(adapter != null && adapter is LineUpScreen.LUTab) {
             adapter.updateFragment(0)
         }
     }
@@ -656,7 +660,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(1)
     }
 
@@ -665,7 +669,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(2)
     }
 
@@ -674,7 +678,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(3)
     }
 
@@ -683,7 +687,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(4)
     }
 
@@ -692,7 +696,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(5)
     }
 
@@ -701,7 +705,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(6)
     }
 
@@ -710,7 +714,7 @@ class LineUpView : View {
 
         val adapter = pager?.adapter
 
-        if(adapter != null && adapter is LUAdder.LUTab)
+        if(adapter != null && adapter is LineUpScreen.LUTab)
             adapter.updateFragment(7)
     }
 }

@@ -55,7 +55,7 @@ class DataResetManager : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -243,7 +243,7 @@ class DataResetManager : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
     }

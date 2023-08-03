@@ -483,7 +483,7 @@
     <string name="main_err_always">Всегда загружать списки ошибок на сервер.</string>
     <string name="main_err_start">Начать загружать списки ошибок…</string>
     <string name="config_send_err">Всегда отправлять списки ошибок на сервер.</string>
-    <string name="down_state_music">Загружаем музыку… : </string>
+    <string name="down_state_music">Загружаем музыку… : %1$s</string>
     <string name="err_send_log">Отправляем списки… : -/_</string>
     <string name="err_send_result">Отправление списка | Успешно : - / Не успешно : _</string>
     <string name="config_sound">Звук</string>
@@ -634,7 +634,7 @@
     <string name="down_wait">Ждем подключения…</string>
     <string name="down_state_ok">Загрузка завершена!</string>
     <string name="down_state_no">Загрузка не завершена…</string>
-    <string name="down_state_doing">"Загружаем файлы… : "</string>
+    <string name="down_state_doing">"Загружаем файлы… : %1$s"</string>
     <string name="down_state_rea">Готово</string>
     <string name="down_redown">Попр. ещё раз</string>
     <string name="down_zip_ex">"Извлекаем… : "</string>
@@ -987,4 +987,8 @@
     <string name="err_solution">Possible Solution</string>
     <string name="err_reason_asset">"Asset has been corrupted\n\nAssets contain BC data, which is very criical for app to be run. It seems app failed to download asset files or was interrupted by any factors, so asets got corrupted "</string>
     <string name="err_solution_asset">1. Go to setting of your system, application, and select BCU Android. Tab button below to access it easily\n2. Reset data. This means you will have to redownload assets again\n\n- When you downloading assets, do not switch to other app, or turn off the screen. Make app keep running until the download finishes</string>
+    <string name="main_asset_fail">Failed to download assets…</string>
+    <string name="main_internet_check_fail">Failed to check internet status…</string>
+    <string name="main_internet_dialog_title">Internet is required</string>
+    <string name="main_internet_dialog_content">BCU needs to downlod BC data and other required additional assets to perform its job properly. You won\'t need internet once you downloaded all required files, so please connect to internet, and turn the application on</string>
 </resources>

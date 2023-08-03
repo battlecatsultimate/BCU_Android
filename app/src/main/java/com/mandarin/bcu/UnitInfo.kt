@@ -9,28 +9,53 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.mandarin.bcu.androidutil.Definer
+import com.mandarin.bcu.androidutil.GetStrings
+import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.AnimatorConst
+import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
-import com.mandarin.bcu.androidutil.unit.coroutine.UInfoLoader
+import com.mandarin.bcu.androidutil.supports.TranslationAnimator
+import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
+import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
+import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
+import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import common.CommonStatic
 import common.io.json.JsonEncoder
+import common.pack.Identifier
+import common.util.lang.MultiLangCont
 import common.util.unit.Unit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class UnitInfo : AppCompatActivity() {
-    private var treasure: FloatingActionButton? = null
+    private val nformid = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +79,7 @@ class UnitInfo : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -76,101 +101,210 @@ class UnitInfo : AppCompatActivity() {
             }
         }
 
-        supportActionBar?.elevation = 0F
-
-        if (StaticStore.unitinfreset) {
-            StaticStore.unittabposition = 0
-            StaticStore.unitinfreset = false
-        }
-
-        val treasuretab = findViewById<ConstraintLayout>(R.id.treasurelayout)
-
-        treasuretab.visibility = View.GONE
-
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (shared.getBoolean("Lay_Land", false)) {
-                val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
-
-                scrollView.visibility = View.GONE
-
-                val unittable = findViewById<ViewPager2>(R.id.unitinftable)
-
-                unittable.isFocusable = false
-                unittable.requestFocusFromTouch()
-            } else {
-                val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
-
-                scrollView.visibility = View.GONE
-
-                val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
-
-                recyclerView.requestFocusFromTouch()
-            }
-        } else {
-            if (shared.getBoolean("Lay_Port", false)) {
-                val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
-
-                scrollView.visibility = View.GONE
-
-                val unittable = findViewById<ViewPager2>(R.id.unitinftable)
-
-                unittable.isFocusable = false
-                unittable.requestFocusFromTouch()
-            } else {
-                val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
-
-                scrollView.visibility = View.GONE
-
-                val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
-
-                recyclerView.requestFocusFromTouch()
-            }
-        }
-
-        val back = findViewById<FloatingActionButton>(R.id.unitinfback)
-
-        treasure = findViewById(R.id.treabutton)
-
-        back.setOnClickListener {
-            StaticStore.unitinfreset = true
-            StaticStore.UisOpen = false
-            finish()
-        }
-
         val result = intent
         val extra = result.extras ?: return
 
         val data = StaticStore.transformIdentifier<Unit>(extra.getString("Data")) ?: return
 
-        val anim = findViewById<Button>(R.id.animanim)
+        lifecycleScope.launch {
+            //Prepare
+            val u = data.get() ?: return@launch
 
-        anim.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                val intent = Intent(this@UnitInfo, ImageViewer::class.java)
+            val fruittext = findViewById<TextView>(R.id.cfinftext)
+            val fruitpage: ViewPager = findViewById<ViewPager>(R.id.catfruitpager)
+            val anim = findViewById<Button>(R.id.animanim)
+            val coord = findViewById<CoordinatorLayout>(R.id.unitcoord)
+            val back = findViewById<FloatingActionButton>(R.id.unitinfback)
+            val treasure = findViewById<FloatingActionButton>(R.id.treabutton)
+            val prog = findViewById<ProgressBar>(R.id.prog)
+            val unittitle = findViewById<AutoMarquee>(R.id.unitinfrarname)
+            val tabs = findViewById<TabLayout>(R.id.unitinfexplain)
+            val treasuretab = findViewById<ConstraintLayout>(R.id.treasurelayout)
+            val mainLayout = findViewById<ConstraintLayout>(R.id.unitinfomain)
+            val st = findViewById<TextView>(R.id.status)
+            val unittable = findViewById<ViewPager2>(R.id.unitinftable)
+            val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
 
-                StaticStore.formposition = StaticStore.unittabposition
+            prog.isIndeterminate = true
 
-                intent.putExtra("Img", ImageViewer.ANIMU)
-                intent.putExtra("Data", JsonEncoder.encode(data).toString())
-                intent.putExtra("Form", StaticStore.formposition)
+            StaticStore.setDisappear(coord, anim)
 
-                startActivity(intent)
+            if (u.info?.evo == null) {
+                StaticStore.setDisappear(fruitpage, fruittext, anim)
             }
-        })
 
-        UInfoLoader(this, data, supportFragmentManager, lifecycle).execute()
+            //Load Data
+            withContext(Dispatchers.IO) {
+                Definer.define(this@UnitInfo, { _ -> }, { t -> runOnUiThread { st.text = t }})
+            }
 
-        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (StaticStore.UisOpen) {
-                    treasure!!.performClick()
+            //Load UI
+            val tabNames = u.forms.mapIndexed { i, _ ->
+                return@mapIndexed if (i in 0..2) {
+                    getString(nformid[i])
                 } else {
-                    StaticStore.unitinfreset = true
+                    if(Locale.getDefault().language == "en")
+                        Interpret.numberWithExtension(i+1, Locale.getDefault().language)
+                    else
+                        getString(R.string.unit_info_forms).replace("_", (i+1).toString())
+                }
+            }.toTypedArray()
 
-                    finish()
+            for (i in u.forms.indices) {
+                tabs.addTab(tabs.newTab().setText(tabNames[i]))
+            }
+
+            val s = GetStrings(this@UnitInfo)
+
+            unittitle.text = s.getTitle(u.forms[0])
+
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (shared.getBoolean("Lay_Land", true)) {
+                    setUinfo(u)
+                } else {
+                    setUinfoR(u)
+                }
+            } else {
+                if (shared.getBoolean("Lay_Port", true)) {
+                    setUinfo(u)
+                } else {
+                    setUinfoR(u)
                 }
             }
-        })
+
+            treasure.setOnClickListener {
+                if (!StaticStore.UisOpen) {
+                    val animator = TranslationAnimator(treasuretab, AnimatorConst.Axis.X, 300, AnimatorConst.Accelerator.DECELERATE, 0f, treasuretab.width.toFloat())
+
+                    animator.start()
+
+                    StaticStore.UisOpen = true
+                } else {
+                    val view = currentFocus
+
+                    if (view != null) {
+                        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
+                        treasuretab.clearFocus()
+                    }
+
+                    val animator = TranslationAnimator(treasuretab, AnimatorConst.Axis.X, 300, AnimatorConst.Accelerator.DECELERATE, treasuretab.width.toFloat(), 0f)
+
+                    animator.start()
+
+                    StaticStore.UisOpen = false
+                }
+            }
+
+            treasuretab.setOnTouchListener { _, _ ->
+                mainLayout.isClickable = false
+
+                true
+            }
+
+            if (u.info.evo != null) {
+                fruitpage.adapter = DynamicFruit(this@UnitInfo, data)
+
+                fruitpage.offscreenPageLimit = 1
+            }
+
+            supportActionBar?.elevation = 0F
+
+            if (StaticStore.unitinfreset) {
+                StaticStore.unittabposition = 0
+                StaticStore.unitinfreset = false
+            }
+
+            treasuretab.visibility = View.GONE
+
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (shared.getBoolean("Lay_Land", false)) {
+                    scrollView.visibility = View.GONE
+
+                    unittable.isFocusable = false
+                    unittable.requestFocusFromTouch()
+                } else {
+                    scrollView.visibility = View.GONE
+
+                    val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
+
+                    recyclerView.requestFocusFromTouch()
+                }
+            } else {
+                if (shared.getBoolean("Lay_Port", false)) {
+                    scrollView.visibility = View.GONE
+
+                    unittable.isFocusable = false
+                    unittable.requestFocusFromTouch()
+                } else {
+                    scrollView.visibility = View.GONE
+
+                    val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
+
+                    recyclerView.requestFocusFromTouch()
+                }
+            }
+
+            back.setOnClickListener {
+                StaticStore.unitinfreset = true
+                StaticStore.UisOpen = false
+                finish()
+            }
+
+            anim.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    val intent = Intent(this@UnitInfo, ImageViewer::class.java)
+
+                    StaticStore.formposition = StaticStore.unittabposition
+
+                    intent.putExtra("Img", ImageViewer.ViewerType.UNIT.name)
+                    intent.putExtra("Data", JsonEncoder.encode(data).toString())
+                    intent.putExtra("Form", StaticStore.formposition)
+
+                    startActivity(intent)
+                }
+            })
+
+            onBackPressedDispatcher.addCallback(this@UnitInfo, object: OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (StaticStore.UisOpen) {
+                        treasure!!.performClick()
+                    } else {
+                        StaticStore.unitinfreset = true
+
+                        finish()
+                    }
+                }
+            })
+
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (shared.getBoolean("Lay_Land", false)) {
+                    scrollView.visibility = View.VISIBLE
+                } else {
+                    scrollView.visibility = View.VISIBLE
+
+                    scrollView.postDelayed({ scrollView.scrollTo(0, 0) }, 0)
+                }
+            } else {
+                if (shared.getBoolean("Lay_Port", false)) {
+                    scrollView.visibility = View.VISIBLE
+                } else {
+                    scrollView.visibility = View.VISIBLE
+
+                    scrollView.postDelayed({ scrollView.scrollTo(0, 0) }, 0)
+                }
+            }
+
+            if(StaticStore.UisOpen) {
+                treasuretab.translationX = treasuretab.width.toFloat()
+                treasuretab.requestLayout()
+            }
+
+            StaticStore.setDisappear(st, prog)
+            StaticStore.setAppear(anim, coord, treasuretab)
+
+            tabs.getTabAt(StaticStore.unittabposition)?.select()
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -197,7 +331,7 @@ class UnitInfo : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
     }
@@ -209,5 +343,129 @@ class UnitInfo : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
+    }
+
+    private fun setUinfoR(u: Unit) {
+        val tabs = findViewById<TabLayout>(R.id.unitinfexplain)
+        val recyclerView = findViewById<RecyclerView>(R.id.unitinfrec)
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = UnitinfRecycle(this, ArrayList(u.forms.map { f -> MultiLangCont.get(f) ?: f.names.toString() }), u.forms, u.id)
+
+        val tabNames = u.forms.mapIndexed { i, _ ->
+            return@mapIndexed if (i in 0..2) {
+                getString(nformid[i])
+            } else {
+                if(Locale.getDefault().language == "en")
+                    Interpret.numberWithExtension(i+1, Locale.getDefault().language)
+                else
+                    getString(R.string.unit_info_forms).replace("_", (i+1).toString())
+            }
+        }.toTypedArray()
+
+        val viewPager: ViewPager2 = findViewById<ViewPager2>(R.id.unitinfpager)
+
+        viewPager.adapter = ExplanationTab(tabs.tabCount, tabNames, u.id)
+        viewPager.offscreenPageLimit = 1
+
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = tabNames[position]
+        }.attach()
+
+        if (u.info.evo == null)
+            viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, this))
+
+        val view = findViewById<View>(R.id.view)
+        val view2 = findViewById<View>(R.id.view2)
+        val exp = findViewById<TextView>(R.id.unitinfexp)
+
+        if (MultiLangCont.getStatic().FEXP.getCont(u.forms[0]) == null) {
+            StaticStore.setDisappear(viewPager, view, view2, tabs, exp)
+        }
+
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewPager.currentItem = tab.position
+
+                StaticStore.unittabposition = tab.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+    }
+
+    private fun setUinfo(u: Unit) {
+        val tabs: TabLayout = findViewById<TabLayout>(R.id.unitinfexplain)
+        val tablePager: ViewPager2 = findViewById<ViewPager2>(R.id.unitinftable)
+
+        val tabNames = u.forms.mapIndexed { i, _ ->
+            return@mapIndexed if (i in 0..2) {
+                getString(nformid[i])
+            } else {
+                if(Locale.getDefault().language == "en")
+                    Interpret.numberWithExtension(i+1, Locale.getDefault().language)
+                else
+                    getString(R.string.unit_info_forms).replace("_", (i+1).toString())
+            }
+        }.toTypedArray()
+
+        tablePager.adapter = TableTab(tabs.tabCount, tabNames, u.id)
+        tablePager.offscreenPageLimit = u.forms.size
+
+        TabLayoutMediator(tabs, tablePager) { tab, position ->
+            tab.text = tabNames[position]
+        }.attach()
+
+        val viewPager: ViewPager2 = findViewById<ViewPager2>(R.id.unitinfpager)
+
+        viewPager.adapter = ExplanationTab(tabs.tabCount, tabNames, u.id)
+        viewPager.offscreenPageLimit = u.forms.size
+
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = tabNames[position]
+        }.attach()
+
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewPager.currentItem = tab.position
+                tablePager.currentItem = tab.position
+                StaticStore.unittabposition = tab.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        if (u.info.evo == null)
+            viewPager.setPadding(0, 0, 0, StaticStore.dptopx(24f, this))
+
+        val view = findViewById<View>(R.id.view)
+        val view2 = findViewById<View>(R.id.view2)
+        val exp = findViewById<TextView>(R.id.unitinfexp)
+
+        if (MultiLangCont.getStatic().FEXP.getCont(u.forms[0]) == null && (u.id.pack == Identifier.DEF || u.forms[0].description.toString().isBlank())) {
+            StaticStore.setDisappear(viewPager, view, view2, exp)
+        }
+    }
+
+    private inner class TableTab(private val form: Int, private val names: Array<String>, private val data: Identifier<Unit>) : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        override fun getItemCount(): Int {
+            return form
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return UnitinfPager.newInstance(position, data, names)
+        }
+    }
+
+    private inner class ExplanationTab(private val number: Int, private val title: Array<String>, private val data: Identifier<Unit>) : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        override fun getItemCount(): Int {
+            return number
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return DynamicExplanation.newInstance(position, data, title)
+        }
     }
 }

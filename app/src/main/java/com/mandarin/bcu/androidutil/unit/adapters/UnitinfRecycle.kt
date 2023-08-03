@@ -803,28 +803,28 @@ class UnitinfRecycle(private val context: Activity,
             validate(viewHolder, f, t)
 
             if (isChecked) {
-                val anim = ScaleAnimator(viewHolder.npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(100f, context))
+                val anim = ScaleAnimator(viewHolder.npresetrow, AnimatorConst.Dimension.WIDTH, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(100f, context))
                 anim.start()
 
-                val anim2 = ScaleAnimator(viewHolder.nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, context))
+                val anim2 = ScaleAnimator(viewHolder.nprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(48f, context))
                 anim2.start()
 
-                val anim3 = ScaleAnimator(viewHolder.nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(16f, context))
+                val anim3 = ScaleAnimator(viewHolder.nprow, AnimatorConst.Dimension.TOP_MARGIN, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(16f, context))
                 anim3.start()
 
-                val anim4 = ScaleAnimator(viewHolder.supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, context))
+                val anim4 = ScaleAnimator(viewHolder.supernprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(48f, context))
                 anim4.start()
             } else {
-                val anim = ScaleAnimator(viewHolder.npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(100f, context), 0)
+                val anim = ScaleAnimator(viewHolder.npresetrow, AnimatorConst.Dimension.WIDTH, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(100f, context), 0)
                 anim.start()
 
-                val anim2 = ScaleAnimator(viewHolder.nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, context), 0)
+                val anim2 = ScaleAnimator(viewHolder.nprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(48f, context), 0)
                 anim2.start()
 
-                val anim3 = ScaleAnimator(viewHolder.nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(16f, context), 0)
+                val anim3 = ScaleAnimator(viewHolder.nprow, AnimatorConst.Dimension.TOP_MARGIN, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(16f, context), 0)
                 anim3.start()
 
-                val anim4 = ScaleAnimator(viewHolder.supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, context), 0)
+                val anim4 = ScaleAnimator(viewHolder.supernprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(48f, context), 0)
                 anim4.start()
             }
         }

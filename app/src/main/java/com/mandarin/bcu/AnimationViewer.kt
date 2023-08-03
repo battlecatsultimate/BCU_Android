@@ -10,21 +10,38 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
-import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
-import com.mandarin.bcu.androidutil.unit.coroutine.Adder
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.unit.adapters.UnitListPager
 import common.CommonStatic
-import common.system.fake.ImageBuilder
-import java.util.*
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class AnimationViewer : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -67,7 +84,7 @@ class AnimationViewer : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -77,35 +94,123 @@ class AnimationViewer : AppCompatActivity() {
 
         setContentView(R.layout.activity_animation_viewer)
 
-        ImageBuilder.builder = BMBuilder()
+        lifecycleScope.launch {
+            //Prepare
+            val back = findViewById<FloatingActionButton>(R.id.animbck)
+            val search = findViewById<FloatingActionButton>(R.id.animsch)
+            val tab = findViewById<TabLayout>(R.id.unittab)
+            val pager = findViewById<ViewPager2>(R.id.unitpager)
+            val schname: TextInputEditText = findViewById<TextInputEditText>(R.id.animschname)
+            val layout: TextInputLayout = findViewById<TextInputLayout>(R.id.animschnamel)
+            val st = findViewById<TextView>(R.id.status)
+            val prog = findViewById<ProgressBar>(R.id.prog)
 
-        val back = findViewById<FloatingActionButton>(R.id.animbck)
-        val search = findViewById<FloatingActionButton>(R.id.animsch)
+            StaticStore.setDisappear(tab, pager, schname, layout)
+            search.hide()
 
-        back.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                StaticStore.filterReset()
-                StaticStore.entityname = ""
-                finish()
+            prog.isIndeterminate = false
+            prog.max = 10000
+
+            //Load Data
+            withContext(Dispatchers.IO) {
+                Definer.define(this@AnimationViewer, { p -> runOnUiThread { prog.progress = (p * 10000).toInt() }}, { t -> runOnUiThread { st.text = t }})
+
+                StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
             }
-        })
 
-        search.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                gotoFilter()
+            //Load UI
+            prog.isIndeterminate = true
+
+            if(StaticStore.entityname != "") {
+                schname.setText(StaticStore.entityname)
             }
-        })
 
-        Adder(this, supportFragmentManager, lifecycle).execute()
+            schname.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable) {
+                    StaticStore.entityname = s.toString()
 
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    back.performClick()
+                    for(i in StaticStore.filterEntityList.indices) {
+                        StaticStore.filterEntityList[i] = true
+                    }
                 }
+            })
+
+            pager.isSaveEnabled = false
+            pager.isSaveFromParentEnabled = false
+
+            pager.adapter = UnitListTab()
+            pager.offscreenPageLimit = getExistingUnit()
+
+            val keys = getExistingPack()
+
+            TabLayoutMediator(tab, pager) { t, position ->
+                t.text = if(position == 0) {
+                    getString(R.string.pack_default)
+                } else {
+                    val pack = PackData.getPack(keys[position])
+
+                    if(pack == null) {
+                        keys[position]
+                    }
+
+                    val name = when (pack) {
+                        is PackData.DefPack -> {
+                            getString(R.string.pack_default)
+                        }
+                        is PackData.UserPack -> {
+                            StaticStore.getPackName(pack.desc.id)
+                        }
+                        else -> {
+                            ""
+                        }
+                    }
+
+                    name.ifEmpty {
+                        keys[position]
+                    }
+                }
+            }.attach()
+
+            back.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    StaticStore.filterReset()
+                    StaticStore.entityname = ""
+                    finish()
+                }
+            })
+
+            search.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    gotoFilter()
+                }
+            })
+
+            onBackPressedDispatcher.addCallback(this@AnimationViewer, object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        back.performClick()
+                    }
+                }
+            )
+
+            if(getExistingUnit() != 1) {
+                StaticStore.setAppear(tab)
+            } else {
+                val collapse = findViewById<CollapsingToolbarLayout>(R.id.animcollapse)
+
+                val param = collapse.layoutParams as AppBarLayout.LayoutParams
+
+                param.scrollFlags = 0
+
+                collapse.layoutParams = param
             }
-        )
+
+            StaticStore.setAppear(pager, schname, layout)
+            search.show()
+
+            StaticStore.setDisappear(st, prog)
+        }
     }
 
     private fun gotoFilter() {
@@ -138,7 +243,7 @@ class AnimationViewer : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
     }
@@ -150,5 +255,46 @@ class AnimationViewer : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
+    }
+
+    private fun getExistingUnit() : Int {
+        var i = 0
+
+        for(p in UserProfile.getAllPacks()) {
+            if(p.units.list.isNotEmpty())
+                i++
+        }
+
+        return i
+    }
+
+    private fun getExistingPack() : ArrayList<String> {
+        val packs = UserProfile.getAllPacks()
+
+        val res = ArrayList<String>()
+
+        for(p in packs) {
+            if(p.units.list.isNotEmpty()) {
+                if(p is PackData.DefPack) {
+                    res.add(Identifier.DEF)
+                } else if(p is PackData.UserPack) {
+                    res.add(p.sid)
+                }
+            }
+        }
+
+        return res
+    }
+
+    inner class UnitListTab : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        private val keys = getExistingPack()
+
+        override fun getItemCount(): Int {
+            return keys.size
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return UnitListPager.newInstance(keys[position], position)
+        }
     }
 }

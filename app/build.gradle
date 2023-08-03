@@ -21,7 +21,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 34
         versionCode 1
-        versionName "0.17.0"
+        versionName "0.17.0b_00"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         android.buildFeatures.buildConfig = true
@@ -89,7 +89,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
 
-    implementation platform("com.google.firebase:firebase-bom:32.1.1")
+    implementation platform('com.google.firebase:firebase-bom:32.2.0')
 
     implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
     implementation 'com.google.firebase:firebase-analytics:21.3.0'

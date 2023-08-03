@@ -334,11 +334,11 @@ class LUUnitSetting : Fragment() {
 
             t.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    val anim = ScaleAnimator(tal, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(64f, requireContext()))
+                    val anim = ScaleAnimator(tal, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(64f, requireContext()))
                     anim.start()
 
                     if(superTalentIndex.isNotEmpty()) {
-                        val anim2 = ScaleAnimator(supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(64f, requireContext()))
+                        val anim2 = ScaleAnimator(supernprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(64f, requireContext()))
                         anim2.start()
                     }
 
@@ -357,11 +357,11 @@ class LUUnitSetting : Fragment() {
                     hp.text = s.getHP(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, level)
                     atk.text = s.getAtk(f, BasisSet.current().t(), f.du.pCoin != null && t.isChecked, level)
                 } else {
-                    val anim = ScaleAnimator(tal, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(64f, requireContext()), 0)
+                    val anim = ScaleAnimator(tal, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(64f, requireContext()), 0)
                     anim.start()
 
                     if(superTalentIndex.isNotEmpty()) {
-                        val anim2 = ScaleAnimator(supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(64f, requireContext()), 0)
+                        val anim2 = ScaleAnimator(supernprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(64f, requireContext()), 0)
                         anim2.start()
                     }
 

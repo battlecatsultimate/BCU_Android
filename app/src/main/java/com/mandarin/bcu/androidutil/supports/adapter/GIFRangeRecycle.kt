@@ -19,13 +19,14 @@ import common.util.pack.NyCastle
 import common.util.pack.Soul
 import common.util.unit.Enemy
 import common.util.unit.Unit
-import java.lang.IllegalStateException
 
-class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activity, private val type: Int, private val content: Any, private val form: Int) : RecyclerView.Adapter<GIFRangeRecycle.ViewHolder>() {
+class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activity, private val type: AnimationCView.AnimationType, private val content: Any, form: Int) : RecyclerView.Adapter<GIFRangeRecycle.ViewHolder>() {
     private val data = ArrayList<Array<Int>>()
     private val enables = Array(name.size) {
         true
     }
+
+    private val form: Int
 
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
         val range: RangeSlider = row.findViewById(R.id.gifrange)
@@ -37,6 +38,12 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
             this.data.add(Array(2) {
                 0
             })
+        }
+
+        this.form = if (type == AnimationCView.AnimationType.UNIT) {
+            form
+        } else {
+            -1
         }
     }
 
@@ -99,7 +106,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
     private fun getEAnimD(ind: Int) : EAnimD<*> {
         when(type) {
-            AnimationCView.UNIT -> {
+            AnimationCView.AnimationType.UNIT -> {
                 if(content !is Identifier<*>)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
@@ -110,7 +117,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
                 return u.forms[form].getEAnim(StaticStore.getAnimType(ind, u.forms[form].anim.anims.size))
             }
-            AnimationCView.ENEMY -> {
+            AnimationCView.AnimationType.ENEMY -> {
                 if(content !is Identifier<*>)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
@@ -121,25 +128,25 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
                 return e.getEAnim(StaticStore.getAnimType(ind, e.anim.anims.size))
             }
-            AnimationCView.EFFECT -> {
+            AnimationCView.AnimationType.EFFECT -> {
                 if(content !is EffAnim<*>)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
                 return StaticJava.generateEAnimD(content, ind)
             }
-            AnimationCView.SOUL -> {
+            AnimationCView.AnimationType.SOUL -> {
                 if(content !is Soul)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
                 return StaticJava.generateEAnimD(content, ind)
             }
-            AnimationCView.CANNON -> {
+            AnimationCView.AnimationType.CANNON -> {
                 if(content !is NyCastle)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
                 return StaticJava.generateEAnimD(content, ind)
             }
-            AnimationCView.DEMONSOUL -> {
+            AnimationCView.AnimationType.DEMON_SOUL -> {
                 if(content !is DemonSoul)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 

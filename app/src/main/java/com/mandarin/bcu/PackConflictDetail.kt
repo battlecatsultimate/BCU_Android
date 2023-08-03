@@ -50,7 +50,7 @@ class PackConflictDetail : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -576,7 +576,7 @@ class PackConflictDetail : AppCompatActivity() {
         })
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
 
         StaticStore.toast = null

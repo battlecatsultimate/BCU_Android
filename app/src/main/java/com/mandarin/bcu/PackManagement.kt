@@ -16,11 +16,13 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.Definer
@@ -31,8 +33,8 @@ import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.pack.adapters.PackManagementAdapter
-import com.mandarin.bcu.androidutil.pack.coroutine.PackManager
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import common.pack.PackData
 import common.pack.UserProfile
@@ -139,7 +141,7 @@ class PackManagement : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -149,88 +151,123 @@ class PackManagement : AppCompatActivity() {
 
         setContentView(R.layout.activity_pack_management)
 
-        PackManager(this).execute()
+        lifecycleScope.launch {
+            //Prepare
+            val swipe = findViewById<SwipeRefreshLayout>(R.id.pmanrefresh)
+            val list = findViewById<ListView>(R.id.pmanlist)
+            val more = findViewById<FloatingActionButton>(R.id.pmanoption)
+            val bck = findViewById<FloatingActionButton>(R.id.pmanbck)
+            val st = findViewById<TextView>(R.id.status)
+            val prog = findViewById<ProgressBar>(R.id.prog)
 
-        val swipe = findViewById<SwipeRefreshLayout>(R.id.pmanrefresh)
-        val list = findViewById<ListView>(R.id.pmanlist)
+            StaticStore.setDisappear(swipe, more)
 
-        swipe.setColorSchemeColors(StaticStore.getAttributeColor(this, R.attr.colorAccent))
+            //Load Data
+            Definer.define(this@PackManagement, { _ -> }, { t -> runOnUiThread { st.text = t }})
 
-        swipe.setOnRefreshListener {
-            handlingPacks = true
-            StaticStore.fixOrientation(this)
+            //Load UI
+            more.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    intent.type = "*/*"
 
-            reloadPack(swipe, list)
-        }
+                    resultLauncher.launch(Intent.createChooser(intent, "Choose Directory"))
+                }
+            })
 
-        val bck = findViewById<FloatingActionButton>(R.id.pmanbck)
+            val packList = ArrayList<PackData.UserPack>()
 
-        bck.setOnClickListener {
-            if(!handlingPacks && !needReload) {
-                val intent = Intent(this, MainActivity::class.java)
-
-                startActivity(intent)
-
-                finish()
-
-                return@setOnClickListener
+            for(pack in UserProfile.getUserPacks()) {
+                packList.add(pack)
             }
 
-            val dialog = Dialog(this)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.loading_dialog)
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) ?: return@setOnClickListener
-            val v = dialog.window?.decorView ?: return@setOnClickListener
+            list.adapter = PackManagementAdapter(this@PackManagement, packList)
 
-            val title = v.findViewById<TextView>(R.id.loadtitle)
-            val progress = v.findViewById<TextView>(R.id.loadprogress)
+            prog.isIndeterminate = true
 
-            progress.visibility = View.GONE
+            swipe.setColorSchemeColors(StaticStore.getAttributeColor(this@PackManagement, R.attr.colorAccent))
 
-            title.text = getString(R.string.pack_reload)
+            swipe.setOnRefreshListener {
+                handlingPacks = true
+                StaticStore.fixOrientation(this@PackManagement)
 
-            dialog.setCancelable(false)
+                reloadPack(swipe, list)
+            }
 
-            dialog.show()
+            bck.setOnClickListener {
+                if(!handlingPacks && !needReload) {
+                    val intent = Intent(this@PackManagement, MainActivity::class.java)
 
-            CoroutineScope(Dispatchers.IO).launch {
-                StaticStore.resetUserPacks()
+                    startActivity(intent)
 
-                Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
+                    finish()
 
-                val l = Locale.getDefault().language
-                Revalidater.validate(l, this@PackManagement)
-
-                dialog.dismiss()
-
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                handlingPacks = false
-
-                withContext(Dispatchers.Main) {
-                    if(PackConflict.conflicts.isNotEmpty()) {
-                        val intent = Intent(this@PackManagement, PackConflictSolve::class.java)
-
-                        startActivity(intent)
-
-                        finish()
-                    } else {
-                        val intent = Intent(this@PackManagement, MainActivity::class.java)
-
-                        startActivity(intent)
-
-                        finish()
-                    }
+                    return@setOnClickListener
                 }
 
-                needReload = false
-            }
-        }
+                val dialog = Dialog(this@PackManagement)
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                bck.performClick()
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.loading_dialog)
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) ?: return@setOnClickListener
+
+                val v = dialog.window?.decorView ?: return@setOnClickListener
+
+                val title = v.findViewById<TextView>(R.id.loadtitle)
+                val progress = v.findViewById<TextView>(R.id.loadprogress)
+
+                progress.visibility = View.GONE
+
+                title.text = getString(R.string.pack_reload)
+
+                dialog.setCancelable(false)
+
+                dialog.show()
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    StaticStore.resetUserPacks()
+
+                    Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
+
+                    val l = Locale.getDefault().language
+                    Revalidater.validate(l, this@PackManagement)
+
+                    dialog.dismiss()
+
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                    handlingPacks = false
+
+                    withContext(Dispatchers.Main) {
+                        if(PackConflict.conflicts.isNotEmpty()) {
+                            val intent = Intent(this@PackManagement, PackConflictSolve::class.java)
+
+                            startActivity(intent)
+
+                            finish()
+                        } else {
+                            val intent = Intent(this@PackManagement, MainActivity::class.java)
+
+                            startActivity(intent)
+
+                            finish()
+                        }
+                    }
+
+                    needReload = false
+                }
             }
-        })
+
+            onBackPressedDispatcher.addCallback(this@PackManagement, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    bck.performClick()
+                }
+            })
+
+            StaticStore.setDisappear(st, prog)
+            StaticStore.setAppear(list, more)
+        }
     }
 
     override fun onResume() {
@@ -242,7 +279,7 @@ class PackManagement : AppCompatActivity() {
         super.onResume()
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
 
         StaticStore.toast = null

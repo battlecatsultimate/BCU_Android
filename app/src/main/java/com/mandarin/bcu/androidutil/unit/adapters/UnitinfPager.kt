@@ -25,12 +25,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
+import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.AnimatorConst
 import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.ScaleAnimator
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
-import com.mandarin.bcu.androidutil.Interpret
 import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.Treasure
@@ -46,7 +46,7 @@ import java.util.*
 class UnitinfPager : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(form: Int, data: Identifier<Unit>, names: Array<String?>?): UnitinfPager {
+        fun newInstance(form: Int, data: Identifier<Unit>, names: Array<String>): UnitinfPager {
             val pager = UnitinfPager()
 
             val bundle = Bundle()
@@ -868,28 +868,28 @@ class UnitinfPager : Fragment() {
             validate(view, f, t)
 
             if (isChecked) {
-                val anim = ScaleAnimator(npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(100f, activity))
+                val anim = ScaleAnimator(npresetrow, AnimatorConst.Dimension.WIDTH, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(100f, activity))
                 anim.start()
 
-                val anim2 = ScaleAnimator(nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, activity))
+                val anim2 = ScaleAnimator(nprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(48f, activity))
                 anim2.start()
 
-                val anim3 = ScaleAnimator(nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(16f, activity))
+                val anim3 = ScaleAnimator(nprow, AnimatorConst.Dimension.TOP_MARGIN, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(16f, activity))
                 anim3.start()
 
-                val anim4 = ScaleAnimator(supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, 0, StaticStore.dptopx(48f, activity))
+                val anim4 = ScaleAnimator(supernprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, 0, StaticStore.dptopx(48f, activity))
                 anim4.start()
             } else {
-                val anim = ScaleAnimator(npresetrow, AnimatorConst.WIDTH, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(100f, activity), 0)
+                val anim = ScaleAnimator(npresetrow, AnimatorConst.Dimension.WIDTH, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(100f, activity), 0)
                 anim.start()
 
-                val anim2 = ScaleAnimator(nprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, activity), 0)
+                val anim2 = ScaleAnimator(nprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(48f, activity), 0)
                 anim2.start()
 
-                val anim3 = ScaleAnimator(nprow, AnimatorConst.TOP_MARGIN, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(16f, activity), 0)
+                val anim3 = ScaleAnimator(nprow, AnimatorConst.Dimension.TOP_MARGIN, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(16f, activity), 0)
                 anim3.start()
 
-                val anim4 = ScaleAnimator(supernprow, AnimatorConst.HEIGHT, 300, AnimatorConst.DECELERATE, StaticStore.dptopx(48f, activity), 0)
+                val anim4 = ScaleAnimator(supernprow, AnimatorConst.Dimension.HEIGHT, 300, AnimatorConst.Accelerator.DECELERATE, StaticStore.dptopx(48f, activity), 0)
                 anim4.start()
             }
         }

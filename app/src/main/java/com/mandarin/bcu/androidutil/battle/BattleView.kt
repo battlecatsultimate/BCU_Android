@@ -21,6 +21,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
+import com.mandarin.bcu.androidutil.battle.BattleBox.BBPainter
+import com.mandarin.bcu.androidutil.battle.BattleBox.OuterBox
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
@@ -28,8 +30,6 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
-import com.mandarin.bcu.androidutil.battle.BattleBox.BBPainter
-import com.mandarin.bcu.androidutil.battle.BattleBox.OuterBox
 import common.CommonStatic
 import common.battle.BattleField
 import common.battle.SBCtrl
@@ -45,6 +45,7 @@ import common.util.stage.MapColc
 import common.util.stage.Stage
 import common.util.stage.info.DefStageInfo
 import kotlin.math.*
+import kotlin.system.measureTimeMillis
 
 @SuppressLint("ViewConstructor")
 class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: Activity, cutout: Double, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context),
@@ -62,22 +63,30 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         )
 
     var initialized = false
+
     var paused = false
     var battleEnd = false
     var musicChanged = false
+
     var spd = 0
+
     var velocity = 0.0
-    private var upd = 0
-    private val cv: CVGraphics
-    private val updater: Updater
+    var scaleMode = false
 
     var initPoint: P? = null
     var endPoint: P? = null
+
     var dragFrame = 0
+
     var isSliding = false
+
     var performed = false
 
+    private val cv: CVGraphics
+    private val updater: Updater
+
     private var continued = false
+    private var upd = 0
 
     init {
         var default = false
@@ -149,11 +158,12 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         isHapticFeedbackEnabled = false
     }
 
-    public override fun onDraw(c: Canvas) {
+    override fun onDraw(c: Canvas) {
         if (initialized) {
             if(continued) {
                 continued = false
                 battleEnd = false
+
                 SoundHandler.battleEnd = false
             }
 
@@ -207,7 +217,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         }
     }
 
-    public override fun onDetachedFromWindow() {
+    override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         removeCallbacks(updater)
     }
@@ -221,86 +231,87 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         var pauseTime = 1000L / 30L
 
         override fun run() {
-            val start = System.currentTimeMillis()
+            val time = measureTimeMillis {
+                if (!paused)
+                    invalidate()
 
-            if (!paused)
-                invalidate()
+                if (!musicChanged) {
+                    if (haveToChangeMusic()) {
+                        SoundHandler.haveToChange = true
 
-            if (!musicChanged) {
-                if (haveToChangeMusic()) {
-                    SoundHandler.haveToChange = true
-                    SoundHandler.MUSIC.stop()
-                    SoundHandler.MUSIC.reset()
-                    val f = StaticStore.getMusicDataSource(Identifier.get(painter.bf.sb.st.mus1))
+                        SoundHandler.MUSIC.stop()
+                        SoundHandler.MUSIC.reset()
 
-                    if (f != null) {
-                        this@BattleView.postDelayed({
-                            if(battleEnd)
-                                return@postDelayed
+                        val f = StaticStore.getMusicDataSource(Identifier.get(painter.bf.sb.st.mus1))
 
-                            SoundHandler.MUSIC.setDataSource(f.absolutePath)
-                            SoundHandler.MUSIC.prepareAsync()
-                            SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                                override fun prepare(mp: MediaPlayer?) {
-                                    if(SoundHandler.musicPlay) {
-                                        try {
-                                            if(SoundHandler.timer != null && SoundHandler.timer?.isRunning == true) {
-                                                SoundHandler.timer?.cancel()
-                                            }
+                        if (f != null) {
+                            this@BattleView.postDelayed({
+                                if(battleEnd)
+                                    return@postDelayed
 
-                                            if((painter.bf.sb.st.mus1?.get()?.loop ?: 0) > 0 && (painter.bf.sb.st.mus1.get()?.loop ?: 0) < SoundHandler.MUSIC.duration) {
-                                                SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
-                                                    override fun onFinish() {
-                                                        SoundHandler.MUSIC.seekTo((painter.bf.sb.st.mus1.get()?.loop ?: 0).toInt(), true)
+                                SoundHandler.MUSIC.setDataSource(f.absolutePath)
+                                SoundHandler.MUSIC.prepareAsync()
 
-                                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-(painter.bf.sb.st.mus1.get()?.loop ?: 0), (SoundHandler.MUSIC.duration-1).toLong()-(painter.bf.sb.st.mus1.get()?.loop ?: 0), true) {
-                                                            override fun onFinish() {
-                                                                SoundHandler.MUSIC.seekTo((painter.bf.sb.st.mus1.get()?.loop ?: 0).toInt(), true)
-
-                                                                SoundHandler.timer?.create()
-                                                            }
-
-                                                            override fun onTick(millisUntilFinished: Long) {}
-
-                                                        }
-
-                                                        SoundHandler.timer?.create()
-                                                    }
-
-                                                    override fun onTick(millisUntilFinished: Long) {}
+                                SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
+                                    override fun prepare(mp: MediaPlayer?) {
+                                        if(SoundHandler.musicPlay) {
+                                            try {
+                                                if(SoundHandler.timer != null && SoundHandler.timer?.isRunning == true) {
+                                                    SoundHandler.timer?.cancel()
                                                 }
 
-                                                SoundHandler.timer?.create()
-                                            } else {
-                                                SoundHandler.timer = null
-                                                SoundHandler.MUSIC.isLooping = true
-                                            }
+                                                if((painter.bf.sb.st.mus1?.get()?.loop ?: 0) > 0 && (painter.bf.sb.st.mus1.get()?.loop ?: 0) < SoundHandler.MUSIC.duration) {
+                                                    SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
+                                                        override fun onFinish() {
+                                                            SoundHandler.MUSIC.seekTo((painter.bf.sb.st.mus1.get()?.loop ?: 0).toInt(), true)
 
-                                            SoundHandler.MUSIC.start()
-                                        } catch(e: NullPointerException) {
-                                            ErrorLogWriter.writeLog(e, StaticStore.upload, context)
+                                                            SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong()-(painter.bf.sb.st.mus1.get()?.loop ?: 0), (SoundHandler.MUSIC.duration-1).toLong()-(painter.bf.sb.st.mus1.get()?.loop ?: 0), true) {
+                                                                override fun onFinish() {
+                                                                    SoundHandler.MUSIC.seekTo((painter.bf.sb.st.mus1.get()?.loop ?: 0).toInt(), true)
+
+                                                                    SoundHandler.timer?.create()
+                                                                }
+
+                                                                override fun onTick(millisUntilFinished: Long) {}
+
+                                                            }
+
+                                                            SoundHandler.timer?.create()
+                                                        }
+
+                                                        override fun onTick(millisUntilFinished: Long) {}
+                                                    }
+
+                                                    SoundHandler.timer?.create()
+                                                } else {
+                                                    SoundHandler.timer = null
+                                                    SoundHandler.MUSIC.isLooping = true
+                                                }
+
+                                                SoundHandler.MUSIC.start()
+                                            } catch(e: NullPointerException) {
+                                                ErrorLogWriter.writeLog(e, StaticStore.upload, context)
+                                            }
                                         }
                                     }
-                                }
-                            })
-                        }, Data.MUSIC_DELAY.toLong())
+                                })
+                            }, Data.MUSIC_DELAY.toLong())
+                        }
+                        musicChanged = true
                     }
-                    musicChanged = true
+                }
+
+                if(isSliding) {
+                    dragFrame++
+                }
+
+                if (!battleEnd) {
+                    checkWin()
+                    checkLose()
                 }
             }
 
-            if(isSliding) {
-                dragFrame++
-            }
-
-            if (!battleEnd) {
-                checkWin()
-                checkLose()
-            }
-
-            val end = System.currentTimeMillis()
-
-            pauseTime = max(0, (pauseTime * 0.5 + (1000/30.0 - (end - start)) * 0.5).toLong())
+            pauseTime = max(0, (pauseTime * 0.5 + (1000/30.0 - time) * 0.5).toLong())
 
             postDelayed(this, pauseTime)
         }

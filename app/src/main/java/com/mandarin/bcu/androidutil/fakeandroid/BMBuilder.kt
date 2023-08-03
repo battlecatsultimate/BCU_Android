@@ -47,6 +47,12 @@ class BMBuilder : ImageBuilder<Bitmap>() {
         return FIBM(o)
     }
 
+    override fun build(o: Bitmap?, appended: Boolean): FakeImage {
+        o ?: return FIBM()
+
+        return FIBM(o, appended)
+    }
+
     override fun build(w: Int, h: Int): FakeImage {
         return FIBM(Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888))
     }

@@ -25,7 +25,7 @@ import common.util.anim.ImgCut
 import common.util.lang.ProcLang
 import java.io.File
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 import java.util.function.Consumer
 
 object Definer {
@@ -33,6 +33,7 @@ object Definer {
     private val starid = StaticStore.starid
     private val abiid = StaticStore.abiid
 
+    @Synchronized
     fun define(context: Context, prog: Consumer<Double>, text: Consumer<String>) {
         try {
             if (!StaticStore.init) {
@@ -424,6 +425,205 @@ object Definer {
         }
     }
 
+    fun initializeConfiguration(shared: SharedPreferences, c: Context) {
+        val ed = shared.edit()
+
+        if (!shared.contains("initial")) {
+            initializeAsset(c)
+            ed.putBoolean("initial", true)
+            ed.putBoolean("theme", false)
+            ed.putBoolean("frame", true)
+            ed.putBoolean("apktest", false)
+            ed.putInt("default_level", 50)
+            ed.putInt("Language", 0)
+            ed.putInt("Orientation", 0)
+            ed.putBoolean("Lay_Port", true)
+            ed.putBoolean("Lay_Land", true)
+            ed.apply()
+        }
+        if (!shared.contains("apktest")) {
+            ed.putBoolean("apktest", true)
+            ed.apply()
+        }
+
+        if (!shared.contains("default_level")) {
+            ed.putInt("default_level", 50)
+            ed.apply()
+        }
+
+        if (!shared.contains("apktest")) {
+            ed.putBoolean("apktest", false)
+            ed.apply()
+        }
+
+        if (!shared.contains("Language")) {
+            ed.putInt("Language", 0)
+            ed.apply()
+        }
+
+        if (!shared.contains("frame")) {
+            ed.putBoolean("frame", true)
+            ed.apply()
+        }
+
+        if (shared.contains("Orientation")) {
+            ed.remove("Orientation")
+            ed.apply()
+        }
+
+        if (!shared.contains("Lay_Port")) {
+            ed.putBoolean("Lay_Port", true)
+            ed.apply()
+        }
+
+        if (!shared.contains("Lay_Land")) {
+            ed.putBoolean("Lay_Land", true)
+            ed.apply()
+        }
+
+        if (shared.contains("Skip_Text")) {
+            ed.remove("Skip_Text")
+            ed.apply()
+        }
+
+        if (!shared.contains("upload")) {
+            ed.putBoolean("upload", false)
+            ed.apply()
+        }
+
+        if (!shared.contains("ask_upload")) {
+            ed.putBoolean("ask_upload", true)
+            ed.apply()
+        }
+
+        if (!shared.contains("music")) {
+            ed.putBoolean("music", true)
+            ed.apply()
+        }
+
+        if (!shared.contains("mus_vol")) {
+            ed.putInt("mus_vol", 99)
+            ed.apply()
+        }
+
+        if (!shared.contains("SE")) {
+            ed.putBoolean("SE", true)
+            ed.apply()
+        }
+
+        if (!shared.contains("se_vol")) {
+            ed.putInt("se_vol", 99)
+            ed.apply()
+        }
+
+        if (!shared.contains("DEV_MODE")) {
+            ed.putBoolean("DEV_MODE", false)
+            ed.apply()
+        }
+
+        if (!shared.contains("Announce_0.13.0")) {
+            ed.putBoolean("Announce_0.13.0", false)
+            ed.apply()
+        }
+
+        if (!shared.contains("PackReset0137")) {
+            ed.putBoolean("PackReset0137", false)
+            ed.apply()
+        }
+
+        if(!shared.contains("Reformat0150")) {
+            ed.putBoolean("Reformat0150", false)
+            ed.apply()
+        }
+
+        if(!shared.contains("UI")) {
+            ed.putBoolean("UI", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("ui_vol")) {
+            ed.putInt("ui_vol", 99)
+            ed.apply()
+        }
+
+        if(!shared.contains("gif")) {
+            ed.putInt("gif", 100)
+            ed.apply()
+        }
+
+        if(!shared.contains("rowlayout")) {
+            ed.putBoolean("rowlayout", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("levelLimit")) {
+            ed.putInt("levelLimit", 0)
+            ed.apply()
+        }
+
+        if(!shared.contains("unlockPlus")) {
+            ed.putBoolean("unlockPlus", true)
+            ed.apply()
+        }
+
+        if(!shared.getBoolean("PackReset0137", false)) {
+            ed.putBoolean("PackReset0137", true)
+            ed.apply()
+
+            deleter(File(StaticStore.getExternalRes(c)))
+        }
+
+        if(!shared.contains("bgeff")) {
+            ed.putBoolean("bgeff", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("unitDelay")) {
+            ed.putBoolean("unitDelay", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("viewerColor")) {
+            ed.putInt("viewerColor", -1)
+            ed.apply()
+        }
+
+        if(!shared.contains("exContinue")) {
+            ed.putBoolean("exContinue", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("realEx")) {
+            ed.putBoolean("realEx", false)
+            ed.apply()
+        }
+
+        if(!shared.contains("shake")) {
+            ed.putBoolean("shake", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("showst")) {
+            ed.putBoolean("showst", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("showres")) {
+            ed.putBoolean("showres", true)
+            ed.apply()
+        }
+
+        if(!shared.contains("reallv")) {
+            ed.putBoolean("reallv", false)
+            ed.apply()
+        }
+
+        if(!shared.contains("lazylineup")) {
+            ed.putBoolean("lazylineup", false)
+            ed.apply()
+        }
+    }
+
     private fun extractMusic(p: PackData.UserPack, shared: SharedPreferences) {
         if(p.musics.list.isEmpty())
             return
@@ -508,5 +708,39 @@ object Definer {
         }
 
         return true
+    }
+
+    private fun initializeAsset(c: Context) {
+        var f = File(StaticStore.getExternalAsset(c))
+
+        if(!f.exists())
+            f.mkdirs()
+
+        f = File(StaticStore.getExternalAsset(c)+"assets/")
+
+        if(!f.exists())
+            f.mkdirs()
+
+        f = File(StaticStore.getExternalAsset(c)+"lang/")
+
+        if(!f.exists())
+            f.mkdirs()
+
+        f = File(StaticStore.getExternalAsset(c)+"music/")
+
+        if(!f.exists())
+            f.mkdirs()
+    }
+
+    private fun deleter(f: File) {
+        if (f.isDirectory) {
+            val lit = f.listFiles() ?: return
+
+            for (g in lit)
+                deleter(g)
+
+            f.delete()
+        } else
+            f.delete()
     }
 }

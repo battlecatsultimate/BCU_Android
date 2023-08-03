@@ -76,7 +76,7 @@ class BGListPager : Fragment() {
                 }
 
                 intent.putExtra("Data", JsonEncoder.encode(data[position]).toString())
-                intent.putExtra("Img", ImageViewer.BG)
+                intent.putExtra("Img", ImageViewer.ViewerType.BACKGROUND.name)
 
                 c.startActivity(intent)
             }

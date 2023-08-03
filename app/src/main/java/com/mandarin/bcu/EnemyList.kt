@@ -9,28 +9,51 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
+import com.mandarin.bcu.androidutil.enemy.adapters.EnemyListPager
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
+import common.pack.Identifier
+import common.pack.PackData
+import common.pack.UserProfile
 import common.system.fake.ImageBuilder
-import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 open class EnemyList : AppCompatActivity() {
-    private var mode = EAdder.MODE_INFO
+    enum class Mode {
+        INFO,
+        SELECTION
+    }
+
+    private var mode = Mode.INFO
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val schname: TextInputEditText = findViewById(R.id.enemlistschname)
+        val schname = findViewById<TextInputEditText>(R.id.enemlistschname)
 
         for(i in StaticStore.filterEntityList.indices) {
             StaticStore.filterEntityList[i] = true
@@ -68,7 +91,7 @@ open class EnemyList : AppCompatActivity() {
             }
         }
 
-        LeakCanaryManager.initCanary(shared)
+        LeakCanaryManager.initCanary(shared, application)
 
         DefineItf.check(this)
 
@@ -83,40 +106,125 @@ open class EnemyList : AppCompatActivity() {
         val extra = intent.extras
 
         if(extra != null) {
-            mode = extra.getInt("mode")
+            mode = Mode.valueOf(extra.getString("mode", "INFO"))
         }
 
-        val back = findViewById<FloatingActionButton>(R.id.enlistbck)
-        val search = findViewById<FloatingActionButton>(R.id.enlistsch)
+        lifecycleScope.launch {
+            //Prepare
+            val tab = findViewById<TabLayout>(R.id.enlisttab)
+            val pager = findViewById<ViewPager2>(R.id.enlistpager)
+            val search = findViewById<FloatingActionButton>(R.id.enlistsch)
+            val schname = findViewById<TextInputEditText>(R.id.enemlistschname)
+            val schnamel = findViewById<TextInputLayout>(R.id.enemlistschnamel)
+            val back = findViewById<FloatingActionButton>(R.id.enlistbck)
+            val st = findViewById<TextView>(R.id.status)
+            val prog = findViewById<ProgressBar>(R.id.prog)
 
-        back.setOnClickListener {
-            StaticStore.filterReset()
-            StaticStore.entityname = ""
-            finish()
-        }
+            StaticStore.setDisappear(tab, pager, search, schname, schnamel)
+            search.hide()
 
-        search.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                gotoFilter()
+            prog.isIndeterminate = true
+
+            //Load Data
+            withContext(Dispatchers.IO) {
+                Definer.define(this@EnemyList, { _ -> }, { t -> runOnUiThread { st.text = t }})
             }
-        })
 
-        EAdder(this, mode, supportFragmentManager, lifecycle).execute()
+            //Load UI
+            if(StaticStore.entityname != "") {
+                schname.setText(StaticStore.entityname)
+            }
 
-        onBackPressedDispatcher.addCallback(
-            this,
-            object: OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    back.performClick()
+            schname.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable) {
+                    StaticStore.entityname = s.toString()
+
+                    for(i in StaticStore.filterEntityList.indices) {
+                        StaticStore.filterEntityList[i] = true
+                    }
                 }
+            })
+
+            pager.isSaveEnabled = false
+            pager.isSaveFromParentEnabled = false
+
+            pager.adapter = EnemyListTab()
+            pager.offscreenPageLimit = UserProfile.getAllPacks().size
+
+            val keys = getExistingPack()
+
+            TabLayoutMediator(tab, pager) { t, position ->
+                t.text = if(position == 0) {
+                    getString(R.string.pack_default)
+                } else {
+                    val pack = UserProfile.getPack(keys[position])
+
+                    if(pack == null) {
+                        keys[position]
+                    }
+
+                    val name = when (pack) {
+                        is PackData.DefPack -> {
+                            getString(R.string.pack_default)
+                        }
+                        is PackData.UserPack -> {
+                            pack.desc.names.toString()
+                        }
+                        else -> {
+                            ""
+                        }
+                    }
+
+                    name.ifEmpty {
+                        keys[position]
+                    }
+                }
+            }.attach()
+
+            back.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    StaticStore.filterReset()
+                    StaticStore.entityname = ""
+                    finish()
+                }
+            })
+
+            search.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    val intent = Intent(this@EnemyList, EnemySearchFilter::class.java)
+
+                    resultLauncher.launch(intent)
+                }
+            })
+
+            onBackPressedDispatcher.addCallback(
+                this@EnemyList,
+                object: OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        back.performClick()
+                    }
+                }
+            )
+
+            if(getEnemyPackNumber() > 1) {
+                tab.visibility = View.VISIBLE
+            } else {
+                val collapse = findViewById<CollapsingToolbarLayout>(R.id.enemcollapse)
+
+                val param = collapse.layoutParams as AppBarLayout.LayoutParams
+
+                param.scrollFlags = 0
+
+                collapse.layoutParams = param
             }
-        )
-    }
 
-    protected fun gotoFilter() {
-        val intent = Intent(this@EnemyList, EnemySearchFilter::class.java)
+            StaticStore.setAppear(pager, search, schname, schnamel)
+            search.show()
 
-        resultLauncher.launch(intent)
+            StaticStore.setDisappear(st, prog)
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -143,7 +251,7 @@ open class EnemyList : AppCompatActivity() {
         super.attachBaseContext(LocaleManager.langChange(newBase,shared?.getInt("Language",0) ?: 0))
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         StaticStore.toast = null
     }
@@ -155,5 +263,49 @@ open class EnemyList : AppCompatActivity() {
             (CommonStatic.ctx as AContext).updateActivity(this)
 
         super.onResume()
+    }
+
+    private fun getExistingPack() : ArrayList<String> {
+        val packs = UserProfile.getAllPacks()
+
+        val res = ArrayList<String>()
+
+        for(p in packs) {
+            if(p.enemies.list.isNotEmpty()) {
+                if(p is PackData.DefPack) {
+                    res.add(Identifier.DEF)
+                } else if(p is PackData.UserPack) {
+                    res.add(p.desc.id)
+                }
+            }
+        }
+
+        return res
+    }
+
+    private fun getEnemyPackNumber() : Int {
+        val packs = UserProfile.getAllPacks()
+
+        var res = 0
+
+        for(p in packs) {
+            if(p.enemies.list.isNotEmpty()) {
+                res++
+            }
+        }
+
+        return res
+    }
+
+    inner class EnemyListTab : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+        private val keys = getExistingPack()
+
+        override fun getItemCount(): Int {
+            return keys.size
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return EnemyListPager.newInstance(keys[position], position, mode)
+        }
     }
 }

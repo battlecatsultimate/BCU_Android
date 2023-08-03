@@ -14,9 +14,9 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mandarin.bcu.EnemyInfo
+import com.mandarin.bcu.EnemyList
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.enemy.coroutine.EAdder
 import com.mandarin.bcu.androidutil.filter.FilterEntity
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -26,16 +26,16 @@ class EnemyListPager : Fragment() {
 
     private var pid = Identifier.DEF
     private var position = 0
-    private var mode = EAdder.MODE_INFO
+    private var mode = EnemyList.Mode.INFO
 
     companion object {
-        fun newInstance(pid: String, position: Int, mode: Int) : EnemyListPager {
+        fun newInstance(pid: String, position: Int, mode: EnemyList.Mode) : EnemyListPager {
             val elp = EnemyListPager()
             val bundle = Bundle()
 
             bundle.putString("pid", pid)
             bundle.putInt("position", position)
-            bundle.putInt("mode", mode)
+            bundle.putString("mode", mode.name)
 
             elp.arguments = bundle
 
@@ -48,9 +48,11 @@ class EnemyListPager : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
-        pid = arguments?.getString("pid") ?: Identifier.DEF
-        position = arguments?.getInt("position") ?: 0
-        mode = arguments?.getInt("mode") ?: EAdder.MODE_INFO
+        val arg = arguments ?: return view
+
+        pid = arg.getString("pid") ?: Identifier.DEF
+        position = arg.getInt("position")
+        mode = EnemyList.Mode.valueOf(arg.getString("mode", "INFO"))
 
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
@@ -98,7 +100,7 @@ class EnemyListPager : Fragment() {
             val ac = activity ?: return
 
             when(mode) {
-                EAdder.MODE_INFO -> {
+                EnemyList.Mode.INFO -> {
                     list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                         if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
                         StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
@@ -107,21 +109,12 @@ class EnemyListPager : Fragment() {
                         ac.startActivity(result)
                     }
                 }
-                EAdder.MODE_SELECTION -> {
+                EnemyList.Mode.SELECTION -> {
                     list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                         val intent = Intent()
                         intent.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
                         ac.setResult(Activity.RESULT_OK, intent)
                         ac.finish()
-                    }
-                }
-                else -> {
-                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
-                        StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
-                        val result = Intent(ac, EnemyInfo::class.java)
-                        result.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
-                        ac.startActivity(result)
                     }
                 }
             }

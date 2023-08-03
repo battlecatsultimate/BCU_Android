@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.fakeandroid
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import androidx.core.graphics.applyCanvas
 import com.mandarin.bcu.androidutil.StaticStore
 import common.system.fake.FakeGraphics
 import common.system.fake.FakeImage
@@ -10,26 +11,44 @@ import common.system.fake.ImageBuilder
 import java.io.IOException
 
 class FIBM : FakeImage {
-    private val bit: Bitmap
+    companion object {
+        const val offset = 2
 
-    @JvmField
-    var reference: String = ""
-    @JvmField
-    var password: String = ""
+        @JvmField
+        val builder: ImageBuilder<Bitmap> = BMBuilder()
+
+        private val imagePaint = Paint().apply {
+            isAntiAlias = false
+        }
+
+        fun build(bimg2: Bitmap?): FakeImage? {
+            return try {
+                builder.build(bimg2)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    private val bit: Bitmap
+    var appended: Boolean
+        private set
 
     constructor() {
         bit = StaticStore.empty(1, 1)
         bit.recycle()
+        appended = false
     }
 
     constructor(read: Bitmap) {
         bit = read.copy(Bitmap.Config.ARGB_8888, true)
+        appended = false
     }
 
-    constructor(ref: String) {
-        bit = StaticStore.empty(1,1)
-        bit.recycle()
-        reference = ref
+    constructor(read: Bitmap, appended: Boolean) {
+        bit = read.copy(Bitmap.Config.ARGB_8888, true)
+        this.appended = appended
     }
 
     override fun bimg(): Bitmap {
@@ -38,7 +57,11 @@ class FIBM : FakeImage {
 
     override fun getHeight(): Int {
         return try {
-            bit.height
+            if (appended) {
+                bit.height - offset * 2
+            } else {
+                bit.height
+            }
         } catch(e: Exception) {
             0
         }
@@ -46,7 +69,11 @@ class FIBM : FakeImage {
 
     override fun getWidth(): Int {
         return try {
-            bit.width
+            if (appended) {
+                bit.width - offset * 2
+            } else {
+                bit.width
+            }
         } catch(e: Exception) {
             0
         }
@@ -62,7 +89,15 @@ class FIBM : FakeImage {
 
     override fun getSubimage(i: Int, j: Int, k: Int, l: Int): FIBM? {
         return try {
-            builder.build(Bitmap.createBitmap(bit, i, j, k, l)) as FIBM
+            val cropped = Bitmap.createBitmap(bit, i, j, k, l)
+
+            val appended = Bitmap.createBitmap(cropped.width + offset * 2, cropped.height + offset * 2, Bitmap.Config.ARGB_8888)
+
+            appended.applyCanvas {
+                drawBitmap(cropped, offset.toFloat(), offset.toFloat(), imagePaint)
+            }
+
+            builder.build(appended, true) as FIBM
         } catch (e: IOException) {
             e.printStackTrace()
             null
@@ -107,20 +142,6 @@ class FIBM : FakeImage {
         p.isFilterBitmap = true
 
         return CVGraphics(Canvas(bit), p, Paint(), false)
-    }
-
-    companion object {
-        @JvmField
-        val builder: ImageBuilder<Bitmap> = BMBuilder()
-
-        fun build(bimg2: Bitmap?): FakeImage? {
-            return try {
-                builder.build(bimg2)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                null
-            }
-        }
     }
 
 }

@@ -69,7 +69,7 @@
     <string name="main_file_cancel">취소</string>
     <string name="down_wait">연결 대기중…</string>
     <string name="down_state_no">다운로드 실패…</string>
-    <string name="down_state_doing">"파일 다운로드중… : "</string>
+    <string name="down_state_doing">"파일 다운로드중… : %1$s"</string>
     <string name="down_state_ok">다운로드 성공!</string>
     <string name="down_state_rea">준비완료</string>
     <string name="down_redown">다시시도</string>
@@ -511,7 +511,7 @@
     <string name="main_err_always">항상 로그 파일 서버로 전송</string>
     <string name="main_err_start">업로드 시작 중…</string>
     <string name="config_send_err">항상 서버에 에러 로그 전송</string>
-    <string name="down_state_music">"음악 다운로드중… : "</string>
+    <string name="down_state_music">음악 다운로드중… : %1$s</string>
     <string name="err_send_log">로그 보내는 중… : -/_</string>
     <string name="err_send_result">로그 보냄 | 성공 : - / 실패 : _</string>
     <string name="config_music">배경음악</string>
@@ -988,4 +988,8 @@
     <string name="err_solution">가능한 해결법</string>
     <string name="err_reason_asset">에셋이 손상되었습니다\n\n에셋은 냥코 데이터를 갖고 있어 앱이 실행되는데 매우 중요한 파일들입니다. 앱이 에셋 다운로드에 실패했거나 다른 요소들에 의해 간섭을 받아 에셋이 손상된 것으로 보입니다</string>
     <string name="err_solution_asset">1. 시스템 설정에 들어가신 뒤, 애플리케이션 -> BCU Android를 선택해 줍니다. 아래의 버튼을 탭하여 바로 접근하실 수 있습니다\n2. 데이터를 초기화 하여 에셋 파일들을 다시 다운받습니다\n\n- 에셋을 다시 다운받을 때 다른 앱으로 전환하거나 화면을 끄지 않도록하여 앱이 다운로드가 끝날 때까지 작동할 수 있도록 만들어줘야 합니다</string>
+    <string name="main_asset_fail">파일 다운로드 실패…</string>
+    <string name="main_internet_check_fail">인터넷 상태 확인 실패…</string>
+    <string name="main_internet_dialog_title">인터넷 연결 필요</string>
+    <string name="main_internet_dialog_content">BCU가 제대로 작동하기 위해서 필수적인 파일들이나 추가적인 에셋을 다운받아야 합니다. 필수적인 파일들을 전부 다운받으면 그 뒤로는 인터넷 없이 사용할 수 있으니 인터넷에 연결한 뒤, 앱을 켜주세요</string>
 </resources>
