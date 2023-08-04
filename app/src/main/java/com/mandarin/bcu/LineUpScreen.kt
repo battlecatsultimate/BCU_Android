@@ -113,7 +113,6 @@ class LineUpScreen : AppCompatActivity() {
             val searchLayout = findViewById<TextInputLayout>(R.id.animschnamel)
             val layout = findViewById<LinearLayout>(R.id.lineuplayout)
             val view = findViewById<View>(R.id.view)
-            val line = LineUpView(this@LineUpScreen, lineupPager)
             val st = findViewById<TextView>(R.id.status)
             var setn = shared.getInt("equip_set", 0)
             var lun = shared.getInt("equip_lu", 0)
@@ -125,24 +124,15 @@ class LineUpScreen : AppCompatActivity() {
             val popupMenu = PopupMenu(this@LineUpScreen, option)
             val menu = popupMenu.menu
 
-            line.id = R.id.lineupView
-
-            val w = StaticStore.getScreenWidth(this@LineUpScreen, false)
-            val h = w / 5.0f * 3
-
-            line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
-
-            layout.addView(line)
-
             val ids = intArrayOf(R.string.lineup_list, R.string.lineup_unit, R.string.lineup_orb, R.string.lineup_castle, R.string.lineup_treasure, R.string.lineup_construction, R.string.lineup_base, R.string.lineup_decoration, R.string.lineup_combo)
             val names = Array(ids.size) {
                 getString(ids[it])
             }
 
             if (view == null)
-                StaticStore.setDisappear(tabLayout, lineupPager, line, row, schname, searchLayout)
+                StaticStore.setDisappear(tabLayout, lineupPager, row, schname, searchLayout)
             else
-                StaticStore.setDisappear(tabLayout, lineupPager, line, row, view, schname, searchLayout)
+                StaticStore.setDisappear(tabLayout, lineupPager, row, view, schname, searchLayout)
 
             //Load Data
             withContext(Dispatchers.IO) {
@@ -189,6 +179,19 @@ class LineUpScreen : AppCompatActivity() {
                     StaticStore.LUread = true
                 }
             }
+
+            val line = LineUpView(this@LineUpScreen, lineupPager)
+
+            line.id = R.id.lineupView
+
+            val w = StaticStore.getScreenWidth(this@LineUpScreen, false)
+            val h = w / 5.0f * 3
+
+            line.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h.toInt())
+
+            layout.addView(line)
+
+            StaticStore.setDisappear(line)
             
             //Load UI
             prog.isIndeterminate = true
