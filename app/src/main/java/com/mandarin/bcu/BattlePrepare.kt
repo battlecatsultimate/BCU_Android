@@ -49,10 +49,21 @@ class BattlePrepare : AppCompatActivity() {
     }
 
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val line = findViewById<LineUpView>(R.id.lineupView)
-        line.updateLineUp()
-        val setname = findViewById<TextView>(R.id.lineupname)
-        setname.text = setLUName
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                while(true) {
+                    val line = findViewById<LineUpView>(R.id.lineupView) ?: continue
+
+                    line.updateLineUp()
+
+                    break
+                }
+            }
+
+            val setName = findViewById<TextView>(R.id.lineupname)
+
+            setName.text = setLUName
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility", "SourceLockedOrientationActivity")
