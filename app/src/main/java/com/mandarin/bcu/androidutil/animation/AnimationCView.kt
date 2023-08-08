@@ -146,7 +146,6 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
         started = true
     }
 
-    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         if (StaticStore.gifisSaving && !StaticStore.keepDoing) {
             StaticStore.keepDoing = true
@@ -161,7 +160,7 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
         }
 
         if (StaticStore.play) {
-            p2 = P(width / 2.0 + posx, height * 2.0 / 3 + posy)
+            p2 = P.newP(width / 2.0 + posx, height * 2.0 / 3 + posy)
 
             cv.setCanvas(canvas)
 

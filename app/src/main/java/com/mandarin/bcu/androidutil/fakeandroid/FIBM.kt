@@ -9,16 +9,20 @@ import common.system.fake.FakeGraphics
 import common.system.fake.FakeImage
 import common.system.fake.ImageBuilder
 import java.io.IOException
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.round
 
 class FIBM : FakeImage {
     companion object {
-        const val offset = 2
-
         @JvmField
         val builder: ImageBuilder<Bitmap> = BMBuilder()
+        const val maxOffset = 2
+        const val calibrator = 0.75
 
         private val imagePaint = Paint().apply {
-            isAntiAlias = false
+            isAntiAlias = true
+            isFilterBitmap = true
         }
 
         fun build(bimg2: Bitmap?): FakeImage? {
@@ -32,23 +36,30 @@ class FIBM : FakeImage {
     }
 
     private val bit: Bitmap
-    var appended: Boolean
-        private set
+
+    val offsetX: Int
+    val offsetY: Int
 
     constructor() {
         bit = StaticStore.empty(1, 1)
         bit.recycle()
-        appended = false
+
+        offsetX = 0
+        offsetY = 0
     }
 
     constructor(read: Bitmap) {
         bit = read.copy(Bitmap.Config.ARGB_8888, true)
-        appended = false
+
+        offsetX = 0
+        offsetY = 0
     }
 
-    constructor(read: Bitmap, appended: Boolean) {
-        bit = read.copy(Bitmap.Config.ARGB_8888, true)
-        this.appended = appended
+    constructor(image: Bitmap, offsetX: Int, offsetY: Int) {
+        bit = image
+
+        this.offsetX = offsetX
+        this.offsetY = offsetY
     }
 
     override fun bimg(): Bitmap {
@@ -57,8 +68,8 @@ class FIBM : FakeImage {
 
     override fun getHeight(): Int {
         return try {
-            if (appended) {
-                bit.height - offset * 2
+            if (offsetY != 0) {
+                bit.height - offsetY * 2
             } else {
                 bit.height
             }
@@ -69,8 +80,8 @@ class FIBM : FakeImage {
 
     override fun getWidth(): Int {
         return try {
-            if (appended) {
-                bit.width - offset * 2
+            if (offsetX != 0) {
+                bit.width - offsetX * 2
             } else {
                 bit.width
             }
@@ -89,15 +100,20 @@ class FIBM : FakeImage {
 
     override fun getSubimage(i: Int, j: Int, k: Int, l: Int): FIBM? {
         return try {
-            val cropped = Bitmap.createBitmap(bit, i, j, k, l)
+            val cropped = Bitmap.createBitmap(bit, i, j, max(1, k), max(1, l))
 
-            val appended = Bitmap.createBitmap(cropped.width + offset * 2, cropped.height + offset * 2, Bitmap.Config.ARGB_8888)
+            val offsetX = scientificRound(min(maxOffset.toDouble(), k / 10.0))
+            val offsetY = scientificRound(min(maxOffset.toDouble(), l / 10.0))
 
-            appended.applyCanvas {
-                drawBitmap(cropped, offset.toFloat(), offset.toFloat(), imagePaint)
+            if (offsetX != 0 || offsetY != 0) {
+                val appended = Bitmap.createBitmap(cropped.width + offsetX * 2, cropped.height + offsetY * 2, Bitmap.Config.ARGB_8888).applyCanvas {
+                    drawBitmap(cropped, offsetX.toFloat(), offsetY.toFloat(), imagePaint)
+                }
+
+                builder.build(appended, offsetX, offsetY) as FIBM
+            } else {
+                builder.build(cropped) as FIBM
             }
-
-            builder.build(appended, true) as FIBM
         } catch (e: IOException) {
             e.printStackTrace()
             null
@@ -144,4 +160,18 @@ class FIBM : FakeImage {
         return CVGraphics(Canvas(bit), p, Paint(), false)
     }
 
+    private fun scientificRound(value: Double) : Int {
+        val toInt = value.toInt()
+
+        val decimals = value - toInt
+
+        return if (decimals == 0.5) {
+            if (toInt % 2 == 1)
+                round(value).toInt()
+            else
+                toInt
+        } else {
+            round(value).toInt()
+        }
+    }
 }

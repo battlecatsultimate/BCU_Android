@@ -41,16 +41,14 @@ class BMBuilder : ImageBuilder<Bitmap>() {
         return FIBM(b)
     }
 
+    override fun build(o: Bitmap, offsetX: Int, offsetY: Int): FakeImage {
+        return FIBM(o, offsetX, offsetY)
+    }
+
     override fun build(o: Bitmap?): FakeImage {
         o ?: return FIBM()
 
         return FIBM(o)
-    }
-
-    override fun build(o: Bitmap?, appended: Boolean): FakeImage {
-        o ?: return FIBM()
-
-        return FIBM(o, appended)
     }
 
     override fun build(w: Int, h: Int): FakeImage {

@@ -1,6 +1,5 @@
 package com.mandarin.bcu.androidutil.fakeandroid
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorMatrixColorFilter
@@ -112,19 +111,19 @@ class CVGraphics : FakeGraphics {
     }
 
     override fun drawImage(bimg: FakeImage, x: Double, y: Double) {
-        val b = bimg.bimg() as Bitmap
-        val appended = bimg is FIBM && bimg.appended
+        if (bimg !is FIBM)
+            return
 
-        if (appended) {
-            c.drawBitmap(b, (x - FIBM.offset).toFloat(), (y - FIBM.offset).toFloat(), bitmapPaint)
+        if (bimg.offsetX != 0 || bimg.offsetY != 0) {
+            c.drawBitmap(bimg.bimg(), (x - bimg.offsetX).toFloat(), (y - bimg.offsetY).toFloat(), bitmapPaint)
         } else {
-            c.drawBitmap(b, x.toFloat(), y.toFloat(), bitmapPaint)
+            c.drawBitmap(bimg.bimg(), x.toFloat(), y.toFloat(), bitmapPaint)
         }
     }
 
     override fun drawImage(bimg: FakeImage, x: Double, y: Double, d: Double, e: Double) {
-        val b = bimg.bimg() as Bitmap
-        val appended = bimg is FIBM && bimg.appended
+        if (bimg !is FIBM || d * e == 0.0)
+            return
 
         m2.reset()
 
@@ -132,27 +131,37 @@ class CVGraphics : FakeGraphics {
 
         m2.set(m)
 
-        val wr = if (appended) {
-            (d + 1) / bimg.width
+        val wr = if (bimg.offsetX != 0) {
+            (d + FIBM.calibrator) / bimg.width
         } else {
             d / bimg.width
         }
 
-        val hr = if (appended) {
-            (e + 1) / bimg.height
+        val hr = if (bimg.offsetY != 0) {
+            (e + FIBM.calibrator) / bimg.height
         } else {
             e / bimg.height
         }
 
-        if (appended) {
-            m2.preTranslate((x - FIBM.offset - 0.5).toFloat(), (y - FIBM.offset - 0.5).toFloat())
-            m2.preScale(wr.toFloat(), hr.toFloat(), (FIBM.offset).toFloat(), (FIBM.offset).toFloat())
+        if (bimg.offsetX != 0 || bimg.offsetY != 0) {
+            val calibrationX = if (bimg.offsetX == 0)
+                0.0
+            else
+                bimg.offsetX + FIBM.calibrator / 2.0
+
+            val calibrationY = if (bimg.offsetY == 0)
+                0.0
+            else
+                bimg.offsetY + FIBM.calibrator / 2.0
+
+            m2.preTranslate((x - calibrationX).toFloat(), (y - calibrationY).toFloat())
+            m2.preScale(wr.toFloat(), hr.toFloat(), bimg.offsetX.toFloat(), bimg.offsetY.toFloat())
         } else {
             m2.preTranslate(x.toFloat(), y.toFloat())
             m2.preScale(wr.toFloat(), hr.toFloat())
         }
 
-        c.drawBitmap(b, m2, bitmapPaint)
+        c.drawBitmap(bimg.bimg(), m2, bitmapPaint)
     }
 
     override fun drawLine(i: Int, j: Int, x: Int, y: Int) {
