@@ -40,7 +40,7 @@ class AssetDownloadService : Service() {
         const val WAKE_UP = 0
     }
 
-    private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/", "fr/", "it/", "es/", "de/")
+    private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/", "fr/", "it/", "es/", "de/", "th/")
 
     private val jobManager = SupervisorJob()
     private val viewScope = CoroutineScope(Dispatchers.IO + jobManager)

@@ -57,7 +57,7 @@ import java.io.File
 import java.util.Locale
 
 open class CheckUpdateScreen : AppCompatActivity() {
-    private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/", "fr/", "it/", "es/", "de/")
+    private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/", "fr/", "it/", "es/", "de/", "th/")
 
     private val broadcastReceiver = ServiceBroadCastReceiver()
     private val serviceConnector = AssetDownloaderConnector()

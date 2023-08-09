@@ -995,4 +995,6 @@
     <string name="stg_info_catamina">%1$d Catamin A</string>
     <string name="stg_info_cataminb">%1$d Catamin B</string>
     <string name="stg_info_cataminc">%1$d Catamin C</string>
+    <string name="def_lang_th">ภาษาไทย</string>
+    <string name="config_lang_reload">Reloading Language Data…</string>
 </resources>

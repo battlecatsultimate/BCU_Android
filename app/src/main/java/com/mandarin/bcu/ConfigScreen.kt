@@ -8,12 +8,14 @@ import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
+import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -24,6 +26,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.mandarin.bcu.androidutil.LocaleManager
@@ -36,18 +39,17 @@ import com.mandarin.bcu.androidutil.supports.ColorPickerView
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.roundToInt
 
 open class ConfigScreen : AppCompatActivity() {
-    companion object {
-        var revalidate: Boolean = false
-    }
-
-    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr, R.string.def_lang_it, R.string.def_lang_es, R.string.def_lang_de)
-    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr","it","es","de")
+    private val langId = intArrayOf(R.string.lang_auto, R.string.def_lang_en, R.string.def_lang_zh, R.string.def_lang_ko, R.string.def_lang_ja, R.string.def_lang_ru, R.string.def_lang_fr, R.string.def_lang_it, R.string.def_lang_es, R.string.def_lang_de, R.string.def_lang_th)
+    private val langCode = arrayOf("","en","zh","ko","ja","ru","fr","it","es","de","th")
 
     private val df: DecimalFormat
 
@@ -90,11 +92,6 @@ open class ConfigScreen : AppCompatActivity() {
         (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_config_screen)
-
-        if(revalidate) {
-            val l = Locale.getDefault().language
-            Revalidater.validate(l, this)
-        }
 
         val back = findViewById<ImageButton>(R.id.configback)
 
@@ -245,11 +242,34 @@ open class ConfigScreen : AppCompatActivity() {
                     ed1.putInt("Language", l)
                     ed1.apply()
 
-                    revalidate = true
-
                     StaticStore.getLang(l)
 
-                    restart()
+                    val dialog = Dialog(this@ConfigScreen)
+
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog.setContentView(R.layout.loading_dialog)
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) ?: return
+
+                    val v = dialog.window?.decorView ?: return
+
+                    val title = v.findViewById<TextView>(R.id.loadtitle)
+                    val loadProgress = v.findViewById<TextView>(R.id.loadprogress)
+
+                    StaticStore.setDisappear(loadProgress)
+                    title.text = getString(R.string.config_lang_reload)
+
+                    dialog.setCancelable(false)
+                    dialog.show()
+
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            Revalidater.validate(Locale.getDefault().language, this@ConfigScreen)
+                        }
+
+                        dialog.dismiss()
+
+                        restart()
+                    }
                 }
             }
 

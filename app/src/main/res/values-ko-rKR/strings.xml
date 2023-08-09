@@ -995,4 +995,6 @@
     <string name="stg_info_catamina">고양이 드링크 A %1$d개</string>
     <string name="stg_info_cataminb">고양이 드링크 B %1$d개</string>
     <string name="stg_info_cataminc">고양이 드링크 C %1$d개</string>
+    <string name="def_lang_th">ภาษาไทย</string>
+    <string name="config_lang_reload">언어 데이터 재로딩 중…</string>
 </resources>

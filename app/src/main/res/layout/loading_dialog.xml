@@ -8,24 +8,23 @@
         android:id="@+id/loadprog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/layout"
-        android:layout_alignBottom="@+id/layout"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp" />
 
     <LinearLayout
         android:id="@+id/layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/loadprog"
+        android:layout_alignBottom="@+id/loadprog"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
+        android:layout_toEndOf="@+id/loadprog"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
