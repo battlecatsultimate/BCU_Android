@@ -41,7 +41,7 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
     private var boxColor = Color.WHITE
 
     fun startSession(ac: Activity) {
-        initializeAnimation(StaticStore.formposition, StaticStore.animposition)
+        initializeAnimation(StaticStore.animposition, StaticStore.formposition)
 
         recorder.checkValidClasses(data, type)
 
