@@ -1,6 +1,7 @@
 package com.mandarin.bcu.androidutil
 
 import android.content.Context
+import com.mandarin.bcu.androidutil.io.LangLoader
 import common.pack.PackData
 import common.pack.UserProfile
 
@@ -49,6 +50,14 @@ object Revalidater {
                     }
                 }
             }
+        }
+
+        LangLoader.readUnitLang(context)
+        LangLoader.readEnemyLang(context)
+        LangLoader.readStageLang(context)
+
+        if(StaticStore.medalnumber != 0) {
+            LangLoader.readMedalLang(context)
         }
     }
 }
