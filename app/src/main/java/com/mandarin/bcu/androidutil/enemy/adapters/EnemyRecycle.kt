@@ -10,7 +10,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -23,9 +22,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
+import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
-import com.mandarin.bcu.androidutil.Interpret
 import common.battle.BasisSet
 import common.pack.Identifier
 import common.util.lang.MultiLangCont
@@ -34,10 +33,10 @@ import common.util.unit.Enemy
 
 class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
-    private var activity: Activity?
+    private var activity: Activity
     private var fs = 0
-    private var multi = 100
-    private var amulti = 100
+    private var multiplication = 100
+    private var attackMultiplication = 100
     private var s: GetStrings
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
     private var color: IntArray
@@ -54,10 +53,10 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         this.data = data
     }
 
-    constructor(activity: Activity, multi: Int, amulti: Int, data: Identifier<AbEnemy>) {
+    constructor(activity: Activity, multi: Int, attackMultiplication: Int, data: Identifier<AbEnemy>) {
         this.activity = activity
-        this.multi = multi
-        this.amulti = amulti
+        this.multiplication = multi
+        this.attackMultiplication = attackMultiplication
         s = GetStrings(activity)
         color = intArrayOf(
                 StaticStore.getAttributeColor(activity, R.attr.TextPrimary)
@@ -67,11 +66,11 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pack: Button = itemView.findViewById(R.id.eneminfpack)
-        val enempack: TextView = itemView.findViewById(R.id.eneminfpackr)
+        val enemyPack: TextView = itemView.findViewById(R.id.eneminfpackr)
         val name: TextView = itemView.findViewById(R.id.eneminfname)
-        val frse: Button = itemView.findViewById(R.id.eneminffrse)
-        val enemid: TextView = itemView.findViewById(R.id.eneminfidr)
-        val enemicon: ImageView = itemView.findViewById(R.id.eneminficon)
+        val unitSwitch: Button = itemView.findViewById(R.id.eneminffrse)
+        val enemyId: TextView = itemView.findViewById(R.id.eneminfidr)
+        val enemyIcon: ImageView = itemView.findViewById(R.id.eneminficon)
         val enemhp: TextView = itemView.findViewById(R.id.eneminfhpr)
         val enemhb: TextView = itemView.findViewById(R.id.eneminfhbr)
         val enemmulti: EditText = itemView.findViewById(R.id.eneminfmultir)
@@ -104,33 +103,32 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val em = Identifier.get(data) ?: return
-        val ac = activity ?: return
 
         if(em !is Enemy)
             return
 
         val t = BasisSet.current().t()
 
-        val shared = activity!!.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
+        val shared = activity.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
         if (shared.getBoolean("frame", true)) {
             fs = 0
-            viewHolder.frse.text = activity!!.getString(R.string.unit_info_fr)
+            viewHolder.unitSwitch.text = activity.getString(R.string.unit_info_fr)
         } else {
             fs = 1
-            viewHolder.frse.text = activity!!.getString(R.string.unit_info_sec)
+            viewHolder.unitSwitch.text = activity.getString(R.string.unit_info_sec)
         }
 
-        val aclev: TextInputLayout = activity!!.findViewById(R.id.aclev)
-        val actrea: TextInputLayout = activity!!.findViewById(R.id.actrea)
-        val itfcry: TextInputLayout = activity!!.findViewById(R.id.itfcrytrea)
-        val cotccry: TextInputLayout = activity!!.findViewById(R.id.cotccrytrea)
-        val godmask = arrayOf<TextInputLayout>(activity!!.findViewById(R.id.godmask), activity!!.findViewById(R.id.godmask1), activity!!.findViewById(R.id.godmask2))
-        val aclevt: TextInputEditText = activity!!.findViewById(R.id.aclevt)
-        val actreat: TextInputEditText = activity!!.findViewById(R.id.actreat)
-        val itfcryt: TextInputEditText = activity!!.findViewById(R.id.itfcrytreat)
-        val cotccryt: TextInputEditText = activity!!.findViewById(R.id.cotccrytreat)
-        val godmaskt = arrayOf<TextInputEditText>(activity!!.findViewById(R.id.godmaskt), activity!!.findViewById(R.id.godmaskt1), activity!!.findViewById(R.id.godmaskt2))
+        val aclev: TextInputLayout = activity.findViewById(R.id.aclev)
+        val actrea: TextInputLayout = activity.findViewById(R.id.actrea)
+        val itfcry: TextInputLayout = activity.findViewById(R.id.itfcrytrea)
+        val cotccry: TextInputLayout = activity.findViewById(R.id.cotccrytrea)
+        val godmask = arrayOf<TextInputLayout>(activity.findViewById(R.id.godmask), activity.findViewById(R.id.godmask1), activity.findViewById(R.id.godmask2))
+        val aclevt: TextInputEditText = activity.findViewById(R.id.aclevt)
+        val actreat: TextInputEditText = activity.findViewById(R.id.actreat)
+        val itfcryt: TextInputEditText = activity.findViewById(R.id.itfcrytreat)
+        val cotccryt: TextInputEditText = activity.findViewById(R.id.cotccrytreat)
+        val godmaskt = arrayOf<TextInputEditText>(activity.findViewById(R.id.godmaskt), activity.findViewById(R.id.godmaskt1), activity.findViewById(R.id.godmaskt2))
 
         aclev.isCounterEnabled = true
         aclev.counterMaxLength = 2
@@ -158,7 +156,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
         val name = StaticStore.trio(em.id.id)
 
-        viewHolder.enemid.text = name
+        viewHolder.enemyId.text = name
 
         val ratio = 32f / 32f
 
@@ -169,39 +167,41 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         if (img != null)
             b = img.bimg() as Bitmap
 
-        viewHolder.enempack.text = s.getPackName(em.id, isRaw)
-        viewHolder.enemicon.setImageBitmap(StaticStore.getResizeb(b, ac, 85f * ratio, 32f * ratio))
-        viewHolder.enemhp.text = s.getHP(em, multi)
+        viewHolder.enemyPack.text = s.getPackName(em.id, isRaw)
+        viewHolder.enemyIcon.setImageBitmap(StaticStore.getResizeb(b, activity, 85f * ratio, 32f * ratio))
+        viewHolder.enemhp.text = s.getHP(em, multiplication)
         viewHolder.enemhb.text = s.getHB(em)
-        viewHolder.enemmulti.setText(multi.toString())
-        viewHolder.enemamulti.setText(amulti.toString())
-        viewHolder.enematk.text = s.getAtk(em, amulti)
+        viewHolder.enemmulti.setText(multiplication.toString())
+        viewHolder.enemamulti.setText(attackMultiplication.toString())
+        viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
         viewHolder.enematktime.text = s.getAtkTime(em, fs)
         viewHolder.enemabilt.text = s.getAbilT(em)
         viewHolder.enempre.text = s.getPre(em, fs)
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
-        viewHolder.enemtrait.text = s.getTrait(em)
+        viewHolder.enemtrait.text = s.getTrait(em, activity)
         viewHolder.enematkt.text = s.getSimu(em)
         viewHolder.enemdrop.text = s.getDrop(em, t)
         viewHolder.enemrange.text = s.getRange(em)
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
-        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray())
+        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0,
+            this.activity
+        )
         val abilityicon = Interpret.getAbiid(em.de)
 
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
             viewHolder.none.visibility = View.GONE
 
-            val linearLayoutManager = LinearLayoutManager(activity)
+            val linearLayoutManager = LinearLayoutManager(this.activity)
 
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
 
             viewHolder.emabil.layoutManager = linearLayoutManager
 
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity)
 
             viewHolder.emabil.adapter = adapterAbil
 
@@ -227,53 +227,49 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         if(em !is Enemy)
             return
 
-        val ac = activity ?: return
-
         val t = BasisSet.current().t()
 
-        val aclev: TextInputLayout = activity!!.findViewById(R.id.aclev)
-        val actrea: TextInputLayout = activity!!.findViewById(R.id.actrea)
-        val itfcry: TextInputLayout = activity!!.findViewById(R.id.itfcrytrea)
-        val cotccry: TextInputLayout = activity!!.findViewById(R.id.cotccrytrea)
-        val godmask = arrayOf<TextInputLayout>(activity!!.findViewById(R.id.godmask), activity!!.findViewById(R.id.godmask1), activity!!.findViewById(R.id.godmask2))
-        val aclevt: TextInputEditText = activity!!.findViewById(R.id.aclevt)
-        val actreat: TextInputEditText = activity!!.findViewById(R.id.actreat)
-        val itfcryt: TextInputEditText = activity!!.findViewById(R.id.itfcrytreat)
-        val cotccryt: TextInputEditText = activity!!.findViewById(R.id.cotccrytreat)
-        val godmaskt = arrayOf<TextInputEditText>(activity!!.findViewById(R.id.godmaskt), activity!!.findViewById(R.id.godmaskt1), activity!!.findViewById(R.id.godmaskt2))
+        val aclev: TextInputLayout = activity.findViewById(R.id.aclev)
+        val actrea: TextInputLayout = activity.findViewById(R.id.actrea)
+        val itfcry: TextInputLayout = activity.findViewById(R.id.itfcrytrea)
+        val cotccry: TextInputLayout = activity.findViewById(R.id.cotccrytrea)
+        val godmask = arrayOf<TextInputLayout>(activity.findViewById(R.id.godmask), activity.findViewById(R.id.godmask1), activity.findViewById(R.id.godmask2))
+        val aclevt: TextInputEditText = activity.findViewById(R.id.aclevt)
+        val actreat: TextInputEditText = activity.findViewById(R.id.actreat)
+        val itfcryt: TextInputEditText = activity.findViewById(R.id.itfcrytreat)
+        val cotccryt: TextInputEditText = activity.findViewById(R.id.cotccrytreat)
+        val godmaskt = arrayOf<TextInputEditText>(activity.findViewById(R.id.godmaskt), activity.findViewById(R.id.godmaskt1), activity.findViewById(R.id.godmaskt2))
 
         viewHolder.pack.setOnClickListener {
             isRaw = !isRaw
 
-            viewHolder.enempack.text = s.getPackName(em.id, isRaw)
+            viewHolder.enemyPack.text = s.getPackName(em.id, isRaw)
         }
 
-        viewHolder.name.setOnLongClickListener(OnLongClickListener {
-            if (activity == null)
-                return@OnLongClickListener false
-
-            val clipboardManager = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        viewHolder.name.setOnLongClickListener {
+            val clipboardManager =
+                activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
             val data = ClipData.newPlainText(null, viewHolder.name.text)
 
             clipboardManager.setPrimaryClip(data)
 
-            StaticStore.showShortMessage(ac, R.string.enem_info_copied)
+            StaticStore.showShortMessage(activity, R.string.enem_info_copied)
 
             true
-        })
+        }
 
-        val reset = activity!!.findViewById<Button>(R.id.enemtreareset)
+        val reset = activity.findViewById<Button>(R.id.enemtreareset)
 
         viewHolder.enemmulti.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (viewHolder.enemmulti.text.toString() == "") {
-                    multi = 100
+                    multiplication = 100
                     multiply(viewHolder, em)
                 } else {
-                    multi = if (viewHolder.enemmulti.text.toString().toDouble() > Int.MAX_VALUE)
+                    multiplication = if (viewHolder.enemmulti.text.toString().toDouble() > Int.MAX_VALUE)
                         Int.MAX_VALUE
                     else
                         Integer.valueOf(viewHolder.enemmulti.text.toString())
@@ -290,10 +286,10 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (viewHolder.enemamulti.text.toString() == "") {
-                    amulti = 100
+                    attackMultiplication = 100
                     multiply(viewHolder, em)
                 } else {
-                    amulti = if (viewHolder.enemamulti.text.toString().toDouble() > Int.MAX_VALUE)
+                    attackMultiplication = if (viewHolder.enemamulti.text.toString().toDouble() > Int.MAX_VALUE)
                         Int.MAX_VALUE
                     else
                         Integer.valueOf(viewHolder.enemamulti.text.toString())
@@ -305,25 +301,25 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             override fun afterTextChanged(s: Editable) {}
         })
 
-        viewHolder.frse.setOnClickListener {
+        viewHolder.unitSwitch.setOnClickListener {
             if (fs == 0) {
                 fs = 1
                 retime(viewHolder, em)
-                viewHolder.frse.text = activity!!.getString(R.string.unit_info_sec)
+                viewHolder.unitSwitch.text = activity.getString(R.string.unit_info_sec)
             } else {
                 fs = 0
                 retime(viewHolder, em)
-                viewHolder.frse.text = activity!!.getString(R.string.unit_info_fr)
+                viewHolder.unitSwitch.text = activity.getString(R.string.unit_info_fr)
             }
         }
 
         viewHolder.enematkb.setOnClickListener {
-            if (viewHolder.enematkb.text == activity!!.getString(R.string.unit_info_atk)) {
-                viewHolder.enematk.text = s.getDPS(em, amulti)
-                viewHolder.enematkb.text = activity!!.getString(R.string.unit_info_dps)
+            if (viewHolder.enematkb.text == activity.getString(R.string.unit_info_atk)) {
+                viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
+                viewHolder.enematkb.text = activity.getString(R.string.unit_info_dps)
             } else {
-                viewHolder.enematk.text = s.getAtk(em, amulti)
-                viewHolder.enematkb.text = activity!!.getString(R.string.unit_info_atk)
+                viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
+                viewHolder.enematkb.text = activity.getString(R.string.unit_info_atk)
             }
         }
 
@@ -374,7 +370,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                         if (aclev.isHelperTextEnabled) {
                             aclev.isHelperTextEnabled = false
                             aclev.isErrorEnabled = true
-                            aclev.error = activity!!.getString(R.string.treasure_invalid)
+                            aclev.error = activity.getString(R.string.treasure_invalid)
                         }
                     } else {
                         if (aclev.isErrorEnabled) {
@@ -418,7 +414,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                         if (actrea.isHelperTextEnabled) {
                             actrea.isHelperTextEnabled = false
                             actrea.isErrorEnabled = true
-                            actrea.error = activity!!.getString(R.string.treasure_invalid)
+                            actrea.error = activity.getString(R.string.treasure_invalid)
                         }
                     } else {
                         if (actrea.isErrorEnabled) {
@@ -462,7 +458,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                         if (itfcry.isHelperTextEnabled) {
                             itfcry.isHelperTextEnabled = false
                             itfcry.isErrorEnabled = true
-                            itfcry.error = activity!!.getString(R.string.treasure_invalid)
+                            itfcry.error = activity.getString(R.string.treasure_invalid)
                         }
                     } else {
                         if (itfcry.isErrorEnabled) {
@@ -488,20 +484,20 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 600) {
                         t.alien = text.toString().toInt()
-                        viewHolder.enemhp.text = s.getHP(em, multi)
-                        if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                            viewHolder.enematk.text = s.getDPS(em, amulti)
+                        viewHolder.enemhp.text = s.getHP(em, multiplication)
+                        if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                            viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
                         } else {
-                            viewHolder.enematk.text = s.getAtk(em, amulti)
+                            viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
                         }
                     }
                 } else {
                     t.alien = 0
-                    viewHolder.enemhp.text = s.getHP(em, multi)
-                    if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                        viewHolder.enematk.text = s.getDPS(em, amulti)
+                    viewHolder.enemhp.text = s.getHP(em, multiplication)
+                    if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                        viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
                     } else {
-                        viewHolder.enematk.text = s.getAtk(em, amulti)
+                        viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
                     }
                 }
             }
@@ -516,7 +512,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                         if (cotccry.isHelperTextEnabled) {
                             cotccry.isHelperTextEnabled = false
                             cotccry.isErrorEnabled = true
-                            cotccry.error = activity!!.getString(R.string.treasure_invalid)
+                            cotccry.error = activity.getString(R.string.treasure_invalid)
                         }
                     } else {
                         if (cotccry.isErrorEnabled) {
@@ -542,20 +538,20 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                 if (text.toString().isNotEmpty()) {
                     if (text.toString().toInt() <= 1500) {
                         t.star = text.toString().toInt()
-                        viewHolder.enemhp.text = s.getHP(em, multi)
-                        if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                            viewHolder.enematk.text = s.getDPS(em, amulti)
+                        viewHolder.enemhp.text = s.getHP(em, multiplication)
+                        if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                            viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
                         } else {
-                            viewHolder.enematk.text = s.getAtk(em, amulti)
+                            viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
                         }
                     }
                 } else {
                     t.star = 0
-                    viewHolder.enemhp.text = s.getHP(em, multi)
-                    if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                        viewHolder.enematk.text = s.getDPS(em, amulti)
+                    viewHolder.enemhp.text = s.getHP(em, multiplication)
+                    if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                        viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
                     } else {
-                        viewHolder.enematk.text = s.getAtk(em, amulti)
+                        viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
                     }
                 }
             }
@@ -571,7 +567,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                             if (godmask[i].isHelperTextEnabled) {
                                 godmask[i].isHelperTextEnabled = false
                                 godmask[i].isErrorEnabled = true
-                                godmask[i].error = activity!!.getString(R.string.treasure_invalid)
+                                godmask[i].error = activity.getString(R.string.treasure_invalid)
                             }
                         } else {
                             if (godmask[i].isErrorEnabled) {
@@ -597,20 +593,20 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
                     if (text.toString().isNotEmpty()) {
                         if (text.toString().toInt() <= 100) {
                             t.gods[i] = text.toString().toInt()
-                            viewHolder.enemhp.text = s.getHP(em, multi)
-                            if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                                viewHolder.enematk.text = s.getDPS(em, amulti)
+                            viewHolder.enemhp.text = s.getHP(em, multiplication)
+                            if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                                viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
                             } else {
-                                viewHolder.enematk.text = s.getAtk(em, amulti)
+                                viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
                             }
                         }
                     } else {
                         t.gods[i] = 0
-                        viewHolder.enemhp.text = s.getHP(em, multi)
-                        if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                            viewHolder.enematk.text = s.getDPS(em, amulti)
+                        viewHolder.enemhp.text = s.getHP(em, multiplication)
+                        if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                            viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
                         } else {
-                            viewHolder.enematk.text = s.getAtk(em, amulti)
+                            viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
                         }
                     }
                 }
@@ -636,12 +632,12 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             for (i in t.gods.indices)
                 godmaskt[i].setText(t.gods[i].toString())
 
-            viewHolder.enemhp.text = s.getHP(em, multi)
+            viewHolder.enemhp.text = s.getHP(em, multiplication)
 
-            if (viewHolder.enematkb.text.toString() == activity!!.getString(R.string.unit_info_dps)) {
-                viewHolder.enematk.text = s.getDPS(em, amulti)
+            if (viewHolder.enematkb.text.toString() == activity.getString(R.string.unit_info_dps)) {
+                viewHolder.enematk.text = s.getDPS(em, attackMultiplication)
             } else {
-                viewHolder.enematk.text = s.getAtk(em, amulti)
+                viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
             }
 
             viewHolder.enemdrop.text = s.getDrop(em, t)
@@ -653,12 +649,12 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     private fun multiply(viewHolder: ViewHolder, em: Enemy) {
-        viewHolder.enemhp.text = s.getHP(em, multi)
-        viewHolder.enematk.text = s.getAtk(em, amulti)
+        viewHolder.enemhp.text = s.getHP(em, multiplication)
+        viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray())
 
-        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
+        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0, activity)
 
         val abilityicon = Interpret.getAbiid(em.de)
 
@@ -671,7 +667,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
             viewHolder.emabil.layoutManager = linearLayoutManager
 
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity)
 
             viewHolder.emabil.adapter = adapterAbil
 
@@ -685,9 +681,9 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multi / 100.0, amulti / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray())
 
-        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0)
+        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0, activity)
 
         val abilityicon = Interpret.getAbiid(em.de)
 
@@ -700,7 +696,7 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
             viewHolder.emabil.layoutManager = linearLayoutManager
 
-            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity!!)
+            val adapterAbil = AdapterAbil(ability, proc, abilityicon, activity)
 
             viewHolder.emabil.adapter = adapterAbil
 

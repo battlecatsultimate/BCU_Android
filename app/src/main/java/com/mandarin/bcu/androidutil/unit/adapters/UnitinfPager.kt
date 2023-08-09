@@ -167,7 +167,7 @@ class UnitinfPager : Fragment() {
         level.setLevel(f.unit.preferredLevel)
         level.setPlusLevel(f.unit.preferredPlusLevel)
 
-        val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0)
+        val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0, activity)
         val abilityicon = Interpret.getAbiid(f.du)
         val cdlevt: TextInputEditText = activity.findViewById(R.id.cdlevt)
         val cdtreat: TextInputEditText = activity.findViewById(R.id.cdtreat)
@@ -205,7 +205,7 @@ class UnitinfPager : Fragment() {
         unithp.text = s.getHP(f, t, false, level)
         unithb.text = s.getHB(f, false, level)
         unitatk.text = s.getTotAtk(f, t, false, level)
-        unittrait.text = s.getTrait(f, false, level)
+        unittrait.text = s.getTrait(f, false, level, activity)
         unitcost.text = s.getCost(f, false, level)
         unitsimu.text = s.getSimu(f)
         unitspd.text = s.getSpd(f, false, level)
@@ -457,7 +457,7 @@ class UnitinfPager : Fragment() {
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, activity)
 
                     val abilityicon = Interpret.getAbiid(du)
 
@@ -494,7 +494,7 @@ class UnitinfPager : Fragment() {
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, activity)
 
                     val abilityicon = Interpret.getAbiid(du)
 
@@ -908,7 +908,7 @@ class UnitinfPager : Fragment() {
             talent[i].setOnLongClickListener {
                 talent[i].isClickable = false
 
-                StaticStore.showShortMessage(activity, s.getTalentName(talentIndex[i], f))
+                StaticStore.showShortMessage(activity, s.getTalentName(talentIndex[i], f, activity))
                 true
             }
         }
@@ -927,7 +927,7 @@ class UnitinfPager : Fragment() {
             superTalent[i].setOnLongClickListener {
                 superTalent[i].isClickable = false
 
-                StaticStore.showShortMessage(activity, s.getTalentName(superTalentIndex[i], f))
+                StaticStore.showShortMessage(activity, s.getTalentName(superTalentIndex[i], f, activity))
                 true
             }
         }
@@ -990,7 +990,7 @@ class UnitinfPager : Fragment() {
         else
             unitcd.text = s.getCD(f, t, 0, talents, this.level)
 
-        unittrait.text = s.getTrait(f, talents, this.level)
+        unittrait.text = s.getTrait(f, talents, this.level, activity)
         unitspd.text = s.getSpd(f, talents, this.level)
         unittba.text = s.getTBA(f, talents, fs, this.level)
         unitatkt.text = s.getAtkTime(f, talents, fs, this.level)
@@ -1000,7 +1000,7 @@ class UnitinfPager : Fragment() {
         else
             f.du
 
-        val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+        val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0, activity)
 
         val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 

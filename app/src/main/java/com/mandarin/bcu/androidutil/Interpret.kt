@@ -4,15 +4,17 @@ import android.content.Context
 import android.util.Log
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore.isEnglish
-import common.battle.data.*
+import common.battle.data.CustomEntity
+import common.battle.data.MaskAtk
+import common.battle.data.MaskEnemy
+import common.battle.data.MaskEntity
+import common.battle.data.MaskUnit
 import common.pack.Identifier
 import common.util.Data
 import common.util.lang.Formatter
 import common.util.lang.ProcLang
 import common.util.unit.Trait
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+import java.util.Locale
 
 object Interpret : Data() {
     const val EN = "en"
@@ -25,17 +27,17 @@ object Interpret : Data() {
     /**
      * enemy traits
      */
-    var TRAIT = Array(0) { "" }
+    val TRAIT = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_de, R.string.sch_re, R.string.sch_wh, R.string.esch_eva, R.string.esch_witch, R.string.sch_bar, R.string.sch_bst, R.string.sch_ba)
 
     /**
      * star names
      */
-    var STAR = Array(0) { "" }
+    val STAR = intArrayOf(R.string.unit_info_starred, R.string.unit_info_god1, R.string.unit_info_god2, R.string.unit_info_god3)
 
     /**
      * ability name
      */
-    var ABIS = Array(0) { "" }
+    val ABIS = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_me, R.string.sch_abi_ws, R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id, R.string.sch_abi_bk, R.string.sch_abi_ck, R.string.sch_abi_cs)
 
     var ATK = ""
 
@@ -68,18 +70,18 @@ object Interpret : Data() {
         TRAIT_ALIEN, TRAIT_ZOMBIE, TRAIT_DEMON, TRAIT_RELIC, TRAIT_WHITE, TRAIT_EVA, TRAIT_WITCH
     )
 
-    fun getTrait(traits: List<Trait>, star: Int): String {
+    fun getTrait(traits: List<Trait>, star: Int, c: Context): String {
         val ans = StringBuilder()
 
         for(trait in traits) {
             if(trait.id.pack == Identifier.DEF) {
                 if(trait.id.id == 6 && star == 1) {
-                    ans.append(TRAIT[trait.id.id])
+                    ans.append(c.getString(TRAIT[trait.id.id]))
                         .append(" (")
-                        .append(STAR[star])
+                        .append(c.getString(STAR[star]))
                         .append("), ")
                 } else {
-                    ans.append(TRAIT[trait.id.id])
+                    ans.append(c.getString(TRAIT[trait.id.id]))
                         .append(", ")
                 }
             } else {
@@ -247,67 +249,86 @@ object Interpret : Data() {
 
     fun getAbiid(me: MaskUnit): List<Int> {
         val l: MutableList<Int> = ArrayList()
-        for (i in ABIS.indices) if (me.abi shr i and 1 > 0) l.add(i)
+
+        for (i in ABIS.indices)
+            if (me.abi shr i and 1 > 0)
+                l.add(i)
+
         return l
     }
 
     fun getAbiid(me: MaskEnemy): List<Int> {
         val l: MutableList<Int> = ArrayList()
-        for (i in ABIS.indices) if (me.abi shr i and 1 > 0) l.add(i)
+
+        for (i in ABIS.indices) if (me.abi shr i and 1 > 0)
+            l.add(i)
+
         return l
     }
 
-    fun getAbi(me: MaskUnit, frag: Array<Array<String>>, addition: Array<String>, lang: Int): List<String> {
+    fun getAbi(me: MaskUnit, frag: Array<Array<String>>, addition: Array<String>, lang: Int, c: Context): List<String> {
         val l: MutableList<String> = ArrayList()
         for (i in ABIS.indices) {
             val imu = StringBuilder(frag[lang][0])
             if (me.abi shr i and 1 > 0) {
-                if (ABIS[i].startsWith("Imu.")) {
-                    imu.append(ABIS[i].substring(4))
+                val abilityName = c.getString(ABIS[i])
+
+                if (abilityName.startsWith("Imu.")) {
+                    imu.append(abilityName.substring(4))
                 } else {
                     when (i) {
-                        0 -> l.add(ABIS[i] + addition[0])
-                        1 -> l.add(ABIS[i] + addition[1])
-                        2 -> l.add(ABIS[i] + addition[2])
-                        10 -> l.add(ABIS[i] + addition[3])
-                        13 -> l.add(ABIS[i] + addition[4])
-                        15 -> l.add(ABIS[i] + addition[5])
-                        16 -> l.add(ABIS[i] + addition[6])
-                        17 -> l.add(ABIS[i] + addition[7])
-                        else -> l.add(ABIS[i])
+                        0 -> l.add(abilityName + addition[0])
+                        1 -> l.add(abilityName + addition[1])
+                        2 -> l.add(abilityName + addition[2])
+                        10 -> l.add(abilityName + addition[3])
+                        13 -> l.add(abilityName + addition[4])
+                        15 -> l.add(abilityName + addition[5])
+                        16 -> l.add(abilityName + addition[6])
+                        17 -> l.add(abilityName + addition[7])
+                        else -> l.add(abilityName)
                     }
                 }
             }
-            if (imu.toString().isNotEmpty() && imu.toString() != frag[lang][0]) l.add(imu.toString())
+            if (imu.toString().isNotEmpty() && imu.toString() != frag[lang][0])
+                l.add(imu.toString())
         }
         return l
     }
 
-    fun getAbi(me: MaskEnemy, frag: Array<Array<String>>, addition: Array<String>, lang: Int): List<String> {
+    fun getAbi(me: MaskEnemy, frag: Array<Array<String>>, addition: Array<String>, lang: Int, c: Context): List<String> {
         val l: MutableList<String> = ArrayList()
         for (i in ABIS.indices) {
             val imu = StringBuilder(frag[lang][0])
-            if (me.abi shr i and 1 > 0) if (ABIS[i].startsWith("Imu.")) imu.append(ABIS[i].substring(4)) else {
-                when (i) {
-                    0 -> l.add(ABIS[i] + addition[0])
-                    1 -> l.add(ABIS[i] + addition[1])
-                    2 -> l.add(ABIS[i] + addition[2])
-                    4 -> l.add(ABIS[i] + addition[3])
-                    5 -> l.add(ABIS[i] + addition[4])
-                    14 -> l.add(ABIS[i] + addition[5])
-                    17 -> l.add(ABIS[i] + addition[6])
-                    20 -> l.add(ABIS[i] + addition[7])
-                    21 -> l.add(ABIS[i] + addition[8])
-                    else -> l.add(ABIS[i])
+            val abilityName = c.getString(ABIS[i])
+
+            if (me.abi shr i and 1 > 0)
+                if (abilityName.startsWith("Imu."))
+                    imu.append(abilityName.substring(4))
+                else {
+                    when (i) {
+                        0 -> l.add(abilityName + addition[0])
+                        1 -> l.add(abilityName + addition[1])
+                        2 -> l.add(abilityName + addition[2])
+                        4 -> l.add(abilityName + addition[3])
+                        5 -> l.add(abilityName + addition[4])
+                        14 -> l.add(abilityName + addition[5])
+                        17 -> l.add(abilityName + addition[6])
+                        20 -> l.add(abilityName + addition[7])
+                        21 -> l.add(abilityName + addition[8])
+                        else -> l.add(abilityName)
+                    }
                 }
-            }
-            if (imu.toString().isNotEmpty() && imu.toString() != frag[lang][0]) l.add(imu.toString())
+
+            if (imu.toString().isNotEmpty() && imu.toString() != frag[lang][0])
+                l.add(imu.toString())
         }
+
         return l
     }
 
     fun isType(de: MaskUnit, type: Int): Boolean {
         val raw = de.rawAtkData()
+
         return when (type) {
             0 -> !de.isRange
             1 -> de.isRange

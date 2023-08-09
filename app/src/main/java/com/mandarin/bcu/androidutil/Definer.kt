@@ -29,10 +29,6 @@ import java.util.Locale
 import java.util.function.Consumer
 
 object Definer {
-    private val colorid = StaticStore.colorid
-    private val starid = StaticStore.starid
-    private val abiid = StaticStore.abiid
-
     @Synchronized
     fun define(context: Context, prog: Consumer<Double>, text: Consumer<String>) {
         try {
@@ -49,7 +45,7 @@ object Definer {
                 AssetLoader.load(prog)
 
                 try {
-                    UserProfile.getBCData().load(text, prog)
+                    UserProfile.getBCData().load({ t -> text.accept(StaticStore.getLoadingText(context, t)) }, prog)
                 } catch (e: Exception) {
                     e.printStackTrace()
 
@@ -91,35 +87,8 @@ object Definer {
             if (StaticStore.treasure == null)
                 StaticStore.readTreasureIcon()
 
-            if(Interpret.TRAIT.isEmpty()) {
-                val colorString = Array(colorid.size) {
-                    context.getString(colorid[it])
-                }
-
-                Interpret.TRAIT = colorString
-            }
-
             if(Interpret.ATK.isEmpty()) {
                 Interpret.ATK = context.getString(R.string.unit_info_atks)
-            }
-
-            if(Interpret.STAR.isEmpty()) {
-                val startString = Array(5) {
-                    if(it == 0)
-                        ""
-                    else
-                        context.getString(starid[it-1])
-                }
-
-                Interpret.STAR = startString
-            }
-
-            if(Interpret.ABIS.isEmpty()) {
-                val abiString = Array(abiid.size) {
-                    context.getString(abiid[it])
-                }
-
-                Interpret.ABIS = abiString
             }
 
             if (StaticStore.unitlang == 1) {
@@ -305,25 +274,7 @@ object Definer {
             getString(context, addid[i], lang)
         }
 
-        val colorString = Array(colorid.size) {
-            context.getString(colorid[it])
-        }
-
-        val startString = Array(5) {
-            if(it == 0)
-                ""
-            else
-                context.getString(starid[it-1])
-        }
-
-        val abiString = Array(abiid.size) {
-            context.getString(abiid[it])
-        }
-
         Interpret.ATK = context.getString(R.string.unit_info_atks)
-        Interpret.TRAIT = colorString
-        Interpret.STAR = startString
-        Interpret.ABIS = abiString
     }
 
     private fun getString(context: Context, id: Int, lang: String): String {

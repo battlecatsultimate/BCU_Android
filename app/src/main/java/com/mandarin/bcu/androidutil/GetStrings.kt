@@ -662,7 +662,7 @@ class GetStrings(private val c: Context) {
             DecimalFormat("#.##").format(getTotAtk(em, multi).toDouble() / (em.de.itv.toDouble() / 30)).toString()
     }
 
-    fun getTrait(ef: Form?, talent: Boolean, lvs: Level): String {
+    fun getTrait(ef: Form?, talent: Boolean, lvs: Level, c: Context): String {
         if (ef == null) return ""
 
         val du: MaskUnit = if (ef.du.pCoin != null && talent)
@@ -672,7 +672,7 @@ class GetStrings(private val c: Context) {
 
         var result: String
 
-        result = Interpret.getTrait(du.traits, 0)
+        result = Interpret.getTrait(du.traits, 0, c)
 
         if (result == "")
             result = c.getString(R.string.unit_info_t_none)
@@ -689,10 +689,7 @@ class GetStrings(private val c: Context) {
         return result
     }
 
-    fun getTrait(em: Enemy?): String {
-        if (em == null)
-            return ""
-
+    fun getTrait(em: Enemy, c: Context): String {
         val de = em.de
 
         val allcolor = StringBuilder()
@@ -709,7 +706,7 @@ class GetStrings(private val c: Context) {
 
         val star = de.star
 
-        result = Interpret.getTrait(de.traits, star)
+        result = Interpret.getTrait(de.traits, star, c)
 
         if (result == "")
             result = c.getString(R.string.unit_info_t_none)
@@ -829,10 +826,7 @@ class GetStrings(private val c: Context) {
             c.getString(R.string.sch_atk_si)
     }
 
-    fun getTalentName(index: Int, f: Form?): String {
-        if (f == null)
-            return ""
-
+    fun getTalentName(index: Int, f: Form, c: Context): String {
         val ans: String?
 
         val info = f.du.pCoin.info
@@ -848,7 +842,7 @@ class GetStrings(private val c: Context) {
             trait.contains(info[index][0]) -> c.getString(R.string.talen_trait) + talTool[info[index][0]]
             basic.contains(info[index][0]) -> talTool[info[index][0]]
             f.du.pCoin.trait.isNotEmpty() && index == 0 -> {
-                val tr = Interpret.getTrait(f.du.pCoin.trait, 0)
+                val tr = Interpret.getTrait(f.du.pCoin.trait, 0, c)
 
                 if(tr.endsWith(", "))
                     c.getString(R.string.talen_abil) + tr.substring(0, tr.length - 2) + " " + talTool[info[index][0]]

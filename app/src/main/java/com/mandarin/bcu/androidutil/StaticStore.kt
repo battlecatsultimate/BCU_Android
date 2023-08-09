@@ -175,15 +175,6 @@ object StaticStore {
     /** File index list of procs  */
     var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison.png", "Barrier.png", "DemonShield.png", "DeathSurge.png", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "Counter.png", "DmgCut.png", "DmgCap.png", "CritX.png", "PoisonX.png", "SealX.png", "MovingX.png", "SummonX.png", "ArmorBreakX.png", "SpeedX.png", "CannonX.png", "", "", "", "", "", "", "", "", "")
 
-    /** String ID list of traits  */
-    var colorid = intArrayOf(R.string.sch_red, R.string.sch_fl, R.string.sch_bla, R.string.sch_me, R.string.sch_an, R.string.sch_al, R.string.sch_zo, R.string.sch_de, R.string.sch_re, R.string.sch_wh, R.string.esch_eva, R.string.esch_witch, R.string.sch_bar, R.string.sch_bst, R.string.sch_ba)
-
-    /** String ID list of star and mask treasure  */
-    var starid = intArrayOf(R.string.unit_info_starred, R.string.unit_info_god1, R.string.unit_info_god2, R.string.unit_info_god3)
-
-    /** String ID list of abilities  */
-    var abiid = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_me, R.string.sch_abi_ws, R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id, R.string.sch_abi_bk, R.string.sch_abi_ck, R.string.sch_abi_cs)
-
     //Variables for Unit
 
     private var unitinflistClick = SystemClock.elapsedRealtime()
@@ -1223,7 +1214,7 @@ object StaticStore {
      *
      * @return Returns converted message string after checking [info]. If [info] has different format, just return [info]
      */
-    fun getLoadingText(ac: Activity, info: String) : String {
+    fun getLoadingText(ac: Context, info: String) : String {
         return when(info) {
             "loading basic images" -> ac.getString(R.string.load_bascimg)
             "loading enemies" -> ac.getString(R.string.load_enemy)

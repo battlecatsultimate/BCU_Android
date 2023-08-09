@@ -21,12 +21,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.GetStrings
+import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.AnimatorConst
 import com.mandarin.bcu.androidutil.supports.AutoMarquee
 import com.mandarin.bcu.androidutil.supports.ScaleAnimator
 import com.mandarin.bcu.androidutil.supports.adapter.AdapterAbil
-import com.mandarin.bcu.androidutil.Interpret
 import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.Treasure
@@ -142,7 +142,7 @@ class UnitinfRecycle(private val context: Activity,
         level.setLevel(f.unit.preferredLevel)
         level.setPlusLevel(f.unit.preferredPlusLevel)
 
-        val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0)
+        val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0, context)
         val abilityicon = Interpret.getAbiid(f.du)
         val cdlevt: TextInputEditText = context.findViewById(R.id.cdlevt)
         val cdtreat: TextInputEditText = context.findViewById(R.id.cdtreat)
@@ -170,7 +170,7 @@ class UnitinfRecycle(private val context: Activity,
         viewHolder.unithp.text = s.getHP(f, t, false, level)
         viewHolder.unithb.text = s.getHB(f, false, level)
         viewHolder.unitatk.text = s.getTotAtk(f, t, false, level)
-        viewHolder.unittrait.text = s.getTrait(f, false, level)
+        viewHolder.unittrait.text = s.getTrait(f, false, level, context)
         viewHolder.unitcost.text = s.getCost(f, false, level)
         viewHolder.unitsimu.text = s.getSimu(f)
         viewHolder.unitspd.text = s.getSpd(f, false, level)
@@ -379,7 +379,7 @@ class UnitinfRecycle(private val context: Activity,
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, context)
 
                     val abilityicon = Interpret.getAbiid(du)
 
@@ -416,7 +416,7 @@ class UnitinfRecycle(private val context: Activity,
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, context)
 
                     val abilityicon = Interpret.getAbiid(du)
 
@@ -843,7 +843,7 @@ class UnitinfRecycle(private val context: Activity,
             talent[i].setOnLongClickListener {
                 talent[i].isClickable = false
 
-                StaticStore.showShortMessage(context, s.getTalentName(talentIndex[i], f))
+                StaticStore.showShortMessage(context, s.getTalentName(talentIndex[i], f, context))
                 true
             }
         }
@@ -862,7 +862,7 @@ class UnitinfRecycle(private val context: Activity,
             superTalent[i].setOnLongClickListener {
                 superTalent[i].isClickable = false
 
-                StaticStore.showShortMessage(context, s.getTalentName(superTalentIndex[i], f))
+                StaticStore.showShortMessage(context, s.getTalentName(superTalentIndex[i], f, context))
                 true
             }
         }
@@ -917,7 +917,7 @@ class UnitinfRecycle(private val context: Activity,
         else
             viewHolder.unitcd.text = s.getCD(f, t, 0, talents, level)
 
-        viewHolder.unittrait.text = s.getTrait(f, talents, level)
+        viewHolder.unittrait.text = s.getTrait(f, talents, level, context)
 
         viewHolder.unitspd.text = s.getSpd(f, talents, level)
 
@@ -936,7 +936,7 @@ class UnitinfRecycle(private val context: Activity,
         this.level.setLevel(level)
         this.level.setPlusLevel(levelp)
 
-        val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0)
+        val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0, context)
 
         val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
 
