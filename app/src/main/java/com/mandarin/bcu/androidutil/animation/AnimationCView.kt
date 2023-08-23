@@ -5,8 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
-import android.widget.SeekBar
-import android.widget.TextView
 import com.mandarin.bcu.ImageViewer
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticJava
@@ -24,7 +22,15 @@ import common.util.unit.AbEnemy
 import common.util.unit.Unit
 
 @SuppressLint("ViewConstructor")
-class AnimationCView(context: ImageViewer, data: Any, private val session: GifSession, val type: AnimationType, dataId: Int, night: Boolean, axis: Boolean, private val textView: TextView, private val seekBar: SeekBar, private val fpsind: TextView, @JvmField val gif: TextView) : View(context) {
+class AnimationCView(
+    context: ImageViewer,
+    data: Any,
+    private val session: GifSession,
+    val type: AnimationType,
+    dataId: Int,
+    night: Boolean,
+    axis: Boolean,
+) : View(context) {
     enum class AnimationType {
         UNIT,
         ENEMY,
@@ -52,7 +58,6 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
     var size = 1f
     var posx = 0f
     var posy = 0f
-    private var previousTime = 0L
     var started = false
 
     private var p2: P

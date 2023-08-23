@@ -385,7 +385,16 @@ class ImageViewer : AppCompatActivity() {
 
                     val buttons = arrayOf<FloatingActionButton>(findViewById(R.id.animbackward), findViewById(R.id.animplay), findViewById(R.id.animforward))
 
-                    val cView = AnimationCView(this@ImageViewer, content, recorder.session, type, if (type == AnimationCView.AnimationType.UNIT) form else index, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fpsIndicator, gif)
+                    val cView = AnimationCView(
+                        this@ImageViewer,
+                        content,
+                        recorder.session,
+                        type,
+                        if (type == AnimationCView.AnimationType.UNIT) form else index,
+                        !shared.getBoolean("theme", false),
+                        shared.getBoolean("Axis", true),
+                        gif
+                    )
                     cView.size = StaticStore.dptopx(1f, this@ImageViewer).toFloat() / 1.25f
                     cView.id = R.id.animationView
 
