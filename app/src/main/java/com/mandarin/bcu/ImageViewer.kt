@@ -392,8 +392,7 @@ class ImageViewer : AppCompatActivity() {
                         type,
                         if (type == AnimationCView.AnimationType.UNIT) form else index,
                         !shared.getBoolean("theme", false),
-                        shared.getBoolean("Axis", true),
-                        gif
+                        shared.getBoolean("Axis", true)
                     )
                     cView.size = StaticStore.dptopx(1f, this@ImageViewer).toFloat() / 1.25f
                     cView.id = R.id.animationView

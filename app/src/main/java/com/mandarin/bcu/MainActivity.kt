@@ -316,7 +316,6 @@ class MainActivity : AppCompatActivity() {
                 card.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(this@MainActivity, classes[index])
-                            .setClassName("com.mandarin.bcu", "com.mandarin.bcu.MainActivity")
 
                         startActivity(intent)
 
@@ -371,7 +370,6 @@ class MainActivity : AppCompatActivity() {
                     card.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
                             val intent = Intent(this@MainActivity, classes[index])
-                                .setClassName("com.mandarin.bcu", "com.mandarin.bcu.MainActivity")
 
                             startActivity(intent)
 
@@ -391,7 +389,6 @@ class MainActivity : AppCompatActivity() {
         config.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@MainActivity, ConfigScreen::class.java)
-                    .setClassName("com.mandarin.bcu", "com.mandarin.bcu.MainActivity")
 
                 startActivity(intent)
                 finish()

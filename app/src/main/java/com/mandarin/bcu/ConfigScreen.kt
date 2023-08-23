@@ -100,7 +100,7 @@ open class ConfigScreen : AppCompatActivity() {
         back.setOnClickListener (object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@ConfigScreen, MainActivity::class.java)
-                    .setClassName("com.mandarin.bcu", "com.mandarin.bcu.ConfigScreen")
+
                 intent.putExtra("Config", true)
                 startActivity(intent)
                 finish()
@@ -318,7 +318,7 @@ open class ConfigScreen : AppCompatActivity() {
         checkupdate.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@ConfigScreen, CheckUpdateScreen::class.java)
-                    .setClassName("com.mandarin.bcu", "com.mandarin.bcu.ConfigScreen")
+
                 intent.putExtra("Config", true)
                 startActivity(intent)
                 finish()
@@ -592,7 +592,6 @@ open class ConfigScreen : AppCompatActivity() {
         reset.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(this@ConfigScreen, DataResetManager::class.java)
-                    .setClassName("com.mandarin.bcu", "com.mandarin.bcu.ConfigScreen")
 
                 startActivity(intent)
                 finish()
@@ -974,7 +973,7 @@ open class ConfigScreen : AppCompatActivity() {
         if(!started) return
 
         val intent = Intent(this@ConfigScreen, ConfigScreen::class.java)
-            .setClassName("com.mandarin.bcu", "com.mandarin.bcu.ConfigScreen")
+
         startActivity(intent)
         finish()
     }
