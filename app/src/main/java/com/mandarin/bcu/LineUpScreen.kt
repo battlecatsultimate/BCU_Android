@@ -774,7 +774,15 @@ class LineUpScreen : AppCompatActivity() {
                 override fun onTabReselected(tab: TabLayout.Tab) {}
             })
 
-            tabLayout.getTabAt(StaticStore.LUtabPosition)?.select()
+            val currentTab = tabLayout.getTabAt(StaticStore.LUtabPosition)
+
+            if (currentTab != null) {
+                tabLayout.post {
+                    currentTab.select()
+                    lineupPager.setCurrentItem(currentTab.position, false)
+                }
+            }
+
             setspin.setSelection(setn)
             luspin.setSelection(lun)
 
