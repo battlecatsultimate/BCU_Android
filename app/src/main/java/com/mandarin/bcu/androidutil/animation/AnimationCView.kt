@@ -22,13 +22,6 @@ import common.util.pack.NyCastle
 import common.util.pack.Soul
 import common.util.unit.AbEnemy
 import common.util.unit.Unit
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.math.max
-import kotlin.system.measureTimeMillis
 
 @SuppressLint("ViewConstructor")
 class AnimationCView(context: ImageViewer, data: Any, private val session: GifSession, val type: AnimationType, dataId: Int, night: Boolean, axis: Boolean, private val textView: TextView, private val seekBar: SeekBar, private val fpsind: TextView, @JvmField val gif: TextView) : View(context) {
@@ -43,8 +36,6 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
 
     val activity = context
     val data: Any
-
-    private val renderer = Renderer()
 
     private val backgroundPaint = Paint()
     private val colorPaint = Paint()
@@ -61,12 +52,11 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
     var size = 1f
     var posx = 0f
     var posy = 0f
-    var previousTime = 0L
+    private var previousTime = 0L
     var started = false
 
     private var p2: P
     private var animP = P(0.0, 0.0)
-
     init {
         when(type) {
             AnimationType.ENEMY -> {
@@ -141,8 +131,6 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        renderer.run()
-
         started = true
     }
 
@@ -172,7 +160,11 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
             anim.draw(cv, p2, size.toDouble())
             anim.update(true)
 
-            StaticStore.frame++
+            if (CommonStatic.getConfig().performanceMode) {
+                StaticStore.frame += 0.5f
+            } else {
+                StaticStore.frame++
+            }
 
             P.delete(p2)
         } else {
@@ -188,52 +180,6 @@ class AnimationCView(context: ImageViewer, data: Any, private val session: GifSe
             anim.draw(cv, p2, size.toDouble())
 
             P.delete(p2)
-        }
-    }
-
-    fun cancelAnimator() {
-        renderer.jobManager.cancel()
-    }
-
-    private inner class Renderer : Runnable {
-        val jobManager = SupervisorJob()
-        private val viewScope = CoroutineScope(Dispatchers.IO + jobManager)
-
-        override fun run() {
-            viewScope.launch {
-                val time = measureTimeMillis {
-                    invalidate()
-
-                    withContext(Dispatchers.Main) {
-                        textView.text = context.getText(R.string.anim_frame).toString().replace("-", "" + StaticStore.frame)
-                        fpsind.text = context.getText(R.string.def_fps).toString().replace("-", "" + fps)
-                    }
-
-                    seekBar.progress = if(StaticStore.frame >= seekBar.max && StaticStore.play) {
-                        StaticStore.frame = 0
-                        0
-                    } else {
-                        StaticStore.frame
-                    }
-
-                    if(StaticStore.enableGIF || StaticStore.gifisSaving) {
-                        val giftext = if (StaticStore.gifFrame != 0)
-                            context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame) + " (" + (session.recorder.frame.toFloat() / StaticStore.gifFrame.toFloat() * 100f).toInt() + "%)"
-                        else
-                            context.getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame)
-
-                        withContext(Dispatchers.Main) {
-                            gif.text = giftext
-                        }
-                    }
-
-                    fps = 1000L / (System.currentTimeMillis() - previousTime)
-                    previousTime = System.currentTimeMillis()
-                }
-
-                if (started)
-                    postDelayed(this@Renderer, max(0, 1000L / 30L - time))
-            }
         }
     }
 }

@@ -71,6 +71,7 @@ import common.util.stage.CastleImg
 import common.util.unit.Enemy
 import common.util.unit.Unit
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -78,7 +79,10 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.round
+import kotlin.system.measureTimeMillis
 
 class ImageViewer : AppCompatActivity() {
     enum class ViewerType {
@@ -100,6 +104,18 @@ class ImageViewer : AppCompatActivity() {
     private val skyBelow = 1
     private val groundUpper = 2
     private val groundBelow = 3
+
+    private var previousTime = System.currentTimeMillis()
+    private var fps = if (CommonStatic.getConfig().performanceMode) {
+        60L
+    } else {
+        30L
+    }
+    private val targetFPS = if (CommonStatic.getConfig().performanceMode) {
+        1000L / 60L
+    } else {
+        1000L / 30L
+    }
 
     private val recorder = GifRecorder()
 
@@ -146,7 +162,7 @@ class ImageViewer : AppCompatActivity() {
             val player = findViewById<TableRow>(R.id.palyrow)
             val controller = findViewById<SeekBar>(R.id.animframeseek)
             val frame = findViewById<TextView>(R.id.animframe)
-            val fps = findViewById<TextView>(R.id.imgviewerfps)
+            val fpsIndicator = findViewById<TextView>(R.id.imgviewerfps)
             val gif = findViewById<TextView>(R.id.imgviewergiffr)
             val cViewlayout = findViewById<LinearLayout>(R.id.imgviewerln)
             val imageViewer = findViewById<ImageView>(R.id.imgviewerimg)
@@ -165,7 +181,7 @@ class ImageViewer : AppCompatActivity() {
 
             bck.setOnClickListener {
                 StaticStore.play = true
-                StaticStore.frame = 0
+                StaticStore.frame = 0f
                 StaticStore.animposition = 0
                 StaticStore.formposition = 0
                 finish()
@@ -175,7 +191,7 @@ class ImageViewer : AppCompatActivity() {
                 ViewerType.BACKGROUND -> {
                     val bgnum = extra.getInt("BGNum")
 
-                    StaticStore.setDisappear(player, controller, frame, anims, fps, gif, prog, forms, loadst)
+                    StaticStore.setDisappear(player, controller, frame, anims, fpsIndicator, gif, prog, forms, loadst)
 
                     val width = StaticStore.getScreenWidth(this@ImageViewer, false)
                     val height = StaticStore.getScreenHeight(this@ImageViewer, false)
@@ -280,7 +296,7 @@ class ImageViewer : AppCompatActivity() {
                     })
                 }
                 ViewerType.CASTLE -> {
-                    StaticStore.setDisappear(anims, player, controller, frame, fps, gif, prog, forms, loadst)
+                    StaticStore.setDisappear(anims, player, controller, frame, fpsIndicator, gif, prog, forms, loadst)
                     option.hide()
 
                     val data = StaticStore.transformIdentifier<CastleImg>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), Identifier::class.java)) ?: return@launch
@@ -313,7 +329,7 @@ class ImageViewer : AppCompatActivity() {
                     imageViewer.setImageBitmap(castle)
                 }
                 else -> {
-                    StaticStore.setDisappear(anims, forms, option, player, controller, frame, fps, gif, cViewlayout, imageViewer)
+                    StaticStore.setDisappear(anims, forms, option, player, controller, frame, fpsIndicator, gif, cViewlayout, imageViewer)
 
                     val index = extra.getInt("Index")
                     val form = extra.getInt("Form")
@@ -369,7 +385,7 @@ class ImageViewer : AppCompatActivity() {
 
                     val buttons = arrayOf<FloatingActionButton>(findViewById(R.id.animbackward), findViewById(R.id.animplay), findViewById(R.id.animforward))
 
-                    val cView = AnimationCView(this@ImageViewer, content, recorder.session, type, if (type == AnimationCView.AnimationType.UNIT) form else index, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fps, gif)
+                    val cView = AnimationCView(this@ImageViewer, content, recorder.session, type, if (type == AnimationCView.AnimationType.UNIT) form else index, !shared.getBoolean("theme", false), shared.getBoolean("Axis", true), frame, controller, fpsIndicator, gif)
                     cView.size = StaticStore.dptopx(1f, this@ImageViewer).toFloat() / 1.25f
                     cView.id = R.id.animationView
 
@@ -449,9 +465,14 @@ class ImageViewer : AppCompatActivity() {
 
                                     val max = cView.anim.len()
 
-                                    controller.max = max - 1
+                                    controller.max = if (CommonStatic.getConfig().performanceMode) {
+                                        (max - 1) * 2
+                                    } else {
+                                        max - 1
+                                    }
+
                                     controller.progress = 0
-                                    StaticStore.frame = 0
+                                    StaticStore.frame = 0f
                                 }
                             }
 
@@ -472,10 +493,14 @@ class ImageViewer : AppCompatActivity() {
                                      cView.anim = StaticJava.generateEAnimD(content, position)
                                 }
 
-                                controller.max = cView.anim.len()
+                                controller.max = if (CommonStatic.getConfig().performanceMode) {
+                                    cView.anim.len() * 2
+                                } else {
+                                    cView.anim.len()
+                                }
                                 controller.progress = 0
 
-                                StaticStore.frame = 0
+                                StaticStore.frame = 0f
                             }
                         }
 
@@ -505,8 +530,14 @@ class ImageViewer : AppCompatActivity() {
                     }
 
                     buttons[0].setOnClickListener {
+                        buttons[2].isEnabled = false
+
                         if (StaticStore.frame > 0) {
-                            StaticStore.frame--
+                            if (CommonStatic.getConfig().performanceMode) {
+                                StaticStore.frame -= 0.5f
+                            } else {
+                                StaticStore.frame--
+                            }
 
                             cView.anim.setTime(StaticStore.frame)
                         } else {
@@ -514,20 +545,34 @@ class ImageViewer : AppCompatActivity() {
 
                             StaticStore.showShortMessage(this@ImageViewer, R.string.anim_warn_frame)
                         }
+
+                        buttons[2].isEnabled = true
                     }
 
                     buttons[2].setOnClickListener {
-                        StaticStore.frame++
+                        buttons[0].isEnabled = false
+
+                        if (CommonStatic.getConfig().performanceMode) {
+                            StaticStore.frame += 0.5f
+                        } else {
+                            StaticStore.frame++
+                        }
 
                         cView.anim.setTime(StaticStore.frame)
 
                         frame.setTextColor(StaticStore.getAttributeColor(this@ImageViewer, R.attr.TextPrimary))
+
+                        buttons[0].isEnabled = true
                     }
 
                     controller.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                         override fun onProgressChanged(controller: SeekBar, progress: Int, fromUser: Boolean) {
                             if (fromUser) {
-                                StaticStore.frame = progress
+                                StaticStore.frame = if (CommonStatic.getConfig().performanceMode) {
+                                    progress / 2f
+                                } else {
+                                    progress.toFloat()
+                                }
 
                                 cView.anim.setTime(StaticStore.frame)
                             }
@@ -539,7 +584,11 @@ class ImageViewer : AppCompatActivity() {
 
                     frame.text = getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
 
-                    controller.progress = StaticStore.frame
+                    controller.progress = if (CommonStatic.getConfig().performanceMode) {
+                        (StaticStore.frame * 2).toInt()
+                    } else {
+                        StaticStore.frame.toInt()
+                    }
 
                     anims.setSelection(StaticStore.animposition)
 
@@ -549,7 +598,11 @@ class ImageViewer : AppCompatActivity() {
 
                     cView.anim.setTime(StaticStore.frame)
 
-                    controller.max = cView.anim.len()
+                    controller.max = if (CommonStatic.getConfig().performanceMode) {
+                        cView.anim.len() * 2
+                    } else {
+                        cView.anim.len()
+                    }
 
                     val popup = PopupMenu(this@ImageViewer, option)
                     val menu = popup.menu
@@ -803,10 +856,8 @@ class ImageViewer : AppCompatActivity() {
 
                     bck.setOnClickListener {
                         if (!StaticStore.gifisSaving) {
-                            cView.cancelAnimator()
-
                             StaticStore.play = true
-                            StaticStore.frame = 0
+                            StaticStore.frame = 0f
                             StaticStore.animposition = 0
                             StaticStore.formposition = 0
                             StaticStore.enableGIF = false
@@ -824,10 +875,8 @@ class ImageViewer : AppCompatActivity() {
                             builder.setTitle(R.string.anim_gif_warn)
                             builder.setMessage(R.string.anim_gif_recording)
                             builder.setPositiveButton(R.string.gif_exit) { _, _ ->
-                                cView.cancelAnimator()
-
                                 StaticStore.play = true
-                                StaticStore.frame = 0
+                                StaticStore.frame = 0f
                                 StaticStore.animposition = 0
                                 StaticStore.formposition = 0
                                 StaticStore.keepDoing = false
@@ -853,7 +902,7 @@ class ImageViewer : AppCompatActivity() {
                         }
                     }
 
-                    StaticStore.setAppear(anims, option, player, controller, frame, fps, cViewlayout)
+                    StaticStore.setAppear(anims, option, player, controller, frame, fpsIndicator, cViewlayout)
                     StaticStore.setDisappear(prog, loadst)
 
                     if (type == AnimationCView.AnimationType.UNIT) {
@@ -873,7 +922,9 @@ class ImageViewer : AppCompatActivity() {
                     }
 
                     if (!shared.getBoolean("FPS", true))
-                        StaticStore.setDisappear(fps)
+                        StaticStore.setDisappear(fpsIndicator)
+
+                    activateAnimator()
                 }
             }
 
@@ -1041,6 +1092,71 @@ class ImageViewer : AppCompatActivity() {
         }
     }
 
+    private fun activateAnimator() {
+        lifecycleScope.launch {
+            val controller = findViewById<SeekBar>(R.id.animframeseek)
+            val frameIndicator = findViewById<TextView>(R.id.animframe)
+            val animator = findViewById<AnimationCView>(R.id.animationView)
+            val fpsIndicator = findViewById<TextView>(R.id.imgviewerfps)
+            val gif = findViewById<TextView>(R.id.imgviewergiffr)
+
+            val targetTime = if (CommonStatic.getConfig().performanceMode) {
+                60L
+            } else {
+                30L
+            }
+
+            withContext(Dispatchers.IO) {
+                while(true) {
+                    if (!animator.started)
+                        continue
+
+                    val time = measureTimeMillis {
+                        animator.postInvalidate()
+
+                        withContext(Dispatchers.Main) {
+                            frameIndicator.text = getText(R.string.anim_frame).toString().replace("-", "" + StaticStore.frame)
+                            fpsIndicator.text = getText(R.string.def_fps).toString().replace("-", "" + fps)
+                        }
+
+                        val maxValue = if (CommonStatic.getConfig().performanceMode) {
+                            controller.max / 2f
+                        } else {
+                            controller.max * 1f
+                        }
+
+                        controller.progress = if(StaticStore.frame >= maxValue && StaticStore.play) {
+                            StaticStore.frame = 0f
+                            0
+                        } else {
+                            if (CommonStatic.getConfig().performanceMode) {
+                                (StaticStore.frame * 2).toInt()
+                            } else {
+                                StaticStore.frame.toInt()
+                            }
+                        }
+
+                        if(StaticStore.enableGIF || StaticStore.gifisSaving) {
+                            val giftext = if (StaticStore.gifFrame != 0)
+                                getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame) + " (" + (recorder.frame.toFloat() / StaticStore.gifFrame.toFloat() * 100f).toInt() + "%)"
+                            else
+                                getText(R.string.anim_gif_frame).toString().replace("-", "" + StaticStore.gifFrame)
+
+                            withContext(Dispatchers.Main) {
+                                gif.text = giftext
+                            }
+                        }
+
+                        fps = min(targetTime, 1000L / max(1L, System.currentTimeMillis() - previousTime))
+                        previousTime = System.currentTimeMillis()
+                    }
+
+                    delay(max(0, targetFPS - time))
+                }
+            }
+        }
+    }
+
     inner class ScaleListener(private val cView: AnimationCView) : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         var updateScale = false
 
@@ -1091,8 +1207,14 @@ class ImageViewer : AppCompatActivity() {
         fun recordGifWithRange(view: AnimationCView, type: AnimationCView.AnimationType, frames: ArrayList<Array<Int>>, enabled: Array<Boolean>, isNightMode: Boolean, data: Any, id: Int = 0, form: Int = 0, pack: String = "000000") {
             checkValidClasses(data, type)
 
-            if(encoder.frameRate != 30f) {
-                encoder.frameRate = 30f
+            val targetFPS = if (CommonStatic.getConfig().performanceMode) {
+                60f
+            } else {
+                30f
+            }
+
+            if(encoder.frameRate != targetFPS) {
+                encoder.frameRate = targetFPS
 
                 encoder.start(bos)
 
@@ -1160,7 +1282,11 @@ class ImageViewer : AppCompatActivity() {
 
                     c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), back)
 
-                    anim.setTime(j)
+                    anim.setTime(if (CommonStatic.getConfig().performanceMode) {
+                        j / 2f
+                    } else {
+                        j.toFloat()
+                    })
                     anim.draw(cv, p, siz)
 
                     encoder.addFrame(b)

@@ -45,8 +45,14 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
 
         recorder.checkValidClasses(data, type)
 
-        if(recorder.encoder.frameRate != 30f) {
-            recorder.encoder.frameRate = 30f
+        val targetFPS = if (CommonStatic.getConfig().performanceMode) {
+            60f
+        } else {
+            30f
+        }
+
+        if(recorder.encoder.frameRate != targetFPS) {
+            recorder.encoder.frameRate = targetFPS
 
             recorder.encoder.start(recorder.bos)
 
@@ -79,7 +85,7 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
         watcher.start()
     }
 
-    fun pushFrame(view: AnimationCView, animationType: Int, form: Int, frame: Int) {
+    fun pushFrame(view: AnimationCView, animationType: Int, form: Int, frame: Float) {
         queuedTasks.addLast {
             if (!StaticStore.keepDoing)
                 return@addLast

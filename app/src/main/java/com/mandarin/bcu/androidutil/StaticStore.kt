@@ -234,7 +234,7 @@ object StaticStore {
      * Variables for Animation
      */
     var play = true
-    var frame = 0
+    var frame = 0f
     var formposition = 0
     var animposition = 0
     var gifFrame = 0
@@ -338,7 +338,7 @@ object StaticStore {
         set = null
         lu = null
         play = true
-        frame = 0
+        frame = 0f
         formposition = 0
         animposition = 0
         gifFrame = 0

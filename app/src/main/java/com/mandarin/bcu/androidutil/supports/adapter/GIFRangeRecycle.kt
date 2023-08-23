@@ -11,6 +11,7 @@ import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticJava
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
+import common.CommonStatic
 import common.pack.Identifier
 import common.util.anim.EAnimD
 import common.util.pack.DemonSoul
@@ -59,20 +60,35 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
         holder.range.valueTo =  (anim.len() - 1).toFloat()
         holder.range.setLabelFormatter { it.toInt().toString() }
-        holder.range.stepSize = 1f
-        holder.range.setMinSeparationValue(1f)
+        holder.range.stepSize = if (CommonStatic.getConfig().performanceMode) {
+            0.5f
+        } else {
+            1f
+        }
+
+        holder.range.setMinSeparationValue(if (CommonStatic.getConfig().performanceMode) {
+            0.5f
+        } else {
+            1f
+        })
 
         holder.range.values = listOf(holder.range.valueFrom, holder.range.valueTo)
 
         holder.range.isTickVisible = false
 
         data[position][0] = if(holder.range.values.size > 0)
-            holder.range.values[0].toInt()
+            if (CommonStatic.getConfig().performanceMode)
+                (holder.range.values[0] * 2f).toInt()
+            else
+                holder.range.values[0].toInt()
         else
             0
 
         data[position][1] = if(holder.range.values.size > 1)
-            holder.range.values[1].toInt()
+            if (CommonStatic.getConfig().performanceMode)
+                (holder.range.values[1] * 2f).toInt()
+            else
+                holder.range.values[1].toInt()
         else
             data[position][0]
 
@@ -80,8 +96,15 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
             if(fromUser) {
                 holder.switch.text = generateRangeName(holder.adapterPosition, holder.range)
 
-                data[holder.adapterPosition][0] = slider.values[0].toInt()
-                data[holder.adapterPosition][1] = slider.values[1].toInt()
+                data[holder.adapterPosition][0] = if (CommonStatic.getConfig().performanceMode)
+                    (holder.range.values[0] * 2f).toInt()
+                else
+                    holder.range.values[0].toInt()
+
+                data[holder.adapterPosition][1] = if (CommonStatic.getConfig().performanceMode)
+                    (holder.range.values[1] * 2f).toInt()
+                else
+                    holder.range.values[1].toInt()
             }
         }
 

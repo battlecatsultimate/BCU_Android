@@ -801,7 +801,7 @@ class BattleSimulation : AppCompatActivity() {
                         SoundHandler.MUSIC.prepareAsync()
 
                         SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                            override fun prepare(mp: MediaPlayer?) {
+                            override fun prepare(mp: MediaPlayer) {
                                 val loop = battleView.painter.bf.sb.st.mus0?.get()?.loop ?: 0
 
                                 if (SoundHandler.musicPlay) {

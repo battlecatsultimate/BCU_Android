@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().realLevel = shared.getBoolean("reallv", false)
         CommonStatic.getConfig().deadOpa = 0
         CommonStatic.getConfig().fullOpa = 100
+        CommonStatic.getConfig().performanceMode = true
 
         val result = intent
         var conf = false

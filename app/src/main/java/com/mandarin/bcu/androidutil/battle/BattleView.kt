@@ -253,7 +253,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                                 SoundHandler.MUSIC.prepareAsync()
 
                                 SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                                    override fun prepare(mp: MediaPlayer?) {
+                                    override fun prepare(mp: MediaPlayer) {
                                         if(SoundHandler.musicPlay) {
                                             try {
                                                 if(SoundHandler.timer != null && SoundHandler.timer?.isRunning == true) {
@@ -311,7 +311,13 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 }
             }
 
-            pauseTime = max(0, (pauseTime * 0.5 + (1000/30.0 - time) * 0.5).toLong())
+            val targetTime = if (CommonStatic.getConfig().performanceMode) {
+                1000 / 60.0
+            } else {
+                1000 / 30.0
+            }
+
+            pauseTime = max(0, (pauseTime * 0.5 + (targetTime - time) * 0.5).toLong())
 
             postDelayed(this, pauseTime)
         }
@@ -352,7 +358,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     SoundHandler.MUSIC.prepareAsync()
 
                     SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                        override fun prepare(mp: MediaPlayer?) {
+                        override fun prepare(mp: MediaPlayer) {
                             SoundHandler.MUSIC.start()
                         }
                     })
@@ -384,7 +390,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     SoundHandler.MUSIC.prepareAsync()
 
                     SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                        override fun prepare(mp: MediaPlayer?) {
+                        override fun prepare(mp: MediaPlayer) {
                             SoundHandler.MUSIC.start()
                         }
                     })

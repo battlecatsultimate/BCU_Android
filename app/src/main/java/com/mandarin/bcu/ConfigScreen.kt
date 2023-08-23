@@ -14,7 +14,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnLongClickListener
+import android.view.View.VISIBLE
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
@@ -366,6 +368,31 @@ open class ConfigScreen : AppCompatActivity() {
 
             override fun onStopTrackingTouch(p0: SeekBar?) {}
         })
+
+        val performance = findViewById<SwitchCompat>(R.id.configperf)
+        val warnText = findViewById<TextView>(R.id.configcaution)
+
+        performance.setOnCheckedChangeListener { _, checked ->
+            CommonStatic.getConfig().performanceMode = checked
+
+            val editor = shared.edit()
+            editor.putBoolean("performance", checked)
+            editor.apply()
+
+            warnText.visibility = if (CommonStatic.getConfig().performanceMode) {
+                VISIBLE
+            } else {
+                GONE
+            }
+        }
+
+        warnText.visibility = if (CommonStatic.getConfig().performanceMode) {
+            VISIBLE
+        } else {
+            GONE
+        }
+
+        performance.isChecked = CommonStatic.getConfig().performanceMode
 
         val mus = findViewById<SwitchCompat>(R.id.configmus)
         val musvol = findViewById<SeekBar>(R.id.configmusvol)

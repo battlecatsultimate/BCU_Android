@@ -42,15 +42,11 @@
         <activity
             android:name=".ErrorScreen"
             android:exported="false" />
-
         <activity
             android:name=".DataResetManager"
             android:exported="true" />
-
         <activity android:name=".EffectList" />
-
         <activity android:name=".FileViewer" />
-
         <activity android:name=".AssetBrowser" />
 
         <meta-data
@@ -58,7 +54,6 @@
             android:value="true" />
 
         <activity android:name=".CastleList" />
-
         <activity
             android:name=".PackManagement"
             android:configChanges="locale"
@@ -75,59 +70,44 @@
                     android:scheme="file" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".StatSearchFilter"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".PackConflictDetail"
             android:configChanges="locale" />
-
         <activity
             android:name=".PackConflictSolve"
             android:configChanges="locale" />
-
         <activity
             android:name=".StageSearchFilter"
             android:configChanges="locale" />
-
         <activity
             android:name=".MusicPlayer"
             android:configChanges="locale" />
-
         <activity
             android:name=".MusicList"
             android:configChanges="locale" />
-
         <activity
             android:name=".BattlePrepare"
             android:configChanges="locale" />
-
         <activity
             android:name=".BattleSimulation"
             android:configChanges="locale"
             android:hardwareAccelerated="true"
             android:screenOrientation="sensorLandscape" />
-
         <activity
             android:name=".BackgroundList"
             android:configChanges="locale" />
-
         <activity android:name=".MedalList" />
-
         <activity
             android:name=".LineUpScreen"
             android:hardwareAccelerated="true" />
-
         <activity
             android:name=".ImageViewer"
             android:hardwareAccelerated="true" />
-
         <activity android:name=".StageInfo" />
-
         <activity android:name=".StageList" />
-
         <activity
             android:name=".CheckUpdateScreen"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
@@ -139,29 +119,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".EnemySearchFilter" />
-
         <activity android:name=".EnemyInfo" />
-
         <activity android:name=".EnemyList" />
-
         <activity
             android:name=".ConfigScreen"
             android:configChanges="locale" />
-
         <activity
             android:name=".ApkDownload"
             android:configChanges="keyboardHidden|orientation|screenSize" />
-
         <activity android:name=".UnitInfo" />
-
         <activity android:name=".SearchFilter" />
-
         <activity android:name=".MapList" />
-
         <activity android:name=".AnimationViewer" />
-
         <activity android:name=".MainActivity" />
 
         <provider
@@ -181,8 +151,9 @@
                 <action android:name="android.intent.action.HEADSET_PLUG" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".CheckUpdateScreen$ServiceBroadCastReceiver" android:exported="false">
+        <receiver
+            android:name=".CheckUpdateScreen$ServiceBroadCastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.mandarin.bcu::Progress-Text" />
                 <action android:name="com.mandarin.bcu::Progress-Progression" />
@@ -191,4 +162,5 @@
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

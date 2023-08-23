@@ -57,6 +57,8 @@ class UnitInfo : AppCompatActivity() {
     private val tabTitle = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        savedInstanceState?.clear()
+
         super.onCreate(savedInstanceState)
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
@@ -219,7 +221,6 @@ class UnitInfo : AppCompatActivity() {
                     scrollView.visibility = View.GONE
 
                     unitTable.isFocusable = false
-                    unitTable.requestFocusFromTouch()
                 } else {
                     scrollView.visibility = View.GONE
 
@@ -232,7 +233,6 @@ class UnitInfo : AppCompatActivity() {
                     scrollView.visibility = View.GONE
 
                     unitTable.isFocusable = false
-                    unitTable.requestFocusFromTouch()
                 } else {
                     scrollView.visibility = View.GONE
 
@@ -436,6 +436,9 @@ class UnitInfo : AppCompatActivity() {
             }
         }.toTypedArray()
 
+        tablePager.isSaveEnabled = false
+        tablePager.isSaveFromParentEnabled = false
+
         tablePager.adapter = TableTab(tabs.tabCount, tabNames, u.id)
         tablePager.offscreenPageLimit = u.forms.size
 
@@ -443,11 +446,11 @@ class UnitInfo : AppCompatActivity() {
             tab.text = tabNames[position]
         }.attach()
 
-        viewPager.adapter = ExplanationTab(tabs.tabCount, tabNames, u.id)
-        viewPager.offscreenPageLimit = u.forms.size
-
         viewPager.isSaveEnabled = false
         viewPager.isSaveFromParentEnabled = false
+
+        viewPager.adapter = ExplanationTab(tabs.tabCount, tabNames, u.id)
+        viewPager.offscreenPageLimit = u.forms.size
 
         TabLayoutMediator(tabs, viewPager) { tab, position ->
             tab.text = tabNames[position]

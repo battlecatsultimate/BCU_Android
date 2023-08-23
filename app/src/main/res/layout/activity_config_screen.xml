@@ -29,7 +29,6 @@
         android:contentDescription="@string/def_schbck"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        app:tint="?attr/UnitinfoName"
         android:tint="?attr/UnitinfoName"
         app:borderWidth="0dp"
         app:elevation="0dp"
@@ -37,7 +36,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_button" />
+        app:srcCompat="@drawable/back_button"
+        app:tint="?attr/UnitinfoName" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -45,7 +45,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3"
         app:layout_constraintVertical_bias="1.0">
@@ -346,7 +346,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView21"
+                android:id="@+id/animation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -365,10 +365,8 @@
                 android:text="@string/confg_axis"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintEnd_toEndOf="@+id/configinfport"
-                app:layout_constraintStart_toStartOf="@+id/textView21"
-                app:layout_constraintTop_toBottomOf="@+id/textView21" />
-
-
+                app:layout_constraintStart_toStartOf="@+id/animation"
+                app:layout_constraintTop_toBottomOf="@+id/animation" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configfps"
@@ -413,17 +411,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/configgifsize" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configperf"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/config_performance"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configinfport"
+                app:layout_constraintStart_toStartOf="@+id/viewcolreset"
+                app:layout_constraintTop_toBottomOf="@+id/viewcolpick" />
+
+            <TextView
+                android:id="@+id/configcaution"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:paddingBottom="24dp"
+                android:text="@string/config_warn"
+                android:textColor="@color/status_warning"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/configperf"
+                app:layout_constraintStart_toStartOf="@+id/configperf"
+                app:layout_constraintTop_toBottomOf="@+id/configperf" />
+
             <TextView
                 android:id="@+id/sound"
                 android:layout_width="58dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="@string/config_sound"
                 android:textColor="?attr/TextPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/configmus"
-                app:layout_constraintTop_toBottomOf="@+id/viewcolpick" />
+                app:layout_constraintTop_toBottomOf="@+id/configcaution" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/configmus"

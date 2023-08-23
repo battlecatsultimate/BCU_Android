@@ -178,7 +178,7 @@ object SoundHandler {
         MUSIC.setDataSource(m.absolutePath)
         MUSIC.prepareAsync()
         MUSIC.setOnPreparedListener(object: MediaPrepare() {
-            override fun prepare(mp: MediaPlayer?) {
+            override fun prepare(mp: MediaPlayer) {
                 if(musicPlay) {
                     if(loop > 0 && loop < MUSIC.duration) {
                         timer = object : PauseCountDown((MUSIC.duration - 1).toLong(), (MUSIC.duration - 1).toLong(), true) {

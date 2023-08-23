@@ -997,4 +997,6 @@
     <string name="stg_info_cataminc">고양이 드링크 C %1$d개</string>
     <string name="def_lang_th">ภาษาไทย</string>
     <string name="config_lang_reload">언어 데이터 재로딩 중…</string>
+    <string name="config_warn">주의! 앱 성능에 심각한 영향을 줄 수 있습니다!</string>
+    <string name="config_performance">고사양 모드 (60 FPS)</string>
 </resources>

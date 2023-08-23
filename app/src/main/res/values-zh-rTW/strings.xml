@@ -997,4 +997,6 @@
     <string name="stg_info_cataminc">%1$d Catamin C</string>
     <string name="def_lang_th">ภาษาไทย</string>
     <string name="config_lang_reload">Reloading Language Data…</string>
+    <string name="config_warn">Warning! Expect severe performance issue!</string>
+    <string name="config_performance">Performance Mode (60 FPS)</string>
 </resources>
