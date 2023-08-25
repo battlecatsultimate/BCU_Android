@@ -9,9 +9,7 @@ import com.google.android.material.slider.RangeSlider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticJava
-import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.animation.AnimationCView
-import common.CommonStatic
 import common.pack.Identifier
 import common.util.anim.EAnimD
 import common.util.pack.DemonSoul
@@ -60,51 +58,30 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
         holder.range.valueTo =  (anim.len() - 1).toFloat()
         holder.range.setLabelFormatter { it.toInt().toString() }
-        holder.range.stepSize = if (CommonStatic.getConfig().performanceMode) {
-            0.5f
-        } else {
-            1f
-        }
+        holder.range.stepSize = 1f
 
-        holder.range.setMinSeparationValue(if (CommonStatic.getConfig().performanceMode) {
-            0.5f
-        } else {
-            1f
-        })
+        holder.range.setMinSeparationValue(1f)
 
         holder.range.values = listOf(holder.range.valueFrom, holder.range.valueTo)
 
         holder.range.isTickVisible = false
 
         data[position][0] = if(holder.range.values.size > 0)
-            if (CommonStatic.getConfig().performanceMode)
-                (holder.range.values[0] * 2f).toInt()
-            else
-                holder.range.values[0].toInt()
+            holder.range.values[0].toInt()
         else
             0
 
         data[position][1] = if(holder.range.values.size > 1)
-            if (CommonStatic.getConfig().performanceMode)
-                (holder.range.values[1] * 2f).toInt()
-            else
-                holder.range.values[1].toInt()
+            holder.range.values[1].toInt()
         else
             data[position][0]
 
-        holder.range.addOnChangeListener { slider, _, fromUser ->
+        holder.range.addOnChangeListener { _, _, fromUser ->
             if(fromUser) {
                 holder.switch.text = generateRangeName(holder.adapterPosition, holder.range)
 
-                data[holder.adapterPosition][0] = if (CommonStatic.getConfig().performanceMode)
-                    (holder.range.values[0] * 2f).toInt()
-                else
-                    holder.range.values[0].toInt()
-
-                data[holder.adapterPosition][1] = if (CommonStatic.getConfig().performanceMode)
-                    (holder.range.values[1] * 2f).toInt()
-                else
-                    holder.range.values[1].toInt()
+                data[holder.adapterPosition][0] = holder.range.values[0].toInt()
+                data[holder.adapterPosition][1] = holder.range.values[1].toInt()
             }
         }
 
@@ -138,7 +115,7 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
                 if(u !is Unit)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return u.forms[form].getEAnim(StaticStore.getAnimType(ind, u.forms[form].anim.anims.size))
+                return StaticJava.generateEAnimD(content, form, ind)
             }
             AnimationCView.AnimationType.ENEMY -> {
                 if(content !is Identifier<*>)
@@ -149,31 +126,31 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
                 if(e !is Enemy)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return e.getEAnim(StaticStore.getAnimType(ind, e.anim.anims.size))
+                return StaticJava.generateEAnimD(content, -1, ind)
             }
             AnimationCView.AnimationType.EFFECT -> {
                 if(content !is EffAnim<*>)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return StaticJava.generateEAnimD(content, ind)
+                return StaticJava.generateEAnimD(content, -1, ind)
             }
             AnimationCView.AnimationType.SOUL -> {
                 if(content !is Soul)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return StaticJava.generateEAnimD(content, ind)
+                return StaticJava.generateEAnimD(content, -1, ind)
             }
             AnimationCView.AnimationType.CANNON -> {
                 if(content !is NyCastle)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return StaticJava.generateEAnimD(content, ind)
+                return StaticJava.generateEAnimD(content, -1, ind)
             }
             AnimationCView.AnimationType.DEMON_SOUL -> {
                 if(content !is DemonSoul)
                     throw IllegalStateException("Invalid content ${content::class.java.name} with type $type")
 
-                return StaticJava.generateEAnimD(content, ind)
+                return StaticJava.generateEAnimD(content, -1, ind)
             }
             else -> {
                 throw IllegalStateException("Invalid type $type")

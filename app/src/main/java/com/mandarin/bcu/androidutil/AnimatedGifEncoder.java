@@ -191,7 +191,7 @@ public class AnimatedGifEncoder {
      */
     public void setFrameRate(float fps) {
         if (fps != 0f) {
-            delay = (int) (100 / fps);
+            delay = (int) Math.round(100 / fps);
             this.fps = fps;
         }
     }

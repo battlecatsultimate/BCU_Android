@@ -13,7 +13,7 @@ import common.util.unit.Unit;
 
 public class StaticJava {
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static EAnimD<?> generateEAnimD(Object data, int dataId) {
+    public static EAnimD<?> generateEAnimD(Object data, int form, int dataId) {
         if(data instanceof EffAnim<?>) {
             ((EffAnim<?>) data).load();
 
@@ -41,9 +41,11 @@ public class StaticJava {
 
             if (entity != null) {
                 if (entity instanceof Unit) {
-                    return ((Unit) entity).forms[dataId].getEAnim(AnimU.UType.WALK);
+                    System.out.println(((Unit) entity).forms[form]);
+
+                    return ((Unit) entity).forms[form].getEAnim(((Unit) entity).forms[form].anim.types[dataId]);
                 } else if (entity instanceof Enemy) {
-                    return ((Enemy) entity).getEAnim(AnimU.UType.WALK);
+                    return ((Enemy) entity).getEAnim(((Enemy) entity).anim.types[dataId]);
                 }
             }
         }

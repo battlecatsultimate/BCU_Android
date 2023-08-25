@@ -61,7 +61,6 @@ import common.pack.UserProfile
 import common.system.P
 import common.util.Data
 import common.util.anim.EAnimD
-import common.util.anim.EAnimU
 import common.util.pack.Background
 import common.util.pack.DemonSoul
 import common.util.pack.EffAnim
@@ -495,11 +494,7 @@ class ImageViewer : AppCompatActivity() {
                             if (StaticStore.animposition != position) {
                                 StaticStore.animposition = position
 
-                                if (type == AnimationCView.AnimationType.UNIT || type == AnimationCView.AnimationType.ENEMY) {
-                                    (cView.anim as EAnimU).changeAnim(StaticStore.getAnimType(position, (cView.anim as EAnimU).anim().anims.size), false)
-                                } else {
-                                     cView.anim = StaticJava.generateEAnimD(content, position)
-                                }
+                                cView.anim = StaticJava.generateEAnimD(content, StaticStore.formposition, position)
 
                                 controller.max = if (CommonStatic.getConfig().performanceMode) {
                                     cView.anim.len() * 2
@@ -600,9 +595,7 @@ class ImageViewer : AppCompatActivity() {
 
                     anims.setSelection(StaticStore.animposition)
 
-                    if (type != AnimationCView.AnimationType.UNIT && type != AnimationCView.AnimationType.ENEMY) {
-                        cView.anim = StaticJava.generateEAnimD(content, StaticStore.animposition)
-                    }
+                    cView.anim = StaticJava.generateEAnimD(content, StaticStore.formposition, StaticStore.animposition)
 
                     cView.anim.setTime(StaticStore.frame)
 
@@ -1248,19 +1241,48 @@ class ImageViewer : AppCompatActivity() {
 
             frame = 0
 
-            StaticStore.gifFrame = getTotalFrame(frames, enabled)
-
             if(!StaticStore.keepDoing) {
                 return
             }
 
-            frames.forEachIndexed { i, range ->
+            val filteredRange = ArrayList<ArrayList<Float>>()
+
+            for (i in frames.indices) {
+                if (!enabled[i]) {
+                    filteredRange.add(ArrayList())
+
+                    continue
+                }
+
+                val range = frames[i]
+
+                val frameData = ArrayList<Float>()
+                var currentFrame = range[0].toFloat()
+
+                while (currentFrame <= range[1].toFloat()) {
+                    frameData.add(currentFrame)
+
+                    currentFrame += if (CommonStatic.getConfig().performanceMode) {
+                        0.5f
+                    } else {
+                        1f
+                    }
+                }
+
+                filteredRange.add(frameData)
+
+                StaticStore.gifFrame += frameData.size
+            }
+
+            for (i in filteredRange.indices) {
                 if(!StaticStore.keepDoing) {
-                    return@forEachIndexed
+                    return
                 }
 
                 if (!enabled[i])
-                    return@forEachIndexed
+                    continue
+
+                val range = filteredRange[i]
 
                 val anim = if (type == AnimationCView.AnimationType.UNIT) {
                     getEanimD(type, i, data, form = StaticStore.formposition)
@@ -1277,7 +1299,7 @@ class ImageViewer : AppCompatActivity() {
                 bitmapPaint.isFilterBitmap = true
                 bitmapPaint.isAntiAlias = true
 
-                for(j in range[0]..range[1]) {
+                for(j in range) {
                     if(!StaticStore.keepDoing) {
                         break
                     }
@@ -1290,11 +1312,7 @@ class ImageViewer : AppCompatActivity() {
 
                     c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), back)
 
-                    anim.setTime(if (CommonStatic.getConfig().performanceMode) {
-                        j / 2f
-                    } else {
-                        j.toFloat()
-                    })
+                    anim.setTime(j)
                     anim.draw(cv, p, siz)
 
                     encoder.addFrame(b)
@@ -1367,34 +1385,22 @@ class ImageViewer : AppCompatActivity() {
         private fun getEanimD(type: AnimationCView.AnimationType, index: Int, data: Any, form: Int = 0) : EAnimD<*> {
             when(type) {
                 AnimationCView.AnimationType.UNIT -> {
-                    val u = Identifier.get(data as Identifier<*>)
-
-                    return (u as Unit).forms[form].getEAnim(StaticStore.getAnimType(index, u.forms[form].anim.anims.size))
+                    return StaticJava.generateEAnimD(data, form, index)
                 }
                 AnimationCView.AnimationType.ENEMY -> {
-                    val e = Identifier.get(data as Identifier<*>)
-
-                    return (e as Enemy).getEAnim(StaticStore.getAnimType(index, e.anim.anims.size))
+                    return StaticJava.generateEAnimD(data, -1, index)
                 }
                 AnimationCView.AnimationType.EFFECT -> {
-                    val d = data as EffAnim<*>
-
-                    return StaticJava.generateEAnimD(d, index)
+                    return StaticJava.generateEAnimD(data, -1, index)
                 }
                 AnimationCView.AnimationType.SOUL -> {
-                    val d = data as Soul
-
-                    return StaticJava.generateEAnimD(d, index)
+                    return StaticJava.generateEAnimD(data, -1, index)
                 }
                 AnimationCView.AnimationType.CANNON -> {
-                    val d = data as NyCastle
-
-                    return StaticJava.generateEAnimD(d, index)
+                    return StaticJava.generateEAnimD(data, -1, index)
                 }
                 AnimationCView.AnimationType.DEMON_SOUL -> {
-                    val d = data as DemonSoul
-
-                    return StaticJava.generateEAnimD(d, index)
+                    return StaticJava.generateEAnimD(data, -1, index)
                 }
                 else -> {
                     throw IllegalStateException("Invalid type $type")

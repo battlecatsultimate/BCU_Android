@@ -105,9 +105,9 @@ class AnimationCView(
         }
 
         this.anim = if (type == AnimationType.UNIT) {
-            StaticJava.generateEAnimD(data , dataId)
+            StaticJava.generateEAnimD(data, dataId, 0)
         } else {
-            StaticJava.generateEAnimD(data , 0)
+            StaticJava.generateEAnimD(data , 0, 0)
         }
 
         CommonStatic.getConfig().ref = axis
