@@ -1378,10 +1378,6 @@ class ImageViewer : AppCompatActivity() {
             StaticStore.enableGIF = false
         }
 
-        private fun getTotalFrame(frames: ArrayList<Array<Int>>, enables: Array<Boolean>) : Int {
-            return frames.filterIndexed { i, _ -> enables[i] }.sumOf { f -> f[1] - f[0] + 1 }
-        }
-
         private fun getEanimD(type: AnimationCView.AnimationType, index: Int, data: Any, form: Int = 0) : EAnimD<*> {
             when(type) {
                 AnimationCView.AnimationType.UNIT -> {
