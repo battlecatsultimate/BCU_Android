@@ -45,7 +45,7 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
 
         recorder.checkValidClasses(data, type)
 
-        val targetFPS = if (CommonStatic.getConfig().performanceMode) {
+        val targetFPS = if (CommonStatic.getConfig().performanceModeAnimation) {
             60f
         } else {
             30f

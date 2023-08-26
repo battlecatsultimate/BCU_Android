@@ -999,4 +999,6 @@
     <string name="config_lang_reload">Reloading Language Data…</string>
     <string name="config_warn">Warning! Expect severe performance issue!</string>
     <string name="config_performance">Performance Mode (60 FPS)</string>
+    <string name="config_perfbattle">In Battle</string>
+    <string name="config_perfanim">In Animation Viewer</string>
 </resources>

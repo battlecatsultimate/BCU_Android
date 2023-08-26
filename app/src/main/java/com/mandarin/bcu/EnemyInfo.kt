@@ -125,8 +125,12 @@ class EnemyInfo : AppCompatActivity() {
                 eanim.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
+
                         intent.putExtra("Img", ImageViewer.ViewerType.ENEMY.name)
                         intent.putExtra("Data", JsonEncoder.encode(data).toString())
+
+                        CommonStatic.getConfig().performanceModeAnimation = shared.getBoolean("performanceAnimation", false)
+
                         startActivity(intent)
                     }
                 })

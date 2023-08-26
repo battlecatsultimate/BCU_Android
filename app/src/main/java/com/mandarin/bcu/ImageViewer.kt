@@ -105,12 +105,12 @@ class ImageViewer : AppCompatActivity() {
     private val groundBelow = 3
 
     private var previousTime = System.currentTimeMillis()
-    private var fps = if (CommonStatic.getConfig().performanceMode) {
+    private var fps = if (CommonStatic.getConfig().performanceModeAnimation) {
         60L
     } else {
         30L
     }
-    private val targetFPS = if (CommonStatic.getConfig().performanceMode) {
+    private var targetFPS = if (CommonStatic.getConfig().performanceModeAnimation) {
         1000L / 60L
     } else {
         1000L / 30L
@@ -472,7 +472,7 @@ class ImageViewer : AppCompatActivity() {
 
                                     val max = cView.anim.len()
 
-                                    controller.max = if (CommonStatic.getConfig().performanceMode) {
+                                    controller.max = if (CommonStatic.getConfig().performanceModeAnimation) {
                                         (max - 1) * 2
                                     } else {
                                         max - 1
@@ -496,7 +496,7 @@ class ImageViewer : AppCompatActivity() {
 
                                 cView.anim = StaticJava.generateEAnimD(content, StaticStore.formposition, position)
 
-                                controller.max = if (CommonStatic.getConfig().performanceMode) {
+                                controller.max = if (CommonStatic.getConfig().performanceModeAnimation) {
                                     cView.anim.len() * 2
                                 } else {
                                     cView.anim.len()
@@ -536,7 +536,7 @@ class ImageViewer : AppCompatActivity() {
                         buttons[2].isEnabled = false
 
                         if (StaticStore.frame > 0) {
-                            if (CommonStatic.getConfig().performanceMode) {
+                            if (CommonStatic.getConfig().performanceModeAnimation) {
                                 StaticStore.frame -= 0.5f
                             } else {
                                 StaticStore.frame--
@@ -555,7 +555,7 @@ class ImageViewer : AppCompatActivity() {
                     buttons[2].setOnClickListener {
                         buttons[0].isEnabled = false
 
-                        if (CommonStatic.getConfig().performanceMode) {
+                        if (CommonStatic.getConfig().performanceModeAnimation) {
                             StaticStore.frame += 0.5f
                         } else {
                             StaticStore.frame++
@@ -571,7 +571,7 @@ class ImageViewer : AppCompatActivity() {
                     controller.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                         override fun onProgressChanged(controller: SeekBar, progress: Int, fromUser: Boolean) {
                             if (fromUser) {
-                                StaticStore.frame = if (CommonStatic.getConfig().performanceMode) {
+                                StaticStore.frame = if (CommonStatic.getConfig().performanceModeAnimation) {
                                     progress / 2f
                                 } else {
                                     progress.toFloat()
@@ -587,7 +587,7 @@ class ImageViewer : AppCompatActivity() {
 
                     frame.text = getString(R.string.anim_frame).replace("-", "" + StaticStore.frame)
 
-                    controller.progress = if (CommonStatic.getConfig().performanceMode) {
+                    controller.progress = if (CommonStatic.getConfig().performanceModeAnimation) {
                         (StaticStore.frame * 2).toInt()
                     } else {
                         StaticStore.frame.toInt()
@@ -599,7 +599,7 @@ class ImageViewer : AppCompatActivity() {
 
                     cView.anim.setTime(StaticStore.frame)
 
-                    controller.max = if (CommonStatic.getConfig().performanceMode) {
+                    controller.max = if (CommonStatic.getConfig().performanceModeAnimation) {
                         cView.anim.len() * 2
                     } else {
                         cView.anim.len()
@@ -1101,7 +1101,7 @@ class ImageViewer : AppCompatActivity() {
             val fpsIndicator = findViewById<TextView>(R.id.imgviewerfps)
             val gif = findViewById<TextView>(R.id.imgviewergiffr)
 
-            val targetTime = if (CommonStatic.getConfig().performanceMode) {
+            val targetTime = if (CommonStatic.getConfig().performanceModeAnimation) {
                 60L
             } else {
                 30L
@@ -1120,7 +1120,7 @@ class ImageViewer : AppCompatActivity() {
                             fpsIndicator.text = getText(R.string.def_fps).toString().replace("-", "" + fps)
                         }
 
-                        val maxValue = if (CommonStatic.getConfig().performanceMode) {
+                        val maxValue = if (CommonStatic.getConfig().performanceModeAnimation) {
                             controller.max / 2f
                         } else {
                             controller.max * 1f
@@ -1130,7 +1130,7 @@ class ImageViewer : AppCompatActivity() {
                             StaticStore.frame = 0f
                             0
                         } else {
-                            if (CommonStatic.getConfig().performanceMode) {
+                            if (CommonStatic.getConfig().performanceModeAnimation) {
                                 (StaticStore.frame * 2).toInt()
                             } else {
                                 StaticStore.frame.toInt()
@@ -1208,7 +1208,7 @@ class ImageViewer : AppCompatActivity() {
         fun recordGifWithRange(view: AnimationCView, type: AnimationCView.AnimationType, frames: ArrayList<Array<Int>>, enabled: Array<Boolean>, isNightMode: Boolean, data: Any, id: Int = 0, form: Int = 0, pack: String = "000000") {
             checkValidClasses(data, type)
 
-            val targetFPS = if (CommonStatic.getConfig().performanceMode) {
+            val targetFPS = if (CommonStatic.getConfig().performanceModeAnimation) {
                 60f
             } else {
                 30f
@@ -1262,7 +1262,7 @@ class ImageViewer : AppCompatActivity() {
                 while (currentFrame <= range[1].toFloat()) {
                     frameData.add(currentFrame)
 
-                    currentFrame += if (CommonStatic.getConfig().performanceMode) {
+                    currentFrame += if (CommonStatic.getConfig().performanceModeAnimation) {
                         0.5f
                     } else {
                         1f

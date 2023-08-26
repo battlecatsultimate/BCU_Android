@@ -44,7 +44,11 @@ import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
 import common.util.stage.Stage
 import common.util.stage.info.DefStageInfo
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.round
+import kotlin.math.tan
 import kotlin.system.measureTimeMillis
 
 @SuppressLint("ViewConstructor")
@@ -103,6 +107,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
         if(CommonStatic.getConfig().stageName)
             painter.stageImage = stgImage
+
+        CommonStatic.getConfig().performanceModeAnimation = CommonStatic.getConfig().performanceModeBattle
 
         painter.dpi = StaticStore.dptopx(32f, context)
         painter.stmImageOffset = StaticStore.dptopx(52f, context)
@@ -311,7 +317,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 }
             }
 
-            val targetTime = if (CommonStatic.getConfig().performanceMode) {
+            val targetTime = if (CommonStatic.getConfig().performanceModeBattle) {
                 1000 / 60.0
             } else {
                 1000 / 30.0

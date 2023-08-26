@@ -573,6 +573,43 @@ object Definer {
             ed.putBoolean("lazylineup", false)
             ed.apply()
         }
+
+        SoundHandler.musicPlay = shared.getBoolean("music", true)
+        SoundHandler.mu_vol = if(shared.getBoolean("music", true)) {
+            StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
+        } else {
+            0f
+        }
+        SoundHandler.sePlay = shared.getBoolean("SE", true)
+        SoundHandler.se_vol = if(shared.getBoolean("SE", true)) {
+            StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
+        } else {
+            0f
+        }
+        SoundHandler.uiPlay = shared.getBoolean("UI", true)
+        SoundHandler.ui_vol = if(SoundHandler.uiPlay)
+            StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+        else
+            0f
+
+        StaticStore.upload = shared.getBoolean("upload", false) || shared.getBoolean("ask_upload", true)
+        StaticStore.showResult = shared.getBoolean("showres", true)
+
+        CommonStatic.getConfig().twoRow = shared.getBoolean("rowlayout", true)
+        CommonStatic.getConfig().levelLimit = shared.getInt("levelLimit", 0)
+        CommonStatic.getConfig().plus = shared.getBoolean("unlockPlus", true)
+        CommonStatic.getConfig().drawBGEffect = shared.getBoolean("bgeff", true)
+        CommonStatic.getConfig().buttonDelay = shared.getBoolean("unitDelay", true)
+        CommonStatic.getConfig().viewerColor = shared.getInt("viewerColor", -1)
+        CommonStatic.getConfig().exContinuation = shared.getBoolean("exContinue", true)
+        CommonStatic.getConfig().realEx = shared.getBoolean("realEx", false)
+        CommonStatic.getConfig().shake = shared.getBoolean("shake", true)
+        CommonStatic.getConfig().stageName = shared.getBoolean("showst", true)
+        CommonStatic.getConfig().realLevel = shared.getBoolean("reallv", false)
+        CommonStatic.getConfig().deadOpa = 0
+        CommonStatic.getConfig().fullOpa = 100
+        CommonStatic.getConfig().performanceModeAnimation = shared.getBoolean("performanceAnimation", false)
+        CommonStatic.getConfig().performanceModeBattle = shared.getBoolean("performanceBattle", false)
     }
 
     private fun extractMusic(p: PackData.UserPack, shared: SharedPreferences) {

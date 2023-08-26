@@ -999,4 +999,6 @@
     <string name="config_lang_reload">언어 데이터 재로딩 중…</string>
     <string name="config_warn">주의! 앱 성능에 심각한 영향을 줄 수 있습니다!</string>
     <string name="config_performance">고사양 모드 (60 FPS)</string>
+    <string name="config_perfbattle">In Battle</string>
+    <string name="config_perfanim">In Animation Viewer</string>
 </resources>

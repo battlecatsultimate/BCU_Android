@@ -165,7 +165,7 @@ class AnimationCView(
             anim.draw(cv, p2, size.toDouble())
             anim.update(true)
 
-            if (CommonStatic.getConfig().performanceMode) {
+            if (CommonStatic.getConfig().performanceModeAnimation) {
                 StaticStore.frame += 0.5f
             } else {
                 StaticStore.frame++

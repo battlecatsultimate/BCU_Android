@@ -688,30 +688,53 @@
                 app:layout_constraintEnd_toStartOf="@+id/viewcolpick"
                 app:layout_constraintTop_toTopOf="@+id/viewcolpick" />
 
-            <androidx.appcompat.widget.SwitchCompat
+            <TextView
                 android:id="@+id/configperf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/config_performance"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/sound"
+                app:layout_constraintTop_toBottomOf="@+id/viewcolpick" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configperfanim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/config_perfanim"
+                android:textColor="?attr/TextPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/configinfport"
+                app:layout_constraintStart_toStartOf="@+id/configperf"
+                app:layout_constraintTop_toBottomOf="@+id/configperf" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/configperfbattle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/config_performance"
+                android:paddingBottom="24dp"
+                android:text="@string/config_perfbattle"
                 android:textColor="?attr/TextPrimary"
                 app:layout_constraintEnd_toEndOf="@+id/configinfport"
-                app:layout_constraintStart_toStartOf="@+id/viewcolcurr"
-                app:layout_constraintTop_toBottomOf="@+id/viewcolpick" />
+                app:layout_constraintStart_toStartOf="@+id/configperfanim"
+                app:layout_constraintTop_toBottomOf="@+id/configperfanim" />
 
             <TextView
                 android:id="@+id/configcaution"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 android:paddingBottom="24dp"
                 android:text="@string/config_warn"
                 android:textColor="@color/status_warning"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/configperf"
-                app:layout_constraintStart_toStartOf="@+id/configperf"
-                app:layout_constraintTop_toBottomOf="@+id/configperf" />
+                app:layout_constraintEnd_toEndOf="@+id/configperfanim"
+                app:layout_constraintStart_toStartOf="@+id/configperfanim"
+                app:layout_constraintTop_toBottomOf="@+id/configperfbattle" />
 
             <TextView
                 android:id="@+id/viewcurrentcol"

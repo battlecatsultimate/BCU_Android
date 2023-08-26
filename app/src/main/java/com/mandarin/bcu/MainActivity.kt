@@ -131,7 +131,8 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().realLevel = shared.getBoolean("reallv", false)
         CommonStatic.getConfig().deadOpa = 0
         CommonStatic.getConfig().fullOpa = 100
-        CommonStatic.getConfig().performanceMode = shared.getBoolean("performance", false)
+        CommonStatic.getConfig().performanceModeAnimation = shared.getBoolean("performanceAnimation", false)
+        CommonStatic.getConfig().performanceModeBattle = shared.getBoolean("performanceBattle", false)
 
         val result = intent
         var conf = false

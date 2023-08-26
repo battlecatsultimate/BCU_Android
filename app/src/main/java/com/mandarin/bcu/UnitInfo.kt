@@ -258,6 +258,8 @@ class UnitInfo : AppCompatActivity() {
                     intent.putExtra("Data", JsonEncoder.encode(data).toString())
                     intent.putExtra("Form", StaticStore.formposition)
 
+                    CommonStatic.getConfig().performanceModeAnimation = shared.getBoolean("performanceAnimation", false)
+
                     startActivity(intent)
                 }
             })
