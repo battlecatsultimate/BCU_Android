@@ -114,16 +114,16 @@ open class EnemyList : AppCompatActivity() {
             val tab = findViewById<TabLayout>(R.id.enlisttab)
             val pager = findViewById<ViewPager2>(R.id.enlistpager)
             val search = findViewById<FloatingActionButton>(R.id.enlistsch)
-            val schname = findViewById<TextInputEditText>(R.id.enemlistschname)
-            val schnamel = findViewById<TextInputLayout>(R.id.enemlistschnamel)
+            val searchBar = findViewById<TextInputEditText>(R.id.enemlistschname)
+            val searchBarLayout = findViewById<TextInputLayout>(R.id.enemlistschnamel)
             val back = findViewById<FloatingActionButton>(R.id.enlistbck)
             val st = findViewById<TextView>(R.id.status)
-            val prog = findViewById<ProgressBar>(R.id.prog)
+            val progression = findViewById<ProgressBar>(R.id.prog)
 
-            StaticStore.setDisappear(tab, pager, search, schname, schnamel)
+            StaticStore.setDisappear(tab, pager, search, searchBar, searchBarLayout)
             search.hide()
 
-            prog.isIndeterminate = true
+            progression.isIndeterminate = true
 
             //Load Data
             withContext(Dispatchers.IO) {
@@ -132,17 +132,23 @@ open class EnemyList : AppCompatActivity() {
 
             //Load UI
             if(StaticStore.entityname != "") {
-                schname.setText(StaticStore.entityname)
+                searchBar.setText(StaticStore.entityname)
             }
 
-            schname.addTextChangedListener(object : TextWatcher {
+            searchBar.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
                 override fun afterTextChanged(s: Editable) {
                     StaticStore.entityname = s.toString()
 
-                    for(i in StaticStore.filterEntityList.indices) {
-                        StaticStore.filterEntityList[i] = true
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            supportFragmentManager.fragments.forEach {
+                                if (it is EnemyListPager) {
+                                    it.validate()
+                                }
+                            }
+                        }
                     }
                 }
             })
@@ -220,10 +226,10 @@ open class EnemyList : AppCompatActivity() {
                 collapse.layoutParams = param
             }
 
-            StaticStore.setAppear(pager, search, schname, schnamel)
+            StaticStore.setAppear(pager, search, searchBar, searchBarLayout)
             search.show()
 
-            StaticStore.setDisappear(st, prog)
+            StaticStore.setDisappear(st, progression)
         }
     }
 

@@ -100,36 +100,46 @@ class AnimationViewer : AppCompatActivity() {
             val search = findViewById<FloatingActionButton>(R.id.animsch)
             val tab = findViewById<TabLayout>(R.id.unittab)
             val pager = findViewById<ViewPager2>(R.id.unitpager)
-            val schname: TextInputEditText = findViewById<TextInputEditText>(R.id.animschname)
-            val layout: TextInputLayout = findViewById<TextInputLayout>(R.id.animschnamel)
+            val searchBar = findViewById<TextInputEditText>(R.id.animschname)
+            val layout = findViewById<TextInputLayout>(R.id.animschnamel)
             val st = findViewById<TextView>(R.id.status)
-            val prog = findViewById<ProgressBar>(R.id.prog)
+            val progression = findViewById<ProgressBar>(R.id.prog)
 
-            StaticStore.setDisappear(tab, pager, schname, layout)
+            StaticStore.setDisappear(tab, pager, searchBar, layout)
             search.hide()
 
-            prog.isIndeterminate = false
-            prog.max = 10000
+            progression.isIndeterminate = false
+            progression.max = 10000
 
             //Load Data
             withContext(Dispatchers.IO) {
-                Definer.define(this@AnimationViewer, { p -> runOnUiThread { prog.progress = (p * 10000).toInt() }}, { t -> runOnUiThread { st.text = t }})
+                Definer.define(this@AnimationViewer, { p -> runOnUiThread { progression.progress = (p * 10000).toInt() }}, { t -> runOnUiThread { st.text = t }})
 
                 StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
             }
 
             //Load UI
-            prog.isIndeterminate = true
+            progression.isIndeterminate = true
 
             if(StaticStore.entityname != "") {
-                schname.setText(StaticStore.entityname)
+                searchBar.setText(StaticStore.entityname)
             }
 
-            schname.addTextChangedListener(object : TextWatcher {
+            searchBar.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
                 override fun afterTextChanged(s: Editable) {
                     StaticStore.entityname = s.toString()
+
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            supportFragmentManager.fragments.forEach {
+                                if (it is UnitListPager)
+                                    it.validate()
+
+                            }
+                        }
+                    }
 
                     for(i in StaticStore.filterEntityList.indices) {
                         StaticStore.filterEntityList[i] = true
@@ -206,10 +216,10 @@ class AnimationViewer : AppCompatActivity() {
                 collapse.layoutParams = param
             }
 
-            StaticStore.setAppear(pager, schname, layout)
+            StaticStore.setAppear(pager, searchBar, layout)
             search.show()
 
-            StaticStore.setDisappear(st, prog)
+            StaticStore.setDisappear(st, progression)
         }
     }
 

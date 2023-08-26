@@ -3,8 +3,6 @@ package com.mandarin.bcu.androidutil.enemy.adapters
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +19,8 @@ import com.mandarin.bcu.androidutil.filter.FilterEntity
 import common.io.json.JsonEncoder
 import common.pack.Identifier
 import common.pack.UserProfile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class EnemyListPager : Fragment() {
 
@@ -43,8 +43,6 @@ class EnemyListPager : Fragment() {
         }
     }
 
-    private var destroyed = false
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.entity_list_pager, container, false)
 
@@ -57,33 +55,7 @@ class EnemyListPager : Fragment() {
         val list = view.findViewById<ListView>(R.id.entitylist)
         val nores = view.findViewById<TextView>(R.id.entitynores)
 
-        validate(nores, list)
-
-        val handler = Handler(Looper.getMainLooper())
-
-        val runnable = object : Runnable {
-            override fun run() {
-                if(position >= StaticStore.filterEntityList.size)
-                    return
-
-                if(StaticStore.filterEntityList[position]) {
-                    validate(nores,list)
-                    StaticStore.filterEntityList[position] = false
-                }
-
-                if(!destroyed) {
-                    handler.postDelayed(this, 100)
-                }
-            }
-        }
-
-        runnable.run()
-
-        return view
-    }
-
-    private fun validate(nores: TextView, list: ListView) {
-        UserProfile.getPack(pid) ?: return
+        UserProfile.getPack(pid) ?: return view
 
         val numbers = FilterEntity.setEnemyFilter(pid)
 
@@ -91,13 +63,13 @@ class EnemyListPager : Fragment() {
             nores.visibility = View.GONE
             list.visibility = View.VISIBLE
 
-            val cont = context ?: return
+            val cont = context ?: return view
 
             val adapter = EnemyListAdapter(cont, numbers)
 
             list.adapter = adapter
 
-            val ac = activity ?: return
+            val ac = requireActivity()
 
             when(mode) {
                 EnemyList.Mode.INFO -> {
@@ -122,10 +94,60 @@ class EnemyListPager : Fragment() {
             nores.visibility = View.VISIBLE
             list.visibility = View.GONE
         }
+
+        return view
     }
 
-    override fun onDestroy() {
-        destroyed = true
-        super.onDestroy()
+    suspend fun validate() {
+        val view = view ?: return
+
+        val list = view.findViewById<ListView>(R.id.entitylist)
+        val nores = view.findViewById<TextView>(R.id.entitynores)
+
+        UserProfile.getPack(pid) ?: return
+
+        val numbers = FilterEntity.setEnemyFilter(pid)
+
+        if(numbers.isNotEmpty()) {
+            withContext(Dispatchers.Main) {
+                nores.visibility = View.GONE
+                list.visibility = View.VISIBLE
+            }
+
+            val cont = context ?: return
+
+            val adapter = EnemyListAdapter(cont, numbers)
+
+            withContext(Dispatchers.Main) {
+                list.adapter = adapter
+            }
+
+            val ac = activity ?: return
+
+            when(mode) {
+                EnemyList.Mode.INFO -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        if (SystemClock.elapsedRealtime() - StaticStore.enemyinflistClick < StaticStore.INTERVAL) return@OnItemClickListener
+                        StaticStore.enemyinflistClick = SystemClock.elapsedRealtime()
+                        val result = Intent(ac, EnemyInfo::class.java)
+                        result.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
+                        ac.startActivity(result)
+                    }
+                }
+                EnemyList.Mode.SELECTION -> {
+                    list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        val intent = Intent()
+                        intent.putExtra("Data", JsonEncoder.encode(numbers[position]).toString())
+                        ac.setResult(Activity.RESULT_OK, intent)
+                        ac.finish()
+                    }
+                }
+            }
+        } else {
+            withContext(Dispatchers.Main) {
+                nores.visibility = View.VISIBLE
+                list.visibility = View.GONE
+            }
+        }
     }
 }
