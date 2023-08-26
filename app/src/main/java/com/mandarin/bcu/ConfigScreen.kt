@@ -21,9 +21,18 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -46,7 +55,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 import kotlin.math.roundToInt
 
 open class ConfigScreen : AppCompatActivity() {
@@ -375,6 +384,7 @@ open class ConfigScreen : AppCompatActivity() {
         val warnText = findViewById<TextView>(R.id.configcaution)
 
         performance.setOnCheckedChangeListener { _, checked ->
+            println(checked)
             CommonStatic.getConfig().performanceMode = checked
 
             val editor = shared.edit()

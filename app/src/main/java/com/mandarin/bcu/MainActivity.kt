@@ -10,8 +10,15 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +44,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private var sendcheck = false
@@ -124,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         CommonStatic.getConfig().realLevel = shared.getBoolean("reallv", false)
         CommonStatic.getConfig().deadOpa = 0
         CommonStatic.getConfig().fullOpa = 100
-        CommonStatic.getConfig().performanceMode = true
+        CommonStatic.getConfig().performanceMode = shared.getBoolean("performance", false)
 
         val result = intent
         var conf = false
