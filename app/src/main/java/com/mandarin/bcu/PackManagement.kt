@@ -38,12 +38,15 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
 import common.pack.PackData
 import common.pack.UserProfile
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Locale
 
 class PackManagement : AppCompatActivity() {
     companion object {
@@ -54,13 +57,6 @@ class PackManagement : AppCompatActivity() {
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if(result.resultCode == RESULT_OK) {
             val path = result.data?.data ?: return@registerForActivityResult
-
-            val intent = result.data ?: return@registerForActivityResult
-
-            println(intent.action)
-            println(intent.scheme)
-            println(intent.categories.joinToString(", "))
-            println(intent.data)
 
             Log.i("PackManagement", "Got URI : $path")
 
@@ -160,7 +156,7 @@ class PackManagement : AppCompatActivity() {
             val st = findViewById<TextView>(R.id.status)
             val prog = findViewById<ProgressBar>(R.id.prog)
 
-            StaticStore.setDisappear(swipe, more)
+            StaticStore.setDisappear(list, swipe, more)
 
             //Load Data
             Definer.define(this@PackManagement, { _ -> }, { t -> runOnUiThread { st.text = t }})
@@ -266,7 +262,7 @@ class PackManagement : AppCompatActivity() {
             })
 
             StaticStore.setDisappear(st, prog)
-            StaticStore.setAppear(list, more)
+            StaticStore.setAppear(list, more, swipe)
         }
     }
 
