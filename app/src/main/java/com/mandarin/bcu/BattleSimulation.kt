@@ -989,6 +989,11 @@ class BattleSimulation : AppCompatActivity() {
         var changed = false
 
         if(st.lim != null && st.lim.lvr != null) {
+            println(st.lim.lvr.all.contentToString())
+            st.lim.lvr.rares.forEach {
+                println(it.contentToString())
+            }
+
             for(forms in lu.lu.fs) {
                 for(form in forms) {
                     form ?: continue
@@ -1004,7 +1009,7 @@ class BattleSimulation : AppCompatActivity() {
 
                     temp = level.plusLv
 
-                    level.setLevel(min(level.plusLv, st.lim.lvr.all[1]))
+                    level.setPlusLevel(min(level.plusLv, st.lim.lvr.all[1]))
 
                     if(!changed && temp != level.plusLv)
                         changed = true
@@ -1020,6 +1025,38 @@ class BattleSimulation : AppCompatActivity() {
                         if(!changed && temp != level.talents[i - 2])
                             changed = true
                     }
+
+                    st.lim.lvr.rares.forEachIndexed { index, levels ->
+                        if (form.unit.rarity == index) {
+                            temp = level.lv
+
+                            level.setLevel(min(level.lv, levels[0]))
+
+                            if(!changed && temp != level.lv)
+                                changed = true
+
+                            temp = level.plusLv
+
+                            level.setPlusLevel(min(level.plusLv, levels[1]))
+
+                            if(!changed && temp != level.plusLv)
+                                changed = true
+
+                            for(i in 2 until levels.size) {
+                                if (i - 2 >= level.talents.size)
+                                    break
+
+                                temp = level.talents[i - 2]
+
+                                level.talents[i - 2] = min(level.talents[i - 2], levels[i])
+
+                                if(!changed && temp != level.talents[i - 2])
+                                    changed = true
+                            }
+                        }
+                    }
+
+                    println("$form = ${level.lv} + ${level.plusLv} | ${level.talents.contentToString()}")
                 }
             }
         }
