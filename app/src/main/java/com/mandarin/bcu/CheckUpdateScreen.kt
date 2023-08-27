@@ -606,7 +606,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
                 UserProfile.profile()
 
                 try {
-                    Definer.define(this@CheckUpdateScreen, { p -> if (p * 10000 != -1.0) prog.progress = (p * 10000).toInt() else prog.isIndeterminate = true }, { t -> runOnUiThread { state.text = StaticStore.getLoadingText(this@CheckUpdateScreen, t) }})
+                    Definer.define(this@CheckUpdateScreen, { p -> runOnUiThread { if (p * 10000 != -1.0) prog.progress = (p * 10000).toInt() else prog.isIndeterminate = true } }, { t -> runOnUiThread { state.text = StaticStore.getLoadingText(this@CheckUpdateScreen, t) }})
                 } catch (assetError: AssetException) {
                     val intent = Intent(this@CheckUpdateScreen, ErrorScreen::class.java)
 
