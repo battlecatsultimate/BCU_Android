@@ -33,7 +33,7 @@ object LangLoader {
                             val size = qs.size
                             var j = 0
                             while (j < size) {
-                                val strs = qs?.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: break
+                                val strs = qs?.poll()?.trim()?.split("\t")?.toTypedArray() ?: break
 
                                 val u = UserProfile.getBCData().units[CommonStatic.parseIntN(strs[0])]
 
@@ -45,7 +45,7 @@ object LangLoader {
                                 var i = 0
 
                                 while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
-                                    MultiLangCont.getStatic().FNAME.put(l.substring(1, l.length - 1), u.forms[i], strs[i + 1].trim { it <= ' ' })
+                                    MultiLangCont.getStatic().FNAME.put(l.substring(1, l.length - 1), u.forms[i], strs[i + 1].trim())
                                     i++
                                 }
 
@@ -56,7 +56,7 @@ object LangLoader {
                             val size = qs.size
                             var j = 0
                             while (j < size) {
-                                val strs = qs?.poll()?.trim { it <= ' ' }?.split("\t")?.toTypedArray() ?: return
+                                val strs = qs?.poll()?.trim()?.split("\t")?.toTypedArray() ?: return
 
                                 val u = UserProfile.getBCData().units[CommonStatic.parseIntN(strs[0])]
 
@@ -67,7 +67,7 @@ object LangLoader {
 
                                 var i = 0
                                 while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
-                                    val lines = strs[i + 1].trim { it <= ' ' }.split("<br>").toTypedArray()
+                                    val lines = strs[i + 1].trim().split("<br>").toTypedArray()
                                     MultiLangCont.getStatic().FEXP.put(l.substring(1, l.length - 1), u.forms[i], lines)
                                     i++
                                 }
@@ -75,7 +75,7 @@ object LangLoader {
                             }
                         }
                         "CatFruitExplanation.txt" -> for (str in qs) {
-                            val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                            val strs = str.trim().split("\t").toTypedArray()
                             val u = UserProfile.getBCData().units[CommonStatic.parseIntN(strs[0])] ?: continue
                             if (strs.size == 1) {
                                 continue
@@ -84,14 +84,14 @@ object LangLoader {
                             MultiLangCont.getStatic().CFEXP.put(l.substring(1, l.length - 1), u.info, lines)
                         }
                         "ComboName.txt" -> for (str in qs) {
-                            val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                            val strs = str.trim().split("\t").toTypedArray()
                             if (strs.size <= 1) {
                                 continue
                             }
-                            val id = strs[0].trim { it <= ' ' }
+                            val id = strs[0].trim()
                             val combo = getComboViaID(UserProfile.getBCData().combos.list, id) ?: continue
 
-                            val name = strs[1].trim { it <= ' ' }
+                            val name = strs[1].trim()
                             MultiLangCont.getStatic().COMNAME.put(l.substring(1, l.length - 1), combo, name)
                         }
                     }
@@ -116,23 +116,23 @@ object LangLoader {
 
                     when (n) {
                         "EnemyName.txt" -> for (str in qs) {
-                            val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                            val strs = str.trim().split("\t").toTypedArray()
 
                             val em = UserProfile.getBCData().enemies[CommonStatic.parseIntN(strs[0])] ?: continue
 
                             if (strs.size == 1)
                                 MultiLangCont.getStatic().ENAME.put(l.substring(1, l.length - 1), em, null)
                             else
-                                MultiLangCont.getStatic().ENAME.put(l.substring(1, l.length - 1), em, if (strs[1].trim { it <= ' ' }.startsWith("【")) strs[1].trim { it <= ' ' }.substring(1, strs[1].trim { it <= ' ' }.length - 1) else strs[1].trim { it <= ' ' })
+                                MultiLangCont.getStatic().ENAME.put(l.substring(1, l.length - 1), em, if (strs[1].trim().startsWith("【")) strs[1].trim().substring(1, strs[1].trim().length - 1) else strs[1].trim())
                         }
                         "EnemyExplanation.txt" -> for (str in qs) {
-                            val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                            val strs = str.trim().split("\t").toTypedArray()
                             val em = UserProfile.getBCData().enemies[CommonStatic.parseIntN(strs[0])]
                                     ?: continue
                             if (strs.size == 1)
                                 MultiLangCont.getStatic().EEXP.put(l.substring(1, l.length - 1), em, null)
                             else {
-                                val lines = strs[1].trim { it <= ' ' }.split("<br>").toTypedArray()
+                                val lines = strs[1].trim().split("<br>").toTypedArray()
                                 MultiLangCont.getStatic().EEXP.put(l.substring(1, l.length - 1), em, lines)
                             }
                         }
@@ -162,19 +162,19 @@ object LangLoader {
 
                 if (qs != null) {
                     for (s in qs) {
-                        val strs = s.trim { it <= ' ' }.split("\t").toTypedArray()
+                        val strs = s.trim().split("\t").toTypedArray()
 
                         if (strs.size == 1)
                             continue
 
-                        val id = strs[0].trim { it <= ' ' }
-                        val name = strs[strs.size - 1].trim { it <= ' ' }
+                        val id = strs[0].trim()
+                        val name = strs[strs.size - 1].trim()
 
                         if (id.isEmpty() || name.isEmpty())
                             continue
 
                         val ids = id.split("-").toTypedArray()
-                        val id0 = CommonStatic.parseIntN(ids[0].trim { it <= ' ' })
+                        val id0 = CommonStatic.parseIntN(ids[0].trim())
 
                         val mc = MapColc.get(Data.hex(id0)) ?: continue
 
@@ -183,7 +183,7 @@ object LangLoader {
                             continue
                         }
 
-                        val id1 = CommonStatic.parseIntN(ids[1].trim { it <= ' ' })
+                        val id1 = CommonStatic.parseIntN(ids[1].trim())
 
                         if (id1 >= mc.maps.list.size || id1 < 0)
                             continue
@@ -196,7 +196,7 @@ object LangLoader {
                             continue
                         }
 
-                        val id2 = CommonStatic.parseIntN(ids[2].trim { it <= ' ' })
+                        val id2 = CommonStatic.parseIntN(ids[2].trim())
 
                         if (id2 >= stm.list.list.size || id2 < 0)
                             continue
@@ -217,14 +217,14 @@ object LangLoader {
 
                 if (qs != null) {
                     for (s in qs) {
-                        val strs = s.trim { it <= ' ' }.split("\t").toTypedArray()
+                        val strs = s.trim().split("\t").toTypedArray()
 
                         if (strs.size <= 1)
                             continue
 
-                        val ids = strs[0].trim { it <= ' ' }.split("|")
+                        val ids = strs[0].trim().split("|")
 
-                        val name = strs[1].trim { it <= ' ' }
+                        val name = strs[1].trim()
 
                         for (id in ids) {
                             when {
@@ -245,20 +245,20 @@ object LangLoader {
 
             if (qs != null) {
                 for (s in qs) {
-                    val strs = s.trim { it <= ' ' }.split("\t").toTypedArray()
+                    val strs = s.trim().split("\t").toTypedArray()
 
                     if (strs.size < 2)
                         continue
 
-                    val num = strs[1].trim { it <= ' ' }
-                    val numbers = strs[0].trim { it <= ' ' }.split("-").toTypedArray()
+                    val num = strs[1].trim()
+                    val numbers = strs[0].trim().split("-").toTypedArray()
 
                     if (numbers.size < 3)
                         continue
 
-                    val id0 = CommonStatic.parseIntN(numbers[0].trim { it <= ' ' })
-                    val id1 = CommonStatic.parseIntN(numbers[1].trim { it <= ' ' })
-                    val id2 = CommonStatic.parseIntN(numbers[2].trim { it <= ' ' })
+                    val id0 = CommonStatic.parseIntN(numbers[0].trim())
+                    val id1 = CommonStatic.parseIntN(numbers[1].trim())
+                    val id2 = CommonStatic.parseIntN(numbers[2].trim())
 
                     val mc = MapColc.get(Data.hex(id0)) ?: continue
 
@@ -295,16 +295,16 @@ object LangLoader {
 
                 if (qs != null) {
                     for (str in qs) {
-                        val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                        val strs = str.trim().split("\t").toTypedArray()
 
                         if (strs.size == 1) {
                             continue
                         }
 
-                        val idText = strs[0].trim { it <= ' ' }.replace(Regex("^0+"), "")
+                        val idText = strs[0].trim().replace(Regex("^0+"), "")
 
                         val id = if (idText.isBlank()) 0 else idText.toInt()
-                        val name = strs[1].trim { it <= ' ' }
+                        val name = strs[1].trim()
 
                         StaticStore.MEDNAME.put(l.substring(1, l.length - 1), id, name)
                     }
@@ -318,16 +318,16 @@ object LangLoader {
 
                 if (qs != null) {
                     for (str in qs) {
-                        val strs = str.trim { it <= ' ' }.split("\t").toTypedArray()
+                        val strs = str.trim().split("\t").toTypedArray()
 
                         if (strs.size == 1) {
                             continue
                         }
 
-                        val idText = strs[0].trim { it <= ' ' }.replace(Regex("^0+"), "")
+                        val idText = strs[0].trim().replace(Regex("^0+"), "")
 
                         val id = if (idText.isBlank()) 0 else idText.toInt()
-                        val name = strs[1].trim { it <= ' ' }.replace("<br>", "\n")
+                        val name = strs[1].trim().replace("<br>", "\n")
 
                         StaticStore.MEDEXP.put(l.substring(1, l.length - 1), id, name)
                     }
