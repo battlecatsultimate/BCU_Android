@@ -54,6 +54,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.Locale
 
@@ -355,7 +356,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
                             }
                         }
                     }
-                } catch (e: SocketTimeoutException) {
+                } catch (e: SocketException) {
                     suspendCancellableCoroutine {
                         val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
 
