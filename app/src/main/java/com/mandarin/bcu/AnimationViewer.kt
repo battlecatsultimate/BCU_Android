@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -45,23 +44,15 @@ import java.util.Locale
 
 class AnimationViewer : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        for(i in StaticStore.filterEntityList.indices) {
-            StaticStore.filterEntityList[i] = true
-        }
-
-        val schname = findViewById<EditText>(R.id.animschname)
-
-        schname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                StaticStore.entityname = s.toString()
-
-                for(i in StaticStore.filterEntityList.indices) {
-                    StaticStore.filterEntityList[i] = true
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                supportFragmentManager.fragments.forEach {
+                    if (it is UnitListPager) {
+                        it.validate()
+                    }
                 }
             }
-        })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,8 +105,6 @@ class AnimationViewer : AppCompatActivity() {
             //Load Data
             withContext(Dispatchers.IO) {
                 Definer.define(this@AnimationViewer, { p -> runOnUiThread { progression.progress = (p * 10000).toInt() }}, { t -> runOnUiThread { st.text = t }})
-
-                StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
             }
 
             //Load UI
@@ -139,10 +128,6 @@ class AnimationViewer : AppCompatActivity() {
 
                             }
                         }
-                    }
-
-                    for(i in StaticStore.filterEntityList.indices) {
-                        StaticStore.filterEntityList[i] = true
                     }
                 }
             })

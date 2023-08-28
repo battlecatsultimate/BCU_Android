@@ -272,7 +272,6 @@ object StaticStore {
     var entityname = ""
     var stgschname = ""
     var stmschname = ""
-    var filterEntityList = BooleanArray(1)
 
     //Variables for battle
 
@@ -327,7 +326,6 @@ object StaticStore {
         stgboss = -1
         stgschname = ""
         stmschname = ""
-        filterEntityList = BooleanArray(1)
         ludata = ArrayList()
         LULoading = false
         LUread = false

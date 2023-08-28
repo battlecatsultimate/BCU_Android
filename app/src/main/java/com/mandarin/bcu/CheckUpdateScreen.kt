@@ -623,8 +623,6 @@ open class CheckUpdateScreen : AppCompatActivity() {
                 StaticStore.getLang(shared.getInt("Language", 0))
 
                 StaticStore.init = true
-
-                StaticStore.filterEntityList = BooleanArray(UserProfile.getAllPacks().size)
             }
 
             if(PackConflict.conflicts.isEmpty()) {

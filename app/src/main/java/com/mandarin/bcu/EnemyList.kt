@@ -53,23 +53,15 @@ open class EnemyList : AppCompatActivity() {
     private var mode = Mode.INFO
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val schname = findViewById<TextInputEditText>(R.id.enemlistschname)
-
-        for(i in StaticStore.filterEntityList.indices) {
-            StaticStore.filterEntityList[i] = true
-        }
-
-        schname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                StaticStore.entityname = s.toString()
-
-                for(i in StaticStore.filterEntityList.indices) {
-                    StaticStore.filterEntityList[i] = true
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                supportFragmentManager.fragments.forEach {
+                    if (it is EnemyListPager) {
+                        it.validate()
+                    }
                 }
             }
-        })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
