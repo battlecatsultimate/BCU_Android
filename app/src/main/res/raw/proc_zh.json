@@ -127,7 +127,7 @@
         "abbr_name": "傳送",
         "full_name": "傳送",
         "tooltip": null,
-        "format": "(prob)%花(_dispTime(time))把目標傳送到(dis)距離",
+        "format": "(prob)%花(_dispTime(time))把目標傳送到(dis_0)距離",
         "class": {
             "prob": {
                 "name": "機率",

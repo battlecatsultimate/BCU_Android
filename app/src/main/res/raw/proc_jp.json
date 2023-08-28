@@ -125,7 +125,7 @@
     "abbr_name": "ワープ",
     "full_name": "ワープ",
     "tooltip": null,
-    "format": "(prob)%の確率で(_dispTime(time))経過後に(_abs(dis))[(dis<0){前方}(dis>=0){後方}]へワープさせる",
+    "format": "(prob)%の確率で(_dispTime(time))経過後に(_abs(dis_0))[(dis_0<0){前方}(dis_0>=0){後方}]へワープさせる",
     "class": {
       "prob": {
         "name": "確率",

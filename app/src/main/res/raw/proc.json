@@ -127,7 +127,13 @@
         "abbr_name": "warp",
         "full_name": "Warp",
         "tooltip": null,
-        "format": "(prob)% chance to warp target [(dis<0){front}(dis>=0){back}] for (_dispTime(time)) to a distance of (_abs(dis))",
+        "format": [
+            "(prob)% chance to warp target for (_dispTime(time)) to a distance",
+            "[(dis_0==dis_1){ of (_abs(dis_0))[(dis_0<0){ forward}(dis_0>=0){ backward}]}",
+            "(dis_0!=dis_1){ between ",
+            "[(dis_0*dis_1>=0){(_abs(dis_0))~(_abs(dis_1)) [(dis_0<0){ forward}(dis_0>=0){ backward}]}",
+            "(dis_0*dis_1<0){(_abs(dis_0))[(dis_0<0){ forward}(dis_0>=0){ backward}] to (_abs(dis_1))[(dis_1<0){ forward}(dis_1>=0){ backward}]}]}]"
+        ],
         "class": {
             "prob": {
                 "name": "chance",
@@ -137,8 +143,12 @@
                 "name": "duration",
                 "tooltip": "exclude time for warp animation"
             },
-            "dis": {
-                "name": "distance",
+            "dis_0": {
+                "name": "point near",
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": "point far",
                 "tooltip": null
             }
         }

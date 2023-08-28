@@ -127,7 +127,7 @@
         "abbr_name": "abducción",
         "full_name": "Abducción",
         "tooltip": null,
-        "format": "Probabilidad del (prob)% de abducir al objetivo hacia [(dis<0){delante}(dis>=0){atrás}] por (_dispTime(time)) a una distancia de (_abs(dis))",
+        "format": "Probabilidad del (prob)% de abducir al objetivo hacia [(dis_0<0){delante}(dis_0>=0){atrás}] por (_dispTime(time)) a una distancia de (_abs(dis_0))",
         "class": {
             "prob": {
                 "name": "probabilidad",
