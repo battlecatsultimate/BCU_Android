@@ -56,7 +56,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.ConnectException
 import java.net.SocketException
-import java.net.SocketTimeoutException
 import java.util.Locale
 
 open class CheckUpdateScreen : AppCompatActivity() {
