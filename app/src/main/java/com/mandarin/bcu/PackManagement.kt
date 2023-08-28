@@ -228,7 +228,7 @@ class PackManagement : AppCompatActivity() {
                     Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
 
                     val l = Locale.getDefault().language
-                    Revalidater.validate(l, this@PackManagement)
+                    Revalidater.validate(this@PackManagement)
 
                     dialog.dismiss()
 
@@ -373,7 +373,7 @@ class PackManagement : AppCompatActivity() {
             Definer.define(this@PackManagement, {p -> println(p)}, this@PackManagement::updateText)
 
             val l = Locale.getDefault().language
-            Revalidater.validate(l, this@PackManagement)
+            Revalidater.validate(this@PackManagement)
 
             dialog.dismiss()
 
@@ -426,7 +426,7 @@ class PackManagement : AppCompatActivity() {
             Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
 
             val l = Locale.getDefault().language
-            Revalidater.validate(l, this@PackManagement)
+            Revalidater.validate(this@PackManagement)
 
             dialog.dismiss()
 

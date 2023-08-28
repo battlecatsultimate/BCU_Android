@@ -159,9 +159,6 @@ object StaticStore {
     /** Star used for difficulty **/
     var starDifficulty: Array<Bitmap>? = null
 
-    /** Additional ability explanation texts  */
-    var addition: Array<String> = Array(0) {""}
-
     /** Imgcut index list of ablities  */
     var anumber = intArrayOf(203, 204, 206, 202, 209, 218, 227, 227, 227, 260, 258, 227, 227, 110, 227, 122, 114, 297, 300, 227)
 
@@ -291,7 +288,6 @@ object StaticStore {
         icons = null
         picons = null
         fruit = null
-        addition = Array(0) {""}
         unitinflistClick = SystemClock.elapsedRealtime()
         UisOpen = false
         unittabposition = 0

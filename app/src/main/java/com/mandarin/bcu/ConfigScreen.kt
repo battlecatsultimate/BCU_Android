@@ -275,7 +275,7 @@ open class ConfigScreen : AppCompatActivity() {
 
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
-                            Revalidater.validate(Locale.getDefault().language, this@ConfigScreen)
+                            Revalidater.validate(this@ConfigScreen)
                         }
 
                         dialog.dismiss()

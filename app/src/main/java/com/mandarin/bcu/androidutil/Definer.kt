@@ -2,7 +2,6 @@ package com.mandarin.bcu.androidutil
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.util.Log
 import com.mandarin.bcu.R
@@ -25,7 +24,6 @@ import common.util.anim.ImgCut
 import common.util.lang.ProcLang
 import java.io.File
 import java.io.IOException
-import java.util.Locale
 import java.util.function.Consumer
 
 object Definer {
@@ -86,10 +84,6 @@ object Definer {
 
             if (StaticStore.treasure == null)
                 StaticStore.readTreasureIcon()
-
-            if(Interpret.ATK.isEmpty()) {
-                Interpret.ATK = context.getString(R.string.unit_info_atks)
-            }
 
             if (StaticStore.unitlang == 1) {
                 LangLoader.readUnitLang(context)
@@ -186,13 +180,6 @@ object Definer {
                 }
             }
 
-            if (StaticStore.addition.isEmpty()) {
-                val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas, R.string.unit_info_colo)
-                StaticStore.addition = Array(addid.size) { i ->
-                    context.getString(addid[i])
-                }
-            }
-
             val packs = UserProfile.getAllPacks()
 
             if(StaticStore.mapcolcname.isEmpty()) {
@@ -262,26 +249,12 @@ object Definer {
         }
     }
 
-    fun redefine(context: Context, lang: String) {
+    fun redefine(context: Context) {
         val shared = context.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
         StaticStore.getLang(shared.getInt("Language", 0))
 
         ProcLang.clear()
-
-        val addid = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas, R.string.unit_info_colo)
-        StaticStore.addition = Array(addid.size) { i ->
-            getString(context, addid[i], lang)
-        }
-
-        Interpret.ATK = context.getString(R.string.unit_info_atks)
-    }
-
-    private fun getString(context: Context, id: Int, lang: String): String {
-        val locale = Locale(lang)
-        val configuration = Configuration(context.resources.configuration)
-        configuration.setLocale(locale)
-        return context.createConfigurationContext(configuration).resources.getString(id)
     }
 
     private fun handlePacks(c: Context) {

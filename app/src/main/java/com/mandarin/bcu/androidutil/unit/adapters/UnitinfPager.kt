@@ -15,8 +15,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TableRow
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +48,7 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Form
 import common.util.unit.Level
 import common.util.unit.Unit
-import java.util.*
+import java.util.Objects
 
 class UnitinfPager : Fragment() {
     companion object {
@@ -167,7 +174,7 @@ class UnitinfPager : Fragment() {
         level.setLevel(f.unit.preferredLevel)
         level.setPlusLevel(f.unit.preferredPlusLevel)
 
-        val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0, activity)
+        val ability = Interpret.getAbi(f.du, fragment, 0, activity)
         val abilityicon = Interpret.getAbiid(f.du)
         val cdlevt: TextInputEditText = activity.findViewById(R.id.cdlevt)
         val cdtreat: TextInputEditText = activity.findViewById(R.id.cdtreat)
@@ -179,7 +186,7 @@ class UnitinfPager : Fragment() {
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+        val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), requireContext())
 
         val name = MultiLangCont.get(f) ?: f.names.toString()
 
@@ -457,11 +464,11 @@ class UnitinfPager : Fragment() {
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, activity)
+                    val ability = Interpret.getAbi(du, fragment, 0, activity)
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), requireContext())
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -494,11 +501,11 @@ class UnitinfPager : Fragment() {
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, activity)
+                    val ability = Interpret.getAbi(du, fragment, 0, activity)
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), requireContext())
 
                     val linearLayoutManager = LinearLayoutManager(activity)
 
@@ -1000,9 +1007,9 @@ class UnitinfPager : Fragment() {
         else
             f.du
 
-        val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0, activity)
+        val abil = Interpret.getAbi(du, fragment, 0, activity)
 
-        val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+        val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), requireContext())
 
         val abilityicon = Interpret.getAbiid(du)
 

@@ -6,8 +6,8 @@ import common.pack.PackData
 import common.pack.UserProfile
 
 object Revalidater {
-    fun validate(lang: String, context: Context) {
-        Definer.redefine(context, lang)
+    fun validate(context: Context) {
+        Definer.redefine(context)
 
         if (StaticStore.ludata.isNotEmpty()) {
             StaticStore.ludata.clear()

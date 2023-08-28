@@ -39,7 +39,10 @@ object Interpret : Data() {
      */
     val ABIS = intArrayOf(R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_md, R.string.sch_abi_ao, R.string.sch_abi_me, R.string.sch_abi_ws, R.string.abi_isnk, R.string.abi_istt, R.string.abi_gh, R.string.sch_abi_zk, R.string.sch_abi_wk, R.string.abi_sui, R.string.abi_ithch, R.string.sch_abi_eva, R.string.abi_iboswv, R.string.sch_abi_it, R.string.sch_abi_id, R.string.sch_abi_bk, R.string.sch_abi_ck, R.string.sch_abi_cs)
 
-    var ATK = ""
+    /**
+     * Additional ability description
+     */
+    val ADD = intArrayOf(R.string.unit_info_strong, R.string.unit_info_resis, R.string.unit_info_masdam, R.string.unit_info_wkill, R.string.unit_info_evakill, R.string.unit_info_insres, R.string.unit_info_insmas, R.string.unit_info_colo)
 
     /**
      * Converts Data Proc index to BCU Android Proc Index
@@ -93,7 +96,7 @@ object Interpret : Data() {
         return ans.toString()
     }
 
-    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean, magnif: DoubleArray): List<String> {
+    fun getProc(du: MaskEntity, useSecond: Boolean, isEnemy: Boolean, magnif: DoubleArray, context: Context): List<String> {
         val lang = Locale.getDefault().language
 
         val common = if(du is CustomEntity)
@@ -173,7 +176,7 @@ object Interpret : Data() {
                         l.add(key)
                     }
                     else -> {
-                        l.add(getFullExplanationWithAtk(key, inds, lang))
+                        l.add(getFullExplanationWithAtk(key, inds, lang, context))
                     }
                 }
             }
@@ -206,7 +209,7 @@ object Interpret : Data() {
         }
     }
 
-    private fun getFullExplanationWithAtk(explanation: String, inds: ArrayList<Int>, lang: String) : String {
+    private fun getFullExplanationWithAtk(explanation: String, inds: ArrayList<Int>, lang: String, c: Context) : String {
         if(isEnglish) {
             val builder = StringBuilder("[")
 
@@ -228,7 +231,7 @@ object Interpret : Data() {
                     builder.append(", ")
             }
 
-            return explanation + " " + ATK.replace("_", builder.toString())
+            return explanation + " " + c.getString(R.string.unit_info_atks).replace("_", builder.toString())
         }
     }
 
@@ -266,7 +269,7 @@ object Interpret : Data() {
         return l
     }
 
-    fun getAbi(me: MaskUnit, frag: Array<Array<String>>, addition: Array<String>, lang: Int, c: Context): List<String> {
+    fun getAbi(me: MaskUnit, frag: Array<Array<String>>, lang: Int, c: Context): List<String> {
         val l: MutableList<String> = ArrayList()
         for (i in ABIS.indices) {
             val imu = StringBuilder(frag[lang][0])
@@ -277,14 +280,14 @@ object Interpret : Data() {
                     imu.append(abilityName.substring(4))
                 } else {
                     when (i) {
-                        0 -> l.add(abilityName + addition[0])
-                        1 -> l.add(abilityName + addition[1])
-                        2 -> l.add(abilityName + addition[2])
-                        10 -> l.add(abilityName + addition[3])
-                        13 -> l.add(abilityName + addition[4])
-                        15 -> l.add(abilityName + addition[5])
-                        16 -> l.add(abilityName + addition[6])
-                        17 -> l.add(abilityName + addition[7])
+                        0 -> l.add(abilityName + c.getString(ADD[0]))
+                        1 -> l.add(abilityName + c.getString(ADD[1]))
+                        2 -> l.add(abilityName + c.getString(ADD[2]))
+                        10 -> l.add(abilityName + c.getString(ADD[3]))
+                        13 -> l.add(abilityName + c.getString(ADD[4]))
+                        15 -> l.add(abilityName + c.getString(ADD[5]))
+                        16 -> l.add(abilityName + c.getString(ADD[6]))
+                        17 -> l.add(abilityName + c.getString(ADD[7]))
                         else -> l.add(abilityName)
                     }
                 }
@@ -295,7 +298,7 @@ object Interpret : Data() {
         return l
     }
 
-    fun getAbi(me: MaskEnemy, frag: Array<Array<String>>, addition: Array<String>, lang: Int, c: Context): List<String> {
+    fun getAbi(me: MaskEnemy, frag: Array<Array<String>>, lang: Int, c: Context): List<String> {
         val l: MutableList<String> = ArrayList()
         for (i in ABIS.indices) {
             val imu = StringBuilder(frag[lang][0])
@@ -306,15 +309,15 @@ object Interpret : Data() {
                     imu.append(abilityName.substring(4))
                 else {
                     when (i) {
-                        0 -> l.add(abilityName + addition[0])
-                        1 -> l.add(abilityName + addition[1])
-                        2 -> l.add(abilityName + addition[2])
-                        4 -> l.add(abilityName + addition[3])
-                        5 -> l.add(abilityName + addition[4])
-                        14 -> l.add(abilityName + addition[5])
-                        17 -> l.add(abilityName + addition[6])
-                        20 -> l.add(abilityName + addition[7])
-                        21 -> l.add(abilityName + addition[8])
+                        0 -> l.add(abilityName + c.getString(ADD[0]))
+                        1 -> l.add(abilityName + c.getString(ADD[1]))
+                        2 -> l.add(abilityName + c.getString(ADD[2]))
+                        4 -> l.add(abilityName + c.getString(ADD[3]))
+                        5 -> l.add(abilityName + c.getString(ADD[4]))
+                        14 -> l.add(abilityName + c.getString(ADD[5]))
+                        17 -> l.add(abilityName + c.getString(ADD[6]))
+                        20 -> l.add(abilityName + c.getString(ADD[7]))
+                        21 -> l.add(abilityName + c.getString(ADD[8]))
                         else -> l.add(abilityName)
                     }
                 }
@@ -414,7 +417,7 @@ object Interpret : Data() {
             } else {
                 " $n раза"
             }
-            else -> ATK.replace("_", "" + n)
+            else -> c.getString(R.string.unit_info_atks).replace("_", "" + n)
         }
     }
 }

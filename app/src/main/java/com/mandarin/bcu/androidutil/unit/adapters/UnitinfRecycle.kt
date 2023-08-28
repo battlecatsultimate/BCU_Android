@@ -12,8 +12,15 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TableRow
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -142,7 +149,7 @@ class UnitinfRecycle(private val context: Activity,
         level.setLevel(f.unit.preferredLevel)
         level.setPlusLevel(f.unit.preferredPlusLevel)
 
-        val ability = Interpret.getAbi(f.du, fragment, StaticStore.addition, 0, context)
+        val ability = Interpret.getAbi(f.du, fragment, 0, context)
         val abilityicon = Interpret.getAbiid(f.du)
         val cdlevt: TextInputEditText = context.findViewById(R.id.cdlevt)
         val cdtreat: TextInputEditText = context.findViewById(R.id.cdtreat)
@@ -154,7 +161,7 @@ class UnitinfRecycle(private val context: Activity,
         atktreat.setText(t.trea[0].toString())
         healtreat.setText(t.trea[1].toString())
 
-        val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+        val proc = Interpret.getProc(f.du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), context)
 
         val icon = f.anim?.uni?.img?.bimg()
 
@@ -379,11 +386,11 @@ class UnitinfRecycle(private val context: Activity,
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, context)
+                    val ability = Interpret.getAbi(du, fragment, 0, context)
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), context)
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -416,11 +423,11 @@ class UnitinfRecycle(private val context: Activity,
                         else
                             f.du
 
-                    val ability = Interpret.getAbi(du, fragment, StaticStore.addition, 0, context)
+                    val ability = Interpret.getAbi(du, fragment, 0, context)
 
                     val abilityicon = Interpret.getAbiid(du)
 
-                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+                    val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), context)
 
                     val linearLayoutManager = LinearLayoutManager(context)
 
@@ -936,9 +943,9 @@ class UnitinfRecycle(private val context: Activity,
         this.level.setLevel(level)
         this.level.setPlusLevel(levelp)
 
-        val abil = Interpret.getAbi(du, fragment, StaticStore.addition, 0, context)
+        val abil = Interpret.getAbi(du, fragment, 0, context)
 
-        val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray())
+        val proc = Interpret.getProc(du, fs == 1, true, arrayOf(1.0, 1.0).toDoubleArray(), context)
 
         val abilityicon = Interpret.getAbiid(du)
 

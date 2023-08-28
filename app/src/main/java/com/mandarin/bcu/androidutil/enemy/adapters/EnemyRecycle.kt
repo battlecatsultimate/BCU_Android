@@ -186,10 +186,8 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enembarrier.text = s.getBarrier(em)
         viewHolder.enemspd.text = s.getSpd(em)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray())
-        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0,
-            this.activity
-        )
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray(), activity)
+        val ability = Interpret.getAbi(em.de, fragment, 0, this.activity)
         val abilityicon = Interpret.getAbiid(em.de)
 
         if (ability.isNotEmpty() || proc.isNotEmpty()) {
@@ -652,9 +650,9 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enemhp.text = s.getHP(em, multiplication)
         viewHolder.enematk.text = s.getAtk(em, attackMultiplication)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray(), activity)
 
-        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0, activity)
+        val ability = Interpret.getAbi(em.de, fragment, 0, activity)
 
         val abilityicon = Interpret.getAbiid(em.de)
 
@@ -681,9 +679,9 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
         viewHolder.enempost.text = s.getPost(em, fs)
         viewHolder.enemtba.text = s.getTBA(em, fs)
 
-        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray())
+        val proc: List<String> = Interpret.getProc(em.de, fs == 1, true, arrayOf(multiplication / 100.0, attackMultiplication / 100.0).toDoubleArray(), activity)
 
-        val ability = Interpret.getAbi(em.de, fragment, StaticStore.addition, 0, activity)
+        val ability = Interpret.getAbi(em.de, fragment, 0, activity)
 
         val abilityicon = Interpret.getAbiid(em.de)
 
