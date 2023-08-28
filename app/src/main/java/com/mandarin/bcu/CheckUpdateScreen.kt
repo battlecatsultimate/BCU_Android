@@ -54,6 +54,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.Locale
@@ -377,10 +378,31 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
                         internetDialog.show()
                     }
+                } catch (e: ConnectException) {
+                    suspendCancellableCoroutine {
+                        val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
 
-                    if (close) {
-                        return@launch
+                        internetDialog.setCancelable(false)
+
+                        internetDialog.setTitle(R.string.main_timeout_dialog_title)
+
+                        internetDialog.setMessage(R.string.main_timeout_dialog_content)
+
+                        internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                            close = true
+
+                            startActivity(intent)
+                            finish()
+
+                            it.resume(0) { _ -> }
+                        }
+
+                        internetDialog.show()
                     }
+                }
+
+                if (close) {
+                    return@launch
                 }
             } else if (!hasAllAsset || langNeed) {
                 prog.isIndeterminate = false

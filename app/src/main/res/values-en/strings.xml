@@ -1002,4 +1002,6 @@
     <string name="config_perfanim">In Animation Viewer</string>
     <string name="main_timeout_dialog_content">It seems internet speed is too low, or BCU took too long time to connect to server. Please try again with another internet configuration</string>
     <string name="main_timeout_dialog_title">Connection Timeout</string>
+    <string name="main_link_dialog_content">BCU failed to connect to server for checking updates. This can be because of your proxy setting. Please change your proxy setting</string>
+    <string name="main_proxy_dialog_title">Connecting Failure</string>
 </resources>
