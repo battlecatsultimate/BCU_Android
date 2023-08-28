@@ -998,6 +998,8 @@
     <string name="config_lang_reload">Reloading Language Data…</string>
     <string name="config_warn">Warning! Expect severe performance issue!</string>
     <string name="config_performance">Performance Mode (60 FPS)</string>
-    <string name="config_perfbattle">전투 내에서</string>
-    <string name="config_perfanim">애니메이션 뷰어 내에서</string>
+    <string name="config_perfbattle">In Battle</string>
+    <string name="config_perfanim">In Animation Viewer</string>
+    <string name="main_timeout_dialog_content">It seems internet speed is too low, or BCU took too long time to connect to server. Please try again with another internet configuration</string>
+    <string name="main_timeout_dialog_title">Connection Timeout</string>
 </resources>

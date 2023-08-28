@@ -54,6 +54,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.SocketTimeoutException
 import java.util.Locale
 
 open class CheckUpdateScreen : AppCompatActivity() {
@@ -194,163 +195,190 @@ open class CheckUpdateScreen : AppCompatActivity() {
             }
 
             if (internetConnected) {
-                withContext(Dispatchers.IO) {
-                    val updateJson = UpdateCheck.checkUpdate()
+                try {
+                    withContext(Dispatchers.IO) {
+                        val updateJson = UpdateCheck.checkUpdate()
 
-                    val langShared = getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
-                    val musicShared = getSharedPreferences(StaticStore.MUSIC, Context.MODE_PRIVATE)
+                        val langShared = getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
+                        val musicShared = getSharedPreferences(StaticStore.MUSIC, Context.MODE_PRIVATE)
 
-                    //Check APK
-                    val apk : UpdateCheck.UpdateJson.ApkJson? = if(updateJson.apk_update != null)
-                        checkApk(updateJson.apk_update)
-                    else
-                        null
-
-                    if(apk != null) {
-                        withContext(Dispatchers.Main) {
-                            suspendCancellableCoroutine {
-                                val apkDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
-
-                                apkDialog.setCancelable(false)
-
-                                apkDialog.setTitle(R.string.apk_down_title)
-
-                                val content = getString(R.string.apk_down_content) + apk.ver
-
-                                apkDialog.setMessage(content)
-                                apkDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
-                                    val intent = Intent(this@CheckUpdateScreen, ApkDownload::class.java)
-
-                                    intent.putExtra("ver", apk.ver)
-
-                                    close = true
-
-                                    startActivity(intent)
-                                    finish()
-
-                                    it.resume(0) { _ -> }
-                                }
-
-                                apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
-                                    it.resume(0) { _ -> }
-                                }
-
-                                apkDialog.show()
-                            }
-                        }
-                    }
-
-                    if (close)
-                        return@withContext
-
-                    withContext(Dispatchers.Main) {
-                        state.setText(R.string.main_check_up)
-                    }
-
-                    //Check Assets
-                    val langFiles = ArrayList<String>()
-
-                    langFiles.add("Difficulty.txt")
-
-                    CommonStatic.getConfig().localLangMap["Difficulty.txt"] = langShared.getString("Difficulty.txt", "")
-
-                    for(lang in langFolder) {
-                        for(l in StaticStore.langfile) {
-                            langFiles.add("$lang$l")
-
-                            CommonStatic.getConfig().localLangMap["$lang$l"] = langShared.getString("$lang$l", "")
-                        }
-                    }
-
-                    //Read Music File
-                    val musicCount = updateJson?.music ?: 0
-
-                    for(i in 0 until musicCount) {
-                        CommonStatic.getConfig().localMusicMap[i] = musicShared.getString(Data.trio(i), "")
-                    }
-
-                    val assetList = try {
-                        UpdateCheck.checkAsset(updateJson, "android")
-                    } catch (_: Exception) {
-                        ArrayList()
-                    }
-
-                    val langList = try {
-                        UpdateCheck.checkLang(langFiles.toTypedArray()).get()
-                    } catch (_: Exception) {
-                        ArrayList()
-                    }
-
-                    val musicList = try {
-                        UpdateCheck.checkMusic(musicCount).get()
-                    } catch (_: Exception) {
-                        ArrayList()
-                    }
-
-                    if(assetList.isNotEmpty() || musicList.isNotEmpty() || langList.isNotEmpty()) {
-                        val file = File(StaticStore.getExternalAsset(this@CheckUpdateScreen)+"assets/")
-
-                        val msg = if(!file.exists())
-                            getString(R.string.main_file_need)
-                        else if(assetList.isNotEmpty() && musicList.isEmpty() && langList.isEmpty())
-                            getString(R.string.main_file_asset)
-                        else if(assetList.isEmpty() && musicList.isNotEmpty() && langList.isEmpty())
-                            getString(R.string.main_file_music)
-                        else if(assetList.isEmpty() && musicList.isEmpty() && langList.isNotEmpty())
-                            getString(R.string.main_file_text)
+                        //Check APK
+                        val apk : UpdateCheck.UpdateJson.ApkJson? = if(updateJson.apk_update != null)
+                            checkApk(updateJson.apk_update)
                         else
-                            getString(R.string.main_file_x)
+                            null
 
-                        val canContinue = !(assetList.isNotEmpty() || musicList.isNotEmpty() || langNeed)
+                        if(apk != null) {
+                            withContext(Dispatchers.Main) {
+                                suspendCancellableCoroutine {
+                                    val apkDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
 
-                        retry.setOnClickListener(object: SingleClick() {
-                            override fun onSingleClick(v: View?) {
-                                lifecycleScope.launch {
-                                    StaticStore.setDisappear(retry)
+                                    apkDialog.setCancelable(false)
 
-                                    val serviceIntent = Intent(this@CheckUpdateScreen, AssetDownloadService::class.java)
+                                    apkDialog.setTitle(R.string.apk_down_title)
 
-                                    startService(serviceIntent)
+                                    val content = getString(R.string.apk_down_content) + apk.ver
 
-                                    bound = bindService(serviceIntent, serviceConnector, 0)
-                                }
-                            }
-                        })
+                                    apkDialog.setMessage(content)
+                                    apkDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                                        val intent = Intent(this@CheckUpdateScreen, ApkDownload::class.java)
 
-                        withContext(Dispatchers.Main) {
-                            suspendCancellableCoroutine {
-                                val updateDialog = AlertDialog.Builder(this@CheckUpdateScreen)
+                                        intent.putExtra("ver", apk.ver)
 
-                                updateDialog.setTitle(msg)
-                                updateDialog.setMessage(R.string.main_file_up)
-
-                                updateDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
-                                    val serviceIntent = Intent(this@CheckUpdateScreen, AssetDownloadService::class.java)
-
-                                    broadcastReceiver.attachListener { intent ->
-                                        if (intent.action == AssetDownloadService.SUCCESS) {
-                                            it.resume(0) { _ -> }
-                                        }
-                                    }
-
-                                    startService(serviceIntent)
-
-                                    bound = bindService(serviceIntent, serviceConnector, 0)
-                                }
-
-                                updateDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
-                                    if(!canContinue) {
                                         close = true
 
+                                        startActivity(intent)
                                         finish()
+
+                                        it.resume(0) { _ -> }
                                     }
 
-                                    it.resume(0) { _ -> }
-                                }
+                                    apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
+                                        it.resume(0) { _ -> }
+                                    }
 
-                                updateDialog.show()
+                                    apkDialog.show()
+                                }
                             }
                         }
+
+                        if (close)
+                            return@withContext
+
+                        withContext(Dispatchers.Main) {
+                            state.setText(R.string.main_check_up)
+                        }
+
+                        //Check Assets
+                        val langFiles = ArrayList<String>()
+
+                        langFiles.add("Difficulty.txt")
+
+                        CommonStatic.getConfig().localLangMap["Difficulty.txt"] = langShared.getString("Difficulty.txt", "")
+
+                        for(lang in langFolder) {
+                            for(l in StaticStore.langfile) {
+                                langFiles.add("$lang$l")
+
+                                CommonStatic.getConfig().localLangMap["$lang$l"] = langShared.getString("$lang$l", "")
+                            }
+                        }
+
+                        //Read Music File
+                        val musicCount = updateJson?.music ?: 0
+
+                        for(i in 0 until musicCount) {
+                            CommonStatic.getConfig().localMusicMap[i] = musicShared.getString(Data.trio(i), "")
+                        }
+
+                        val assetList = try {
+                            UpdateCheck.checkAsset(updateJson, "android")
+                        } catch (_: Exception) {
+                            ArrayList()
+                        }
+
+                        val langList = try {
+                            UpdateCheck.checkLang(langFiles.toTypedArray()).get()
+                        } catch (_: Exception) {
+                            ArrayList()
+                        }
+
+                        val musicList = try {
+                            UpdateCheck.checkMusic(musicCount).get()
+                        } catch (_: Exception) {
+                            ArrayList()
+                        }
+
+                        if(assetList.isNotEmpty() || musicList.isNotEmpty() || langList.isNotEmpty()) {
+                            val file = File(StaticStore.getExternalAsset(this@CheckUpdateScreen)+"assets/")
+
+                            val msg = if(!file.exists())
+                                getString(R.string.main_file_need)
+                            else if(assetList.isNotEmpty() && musicList.isEmpty() && langList.isEmpty())
+                                getString(R.string.main_file_asset)
+                            else if(assetList.isEmpty() && musicList.isNotEmpty() && langList.isEmpty())
+                                getString(R.string.main_file_music)
+                            else if(assetList.isEmpty() && musicList.isEmpty() && langList.isNotEmpty())
+                                getString(R.string.main_file_text)
+                            else
+                                getString(R.string.main_file_x)
+
+                            val canContinue = !(assetList.isNotEmpty() || musicList.isNotEmpty() || langNeed)
+
+                            retry.setOnClickListener(object: SingleClick() {
+                                override fun onSingleClick(v: View?) {
+                                    lifecycleScope.launch {
+                                        StaticStore.setDisappear(retry)
+
+                                        val serviceIntent = Intent(this@CheckUpdateScreen, AssetDownloadService::class.java)
+
+                                        startService(serviceIntent)
+
+                                        bound = bindService(serviceIntent, serviceConnector, 0)
+                                    }
+                                }
+                            })
+
+                            withContext(Dispatchers.Main) {
+                                suspendCancellableCoroutine {
+                                    val updateDialog = AlertDialog.Builder(this@CheckUpdateScreen)
+
+                                    updateDialog.setTitle(msg)
+                                    updateDialog.setMessage(R.string.main_file_up)
+
+                                    updateDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                                        val serviceIntent = Intent(this@CheckUpdateScreen, AssetDownloadService::class.java)
+
+                                        broadcastReceiver.attachListener { intent ->
+                                            if (intent.action == AssetDownloadService.SUCCESS) {
+                                                it.resume(0) { _ -> }
+                                            }
+                                        }
+
+                                        startService(serviceIntent)
+
+                                        bound = bindService(serviceIntent, serviceConnector, 0)
+                                    }
+
+                                    updateDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
+                                        if(!canContinue) {
+                                            close = true
+
+                                            finish()
+                                        }
+
+                                        it.resume(0) { _ -> }
+                                    }
+
+                                    updateDialog.show()
+                                }
+                            }
+                        }
+                    }
+                } catch (e: SocketTimeoutException) {
+                    suspendCancellableCoroutine {
+                        val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
+
+                        internetDialog.setCancelable(false)
+
+                        internetDialog.setTitle(R.string.main_timeout_dialog_title)
+
+                        internetDialog.setMessage(R.string.main_timeout_dialog_content)
+
+                        internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                            close = true
+
+                            startActivity(intent)
+                            finish()
+
+                            it.resume(0) { _ -> }
+                        }
+
+                        internetDialog.show()
+                    }
+
+                    if (close) {
+                        return@launch
                     }
                 }
             } else if (!hasAllAsset || langNeed) {
