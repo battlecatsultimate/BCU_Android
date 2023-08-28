@@ -132,13 +132,13 @@ class CVGraphics : FakeGraphics {
         m2.set(m)
 
         val wr = if (bimg.offsetX != 0) {
-            (d + FIBM.calibrator) / bimg.width
+            (d + FIBM.CALIBRATOR) / bimg.width
         } else {
             d / bimg.width
         }
 
         val hr = if (bimg.offsetY != 0) {
-            (e + FIBM.calibrator) / bimg.height
+            (e + FIBM.CALIBRATOR) / bimg.height
         } else {
             e / bimg.height
         }
@@ -147,12 +147,12 @@ class CVGraphics : FakeGraphics {
             val calibrationX = if (bimg.offsetX == 0)
                 0.0
             else
-                bimg.offsetX + FIBM.calibrator / 2.0
+                bimg.offsetX + FIBM.CALIBRATOR / 2.0
 
             val calibrationY = if (bimg.offsetY == 0)
                 0.0
             else
-                bimg.offsetY + FIBM.calibrator / 2.0
+                bimg.offsetY + FIBM.CALIBRATOR / 2.0
 
             m2.preTranslate((x - calibrationX).toFloat(), (y - calibrationY).toFloat())
             m2.preScale(wr.toFloat(), hr.toFloat(), bimg.offsetX.toFloat(), bimg.offsetY.toFloat())

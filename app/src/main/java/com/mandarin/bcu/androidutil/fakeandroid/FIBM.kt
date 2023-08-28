@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.fakeandroid
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import androidx.core.graphics.alpha
 import androidx.core.graphics.applyCanvas
 import com.mandarin.bcu.androidutil.StaticStore
 import common.system.fake.FakeGraphics
@@ -14,11 +15,21 @@ import kotlin.math.min
 import kotlin.math.round
 
 class FIBM : FakeImage {
+    private enum class Snap {
+        LEFT,
+        RIGHT,
+        BOTTOM,
+        TOP
+    }
+
     companion object {
         @JvmField
         val builder: ImageBuilder<Bitmap> = BMBuilder()
-        const val maxOffset = 2
-        const val calibrator = 0.75
+
+        const val CALIBRATOR = 0.75
+
+        private const val MAX_OFFSET = 5
+        private const val CONNECTION_RATIO = 0.2
 
         private val imagePaint = Paint().apply {
             isAntiAlias = true
@@ -102,15 +113,36 @@ class FIBM : FakeImage {
         return try {
             val cropped = Bitmap.createBitmap(bit, i, j, max(1, k), max(1, l))
 
-            val offsetX = scientificRound(min(maxOffset.toDouble(), k / 10.0))
-            val offsetY = scientificRound(min(maxOffset.toDouble(), l / 10.0))
+            val offsetLeft = if (isSegment(cropped, Snap.LEFT)) {
+                0
+            } else {
+                scientificRound(min(MAX_OFFSET.toDouble(), k / 10.0))
+            }
 
-            if (offsetX != 0 || offsetY != 0) {
-                val appended = Bitmap.createBitmap(cropped.width + offsetX * 2, cropped.height + offsetY * 2, Bitmap.Config.ARGB_8888).applyCanvas {
-                    drawBitmap(cropped, offsetX.toFloat(), offsetY.toFloat(), imagePaint)
+            val offsetRight = if (isSegment(cropped, Snap.RIGHT)) {
+                0
+            } else {
+                scientificRound(min(MAX_OFFSET.toDouble(), k / 10.0))
+            }
+
+            val offsetTop = if (isSegment(cropped, Snap.TOP)) {
+                0
+            } else {
+                scientificRound(min(MAX_OFFSET.toDouble(), l / 10.0))
+            }
+
+            val offsetBottom = if (isSegment(cropped, Snap.BOTTOM)) {
+                0
+            } else {
+                scientificRound(min(MAX_OFFSET.toDouble(), l / 10.0))
+            }
+
+            if (offsetLeft + offsetRight + offsetTop + offsetBottom != 0) {
+                val appended = Bitmap.createBitmap(cropped.width + offsetLeft + offsetRight, cropped.height + offsetTop + offsetBottom, Bitmap.Config.ARGB_8888).applyCanvas {
+                    drawBitmap(cropped, offsetLeft.toFloat(), offsetTop.toFloat(), imagePaint)
                 }
 
-                builder.build(appended, offsetX, offsetY) as FIBM
+                builder.build(appended, offsetLeft, offsetTop) as FIBM
             } else {
                 builder.build(cropped) as FIBM
             }
@@ -172,6 +204,39 @@ class FIBM : FakeImage {
                 toInt
         } else {
             round(value).toInt()
+        }
+    }
+
+    private fun isSegment(image: Bitmap, snap: Snap) : Boolean {
+        val w = image.width
+        val h = image.height
+
+        return when(snap) {
+            Snap.LEFT -> {
+                val pixels = IntArray(h)
+                image.getPixels(pixels, 0, 1, 0, 0, 1, h)
+
+                pixels.count { c -> c.alpha == 255 } >= h * CONNECTION_RATIO
+            }
+            Snap.RIGHT -> {
+                val pixels = IntArray(h)
+                image.getPixels(pixels, 0, 1, w - 1, 0, 1, h)
+
+                pixels.count { c -> c.alpha == 255 } >= h * CONNECTION_RATIO
+            }
+            Snap.BOTTOM -> {
+                val pixels = IntArray(w)
+                image.getPixels(pixels, 0, w, 0, h - 1, w, 1)
+
+                pixels.count { c -> c.alpha == 255 } >= w * CONNECTION_RATIO
+            }
+            Snap.TOP -> {
+                val pixels = IntArray(w)
+                image.getPixels(pixels, 0, w, 0, 0, w, 1)
+
+
+                pixels.count { c -> c.alpha == 255 } >= w * CONNECTION_RATIO
+            }
         }
     }
 }
