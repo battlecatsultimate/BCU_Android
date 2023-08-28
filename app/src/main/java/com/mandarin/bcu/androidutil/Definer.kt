@@ -45,9 +45,7 @@ object Definer {
                 try {
                     UserProfile.getBCData().load({ t -> text.accept(StaticStore.getLoadingText(context, t)) }, prog)
                 } catch (e: Exception) {
-                    e.printStackTrace()
-
-                    throw AssetException("E/Definer::define - Failed to read asset")
+                    throw AssetException(e, "E/Definer::define - Failed to read asset")
                 }
 
                 StaticStore.init = true

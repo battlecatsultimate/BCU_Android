@@ -1,4 +1,4 @@
 package com.mandarin.bcu.androidutil.io
 
-class AssetException(message: String) : Exception(message) {
+class AssetException(e: Exception, message: String) : Exception(message, e) {
 }
