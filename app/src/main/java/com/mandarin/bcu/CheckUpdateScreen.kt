@@ -56,6 +56,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.ConnectException
 import java.net.SocketException
+import java.net.UnknownHostException
 import java.util.Locale
 
 open class CheckUpdateScreen : AppCompatActivity() {
@@ -378,6 +379,27 @@ open class CheckUpdateScreen : AppCompatActivity() {
                         internetDialog.show()
                     }
                 } catch (e: ConnectException) {
+                    suspendCancellableCoroutine {
+                        val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
+
+                        internetDialog.setCancelable(false)
+
+                        internetDialog.setTitle(R.string.main_timeout_dialog_title)
+
+                        internetDialog.setMessage(R.string.main_timeout_dialog_content)
+
+                        internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
+                            close = true
+
+                            startActivity(intent)
+                            finish()
+
+                            it.resume(0) { _ -> }
+                        }
+
+                        internetDialog.show()
+                    }
+                } catch (e: UnknownHostException) {
                     suspendCancellableCoroutine {
                         val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
 
