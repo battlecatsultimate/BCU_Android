@@ -48,9 +48,16 @@ class BattlePrepare : AppCompatActivity() {
         var sniper = false
     }
 
+    private var initialized = false
+
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
+                while (true) {
+                    if (initialized)
+                        break
+                }
+
                 while(true) {
                     val line = try {
                         findViewById<LineUpView>(R.id.lineupView) ?: continue
@@ -364,6 +371,8 @@ class BattlePrepare : AppCompatActivity() {
                 }
 
                 StaticStore.setDisappear(prog, st)
+
+                initialized = true
             }
         }
     }
