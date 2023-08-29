@@ -52,7 +52,11 @@ class BattlePrepare : AppCompatActivity() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 while(true) {
-                    val line = findViewById<LineUpView>(R.id.lineupView) ?: continue
+                    val line = try {
+                        findViewById<LineUpView>(R.id.lineupView) ?: continue
+                    } catch (_: NullPointerException) {
+                        continue
+                    }
 
                     line.updateLineUp()
 
