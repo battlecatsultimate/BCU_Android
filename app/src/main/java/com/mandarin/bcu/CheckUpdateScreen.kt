@@ -334,6 +334,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
                                         broadcastReceiver.attachListener { intent ->
                                             if (intent.action == AssetDownloadService.SUCCESS) {
+                                                if (!it.isActive || it.isCancelled)
+                                                    return@attachListener
+
                                                 it.resume(0) { _ -> }
                                             }
                                         }
