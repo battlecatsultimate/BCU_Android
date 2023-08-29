@@ -44,7 +44,9 @@ class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<U
         holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].names.toString()
         holder.title.isSelected = true
 
-        holder.image.setImageBitmap(StaticStore.makeIcon(context, u.forms[0].anim.uni.img.bimg() as Bitmap, 48f))
+        val icon = u.forms[0].anim?.uni?.img?.bimg() ?: return row
+
+        holder.image.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap, 48f))
 
         return row
     }
