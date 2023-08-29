@@ -386,13 +386,19 @@ object StaticStore {
      * @return Returns resized Bitmap using specified dpi value.
      */
     fun getResizeb(b: Bitmap?, context: Context, w: Float, h: Float): Bitmap {
-        if (b == null || b.isRecycled) return empty(context, w, h)
+        if (b == null || b.isRecycled)
+            return empty(context, w, h)
+
         val r = context.resources
+
         val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, w, r.displayMetrics)
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, h, r.displayMetrics)
+
         val bd = BitmapDrawable(context.resources, Bitmap.createScaledBitmap(b, width.toInt(), height.toInt(), true))
+
         bd.isFilterBitmap = true
         bd.setAntiAlias(true)
+
         return bd.bitmap
     }
 
@@ -408,9 +414,12 @@ object StaticStore {
         context ?: return empty(1, 1)
 
         val r = context.resources
+
         val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, w, r.displayMetrics)
         val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, h, r.displayMetrics)
+
         val conf = Bitmap.Config.ARGB_8888
+
         return Bitmap.createBitmap(width.toInt(), height.toInt(), conf)
     }
 
@@ -439,8 +448,10 @@ object StaticStore {
             return empty(context, w, h)
 
         val bd = BitmapDrawable(context.resources, Bitmap.createScaledBitmap(b, w.toInt(), h.toInt(), true))
+
         bd.isFilterBitmap = true
         bd.setAntiAlias(true)
+
         return bd.bitmap
     }
 
@@ -454,6 +465,7 @@ object StaticStore {
      */
     fun getResizebp(b: Bitmap, w: Float, h: Float): Bitmap {
         val matrix = Matrix()
+
         if (w < 0 || h < 0) {
             if (w < 0 && h < 0) {
                 matrix.setScale(-1f, -1f)
@@ -463,8 +475,14 @@ object StaticStore {
                 matrix.setScale(1f, -1f)
             }
         }
+
+        if (b.isRecycled)
+            return empty(abs(w).toInt(), abs(h).toInt())
+
         var reversed = Bitmap.createBitmap(b, 0, 0, b.width, b.height, matrix, false)
+
         reversed = Bitmap.createScaledBitmap(reversed, abs(w).toInt(), abs(h).toInt(), true)
+
         return reversed
     }
 
