@@ -63,7 +63,11 @@ class PackManagement : AppCompatActivity() {
             val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
 
             val resolver = applicationContext.contentResolver
-            val cursor = resolver.query(path, projection, null, null, null)
+            val cursor = try {
+                resolver.query(path, projection, null, null, null)
+            } catch (_: SecurityException) {
+                return@registerForActivityResult
+            }
 
             if(cursor != null) {
                 if(cursor.moveToFirst()) {
