@@ -160,6 +160,13 @@ class SoundPlayer : MediaPlayer() {
         isRunning = false
     }
 
+    override fun setLooping(p0: Boolean) {
+        if (!isSafe())
+            return
+
+        super.setLooping(p0)
+    }
+
     override fun pause() {
         if(!isSafe())
             return
