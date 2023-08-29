@@ -63,7 +63,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
+import java.util.Locale
 
 class LineUpScreen : AppCompatActivity() {
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -74,6 +74,8 @@ class LineUpScreen : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
+        savedInstanceState?.clear()
+
         super.onCreate(savedInstanceState)
 
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
