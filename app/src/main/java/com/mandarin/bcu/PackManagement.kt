@@ -381,7 +381,7 @@ class PackManagement : AppCompatActivity() {
 
             StaticStore.resetUserPacks()
 
-            Definer.define(this@PackManagement, {p -> println(p)}, this@PackManagement::updateText)
+            Definer.define(this@PackManagement, { _ -> }, this@PackManagement::updateText)
 
             Locale.getDefault().language
             Revalidater.validate(this@PackManagement)
@@ -434,7 +434,7 @@ class PackManagement : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             StaticStore.resetUserPacks()
 
-            Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
+            Definer.define(this@PackManagement, { _ -> }, this@PackManagement::updateText)
 
             Locale.getDefault().language
             Revalidater.validate(this@PackManagement)
@@ -475,6 +475,8 @@ class PackManagement : AppCompatActivity() {
     private fun updateText(info: String) {
         val st = findViewById<TextView>(R.id.status)
 
-        st.text = StaticStore.getLoadingText(this, info)
+        runOnUiThread {
+            st.text = StaticStore.getLoadingText(this, info)
+        }
     }
 }
