@@ -9,6 +9,7 @@ import common.util.pack.EffAnim;
 import common.util.pack.NyCastle;
 import common.util.pack.Soul;
 import common.util.unit.Enemy;
+import common.util.unit.Form;
 import common.util.unit.Unit;
 
 public class StaticJava {
@@ -41,10 +42,20 @@ public class StaticJava {
 
             if (entity != null) {
                 if (entity instanceof Unit) {
-                    System.out.println(((Unit) entity).forms[form]);
+                    if (((Unit) entity).forms[form].anim == null) {
+                        Form defaultForm = UserProfile.getBCData().units.get(0).forms[0];
+
+                        return defaultForm.getEAnim(defaultForm.anim.types[0]);
+                    }
 
                     return ((Unit) entity).forms[form].getEAnim(((Unit) entity).forms[form].anim.types[dataId]);
                 } else if (entity instanceof Enemy) {
+                    if (((Enemy) entity).anim == null) {
+                        Enemy defaultEnemy = UserProfile.getBCData().enemies.get(0);
+
+                        return defaultEnemy.getEAnim(defaultEnemy.anim.types[0]);
+                    }
+
                     return ((Enemy) entity).getEAnim(((Enemy) entity).anim.types[dataId]);
                 }
             }
