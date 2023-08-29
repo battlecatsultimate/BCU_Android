@@ -5,8 +5,11 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
@@ -14,6 +17,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
@@ -25,8 +29,11 @@ import common.CommonStatic
 import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
+import kotlin.math.max
 
 class BackgroundList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,53 +68,63 @@ class BackgroundList : AppCompatActivity() {
 
         setContentView(R.layout.activity_background_list)
 
-        val tab = findViewById<TabLayout>(R.id.bglisttab)
-        val pager = findViewById<ViewPager2>(R.id.bglistpager)
+        lifecycleScope.launch {
+            val tab = findViewById<TabLayout>(R.id.bglisttab)
+            val pager = findViewById<ViewPager2>(R.id.bglistpager)
+            val bck = findViewById<FloatingActionButton>(R.id.bgbck)
+            val progression = findViewById<ProgressBar>(R.id.prog)
+            val status = findViewById<TextView>(R.id.status)
 
-        pager.adapter = BGListTab()
-        pager.offscreenPageLimit = getExistingBGPack()
+            StaticStore.setDisappear(tab, pager, bck)
 
-        val keys = getExistingPack()
+            withContext(Dispatchers.IO) {
+                Definer.define(this@BackgroundList, { _ -> }, { t -> runOnUiThread { status.text = t }})
+            }
 
-        TabLayoutMediator(tab, pager) { t, position ->
-            t.text = if (position == 0) {
-                getString(R.string.pack_default)
-            } else {
-                val pack = UserProfile.getUserPack(keys[position])
+            pager.adapter = BGListTab()
+            pager.offscreenPageLimit = getExistingBGPack()
 
-                if (pack == null) {
-                    keys[position]
-                }
+            val keys = getExistingPack()
 
-                val name = pack?.desc?.names.toString()
-
-                if (name.isEmpty()) {
-                    keys[position]
+            TabLayoutMediator(tab, pager) { t, position ->
+                t.text = if (position == 0) {
+                    getString(R.string.pack_default)
                 } else {
-                    name
+                    val pack = UserProfile.getUserPack(keys[position])
+
+                    if (pack == null) {
+                        keys[position]
+                    }
+
+                    val name = pack?.desc?.names.toString()
+
+                    name.ifEmpty {
+                        keys[position]
+                    }
                 }
+            }.attach()
+
+            if(getExistingBGPack() == 1) {
+                tab.visibility = View.GONE
+
+                val collapse = findViewById<CollapsingToolbarLayout>(R.id.bgcollapse)
+
+                val param = collapse.layoutParams as AppBarLayout.LayoutParams
+
+                param.scrollFlags = 0
+
+                collapse.layoutParams = param
             }
-        }.attach()
 
-        if(getExistingBGPack() == 1) {
-            tab.visibility = View.GONE
+            bck.setOnClickListener(object : SingleClick() {
+                override fun onSingleClick(v: View?) {
+                    finish()
+                }
+            })
 
-            val collapse = findViewById<CollapsingToolbarLayout>(R.id.bgcollapse)
-
-            val param = collapse.layoutParams as AppBarLayout.LayoutParams
-
-            param.scrollFlags = 0
-
-            collapse.layoutParams = param
+            StaticStore.setAppear(tab, pager, bck)
+            StaticStore.setDisappear(progression, status)
         }
-
-        val bck = findViewById<FloatingActionButton>(R.id.bgbck)
-
-        bck.setOnClickListener(object : SingleClick() {
-            override fun onSingleClick(v: View?) {
-                finish()
-            }
-        })
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -156,7 +173,7 @@ class BackgroundList : AppCompatActivity() {
                 res++
         }
 
-        return res
+        return max(1, res)
     }
 
     private fun getExistingPack(): ArrayList<String> {
