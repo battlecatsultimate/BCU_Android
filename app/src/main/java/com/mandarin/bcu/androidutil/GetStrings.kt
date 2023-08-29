@@ -327,7 +327,7 @@ class GetStrings(private val c: Context) {
         return if (viewHolder == null)
             ""
         else
-            id + "-" + viewHolder.adapterPosition
+            id + "-" + viewHolder.bindingAdapterPosition
     }
 
     fun getID(form: Int, id: String): String {

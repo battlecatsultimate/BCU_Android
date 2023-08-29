@@ -78,16 +78,16 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
 
         holder.range.addOnChangeListener { _, _, fromUser ->
             if(fromUser) {
-                holder.switch.text = generateRangeName(holder.adapterPosition, holder.range)
+                holder.switch.text = generateRangeName(holder.bindingAdapterPosition, holder.range)
 
-                data[holder.adapterPosition][0] = holder.range.values[0].toInt()
-                data[holder.adapterPosition][1] = holder.range.values[1].toInt()
+                data[holder.bindingAdapterPosition][0] = holder.range.values[0].toInt()
+                data[holder.bindingAdapterPosition][1] = holder.range.values[1].toInt()
             }
         }
 
         holder.switch.setOnCheckedChangeListener { _, b ->
             holder.range.isEnabled = b
-            enables[holder.adapterPosition] = b
+            enables[holder.bindingAdapterPosition] = b
         }
 
         holder.switch.isChecked = enables[position]

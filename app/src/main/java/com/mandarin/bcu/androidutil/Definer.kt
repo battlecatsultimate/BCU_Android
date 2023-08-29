@@ -547,19 +547,19 @@ object Definer {
 
         SoundHandler.musicPlay = shared.getBoolean("music", true)
         SoundHandler.mu_vol = if(shared.getBoolean("music", true)) {
-            StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
+            0.01f + shared.getInt("mus_vol", 99) / 100f
         } else {
             0f
         }
         SoundHandler.sePlay = shared.getBoolean("SE", true)
         SoundHandler.se_vol = if(shared.getBoolean("SE", true)) {
-            StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
+            (0.01f + shared.getInt("se_vol", 99) / 100f) * 0.85f
         } else {
             0f
         }
         SoundHandler.uiPlay = shared.getBoolean("UI", true)
         SoundHandler.ui_vol = if(SoundHandler.uiPlay)
-            StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+            (0.01f + shared.getInt("ui_vol", 99) / 100f) * 0.85f
         else
             0f
 

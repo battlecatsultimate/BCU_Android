@@ -94,6 +94,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.4.1'
     implementation 'com.google.firebase:firebase-analytics:21.3.0'
 
+    implementation "androidx.media3:media3-exoplayer:1.1.1"
+    implementation "androidx.media3:media3-exoplayer-dash:1.1.1"
+    implementation "androidx.media3:media3-ui:1.1.1"
 }
 
 repositories {

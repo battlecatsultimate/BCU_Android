@@ -74,7 +74,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
 
                 viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_more_black_24dp))
 
-                infos[viewHolder.adapterPosition] = true
+                infos[viewHolder.bindingAdapterPosition] = true
             } else {
                 viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 val height = viewHolder.moreinfo.measuredHeight
@@ -89,11 +89,11 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
                 anim.interpolator = DecelerateInterpolator()
                 anim.start()
                 viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_less_black_24dp))
-                infos[viewHolder.adapterPosition] = false
+                infos[viewHolder.bindingAdapterPosition] = false
             }
         })
 
-        if (infos[viewHolder.adapterPosition]) {
+        if (infos[viewHolder.bindingAdapterPosition]) {
             viewHolder.moreinfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val layout = viewHolder.moreinfo.layoutParams
             layout.height = viewHolder.moreinfo.measuredHeight
@@ -101,7 +101,7 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.expand.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_expand_more_black_24dp))
         }
 
-        val id = data[viewHolder.adapterPosition]?.enemy ?: UserProfile.getBCData().enemies[0].id
+        val id = data[viewHolder.bindingAdapterPosition]?.enemy ?: UserProfile.getBCData().enemies[0].id
 
         val em = Identifier.get(id) ?: return
 
@@ -116,49 +116,49 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
             viewHolder.icon.setImageBitmap(StaticStore.getResizeb(icon as Bitmap,activity, 85f, 32f))
         }
 
-        viewHolder.number.text = s.getNumber(data[viewHolder.adapterPosition] ?: SCDef.Line())
+        viewHolder.number.text = s.getNumber(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line())
 
 
         viewHolder.info.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, EnemyInfo::class.java)
                 intent.putExtra("Data", JsonEncoder.encode(em.id).toString())
-                intent.putExtra("Multiply", ((data[viewHolder.adapterPosition]?.multiple?.toFloat() ?: 0f) * multi.toFloat() / 100.toFloat()).toInt())
-                intent.putExtra("AMultiply", ((data[viewHolder.adapterPosition]?.mult_atk?.toFloat() ?: 0f) * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("Multiply", ((data[viewHolder.bindingAdapterPosition]?.multiple?.toFloat() ?: 0f) * multi.toFloat() / 100.toFloat()).toInt())
+                intent.putExtra("AMultiply", ((data[viewHolder.bindingAdapterPosition]?.mult_atk?.toFloat() ?: 0f) * multi.toFloat() / 100.toFloat()).toInt())
                 activity.startActivity(intent)
             }
         })
 
-        viewHolder.multiply.text = s.getMultiply(data[viewHolder.adapterPosition] ?: SCDef.Line(), multi)
+        viewHolder.multiply.text = s.getMultiply(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), multi)
 
-        viewHolder.bh.text = s.getBaseHealth(data[viewHolder.adapterPosition] ?: SCDef.Line())
+        viewHolder.bh.text = s.getBaseHealth(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line())
 
-        if ((data[viewHolder.adapterPosition]?.boss ?: -1) == 0)
+        if ((data[viewHolder.bindingAdapterPosition]?.boss ?: -1) == 0)
             viewHolder.isboss.text = activity.getString(R.string.unit_info_false)
         else
             viewHolder.isboss.text = activity.getString(R.string.unit_info_true)
 
-        viewHolder.layer.text = s.getLayer(data[viewHolder.adapterPosition] ?: SCDef.Line())
+        viewHolder.layer.text = s.getLayer(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line())
 
         viewHolder.startb.setOnClickListener {
             if (viewHolder.start.text.toString().endsWith("f"))
-                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: SCDef.Line(), false)
+                viewHolder.start.text = s.getStart(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), false)
             else
-                viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: SCDef.Line(), true)
+                viewHolder.start.text = s.getStart(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), true)
         }
 
-        viewHolder.start.text = s.getStart(data[viewHolder.adapterPosition] ?: SCDef.Line(), frse)
+        viewHolder.start.text = s.getStart(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), frse)
 
         viewHolder.respawnb.setOnClickListener {
             if (viewHolder.respawn.text.toString().endsWith("f"))
-                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), false)
+                viewHolder.respawn.text = s.getRespawn(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), false)
             else
-                viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), true)
+                viewHolder.respawn.text = s.getRespawn(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), true)
         }
 
-        viewHolder.respawn.text = s.getRespawn(data[viewHolder.adapterPosition] ?: SCDef.Line(), frse)
+        viewHolder.respawn.text = s.getRespawn(data[viewHolder.bindingAdapterPosition] ?: SCDef.Line(), frse)
 
-        viewHolder.killcount.text = (data[viewHolder.adapterPosition] ?: SCDef.Line()).kill_count.toString()
+        viewHolder.killcount.text = (data[viewHolder.bindingAdapterPosition] ?: SCDef.Line()).kill_count.toString()
     }
 
     override fun getItemCount(): Int {

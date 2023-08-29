@@ -9,7 +9,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Point
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -45,13 +44,11 @@ import com.mandarin.bcu.androidutil.battle.BBCtrl
 import com.mandarin.bcu.androidutil.battle.BattleView
 import com.mandarin.bcu.androidutil.battle.sound.PauseCountDown
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
-import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
 import com.mandarin.bcu.androidutil.fakeandroid.AndroidKeys
 import com.mandarin.bcu.androidutil.fakeandroid.CVGraphics
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
-import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
 import common.CommonStatic
@@ -70,11 +67,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlin.math.abs
-import kotlin.math.ln
 import kotlin.math.min
 import kotlin.random.Random
 
 class BattleSimulation : AppCompatActivity() {
+    var paused = false
+        private set
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -473,8 +472,8 @@ class BattleSimulation : AppCompatActivity() {
 
                             SoundHandler.resetHandler()
 
-                            if (SoundHandler.MUSIC.isInitialized) {
-                                if (SoundHandler.MUSIC.isRunning) {
+                            if (SoundHandler.MUSIC.currentMediaItem != null) {
+                                if (SoundHandler.MUSIC.isPlaying) {
                                     SoundHandler.MUSIC.stop()
                                     SoundHandler.MUSIC.release()
                                 } else {
@@ -507,8 +506,8 @@ class BattleSimulation : AppCompatActivity() {
 
                         SoundHandler.resetHandler()
 
-                        if (SoundHandler.MUSIC.isInitialized) {
-                            if (SoundHandler.MUSIC.isRunning) {
+                        if (SoundHandler.MUSIC.currentMediaItem != null) {
+                            if (SoundHandler.MUSIC.isPlaying) {
                                 SoundHandler.MUSIC.stop()
                                 SoundHandler.MUSIC.release()
                             } else {
@@ -590,8 +589,8 @@ class BattleSimulation : AppCompatActivity() {
 
                         volumeMusic.isEnabled = true
 
-                        if (!SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.isInitialized) {
-                            SoundHandler.MUSIC.start()
+                        if (!SoundHandler.MUSIC.isPlaying) {
+                            SoundHandler.MUSIC.play()
                         }
 
                         val firstLoop = battleView.painter.bf.sb.st.mus0?.get()?.loop ?: 0
@@ -605,14 +604,14 @@ class BattleSimulation : AppCompatActivity() {
                             }
 
                             if(lop != 0L) {
-                                SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration - 1).toLong(), (SoundHandler.MUSIC.duration - 1).toLong(), true) {
+                                SoundHandler.timer = object : PauseCountDown(SoundHandler.MUSIC.duration - 1, SoundHandler.MUSIC.duration - 1, true) {
                                     override fun onFinish() {
-                                        SoundHandler.MUSIC.seekTo(lop.toInt(), true)
+                                        SoundHandler.MUSIC.seekTo(lop)
 
-                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration - 1).toLong() - lop, (SoundHandler.MUSIC.duration - 1).toLong() - lop, true) {
+                                        SoundHandler.timer = object : PauseCountDown(SoundHandler.MUSIC.duration - 1 - lop, SoundHandler.MUSIC.duration - 1 - lop, true) {
                                             override fun onFinish() {
 
-                                                SoundHandler.MUSIC.seekTo(lop.toInt(), true)
+                                                SoundHandler.MUSIC.seekTo(lop)
 
                                                 SoundHandler.timer?.create()
                                             }
@@ -643,7 +642,7 @@ class BattleSimulation : AppCompatActivity() {
 
                         volumeMusic.isEnabled = false
 
-                        if (SoundHandler.MUSIC.isInitialized && SoundHandler.MUSIC.isRunning && SoundHandler.MUSIC.isPlaying) {
+                        if (SoundHandler.MUSIC.isPlaying) {
                             SoundHandler.MUSIC.pause()
                         }
 
@@ -664,12 +663,10 @@ class BattleSimulation : AppCompatActivity() {
                             editor.putInt("mus_vol", progress)
                             editor.apply()
 
-                            SoundHandler.mu_vol = StaticStore.getVolumScaler(progress)
-
-                            val log1 = (1 - ln(100 - progress.toDouble()) / ln(100.0)).toFloat()
+                            SoundHandler.mu_vol = 0.01f + progress / 100f
 
                             if(!battleView.battleEnd) {
-                                SoundHandler.MUSIC.setVolume(log1, log1)
+                                SoundHandler.MUSIC.volume = SoundHandler.mu_vol
                             }
                         }
                     }
@@ -695,7 +692,7 @@ class BattleSimulation : AppCompatActivity() {
                         editor.apply()
 
                         SoundHandler.sePlay = true
-                        SoundHandler.se_vol = StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
+                        SoundHandler.se_vol = (0.01f + (shared.getInt("se_vol", 99) / 100f)) * 0.85f
 
                         volumeSFX.isEnabled = true
                     } else {
@@ -722,7 +719,7 @@ class BattleSimulation : AppCompatActivity() {
                             editor.putInt("se_vol", progress)
                             editor.apply()
 
-                            SoundHandler.se_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+                            SoundHandler.se_vol = (0.01f + progress / 100f) * 0.85f
                         }
                     }
 
@@ -749,7 +746,7 @@ class BattleSimulation : AppCompatActivity() {
                     SoundHandler.uiPlay = c
 
                     SoundHandler.ui_vol = if(c) {
-                        StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+                        (0.01f + shared.getInt("ui_vol", 99) / 100f) * 0.85f
                     } else {
                         0f
                     }
@@ -768,7 +765,7 @@ class BattleSimulation : AppCompatActivity() {
                             editor.putInt("ui_vol", progress)
                             editor.apply()
 
-                            SoundHandler.ui_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+                            SoundHandler.ui_vol = (0.01f + progress / 100f) * 0.85f
                         }
                     }
 
@@ -777,11 +774,9 @@ class BattleSimulation : AppCompatActivity() {
                     override fun onStopTrackingTouch(p0: SeekBar?) {}
                 })
 
-                SoundHandler.MUSIC = SoundPlayer()
+                SoundHandler.initializePlayer(this@BattleSimulation)
 
-                val musicVolumeValue = (1 - ln(100 - shared.getInt("mus_vol", 99).toDouble()) / ln(100.0)).toFloat()
-
-                SoundHandler.MUSIC.setVolume(musicVolumeValue, musicVolumeValue)
+                SoundHandler.MUSIC.volume = 0.01f + shared.getInt("mus_vol", 99) / 100f
 
                 SoundHandler.twoMusic = battleView.painter.bf.sb.st.mush != 0 && battleView.painter.bf.sb.st.mush != 100 && battleView.painter.bf.sb.st.mus0 != battleView.painter.bf.sb.st.mus1
 
@@ -793,52 +788,7 @@ class BattleSimulation : AppCompatActivity() {
                 }
 
                 if(battleView.painter.bf.sb.st.mus0 != null) {
-                    val f = StaticStore.getMusicDataSource(Identifier.get(battleView.painter.bf.sb.st.mus0))
-
-                    if (f != null) {
-                        SoundHandler.MUSIC.setDataSource(f.absolutePath)
-
-                        SoundHandler.MUSIC.prepareAsync()
-
-                        SoundHandler.MUSIC.setOnPreparedListener(object : MediaPrepare() {
-                            override fun prepare(mp: MediaPlayer) {
-                                val loop = battleView.painter.bf.sb.st.mus0?.get()?.loop ?: 0
-
-                                if (SoundHandler.musicPlay) {
-                                    if(loop > 0 && loop < SoundHandler.MUSIC.duration) {
-                                        SoundHandler.timer = object : PauseCountDown((SoundHandler.MUSIC.duration-1).toLong(), (SoundHandler.MUSIC.duration-1).toLong(), true) {
-                                            override fun onFinish() {
-                                                SoundHandler.MUSIC.seekTo(loop.toInt(), true)
-
-                                                SoundHandler.timer = object : PauseCountDown(SoundHandler.MUSIC.duration - 1 - loop, SoundHandler.MUSIC.duration- 1 - loop, true) {
-                                                    override fun onFinish() {
-                                                        SoundHandler.MUSIC.seekTo(loop.toInt(), true)
-
-                                                        SoundHandler.timer?.create()
-                                                    }
-
-                                                    override fun onTick(millisUntilFinished: Long) {}
-
-                                                }
-
-                                                SoundHandler.timer?.create()
-                                            }
-
-                                            override fun onTick(millisUntilFinished: Long) {}
-
-                                        }
-
-                                        SoundHandler.timer?.create()
-                                    } else {
-                                        SoundHandler.timer = null
-                                        SoundHandler.MUSIC.isLooping = true
-                                    }
-
-                                    SoundHandler.MUSIC.start()
-                                }
-                            }
-                        })
-                    }
+                    SoundHandler.setBGM(battleView.painter.bf.sb.st.mus0)
                 }
 
                 row.isChecked = shared.getBoolean("rowlayout", true)
@@ -881,8 +831,6 @@ class BattleSimulation : AppCompatActivity() {
                 battleView.initialized = true
             }
         }
-
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -923,10 +871,11 @@ class BattleSimulation : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
-            if (SoundHandler.MUSIC.isRunning || SoundHandler.MUSIC.isPlaying) {
-                SoundHandler.MUSIC.pause()
-            }
+
+        paused = true
+
+        if (SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.currentMediaItem != null) {
+            SoundHandler.MUSIC.pause()
         }
 
         SoundHandler.timer?.pause()
@@ -935,15 +884,15 @@ class BattleSimulation : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        paused = false
+
         AContext.check()
 
         if(CommonStatic.ctx is AContext)
             (CommonStatic.ctx as AContext).updateActivity(this)
 
-        if (SoundHandler.MUSIC.isInitialized && !SoundHandler.MUSIC.isReleased) {
-            if ((!SoundHandler.MUSIC.isRunning || !SoundHandler.MUSIC.isPlaying) && SoundHandler.musicPlay) {
-                SoundHandler.MUSIC.start()
-            }
+        if (SoundHandler.isMusicPossible && !SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.currentMediaItem != null) {
+            SoundHandler.MUSIC.play()
 
             SoundHandler.timer?.resume()
         }

@@ -362,7 +362,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
                         }
                     }
                 } catch (e: SocketException) {
-                    suspendCancellableCoroutine {
+                    suspendCancellableCoroutine<Int> {
                         val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
 
                         internetDialog.setCancelable(false)

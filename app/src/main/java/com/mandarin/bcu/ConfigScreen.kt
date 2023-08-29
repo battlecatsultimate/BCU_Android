@@ -435,7 +435,7 @@ open class ConfigScreen : AppCompatActivity() {
                 editor.putBoolean("music", true)
                 editor.apply()
                 SoundHandler.musicPlay = true
-                SoundHandler.mu_vol = StaticStore.getVolumScaler(shared.getInt("mus_vol", 99))
+                SoundHandler.mu_vol = 0.01f + shared.getInt("mus_vol", 99) / 100f
                 musvol.isEnabled = true
             } else {
                 val editor = shared.edit()
@@ -475,7 +475,7 @@ open class ConfigScreen : AppCompatActivity() {
                 editor.putBoolean("SE", true)
                 editor.apply()
                 SoundHandler.sePlay = true
-                SoundHandler.se_vol = StaticStore.getVolumScaler((shared.getInt("se_vol", 99) * 0.85).toInt())
+                SoundHandler.se_vol = (0.01f + shared.getInt("se_vol", 99) / 100f) * 0.85f
                 sevol.isEnabled = true
             } else {
                 val editor = shared.edit()
@@ -494,7 +494,7 @@ open class ConfigScreen : AppCompatActivity() {
                     val editor = shared.edit()
                     editor.putInt("se_vol", progress)
                     editor.apply()
-                    SoundHandler.se_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+                    SoundHandler.se_vol = (0.01f + progress) * 0.85f
                 }
             }
 
@@ -514,7 +514,7 @@ open class ConfigScreen : AppCompatActivity() {
 
             SoundHandler.uiPlay = c
             SoundHandler.ui_vol = if(c) {
-                StaticStore.getVolumScaler((shared.getInt("ui_vol", 99) * 0.85).toInt())
+                (0.01f + shared.getInt("ui_vol", 99) / 100f) * 0.85f
             } else {
                 0f
             }
@@ -529,7 +529,7 @@ open class ConfigScreen : AppCompatActivity() {
                     val editor = shared.edit()
                     editor.putInt("ui_vol", progress)
                     editor.apply()
-                    SoundHandler.ui_vol = StaticStore.getVolumScaler((progress * 0.85).toInt())
+                    SoundHandler.ui_vol = (0.01f + progress / 100f) * 0.85f
                 }
             }
 

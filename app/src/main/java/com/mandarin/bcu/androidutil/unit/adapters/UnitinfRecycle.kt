@@ -144,7 +144,7 @@ class UnitinfRecycle(private val context: Activity,
 
         val t = BasisSet.current().t()
         
-        val f = forms[viewHolder.adapterPosition]
+        val f = forms[viewHolder.bindingAdapterPosition]
 
         level.setLevel(f.unit.preferredLevel)
         level.setPlusLevel(f.unit.preferredPlusLevel)
@@ -314,7 +314,7 @@ class UnitinfRecycle(private val context: Activity,
 
         val t = BasisSet.current().t()
         
-        val f = forms[viewHolder.adapterPosition]
+        val f = forms[viewHolder.bindingAdapterPosition]
 
         val levels: MutableList<Int> = ArrayList()
 

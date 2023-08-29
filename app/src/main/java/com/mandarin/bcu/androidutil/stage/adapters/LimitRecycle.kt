@@ -24,7 +24,7 @@ class LimitRecycle(private val activity: Activity, l: Limit?) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.limit.text = limits[viewHolder.adapterPosition]
+        viewHolder.limit.text = limits[viewHolder.bindingAdapterPosition]
     }
 
     override fun getItemCount(): Int {

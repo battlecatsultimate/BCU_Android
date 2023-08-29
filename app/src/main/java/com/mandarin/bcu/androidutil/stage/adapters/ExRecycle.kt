@@ -40,13 +40,13 @@ class ExRecycle(private val st: Stage, private val activity: Activity) : Recycle
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.chance.text = chanceData[holder.adapterPosition]
-        holder.mapst.text = getMapStageName(stageData[holder.adapterPosition])
+        holder.chance.text = chanceData[holder.bindingAdapterPosition]
+        holder.mapst.text = getMapStageName(stageData[holder.bindingAdapterPosition])
         holder.info.setOnClickListener(object : SingleClick() {
             override fun onSingleClick(v: View?) {
                 val intent = Intent(activity, StageInfo::class.java)
 
-                intent.putExtra("Data", JsonEncoder.encode(stageData[holder.adapterPosition].id).toString())
+                intent.putExtra("Data", JsonEncoder.encode(stageData[holder.bindingAdapterPosition].id).toString())
                 intent.putExtra("custom", false)
 
                 activity.startActivity(intent)

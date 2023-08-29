@@ -225,7 +225,7 @@ object StaticStore {
      */
     var musicnames: MutableMap<String, SparseArray<String>> = HashMap()
     var musicData: MutableList<Identifier<Music>> = ArrayList()
-    var durations: MutableList<Int> = ArrayList()
+    var durations: MutableList<Long> = ArrayList()
 
     /**
      * Variables for Animation

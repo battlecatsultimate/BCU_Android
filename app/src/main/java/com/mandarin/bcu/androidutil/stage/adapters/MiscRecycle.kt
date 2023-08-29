@@ -20,7 +20,7 @@ class MiscRecycle(private val activity: Activity, private val miscs : List<Strin
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.misc.text = miscs[holder.adapterPosition]
+        holder.misc.text = miscs[holder.bindingAdapterPosition]
     }
 
     override fun getItemCount(): Int {

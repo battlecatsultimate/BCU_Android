@@ -1,10 +1,13 @@
 package com.mandarin.bcu.androidutil.battle.sound
 
+import android.content.Context
 import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.media.SoundPool
+import androidx.core.net.toUri
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.MediaPrepare
 import common.pack.Identifier
 import common.pack.UserProfile
 import common.util.stage.Music
@@ -16,7 +19,9 @@ object SoundHandler {
     const val SE_BASE = 2
     const val SE_UI = 3
 
-    var MUSIC = SoundPlayer()
+    lateinit var MUSIC: Player
+        private set
+    private val listeners = ArrayList<Player.Listener>()
 
     /** SoundPool for all other sound effects **/
     var SE: SoundPool? = SoundPool.Builder().setMaxStreams(50).build()
@@ -36,8 +41,6 @@ object SoundHandler {
     var battleEnd = false
 
     var twoMusic = false
-
-    var haveToChange = false
 
     var Changed = false
 
@@ -163,56 +166,56 @@ object SoundHandler {
         playCustom[mus] = true
     }
 
-    fun setBGM(music: Identifier<Music>) {
+    fun initializePlayer(context: Context, directPlay: Boolean = true, repeat: Boolean = true) {
+        if (this::MUSIC.isInitialized && MUSIC.isCommandAvailable(Player.COMMAND_RELEASE)) {
+            MUSIC.release()
+        }
+
+        listeners.clear()
+
+        val player = ExoPlayer.Builder(context).build()
+
+        player.playWhenReady = directPlay
+        player.repeatMode = if (repeat) {
+            Player.REPEAT_MODE_ONE
+        } else {
+            Player.REPEAT_MODE_OFF
+        }
+
+        MUSIC = player
+    }
+
+    val isMusicPossible: Boolean
+        get() {
+            return this::MUSIC.isInitialized
+        }
+
+    fun setBGM(music: Identifier<Music>, onReady: () -> Unit = { }, onComplete: () -> Unit = { }) {
+        if (!this::MUSIC.isInitialized)
+            return
+
         val m = StaticStore.getMusicDataSource(Identifier.get(music)) ?: return
         val loop = music.get()?.loop ?: 0
 
-        if(MUSIC.isInitialized) {
-            MUSIC.stop()
-            MUSIC.reset()
+        if (MUSIC.isLoading) {
+            val listener = object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    super.onPlaybackStateChanged(playbackState)
 
-            timer?.cancel()
-            timer = null
-        }
+                    if (playbackState == Player.STATE_READY) {
+                        listeners.remove(this)
+                        MUSIC.removeListener(this)
 
-        MUSIC.setDataSource(m.absolutePath)
-        MUSIC.prepareAsync()
-        MUSIC.setOnPreparedListener(object: MediaPrepare() {
-            override fun prepare(mp: MediaPlayer) {
-                if(musicPlay) {
-                    if(loop > 0 && loop < MUSIC.duration) {
-                        timer = object : PauseCountDown((MUSIC.duration - 1).toLong(), (MUSIC.duration - 1).toLong(), true) {
-                            override fun onFinish() {
-                                MUSIC.seekTo(loop.toInt(), true)
-
-                                timer = object : PauseCountDown(
-                                    (MUSIC.duration - 1).toLong(),
-                                    (MUSIC.duration - 1).toLong(),
-                                    true
-                                ) {
-                                    override fun onFinish() {
-                                        MUSIC.seekTo(loop.toInt(), true)
-
-                                        timer?.create()
-                                    }
-
-                                    override fun onTick(millisUntilFinished: Long) {}
-                                }
-                            }
-
-                            override fun onTick(millisUntilFinished: Long) {}
-                        }
-
-                        timer?.create()
-                    } else {
-                        timer = null
-                        MUSIC.isLooping = true
+                        loadMusic(m, loop, onReady, onComplete)
                     }
-
-                    MUSIC.start()
                 }
             }
-        })
+
+            MUSIC.addListener(listener)
+            listeners.add(listener)
+        } else {
+            loadMusic(m, loop, onReady, onComplete)
+        }
     }
 
     @JvmStatic
@@ -238,7 +241,6 @@ object SoundHandler {
         inBattle = false
         battleEnd = false
         twoMusic = false
-        haveToChange = false
         Changed = false
         mu1 = null
         lop = 0
@@ -385,6 +387,75 @@ object SoundHandler {
                 return -1
             }
         }
+    }
+
+    fun loadMusic(m: File, loop: Long, onReady: () -> Unit, onComplete: () -> Unit) {
+        if (!MUSIC.isCommandAvailable(Player.COMMAND_SET_MEDIA_ITEM) || !MUSIC.isCommandAvailable(Player.COMMAND_PREPARE))
+            return
+
+        if (MUSIC.currentMediaItem != null) {
+            if (MUSIC.isCommandAvailable(Player.COMMAND_CHANGE_MEDIA_ITEMS)) {
+                MUSIC.clearMediaItems()
+            }
+
+            MUSIC.stop()
+            MUSIC.seekTo(0)
+
+            timer?.cancel()
+            timer = null
+
+            listeners.removeIf {
+                MUSIC.removeListener(it)
+
+                true
+            }
+        }
+
+        val item = MediaItem.fromUri(m.toUri())
+
+        MUSIC.setMediaItem(item)
+        MUSIC.prepare()
+
+        val listener = object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                super.onPlaybackStateChanged(playbackState)
+
+                if (playbackState == Player.STATE_READY) {
+                    if(musicPlay) {
+                        if(loop > 0 && loop < MUSIC.duration) {
+                            timer = object : PauseCountDown((MUSIC.duration - 1), (MUSIC.duration - 1), true) {
+                                override fun onFinish() {
+                                    MUSIC.seekTo(loop)
+
+                                    timer = object : PauseCountDown((MUSIC.duration - 1), (MUSIC.duration - 1), true) {
+                                        override fun onFinish() {
+                                            MUSIC.seekTo(loop)
+
+                                            timer?.create()
+                                        }
+
+                                        override fun onTick(millisUntilFinished: Long) {}
+                                    }
+                                }
+
+                                override fun onTick(millisUntilFinished: Long) {}
+                            }
+
+                            timer?.create()
+                        } else {
+                            timer = null
+                        }
+
+                        onReady()
+                    }
+                } else if (playbackState == Player.STATE_ENDED) {
+                    onComplete()
+                }
+            }
+        }
+
+        MUSIC.addListener(listener)
+        listeners.add(listener)
     }
 
     fun load(mus: Identifier<Music>, play: Boolean) : Int {

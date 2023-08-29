@@ -21,7 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.battle.sound.SoundPlayer
+import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.music.adapters.MusicListPager
@@ -31,13 +31,16 @@ import common.pack.Identifier
 import common.pack.PackData
 import common.pack.UserProfile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlin.math.round
 
 class MusicList : AppCompatActivity() {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -89,6 +92,8 @@ class MusicList : AppCompatActivity() {
 
             st.setText(R.string.load_music_duratoin)
 
+            SoundHandler.initializePlayer(this@MusicList, directPlay = false, repeat = false)
+
             withContext(Dispatchers.IO) {
                 if(StaticStore.musicnames.size != UserProfile.getAllPacks().size || StaticStore.musicData.isEmpty()) {
                     StaticStore.musicnames.clear()
@@ -101,39 +106,47 @@ class MusicList : AppCompatActivity() {
                         for (j in p.musics.list.indices) {
                             val m = p.musics.list[j]
 
-                            val f = StaticStore.getMusicDataSource(m) ?: continue
+                            while(true) {
+                                val isLoading = withContext(Dispatchers.Main) {
+                                    SoundHandler.MUSIC.isLoading
+                                }
 
-                            val sp = SoundPlayer()
-
-                            sp.setDataSource(f.absolutePath)
-
-                            sp.prepare()
-
-                            StaticStore.durations.add(sp.duration)
-
-                            var time = sp.duration.toFloat() / 1000f
-
-                            sp.release()
-
-                            var min = (time / 60f).toInt()
-
-                            time -= min.toFloat() * 60f
-
-                            var sec = round(time).toInt()
-
-                            if (sec == 60) {
-                                min += 1
-                                sec = 0
+                                if(!isLoading) {
+                                    break
+                                }
                             }
 
-                            val mins = min.toString()
+                            withContext(Dispatchers.Main) {
+                                suspendCancellableCoroutine {
+                                    SoundHandler.setBGM(m.id, onReady = {
+                                        StaticStore.durations.add(SoundHandler.MUSIC.duration)
 
-                            val secs = if (sec < 10) "0$sec"
-                            else sec.toString()
+                                        var time = SoundHandler.MUSIC.duration.toFloat() / 1000f
 
-                            names.append(m.id.id, "$mins:$secs")
+                                        var min = (time / 60f).toInt()
 
-                            StaticStore.musicData.add(m.id)
+                                        time -= min.toFloat() * 60f
+
+                                        var sec = round(time).toInt()
+
+                                        if (sec == 60) {
+                                            min += 1
+                                            sec = 0
+                                        }
+
+                                        val mins = min.toString()
+
+                                        val secs = if (sec < 10) "0$sec"
+                                        else sec.toString()
+
+                                        names.append(m.id.id, "$mins:$secs")
+
+                                        StaticStore.musicData.add(m.id)
+
+                                        it.resume(0) { }
+                                    })
+                                }
+                            }
                         }
 
                         if(p is PackData.DefPack) {
@@ -144,6 +157,8 @@ class MusicList : AppCompatActivity() {
                     }
                 }
             }
+
+            SoundHandler.MUSIC.release()
 
             //Load UI
             st.text = getString(R.string.medal_loading_data)
@@ -180,10 +195,8 @@ class MusicList : AppCompatActivity() {
                         }
                     }
 
-                    if(name.isEmpty()) {
+                    name.ifEmpty {
                         keys[position]
-                    } else {
-                        name
                     }
                 }
             }.attach()
