@@ -43,6 +43,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.text.DecimalFormat
@@ -66,6 +67,12 @@ class PackManagement : AppCompatActivity() {
             val cursor = try {
                 resolver.query(path, projection, null, null, null)
             } catch (_: SecurityException) {
+                StaticStore.showShortMessage(this, R.string.pack_import_denied)
+
+                return@registerForActivityResult
+            } catch (_: FileNotFoundException) {
+                StaticStore.showShortMessage(this, R.string.pack_import_nofile)
+
                 return@registerForActivityResult
             }
 

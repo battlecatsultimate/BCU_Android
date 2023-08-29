@@ -1007,4 +1007,6 @@
     <string name="main_proxy_dialog_title">서버 연결 실패</string>
     <string name="main_terminated_dialog_title">서버 연결 중단됨</string>
     <string name="main_terminated_dialog_content">알 수 없는 이유로 서버와의 연결이 끊겼습니다. 이는 인터넷 상태가 변경됐거나, BCU와 서버 사이의 연결이 간섭을 받아 발생한 것일 수 있습니다. 더 안정적인 인터넷 환경에서 다시 시도해주세요</string>
+    <string name="pack_import_denied">선택된 파일 불러오기 실패 (접근 거부)</string>
+    <string name="pack_import_nofile">선택된 파일 불러오기 실패 (파일 인식 불가)</string>
 </resources>
