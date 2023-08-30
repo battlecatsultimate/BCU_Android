@@ -92,23 +92,21 @@ class EnemyInfo : AppCompatActivity() {
                 val treasure = findViewById<FloatingActionButton>(R.id.enemtreasure)
                 val scrollView = findViewById<ScrollView>(R.id.eneminfscroll)
                 val title = findViewById<TextView>(R.id.eneminftitle)
-                val eanim = findViewById<Button>(R.id.eanimanim)
+                val enemyAnimation = findViewById<Button>(R.id.eanimanim)
                 val view1 = findViewById<View>(R.id.enemviewtop)
                 val view2 = findViewById<View>(R.id.enemviewbot)
                 val viewPager = findViewById<ViewPager>(R.id.eneminfexp)
-                val exptext = findViewById<TextView>(R.id.eneminfexptx)
+                val explanationTitle = findViewById<TextView>(R.id.eneminfexptx)
                 val st = findViewById<TextView>(R.id.status)
-                val prog = findViewById<ProgressBar>(R.id.prog)
+                val progression = findViewById<ProgressBar>(R.id.prog)
                 val recyclerView = findViewById<RecyclerView>(R.id.eneminftable)
                 val main = findViewById<ConstraintLayout>(R.id.enemmainlayout)
-                val treasurelay: ConstraintLayout = findViewById(R.id.enemtreasuretab)
+                val treasureLayout: ConstraintLayout = findViewById(R.id.enemtreasuretab)
                 val back: FloatingActionButton = findViewById(R.id.eneminfbck)
 
-                if (MultiLangCont.getStatic().EEXP.getCont(e) == null && (e.id.pack == Identifier.DEF || e.description.toString().isBlank())) {
-                    StaticStore.setDisappear(view1, view2, viewPager, exptext, eanim)
-                }
+                StaticStore.setDisappear(view1, view2, explanationTitle, viewPager, enemyAnimation, treasure, back, scrollView)
 
-                prog.isIndeterminate = true
+                progression.isIndeterminate = true
 
                 //Load Data
                 withContext(Dispatchers.IO) {
@@ -122,7 +120,7 @@ class EnemyInfo : AppCompatActivity() {
 
                 title.text = MultiLangCont.get(e) ?: e.names.toString()
 
-                eanim.setOnClickListener(object : SingleClick() {
+                enemyAnimation.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(this@EnemyInfo, ImageViewer::class.java)
 
@@ -152,7 +150,7 @@ class EnemyInfo : AppCompatActivity() {
 
                 treasure.setOnClickListener {
                     if (!StaticStore.EisOpen) {
-                        TranslationAnimator(treasurelay, AnimatorConst.Axis.X, 300, AnimatorConst.Accelerator.DECELERATE, 0f, treasurelay.width.toFloat()).start()
+                        TranslationAnimator(treasureLayout, AnimatorConst.Axis.X, 300, AnimatorConst.Accelerator.DECELERATE, 0f, treasureLayout.width.toFloat()).start()
 
                         StaticStore.EisOpen = true
                     } else {
@@ -161,16 +159,16 @@ class EnemyInfo : AppCompatActivity() {
                         if (view != null) {
                             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                             imm.hideSoftInputFromWindow(view.windowToken, 0)
-                            treasurelay.clearFocus()
+                            treasureLayout.clearFocus()
                         }
 
-                        TranslationAnimator(treasurelay, AnimatorConst.Axis.X, 300, AnimatorConst.Accelerator.DECELERATE, treasurelay.width.toFloat(), 0f).start()
+                        TranslationAnimator(treasureLayout, AnimatorConst.Axis.X, 300, AnimatorConst.Accelerator.DECELERATE, treasureLayout.width.toFloat(), 0f).start()
 
                         StaticStore.EisOpen = false
                     }
                 }
 
-                treasurelay.setOnTouchListener { _, _ ->
+                treasureLayout.setOnTouchListener { _, _ ->
                     main.isClickable = false
                     true
                 }
@@ -193,12 +191,16 @@ class EnemyInfo : AppCompatActivity() {
                 )
 
                 if(StaticStore.EisOpen) {
-                    treasurelay.translationX = -treasurelay.width.toFloat()
-                    treasurelay.requestLayout()
+                    treasureLayout.translationX = -treasureLayout.width.toFloat()
+                    treasureLayout.requestLayout()
                 }
 
-                StaticStore.setAppear(scrollView, eanim)
-                StaticStore.setDisappear(prog, st)
+                if (MultiLangCont.getStatic().EEXP.getCont(e) == null && (e.id.pack == Identifier.DEF || e.description.toString().isBlank())) {
+                    StaticStore.setAppear(view1, view2, explanationTitle, viewPager)
+                }
+
+                StaticStore.setAppear(scrollView, enemyAnimation, treasure, back)
+                StaticStore.setDisappear(progression, st)
             }
         }
     }
