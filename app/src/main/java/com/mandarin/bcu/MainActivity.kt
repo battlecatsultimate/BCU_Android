@@ -44,6 +44,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.lang.Exception
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -491,7 +492,11 @@ class MainActivity : AppCompatActivity() {
                     if (safeCheck(f)) {
                         withContext(Dispatchers.IO) {
                             val inputStream = resources.openRawResource(R.raw.service_key)
-                            val good = DriveUtil.upload(f, inputStream)
+                            val good = try {
+                                DriveUtil.upload(f, inputStream)
+                            } catch (_: Exception) {
+                                false
+                            }
 
                             if (good) {
                                 f.delete()
