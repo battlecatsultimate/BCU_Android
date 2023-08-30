@@ -39,7 +39,7 @@ class LineUpView : View {
     /**
      * Flag whether draw unusable red box or not
      */
-    private val isUnusable = Array(2) { Array<Boolean>(5) { false } }
+    private val isUnusable = Array(2) { Array(5) { false } }
     /**
      * Bitmap of empty icon
      */
