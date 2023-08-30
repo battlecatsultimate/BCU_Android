@@ -18,11 +18,41 @@ import common.util.unit.AbEnemy
 import common.util.unit.Enemy
 
 class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<AbEnemy>>) : ArrayAdapter<Identifier<AbEnemy>>(context, R.layout.listlayout, name.toTypedArray()) {
+    inner class ViewHolder(row: View) {
+        private var initialized = false
 
-    private class ViewHolder constructor(row: View) {
-        var id: TextView = row.findViewById(R.id.unitID)
-        var title: TextView = row.findViewById(R.id.unitname)
-        var image: ImageView = row.findViewById(R.id.uniticon)
+        val id = row.findViewById<TextView>(R.id.unitID)!!
+        val title = row.findViewById<TextView>(R.id.unitname)!!
+        val image = row.findViewById<ImageView>(R.id.uniticon)!!
+        private val fadeout = row.findViewById<View>(R.id.fadeout)!!
+
+        fun initialize(position: Int) {
+            if (initialized)
+                return
+
+            val e = name[position].get() ?: return
+
+            if(e !is Enemy) {
+                Log.e("ENL", "TYPE : "+e.javaClass.name)
+
+                return
+            }
+
+            fadeout.visibility = View.GONE
+
+            id.text = generateName(name[position])
+
+            title.text = MultiLangCont.get(e) ?: e.names.toString()
+
+            val icon = e.anim?.edi?.img?.bimg()
+
+            if (icon != null)
+                image.setImageBitmap(StaticStore.getResizeb(icon as Bitmap, context, 85f, 32f))
+            else
+                image.setImageBitmap(StaticStore.empty(context, 85f, 32f))
+
+            initialized = true
+        }
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -39,24 +69,7 @@ class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<
             holder = row.tag as ViewHolder
         }
 
-        val e = name[position].get() ?: return row
-
-        if(e !is Enemy) {
-            Log.e("ENL", "TYPE : "+e.javaClass.name)
-
-            return row
-        }
-
-        holder.id.text = generateName(name[position])
-
-        holder.title.text = MultiLangCont.get(e) ?: e.names.toString()
-
-        val icon = e.anim?.edi?.img?.bimg()
-
-        if (icon != null)
-            holder.image.setImageBitmap(StaticStore.getResizeb(icon as Bitmap, context, 85f, 32f))
-        else
-            holder.image.setImageBitmap(StaticStore.empty(context, 85f, 32f))
+        holder.initialize(position)
 
         return row
     }
@@ -69,4 +82,12 @@ class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<
         }
     }
 
+    override fun isEnabled(position: Int): Boolean {
+        val e = Identifier.get(name[position]) ?: return false
+
+        if (e !is Enemy)
+            return false
+
+        return e.anim != null
+    }
 }

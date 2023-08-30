@@ -16,11 +16,37 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Unit
 
 class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<Unit>>) : ArrayAdapter<Identifier<Unit>>(context, R.layout.listlayout, name.toTypedArray()) {
-    private class ViewHolder(row: View) {
+    inner class ViewHolder(row: View) {
+        private var initialized = false
+
         val id = row.findViewById<AutoMarquee>(R.id.unitID)!!
         val title = row.findViewById<TextView>(R.id.unitname)!!
         val image = row.findViewById<ImageView>(R.id.uniticon)!!
-        val fadeout = row.findViewById<View>(R.id.fadeout)!!
+        private val fadeout = row.findViewById<View>(R.id.fadeout)!!
+
+        fun initialize(position: Int) {
+            if (initialized)
+                return
+
+            if (isEnabled(position)) {
+                fadeout.visibility = View.GONE
+            } else {
+                fadeout.visibility = View.VISIBLE
+            }
+
+            val u = Identifier.get(name[position]) ?: return
+
+            id.text = StaticStore.generateIdName(name[position], context)
+            id.isSelected = true
+            title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].names.toString()
+            title.isSelected = true
+
+            val icon = u.forms[0].anim?.uni?.img?.bimg() ?: return
+
+            image.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap, 48f))
+
+            initialized = true
+        }
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -40,22 +66,7 @@ class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<U
             holder = row.tag as ViewHolder
         }
 
-        if (isEnabled(position)) {
-            holder.fadeout.visibility = View.GONE
-        } else {
-            holder.fadeout.visibility = View.VISIBLE
-        }
-
-        val u = Identifier.get(name[position]) ?: return row
-
-        holder.id.text = StaticStore.generateIdName(name[position], context)
-        holder.id.isSelected = true
-        holder.title.text = MultiLangCont.get(u.forms[0]) ?: u.forms[0].names.toString()
-        holder.title.isSelected = true
-
-        val icon = u.forms[0].anim?.uni?.img?.bimg() ?: return row
-
-        holder.image.setImageBitmap(StaticStore.makeIcon(context, icon as Bitmap, 48f))
+        holder.initialize(position)
 
         return row
     }
