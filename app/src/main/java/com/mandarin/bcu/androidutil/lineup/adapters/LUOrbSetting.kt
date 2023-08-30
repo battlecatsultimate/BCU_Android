@@ -8,16 +8,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.R
+import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.lineup.LineUpView
 import com.mandarin.bcu.androidutil.supports.SingleClick
-import com.mandarin.bcu.androidutil.Interpret
 import common.CommonStatic
 import common.battle.BasisSet
 import common.battle.data.Orb
@@ -453,13 +457,10 @@ class LUOrbSetting : Fragment() {
 
         f = if (StaticStore.position[0] == -1)
             return
-        else if (StaticStore.position[0] == 100)
+        else if (StaticStore.position[0] == LineUpView.REPLACE)
             line.repform ?: return
         else {
-            if (StaticStore.position[0] * 5 + StaticStore.position[1] >= StaticStore.currentForms.size)
-                return
-            else
-                StaticStore.currentForms[StaticStore.position[0] * 5 + StaticStore.position[1]] ?: return
+            line.lu.fs[StaticStore.position[0]][StaticStore.position[1]]
         }
 
         updateOrbData()

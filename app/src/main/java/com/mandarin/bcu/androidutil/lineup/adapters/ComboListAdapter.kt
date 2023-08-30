@@ -18,7 +18,7 @@ import common.util.unit.Combo
 import java.text.DecimalFormat
 
 class ComboListAdapter internal constructor(activity: Activity, private val names: Array<String>) : ArrayAdapter<String>(activity, R.layout.combo_list_layout, names) {
-    private class ViewHolder constructor(view: View) {
+    private class ViewHolder(view: View) {
         var comboname: TextView = view.findViewById(R.id.comboname)
         var combodesc: TextView = view.findViewById(R.id.combodesc)
         var comboocc: TextView = view.findViewById(R.id.comboocc)
@@ -28,6 +28,7 @@ class ComboListAdapter internal constructor(activity: Activity, private val name
     }
 
     private val comnames = intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd, R.string.combo_caninch, R.string.combo_work, R.string.combo_initmon, R.string.combo_canatk, R.string.combo_canchtime, R.string.combo_efficiency, R.string.combo_wal, R.string.combo_bsh, R.string.combo_cd, R.string.combo_ac, R.string.combo_xp, R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit)
+
     override fun getView(position: Int, view: View?, group: ViewGroup): View {
         val holder: ViewHolder
         val row: View

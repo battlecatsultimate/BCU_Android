@@ -24,8 +24,8 @@ class LUCatCombo : Fragment() {
     private var posit = -1
     private lateinit var line: LineUpView
     private val schid = intArrayOf(R.string.combo_str, R.string.combo_abil, R.string.combo_bscan, R.string.combo_mon, R.string.combo_env)
-    private val locater = arrayOf(intArrayOf(0, 1, 2), intArrayOf(14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24), intArrayOf(3, 6, 7, 10), intArrayOf(5, 4, 9), intArrayOf(11, 12, 13))
-    private val locateid = arrayOf(intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd), intArrayOf(R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit), intArrayOf(R.string.combo_caninch, R.string.combo_canatk, R.string.combo_canchtime, R.string.combo_bsh), intArrayOf(R.string.combo_initmon, R.string.combo_work, R.string.combo_wal), intArrayOf(R.string.combo_cd, R.string.combo_ac, R.string.combo_xp))
+    private val locater = arrayOf(intArrayOf(0, 1, 2), intArrayOf(14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24), intArrayOf(3, 6, 7, 10), intArrayOf(5, 4, 8, 9), intArrayOf(11, 12, 13))
+    private val locateid = arrayOf(intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd), intArrayOf(R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit), intArrayOf(R.string.combo_caninch, R.string.combo_canatk, R.string.combo_canchtime, R.string.combo_bsh), intArrayOf(R.string.combo_initmon, R.string.combo_work, R.string.combo_efficiency, R.string.combo_wal), intArrayOf(R.string.combo_cd, R.string.combo_ac, R.string.combo_xp))
     private val sch = arrayOfNulls<String>(schid.size)
     private var comboListAdapter: ComboListAdapter? = null
 

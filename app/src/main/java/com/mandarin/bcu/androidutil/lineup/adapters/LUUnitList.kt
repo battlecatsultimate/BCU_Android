@@ -50,7 +50,7 @@ class LUUnitList : Fragment() {
                 line.repform = f
 
             line.updateLineUp()
-            line.toFormArray()
+            line.syncLineUp()
             line.invalidate()
         }
 

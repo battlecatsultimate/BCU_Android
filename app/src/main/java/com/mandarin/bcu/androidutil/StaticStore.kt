@@ -246,7 +246,6 @@ object StaticStore {
     var LULoading = false
     var LUread = false
     var LUtabPosition = 0
-    var currentForms: ArrayList<Form?> = ArrayList()
     var position = intArrayOf(-1, -1)
     var combos: ArrayList<Combo> = ArrayList()
     var set: BasisSet? = null
@@ -326,7 +325,6 @@ object StaticStore {
         LULoading = false
         LUread = false
         LUtabPosition = 0
-        currentForms.clear()
         position = intArrayOf(-1, -1)
         combos.clear()
         set = null

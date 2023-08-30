@@ -16,7 +16,7 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Unit
 
 class LUUnitListAdapter(context: Context, private val numbers: ArrayList<Identifier<Unit>>) : ArrayAdapter<Identifier<Unit>>(context, R.layout.listlayout, numbers.toTypedArray()) {
-    private class ViewHolder constructor(row: View) {
+    private class ViewHolder(row: View) {
         var id: TextView = row.findViewById(R.id.unitID)
         var title: TextView = row.findViewById(R.id.unitname)
         var image: ImageView = row.findViewById(R.id.uniticon)

@@ -18,7 +18,7 @@ class ComboSubSchListAdapter internal constructor(private val activity: Activity
     private val combocat: BooleanArray = BooleanArray(sch.size)
     private val comid = ArrayList<Int>()
 
-    private class ViewHolder constructor(view: View) {
+    private class ViewHolder(view: View) {
         var category: TextView = view.findViewById(R.id.spinnertext)
 
     }

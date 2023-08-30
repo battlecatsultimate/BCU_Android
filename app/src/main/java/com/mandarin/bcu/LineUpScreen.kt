@@ -229,12 +229,18 @@ class LineUpScreen : AppCompatActivity() {
                     MotionEvent.ACTION_DOWN -> {
                         line.posx = event.x
                         line.posy = event.y
+
                         line.touched = true
 
                         line.invalidate()
 
                         if (!line.drawFloating) {
                             posit = line.getTouchedUnit(event.x, event.y)
+
+                            if (posit != null) {
+                                println(posit.contentToString())
+                            }
+
                             if (posit != null) {
                                 line.prePosit = posit
                             }
@@ -255,7 +261,7 @@ class LineUpScreen : AppCompatActivity() {
                         val deleted = line.getTouchedUnit(event.x, event.y)
 
                         if (deleted != null) {
-                            if (deleted[0] == -100) {
+                            if (deleted[0] == LineUpView.REMOVE) {
                                 StaticStore.position = intArrayOf(-1, -1)
                                 line.updateUnitSetting()
                                 line.updateUnitOrb()
@@ -863,6 +869,8 @@ class LineUpScreen : AppCompatActivity() {
             }
 
             val frag = supportFragmentManager.findFragmentByTag("f$i")
+
+            println(supportFragmentManager.fragments)
 
             if(frag == null) {
                 Log.e("LUAdder:LUTab", "Failed to get fragment : $i")

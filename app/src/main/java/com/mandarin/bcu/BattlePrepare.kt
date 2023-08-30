@@ -190,7 +190,6 @@ class BattlePrepare : AppCompatActivity() {
 
                 prog.isIndeterminate = true
 
-                line.updateLineUp()
                 setname.text = setLUName
 
                 val stage = Identifier.get(data) ?: return@launch
@@ -268,10 +267,14 @@ class BattlePrepare : AppCompatActivity() {
                         MotionEvent.ACTION_DOWN -> {
                             line.posx = event.x
                             line.posy = event.y
+
                             line.touched = true
+
                             line.invalidate()
+
                             if (!line.drawFloating) {
                                 posit = line.getTouchedUnit(event.x, event.y)
+
                                 if (posit != null) {
                                     line.prePosit = posit
                                 }
@@ -280,25 +283,34 @@ class BattlePrepare : AppCompatActivity() {
                         MotionEvent.ACTION_MOVE -> {
                             line.posx = event.x
                             line.posy = event.y
+
                             if (!line.drawFloating) {
                                 line.floatB = line.getUnitImage(line.prePosit[0], line.prePosit[1])
                             }
+
                             line.drawFloating = true
+
+                            line.invalidate()
                         }
                         MotionEvent.ACTION_UP -> {
                             line.checkChange()
+
                             val deleted = line.getTouchedUnit(event.x, event.y)
+
                             if (deleted != null) {
                                 if (deleted[0] == -100) {
                                     StaticStore.position = intArrayOf(-1, -1)
+
                                     line.updateUnitSetting()
                                     line.updateUnitOrb()
                                 } else {
                                     StaticStore.position = deleted
+
                                     line.updateUnitSetting()
                                     line.updateUnitOrb()
                                 }
                             }
+
                             line.drawFloating = false
                             line.touched = false
                         }

@@ -20,7 +20,7 @@ class ComboSchListAdapter internal constructor(private val activity: Activity, p
     private val locateid = arrayOf(intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd), intArrayOf(R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit), intArrayOf(R.string.combo_caninch, R.string.combo_canatk, R.string.combo_canchtime, R.string.combo_bsh), intArrayOf(R.string.combo_initmon, R.string.combo_work, R.string.combo_wal), intArrayOf(R.string.combo_cd, R.string.combo_ac, R.string.combo_xp))
     private val comid: MutableList<String> = ArrayList()
 
-    private class ViewHolder constructor(view: View) {
+    private class ViewHolder(view: View) {
         var category: TextView = view.findViewById(R.id.spinnertext)
     }
 

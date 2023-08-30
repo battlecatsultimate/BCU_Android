@@ -75,13 +75,10 @@ class LUUnitSetting : Fragment() {
 
         f = if (StaticStore.position[0] == -1)
             null
-        else if (StaticStore.position[0] == 100)
+        else if (StaticStore.position[0] == LineUpView.REPLACE)
             line.repform
         else {
-            if (StaticStore.position[0] * 5 + StaticStore.position[1] >= StaticStore.currentForms.size)
-                null
-            else
-                StaticStore.currentForms[StaticStore.position[0] * 5 + StaticStore.position[1]]
+            line.lu.fs[StaticStore.position[0]][StaticStore.position[1]]
         }
 
         if (f == null) {
@@ -425,7 +422,7 @@ class LUUnitSetting : Fragment() {
                 this.f = f.unit.forms[fid % f.unit.forms.size]
 
                 line.updateLineUp()
-                line.toFormArray()
+                line.syncLineUp()
 
                 val lev = spinners[0].selectedItem as Int
                 val levp1 = spinners[1].selectedItem as Int
