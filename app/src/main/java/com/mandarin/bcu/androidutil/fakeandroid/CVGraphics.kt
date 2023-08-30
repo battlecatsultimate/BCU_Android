@@ -114,8 +114,8 @@ class CVGraphics : FakeGraphics {
         if (bimg !is FIBM)
             return
 
-        if (bimg.offsetX != 0 || bimg.offsetY != 0) {
-            c.drawBitmap(bimg.bimg(), (x - bimg.offsetX).toFloat(), (y - bimg.offsetY).toFloat(), bitmapPaint)
+        if (bimg.offsetLeft != 0 || bimg.offsetTop != 0) {
+            c.drawBitmap(bimg.bimg(), (x - bimg.offsetLeft).toFloat(), (y - bimg.offsetTop).toFloat(), bitmapPaint)
         } else {
             c.drawBitmap(bimg.bimg(), x.toFloat(), y.toFloat(), bitmapPaint)
         }
@@ -131,31 +131,31 @@ class CVGraphics : FakeGraphics {
 
         m2.set(m)
 
-        val wr = if (bimg.offsetX != 0) {
+        val wr = if (bimg.offsetLeft != 0) {
             (d + FIBM.CALIBRATOR) / bimg.width
         } else {
             d / bimg.width
         }
 
-        val hr = if (bimg.offsetY != 0) {
+        val hr = if (bimg.offsetTop != 0) {
             (e + FIBM.CALIBRATOR) / bimg.height
         } else {
             e / bimg.height
         }
 
-        if (bimg.offsetX != 0 || bimg.offsetY != 0) {
-            val calibrationX = if (bimg.offsetX == 0)
+        if (bimg.offsetLeft != 0 || bimg.offsetTop != 0) {
+            val calibrationX = if (bimg.offsetLeft == 0)
                 0.0
             else
-                bimg.offsetX + FIBM.CALIBRATOR / 2.0
+                bimg.offsetLeft + FIBM.CALIBRATOR / 2.0
 
-            val calibrationY = if (bimg.offsetY == 0)
+            val calibrationY = if (bimg.offsetTop == 0)
                 0.0
             else
-                bimg.offsetY + FIBM.CALIBRATOR / 2.0
+                bimg.offsetTop + FIBM.CALIBRATOR / 2.0
 
             m2.preTranslate((x - calibrationX).toFloat(), (y - calibrationY).toFloat())
-            m2.preScale(wr.toFloat(), hr.toFloat(), bimg.offsetX.toFloat(), bimg.offsetY.toFloat())
+            m2.preScale(wr.toFloat(), hr.toFloat(), bimg.offsetLeft.toFloat(), bimg.offsetTop.toFloat())
         } else {
             m2.preTranslate(x.toFloat(), y.toFloat())
             m2.preScale(wr.toFloat(), hr.toFloat())

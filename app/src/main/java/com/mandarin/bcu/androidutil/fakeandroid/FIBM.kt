@@ -48,29 +48,20 @@ class FIBM : FakeImage {
 
     private val bit: Bitmap
 
-    val offsetX: Int
-    val offsetY: Int
+    var offsetLeft = 0
+        private set
+    var offsetTop = 0
+        private set
+    private var offsetRight = 0
+    private var offsetBottom = 0
 
     constructor() {
         bit = StaticStore.empty(1, 1)
         bit.recycle()
-
-        offsetX = 0
-        offsetY = 0
     }
 
     constructor(read: Bitmap) {
         bit = read.copy(Bitmap.Config.ARGB_8888, true)
-
-        offsetX = 0
-        offsetY = 0
-    }
-
-    constructor(image: Bitmap, offsetX: Int, offsetY: Int) {
-        bit = image
-
-        this.offsetX = offsetX
-        this.offsetY = offsetY
     }
 
     override fun bimg(): Bitmap {
@@ -79,8 +70,8 @@ class FIBM : FakeImage {
 
     override fun getHeight(): Int {
         return try {
-            if (offsetY != 0) {
-                bit.height - offsetY * 2
+            if (offsetTop != 0 || offsetBottom != 0) {
+                bit.height - offsetTop - offsetBottom
             } else {
                 bit.height
             }
@@ -91,8 +82,8 @@ class FIBM : FakeImage {
 
     override fun getWidth(): Int {
         return try {
-            if (offsetX != 0) {
-                bit.width - offsetX * 2
+            if (offsetLeft != 0 || offsetRight != 0) {
+                bit.width - offsetLeft - offsetRight
             } else {
                 bit.width
             }
@@ -142,7 +133,14 @@ class FIBM : FakeImage {
                     drawBitmap(cropped, offsetLeft.toFloat(), offsetTop.toFloat(), imagePaint)
                 }
 
-                builder.build(appended, offsetLeft, offsetTop) as FIBM
+                val result = builder.build(appended) as FIBM
+
+                result.offsetLeft = offsetLeft
+                result.offsetTop = offsetTop
+                result.offsetBottom = offsetBottom
+                result.offsetRight = offsetRight
+
+                result
             } else {
                 builder.build(cropped) as FIBM
             }
