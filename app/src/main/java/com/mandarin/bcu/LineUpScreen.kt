@@ -202,6 +202,10 @@ class LineUpScreen : AppCompatActivity() {
 
             val line = LineUpView(this@LineUpScreen, lineupPager)
 
+            if (stage != null) {
+                line.attachStageLimit(stage, star)
+            }
+
             line.id = R.id.lineupView
 
             val w = StaticStore.getScreenWidth(this@LineUpScreen, false)

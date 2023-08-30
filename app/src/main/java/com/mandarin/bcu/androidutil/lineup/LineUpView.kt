@@ -1,5 +1,6 @@
 package com.mandarin.bcu.androidutil.lineup
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -17,6 +18,8 @@ import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.battle.BasisSet
 import common.battle.LineUp
 import common.system.files.VFile
+import common.util.stage.Limit
+import common.util.stage.Stage
 import common.util.unit.Form
 
 class LineUpView : View {
@@ -26,11 +29,17 @@ class LineUpView : View {
     }
 
     private val pager: ViewPager2?
+    private var limit: Limit? = null
+    private var price = 0
 
     /**
      * Bitmap list of unit icons
      */
     private val units: Array<Array<Bitmap>>
+    /**
+     * Flag whether draw unusable red box or not
+     */
+    private val isUnusable = Array(2) { Array<Boolean>(5) { false } }
     /**
      * Bitmap of empty icon
      */
@@ -60,6 +69,11 @@ class LineUpView : View {
      * Bitmap from replace icon drawable
      */
     private lateinit var replace: Bitmap
+
+    /**
+     * Bitmap that is used when unit is unusable
+     */
+    private lateinit var unusable: Bitmap
     /**
      * Currently selected lineup
      */
@@ -109,6 +123,9 @@ class LineUpView : View {
     @JvmField
     var repform: Form? = null
 
+    private lateinit var replaceFormIcon: Bitmap
+    private var isReplaceFormUnusable = false
+
     var yellow = false
 
     constructor(context: Context?) : super(context) {
@@ -152,16 +169,29 @@ class LineUpView : View {
         override fun onTick(millisUntilFinished: Long) {}
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 
         getPosition()
 
         val path = "./org/page/uni.png"
+        val originalIcon = VFile.get(path).data.img.bimg() as Bitmap
 
-        empty = StaticStore.getResizebp(VFile.get(path).data.img.bimg() as Bitmap, bw, bw)
+        empty = StaticStore.getResizebp(originalIcon, bw, bw)
         bd = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context, R.drawable.ic_delete_forever_black_24dp), 128f * 2 / 3, 128f * 2 / 3)
         replace = StaticStore.getResizebp(StaticStore.getBitmapFromVector(context, R.drawable.ic_autorenew_black_24dp), 128f * 2 / 5, 128f * 2 / 5)
+
+        val preUnusable = StaticStore.empty(110, 85)
+        val canvas = Canvas(preUnusable)
+
+        val paint = Paint()
+        paint.color = StaticStore.getAttributeColor(context, R.attr.SemiWarningPrimary)
+
+        canvas.drawRect(0f, 0f, originalIcon.width.toFloat(), originalIcon.height.toFloat(), paint)
+
+        unusable = StaticStore.getResizebp(StaticStore.makeIcon(context, preUnusable, 48f), bw, bw)
+
 
         syncLineUp()
 
@@ -190,6 +220,13 @@ class LineUpView : View {
         if (touched) {
             invalidate()
         }
+    }
+
+    fun attachStageLimit(stage: Stage, star: Int) {
+        val container = stage.cont ?: return
+
+        limit = stage.getLim(star)
+        price = container.price
     }
 
     /**
@@ -252,16 +289,14 @@ class LineUpView : View {
      * Draws replacing area using repform
      */
     private fun drawReplaceBox(c: Canvas) {
+        c.drawBitmap(replaceFormIcon, 0f, bw * 2, p)
+
         if (repform == null) {
-            c.drawBitmap(empty, 0f, bw * 2, p)
             c.drawBitmap(replace, bw / 2 - replace.width.toFloat() / 2, bw * 2.5f - replace.height.toFloat() / 2, icon)
-        } else {
-            var icon = repform!!.anim.uni.img.bimg() as Bitmap
+        }
 
-            if (icon.width != icon.height)
-                icon = StaticStore.makeIcon(context, icon, 48f)
-
-            c.drawBitmap(StaticStore.getResizebp(icon, bw, bw), 0f, bw * 2, p)
+        if (isReplaceFormUnusable) {
+            c.drawBitmap(unusable, 0f, bw * 2, p)
         }
     }
 
@@ -272,6 +307,10 @@ class LineUpView : View {
         position.forEachIndexed { x, icons ->
             icons.forEachIndexed { y, coordinate ->
                 c.drawBitmap(units[x][y], coordinate[0], coordinate[1], p)
+
+                if (isUnusable[x][y]) {
+                    c.drawBitmap(unusable, coordinate[0], coordinate[1], p)
+                }
             }
         }
     }
@@ -400,11 +439,37 @@ class LineUpView : View {
             forms.forEachIndexed { y, form ->
                 val icon = form?.anim?.uni?.img?.bimg()
 
-               units[x][y] = if (icon is Bitmap)
-                   StaticStore.getResizebp(StaticStore.makeIcon(context, icon, 48f), bw, bw)
-               else
-                   empty
+                units[x][y] = if (icon is Bitmap)
+                    StaticStore.getResizebp(StaticStore.makeIcon(context, icon, 48f), bw, bw)
+                else
+                    empty
+
+                isUnusable[x][y] = limit != null && lu.fs[x][y] != null && limit?.unusable(lu.fs[x][y].du, price) == true
             }
+        }
+
+        if (repform != null) {
+            val icon = repform?.anim?.uni?.img?.bimg()
+
+            if (icon == null) {
+                replaceFormIcon = StaticStore.getResizebp(StaticStore.makeIcon(context, empty, 48f), bw, bw)
+                isReplaceFormUnusable = false
+
+                return
+            }
+
+            if (icon !is Bitmap) {
+                replaceFormIcon = StaticStore.getResizebp(StaticStore.makeIcon(context, empty, 48f), bw, bw)
+                isReplaceFormUnusable = false
+
+                return
+            }
+
+            replaceFormIcon = StaticStore.getResizebp(StaticStore.makeIcon(context, icon, 48f), bw, bw)
+            isReplaceFormUnusable = limit != null && limit?.unusable(repform?.du, price) == true
+        } else {
+            replaceFormIcon = StaticStore.getResizebp(StaticStore.makeIcon(context, empty, 48f), bw, bw)
+            isReplaceFormUnusable = false
         }
     }
 
@@ -413,6 +478,10 @@ class LineUpView : View {
      */
     fun checkChange() {
         val posit = getTouchedUnit(posx, posy) ?: return
+
+        //No need to check change at all if source was remove
+        if (prePosit[0] == REMOVE || prePosit[1] == REMOVE)
+            return
 
         if (posit[0] == REMOVE && posit[1] == REMOVE) {
             removeUnit(prePosit)
@@ -446,6 +515,7 @@ class LineUpView : View {
         for(i in units.indices) {
             for(j in units[i].indices) {
                 units[i][j] = empty
+                isUnusable[i][j] = false
             }
         }
     }
@@ -454,6 +524,9 @@ class LineUpView : View {
      * Gets unit's icon using position vlaues
      */
     fun getUnitImage(x: Int, y: Int): Bitmap? {
+        if (x == REMOVE)
+            return null
+
         if (x == REPLACE)
             return if (repform != null) {
                 var b = repform!!.anim.uni.img.bimg() as Bitmap
@@ -552,7 +625,7 @@ class LineUpView : View {
         }
     }
 
-    fun syncUnitList() {
+    private fun syncUnitList() {
         Log.i("LineupView", "Updating unit list...")
 
         val adapter = pager?.adapter ?: return
