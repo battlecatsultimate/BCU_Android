@@ -241,7 +241,8 @@ class PackManagement : AppCompatActivity() {
                     Locale.getDefault().language
                     Revalidater.validate(this@PackManagement)
 
-                    dialog.dismiss()
+                    if (isSafeToDismiss(dialog))
+                        dialog.dismiss()
 
                     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
                     handlingPacks = false
@@ -368,7 +369,8 @@ class PackManagement : AppCompatActivity() {
             ins.close()
             fos.close()
 
-            dialog.dismiss()
+            if (isSafeToDismiss(dialog))
+                dialog.dismiss()
 
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
@@ -386,7 +388,8 @@ class PackManagement : AppCompatActivity() {
             Locale.getDefault().language
             Revalidater.validate(this@PackManagement)
 
-            dialog.dismiss()
+            if (isSafeToDismiss(dialog))
+                dialog.dismiss()
 
             val packList = ArrayList<PackData.UserPack>()
 
@@ -439,7 +442,8 @@ class PackManagement : AppCompatActivity() {
             Locale.getDefault().language
             Revalidater.validate(this@PackManagement)
 
-            dialog.dismiss()
+            if (isSafeToDismiss(dialog))
+                dialog.dismiss()
 
             val packList = ArrayList<PackData.UserPack>()
 
@@ -478,5 +482,11 @@ class PackManagement : AppCompatActivity() {
         runOnUiThread {
             st.text = StaticStore.getLoadingText(this, info)
         }
+    }
+
+    private fun isSafeToDismiss(dialog: Dialog) : Boolean {
+        val window = dialog.window ?: return false
+
+        return window.decorView.parent != null
     }
 }
