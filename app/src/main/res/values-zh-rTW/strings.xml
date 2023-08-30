@@ -1009,4 +1009,6 @@
     <string name="main_terminated_dialog_content">Connection has been closed due to unknown reason. This can be because internet status change, or interruption between server and BCU. Please retry with more stable internet status</string>
     <string name="pack_import_denied">Failed to import selected file (Permission denied)</string>
     <string name="pack_import_nofile">Failed to import selected file (No such file)</string>
+    <string name="combo_efficiency">Worker Cat Efficiency</string>
+    <string name="combo_efficiency">Worker Cat Efficiency</string>
 </resources>

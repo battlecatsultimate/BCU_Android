@@ -27,7 +27,7 @@ class ComboListAdapter internal constructor(activity: Activity, private val name
 
     }
 
-    private val comnames = intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd, R.string.combo_caninch, R.string.combo_work, R.string.combo_initmon, R.string.combo_canatk, R.string.combo_canchtime, 0, R.string.combo_wal, R.string.combo_bsh, R.string.combo_cd, R.string.combo_ac, R.string.combo_xp, R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit)
+    private val comnames = intArrayOf(R.string.combo_atk, R.string.combo_hp, R.string.combo_spd, R.string.combo_caninch, R.string.combo_work, R.string.combo_initmon, R.string.combo_canatk, R.string.combo_canchtime, R.string.combo_efficiency, R.string.combo_wal, R.string.combo_bsh, R.string.combo_cd, R.string.combo_ac, R.string.combo_xp, R.string.combo_strag, R.string.combo_md, R.string.combo_res, R.string.combo_kbdis, R.string.combo_sl, R.string.combo_st, R.string.combo_wea, R.string.combo_inc, R.string.combo_wit, R.string.combo_eva, R.string.combo_crit)
     override fun getView(position: Int, view: View?, group: ViewGroup): View {
         val holder: ViewHolder
         val row: View
@@ -95,10 +95,6 @@ class ComboListAdapter internal constructor(activity: Activity, private val name
             24 -> multi = " ( +" + (1 + c.lv) + "% )"
         }
 
-        return if (context.resources.getResourceName(comnames[c.type]) != null) {
-            context.getString(comnames[c.type]) + " Lv. " + (c.lv + 1) + multi
-        } else {
-            "Type ${c.type} Lv. " + (c.lv + 1) + multi
-        }
+        return context.getString(comnames[c.type]) + " Lv. " + (c.lv + 1) + multi
     }
 }
