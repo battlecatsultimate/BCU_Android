@@ -236,6 +236,8 @@ class LineUpView : View {
         } else {
             repform = null
         }
+
+        syncUnitList()
     }
 
     /**
@@ -547,6 +549,16 @@ class LineUpView : View {
 
         if(adapter != null && adapter is LineUpScreen.LUTab) {
             adapter.updateFragment(0)
+        }
+    }
+
+    fun syncUnitList() {
+        Log.i("LineupView", "Updating unit list...")
+
+        val adapter = pager?.adapter ?: return
+
+        if (adapter is LineUpScreen.LUTab) {
+            adapter.syncFragment(0)
         }
     }
 

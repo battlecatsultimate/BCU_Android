@@ -59,6 +59,7 @@ import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import common.CommonStatic
 import common.battle.BasisSet
 import common.pack.UserProfile
+import common.util.stage.Stage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -103,6 +104,23 @@ class LineUpScreen : AppCompatActivity() {
         (CommonStatic.ctx as AContext).updateActivity(this)
 
         setContentView(R.layout.activity_line_up_screen)
+
+        val result = intent
+        val extra = result.extras
+
+        val stage = if (extra != null) {
+            if (extra.containsKey("stage")) {
+                val data = StaticStore.transformIdentifier<Stage>(extra.getString("stage"))
+
+                data?.get()
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+
+        val star = extra?.getInt("star", 0) ?: 0
 
         lifecycleScope.launch {
             //Prepare
@@ -220,7 +238,7 @@ class LineUpScreen : AppCompatActivity() {
                 resultLauncher.launch(intent)
             }
 
-            val tab = LUTab(line)
+            val tab = LUTab(line, stage, star)
 
             line.setOnTouchListener { _: View?, event: MotionEvent ->
                 val posit: IntArray?
@@ -861,7 +879,7 @@ class LineUpScreen : AppCompatActivity() {
         super.onResume()
     }
 
-    inner class LUTab(private val lineup: LineUpView) : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+    inner class LUTab(private val lineup: LineUpView, private val stage: Stage?, private val star: Int) : FragmentStateAdapter(supportFragmentManager, lifecycle) {
         fun updateFragment(i: Int) {
             if(i >= 8) {
                 Log.w("LUAdder::LUTab", "Fragment updating index must not exceed 5!")
@@ -877,6 +895,32 @@ class LineUpScreen : AppCompatActivity() {
             } else {
                 when(i) {
                     0 -> (frag as LUUnitList).update()
+                    1 -> (frag as LUUnitSetting).update()
+                    2 -> (frag as LUOrbSetting).update()
+                    3 -> (frag as LUCastleSetting).update()
+                    4 -> (frag as LUTreasureSetting).update()
+                    5 -> (frag as LUConstruction).update()
+                    6 -> (frag as LUFoundationDecoration).update()
+                    7 -> (frag as LUFoundationDecoration).update()
+                }
+            }
+        }
+
+        fun syncFragment(i: Int) {
+            if(i >= 8) {
+                Log.w("LUAdder::LUTab", "Fragment updating index must not exceed 5!")
+                return
+            }
+
+            val frag = supportFragmentManager.findFragmentByTag("f$i")
+
+            println(supportFragmentManager.fragments)
+
+            if(frag == null) {
+                Log.e("LUAdder:LUTab", "Failed to get fragment : $i")
+            } else {
+                when(i) {
+                    0 -> (frag as LUUnitList).sync()
                     1 -> (frag as LUUnitSetting).update()
                     2 -> (frag as LUOrbSetting).update()
                     3 -> (frag as LUCastleSetting).update()
@@ -914,7 +958,7 @@ class LineUpScreen : AppCompatActivity() {
 
         override fun createFragment(i: Int): Fragment {
             return when(i) {
-                0 -> LUUnitList.newInstance(lineup)
+                0 -> LUUnitList.newInstance(lineup, stage = stage, star = star)
                 1 -> LUUnitSetting.newInstance(lineup)
                 2 -> LUOrbSetting.newInstance(lineup)
                 3 -> LUCastleSetting.newInstance()

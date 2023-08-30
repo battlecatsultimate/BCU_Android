@@ -16,11 +16,11 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Unit
 
 class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<Unit>>) : ArrayAdapter<Identifier<Unit>>(context, R.layout.listlayout, name.toTypedArray()) {
-
-    private class ViewHolder constructor(row: View) {
-        var id: AutoMarquee = row.findViewById(R.id.unitID)
-        var title: TextView = row.findViewById(R.id.unitname)
-        var image: ImageView = row.findViewById(R.id.uniticon)
+    private class ViewHolder(row: View) {
+        val id = row.findViewById<AutoMarquee>(R.id.unitID)!!
+        val title = row.findViewById<TextView>(R.id.unitname)!!
+        val image = row.findViewById<ImageView>(R.id.uniticon)!!
+        val fadeout = row.findViewById<View>(R.id.fadeout)!!
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -29,12 +29,21 @@ class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<U
 
         if(view == null) {
             val inf = LayoutInflater.from(context)
+
             row = inf.inflate(R.layout.listlayout,parent,false)
+
             holder = ViewHolder(row)
+
             row.tag = holder
         } else {
             row = view
             holder = row.tag as ViewHolder
+        }
+
+        if (isEnabled(position)) {
+            holder.fadeout.visibility = View.GONE
+        } else {
+            holder.fadeout.visibility = View.VISIBLE
         }
 
         val u = Identifier.get(name[position]) ?: return row
@@ -51,4 +60,9 @@ class UnitListAdapter(context: Context, private val name: ArrayList<Identifier<U
         return row
     }
 
+    override fun isEnabled(position: Int): Boolean {
+        val u = Identifier.get(name[position]) ?: return false
+
+        return !u.forms.any { f -> f.anim == null }
+    }
 }

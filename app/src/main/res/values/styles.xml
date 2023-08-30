@@ -18,6 +18,8 @@
         <item name="SelectionPrimary">@color/SelectionPrimaryN</item>
         <item name="HintPrimary">@color/HintPrimaryN</item>
         <item name="ErrorPrimary">@color/ErrorPrimaryN</item>
+        <item name="SemiWarningPrimary">@color/SemiWarningPrimary</item>
+        <item name="SemiCautionPrimary">@color/SemiCautionPrimary</item>
         <item name="SemiBackgroundPrimary">@color/SemiBackgroundPrimaryN</item>
         <item name="BorderPrimary">@color/BorderPrimaryN</item>
         <item name="android:windowActionBar">false</item>
@@ -46,6 +48,8 @@
         <item name="SelectionPrimary">@color/SelectionPrimaryN</item>
         <item name="HintPrimary">@color/HintPrimaryN</item>
         <item name="ErrorPrimary">@color/ErrorPrimaryN</item>
+        <item name="SemiWarningPrimary">@color/SemiWarningPrimary</item>
+        <item name="SemiCautionPrimary">@color/SemiCautionPrimary</item>
         <item name="BorderPrimary">@color/BorderPrimaryN</item>
         <item name="SemiBackgroundPrimary">@color/SemiBackgroundPrimaryN</item>
         <item name="android:windowActionBar">false</item>
@@ -74,6 +78,8 @@
         <item name="SelectionPrimary">@color/SelectionPrimaryN</item>
         <item name="HintPrimary">@color/HintPrimaryN</item>
         <item name="ErrorPrimary">@color/ErrorPrimaryN</item>
+        <item name="SemiWarningPrimary">@color/SemiWarningPrimary</item>
+        <item name="SemiCautionPrimary">@color/SemiCautionPrimary</item>
         <item name="BorderPrimary">@color/BorderPrimaryN</item>
         <item name="SemiBackgroundPrimary">@color/SemiBackgroundPrimaryN</item>
         <item name="android:windowActionBar">false</item>
@@ -102,6 +108,8 @@
         <item name="SelectionPrimary">@color/SelectionPrimary</item>
         <item name="HintPrimary">@color/HintPrimary</item>
         <item name="ErrorPrimary">@color/ErrorPrimary</item>
+        <item name="SemiWarningPrimary">@color/SemiWarningPrimary</item>
+        <item name="SemiCautionPrimary">@color/SemiCautionPrimary</item>
         <item name="SemiBackgroundPrimary">@color/SemiBackgroundPrimary</item>
         <item name="BorderPrimary">@color/BorderPrimary</item>
         <item name="android:windowActionBar">false</item>
@@ -130,6 +138,8 @@
         <item name="SelectionPrimary">@color/SelectionPrimary</item>
         <item name="HintPrimary">@color/HintPrimary</item>
         <item name="ErrorPrimary">@color/ErrorPrimary</item>
+        <item name="SemiWarningPrimary">@color/SemiWarningPrimary</item>
+        <item name="SemiCautionPrimary">@color/SemiCautionPrimary</item>
         <item name="SemiBackgroundPrimary">@color/SemiBackgroundPrimary</item>
         <item name="BorderPrimary">@color/BorderPrimary</item>
         <item name="android:windowActionBar">false</item>

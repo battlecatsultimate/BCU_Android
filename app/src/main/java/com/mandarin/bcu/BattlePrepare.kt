@@ -201,22 +201,34 @@ class BattlePrepare : AppCompatActivity() {
                     stname.text = getStageName(data.id)
 
                 val stars = ArrayList<String>()
+
                 var i = 0
+
                 while (i < stm.stars.size) {
                     val s = (i + 1).toString() + " (" + stm.stars[i] + " %)"
+
                     stars.add(s)
                     i++
                 }
+
                 val arrayAdapter = ArrayAdapter(this@BattlePrepare, R.layout.spinneradapter, stars)
+
                 star.adapter = arrayAdapter
-                if (selection < stars.size && selection >= 0) star.setSelection(selection)
+
+                if (selection < stars.size && selection >= 0)
+                    star.setSelection(selection)
+
                 equip.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(this@BattlePrepare, LineUpScreen::class.java)
 
+                        intent.putExtra("stage", JsonEncoder.encode(stage.id).toString())
+                        intent.putExtra("star", star.selectedItemPosition)
+
                         resultLauncher.launch(intent)
                     }
                 })
+
                 sniper.isChecked = BattlePrepare.sniper
 
                 if(BattlePrepare.sniper) {
@@ -263,6 +275,7 @@ class BattlePrepare : AppCompatActivity() {
 
                 line.setOnTouchListener { _: View?, event: MotionEvent ->
                     val posit: IntArray?
+
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             line.posx = event.x

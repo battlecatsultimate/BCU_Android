@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/listlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,9 +12,9 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/def_unit_icon"
         android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/unitname"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/unitID" />
 
     <com.mandarin.bcu.androidutil.supports.AutoMarquee
         android:id="@+id/unitID"
@@ -39,19 +41,28 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="4dp"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
-        android:padding="2dp"
+        android:paddingBottom="4dp"
         android:singleLine="true"
         android:text="Medium Text"
         android:textAppearance="@style/CounterStyle"
         android:textColor="?attr/TextPrimary"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/uniticon"
         app:layout_constraintTop_toBottomOf="@+id/unitID" />
+
+    <View
+        android:id="@+id/fadeout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?attr/SemiBackgroundPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
