@@ -19,40 +19,10 @@ import common.util.unit.Enemy
 
 class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<AbEnemy>>) : ArrayAdapter<Identifier<AbEnemy>>(context, R.layout.listlayout, name.toTypedArray()) {
     inner class ViewHolder(row: View) {
-        private var initialized = false
-
         val id = row.findViewById<TextView>(R.id.unitID)!!
         val title = row.findViewById<TextView>(R.id.unitname)!!
         val image = row.findViewById<ImageView>(R.id.uniticon)!!
-        private val fadeout = row.findViewById<View>(R.id.fadeout)!!
-
-        fun initialize(position: Int) {
-            if (initialized)
-                return
-
-            val e = name[position].get() ?: return
-
-            if(e !is Enemy) {
-                Log.e("ENL", "TYPE : "+e.javaClass.name)
-
-                return
-            }
-
-            fadeout.visibility = View.GONE
-
-            id.text = generateName(name[position])
-
-            title.text = MultiLangCont.get(e) ?: e.names.toString()
-
-            val icon = e.anim?.edi?.img?.bimg()
-
-            if (icon != null)
-                image.setImageBitmap(StaticStore.getResizeb(icon as Bitmap, context, 85f, 32f))
-            else
-                image.setImageBitmap(StaticStore.empty(context, 85f, 32f))
-
-            initialized = true
-        }
+        val fadeout = row.findViewById<View>(R.id.fadeout)!!
     }
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
@@ -69,7 +39,26 @@ class EnemyListAdapter(context: Context, private val name: ArrayList<Identifier<
             holder = row.tag as ViewHolder
         }
 
-        holder.initialize(position)
+        val e = name[position].get() ?: return row
+
+        if(e !is Enemy) {
+            Log.e("ENL", "TYPE : "+e.javaClass.name)
+
+            return row
+        }
+
+        holder.fadeout.visibility = View.GONE
+
+        holder.id.text = generateName(name[position])
+
+        holder.title.text = MultiLangCont.get(e) ?: e.names.toString()
+
+        val icon = e.anim?.edi?.img?.bimg()
+
+        if (icon != null)
+            holder.image.setImageBitmap(StaticStore.getResizeb(icon as Bitmap, context, 85f, 32f))
+        else
+            holder.image.setImageBitmap(StaticStore.empty(context, 85f, 32f))
 
         return row
     }
