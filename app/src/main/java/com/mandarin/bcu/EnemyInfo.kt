@@ -195,7 +195,7 @@ class EnemyInfo : AppCompatActivity() {
                     treasureLayout.requestLayout()
                 }
 
-                if (MultiLangCont.getStatic().EEXP.getCont(e) == null && (e.id.pack == Identifier.DEF || e.description.toString().isBlank())) {
+                if (MultiLangCont.getStatic().EEXP.getCont(e) != null || (e.id.pack != Identifier.DEF && e.description.toString().isNotBlank())) {
                     StaticStore.setAppear(view1, view2, explanationTitle, viewPager)
                 }
 
