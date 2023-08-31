@@ -21,6 +21,9 @@ import common.system.files.VFile
 import common.util.stage.Limit
 import common.util.stage.Stage
 import common.util.unit.Form
+import java.util.Collections
+import kotlin.math.max
+import kotlin.math.min
 
 class LineUpView : View {
     companion object {
@@ -383,16 +386,78 @@ class LineUpView : View {
      * Changes 2 units' position using 2 ints. from is first unit's position, and to is second unit's position
      */
     private fun changeUnitPosition(from: IntArray, to: IntArray) {
-        val fromForm = lu.fs[from[0]][from[1]] ?: return
-        val toForm = lu.fs[to[0]][to[1]]
+        //Pointless move
+        if (from[0] == to[0] && from[1] == to[1])
+            return
 
-        // If toForm turned out to be existing unit
-        if (toForm != null) {
-            lu.fs[from[0]][from[1]] = toForm
-            lu.fs[to[0]][to[1]] = fromForm
-        } else {
-            lu.fs[from[0]][from[1]] = null
-            lu.fs[to[0]][to[1]] = fromForm
+        //If source unit is empty, don't do it
+        lu.fs[from[0]][from[1]] ?: return
+
+        //Check which coordinate is larger
+        val fromIsBig = from[0] > to[0] || from[1] > to[1]
+
+        //Shift units
+        rotateUnit(from, to, fromIsBig)
+    }
+
+    private fun rotateUnit(from: IntArray, to: IntArray, toRight: Boolean) {
+        //Make 2D array into 1D array
+        val unitArray = Array<Form?>(10) {
+            val x = if (it >= 5)
+                1
+            else
+                0
+
+            val y = it - x * 5
+
+            lu.fs[x][y]
+        }
+
+        //Extract units with range of two coordinates
+        val f = from[0] * 5 + from[1]
+        val t = to[0] * 5 + to[1]
+
+        val realFrom = min(f, t)
+        val realTo = max(f, t)
+
+        //For safety
+        if (realTo - realFrom + 1 <= 0) {
+            return
+        }
+
+        val extractedUnitArray = Array<Form?>(realTo - realFrom + 1) {
+            val realIndex = it + realFrom
+
+            val x = if (realIndex >= 5)
+                1
+            else
+                0
+
+            val y = realIndex - x * 5
+
+            lu.fs[x][y]
+        }.toList()
+
+        //Rotate array
+        Collections.rotate(extractedUnitArray, if (toRight) 1 else -1)
+
+        //Inject rotated array into unit array
+        extractedUnitArray.forEachIndexed { index, form ->
+            val realIndex = index + realFrom
+
+            unitArray[realIndex] = form
+        }
+
+        //Inject 1D array into 2D array
+        unitArray.forEachIndexed { index, form ->
+            val x = if (index >= 5)
+                1
+            else
+                0
+
+            val y = index - x * 5
+
+            lu.fs[x][y] = form
         }
     }
 
