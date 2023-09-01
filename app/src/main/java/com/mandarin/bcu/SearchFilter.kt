@@ -21,19 +21,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.adapter.SearchAbilityAdapter
-import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.SearchAbilityAdapter
 import com.mandarin.bcu.androidutil.supports.adapter.SearchTraitAdapter
 import common.CommonStatic
 import common.pack.Identifier
 import common.pack.UserProfile
 import common.util.Data
 import common.util.unit.Trait
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Locale
 
 class SearchFilter : AppCompatActivity() {
     private val rareid = intArrayOf(R.id.schchba, R.id.schchex, R.id.schchr, R.id.schchsr, R.id.schchur, R.id.schchlr)
