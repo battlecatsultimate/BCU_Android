@@ -103,6 +103,8 @@ class BattleSimulation : AppCompatActivity() {
 
         setContentView(R.layout.activity_battle_simulation)
 
+        SoundHandler.initializePlayer(this@BattleSimulation, directPlay = SoundHandler.musicPlay)
+
         val att = window.attributes
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             att.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
@@ -773,8 +775,6 @@ class BattleSimulation : AppCompatActivity() {
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {}
                 })
-
-                SoundHandler.initializePlayer(this@BattleSimulation)
 
                 SoundHandler.MUSIC.volume = 0.01f + shared.getInt("mus_vol", 99) / 100f
 
