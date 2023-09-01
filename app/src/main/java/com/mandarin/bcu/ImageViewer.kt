@@ -194,6 +194,7 @@ class ImageViewer : AppCompatActivity() {
 
                     val width = StaticStore.getScreenWidth(this@ImageViewer, false)
                     val height = StaticStore.getScreenHeight(this@ImageViewer, false)
+
                     val paint = Paint().apply {
                         isFilterBitmap = true
                         isAntiAlias = true
@@ -218,15 +219,15 @@ class ImageViewer : AppCompatActivity() {
                         val totalHeight = groundPart.height + skyPart.height
 
                         //This must take 80% of viewer height
-                        val ratio = height * 0.8 / totalHeight.toDouble()
+                        val ratio = height * 0.8 / totalHeight.toDouble() * (1 + 0.005)
 
                         val w = groundPart.width * ratio
 
                         var i = 0
 
                         while (i < 1 + width / w) {
-                            cv.drawImage(skyPart, w * i, height * 0.1, w, skyPart.height * ratio)
-                            cv.drawImage(groundPart, w * i, height * 0.1 + skyPart.height * ratio, w, groundPart.height * ratio)
+                            cv.drawImage(skyPart, round(w * i), round(height * 0.1), round(w), round(skyPart.height * ratio))
+                            cv.drawImage(groundPart, round(w * i), round(height * 0.1 + skyPart.height * ratio), round(w), round(groundPart.height * ratio))
 
                             i++
                         }
@@ -244,7 +245,7 @@ class ImageViewer : AppCompatActivity() {
                         var i = 0
 
                         while (i < 1 + width / w) {
-                            cv.drawImage(groundPart, w * i, height * 0.1 + groundPart.height * ratio, w, groundPart.height * ratio)
+                            cv.drawImage(groundPart, round(w * i), round(height * 0.1 + groundPart.height * ratio), round(w), round(groundPart.height * ratio))
 
                             i++
                         }
