@@ -4,16 +4,23 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,15 +29,13 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.supports.SingleClick
-import com.mandarin.bcu.androidutil.supports.adapter.StatFilterAdapter
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
+import com.mandarin.bcu.androidutil.supports.SingleClick
+import com.mandarin.bcu.androidutil.supports.adapter.StatFilterAdapter
 import common.CommonStatic
-import java.lang.NumberFormatException
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Locale
 
 class StatSearchFilter : AppCompatActivity() {
     private lateinit var adapter: StatFilterAdapter
@@ -110,13 +115,25 @@ class StatSearchFilter : AppCompatActivity() {
                 StatFilterElement.show = false
                 select.hide()
 
-                val size = StatFilterElement.statFilter.size
+                var index = 0
 
-                StatFilterElement.statFilter.removeIf {
-                    it.delete
+                list.children.forEach { child ->
+                    child.clearFocus()
                 }
 
-                adapter.notifyItemRangeRemoved(0, size)
+                StatFilterElement.statFilter.removeIf {
+                    val deleted = it.delete
+
+                    if (deleted) {
+                        adapter.notifyItemRemoved(index)
+                    } else {
+                        index++
+                    }
+
+                    deleted
+                }
+
+                adapter.notifyItemRangeChanged(0, StatFilterElement.statFilter.size)
             } else {
                 StatFilterElement.show = true
                 select.show()

@@ -30,10 +30,10 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
                 StatFilterElement.CD, StatFilterElement.BARRIER, StatFilterElement.PREATK, StatFilterElement.ATKCOUNT)
     }
 
-    class ViewHolder constructor(row: View) : RecyclerView.ViewHolder(row) {
-        var delete: CheckBox = row.findViewById(R.id.statschdelete)
-        var layout: TextInputLayout = row.findViewById(R.id.statschmulti)
-        var edit: TextInputEditText = row.findViewById(R.id.statschmultiedit)
+    inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
+        var delete = row.findViewById<CheckBox>(R.id.statschdelete)!!
+        var layout = row.findViewById<TextInputLayout>(R.id.statschmulti)!!
+        var edit = row.findViewById<TextInputEditText>(R.id.statschmultiedit)!!
     }
 
     private val time: Int = context.resources.getInteger(android.R.integer.config_shortAnimTime)
@@ -107,16 +107,6 @@ class StatFilterAdapter(private val context: Context, private val unit: Boolean)
     }
 
     private fun fade(v: View) {
-        if(!StatFilterElement.started) {
-            if(StatFilterElement.show) {
-                v.visibility = View.VISIBLE
-            } else {
-                v.visibility = View.GONE
-            }
-
-            return
-        }
-
         if(v.visibility == View.GONE && StatFilterElement.show) {
             v.visibility = View.VISIBLE
 
