@@ -155,7 +155,7 @@ class StatSearchFilter : AppCompatActivity() {
                 if(unit) {
                     var t = StatFilterElement.HP
                     var o = StatFilterElement.OPTION_GREAT
-                    var l = shared.getInt("default_level", 50)-1
+                    var l = shared.getInt("default_level", 50) - 1
 
                     val builder = AlertDialog.Builder(this@StatSearchFilter)
                     val inflater = LayoutInflater.from(this@StatSearchFilter)
@@ -184,7 +184,7 @@ class StatSearchFilter : AppCompatActivity() {
                         opt.add(getString(id))
                     }
 
-                    for(level in 1..50) {
+                    for(level in 1..60) {
                         lev.add(level.toString())
                     }
 
