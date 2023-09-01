@@ -445,9 +445,9 @@ object SoundHandler {
                         } else {
                             timer = null
                         }
-
-                        onReady()
                     }
+
+                    onReady()
                 } else if (playbackState == Player.STATE_ENDED) {
                     onComplete()
                 }
