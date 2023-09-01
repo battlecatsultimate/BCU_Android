@@ -218,7 +218,7 @@
             <TextView
                 android:id="@+id/stginfodif"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
@@ -244,7 +244,7 @@
             <TextView
                 android:id="@+id/stginfocontin"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingStart="4dp"
@@ -259,7 +259,7 @@
             <TextView
                 android:id="@+id/stginfocontinr"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/cell_shape"
                 android:gravity="center"
                 android:paddingTop="12dp"
