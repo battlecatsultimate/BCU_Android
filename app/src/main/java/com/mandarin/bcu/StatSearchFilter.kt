@@ -238,7 +238,7 @@ class StatSearchFilter : AppCompatActivity() {
                                     l = 0
                                 }
 
-                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l+1)) {
+                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l + 1)) {
                                     levspin.setSelection(l, false)
                                     break
                                 } else {
@@ -289,7 +289,7 @@ class StatSearchFilter : AppCompatActivity() {
                                     l = 0
                                 }
 
-                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
+                                if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l + 1)) {
                                     levspin.setSelection(l, false)
                                     break
                                 } else {
@@ -360,7 +360,7 @@ class StatSearchFilter : AppCompatActivity() {
                             l = 0
                         }
 
-                        if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
+                        if(StatFilterElement.canBeAdded(StatFilterAdapter.unitData[typespin.selectedItemPosition], optspin.selectedItemPosition, l + 1)) {
                             levspin.setSelection(l)
                             break
                         } else {
@@ -387,7 +387,7 @@ class StatSearchFilter : AppCompatActivity() {
                 } else {
                     var t = StatFilterElement.HP
                     var o = StatFilterElement.OPTION_GREAT
-                    var l = 100
+                    var m = 100
 
                     val builder = AlertDialog.Builder(this@StatSearchFilter)
                     val inflater = LayoutInflater.from(this@StatSearchFilter)
@@ -462,15 +462,15 @@ class StatSearchFilter : AppCompatActivity() {
                             }
 
                             while(true) {
-                                if(l == Int.MAX_VALUE) {
-                                    l = 0
+                                if(m == Int.MAX_VALUE) {
+                                    m = 0
                                 }
 
-                                if(StatFilterElement.canBeAdded(StatFilterAdapter.enemyData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
-                                    multie.setText(l.toString())
+                                if(StatFilterElement.canBeAdded(StatFilterAdapter.enemyData[typespin.selectedItemPosition], optspin.selectedItemPosition, m)) {
+                                    multie.setText(m.toString())
                                     break
                                 } else {
-                                    l++
+                                    m++
                                 }
                             }
                         }
@@ -513,11 +513,11 @@ class StatSearchFilter : AppCompatActivity() {
                             o = position
 
                             while(true) {
-                                if(StatFilterElement.canBeAdded(StatFilterAdapter.enemyData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
-                                    multie.setText(l.toString())
+                                if(StatFilterElement.canBeAdded(StatFilterAdapter.enemyData[typespin.selectedItemPosition], optspin.selectedItemPosition, m)) {
+                                    multie.setText(m.toString())
                                     break
                                 } else {
-                                    l++
+                                    m++
                                 }
                             }
                         }
@@ -542,21 +542,21 @@ class StatSearchFilter : AppCompatActivity() {
                     }
 
                     while(true) {
-                        if(l == Int.MAX_VALUE) {
-                            l = 0
+                        if(m == Int.MAX_VALUE) {
+                            m = 0
                         }
 
-                        if(StatFilterElement.canBeAdded(StatFilterAdapter.enemyData[typespin.selectedItemPosition], optspin.selectedItemPosition, l)) {
-                            multie.setText(l.toString())
+                        if(StatFilterElement.canBeAdded(StatFilterAdapter.enemyData[typespin.selectedItemPosition], optspin.selectedItemPosition, m)) {
+                            multie.setText(m.toString())
                             break
                         } else {
-                            l++
+                            m++
                         }
                     }
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            StatFilterElement(StatFilterAdapter.enemyData[t], o, l+1)
+                            StatFilterElement(StatFilterAdapter.enemyData[t], o, m+1)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)
                             dialog.dismiss()
@@ -609,7 +609,7 @@ class StatSearchFilter : AppCompatActivity() {
                                         addb.setTextColor(StaticStore.getAttributeColor(this@StatSearchFilter, R.attr.TextPrimary))
                                     }
 
-                                    l = value
+                                    m = value
                                 }
                             }
                         }
@@ -621,7 +621,7 @@ class StatSearchFilter : AppCompatActivity() {
                     })
 
                     multie.post {
-                        multie.setSelection(l.toString().length)
+                        multie.setSelection(m.toString().length)
                     }
 
                     dialog.show()

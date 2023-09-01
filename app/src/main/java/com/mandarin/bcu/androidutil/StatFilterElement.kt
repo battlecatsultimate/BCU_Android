@@ -55,7 +55,7 @@ class StatFilterElement(val type: Int, val option: Int, val lev: Int) {
 
         fun canBeAdded(type: Int, option: Int, lev: Int) : Boolean {
             for(element in statFilter) {
-                if(element.type == type && element.option == option && element.lev == lev + 1) {
+                if(element.type == type && element.option == option && element.lev == lev) {
                     return false
                 }
             }
