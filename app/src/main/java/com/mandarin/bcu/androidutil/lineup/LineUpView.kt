@@ -579,7 +579,11 @@ class LineUpView : View {
     private fun clearAllUnit() {
         for(i in units.indices) {
             for(j in units[i].indices) {
-                units[i][j] = empty
+                units[i][j] = if (this::empty.isInitialized) {
+                    empty
+                } else {
+                    StaticStore.empty(1, 1)
+                }
                 isUnusable[i][j] = false
             }
         }
