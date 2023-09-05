@@ -1002,11 +1002,13 @@
     <string name="config_perfanim">In Animation Viewer</string>
     <string name="main_timeout_dialog_content">It seems internet speed is too low, or BCU took too long time to connect to server. Please try again with another internet configuration</string>
     <string name="main_timeout_dialog_title">Connection Timeout</string>
-    <string name="main_link_dialog_content">BCU failed to connect to server for checking updates. This can be because of your proxy setting. Please change your proxy setting</string>
+    <string name="main_proxy_dialog_content">BCU failed to connect to server for checking updates. This can be because of your proxy setting. Please change your proxy setting</string>
     <string name="main_proxy_dialog_title">Connecting Failure</string>
     <string name="main_terminated_dialog_title">Connection Terminated</string>
     <string name="main_terminated_dialog_content">Connection has been closed due to unknown reason. This can be because internet status change, or interruption between server and BCU. Please retry with more stable internet status</string>
     <string name="pack_import_denied">Failed to import selected file (Permission denied)</string>
     <string name="pack_import_nofile">Failed to import selected file (No such file)</string>
     <string name="combo_efficiency">Worker Cat Efficiency</string>
+    <string name="main_denied_dialog_title">Connection Denied/Failed</string>
+    <string name="main_denied_dialog_content">Connection failed because server is either unavailable, or denied. This can be because server is under maintenance, or server denied because of proxy settings</string>
 </resources>

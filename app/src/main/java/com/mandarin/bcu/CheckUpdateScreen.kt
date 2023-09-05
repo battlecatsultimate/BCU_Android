@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.api.client.http.HttpResponseException
 import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
@@ -54,11 +55,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.ConnectException
 import java.net.SocketException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.Locale
-import javax.net.ssl.SSLHandshakeException
 
 open class CheckUpdateScreen : AppCompatActivity() {
     private val langFolder = arrayOf("en/", "jp/", "kr/", "zh/", "fr/", "it/", "es/", "de/", "th/")
@@ -201,6 +201,8 @@ open class CheckUpdateScreen : AppCompatActivity() {
                 try {
                     withContext(Dispatchers.IO) {
                         val updateJson = UpdateCheck.checkUpdate()
+
+                        0/0
 
                         val langShared = getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
                         val musicShared = getSharedPreferences(StaticStore.MUSIC, Context.MODE_PRIVATE)
@@ -350,7 +352,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                         if(!canContinue) {
                                             close = true
 
-                                            finish()
+                                            if (!hasAllAsset || langNeed) {
+                                                finish()
+                                            }
                                         }
 
                                         it.resume(0) { _ -> }
@@ -361,84 +365,46 @@ open class CheckUpdateScreen : AppCompatActivity() {
                             }
                         }
                     }
-                } catch (e: SocketException) {
+                } catch (e: Exception) {
+                    val titleID: Int
+                    val messageID: Int
+
+                    when(e) {
+                        is SocketTimeoutException,
+                        is SocketException -> {
+                            titleID = R.string.main_timeout_dialog_title
+                            messageID = R.string.main_timeout_dialog_content
+                        }
+                        is UnknownHostException -> {
+                            titleID = R.string.main_proxy_dialog_title
+                            messageID = R.string.main_proxy_dialog_content
+                        }
+                        is HttpResponseException,
+                        is org.apache.http.client.HttpResponseException -> {
+                            titleID = R.string.main_denied_dialog_title
+                            messageID = R.string.main_denied_dialog_content
+                        }
+                        else -> {
+                            titleID = R.string.main_terminated_dialog_title
+                            messageID = R.string.main_terminated_dialog_content
+                        }
+                    }
+
                     suspendCancellableCoroutine<Int> {
                         val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
 
                         internetDialog.setCancelable(false)
 
-                        internetDialog.setTitle(R.string.main_timeout_dialog_title)
+                        internetDialog.setTitle(titleID)
 
-                        internetDialog.setMessage(R.string.main_timeout_dialog_content)
-
-                        internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
-                            close = true
-
-                            startActivity(intent)
-                            finish()
-
-                            it.resume(0) { _ -> }
-                        }
-
-                        internetDialog.show()
-                    }
-                } catch (e: ConnectException) {
-                    suspendCancellableCoroutine {
-                        val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
-
-                        internetDialog.setCancelable(false)
-
-                        internetDialog.setTitle(R.string.main_timeout_dialog_title)
-
-                        internetDialog.setMessage(R.string.main_timeout_dialog_content)
+                        internetDialog.setMessage(messageID)
 
                         internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
                             close = true
 
-                            startActivity(intent)
-                            finish()
-
-                            it.resume(0) { _ -> }
-                        }
-
-                        internetDialog.show()
-                    }
-                } catch (e: UnknownHostException) {
-                    suspendCancellableCoroutine {
-                        val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
-
-                        internetDialog.setCancelable(false)
-
-                        internetDialog.setTitle(R.string.main_timeout_dialog_title)
-
-                        internetDialog.setMessage(R.string.main_timeout_dialog_content)
-
-                        internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
-                            close = true
-
-                            startActivity(intent)
-                            finish()
-
-                            it.resume(0) { _ -> }
-                        }
-
-                        internetDialog.show()
-                    }
-                } catch (e: SSLHandshakeException) {
-                    suspendCancellableCoroutine {
-                        val internetDialog = android.app.AlertDialog.Builder(this@CheckUpdateScreen)
-
-                        internetDialog.setCancelable(false)
-
-                        internetDialog.setTitle(R.string.main_terminated_dialog_title)
-
-                        internetDialog.setMessage(R.string.main_terminated_dialog_content)
-
-                        internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
-                            close = true
-
-                            startActivity(intent)
-                            finish()
+                            if (!hasAllAsset || langNeed) {
+                                finish()
+                            }
 
                             it.resume(0) { _ -> }
                         }
@@ -447,7 +413,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
                     }
                 }
 
-                if (close) {
+                if (close && (!hasAllAsset || langNeed)) {
                     return@launch
                 }
             } else if (!hasAllAsset || langNeed) {
@@ -469,7 +435,6 @@ open class CheckUpdateScreen : AppCompatActivity() {
                     internetDialog.setPositiveButton(R.string.main_file_ok) { _, _ ->
                         close = true
 
-                        startActivity(intent)
                         finish()
 
                         it.resume(0) { _ -> }
@@ -477,10 +442,10 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
                     internetDialog.show()
                 }
-            }
 
-            if (close)
-                return@launch
+                if (close)
+                    return@launch
+            }
 
             if (bound) {
                 unbindService(serviceConnector)
