@@ -556,7 +556,7 @@ class StatSearchFilter : AppCompatActivity() {
 
                     addb.setOnClickListener(object : SingleClick() {
                         override fun onSingleClick(v: View?) {
-                            StatFilterElement(StatFilterAdapter.enemyData[t], o, m+1)
+                            StatFilterElement(StatFilterAdapter.enemyData[t], o, m)
 
                             adapter.notifyItemInserted(StatFilterElement.statFilter.size-1)
                             dialog.dismiss()

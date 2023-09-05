@@ -14,7 +14,15 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.CompoundButton
+import android.widget.EditText
+import android.widget.HorizontalScrollView
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +44,7 @@ import common.util.Data
 import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
 import common.util.unit.Enemy
-import java.util.*
+import java.util.Locale
 
 class StageSearchFilter : AppCompatActivity() {
     companion object {
@@ -371,7 +379,6 @@ class StageSearchFilter : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
             }
-
         })
 
         bhedit.setOnEditorActionListener { _: TextView?, id: Int, _: KeyEvent? ->
