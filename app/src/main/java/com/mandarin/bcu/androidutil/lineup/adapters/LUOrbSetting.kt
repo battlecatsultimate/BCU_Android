@@ -455,15 +455,13 @@ class LUOrbSetting : Fragment() {
         if (!this::line.isInitialized)
             return
 
-        f = if (StaticStore.position[0] == -1)
+        val temporaryForm = if (StaticStore.position[0] == -1)
             return
         else if (StaticStore.position[0] == LineUpView.REPLACE)
-            line.repform ?: return
+            line.repform
         else {
             line.lu.fs[StaticStore.position[0]][StaticStore.position[1]]
         }
-
-        updateOrbData()
 
         val orbs = v.findViewById<Spinner>(R.id.orbspinner)
         val type = v.findViewById<Spinner>(R.id.orbtype)
@@ -473,6 +471,21 @@ class LUOrbSetting : Fragment() {
         val remove = v.findViewById<FloatingActionButton>(R.id.orbremove)
         val image = v.findViewById<ImageView>(R.id.orbimage)
         val desc = v.findViewById<TextView>(R.id.orbdesc)
+
+        if (temporaryForm == null) {
+            setDisappear(orbs, type, trait, grade, add, remove, image, desc)
+
+            synchronized(obj) {
+                isUpdating = false
+                obj.notifyAll()
+            }
+
+            return
+        } else {
+            f = temporaryForm
+        }
+
+        updateOrbData()
 
         if(f.orbs == null) {
             setDisappear(orbs, type, trait, grade, add, remove, image, desc)
