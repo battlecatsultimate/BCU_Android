@@ -202,8 +202,6 @@ open class CheckUpdateScreen : AppCompatActivity() {
                     withContext(Dispatchers.IO) {
                         val updateJson = UpdateCheck.checkUpdate()
 
-                        0/0
-
                         val langShared = getSharedPreferences(StaticStore.LANG, Context.MODE_PRIVATE)
                         val musicShared = getSharedPreferences(StaticStore.MUSIC, Context.MODE_PRIVATE)
 
