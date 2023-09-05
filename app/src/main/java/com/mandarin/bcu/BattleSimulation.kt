@@ -877,7 +877,7 @@ class BattleSimulation : AppCompatActivity() {
 
         paused = true
 
-        if (SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.currentMediaItem != null && SoundHandler.musicPlay) {
+        if (SoundHandler.isMusicPossible && SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.currentMediaItem != null && SoundHandler.musicPlay) {
             SoundHandler.MUSIC.pause()
         }
 
@@ -894,7 +894,7 @@ class BattleSimulation : AppCompatActivity() {
         if(CommonStatic.ctx is AContext)
             (CommonStatic.ctx as AContext).updateActivity(this)
 
-        if (SoundHandler.isMusicPossible && !SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.currentMediaItem != null && SoundHandler.musicPlay) {
+        if (SoundHandler.isMusicPossible && SoundHandler.isMusicPossible && !SoundHandler.MUSIC.isPlaying && SoundHandler.MUSIC.currentMediaItem != null && SoundHandler.musicPlay) {
             SoundHandler.MUSIC.play()
 
             SoundHandler.timer?.resume()
