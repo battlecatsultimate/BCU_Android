@@ -660,6 +660,8 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
             state.setText(R.string.main_file_read)
 
+            var close = false
+
             withContext(Dispatchers.IO) {
                 DefineItf().init(this@CheckUpdateScreen)
 
@@ -677,13 +679,16 @@ open class CheckUpdateScreen : AppCompatActivity() {
                     startActivity(intent)
                     finish()
 
-                    return@withContext
+                    close = true
                 }
 
                 StaticStore.getLang(shared.getInt("Language", 0))
 
                 StaticStore.init = true
             }
+
+            if (close)
+                return@launch
 
             if(PackConflict.conflicts.isEmpty()) {
                 if (!MainActivity.isRunning) {

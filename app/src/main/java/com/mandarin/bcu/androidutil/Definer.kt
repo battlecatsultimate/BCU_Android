@@ -40,9 +40,9 @@ object Definer {
                 CommonStatic.ctx.initProfile()
 
                 text.accept(context.getString(R.string.main_file_read))
-                AssetLoader.load(prog)
 
                 try {
+                    AssetLoader.load(prog)
                     UserProfile.getBCData().load({ t -> text.accept(StaticStore.getLoadingText(context, t)) }, prog)
                 } catch (e: Exception) {
                     throw AssetException(e, "E/Definer::define - Failed to read asset")
