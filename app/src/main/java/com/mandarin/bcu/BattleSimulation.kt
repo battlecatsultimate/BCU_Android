@@ -256,7 +256,10 @@ class BattleSimulation : AppCompatActivity() {
                 }
 
                 skipFrame.setOnClickListener {
-                    battleView.painter.bf.update()
+                    repeat(if (CommonStatic.getConfig().performanceModeBattle) 2 else 1) {
+                        battleView.painter.bf.update()
+                    }
+
                     battleView.invalidate()
                 }
 
