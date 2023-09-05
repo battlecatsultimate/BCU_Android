@@ -245,13 +245,13 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                             if(battleEnd)
                                 return@postDelayed
 
-                            SoundHandler.setBGM(painter.bf.sb.st.mus1) {
-                                if (!activity.paused) {
+                            SoundHandler.setBGM(painter.bf.sb.st.mus1, onReady = {
+                                if (!activity.paused && SoundHandler.musicPlay) {
                                     SoundHandler.MUSIC.play()
                                 } else {
                                     SoundHandler.MUSIC.pause()
                                 }
-                            }
+                            })
                         }, Data.MUSIC_DELAY.toLong())
                         musicChanged = true
                     }
