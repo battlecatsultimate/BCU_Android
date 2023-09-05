@@ -170,7 +170,9 @@ class PackManagement : AppCompatActivity() {
             StaticStore.setDisappear(list, swipe, more)
 
             //Load Data
-            Definer.define(this@PackManagement, { _ -> }, { t -> runOnUiThread { st.text = t }})
+            withContext(Dispatchers.IO) {
+                Definer.define(this@PackManagement, { _ -> }, { t -> runOnUiThread { st.text = t }})
+            }
 
             //Load UI
             more.setOnClickListener(object : SingleClick() {
