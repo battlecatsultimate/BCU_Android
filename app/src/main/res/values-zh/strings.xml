@@ -88,7 +88,7 @@
     <string name="down_zip_rea">準備解壓縮…</string>
     <string name="main_down_init">初始下載</string>
     <string name="main_file_read">讀取檔案…</string>
-    <string name="def_schreset_cont">Reset Search Settng</string>
+    <string name="def_schreset_cont">Reset Search Setting</string>
     <string name="def_unit_icon">Unit icon</string>
     <string name="hb">擊退</string>
     <string name="unit_info_hp">體力</string>
@@ -253,7 +253,7 @@
     <string name="needconnect">需要網路連線</string>
     <string name="config_skip_text">跳過檢查文字更新</string>
     <string name="config_check_up">檢查更新</string>
-    <string name="def_map_coount">Map_Coount</string>
+    <string name="def_map_coount">Map_Count</string>
     <string name="def_map_name">Map_Name</string>
     <string name="map_list_stages">" 關卡"</string>
     <string name="stg_info_enemimg">載入敵人圖像…</string>

@@ -87,7 +87,7 @@
     <string name="down_zip_rea">추출 준비중…</string>
     <string name="main_down_init">추가 데이터 필요</string>
     <string name="main_file_read">파일 읽는중…</string>
-    <string name="def_schreset_cont">Reset Search Settng</string>
+    <string name="def_schreset_cont">Reset Search Setting</string>
     <string name="def_unit_icon">Unit icon</string>
     <string name="hb">히트백</string>
     <string name="unit_info_hp">체력</string>
@@ -254,7 +254,7 @@
     <string name="config_skip_text">언어파일 업데이트 확인 건너뛰기</string>
     <string name="config_check_up">업데이트 확인</string>
     <string name="def_map_name">Map_Name</string>
-    <string name="def_map_coount">Map_Coount</string>
+    <string name="def_map_coount">Map_Count</string>
     <string name="map_list_stages">" 스테이지"</string>
     <string name="stg_info_enemimg">적 이미지 불러오는 중…</string>
     <string name="stg_info_enemname">적 이름 불러오는 중…</string>

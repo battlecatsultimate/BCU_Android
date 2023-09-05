@@ -906,7 +906,7 @@
     <string name="config_delay">Unit deploy button delay</string>
     <string name="sch_bar">Colossus</string>
     <string name="sch_abi_bk">Colossus Slayer</string>
-    <string name="fruit18">Gold Cafruit Seed</string>
+    <string name="fruit18">Gold Catfruit Seed</string>
     <string name="sch_abi_ck">Soulstrike</string>
     <string name="eff_back">Back</string>
     <string name="reset">Reset</string>
@@ -957,7 +957,7 @@
     <string name="config_reallv">Perform realistic leveling in battle</string>
     <string name="lineup_base">Foundation</string>
     <string name="lineup_decoration">Decoration</string>
-    <string name="lineup_slfd">Slow Beam Foundatoin Level</string>
+    <string name="lineup_slfd">Slow Beam Foundation Level</string>
     <string name="lineup_iwfd">Iron Wall Foundation Level</string>
     <string name="lineup_thfd">Thunderbolt Foundation Level</string>
     <string name="lineup_wtfd">Waterblast Foundation Level</string>

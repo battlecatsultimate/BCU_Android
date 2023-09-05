@@ -87,7 +87,7 @@
     <string name="down_zip_rea">Preparing Extracting…</string>
     <string name="main_down_init">Initial Download Required</string>
     <string name="main_file_read">Reading Files…</string>
-    <string name="def_schreset_cont">Reset Search Settng</string>
+    <string name="def_schreset_cont">Reset Search Setting</string>
     <string name="def_unit_icon">Unit icon</string>
     <string name="unit_info_id">ID</string>
     <string name="unit_info_trait">Trait</string>
@@ -253,7 +253,7 @@
     <string name="config_skip_text">Skip checking text updates</string>
     <string name="config_check_up">Check Updates</string>
     <string name="def_map_name">Map_Name</string>
-    <string name="def_map_coount">Map_Coount</string>
+    <string name="def_map_coount">Map_Count</string>
     <string name="map_list_stages">" Stages"</string>
     <string name="stg_info_enemimg">Loading Enemy Images…</string>
     <string name="stg_info_enemname">Loading Enemy Names…</string>
@@ -431,7 +431,7 @@
     <string name="combo_wit">Witch Kill</string>
     <string name="combo_eva">EVA Kill</string>
     <string name="combo_crit">Critical</string>
-    <string name="combo_occu">Occupance</string>
+    <string name="combo_occu">Occupancy</string>
     <string name="combo_atk">Attack</string>
     <string name="combo_spd">Speed</string>
     <string name="combo_xp">XP</string>
@@ -627,7 +627,7 @@
     <string name="pack_conf_guide_igndesc">This action will make app ignore conflict, but be aware that this action may make app crash</string>
     <string name="pack_conf_parent">Pack requires parent packs</string>
     <string name="pack_conf_sameID">Several packs have same ID</string>
-    <string name="pack_conf_select">Selct Action</string>
+    <string name="pack_conf_select">Select Action</string>
     <string name="pack_conf_warning">This action can make app crash</string>
     <string name="pack_conf_cantsolve">Can\'t solve</string>
     <string name="unit_info_forms">_</string>
@@ -906,7 +906,7 @@
     <string name="config_delay">Unit deploy button delay</string>
     <string name="sch_bar">Colossal</string>
     <string name="sch_abi_bk">Colossus Slayer</string>
-    <string name="fruit18">Gold Cafruit Seed</string>
+    <string name="fruit18">Gold Catfruit Seed</string>
     <string name="sch_abi_ck">Soulstrike</string>
     <string name="eff_back">Back</string>
     <string name="reset">Reset</string>
@@ -957,7 +957,7 @@
     <string name="config_reallv">Perform realistic leveling in battle</string>
     <string name="lineup_base">Foundation</string>
     <string name="lineup_decoration">Decoration</string>
-    <string name="lineup_slfd">Slow Beam Foundatoin Level</string>
+    <string name="lineup_slfd">Slow Beam Foundation Level</string>
     <string name="lineup_iwfd">Iron Wall Foundation Level</string>
     <string name="lineup_thfd">Thunderbolt Foundation Level</string>
     <string name="lineup_wtfd">Waterblast Foundation Level</string>
