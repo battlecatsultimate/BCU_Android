@@ -38,6 +38,7 @@ import com.mandarin.bcu.androidutil.io.AssetDownloadService
 import com.mandarin.bcu.androidutil.io.AssetException
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
+import com.mandarin.bcu.androidutil.io.LanguageException
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import com.mandarin.bcu.androidutil.supports.AnimatorConst
 import com.mandarin.bcu.androidutil.supports.CustomAnimator
@@ -675,6 +676,17 @@ open class CheckUpdateScreen : AppCompatActivity() {
                     intent.putExtra("reasonPhrase", getString(R.string.err_reason_asset))
                     intent.putExtra("solution", getString(R.string.err_solution_asset))
                     intent.putExtra("errorCode", StaticStore.ERR_ASSET)
+
+                    startActivity(intent)
+                    finish()
+
+                    close = true
+                } catch (languageError: LanguageException) {
+                    val intent = Intent(this@CheckUpdateScreen, ErrorScreen::class.java)
+
+                    intent.putExtra("reasonPhrase", getString(R.string.err_reason_lang))
+                    intent.putExtra("solution", getString(R.string.err_solution_lang))
+                    intent.putExtra("errorCode", StaticStore.ERR_LANG)
 
                     startActivity(intent)
                     finish()

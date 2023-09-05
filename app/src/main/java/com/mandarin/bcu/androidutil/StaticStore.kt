@@ -96,6 +96,8 @@ object StaticStore {
 
     /** asset error code **/
     const val ERR_ASSET = "asset"
+    /** language data error code **/
+    const val ERR_LANG = "language"
 
     /**
      * This value prevents button is performed less than every 1 sec<br></br>

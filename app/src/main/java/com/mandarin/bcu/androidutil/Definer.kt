@@ -12,6 +12,7 @@ import com.mandarin.bcu.androidutil.io.AssetException
 import com.mandarin.bcu.androidutil.io.DefineItf
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import com.mandarin.bcu.androidutil.io.LangLoader
+import com.mandarin.bcu.androidutil.io.LanguageException
 import com.mandarin.bcu.androidutil.pack.PackConflict
 import common.CommonStatic
 import common.io.assets.AssetLoader
@@ -83,16 +84,20 @@ object Definer {
             if (StaticStore.treasure == null)
                 StaticStore.readTreasureIcon()
 
-            if (StaticStore.unitlang == 1) {
-                LangLoader.readUnitLang(context)
-            }
+            try {
+                if (StaticStore.unitlang == 1) {
+                    LangLoader.readUnitLang(context)
+                }
 
-            if(StaticStore.enemeylang == 1) {
-                LangLoader.readEnemyLang(context)
-            }
+                if(StaticStore.enemeylang == 1) {
+                    LangLoader.readEnemyLang(context)
+                }
 
-            if(StaticStore.stagelang == 1) {
-                LangLoader.readStageLang(context)
+                if(StaticStore.stagelang == 1) {
+                    LangLoader.readStageLang(context)
+                }
+            } catch (e: NumberFormatException) {
+                throw LanguageException(e, "E/Definer::define - failed to read language")
             }
 
             if (StaticStore.fruit == null) {
@@ -220,8 +225,12 @@ object Definer {
                 }
             }
 
-            if(StaticStore.medalnumber != 0 && StaticStore.medallang == 1) {
-                LangLoader.readMedalLang(context)
+            try {
+                if(StaticStore.medalnumber != 0 && StaticStore.medallang == 1) {
+                    LangLoader.readMedalLang(context)
+                }
+            } catch (e: NumberFormatException) {
+                throw LanguageException(e, "E/Definer::define - failed to read language")
             }
 
             if(SoundHandler.play.isEmpty()) {

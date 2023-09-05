@@ -6,18 +6,19 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
 import com.mandarin.bcu.androidutil.io.DefineItf
+import com.mandarin.bcu.androidutil.supports.DataResetHandler
 import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import common.CommonStatic
@@ -83,13 +84,22 @@ class ErrorScreen : AppCompatActivity() {
             solve.setOnClickListener(object: SingleClick() {
                 override fun onSingleClick(v: View?) {
                     when (errorCode) {
-                        "asset" -> {
+                        StaticStore.ERR_ASSET -> {
                             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                             val uri = Uri.fromParts("package", packageName, null)
 
                             intent.setData(uri)
 
                             startActivity(intent)
+                            finish()
+                        }
+                        StaticStore.ERR_LANG -> {
+                            val handler = DataResetHandler(getString(R.string.datareset_lang), getString(R.string.datareset_langreset), DataResetHandler.TYPE.LANG)
+
+                            handler.performReset(this@ErrorScreen)
+
+                            StaticStore.showShortMessage(this@ErrorScreen, R.string.datareset_restart)
+
                             finish()
                         }
                     }
