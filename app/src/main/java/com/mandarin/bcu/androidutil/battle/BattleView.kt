@@ -238,22 +238,27 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
                 if (!musicChanged) {
                     if (haveToChangeMusic()) {
-                        if (SoundHandler.MUSIC.isPlaying)
-                            SoundHandler.MUSIC.pause()
+                        if (painter.bf.sb.st.mus1 != null) {
+                            musicChanged = true
+                        } else {
+                            if (SoundHandler.MUSIC.isPlaying)
+                                SoundHandler.MUSIC.pause()
 
-                        this@BattleView.postDelayed({
-                            if(battleEnd)
-                                return@postDelayed
+                            this@BattleView.postDelayed({
+                                if(battleEnd)
+                                    return@postDelayed
 
-                            SoundHandler.setBGM(painter.bf.sb.st.mus1, onReady = {
-                                if (!activity.paused && SoundHandler.musicPlay) {
-                                    SoundHandler.MUSIC.play()
-                                } else {
-                                    SoundHandler.MUSIC.pause()
-                                }
-                            })
-                        }, Data.MUSIC_DELAY.toLong())
-                        musicChanged = true
+                                SoundHandler.setBGM(painter.bf.sb.st.mus1, onReady = {
+                                    if (!activity.paused && SoundHandler.musicPlay) {
+                                        SoundHandler.MUSIC.play()
+                                    } else {
+                                        SoundHandler.MUSIC.pause()
+                                    }
+                                })
+                            }, Data.MUSIC_DELAY.toLong())
+
+                            musicChanged = true
+                        }
                     }
                 }
 
