@@ -126,8 +126,6 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         loadSE(SoundHandler.SE_BASE, 22)
         loadSE(SoundHandler.SE_UI, 10, 15, 19, 27, 28)
 
-        var animationError = false
-
         for (fs in painter.bf.sb.b.lu.fs) {
             for (f in fs) {
                 f ?: continue
