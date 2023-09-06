@@ -102,7 +102,7 @@ class FIBM : FakeImage {
 
     override fun getSubimage(i: Int, j: Int, k: Int, l: Int): FIBM? {
         return try {
-            val cropped = Bitmap.createBitmap(bit, i, j, max(1, k), max(1, l))
+            val cropped = Bitmap.createBitmap(bit, max(0, i), max(0, j), max(1, k), max(1, l))
 
             val offsetLeft = if (isSegment(cropped, Snap.LEFT)) {
                 0
