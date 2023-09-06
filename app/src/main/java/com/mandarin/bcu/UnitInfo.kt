@@ -41,7 +41,7 @@ import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.TranslationAnimator
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
-import com.mandarin.bcu.androidutil.unit.adapters.UnitinfPager
+import com.mandarin.bcu.androidutil.unit.adapters.UnitInfoPager
 import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
 import common.CommonStatic
 import common.io.json.JsonEncoder
@@ -483,7 +483,7 @@ class UnitInfo : AppCompatActivity() {
         }
 
         override fun createFragment(position: Int): Fragment {
-            return UnitinfPager.newInstance(position, data, names)
+            return UnitInfoPager.newInstance(position, data, names)
         }
     }
 

@@ -50,11 +50,11 @@ import common.util.unit.Level
 import common.util.unit.Unit
 import java.util.Objects
 
-class UnitinfPager : Fragment() {
+class UnitInfoPager : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(form: Int, data: Identifier<Unit>, names: Array<String>): UnitinfPager {
-            val pager = UnitinfPager()
+        fun newInstance(form: Int, data: Identifier<Unit>, names: Array<String>): UnitInfoPager {
+            val pager = UnitInfoPager()
 
             val bundle = Bundle()
 
@@ -190,10 +190,10 @@ class UnitinfPager : Fragment() {
 
         val name = MultiLangCont.get(f) ?: f.names.toString()
 
-        val uni = f.anim.uni
+        val tempIcon = f.anim?.uni?.img?.bimg()
 
-        var icon = if(uni != null) {
-            f.anim.uni.img.bimg() as Bitmap
+        var icon = if(tempIcon is Bitmap) {
+            tempIcon
         } else {
             StaticStore.empty(StaticStore.dptopx(48f, activity),StaticStore.dptopx(48f, activity))
         }
@@ -572,20 +572,20 @@ class UnitinfPager : Fragment() {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
 
-                this@UnitinfPager.level.setLevel(level)
+                this@UnitInfoPager.level.setLevel(level)
 
-                unithp.text = s.getHP(f, t, talents, this@UnitinfPager.level)
+                unithp.text = s.getHP(f, t, talents, this@UnitInfoPager.level)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getAtk(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getAtk(f, t, talents, this@UnitInfoPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitInfoPager.level)
                 } else {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getTotAtk(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getTotAtk(f, t, talents, this@UnitInfoPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitInfoPager.level)
                 }
 
                 if(CommonStatic.getConfig().realLevel) {
@@ -605,20 +605,20 @@ class UnitinfPager : Fragment() {
                 val level = unitlevel.selectedItem as Int
                 val levelp = unitlevelp.selectedItem as Int
 
-                this@UnitinfPager.level.setPlusLevel(levelp)
+                this@UnitInfoPager.level.setPlusLevel(levelp)
 
-                unithp.text = s.getHP(f, t, talents, this@UnitinfPager.level)
+                unithp.text = s.getHP(f, t, talents, this@UnitInfoPager.level)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getAtk(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getAtk(f, t, talents, this@UnitInfoPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitInfoPager.level)
                 } else {
                     if (unitatkb.text == activity.getString(R.string.unit_info_atk))
-                        unitatk.text = s.getAtk(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getAtk(f, t, talents, this@UnitInfoPager.level)
                     else
-                        unitatk.text = s.getDPS(f, t, talents, this@UnitinfPager.level)
+                        unitatk.text = s.getDPS(f, t, talents, this@UnitInfoPager.level)
                 }
 
                 if(CommonStatic.getConfig().realLevel) {
