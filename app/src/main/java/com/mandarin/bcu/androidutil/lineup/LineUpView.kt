@@ -655,7 +655,11 @@ class LineUpView : View {
                         }
                     }
 
-                    var b = f.anim.uni.img.bimg() as Bitmap
+                    var b = f.anim?.uni?.img?.bimg()
+
+                    if (b !is Bitmap) {
+                        b = empty
+                    }
 
                     if (b.width != b.height)
                         b = StaticStore.getResizebp(StaticStore.makeIcon(context, b, 48f), bw, bw)
