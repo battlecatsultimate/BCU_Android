@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import com.mandarin.bcu.MainActivity
+import com.mandarin.bcu.PackConflictSolve
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.pack.PackConflict
@@ -54,6 +55,7 @@ class PackConfSolver(c: Activity) : CoroutineTask<String>() {
         }
 
         PackConflict.conflicts.clear()
+        PackConflictSolve.data.clear()
 
         canDo = true
     }

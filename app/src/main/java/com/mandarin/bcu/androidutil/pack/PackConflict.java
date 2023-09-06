@@ -141,15 +141,11 @@ public class PackConflict {
 
                     String p = confPack.get(0);
 
-                    String path;
-
-                    if(p.endsWith(".pack.bcuzip")) {
-                        path = StaticStore.getExternalPack(c);
-                    } else {
-                        Log.e("PackConflict", "Invalid File : "+p);
-
-                        return;
+                    if (!p.endsWith(".pack.bcuzip")) {
+                        p += ".pack.bcuzip";
                     }
+
+                    String path = StaticStore.getExternalPack(c);
 
                     File f = new File(path, p);
 
@@ -212,15 +208,11 @@ public class PackConflict {
 
                     String p = confPack.get(0);
 
-                    String path;
-
-                    if(p.endsWith(".pack.bcuzip")) {
-                        path = StaticStore.getExternalPack(c);
-                    } else {
-                        Log.e("PackConflict", "Invalid File : "+p);
-
-                        return;
+                    if (!p.endsWith(".pack.bcuzip")) {
+                        p += ".pack.bcuzip";
                     }
+
+                    String path = StaticStore.getExternalPack(c);
 
                     File f = new File(path, p);
 
@@ -269,7 +261,7 @@ public class PackConflict {
 
             for(String p : confPack) {
                 if(ocp.contains(p) && id == ID_SAME_ID) {
-                    return ""+i+"\\"+ocp.indexOf(p);
+                    return i+"\\"+ocp.indexOf(p);
                 }
             }
         }
@@ -294,7 +286,7 @@ public class PackConflict {
     @NonNull
     @Override
     public String toString() {
-        if(confPack.size() != 0) {
+        if(!confPack.isEmpty()) {
             return "CONFLICT : "+confPack.get(0)+" | ID : "+id;
         }
 

@@ -344,74 +344,74 @@ class PackManagement : AppCompatActivity() {
 
         dialog.show()
 
-        CoroutineScope(Dispatchers.Main).launch {
-            val total = ins.available().toLong()
-            var prog = 0L
-            val df = DecimalFormat("#.##")
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val total = ins.available().toLong()
+                var prog = 0L
+                val df = DecimalFormat("#.##")
 
-            val b = ByteArray(65536)
-            var len: Int
+                val b = ByteArray(65536)
+                var len: Int
 
-            while(ins.read(b).also { len = it } != -1) {
-                fos.write(b, 0, len)
+                while(ins.read(b).also { len = it } != -1) {
+                    fos.write(b, 0, len)
 
-                prog += len
+                    prog += len
 
-                val msg = if(total >= 50000000) {
-                    "${byteToMB(prog, df)} MB / ${byteToMB(total, df)} MB (${(prog*100.0/total).toInt()}%)"
-                } else {
-                    "${byteToKB(prog, df)} KB / ${byteToKB(total, df)} KB (${(prog*100.0/total).toInt()}%)"
+                    val msg = if(total >= 50000000) {
+                        "${byteToMB(prog, df)} MB / ${byteToMB(total, df)} MB (${(prog*100.0/total).toInt()}%)"
+                    } else {
+                        "${byteToKB(prog, df)} KB / ${byteToKB(total, df)} KB (${(prog*100.0/total).toInt()}%)"
+                    }
+
+                    runOnUiThread {
+                        progress.text = msg
+                    }
                 }
 
-                runOnUiThread {
-                    progress.text = msg
+                ins.close()
+                fos.close()
+
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+                handlingPacks = false
+
+                withContext(Dispatchers.Main) {
+                    title.setText(R.string.pack_reload)
+
+                    progress.visibility = View.GONE
                 }
-            }
 
-            ins.close()
-            fos.close()
+                StaticStore.resetUserPacks()
 
-            if (isSafeToDismiss(dialog))
-                dialog.dismiss()
+                Definer.define(this@PackManagement, { _ -> }, this@PackManagement::updateText)
 
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                Locale.getDefault().language
+                Revalidater.validate(this@PackManagement)
 
-            handlingPacks = false
+                if (isSafeToDismiss(dialog))
+                    dialog.dismiss()
 
-            runOnUiThread {
-                title.setText(R.string.pack_reload)
-                progress.visibility = View.GONE
-            }
+                val packList = ArrayList<PackData.UserPack>()
 
-            StaticStore.resetUserPacks()
+                for(p in UserProfile.getUserPacks()) {
+                    packList.add(p)
+                }
 
-            Definer.define(this@PackManagement, { _ -> }, this@PackManagement::updateText)
+                withContext(Dispatchers.Main) {
+                    list.adapter = PackManagementAdapter(this@PackManagement, packList)
+                }
 
-            Locale.getDefault().language
-            Revalidater.validate(this@PackManagement)
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                handlingPacks = false
 
-            if (isSafeToDismiss(dialog))
-                dialog.dismiss()
+                withContext(Dispatchers.Main) {
+                    swipe?.isRefreshing = false
 
-            val packList = ArrayList<PackData.UserPack>()
-
-            for(p in UserProfile.getUserPacks()) {
-                packList.add(p)
-            }
-
-            runOnUiThread {
-                list.adapter = PackManagementAdapter(this@PackManagement, packList)
-            }
-
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-            handlingPacks = false
-
-            runOnUiThread {
-                swipe?.isRefreshing = false
-            }
-
-            if(PackConflict.conflicts.isNotEmpty()) {
-                StaticStore.showShortSnack(findViewById(R.id.pmanlayout), R.string.pack_manage_warn)
+                    if(PackConflict.conflicts.isNotEmpty()) {
+                        StaticStore.showShortSnack(findViewById(R.id.pmanlayout), R.string.pack_manage_warn)
+                    }
+                }
             }
         }
     }

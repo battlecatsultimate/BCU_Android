@@ -56,6 +56,14 @@ class AContext : Context {
             list.add(path[path.size-1])
 
             PackConflict(PackConflict.ID_CORRUPTED, list, true)
+        } else if(str.contains("failed to load pack ")) {
+            val packDescription = str.split(" - ")
+
+            val list = ArrayList<String>()
+
+            list.add(packDescription[packDescription.size - 1])
+
+            PackConflict(PackConflict.ID_CORRUPTED, list, true)
         }
 
         val wac = c

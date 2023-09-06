@@ -126,17 +126,19 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
         loadSE(SoundHandler.SE_BASE, 22)
         loadSE(SoundHandler.SE_UI, 10, 15, 19, 27, 28)
 
+        var animationError = false
+
         for (fs in painter.bf.sb.b.lu.fs) {
             for (f in fs) {
-                if (f != null) {
-                    if (f.anim.uni.img.height == f.anim.uni.img.width) {
-                        val cut = ImgCut.newIns("./org/data/uni.imgcut")
-                        f.anim.uni.setCut(cut)
-                        f.anim.uni.img = f.anim.uni.img
-                        f.anim.check()
-                    } else {
-                        f.anim.check()
-                    }
+                f ?: continue
+
+                if (f.anim.uni.img.height == f.anim.uni.img.width) {
+                    val cut = ImgCut.newIns("./org/data/uni.imgcut")
+                    f.anim.uni.setCut(cut)
+                    f.anim.uni.img = f.anim.uni.img
+                    f.anim.check()
+                } else {
+                    f.anim.check()
                 }
             }
         }

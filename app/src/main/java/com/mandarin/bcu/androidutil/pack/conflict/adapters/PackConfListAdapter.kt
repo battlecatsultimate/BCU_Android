@@ -5,7 +5,11 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mandarin.bcu.PackConflictSolve
 import com.mandarin.bcu.R
@@ -192,6 +196,9 @@ class PackConfListAdapter(context: Context, name: ArrayList<String>) : ArrayAdap
                                     pc.action = PackConflict.ACTION_IGNORE
                                 }
                             }
+
+                            println(PackConflictSolve.data)
+                            println(posit)
 
                             PackConflictSolve.data[posit] = pc.action
                         }

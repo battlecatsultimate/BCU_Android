@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Opts {
 	public static final String ERR_PACK_READ = "Error in reading pack ";
+	public static final String ERR_FAIL = "failed to load pack ";
 	public static final String ERR_PACK_SAME_ID = " conflict with pack ";
 	public static final String ERR_PACK_PARENT = " require parent packs: ";
 
@@ -44,6 +45,7 @@ public class Opts {
 
 	public static void loadErr(String text) {
 		Log.e("Opts", text);
+
 		if(text.contains(ERR_PACK_PARENT)) {
 			String[] info = text.split(ERR_PACK_PARENT);
 
@@ -67,6 +69,13 @@ public class Opts {
 
 			List<String> confs = new ArrayList<>();
 			confs.add(op);
+
+			new PackConflict(PackConflict.ID_CORRUPTED, confs, true);
+		} else if (text.contains(ERR_FAIL)) {
+			String[] op = text.split(" - ");
+
+			List<String> confs = new ArrayList<>();
+			confs.add(op[op.length - 1]);
 
 			new PackConflict(PackConflict.ID_CORRUPTED, confs, true);
 		}
