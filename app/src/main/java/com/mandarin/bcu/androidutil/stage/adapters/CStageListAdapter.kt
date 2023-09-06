@@ -12,12 +12,11 @@ import common.util.lang.MultiLangCont
 import common.util.stage.SCDef
 import common.util.stage.Stage
 import common.util.unit.AbEnemy
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Locale
 
 class CStageListAdapter(activity: Activity, private val stages: Array<Identifier<Stage>>) : ArrayAdapter<Identifier<Stage>>(activity, R.layout.stage_list_layout, stages) {
 
-    private class ViewHolder constructor(row: View) {
+    private class ViewHolder(row: View) {
         var name: TextView = row.findViewById(R.id.map_list_name)
         var enemy: TextView = row.findViewById(R.id.map_list_coutns)
     }
@@ -28,8 +27,11 @@ class CStageListAdapter(activity: Activity, private val stages: Array<Identifier
 
         if(view == null) {
             val inf = LayoutInflater.from(context)
+
             row = inf.inflate(R.layout.map_list_layout,parent,false)
+
             holder = ViewHolder(row)
+
             row.tag = holder
         } else {
             row = view
@@ -43,7 +45,7 @@ class CStageListAdapter(activity: Activity, private val stages: Array<Identifier
         if(holder.name.text.isBlank())
             holder.name.text = getStageName(position)
 
-        val ids = getid(st.data)
+        val ids = getID(st.data)
 
         val lang = Locale.getDefault().language
 
@@ -58,23 +60,33 @@ class CStageListAdapter(activity: Activity, private val stages: Array<Identifier
         return row
     }
 
-    private fun getid(stage: SCDef): List<Identifier<AbEnemy>> {
+    private fun getID(stage: SCDef): List<Identifier<AbEnemy>> {
         val result: MutableList<SCDef.Line?> = ArrayList()
-        val data = reverse(stage.datas)
-        for (datas in data) {
+
+        val dataSet = reverse(stage.datas)
+
+        for (data in dataSet) {
+            data ?: continue
+
             if (result.isEmpty()) {
-                result.add(datas)
+                result.add(data)
+
                 continue
             }
-            val id = datas!!.enemy
+
+            val id = data.enemy ?: continue
+
             if (haveSame(id, result)) {
-                result.add(datas)
+                result.add(data)
             }
         }
+
         val ids: MutableList<Identifier<AbEnemy>> = ArrayList()
-        for (datas in result) {
-            datas ?: continue
-            ids.add(datas.enemy)
+
+        for (data in result) {
+            data ?: continue
+
+            ids.add(data.enemy)
         }
         return ids
     }
