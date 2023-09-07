@@ -498,7 +498,9 @@ class BattleSimulation : AppCompatActivity() {
                             finish()
                         }
 
-                        dialog.show()
+                        if (!isDestroyed && !isFinishing) {
+                            dialog.show()
+                        }
                     } else {
                         P.stack.clear()
 
@@ -567,7 +569,10 @@ class BattleSimulation : AppCompatActivity() {
                                 CVGraphics.clear()
                                 dialog.dismiss()
                             }
-                            dialog.show()
+
+                            if (!isDestroyed && !isFinishing) {
+                                dialog.show()
+                            }
                         } else {
                             battleView.reopenStage(battleView.painter.bf.sb.st, false)
                         }

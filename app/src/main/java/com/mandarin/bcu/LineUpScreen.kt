@@ -481,7 +481,9 @@ class LineUpScreen : AppCompatActivity() {
 
                         cancel.setOnClickListener { dialog.dismiss() }
 
-                        dialog.show()
+                        if (!isDestroyed && !isFinishing) {
+                            dialog.show()
+                        }
 
                         return@setOnMenuItemClickListener true
                     }
@@ -531,7 +533,9 @@ class LineUpScreen : AppCompatActivity() {
 
                         cancel.setOnClickListener { dialog.dismiss() }
 
-                        dialog.show()
+                        if (!isDestroyed && !isFinishing) {
+                            dialog.show()
+                        }
 
                         return@setOnMenuItemClickListener true
                     }
@@ -654,7 +658,11 @@ class LineUpScreen : AppCompatActivity() {
                             dialog.dismiss()
                         }
                         cancel.setOnClickListener { dialog.dismiss() }
-                        dialog.show()
+
+                        if (!isDestroyed && !isFinishing) {
+                            dialog.show()
+                        }
+
                         return@setOnMenuItemClickListener true
                     }
                     R.id.lineup_rename_lineup -> {
@@ -685,7 +693,11 @@ class LineUpScreen : AppCompatActivity() {
                             dialog.dismiss()
                         }
                         cancel.setOnClickListener { dialog.dismiss() }
-                        dialog.show()
+
+                        if (!isDestroyed && !isFinishing) {
+                            dialog.show()
+                        }
+
                         return@setOnMenuItemClickListener true
                     }
                     R.id.lineup_clone_set -> {

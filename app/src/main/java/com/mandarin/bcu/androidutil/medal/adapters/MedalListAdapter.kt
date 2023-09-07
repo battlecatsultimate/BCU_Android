@@ -4,13 +4,20 @@ import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
+import android.widget.ArrayAdapter
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.SingleClick
-import kotlin.collections.ArrayList
 
 class MedalListAdapter(private val activity: Activity, private val num: Int, width: Int, private val imgwh: Float, lines: Array<String?>, private val order: ArrayList<Int>) : ArrayAdapter<String?>(activity, R.layout.medal_layout, lines) {
     private val height: Int = width / num - StaticStore.dptopx(4f, activity)
@@ -72,7 +79,10 @@ class MedalListAdapter(private val activity: Activity, private val num: Int, wid
                         lp.width = WindowManager.LayoutParams.MATCH_PARENT
                         lp.height = WindowManager.LayoutParams.WRAP_CONTENT
                         dialog.window?.attributes = lp
-                        dialog.show()
+
+                        if (!activity.isDestroyed && !activity.isFinishing) {
+                            dialog.show()
+                        }
                     }
                 })
                 holder.layout.addView(icon)

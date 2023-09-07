@@ -271,7 +271,10 @@ open class ConfigScreen : AppCompatActivity() {
                     title.text = getString(R.string.config_lang_reload)
 
                     dialog.setCancelable(false)
-                    dialog.show()
+
+                    if (!isDestroyed && !isFinishing) {
+                        dialog.show()
+                    }
 
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
@@ -579,7 +582,10 @@ open class ConfigScreen : AppCompatActivity() {
                 val dialog = builder.create()
 
                 dialog.setCancelable(true)
-                dialog.show()
+
+                if (!isDestroyed && !isFinishing) {
+                    dialog.show()
+                }
 
                 active.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
@@ -879,7 +885,9 @@ open class ConfigScreen : AppCompatActivity() {
 
                 modes[0].isChecked = true
 
-                dialog.show()
+                if (!isDestroyed && !isFinishing) {
+                    dialog.show()
+                }
 
                 dialog.window?.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
 

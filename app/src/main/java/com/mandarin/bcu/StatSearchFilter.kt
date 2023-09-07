@@ -383,7 +383,9 @@ class StatSearchFilter : AppCompatActivity() {
                         }
                     })
 
-                    dialog.show()
+                    if (!isDestroyed && !isFinishing) {
+                        dialog.show()
+                    }
                 } else {
                     var t = StatFilterElement.HP
                     var o = StatFilterElement.OPTION_GREAT
@@ -624,7 +626,9 @@ class StatSearchFilter : AppCompatActivity() {
                         multie.setSelection(m.toString().length)
                     }
 
-                    dialog.show()
+                    if (!isDestroyed && !isFinishing) {
+                        dialog.show()
+                    }
                 }
             }
         })

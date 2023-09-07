@@ -176,7 +176,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                         }
                     })
 
-                    dialog.show()
+                    if (!isDestroyed && !isFinishing) {
+                        dialog.show()
+                    }
                 }
             }
 

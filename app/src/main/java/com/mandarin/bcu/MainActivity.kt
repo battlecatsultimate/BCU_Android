@@ -226,7 +226,10 @@ class MainActivity : AppCompatActivity() {
                 val dialog = builder.create()
 
                 dialog.setCancelable(true)
-                dialog.show()
+
+                if (!isDestroyed && !isFinishing) {
+                    dialog.show()
+                }
 
                 no.setOnClickListener {
                     deleter(upload)

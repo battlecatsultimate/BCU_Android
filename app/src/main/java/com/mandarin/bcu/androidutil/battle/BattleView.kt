@@ -505,7 +505,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                         }
                     })
 
-                    dialog.show()
+                    if (!activity.isDestroyed && !activity.isFinishing) {
+                        dialog.show()
+                    }
 
                     return
                 }
@@ -557,7 +559,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     }
                 })
 
-                dialog.show()
+                if (!activity.isDestroyed && !activity.isFinishing) {
+                    dialog.show()
+                }
 
                 return
             }
@@ -622,7 +626,9 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             dismissed = true
         }
 
-        dialog.show()
+        if (!activity.isDestroyed && !activity.isFinishing) {
+            dialog.show()
+        }
 
         postDelayed({
             if(!dismissed && !activity.isDestroyed)

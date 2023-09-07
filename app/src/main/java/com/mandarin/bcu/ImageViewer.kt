@@ -803,7 +803,9 @@ class ImageViewer : AppCompatActivity() {
 
                                     val dialog = builder.create()
 
-                                    dialog.show()
+                                    if (!isDestroyed && !isFinishing) {
+                                        dialog.show()
+                                    }
 
                                     dialog.setOnDismissListener {
                                         StaticStore.unfixOrientation(this@ImageViewer)
@@ -900,7 +902,9 @@ class ImageViewer : AppCompatActivity() {
 
                             val dialog = builder.create()
 
-                            dialog.show()
+                            if (!isDestroyed && !isFinishing) {
+                                dialog.show()
+                            }
                         }
                     }
 

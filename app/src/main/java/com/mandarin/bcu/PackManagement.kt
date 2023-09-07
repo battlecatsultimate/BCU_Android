@@ -115,7 +115,9 @@ class PackManagement : AppCompatActivity() {
                             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
                         }
 
-                        dialog.show()
+                        if (!isDestroyed && !isFinishing) {
+                            dialog.show()
+                        }
                     }
 
 
@@ -233,7 +235,9 @@ class PackManagement : AppCompatActivity() {
 
                 dialog.setCancelable(false)
 
-                dialog.show()
+                if (!isDestroyed && !isFinishing) {
+                    dialog.show()
+                }
 
                 CoroutineScope(Dispatchers.IO).launch {
                     StaticStore.resetUserPacks()
@@ -342,7 +346,9 @@ class PackManagement : AppCompatActivity() {
 
         dialog.setCancelable(false)
 
-        dialog.show()
+        if (!isDestroyed && !isFinishing) {
+            dialog.show()
+        }
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
@@ -434,7 +440,9 @@ class PackManagement : AppCompatActivity() {
 
         dialog.setCancelable(false)
 
-        dialog.show()
+        if (!isDestroyed && !isFinishing) {
+            dialog.show()
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             StaticStore.resetUserPacks()

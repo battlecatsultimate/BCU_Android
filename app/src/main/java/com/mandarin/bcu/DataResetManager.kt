@@ -133,7 +133,9 @@ class DataResetManager : AppCompatActivity() {
 
                 dialog.setCancelable(false)
 
-                dialog.show()
+                if (!isDestroyed && !isFinishing) {
+                    dialog.show()
+                }
 
                 dialogReset.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {

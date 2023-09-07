@@ -103,7 +103,9 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
 
                     StaticStore.fixOrientation(ac)
 
-                    dialog.show()
+                    if (!ac.isDestroyed && !ac.isFinishing) {
+                        dialog.show()
+                    }
                 }
                 R.id.packshare -> {
                     if(!f.exists()) {
