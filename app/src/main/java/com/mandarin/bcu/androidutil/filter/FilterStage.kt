@@ -11,8 +11,6 @@ import common.util.lang.MultiLangCont
 import common.util.stage.MapColc
 import common.util.stage.Stage
 import common.util.unit.AbEnemy
-import java.util.*
-import kotlin.collections.ArrayList
 
 object FilterStage {
     fun setFilter(name: String, stmname: String, enemies: ArrayList<Identifier<AbEnemy>>, enemorand: Boolean, music: String, bg: String, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
@@ -167,6 +165,8 @@ object FilterStage {
 
     private fun contains(src: Identifier<AbEnemy>, target: ArrayList<Identifier<AbEnemy>>) : Boolean {
         for(id in target) {
+            id.pack ?: continue
+
             if(id.equals(src)) {
                 return true
             }
