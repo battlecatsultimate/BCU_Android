@@ -1025,9 +1025,9 @@ class ImageViewer : AppCompatActivity() {
                         entity.anim.anims
                     }
                     else -> {
-                        return res
+                        null
                     }
-                }
+                } ?: return res
 
                 animationTypes.forEachIndexed { index, _ ->
                     if(index == 4 && animationTypes.size == 5)
