@@ -275,8 +275,8 @@ class LUUnitSetting : Fragment() {
 
             spinners[0].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
-                    val lev = spinners[0].selectedItem as Int
-                    val levp = spinners[1].selectedItem as Int
+                    val lev = (spinners[0].selectedItem ?: 1) as Int
+                    val levp = (spinners[1].selectedItem ?: 0) as Int
 
                     level.setLevel(lev)
 
