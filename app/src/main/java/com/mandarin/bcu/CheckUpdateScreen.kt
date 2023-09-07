@@ -697,8 +697,6 @@ open class CheckUpdateScreen : AppCompatActivity() {
                 }
 
                 StaticStore.getLang(shared.getInt("Language", 0))
-
-                StaticStore.init = true
             }
 
             if (close)
