@@ -1012,8 +1012,6 @@ class BattleSimulation : AppCompatActivity() {
                             }
                         }
                     }
-
-                    println("$form = ${level.lv} + ${level.plusLv} | ${level.talents.contentToString()}")
                 }
             }
         }
