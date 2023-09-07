@@ -507,7 +507,10 @@ class LineUpView : View {
                 units[x][y] = if (icon is Bitmap)
                     StaticStore.getResizebp(StaticStore.makeIcon(context, icon, 48f), bw, bw)
                 else
-                    empty
+                    if (this::empty.isInitialized)
+                        empty
+                    else
+                        StaticStore.empty(1, 1)
 
                 isUnusable[x][y] = limit != null && lu.fs[x][y] != null && limit?.unusable(lu.fs[x][y].du, price) == true
             }
