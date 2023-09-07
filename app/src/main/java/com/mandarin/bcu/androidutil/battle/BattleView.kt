@@ -238,7 +238,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
                 if (!musicChanged) {
                     if (haveToChangeMusic()) {
-                        if (painter.bf.sb.st.mus1 != null) {
+                        if (painter.bf.sb.st.mus1 == null) {
                             musicChanged = true
                         } else {
                             if (SoundHandler.MUSIC.isPlaying)
