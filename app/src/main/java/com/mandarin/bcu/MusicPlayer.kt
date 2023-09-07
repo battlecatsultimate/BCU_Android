@@ -223,7 +223,7 @@ class MusicPlayer : AppCompatActivity() {
 
                                             StaticStore.musicData.add(m.id)
 
-                                            if (!it.isCancelled)
+                                            if (!it.isCompleted)
                                                 it.resume(0) { }
                                         })
                                     }
