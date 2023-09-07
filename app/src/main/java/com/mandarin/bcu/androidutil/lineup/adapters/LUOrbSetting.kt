@@ -912,7 +912,7 @@ class LUOrbSetting : Fragment() {
 
         for(i in Interpret.TRAIT.indices) {
             if(((trait shr i) and 1) > 0) {
-                r.append(Interpret.TRAIT[i]).append("/ ")
+                r.append(getString(Interpret.TRAIT[i])).append("/ ")
             }
         }
 
