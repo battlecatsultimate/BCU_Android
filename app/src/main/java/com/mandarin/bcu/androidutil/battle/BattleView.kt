@@ -130,11 +130,13 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             for (f in fs) {
                 f ?: continue
 
+                f.anim.uni.check()
+
                 if (f.anim.uni.img.height == f.anim.uni.img.width) {
                     val cut = ImgCut.newIns("./org/data/uni.imgcut")
                     f.anim.uni.setCut(cut)
-                    f.anim.uni.check()
                     f.anim.uni.img = f.anim.uni.img
+
                     f.anim.check()
                 } else {
                     f.anim.check()
