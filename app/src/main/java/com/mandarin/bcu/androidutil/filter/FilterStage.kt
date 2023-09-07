@@ -60,13 +60,13 @@ object FilterStage {
                     if(!mus && s.mus0 != null && s.mus0.id != -1) {
                         val m0 = s.mus0.pack + " - " + Data.trio(s.mus0.id)
 
-                        mus = mus || m0 == music
+                        mus = m0 == music
                     }
 
                     if(!mus && s.mus1 != null && s.mus1.id != -1) {
                         val m1 = s.mus1.pack + " - " + Data.trio(s.mus1.id)
 
-                        mus = mus || m1 == music
+                        mus = m1 == music
                     }
 
                     var backg = bg.isEmpty()
@@ -74,7 +74,7 @@ object FilterStage {
                     if(!backg && s.bg != null && s.bg.id != -1) {
                         val b = s.bg.pack + " - " + Data.trio(s.bg.id)
 
-                        backg = backg || bg == b
+                        backg = bg == b
                     }
 
                     val stars = stm.stars.size > star
