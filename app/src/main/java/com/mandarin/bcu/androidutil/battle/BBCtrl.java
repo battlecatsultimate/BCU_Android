@@ -18,9 +18,9 @@ public class BBCtrl extends BattleBox.BBPainter {
     public static final int ACTION_LINEUP_CHANGE_DOWN = 20;
 
     private final float dpi;
-    private final double cutout;
+    private final float cutout;
 
-    public BBCtrl(BattleBox.OuterBox bip, SBCtrl bas, BattleBox bb, float dpi, double cutout) {
+    public BBCtrl(BattleBox.OuterBox bip, SBCtrl bas, BattleBox bb, float dpi, float cutout) {
         super(bip, bas, bb);
         ctrl = bas;
         this.dpi = dpi;
@@ -34,11 +34,11 @@ public class BBCtrl extends BattleBox.BBPainter {
         if (action == MotionEvent.ACTION_UP) {
             int w = box.getWidth();
             int h = box.getHeight();
-            double hr = unir;
-            double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
+            float hr = unir;
+            float term = hr * aux.slot[0].getImg().getWidth() * 0.2f;
 
             if(CommonStatic.getConfig().twoRow) {
-                double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
+                float termh = hr * aux.slot[0].getImg().getHeight() * 0.1f;
 
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 5; j++) {
@@ -101,11 +101,11 @@ public class BBCtrl extends BattleBox.BBPainter {
             int w = box.getWidth();
             int h = box.getHeight();
 
-            double hr = unir;
-            double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
+            float hr = unir;
+            float term = hr * aux.slot[0].getImg().getWidth() * 0.2f;
 
             if(CommonStatic.getConfig().twoRow) {
-                double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
+                float termh = hr * aux.slot[0].getImg().getHeight() * 0.1f;
 
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 5; j++) {

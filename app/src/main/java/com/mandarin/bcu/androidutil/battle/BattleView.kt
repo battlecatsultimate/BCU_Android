@@ -47,7 +47,7 @@ import kotlin.math.tan
 import kotlin.system.measureTimeMillis
 
 @SuppressLint("ViewConstructor")
-class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: BattleSimulation, cutout: Double, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context),
+class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean, private val activity: BattleSimulation, cutout: Float, stageName: String, fontMode: StageBitmapGenerator.FONTMODE) : View(context),
     BattleBox, OuterBox {
     @JvmField
     var painter: BBPainter = if (type == 0)
@@ -69,7 +69,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
     var spd = 0
 
-    var velocity = 0.0
+    var velocity = 0f
     var scaleMode = false
 
     var initPoint: P? = null
@@ -194,6 +194,8 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                 for (es in painter.bf.sb.st.data.allEnemy)
                     es.anim.check()
             }
+
+            println(c.isHardwareAccelerated)
 
             if (!paused) {
                 if (spd > 0) {

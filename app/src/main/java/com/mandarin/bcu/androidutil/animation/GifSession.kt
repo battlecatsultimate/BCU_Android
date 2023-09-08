@@ -35,7 +35,7 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
     private var currentAnimationType = 0
     private var currentForm = 0
 
-    private var ratio = 1.0
+    private var ratio = 1f
     private var night = false
     private var color = Color.WHITE
     private var boxColor = Color.WHITE
@@ -65,7 +65,7 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
 
         val shared = ac.getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
-        ratio = shared.getInt("gif", 100).toDouble() / 100.0
+        ratio = shared.getInt("gif", 100) / 100f
         night = !shared.getBoolean("theme", false)
 
         color = if(CommonStatic.getConfig().viewerColor != -1) {
@@ -98,9 +98,10 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
 
             val w = (view.width * ratio).toInt()
             val h = (view.height * ratio).toInt()
-            val siz = view.size.toDouble() * ratio
+            val siz = view.size * ratio
 
-            val p = P.newP((view.width.toFloat() / 2 + view.posx).toDouble(), (view.height.toFloat() * 2 / 3 + view.posy).toDouble()).apply {
+            val p = P.newP(view.width.toFloat() / 2 + view.posx, view.height.toFloat() * 2 / 3 + view.posy
+            ).apply {
                 x *= ratio
                 y *= ratio
             }
@@ -123,7 +124,7 @@ class GifSession(val recorder: ImageViewer.GifRecorder, private val type: Animat
             }
 
             cvGraphics.setColor(color)
-            cvGraphics.fillRect(0, 0, w, h)
+            cvGraphics.fillRect(0f, 0f, w.toFloat(), h.toFloat())
 
             cvGraphics.setColor(boxColor)
 

@@ -131,7 +131,7 @@ class BattleSimulation : AppCompatActivity() {
             val data = StaticStore.transformIdentifier<Stage>(bundle.getString("Data")) ?: return
             val star = bundle.getInt("star")
             val item = bundle.getInt("item")
-            val siz = bundle.getDouble("size", 1.0)
+            val siz = bundle.getFloat("size", 1f)
             val pos = bundle.getInt("pos", 0)
             
             lifecycleScope.launch {
@@ -330,7 +330,7 @@ class BattleSimulation : AppCompatActivity() {
                         if (action == MotionEvent.ACTION_DOWN) {
                             battleView.scaleMode = true
 
-                            battleView.velocity = 0.0
+                            battleView.velocity = 0f
 
                             x = event.x
                             y = event.y
@@ -342,12 +342,12 @@ class BattleSimulation : AppCompatActivity() {
                                     velocity?.clear()
 
                                 if(battleView.initPoint == null)
-                                    battleView.initPoint = P.newP(0.0, 0.0)
+                                    battleView.initPoint = P.newP(0f, 0f)
 
                                 battleView.dragFrame = 1
 
-                                battleView.initPoint?.x = event.x.toDouble()
-                                battleView.initPoint?.y = event.y.toDouble()
+                                battleView.initPoint?.x = event.x
+                                battleView.initPoint?.y = event.y
 
                                 battleView.isSliding = true
 
@@ -369,7 +369,7 @@ class BattleSimulation : AppCompatActivity() {
                             }
 
                             if (!twoTouched && horizontal) {
-                                battleView.velocity = (velocity?.xVelocity?.toDouble() ?: 0.0) * 0.5
+                                battleView.velocity = (velocity?.xVelocity ?: 0f) * 0.5f
                             }
 
                             horizontal = false
@@ -381,10 +381,10 @@ class BattleSimulation : AppCompatActivity() {
                         } else if (action == MotionEvent.ACTION_MOVE) {
                             if (event.pointerCount == 1 && id == previousID) {
                                 if(battleView.endPoint == null)
-                                    battleView.endPoint = P.newP(0.0, 0.0)
+                                    battleView.endPoint = P.newP(0f, 0f)
 
-                                battleView.endPoint?.x = event.x.toDouble()
-                                battleView.endPoint?.y = event.y.toDouble()
+                                battleView.endPoint?.x = event.x
+                                battleView.endPoint?.y = event.y
 
                                 velocity?.addMovement(event)
                                 velocity?.computeCurrentVelocity(1000/30)
@@ -916,28 +916,28 @@ class BattleSimulation : AppCompatActivity() {
     }
 
     @Suppress("DEPRECATION")
-    private fun getCutoutWidth(ac: Activity) : Double {
+    private fun getCutoutWidth(ac: Activity) : Float {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val m = ac.windowManager.currentWindowMetrics
 
             val cutout = m.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.displayCutout())
 
-            val result = cutout.left.coerceAtLeast(cutout.right).toDouble()
+            val result = cutout.left.coerceAtLeast(cutout.right).toFloat()
 
-            if(result == 0.0) {
+            if(result == 0f) {
                 val cut = m.windowInsets.displayCutout ?: return result
 
-                return cut.boundingRectLeft.width().coerceAtLeast(cut.boundingRectRight.width()).toDouble()
+                return cut.boundingRectLeft.width().coerceAtLeast(cut.boundingRectRight.width()).toFloat()
             } else {
                 result
             }
         } else {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val cutout = ac.windowManager.defaultDisplay.cutout ?: return 0.0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val cutout = ac.windowManager.defaultDisplay.cutout ?: return 0f
 
-                return cutout.boundingRectLeft.width().coerceAtLeast(cutout.boundingRectRight.width()).toDouble()
+                return cutout.boundingRectLeft.width().coerceAtLeast(cutout.boundingRectRight.width()).toFloat()
             } else {
-                0.0
+                0f
             }
         }
     }
@@ -1027,7 +1027,7 @@ class BattleSimulation : AppCompatActivity() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             val firstDistance = realFX - previousX
 
-            cView.painter.bf.sb.siz *= detector.scaleFactor.toDouble()
+            cView.painter.bf.sb.siz *= detector.scaleFactor
             cView.painter.regulate()
 
             val difference = firstDistance * (cView.painter.bf.sb.siz / previousScale - 1)

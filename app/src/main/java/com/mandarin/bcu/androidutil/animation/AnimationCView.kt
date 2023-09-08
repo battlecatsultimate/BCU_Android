@@ -61,7 +61,7 @@ class AnimationCView(
     var started = false
 
     private var p2: P
-    private var animP = P(0.0, 0.0)
+    private var animP = P(0f, 0f)
     init {
         when(type) {
             AnimationType.ENEMY -> {
@@ -126,7 +126,7 @@ class AnimationCView(
         }
 
         colorPaint.isFilterBitmap = true
-        p2 = P((width.toFloat() / 2).toDouble(), (height.toFloat() * 2f / 3f).toDouble())
+        p2 = P(width.toFloat() / 2, height.toFloat() * 2f / 3f)
 
         cv = CVGraphics(Canvas(), colorPaint, bitmapPaint, night)
 
@@ -145,7 +145,7 @@ class AnimationCView(
         }
 
         if (StaticStore.enableGIF) {
-            animP = P.newP((width.toFloat() / 2 + posx).toDouble(), (height.toFloat() * 2 / 3 + posy).toDouble())
+            animP = P.newP(width.toFloat() / 2 + posx, height.toFloat() * 2 / 3 + posy)
 
             session.pushFrame(this, StaticStore.animposition, StaticStore.formposition, anim.f)
 
@@ -153,7 +153,7 @@ class AnimationCView(
         }
 
         if (StaticStore.play) {
-            p2 = P.newP(width / 2.0 + posx, height * 2.0 / 3 + posy)
+            p2 = P.newP(width / 2f + posx, height * 2f / 3 + posy)
 
             cv.setCanvas(canvas)
 
@@ -162,7 +162,7 @@ class AnimationCView(
 
             cv.setColor(range.color)
 
-            anim.draw(cv, p2, size.toDouble())
+            anim.draw(cv, p2, size)
             anim.update(true)
 
             if (CommonStatic.getConfig().performanceModeAnimation) {
@@ -173,7 +173,7 @@ class AnimationCView(
 
             P.delete(p2)
         } else {
-            p2 = P.newP(width / 2.0 + posx, height * 2.0 / 3 + posy)
+            p2 = P.newP(width / 2f + posx, height * 2f / 3 + posy)
             
             cv.setCanvas(canvas)
 
@@ -182,7 +182,7 @@ class AnimationCView(
 
             cv.setColor(range.color)
 
-            anim.draw(cv, p2, size.toDouble())
+            anim.draw(cv, p2, size)
 
             P.delete(p2)
         }

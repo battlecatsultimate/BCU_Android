@@ -26,10 +26,10 @@ class FIBM : FakeImage {
         @JvmField
         val builder: ImageBuilder<Bitmap> = BMBuilder()
 
-        const val CALIBRATOR = 0.75
+        const val CALIBRATOR = 0.75f
 
         private const val MAX_OFFSET = 5
-        private const val CONNECTION_RATIO = 0.2
+        private const val CONNECTION_RATIO = 0.2f
 
         private val imagePaint = Paint().apply {
             isAntiAlias = true

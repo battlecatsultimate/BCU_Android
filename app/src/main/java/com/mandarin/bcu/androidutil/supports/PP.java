@@ -7,7 +7,7 @@ import common.system.P;
 
 public strictfp class PP extends P {
 
-    public PP(double d, double e) {
+    public PP(float d, float e) {
         super(d, e);
     }
 
@@ -33,14 +33,14 @@ public strictfp class PP extends P {
     }
 
     @Override
-    public PP times(double d) {
+    public PP times(float d) {
         x *= d;
         y *= d;
         return this;
     }
 
     @Override
-    public PP times(double hf, double vf) {
+    public PP times(float hf, float vf) {
         x *= hf;
         y *= vf;
         return this;

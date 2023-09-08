@@ -110,19 +110,19 @@ class CVGraphics : FakeGraphics {
         m2.reset()
     }
 
-    override fun drawImage(bimg: FakeImage, x: Double, y: Double) {
+    override fun drawImage(bimg: FakeImage, x: Float, y: Float) {
         if (bimg !is FIBM)
             return
 
         if (bimg.offsetLeft != 0 || bimg.offsetTop != 0) {
-            c.drawBitmap(bimg.bimg(), (x - bimg.offsetLeft).toFloat(), (y - bimg.offsetTop).toFloat(), bitmapPaint)
+            c.drawBitmap(bimg.bimg(), x - bimg.offsetLeft, y - bimg.offsetTop, bitmapPaint)
         } else {
-            c.drawBitmap(bimg.bimg(), x.toFloat(), y.toFloat(), bitmapPaint)
+            c.drawBitmap(bimg.bimg(), x, y, bitmapPaint)
         }
     }
 
-    override fun drawImage(bimg: FakeImage, x: Double, y: Double, d: Double, e: Double) {
-        if (bimg !is FIBM || d * e == 0.0)
+    override fun drawImage(bimg: FakeImage, x: Float, y: Float, d: Float, e: Float) {
+        if (bimg !is FIBM || d * e == 0f)
             return
 
         m2.reset()
@@ -131,62 +131,53 @@ class CVGraphics : FakeGraphics {
 
         m2.set(m)
 
-        val wr = if (bimg.offsetLeft != 0) {
-            (d + FIBM.CALIBRATOR) / bimg.width
-        } else {
-            d / bimg.width
-        }
-
-        val hr = if (bimg.offsetTop != 0) {
-            (e + FIBM.CALIBRATOR) / bimg.height
-        } else {
-            e / bimg.height
-        }
+        val wr = d / bimg.width
+        val hr = e / bimg.height
 
         if (bimg.offsetLeft != 0 || bimg.offsetTop != 0) {
             val calibrationX = if (bimg.offsetLeft == 0)
-                0.0
+                0f
             else
-                bimg.offsetLeft + FIBM.CALIBRATOR / 2.0
+                bimg.offsetLeft.toFloat()
 
             val calibrationY = if (bimg.offsetTop == 0)
-                0.0
+                0f
             else
-                bimg.offsetTop + FIBM.CALIBRATOR / 2.0
+                bimg.offsetTop.toFloat()
 
-            m2.preTranslate((x - calibrationX).toFloat(), (y - calibrationY).toFloat())
-            m2.preScale(wr.toFloat(), hr.toFloat(), bimg.offsetLeft.toFloat(), bimg.offsetTop.toFloat())
+            m2.preTranslate(x - calibrationX, y - calibrationY)
+            m2.preScale(wr, hr, bimg.offsetLeft.toFloat(), bimg.offsetTop.toFloat())
         } else {
-            m2.preTranslate(x.toFloat(), y.toFloat())
-            m2.preScale(wr.toFloat(), hr.toFloat())
+            m2.preTranslate(x, y)
+            m2.preScale(wr, hr)
         }
 
         c.drawBitmap(bimg.bimg(), m2, bitmapPaint)
     }
 
-    override fun drawLine(i: Int, j: Int, x: Int, y: Int) {
-        c.drawLine(i.toFloat(), j.toFloat(), x.toFloat(), y.toFloat(), colorPaint)
+    override fun drawLine(i: Float, j: Float, x: Float, y: Float) {
+        c.drawLine(i, j, x, y, colorPaint)
     }
 
-    override fun drawOval(i: Int, j: Int, k: Int, l: Int) {
+    override fun drawOval(i: Float, j: Float, k: Float, l: Float) {
         colorPaint.style = Paint.Style.STROKE
 
-        c.drawOval(i.toFloat(), j.toFloat(), k.toFloat(), l.toFloat(), colorPaint)
+        c.drawOval(i, j, k, l, colorPaint)
     }
 
-    override fun drawRect(x: Int, y: Int, x2: Int, y2: Int) {
+    override fun drawRect(x: Float, y: Float, x2: Float, y2: Float) {
         colorPaint.style = Paint.Style.STROKE
-        c.drawRect(x.toFloat(), y.toFloat(), x + x2.toFloat(), y + y2.toFloat(), colorPaint)
+        c.drawRect(x, y, x + x2, y + y2, colorPaint)
     }
 
-    override fun fillOval(i: Int, j: Int, k: Int, l: Int) {
+    override fun fillOval(i: Float, j: Float, k: Float, l: Float) {
         colorPaint.style = Paint.Style.FILL
-        c.drawOval(i.toFloat(), j.toFloat(), k.toFloat(), l.toFloat(), colorPaint)
+        c.drawOval(i, j, k, l, colorPaint)
     }
 
-    override fun fillRect(x: Int, y: Int, w: Int, h: Int) {
+    override fun fillRect(x: Float, y: Float, w: Float, h: Float) {
         colorPaint.style = Paint.Style.FILL
-        c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), colorPaint)
+        c.drawRect(x, y, x + w, y + h, colorPaint)
     }
 
     @Synchronized
@@ -205,29 +196,29 @@ class CVGraphics : FakeGraphics {
         return FTMT(m)
     }
 
-    override fun gradRect(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, c: IntArray, d: Int, e: Int, f: IntArray) {
-        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (y + h).toFloat(), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
+    override fun gradRect(x: Float, y: Float, w: Float, h: Float, a: Float, b: Float, c: IntArray, d: Float, e: Float, f: IntArray) {
+        val s: Shader = LinearGradient(x, y, x, (y + h), Color.rgb(c[0], c[1], c[2]), Color.rgb(f[0], f[1], f[2]), Shader.TileMode.CLAMP)
 
         gradientPaint.shader = s
 
-        this.c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), gradientPaint)
+        this.c.drawRect(x, y, x + w, y + h, gradientPaint)
     }
 
-    override fun gradRectAlpha(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, al: Int, c: IntArray, d: Int, e: Int, al2: Int, f: IntArray) {
-        val s: Shader = LinearGradient(x.toFloat(), y.toFloat(), x.toFloat(), (y + h).toFloat(), Color.argb(al, c[0], c[1], c[2]), Color.argb(al2, f[0], f[1], f[2]), Shader.TileMode.CLAMP)
+    override fun gradRectAlpha(x: Float, y: Float, w: Float, h: Float, a: Float, b: Float, al: Int, c: IntArray, d: Float, e: Float, al2: Int, f: IntArray) {
+        val s: Shader = LinearGradient(x, y, x, (y + h), Color.argb(al, c[0], c[1], c[2]), Color.argb(al2, f[0], f[1], f[2]), Shader.TileMode.CLAMP)
 
         gradientPaint.shader = s
 
-        this.c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), gradientPaint)
+        this.c.drawRect(x, y, x + w, y + h, gradientPaint)
     }
 
-    override fun rotate(d: Double) {
-        m.preRotate(Math.toDegrees(d).toFloat())
+    override fun rotate(d: Float) {
+        m.preRotate(Math.toDegrees(d.toDouble()).toFloat())
         c.setMatrix(m)
     }
 
-    override fun scale(hf: Int, vf: Int) {
-        m.preScale(hf.toFloat(), vf.toFloat())
+    override fun scale(hf: Float, vf: Float) {
+        m.preScale(hf, vf)
         c.setMatrix(m)
     }
 
@@ -337,12 +328,12 @@ class CVGraphics : FakeGraphics {
         c.setMatrix(m)
     }
 
-    override fun translate(x: Double, y: Double) {
-        m.preTranslate(x.toFloat(), y.toFloat())
+    override fun translate(x: Float, y: Float) {
+        m.preTranslate(x, y)
         c.setMatrix(m)
     }
 
-    override fun colRect(x: Int, y: Int, w: Int, h: Int, r: Int, g: Int, b: Int, a: Int) {
+    override fun colRect(x: Float, y: Float, w: Float, h: Float, r: Int, g: Int, b: Int, a: Int) {
         var a1 = a
 
         if (a1 < 0)
@@ -357,7 +348,7 @@ class CVGraphics : FakeGraphics {
         colorPaint.color = rgba
         colorPaint.style = Paint.Style.FILL
 
-        c.drawRect(x.toFloat(), y.toFloat(), x + w.toFloat(), y + h.toFloat(), colorPaint)
+        c.drawRect(x, y, x + w, y + h, colorPaint)
     }
 
     override fun delete(at: FakeTransform) {
