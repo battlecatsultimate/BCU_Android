@@ -192,16 +192,15 @@ class ImageViewer : AppCompatActivity() {
 
                     StaticStore.setDisappear(player, controller, frame, anims, fpsIndicator, gif, prog, forms, loadst)
 
-                    val width = StaticStore.getScreenWidth(this@ImageViewer, false)
-                    val height = StaticStore.getScreenHeight(this@ImageViewer, false)
+                    val width = StaticStore.getScreenWidth(this@ImageViewer, false).toFloat()
+                    val height = StaticStore.getScreenHeight(this@ImageViewer, false).toFloat()
 
                     val paint = Paint().apply {
                         isFilterBitmap = true
                         isAntiAlias = true
-                        isDither = true
                     }
 
-                    val b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                    val b = Bitmap.createBitmap(width.toInt(), height.toInt(), Bitmap.Config.ARGB_8888)
                     val canvas = Canvas(b)
 
                     val data = StaticStore.transformIdentifier<Background>(JsonDecoder.decode(JsonParser.parseString(extra.getString("Data")), Identifier::class.java)) ?: return@launch
@@ -219,39 +218,58 @@ class ImageViewer : AppCompatActivity() {
                         val totalHeight = groundPart.height + skyPart.height
 
                         //This must take 80% of viewer height
-                        val ratio = height * 0.8 / totalHeight.toDouble() * (1 + 0.005)
+                        val ratio = height * 0.8f / totalHeight.toFloat()
 
-                        val w = groundPart.width * ratio
+                        val imageWidth = round(groundPart.width * ratio)
 
-                        var i = 0
+                        val groundHeight = round(groundPart.height * ratio)
+                        val skyHeight = round(skyPart.height * ratio)
 
-                        while (i < 1 + width / w) {
-                            cv.drawImage(skyPart, round(w * i), round(height * 0.1), round(w), round(skyPart.height * ratio))
-                            cv.drawImage(groundPart, round(w * i), round(height * 0.1 + skyPart.height * ratio), round(w), round(groundPart.height * ratio))
+                        var groundGradient = round(height * 0.1f)
+                        val skyGradient = round(height * 0.1f)
 
-                            i++
+                        if (groundGradient + groundHeight + skyHeight + skyGradient != height) {
+                            groundGradient += height - (groundGradient + groundHeight + skyHeight + skyGradient)
                         }
 
-                        cv.gradRect(0, round(height * 0.9).toInt(), width, round(height * 0.1).toInt(), 0, round(height * 0.9).toInt(), getColorData(bg, groundUpper), 0, height, getColorData(bg, groundBelow))
-                        cv.gradRect(0, 0, width, round(height * 0.1).toInt(), 0, 0, getColorData(bg, skyUpper), 0, round(height * 0.1).toInt(), getColorData(bg, skyBelow))
+                        var currentX = 0f
+
+                        while (currentX < width) {
+                            cv.drawImage(skyPart, currentX, skyGradient, imageWidth, skyHeight)
+                            cv.drawImage(groundPart, currentX, skyGradient + skyHeight, imageWidth, groundHeight)
+
+                            currentX += imageWidth
+                        }
+
+                        cv.gradRect(0f, skyGradient + skyHeight + groundHeight, width, groundGradient, 0f, skyGradient + skyHeight + groundHeight, getColorData(bg, groundUpper), 0f, height, getColorData(bg, groundBelow))
+                        cv.gradRect(0f, 0f, width, skyGradient, 0f, 0f, getColorData(bg, skyUpper), 0f, skyGradient, getColorData(bg, skyBelow))
                     } else {
                         val groundPart = bg.parts[Background.BG]
 
                         //This must take 80% of viewer height
-                        val ratio = height * 0.8 / (groundPart.height * 2.0)
+                        val ratio = height * 0.8f / (groundPart.height * 2f)
 
-                        val w = groundPart.width * ratio
+                        val imageWidth = round(groundPart.width * ratio)
 
-                        var i = 0
+                        val groundHeight = round(groundPart.height * ratio)
 
-                        while (i < 1 + width / w) {
-                            cv.drawImage(groundPart, round(w * i), round(height * 0.1 + groundPart.height * ratio), round(w), round(groundPart.height * ratio))
+                        var groundGradient = round(height * 0.1f)
+                        val skyGradient = round(height * 0.1f + groundHeight)
 
-                            i++
+                        if (groundGradient + groundHeight + skyGradient != height) {
+                            groundGradient += height - (groundGradient + groundHeight + skyGradient)
                         }
 
-                        cv.gradRect(0, round(height * 0.9).toInt(), width, round(height * 0.1).toInt(), 0, round(height * 0.9).toInt(), getColorData(bg, groundUpper), 0, height, getColorData(bg, groundBelow))
-                        cv.gradRect(0, 0, width, round(height * 0.5).toInt(), 0, 0, getColorData(bg, skyUpper), 0, round(height * 0.5).toInt(), getColorData(bg, skyBelow))
+                        var currentX = 0f
+
+                        while (currentX < width) {
+                            cv.drawImage(groundPart, currentX, skyGradient, imageWidth, groundHeight)
+
+                            currentX += imageWidth
+                        }
+
+                        cv.gradRect(0f, skyGradient + groundHeight, width, groundGradient, 0f, skyGradient + groundHeight, getColorData(bg, groundUpper), 0f, height, getColorData(bg, groundBelow))
+                        cv.gradRect(0f, 0f, width, skyGradient, 0f, 0f, getColorData(bg, skyUpper), 0f, skyGradient, getColorData(bg, skyBelow))
                     }
 
                     imageViewer.setImageBitmap(b)
@@ -1233,13 +1251,13 @@ class ImageViewer : AppCompatActivity() {
 
             val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
 
-            val ratio = shared.getInt("gif", 100).toDouble() / 100.0
+            val ratio = shared.getInt("gif", 100).toFloat() / 100f
 
-            val w = (view.width * ratio).toInt()
-            val h = (view.height * ratio).toInt()
-            val siz = view.size.toDouble() * ratio
+            val w = view.width * ratio
+            val h = view.height * ratio
+            val siz = view.size * ratio
 
-            val p = P.newP((view.width.toFloat() / 2 + view.posx).toDouble(), (view.height.toFloat() * 2 / 3 + view.posy).toDouble()).apply {
+            val p = P.newP((view.width.toFloat() / 2 + view.posx), (view.height.toFloat() * 2 / 3 + view.posy)).apply {
                 x *= ratio
                 y *= ratio
             }
@@ -1309,13 +1327,13 @@ class ImageViewer : AppCompatActivity() {
                         break
                     }
 
-                    val b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+                    val b = Bitmap.createBitmap(w.toInt(), h.toInt(), Bitmap.Config.ARGB_8888)
                     val c = Canvas(b)
 
                     val cv = CVGraphics(c, bp, bitmapPaint, isNightMode)
                     cv.independent = true
 
-                    c.drawRect(0f, 0f, w.toFloat(), h.toFloat(), back)
+                    c.drawRect(0f, 0f, w, h, back)
 
                     anim.setTime(j)
                     anim.draw(cv, p, siz)
