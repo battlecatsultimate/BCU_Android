@@ -13,6 +13,7 @@ import common.util.unit.Combo
 import java.io.File
 
 object LangLoader {
+    @Synchronized
     fun readUnitLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/", "/th/")
         val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
@@ -102,6 +103,7 @@ object LangLoader {
         StaticStore.unitlang = 0
     }
 
+    @Synchronized
     fun readEnemyLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/", "/th/")
         val files = arrayOf("EnemyName.txt", "EnemyExplanation.txt")
@@ -143,6 +145,7 @@ object LangLoader {
         StaticStore.enemeylang = 0
     }
 
+    @Synchronized
     fun readStageLang(c: Context) {
         val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/","/fr/","/it/","/es/","/de/", "/th/")
 
@@ -281,6 +284,7 @@ object LangLoader {
         StaticStore.stagelang = 0
     }
 
+    @Synchronized
     fun readMedalLang(c: Context) {
         val medalName = "MedalName.txt"
         val medalExp = "MedalExplanation.txt"
