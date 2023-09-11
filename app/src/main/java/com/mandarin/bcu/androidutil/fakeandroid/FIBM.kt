@@ -28,6 +28,7 @@ class FIBM : FakeImage {
 
         private const val MAX_OFFSET = 5
         private const val CONNECTION_RATIO = 0.2f
+        private const val tolerance = 230
 
         private val imagePaint = Paint().apply {
             isAntiAlias = true
@@ -212,26 +213,26 @@ class FIBM : FakeImage {
                 val pixels = IntArray(h)
                 image.getPixels(pixels, 0, 1, 0, 0, 1, h)
 
-                pixels.count { c -> c.alpha == 255 } >= h * CONNECTION_RATIO
+                pixels.count { c -> c.alpha >= tolerance } >= h * CONNECTION_RATIO
             }
             Snap.RIGHT -> {
                 val pixels = IntArray(h)
                 image.getPixels(pixels, 0, 1, w - 1, 0, 1, h)
 
-                pixels.count { c -> c.alpha == 255 } >= h * CONNECTION_RATIO
+                pixels.count { c -> c.alpha >= tolerance } >= h * CONNECTION_RATIO
             }
             Snap.BOTTOM -> {
                 val pixels = IntArray(w)
                 image.getPixels(pixels, 0, w, 0, h - 1, w, 1)
 
-                pixels.count { c -> c.alpha == 255 } >= w * CONNECTION_RATIO
+                pixels.count { c -> c.alpha >= tolerance } >= w * CONNECTION_RATIO
             }
             Snap.TOP -> {
                 val pixels = IntArray(w)
                 image.getPixels(pixels, 0, w, 0, 0, w, 1)
 
 
-                pixels.count { c -> c.alpha == 255 } >= w * CONNECTION_RATIO
+                pixels.count { c -> c.alpha >= tolerance } >= w * CONNECTION_RATIO
             }
         }
     }
