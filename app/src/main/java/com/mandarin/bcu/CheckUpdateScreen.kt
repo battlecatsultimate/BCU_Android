@@ -243,7 +243,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                         it.resume(0) { _ -> }
                                     }
 
-                                    apkDialog.show()
+                                    if (!isDestroyed && !isFinishing) {
+                                        apkDialog.show()
+                                    }
                                 }
                             }
                         }
