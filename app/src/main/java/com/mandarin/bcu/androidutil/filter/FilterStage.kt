@@ -164,6 +164,8 @@ object FilterStage {
     }
 
     private fun contains(src: Identifier<AbEnemy>, target: ArrayList<Identifier<AbEnemy>>) : Boolean {
+        src.pack ?: return false
+
         for(id in target) {
             id.pack ?: continue
 
