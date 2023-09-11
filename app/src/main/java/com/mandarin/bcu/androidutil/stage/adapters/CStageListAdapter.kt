@@ -85,6 +85,7 @@ class CStageListAdapter(activity: Activity, private val stages: Array<Identifier
 
         for (data in result) {
             data ?: continue
+            data.enemy ?: continue
 
             ids.add(data.enemy)
         }
