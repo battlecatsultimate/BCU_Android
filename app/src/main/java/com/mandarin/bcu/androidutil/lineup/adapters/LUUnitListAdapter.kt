@@ -104,7 +104,19 @@ class LUUnitListAdapter(context: Context, private val numbers: ArrayList<Identif
                 return false
         }
 
-        return BasisSet.current().sele.lu != null && !BasisSet.current().sele.lu.fs.any { forms -> forms.filterNotNull().any { f -> f.unit != null && u.id.equals(f.unit.id) } }
+        if (BasisSet.current() == null) {
+            BasisSet.setCurrent(BasisSet.def())
+        }
+
+        if (BasisSet.current().sele == null) {
+            if (BasisSet.current().lb.isEmpty()) {
+                BasisSet.current().add()
+            } else {
+                BasisSet.current().sele = BasisSet.current().lb[0]
+            }
+        }
+
+        return BasisSet.current() != null && BasisSet.current().sele != null && BasisSet.current().sele.lu != null && !BasisSet.current().sele.lu.fs.any { forms -> forms.filterNotNull().any { f -> f.unit != null && u.id.equals(f.unit.id) } }
     }
 
     private fun generateID(id: Identifier<Unit>) : String {
