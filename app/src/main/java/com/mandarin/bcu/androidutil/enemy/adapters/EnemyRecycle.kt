@@ -65,35 +65,35 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pack: Button = itemView.findViewById(R.id.eneminfpack)
-        val enemyPack: TextView = itemView.findViewById(R.id.eneminfpackr)
-        val name: TextView = itemView.findViewById(R.id.eneminfname)
-        val unitSwitch: Button = itemView.findViewById(R.id.eneminffrse)
-        val enemyId: TextView = itemView.findViewById(R.id.eneminfidr)
-        val enemyIcon: ImageView = itemView.findViewById(R.id.eneminficon)
-        val enemhp: TextView = itemView.findViewById(R.id.eneminfhpr)
-        val enemhb: TextView = itemView.findViewById(R.id.eneminfhbr)
-        val enemmulti: EditText = itemView.findViewById(R.id.eneminfmultir)
-        val enematkb: Button = itemView.findViewById(R.id.eneminfatk)
-        val enematk: TextView = itemView.findViewById(R.id.eneminfatkr)
-        val enematktimeb: Button = itemView.findViewById(R.id.eneminfatktime)
-        val enematktime: TextView = itemView.findViewById(R.id.eneminfatktimer)
-        val enemabilt: TextView = itemView.findViewById(R.id.eneminfabiltr)
-        val enempreb: Button = itemView.findViewById(R.id.eneminfpre)
-        val enempre: TextView = itemView.findViewById(R.id.eneminfprer)
-        val enempostb: Button = itemView.findViewById(R.id.eneminfpost)
-        val enempost: TextView = itemView.findViewById(R.id.eneminfpostr)
-        val enemtbab: Button = itemView.findViewById(R.id.eneminftba)
-        val enemtba: TextView = itemView.findViewById(R.id.eneminftbar)
-        val enemtrait: TextView = itemView.findViewById(R.id.eneminftraitr)
-        val enematkt: TextView = itemView.findViewById(R.id.eneminfatktr)
-        val enemdrop: TextView = itemView.findViewById(R.id.eneminfdropr)
-        val enemrange: TextView = itemView.findViewById(R.id.eneminfranger)
-        val enembarrier: TextView = itemView.findViewById(R.id.eneminfbarrierr)
-        val enemspd: TextView = itemView.findViewById(R.id.eneminfspdr)
-        val none: TextView = itemView.findViewById(R.id.eneminfnone)
-        val emabil: RecyclerView = itemView.findViewById(R.id.eneminfabillist)
-        val enemamulti: EditText = itemView.findViewById(R.id.eneminfamultir)
+        val pack = itemView.findViewById<Button>(R.id.eneminfpack)!!
+        val enemyPack = itemView.findViewById<TextView>(R.id.eneminfpackr)!!
+        val name = itemView.findViewById<TextView>(R.id.eneminfname)!!
+        val unitSwitch = itemView.findViewById<Button>(R.id.eneminffrse)!!
+        val enemyId = itemView.findViewById<TextView>(R.id.eneminfidr)!!
+        val enemyIcon = itemView.findViewById<ImageView>(R.id.eneminficon)!!
+        val enemhp = itemView.findViewById<TextView>(R.id.eneminfhpr)!!
+        val enemhb = itemView.findViewById<TextView>(R.id.eneminfhbr)!!
+        val enemmulti = itemView.findViewById<EditText>(R.id.eneminfmultir)!!
+        val enematkb = itemView.findViewById<Button>(R.id.eneminfatk)!!
+        val enematk = itemView.findViewById<TextView>(R.id.eneminfatkr)!!
+        val enematktimeb = itemView.findViewById<Button>(R.id.eneminfatktime)!!
+        val enematktime = itemView.findViewById<TextView>(R.id.eneminfatktimer)!!
+        val enemabilt = itemView.findViewById<TextView>(R.id.eneminfabiltr)!!
+        val enempreb = itemView.findViewById<Button>(R.id.eneminfpre)!!
+        val enempre = itemView.findViewById<TextView>(R.id.eneminfprer)!!
+        val enempostb = itemView.findViewById<Button>(R.id.eneminfpost)!!
+        val enempost = itemView.findViewById<TextView>(R.id.eneminfpostr)!!
+        val enemtbab = itemView.findViewById<Button>(R.id.eneminftba)!!
+        val enemtba = itemView.findViewById<TextView>(R.id.eneminftbar)!!
+        val enemtrait = itemView.findViewById<TextView>(R.id.eneminftraitr)!!
+        val enematkt = itemView.findViewById<TextView>(R.id.eneminfatktr)!!
+        val enemdrop = itemView.findViewById<TextView>(R.id.eneminfdropr)!!
+        val enemrange = itemView.findViewById<TextView>(R.id.eneminfranger)!!
+        val enembarrier = itemView.findViewById<TextView>(R.id.eneminfbarrierr)!!
+        val enemspd = itemView.findViewById<TextView>(R.id.eneminfspdr)!!
+        val none = itemView.findViewById<TextView>(R.id.eneminfnone)!!
+        val emabil = itemView.findViewById<RecyclerView>(R.id.eneminfabillist)!!
+        val enemamulti = itemView.findViewById<EditText>(R.id.eneminfamultir)!!
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -119,15 +119,18 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
             viewHolder.unitSwitch.text = activity.getString(R.string.unit_info_sec)
         }
 
-        val aclev: TextInputLayout = activity.findViewById(R.id.aclev)
-        val actrea: TextInputLayout = activity.findViewById(R.id.actrea)
-        val itfcry: TextInputLayout = activity.findViewById(R.id.itfcrytrea)
-        val cotccry: TextInputLayout = activity.findViewById(R.id.cotccrytrea)
+        val aclev = activity.findViewById<TextInputLayout>(R.id.aclev)
+        val actrea = activity.findViewById<TextInputLayout>(R.id.actrea)
+        val itfcry = activity.findViewById<TextInputLayout>(R.id.itfcrytrea)
+        val cotccry = activity.findViewById<TextInputLayout>(R.id.cotccrytrea)
+
         val godmask = arrayOf<TextInputLayout>(activity.findViewById(R.id.godmask), activity.findViewById(R.id.godmask1), activity.findViewById(R.id.godmask2))
-        val aclevt: TextInputEditText = activity.findViewById(R.id.aclevt)
-        val actreat: TextInputEditText = activity.findViewById(R.id.actreat)
-        val itfcryt: TextInputEditText = activity.findViewById(R.id.itfcrytreat)
-        val cotccryt: TextInputEditText = activity.findViewById(R.id.cotccrytreat)
+
+        val aclevt = activity.findViewById<TextInputEditText>(R.id.aclevt)
+        val actreat = activity.findViewById<TextInputEditText>(R.id.actreat)
+        val itfcryt = activity.findViewById<TextInputEditText>(R.id.itfcrytreat)
+        val cotccryt = activity.findViewById<TextInputEditText>(R.id.cotccrytreat)
+
         val godmaskt = arrayOf<TextInputEditText>(activity.findViewById(R.id.godmaskt), activity.findViewById(R.id.godmaskt1), activity.findViewById(R.id.godmaskt2))
 
         aclev.isCounterEnabled = true
@@ -227,15 +230,18 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
 
         val t = BasisSet.current().t()
 
-        val aclev: TextInputLayout = activity.findViewById(R.id.aclev)
-        val actrea: TextInputLayout = activity.findViewById(R.id.actrea)
-        val itfcry: TextInputLayout = activity.findViewById(R.id.itfcrytrea)
-        val cotccry: TextInputLayout = activity.findViewById(R.id.cotccrytrea)
+        val aclev = activity.findViewById<TextInputLayout>(R.id.aclev)
+        val actrea = activity.findViewById<TextInputLayout>(R.id.actrea)
+        val itfcry = activity.findViewById<TextInputLayout>(R.id.itfcrytrea)
+        val cotccry = activity.findViewById<TextInputLayout>(R.id.cotccrytrea)
+
         val godmask = arrayOf<TextInputLayout>(activity.findViewById(R.id.godmask), activity.findViewById(R.id.godmask1), activity.findViewById(R.id.godmask2))
-        val aclevt: TextInputEditText = activity.findViewById(R.id.aclevt)
-        val actreat: TextInputEditText = activity.findViewById(R.id.actreat)
-        val itfcryt: TextInputEditText = activity.findViewById(R.id.itfcrytreat)
-        val cotccryt: TextInputEditText = activity.findViewById(R.id.cotccrytreat)
+
+        val aclevt = activity.findViewById<TextInputEditText>(R.id.aclevt)
+        val actreat = activity.findViewById<TextInputEditText>(R.id.actreat)
+        val itfcryt = activity.findViewById<TextInputEditText>(R.id.itfcrytreat)
+        val cotccryt = activity.findViewById<TextInputEditText>(R.id.cotccrytreat)
+
         val godmaskt = arrayOf<TextInputEditText>(activity.findViewById(R.id.godmaskt), activity.findViewById(R.id.godmaskt1), activity.findViewById(R.id.godmaskt2))
 
         viewHolder.pack.setOnClickListener {

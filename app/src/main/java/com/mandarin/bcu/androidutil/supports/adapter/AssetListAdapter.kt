@@ -30,11 +30,11 @@ class AssetListAdapter(private val ac: Activity, private val files: ArrayList<VF
 
     val df = DecimalFormat("#.##")
 
-    private class ViewHolder constructor(row: View) {
-        val name: AutoMarquee = row.findViewById(R.id.filename)
-        val size: AutoMarquee = row.findViewById(R.id.filesize)
-        val img: ImageView = row.findViewById(R.id.fileimage)
-        val option: FloatingActionButton = row.findViewById(R.id.fileoption)
+    private class ViewHolder(row: View) {
+        val name = row.findViewById<AutoMarquee>(R.id.filename)!!
+        val size = row.findViewById<AutoMarquee>(R.id.filesize)!!
+        val img = row.findViewById<ImageView>(R.id.fileimage)!!
+        val option = row.findViewById<FloatingActionButton>(R.id.fileoption)!!
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

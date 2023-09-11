@@ -26,27 +26,27 @@ class PackConfListAdapter(context: Context, name: ArrayList<String>) : ArrayAdap
         const val SOLVED = "Solved"
     }
 
-    private class ViewHoler constructor(row: View) {
-        val title: TextView = row.findViewById(R.id.packconftitle)
-        val desc: TextView = row.findViewById(R.id.packconfdesc)
-        val remove: TextView = row.findViewById(R.id.packconfremove)
-        val action: Spinner = row.findViewById(R.id.packconfaction)
-        val status: ImageView = row.findViewById(R.id.packconfstatus)
-        val tooltip: ToolTipRelativeLayout = row.findViewById(R.id.packconftooltip)
+    private class ViewHolder(row: View) {
+        val title = row.findViewById<TextView>(R.id.packconftitle)!!
+        val desc = row.findViewById<TextView>(R.id.packconfdesc)!!
+        val remove = row.findViewById<TextView>(R.id.packconfremove)!!
+        val action = row.findViewById<Spinner>(R.id.packconfaction)!!
+        val status = row.findViewById<ImageView>(R.id.packconfstatus)!!
+        val tooltip = row.findViewById<ToolTipRelativeLayout>(R.id.packconftooltip)!!
     }
 
     override fun getView(posit: Int, convertView: View?, parent: ViewGroup): View {
-        val holder: ViewHoler
+        val holder: ViewHolder
         val row:View
 
         if(convertView == null) {
             val inf = LayoutInflater.from(context)
             row = inf.inflate(R.layout.pack_conflict_list_layout, convertView, false)
-            holder = ViewHoler(row)
+            holder = ViewHolder(row)
             row.tag = holder
         } else {
             row = convertView
-            holder = row.tag as ViewHoler
+            holder = row.tag as ViewHolder
         }
 
         if(posit >= PackConflict.conflicts.size)

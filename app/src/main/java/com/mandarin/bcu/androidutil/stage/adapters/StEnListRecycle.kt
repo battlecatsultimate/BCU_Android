@@ -9,7 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TableLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mandarin.bcu.EnemyInfo
@@ -166,20 +170,20 @@ class StEnListRecycle(private val activity: Activity, private val st: Stage, pri
     }
 
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val expand: ImageButton = row.findViewById(R.id.stgenlistexp)
-        val icon: ImageView = row.findViewById(R.id.stgenlisticon)
-        val multiply: TextView = row.findViewById(R.id.stgenlistmultir)
-        val number: TextView = row.findViewById(R.id.stgenlistnumr)
-        val info: ImageButton = row.findViewById(R.id.stgenlistinfo)
-        val bh: TextView = row.findViewById(R.id.enemlistbhr)
-        val isboss: TextView = row.findViewById(R.id.enemlistibr)
-        val layer: TextView = row.findViewById(R.id.enemlistlayr)
-        val startb: Button = row.findViewById(R.id.enemlistst)
-        val start: TextView = row.findViewById(R.id.enemliststr)
-        val respawnb: Button = row.findViewById(R.id.enemlistres)
-        val respawn: TextView = row.findViewById(R.id.enemlistresr)
-        val moreinfo: TableLayout = row.findViewById(R.id.stgenlistmi)
-        val killcount: TextView = row.findViewById(R.id.enemlistkilcr)
+        val expand = row.findViewById<ImageButton>(R.id.stgenlistexp)!!
+        val icon = row.findViewById<ImageView>(R.id.stgenlisticon)!!
+        val multiply = row.findViewById<TextView>(R.id.stgenlistmultir)!!
+        val number = row.findViewById<TextView>(R.id.stgenlistnumr)!!
+        val info = row.findViewById<ImageButton>(R.id.stgenlistinfo)!!
+        val bh = row.findViewById<TextView>(R.id.enemlistbhr)!!
+        val isboss = row.findViewById<TextView>(R.id.enemlistibr)!!
+        val layer = row.findViewById<TextView>(R.id.enemlistlayr)!!
+        val startb = row.findViewById<Button>(R.id.enemlistst)!!
+        val start = row.findViewById<TextView>(R.id.enemliststr)!!
+        val respawnb = row.findViewById<Button>(R.id.enemlistres)!!
+        val respawn = row.findViewById<TextView>(R.id.enemlistresr)!!
+        val moreinfo = row.findViewById<TableLayout>(R.id.stgenlistmi)!!
+        val killcount = row.findViewById<TextView>(R.id.enemlistkilcr)!!
     }
 
     private fun reverse(data: Array<SCDef.Line>): Array<SCDef.Line?> {

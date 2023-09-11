@@ -101,8 +101,8 @@ class EnemyInfo : AppCompatActivity() {
                 val progression = findViewById<ProgressBar>(R.id.prog)
                 val recyclerView = findViewById<RecyclerView>(R.id.eneminftable)
                 val main = findViewById<ConstraintLayout>(R.id.enemmainlayout)
-                val treasureLayout: ConstraintLayout = findViewById(R.id.enemtreasuretab)
-                val back: FloatingActionButton = findViewById(R.id.eneminfbck)
+                val treasureLayout = findViewById<ConstraintLayout>(R.id.enemtreasuretab)
+                val back = findViewById<FloatingActionButton>(R.id.eneminfbck)
 
                 StaticStore.setDisappear(view1, view2, explanationTitle, viewPager, enemyAnimation, treasure, back, scrollView)
 
@@ -157,7 +157,7 @@ class EnemyInfo : AppCompatActivity() {
                         val view = currentFocus
 
                         if (view != null) {
-                            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             imm.hideSoftInputFromWindow(view.windowToken, 0)
                             treasureLayout.clearFocus()
                         }

@@ -14,9 +14,9 @@ import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.supports.DataResetHandler
 
 class DataResetAdapter(private val activity: Activity, private val data: ArrayList<DataResetHandler>) : ArrayAdapter<DataResetHandler>(activity, R.layout.data_reset_checkbox, data) {
-    private class ViewHolder constructor(view: View) {
-        val text: TextView = view.findViewById(R.id.dataresettext)
-        val check: CheckBox = view.findViewById(R.id.dataresetcheck)
+    private class ViewHolder(view: View) {
+        val text = view.findViewById<TextView>(R.id.dataresettext)!!
+        val check = view.findViewById<CheckBox>(R.id.dataresetcheck)!!
     }
 
     private val states = arrayOf(intArrayOf(android.R.attr.state_enabled), intArrayOf(-android.R.attr.state_enabled))

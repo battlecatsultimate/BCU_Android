@@ -43,10 +43,7 @@ import common.util.unit.Form
 import common.util.unit.Level
 import common.util.unit.Unit
 
-class UnitinfRecycle(private val context: Activity,
-                     private val names: ArrayList<String>, private val forms: Array<Form>,
-                     private val data: Identifier<Unit>
-) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
+class UnitinfRecycle(private val context: Activity, private val names: ArrayList<String>, private val forms: Array<Form>, private val data: Identifier<Unit>) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
     private var fs = 0
     private val s: GetStrings = GetStrings(this.context)
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
@@ -63,9 +60,9 @@ class UnitinfRecycle(private val context: Activity,
     private val superTalentIndex = java.util.ArrayList<Int>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pack: Button = itemView.findViewById(R.id.unitinfpack)
-        val unitpack: TextView = itemView.findViewById(R.id.unitinfpackr)
-        var frse: Button = itemView.findViewById(R.id.unitinffrse)
+        val pack = itemView.findViewById<Button>(R.id.unitinfpack)!!
+        val unitpack = itemView.findViewById<TextView>(R.id.unitinfpackr)!!
+        var frse = itemView.findViewById<Button>(R.id.unitinffrse)!!
         var unitname: TextView = itemView.findViewById(R.id.unitinfname)
         var unitid: TextView = itemView.findViewById(R.id.unitinfidr)
         var unithp: TextView = itemView.findViewById(R.id.unitinfhpr)
@@ -113,10 +110,10 @@ class UnitinfRecycle(private val context: Activity,
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val u = data.get() ?: return
 
-        val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
-        val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
-        val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
-        val healtrea: TextInputLayout = context.findViewById(R.id.healtrea)
+        val cdlev = context.findViewById<TextInputLayout>(R.id.cdlev)
+        val cdtrea = context.findViewById<TextInputLayout>(R.id.cdtrea)
+        val atktrea = context.findViewById<TextInputLayout>(R.id.atktrea)
+        val healtrea = context.findViewById<TextInputLayout>(R.id.healtrea)
 
         cdlev.isCounterEnabled = true
         cdlev.counterMaxLength = 2
@@ -150,11 +147,13 @@ class UnitinfRecycle(private val context: Activity,
         level.setPlusLevel(f.unit.preferredPlusLevel)
 
         val ability = Interpret.getAbi(f.du, fragment, 0, context)
+
         val abilityicon = Interpret.getAbiid(f.du)
-        val cdlevt: TextInputEditText = context.findViewById(R.id.cdlevt)
-        val cdtreat: TextInputEditText = context.findViewById(R.id.cdtreat)
-        val atktreat: TextInputEditText = context.findViewById(R.id.atktreat)
-        val healtreat: TextInputEditText = context.findViewById(R.id.healtreat)
+
+        val cdlevt = context.findViewById<TextInputEditText>(R.id.cdlevt)
+        val cdtreat = context.findViewById<TextInputEditText>(R.id.cdtreat)
+        val atktreat = context.findViewById<TextInputEditText>(R.id.atktreat)
+        val healtreat = context.findViewById<TextInputEditText>(R.id.healtreat)
 
         cdlevt.setText(t.tech[0].toString())
         cdtreat.setText(t.trea[2].toString())
@@ -302,14 +301,14 @@ class UnitinfRecycle(private val context: Activity,
 
     @SuppressLint("ClickableViewAccessibility")
     private fun listeners(viewHolder: ViewHolder, talent: Array<Spinner>, superTalent: Array<Spinner>) {
-        val cdlev: TextInputLayout = context.findViewById(R.id.cdlev)
-        val cdtrea: TextInputLayout = context.findViewById(R.id.cdtrea)
-        val atktrea: TextInputLayout = context.findViewById(R.id.atktrea)
-        val healtrea: TextInputLayout = context.findViewById(R.id.healtrea)
-        val cdlevt: TextInputEditText = context.findViewById(R.id.cdlevt)
-        val cdtreat: TextInputEditText = context.findViewById(R.id.cdtreat)
-        val atktreat: TextInputEditText = context.findViewById(R.id.atktreat)
-        val healtreat: TextInputEditText = context.findViewById(R.id.healtreat)
+        val cdlev = context.findViewById<TextInputLayout>(R.id.cdlev)
+        val cdtrea = context.findViewById<TextInputLayout>(R.id.cdtrea)
+        val atktrea = context.findViewById<TextInputLayout>(R.id.atktrea)
+        val healtrea = context.findViewById<TextInputLayout>(R.id.healtrea)
+        val cdlevt = context.findViewById<TextInputEditText>(R.id.cdlevt)
+        val cdtreat = context.findViewById<TextInputEditText>(R.id.cdtreat)
+        val atktreat = context.findViewById<TextInputEditText>(R.id.atktreat)
+        val healtreat = context.findViewById<TextInputEditText>(R.id.healtreat)
         val reset = context.findViewById<Button>(R.id.treasurereset)
 
         val t = BasisSet.current().t()

@@ -338,7 +338,7 @@ class BattlePrepare : AppCompatActivity() {
                     true
                 }
 
-                val bck: FloatingActionButton = findViewById(R.id.battlebck)
+                val bck = findViewById<FloatingActionButton>(R.id.battlebck)
                 bck.setOnClickListener {
                     BattlePrepare.rich = false
                     BattlePrepare.sniper = false

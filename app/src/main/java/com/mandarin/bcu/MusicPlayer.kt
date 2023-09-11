@@ -489,7 +489,7 @@ class MusicPlayer : AppCompatActivity() {
 
                         if (ch == -1) {
                             ch = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                                val toolbar: Toolbar = findViewById(R.id.musictool)
+                                val toolbar = findViewById<Toolbar>(R.id.musictool)
                                 val toolh = toolbar.height
 
                                 val rect = Rect()

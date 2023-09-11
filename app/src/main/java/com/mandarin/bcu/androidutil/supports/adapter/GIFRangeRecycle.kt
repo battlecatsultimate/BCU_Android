@@ -28,8 +28,8 @@ class GIFRangeRecycle(private val name: ArrayList<String>, private val ac: Activ
     private val form: Int
 
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val range: RangeSlider = row.findViewById(R.id.gifrange)
-        val switch: SwitchMaterial = row.findViewById(R.id.gifswitch)
+        val range = row.findViewById<RangeSlider>(R.id.gifrange)!!
+        val switch = row.findViewById<SwitchMaterial>(R.id.gifswitch)!!
     }
 
     init {

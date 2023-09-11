@@ -10,7 +10,7 @@ import com.mandarin.bcu.R
 
 class MiscRecycle(private val activity: Activity, private val miscs : List<String>) : RecyclerView.Adapter<MiscRecycle.ViewHolder>() {
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val misc: TextView = itemView.findViewById(R.id.limitst)
+        val misc = itemView.findViewById<TextView>(R.id.limitst)!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

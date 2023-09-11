@@ -29,9 +29,9 @@ class ExRecycle(private val st: Stage, private val activity: Activity) : Recycle
     }
 
     class ViewHolder(row: View) : RecyclerView.ViewHolder(row) {
-        val chance: TextView = row.findViewById(R.id.exchance)
-        val mapst = row.findViewById<TextView>(R.id.exmapst)
-        val info = row.findViewById<ImageButton>(R.id.exinfo)
+        val chance = row.findViewById<TextView>(R.id.exchance)!!
+        val mapst = row.findViewById<TextView>(R.id.exmapst)!!
+        val info = row.findViewById<ImageButton>(R.id.exinfo)!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

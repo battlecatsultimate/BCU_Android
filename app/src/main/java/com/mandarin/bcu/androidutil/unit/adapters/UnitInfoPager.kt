@@ -1,7 +1,6 @@
 package com.mandarin.bcu.androidutil.unit.adapters
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -48,7 +47,6 @@ import common.util.lang.MultiLangCont
 import common.util.unit.Form
 import common.util.unit.Level
 import common.util.unit.Unit
-import java.util.Objects
 
 class UnitInfoPager : Fragment() {
     companion object {
@@ -103,7 +101,7 @@ class UnitInfoPager : Fragment() {
         val unitatkt = view.findViewById<TextView>(R.id.unitinfatktimer)
         val unitabilt = view.findViewById<TextView>(R.id.unitinfabiltr)
         val none = view.findViewById<TextView>(R.id.unitabilnone)
-        val unitabil: RecyclerView = view.findViewById(R.id.unitinfabilr)
+        val unitabil = view.findViewById<RecyclerView>(R.id.unitinfabilr)
         val unittalen = view.findViewById<CheckBox>(R.id.unitinftalen)
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val nprow = view.findViewById<TableRow>(R.id.talenrow)
@@ -130,10 +128,10 @@ class UnitInfoPager : Fragment() {
         unitabil.isFocusable = false
         unitabil.isNestedScrollingEnabled = false
 
-        val cdlev: TextInputLayout = activity.findViewById(R.id.cdlev)
-        val cdtrea: TextInputLayout = activity.findViewById(R.id.cdtrea)
-        val atktrea: TextInputLayout = activity.findViewById(R.id.atktrea)
-        val healtrea: TextInputLayout = activity.findViewById(R.id.healtrea)
+        val cdlev = activity.findViewById<TextInputLayout>(R.id.cdlev)
+        val cdtrea = activity.findViewById<TextInputLayout>(R.id.cdtrea)
+        val atktrea = activity.findViewById<TextInputLayout>(R.id.atktrea)
+        val healtrea = activity.findViewById<TextInputLayout>(R.id.healtrea)
 
         cdlev.isCounterEnabled = true
         cdlev.counterMaxLength = 2
@@ -175,11 +173,13 @@ class UnitInfoPager : Fragment() {
         level.setPlusLevel(f.unit.preferredPlusLevel)
 
         val ability = Interpret.getAbi(f.du, fragment, 0, activity)
+
         val abilityicon = Interpret.getAbiid(f.du)
-        val cdlevt: TextInputEditText = activity.findViewById(R.id.cdlevt)
-        val cdtreat: TextInputEditText = activity.findViewById(R.id.cdtreat)
-        val atktreat: TextInputEditText = activity.findViewById(R.id.atktreat)
-        val healtreat: TextInputEditText = activity.findViewById(R.id.healtreat)
+
+        val cdlevt = activity.findViewById<TextInputEditText>(R.id.cdlevt)
+        val cdtreat = activity.findViewById<TextInputEditText>(R.id.cdtreat)
+        val atktreat = activity.findViewById<TextInputEditText>(R.id.atktreat)
+        val healtreat = activity.findViewById<TextInputEditText>(R.id.healtreat)
 
         cdlevt.setText(t.tech[0].toString())
         cdtreat.setText(t.trea[2].toString())
@@ -342,14 +342,14 @@ class UnitInfoPager : Fragment() {
     private fun listeners(view: View, talent: Array<Spinner>, superTalent: Array<Spinner>) {
         val activity = activity ?: return
 
-        val cdlev: TextInputLayout = Objects.requireNonNull<Activity>(activity).findViewById(R.id.cdlev)
-        val cdtrea: TextInputLayout = activity.findViewById(R.id.cdtrea)
-        val atktrea: TextInputLayout = activity.findViewById(R.id.atktrea)
-        val healtrea: TextInputLayout = activity.findViewById(R.id.healtrea)
-        val cdlevt: TextInputEditText = activity.findViewById(R.id.cdlevt)
-        val cdtreat: TextInputEditText = activity.findViewById(R.id.cdtreat)
-        val atktreat: TextInputEditText = activity.findViewById(R.id.atktreat)
-        val healtreat: TextInputEditText = activity.findViewById(R.id.healtreat)
+        val cdlev = activity.findViewById<TextInputLayout>(R.id.cdlev)
+        val cdtrea = activity.findViewById<TextInputLayout>(R.id.cdtrea)
+        val atktrea = activity.findViewById<TextInputLayout>(R.id.atktrea)
+        val healtrea = activity.findViewById<TextInputLayout>(R.id.healtrea)
+        val cdlevt = activity.findViewById<TextInputEditText>(R.id.cdlevt)
+        val cdtreat = activity.findViewById<TextInputEditText>(R.id.cdtreat)
+        val atktreat = activity.findViewById<TextInputEditText>(R.id.atktreat)
+        val healtreat = activity.findViewById<TextInputEditText>(R.id.healtreat)
         val reset = activity.findViewById<Button>(R.id.treasurereset)
         val frse = view.findViewById<Button>(R.id.unitinffrse)
         val pack = view.findViewById<Button>(R.id.unitinfpack)
@@ -371,7 +371,7 @@ class UnitInfoPager : Fragment() {
         val unittba = view.findViewById<TextView>(R.id.unitinftbar)
         val unitatktb = view.findViewById<Button>(R.id.unitinfatktime)
         val unitatkt = view.findViewById<TextView>(R.id.unitinfatktimer)
-        val unitabil: RecyclerView = view.findViewById(R.id.unitinfabilr)
+        val unitabil = view.findViewById<RecyclerView>(R.id.unitinfabilr)
         val unittalen = view.findViewById<CheckBox>(R.id.unitinftalen)
         val npreset = view.findViewById<Button>(R.id.unitinftalreset)
         val npresetrow = view.findViewById<TableRow>(R.id.talresetrow)
@@ -602,8 +602,8 @@ class UnitInfoPager : Fragment() {
 
         unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
-                val level = unitlevel.selectedItem as Int
-                val levelp = unitlevelp.selectedItem as Int
+                val level = (unitlevel.selectedItem ?: 1) as Int
+                val levelp = (unitlevelp.selectedItem ?: 0) as Int
 
                 this@UnitInfoPager.level.setPlusLevel(levelp)
 
@@ -974,7 +974,7 @@ class UnitInfoPager : Fragment() {
         val unittba = view.findViewById<TextView>(R.id.unitinftbar)
         val unitatkt = view.findViewById<TextView>(R.id.unitinfatktimer)
         val none = view.findViewById<TextView>(R.id.unitabilnone)
-        val unitabil: RecyclerView = view.findViewById(R.id.unitinfabilr)
+        val unitabil = view.findViewById<RecyclerView>(R.id.unitinfabilr)
 
         val level = unitlevel.selectedItem as Int
         val levelp = unitlevelp.selectedItem as Int

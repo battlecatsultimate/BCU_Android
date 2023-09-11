@@ -25,10 +25,10 @@ import java.text.DecimalFormat
 
 class PackManagementAdapter(private val ac: Activity, private val pList: ArrayList<PackData.UserPack>) : ArrayAdapter<PackData.UserPack>(ac, R.layout.ability_layout, pList) {
     class ViewHolder(v: View) {
-        val id: TextView = v.findViewById(R.id.pmanid)
-        val name: TextView = v.findViewById(R.id.pmanname)
-        val desc: TextView = v.findViewById(R.id.pmandesc)
-        val more: FloatingActionButton = v.findViewById(R.id.pmanmore)
+        val id = v.findViewById<TextView>(R.id.pmanid)!!
+        val name = v.findViewById<TextView>(R.id.pmanname)!!
+        val desc = v.findViewById<TextView>(R.id.pmandesc)!!
+        val more = v.findViewById<FloatingActionButton>(R.id.pmanmore)!!
     }
 
     var dialog = AlertDialog.Builder(context)

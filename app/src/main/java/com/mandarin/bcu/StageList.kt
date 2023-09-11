@@ -78,7 +78,7 @@ class StageList : AppCompatActivity() {
             custom = extra.getBoolean("custom")
             
             lifecycleScope.launch {
-                val bck: FloatingActionButton = findViewById<FloatingActionButton>(R.id.stglistbck)
+                val bck = findViewById<FloatingActionButton>(R.id.stglistbck)
                 val st = findViewById<TextView>(R.id.status)
                 val stglist = findViewById<ListView>(R.id.stglist)
                 val prog = findViewById<ProgressBar>(R.id.prog)

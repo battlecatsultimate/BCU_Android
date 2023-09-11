@@ -13,14 +13,14 @@ import common.util.Data
 import common.util.stage.Music
 
 class MusicListAdapter(context: Context, private val name: ArrayList<Identifier<Music>>, private val pid: String, private val player: Boolean) : ArrayAdapter<Identifier<Music>>(context, R.layout.map_list_layout, name.toTypedArray()) {
-    private class ViewHolder constructor(row: View) {
-        val title: TextView = row.findViewById(R.id.map_list_name)
-        val duration: TextView = row.findViewById(R.id.map_list_coutns)
+    private class ViewHolder(row: View) {
+        val title = row.findViewById<TextView>(R.id.map_list_name)!!
+        val duration = row.findViewById<TextView>(R.id.map_list_coutns)!!
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
-        val row:View
+        val row: View
 
         if(convertView == null) {
             val inf = LayoutInflater.from(context)

@@ -49,43 +49,43 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
     )
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pack: Button = itemView.findViewById(R.id.stginfopack)
-        val stgpack: TextView = itemView.findViewById(R.id.stginfopackr)
-        val id: TextView = itemView.findViewById(R.id.stginfoidr)
-        val star: Spinner = itemView.findViewById(R.id.stginfostarr)
-        val energy: TextView = itemView.findViewById(R.id.stginfoengr)
-        val xp: TextView = itemView.findViewById(R.id.stginfoxpr)
-        val health: TextView = itemView.findViewById(R.id.stginfobhr)
-        val difficulty: TextView = itemView.findViewById(R.id.stginfodifr)
-        val continueable: TextView = itemView.findViewById(R.id.stginfocontinr)
-        val length: TextView = itemView.findViewById(R.id.stginfolenr)
-        val maxenemy: TextView = itemView.findViewById(R.id.stginfomaxenr)
-        val music: Button = itemView.findViewById(R.id.stginfomusicr)
-        val castleperc: TextView = itemView.findViewById(R.id.stginfomusic2)
-        val music2: Button = itemView.findViewById(R.id.stginfomusic2r)
-        val background: Button = itemView.findViewById(R.id.stginfobgr)
-        val castle: Button = itemView.findViewById(R.id.stginfoctr)
-        val extitle: TextView = itemView.findViewById(R.id.stginfoex)
-        val ex: RecyclerView = itemView.findViewById(R.id.exrec)
-        val exrow: TableRow = itemView.findViewById(R.id.ex)
-        val exscroll: NestedScrollView = itemView.findViewById(R.id.exscroll)
-        val droptitle: TextView = itemView.findViewById(R.id.stginfodrop)
-        val drop: RecyclerView = itemView.findViewById(R.id.droprec)
-        val droprow: TableRow = itemView.findViewById(R.id.drop)
-        val dropscroll: NestedScrollView = itemView.findViewById(R.id.dropscroll)
-        val score: RecyclerView = itemView.findViewById(R.id.scorerec)
-        val scorerow: TableRow = itemView.findViewById(R.id.score)
-        val scorescroll: NestedScrollView = itemView.findViewById(R.id.scorescroll)
-        val limitNone: TextView = itemView.findViewById(R.id.stginfononer)
-        val limitrec: RecyclerView = itemView.findViewById(R.id.stginfolimitrec)
-        val limitscroll: NestedScrollView = itemView.findViewById(R.id.limitscroll)
-        val miscrec: RecyclerView = itemView.findViewById(R.id.stginfomiscrec)
-        val miscnone: TextView = itemView.findViewById(R.id.miscnone)
-        val miscscroll: NestedScrollView = itemView.findViewById(R.id.miscscroll)
-        val chanceText: TextView = itemView.findViewById(R.id.stfinfochance)
-        val loop: TextView = itemView.findViewById(R.id.stginfoloopt)
-        val loop1: TextView = itemView.findViewById(R.id.stginfoloop1t)
-        val minres: TextView = itemView.findViewById(R.id.stginfominrest)
+        val pack = itemView.findViewById<Button>(R.id.stginfopack)!!
+        val stgpack = itemView.findViewById<TextView>(R.id.stginfopackr)!!
+        val id = itemView.findViewById<TextView>(R.id.stginfoidr)!!
+        val star = itemView.findViewById<Spinner>(R.id.stginfostarr)!!
+        val energy = itemView.findViewById<TextView>(R.id.stginfoengr)!!
+        val xp = itemView.findViewById<TextView>(R.id.stginfoxpr)!!
+        val health = itemView.findViewById<TextView>(R.id.stginfobhr)!!
+        val difficulty = itemView.findViewById<TextView>(R.id.stginfodifr)!!
+        val continueable = itemView.findViewById<TextView>(R.id.stginfocontinr)!!
+        val length = itemView.findViewById<TextView>(R.id.stginfolenr)!!
+        val maxenemy = itemView.findViewById<TextView>(R.id.stginfomaxenr)!!
+        val music = itemView.findViewById<Button>(R.id.stginfomusicr)!!
+        val castleperc = itemView.findViewById<TextView>(R.id.stginfomusic2)!!
+        val music2 = itemView.findViewById<Button>(R.id.stginfomusic2r)!!
+        val background = itemView.findViewById<Button>(R.id.stginfobgr)!!
+        val castle = itemView.findViewById<Button>(R.id.stginfoctr)!!
+        val extitle = itemView.findViewById<TextView>(R.id.stginfoex)!!
+        val ex = itemView.findViewById<RecyclerView>(R.id.exrec)!!
+        val exrow = itemView.findViewById<TableRow>(R.id.ex)!!
+        val exscroll = itemView.findViewById<NestedScrollView>(R.id.exscroll)!!
+        val droptitle = itemView.findViewById<TextView>(R.id.stginfodrop)!!
+        val drop = itemView.findViewById<RecyclerView>(R.id.droprec)!!
+        val droprow = itemView.findViewById<TableRow>(R.id.drop)!!
+        val dropscroll = itemView.findViewById<NestedScrollView>(R.id.dropscroll)!!
+        val score = itemView.findViewById<RecyclerView>(R.id.scorerec)!!
+        val scorerow = itemView.findViewById<TableRow>(R.id.score)!!
+        val scorescroll = itemView.findViewById<NestedScrollView>(R.id.scorescroll)!!
+        val limitNone = itemView.findViewById<TextView>(R.id.stginfononer)!!
+        val limitrec = itemView.findViewById<RecyclerView>(R.id.stginfolimitrec)!!
+        val limitscroll = itemView.findViewById<NestedScrollView>(R.id.limitscroll)!!
+        val miscrec = itemView.findViewById<RecyclerView>(R.id.stginfomiscrec)!!
+        val miscnone = itemView.findViewById<TextView>(R.id.miscnone)!!
+        val miscscroll = itemView.findViewById<NestedScrollView>(R.id.miscscroll)!!
+        val chanceText = itemView.findViewById<TextView>(R.id.stfinfochance)!!
+        val loop = itemView.findViewById<TextView>(R.id.stginfoloopt)!!
+        val loop1 = itemView.findViewById<TextView>(R.id.stginfoloop1t)!!
+        val minres = itemView.findViewById<TextView>(R.id.stginfominrest)!!
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -140,7 +140,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
 
         viewHolder.star.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val enrec: RecyclerView = activity.findViewById(R.id.stginfoenrec)
+                val enrec = activity.findViewById<RecyclerView>(R.id.stginfoenrec)
 
                 enrec.layoutManager = LinearLayoutManager(activity)
 
@@ -430,15 +430,15 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
             viewHolder.miscrec.adapter = miscRecycle
         }
 
-        val stlev: TextInputLayout = activity.findViewById(R.id.stlev)
-        val sttrea: TextInputLayout = activity.findViewById(R.id.sttrea)
-        val sttrea2: TextInputLayout = activity.findViewById(R.id.sttrea2)
+        val stlev = activity.findViewById<TextInputLayout>(R.id.stlev)
+        val sttrea = activity.findViewById<TextInputLayout>(R.id.sttrea)
+        val sttrea2 = activity.findViewById<TextInputLayout>(R.id.sttrea2)
 
-        val stlevt: TextInputEditText = activity.findViewById(R.id.stlevt)
-        val sttreat: TextInputEditText = activity.findViewById(R.id.sttreat)
-        val sttreat2: TextInputEditText = activity.findViewById(R.id.sttreat2)
+        val stlevt = activity.findViewById<TextInputEditText>(R.id.stlevt)
+        val sttreat = activity.findViewById<TextInputEditText>(R.id.sttreat)
+        val sttreat2 = activity.findViewById<TextInputEditText>(R.id.sttreat2)
 
-        val reset: Button = activity.findViewById(R.id.treasurereset)
+        val reset = activity.findViewById<Button>(R.id.treasurereset)
 
         stlev.isCounterEnabled = true
         stlev.counterMaxLength = 2

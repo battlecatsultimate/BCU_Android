@@ -307,8 +307,8 @@ class LUUnitSetting : Fragment() {
 
             spinners[1].onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, v: View?, position: Int, id: Long) {
-                    val lev = spinners[0].selectedItem as Int
-                    val levp = spinners[1].selectedItem as Int
+                    val lev = (spinners[0].selectedItem ?: 1) as Int
+                    val levp = (spinners[1].selectedItem ?: 0) as Int
 
                     level.setPlusLevel(levp)
 
@@ -346,8 +346,8 @@ class LUUnitSetting : Fragment() {
                         anim2.start()
                     }
 
-                    val lev = spinners[0].selectedItem as Int
-                    val levp1 = spinners[1].selectedItem as Int
+                    val lev = (spinners[0].selectedItem ?: 1) as Int
+                    val levp1 = (spinners[1].selectedItem ?: 0) as Int
 
                     level.setLevel(lev)
                     level.setPlusLevel(levp1)
@@ -369,8 +369,8 @@ class LUUnitSetting : Fragment() {
                         anim2.start()
                     }
 
-                    val lev = spinners[0].selectedItem as Int
-                    val levp1 = spinners[1].selectedItem as Int
+                    val lev = (spinners[0].selectedItem ?: 1) as Int
+                    val levp1 = (spinners[1].selectedItem ?: 0) as Int
 
                     level.setLevel(lev)
                     level.setPlusLevel(levp1)
@@ -424,8 +424,8 @@ class LUUnitSetting : Fragment() {
                 line.updateLineUp()
                 line.syncLineUp()
 
-                val lev = spinners[0].selectedItem as Int
-                val levp1 = spinners[1].selectedItem as Int
+                val lev = (spinners[0].selectedItem ?: 1) as Int
+                val levp1 = (spinners[1].selectedItem ?: 0) as Int
 
                 level.setLevel(lev)
                 level.setPlusLevel(levp1)
