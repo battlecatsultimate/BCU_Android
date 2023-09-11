@@ -1045,7 +1045,7 @@ class BattleSimulation : AppCompatActivity() {
             if(cView.scaleMode) {
                 realFX = detector.focusX
                 previousX = cView.painter.bf.sb.pos.toFloat()
-                previousScale = cView.painter.bf.sb.siz.toFloat()
+                previousScale = cView.painter.bf.sb.siz
 
                 cView.scaleMode = false
             }
