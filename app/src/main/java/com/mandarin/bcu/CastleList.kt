@@ -36,6 +36,8 @@ import java.util.Locale
 
 class CastleList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        savedInstanceState?.clear()
+
         super.onCreate(savedInstanceState)
 
         val shared = getSharedPreferences(StaticStore.CONFIG, Context.MODE_PRIVATE)
