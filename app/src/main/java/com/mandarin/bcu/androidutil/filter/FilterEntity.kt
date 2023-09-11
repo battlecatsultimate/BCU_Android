@@ -1,8 +1,9 @@
 package com.mandarin.bcu.androidutil.filter
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
-import com.mandarin.bcu.androidutil.Interpret
 import common.CommonStatic
 import common.battle.data.MaskEntity
 import common.pack.Identifier
@@ -12,9 +13,7 @@ import common.util.lang.MultiLangCont
 import common.util.unit.AbEnemy
 import common.util.unit.Trait
 import common.util.unit.Unit
-import java.lang.Exception
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Locale
 
 object FilterEntity {
     fun setUnitFilter(pid: String): ArrayList<Identifier<Unit>> {
@@ -256,6 +255,8 @@ object FilterEntity {
         val result = ArrayList<Identifier<AbEnemy>>()
 
         val lang = Locale.getDefault().language
+
+        FirebaseCrashlytics.getInstance().log("B0 : ${b0.size} | B1 : ${b1.size} | B2 : ${b2.size} | B3 : ${b3.size} | B4 : ${b4.size} | ENEMY : ${p.enemies.size()}")
 
         for (i in p.enemies.list.indices)
             if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i]) {
