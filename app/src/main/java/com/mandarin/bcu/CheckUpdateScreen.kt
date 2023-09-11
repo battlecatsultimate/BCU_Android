@@ -172,7 +172,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
                             dialog.dismiss()
 
-                            it.resume(0) { _ -> }
+                            if (it.isActive) {
+                                it.resume(0) { _ -> }
+                            }
                         }
                     })
 
@@ -236,11 +238,15 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                         startActivity(intent)
                                         finish()
 
-                                        it.resume(0) { _ -> }
+                                        if (it.isActive) {
+                                            it.resume(0) { _ -> }
+                                        }
                                     }
 
                                     apkDialog.setNegativeButton(R.string.main_file_cancel) { _, _ ->
-                                        it.resume(0) { _ -> }
+                                        if (it.isActive) {
+                                            it.resume(0) { _ -> }
+                                        }
                                     }
 
                                     if (!isDestroyed && !isFinishing) {
@@ -342,7 +348,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                                 if (!it.isActive || it.isCancelled)
                                                     return@attachListener
 
-                                                it.resume(0) { _ -> }
+                                                if (it.isActive) {
+                                                    it.resume(0) { _ -> }
+                                                }
                                             }
                                         }
 
@@ -360,7 +368,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                             }
                                         }
 
-                                        it.resume(0) { _ -> }
+                                        if (it.isActive) {
+                                            it.resume(0) { _ -> }
+                                        }
                                     }
 
                                     updateDialog.show()
@@ -409,7 +419,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                 finish()
                             }
 
-                            it.resume(0) { _ -> }
+                            if (it.isActive) {
+                                it.resume(0) { _ -> }
+                            }
                         }
 
                         internetDialog.show()
@@ -440,7 +452,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
 
                         finish()
 
-                        it.resume(0) { _ -> }
+                        if (it.isActive) {
+                            it.resume(0) { _ -> }
+                        }
                     }
 
                     internetDialog.show()
