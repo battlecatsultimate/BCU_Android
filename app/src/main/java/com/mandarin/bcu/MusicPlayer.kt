@@ -694,6 +694,14 @@ class MusicPlayer : AppCompatActivity() {
     }
 
     fun indexOf(id: Identifier<Music>?) : Int {
+        if (StaticStore.musicData.isEmpty()) {
+            for(pack in UserProfile.getAllPacks()) {
+                for (music in pack.musics) {
+                    StaticStore.musicData.add(music.id)
+                }
+            }
+        }
+
         if(id == null)
             return -1
         else {
