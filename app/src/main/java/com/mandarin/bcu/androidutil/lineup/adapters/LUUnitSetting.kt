@@ -446,6 +446,12 @@ class LUUnitSetting : Fragment() {
                     val max = f.du.pCoin.max
 
                     for(i in talentIndex.indices) {
+                        if (talentIndex[i] >= max.size) {
+                            talent[i].isEnabled = false
+
+                            return@setOnClickListener
+                        }
+
                         val list = ArrayList<Int>()
 
                         for (j in 0 until max[talentIndex[i]] + 1)
