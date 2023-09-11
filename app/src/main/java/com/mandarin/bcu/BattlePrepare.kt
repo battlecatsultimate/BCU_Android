@@ -164,6 +164,8 @@ class BattlePrepare : AppCompatActivity() {
                         else
                             BasisSet.list().size - 1
 
+                    BasisSet.list()
+
                     BasisSet.setCurrent(BasisSet.list()[set])
 
                     if (lu >= BasisSet.current().lb.size)
