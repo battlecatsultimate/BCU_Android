@@ -597,7 +597,7 @@ class LineUpView : View {
             return null
 
         if (x == REPLACE)
-            return if (repform != null) {
+            return if (repform != null && repform!!.anim.uni.img != null) {
                 var b = repform!!.anim.uni.img.bimg() as Bitmap
 
                 if (b.height != b.width)
