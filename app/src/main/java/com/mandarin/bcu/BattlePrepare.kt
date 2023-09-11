@@ -65,6 +65,9 @@ class BattlePrepare : AppCompatActivity() {
                         continue
                     }
 
+                    if (!line.canDraw())
+                        continue
+
                     line.updateLineUp()
 
                     break

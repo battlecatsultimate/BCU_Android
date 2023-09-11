@@ -205,10 +205,14 @@ class LineUpView : View {
         timer.start()
     }
 
+    fun canDraw() : Boolean {
+        return this::empty.isInitialized && this::bd.isInitialized && this::replace.isInitialized
+    }
+
     override fun onDraw(c: Canvas) {
         getPosition()
 
-        if (!this::empty.isInitialized || !this::bd.isInitialized || !this::replace.isInitialized) {
+        if (!canDraw()) {
             return
         }
 
@@ -507,10 +511,7 @@ class LineUpView : View {
                 units[x][y] = if (icon is Bitmap)
                     StaticStore.getResizebp(StaticStore.makeIcon(context, icon, 48f), bw, bw)
                 else
-                    if (this::empty.isInitialized)
-                        empty
-                    else
-                        StaticStore.empty(1, 1)
+                    empty
 
                 isUnusable[x][y] = limit != null && lu.fs[x][y] != null && limit?.unusable(lu.fs[x][y].du, price) == true
             }
@@ -582,11 +583,7 @@ class LineUpView : View {
     private fun clearAllUnit() {
         for(i in units.indices) {
             for(j in units[i].indices) {
-                units[i][j] = if (this::empty.isInitialized) {
-                    empty
-                } else {
-                    StaticStore.empty(1, 1)
-                }
+                units[i][j] = empty
                 isUnusable[i][j] = false
             }
         }
