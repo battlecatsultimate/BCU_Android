@@ -93,13 +93,18 @@ class PackManagement : AppCompatActivity() {
                     val pack = File(StaticStore.getExternalPack(this), name)
 
                     if(!pack.exists()) {
-                        pack.createNewFile()
+                        try {
+                            val ins = resolver.openInputStream(path) ?: return@registerForActivityResult
+                            val fos = FileOutputStream(pack)
 
-                        val ins = resolver.openInputStream(path) ?: return@registerForActivityResult
-                        val fos = FileOutputStream(pack)
+                            pack.createNewFile()
 
-                        showWritingDialog(ins, fos, pack)
+                            showWritingDialog(ins, fos, pack)
+                        } catch (_: FileNotFoundException) {
+                            StaticStore.showShortMessage(this, R.string.pack_import_nofile)
 
+                            return@registerForActivityResult
+                        }
                     } else {
                         StaticStore.fixOrientation(this)
 
@@ -109,10 +114,18 @@ class PackManagement : AppCompatActivity() {
                         dialog.setMessage(R.string.pack_import_exist_msg)
 
                         dialog.setPositiveButton(R.string.replace) { _, _ ->
-                            val ins = resolver.openInputStream(path) ?: return@setPositiveButton
-                            val fos = FileOutputStream(pack)
+                            try {
+                                val ins = resolver.openInputStream(path) ?: return@setPositiveButton
+                                val fos = FileOutputStream(pack)
 
-                            showWritingDialog(ins, fos, pack)
+                                pack.createNewFile()
+
+                                showWritingDialog(ins, fos, pack)
+                            } catch (_: FileNotFoundException) {
+                                StaticStore.showShortMessage(this, R.string.pack_import_nofile)
+
+                                return@setPositiveButton
+                            }
                         }
 
                         dialog.setNegativeButton(R.string.main_file_cancel) {_, _ ->
