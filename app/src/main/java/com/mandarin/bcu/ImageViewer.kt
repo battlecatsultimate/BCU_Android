@@ -475,6 +475,8 @@ class ImageViewer : AppCompatActivity() {
                         if (u !is Unit)
                             return@launch
 
+                        u.forms.forEach { f -> f.anim.load() }
+
                         val formAdapter = ArrayAdapter(this@ImageViewer, R.layout.spinneradapter, u.forms.map {
                             f -> if (content.pack == Identifier.DEF)
                                 "Default-${content.id}-${f.fid}"
@@ -487,6 +489,7 @@ class ImageViewer : AppCompatActivity() {
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, ids: Long) {
                                 if (StaticStore.formposition != position) {
                                     StaticStore.formposition = position
+
                                     cView.anim = u.forms[position].getEAnim(StaticStore.getAnimType(anims.selectedItemPosition, u.forms[position].anim.anims.size))
 
                                     val max = cView.anim.len()
