@@ -166,7 +166,7 @@ public interface BattleBox {
                 bf.sb.registerBattleDimension(midY, h / minSiz);
 
             if(CommonStatic.getConfig().twoRow)
-                midY += (h * 0.75 / 10.0);
+                midY += (h * 0.75f / 10f);
 
             ImgCore.set(g);
 
@@ -264,10 +264,10 @@ public interface BattleBox {
             midh = h + (int) (groundHeight * (bf.sb.siz - maxSiz) / (maxSiz - minSiz));
 
             if(CommonStatic.getConfig().twoRow) {
-                midh -= h * 0.75 / 10.0;
+                midh = (int) (midh - h * 0.75f / 10f);
             }
 
-            midh += bf.sb.shakeOffset * dpi / 32.0;
+            midh = (int) (midh + bf.sb.shakeOffset * dpi / 32f);
         }
 
         public void reset() {
@@ -417,12 +417,12 @@ public interface BattleBox {
                     if(bf.sb.selectedUnit[0] != -1 && bf.sb.selectedUnit[0] == i && bf.sb.selectedUnit[1] == j) {
                         switch (bf.sb.buttonDelay) {
                             case 3:
-                                imw *= 0.95;
-                                imh *= 0.95;
+                                imw = (int) (imw * 0.95f);
+                                imh = (int) (imh * 0.95f) ;
                                 break;
                             case 4:
-                                imw *= 1.05;
-                                imh *= 1.05;
+                                imw = (int) (imw * 1.05f);
+                                imh = (int) (imh * 1.05f);
                         }
                     }
 
@@ -489,30 +489,17 @@ public interface BattleBox {
                 if(bf.sb.selectedUnit[0] != -1 && bf.sb.selectedUnit[0] == index && bf.sb.selectedUnit[1] == i) {
                     switch (bf.sb.buttonDelay) {
                         case 3:
-                            imw *= 0.95;
-                            imh *= 0.95;
+                            imw = (int) (imw * 0.95f);
+                            imh = (int) (imh * 0.95f) ;
                             break;
                         case 4:
-                            imw *= 1.05;
-                            imh *= 1.05;
+                            imw = (int) (imw * 1.05f);
+                            imh = (int) (imh * 1.05f);
                     }
                 }
 
                 int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) - 2) + (index == 0 ? 0 : (term / 2)));
-                int y = h - ih - (isBehind ? 0 : (int) (ih * 0.1));
-
-                //Check if lineup is changing
-                if(bf.sb.changeFrame != -1) {
-                    if(bf.sb.changeFrame >= bf.sb.changeDivision) {
-                        float dis = isBehind ? ih * 0.5f : bf.sb.goingUp ? ih * 0.4f : ih * 0.6f;
-
-                        y += (dis / bf.sb.changeDivision) * (bf.sb.changeDivision * 2 - bf.sb.changeFrame) * (isBehind ? 1 : -1) * (bf.sb.goingUp ? 1 : -1);
-                    } else {
-                        float dis = isBehind ? ih * 0.5f : bf.sb.goingUp ? ih * 0.6f : ih * 0.4f;
-
-                        y +=  (dis - (dis / bf.sb.changeDivision) * (bf.sb.changeDivision - bf.sb.changeFrame)) * (isBehind ? -1 : 1) * (bf.sb.goingUp ? 1 : -1);
-                    }
-                }
+                int y = getLineupY(h, isBehind, ih);
 
                 g.drawImage(img, x - (imw - iw) / 2f, y - (imh - ih) / 2f, imw, imh);
 
@@ -557,6 +544,25 @@ public interface BattleBox {
             if(((CVGraphics)g).neg) {
                 g.setComposite(FakeGraphics.GRAY, 0, 0);
             }
+        }
+
+        private int getLineupY(int h, boolean isBehind, int ih) {
+            int y = h - ih - (isBehind ? 0 : (int) (ih * 0.1));
+
+            //Check if lineup is changing
+            if(bf.sb.changeFrame != -1) {
+                if(bf.sb.changeFrame >= bf.sb.changeDivision) {
+                    float dis = isBehind ? ih * 0.5f : bf.sb.goingUp ? ih * 0.4f : ih * 0.6f;
+
+                    y = (int) (y + (dis / bf.sb.changeDivision) * (bf.sb.changeDivision * 2 - bf.sb.changeFrame) * (isBehind ? 1 : -1) * (bf.sb.goingUp ? 1 : -1));
+                } else {
+                    float dis = isBehind ? ih * 0.5f : bf.sb.goingUp ? ih * 0.6f : ih * 0.4f;
+
+                    y = (int) (y + (dis - (dis / bf.sb.changeDivision) * (bf.sb.changeDivision - bf.sb.changeFrame)) * (isBehind ? -1 : 1) * (bf.sb.goingUp ? 1 : -1));
+                }
+            }
+            
+            return y;
         }
 
         private void drawCannonRange(FakeGraphics g) {
@@ -647,17 +653,17 @@ public interface BattleBox {
             int posx = (int) ((bf.sb.ebase.pos * ratio + off) * bf.sb.siz + bf.sb.pos);
 
             if (bf.sb.ebase instanceof Entity && ((Entity) bf.sb.ebase).data instanceof DataEnemy) {
-                posx -= castw * bf.sb.siz / 2;
+                posx = (int) (posx - castw * bf.sb.siz / 2);
 
                 AnimU<?> anim = ((Entity) bf.sb.ebase).data.getPack().anim;
 
                 if(anim != null && anim.mamodel.confs.length > 1) {
-                    posx += anim.mamodel.confs[1][2] * 2.5 * anim.mamodel.parts[0][8] / anim.mamodel.ints[0] * bf.sb.siz * ratio;
-                    posy += anim.mamodel.confs[1][3] * 2.5 * anim.mamodel.parts[0][9] / anim.mamodel.ints[0] * bf.sb.siz * ratio;
+                    posx = (int) (posx + anim.mamodel.confs[1][2] * 2.5f * anim.mamodel.parts[0][8] / anim.mamodel.ints[0] * bf.sb.siz * ratio);
+                    posy = (int) (posy + anim.mamodel.confs[1][3] * 2.5f * anim.mamodel.parts[0][9] / anim.mamodel.ints[0] * bf.sb.siz * ratio);
                 }
             } else {
-                posx -= castw * bf.sb.siz * 1.15;
-                posy -= casth * bf.sb.siz * 0.95 + aux.num[5][0].getImg().getHeight() * bf.sb.siz;
+                posx = (int) (posx - castw * bf.sb.siz * 1.15f);
+                posy = (int) (posy - (casth * bf.sb.siz * 0.95f + aux.num[5][0].getImg().getHeight() * bf.sb.siz));
             }
 
             setSym(gra, bf.sb.siz * 0.8f, posx, posy, 0);
@@ -691,7 +697,7 @@ public interface BattleBox {
                 if ((bf.sb.s_stop == 0 || (bf.sb.le.get(i).getAbi() & Data.AB_TIMEI) == 0)) {
                     int dep = bf.sb.le.get(i).layer * DEP;
 
-                    while (efList.size() > 0) {
+                    while (!efList.isEmpty()) {
                         ContAb wc = efList.get(0);
 
                         if (wc.layer + 1 <= bf.sb.le.get(i).layer) {
@@ -766,7 +772,7 @@ public interface BattleBox {
                 }
             }
 
-            while(efList.size() > 0) {
+            while(!efList.isEmpty()) {
                 drawEff(gra, efList.get(0), at, psiz);
 
                 efList.remove(0);
@@ -977,7 +983,7 @@ public interface BattleBox {
 
             int min = (int) timeLeft / 60;
 
-            timeLeft -= min * 60.0;
+            timeLeft = (int) (timeLeft - min * 60f);
 
             FakeImage separator = aux.timer[10].getImg();
             FakeImage zero = aux.timer[0].getImg();
