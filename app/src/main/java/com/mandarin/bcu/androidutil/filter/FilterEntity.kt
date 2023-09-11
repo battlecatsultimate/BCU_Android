@@ -16,6 +16,7 @@ import common.util.unit.Unit
 import java.util.Locale
 
 object FilterEntity {
+    @Synchronized
     fun setUnitFilter(pid: String): ArrayList<Identifier<Unit>> {
         val p = UserProfile.getPack(pid) ?: return ArrayList()
 
@@ -151,6 +152,7 @@ object FilterEntity {
         }
     }
 
+    @Synchronized
     fun setEnemyFilter(pid: String): ArrayList<Identifier<AbEnemy>> {
         val p = UserProfile.getPack(pid) ?: return ArrayList()
 
@@ -283,6 +285,7 @@ object FilterEntity {
         return result
     }
 
+    @Synchronized
     fun setLuFilter() : ArrayList<Identifier<Unit>> {
         val b0 = ArrayList<Boolean>()
         val b1 = ArrayList<Boolean>()
