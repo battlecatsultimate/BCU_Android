@@ -131,17 +131,18 @@ class LineUpScreen : AppCompatActivity() {
             val tabLayout = findViewById<TabLayout>(R.id.lineuptab)
             val lineupPager = findViewById<ViewPager2>(R.id.lineuppager)
             val row = findViewById<TableRow>(R.id.lineupsetrow)
-            val schname = findViewById<TextInputEditText>(R.id.animschname)
+            val searchBar = findViewById<TextInputEditText>(R.id.animschname)
             val searchLayout = findViewById<TextInputLayout>(R.id.animschnamel)
             val layout = findViewById<LinearLayout>(R.id.lineuplayout)
             val view = findViewById<View>(R.id.view)
             val st = findViewById<TextView>(R.id.status)
-            var setn = shared.getInt("equip_set", 0)
-            var lun = shared.getInt("equip_lu", 0)
-            val prog = findViewById<ProgressBar>(R.id.prog)
+            val progression = findViewById<ProgressBar>(R.id.prog)
             val bck = findViewById<FloatingActionButton>(R.id.lineupbck)
             val sch = findViewById<FloatingActionButton>(R.id.linesch)
             val option = findViewById<FloatingActionButton>(R.id.lineupsetting)
+
+            var setIndex = max(0, shared.getInt("equip_set", 0))
+            var lineupIndex = max(0, shared.getInt("equip_lu", 0))
 
             val popupMenu = PopupMenu(this@LineUpScreen, option)
             val menu = popupMenu.menu
@@ -152,9 +153,9 @@ class LineUpScreen : AppCompatActivity() {
             }
 
             if (view == null)
-                StaticStore.setDisappear(tabLayout, lineupPager, row, schname, searchLayout)
+                StaticStore.setDisappear(tabLayout, lineupPager, row, searchBar, searchLayout)
             else
-                StaticStore.setDisappear(tabLayout, lineupPager, row, view, schname, searchLayout)
+                StaticStore.setDisappear(tabLayout, lineupPager, row, view, searchBar, searchLayout)
 
             //Load Data
             withContext(Dispatchers.IO) {
@@ -220,11 +221,11 @@ class LineUpScreen : AppCompatActivity() {
             StaticStore.setDisappear(line)
             
             //Load UI
-            prog.isIndeterminate = true
+            progression.isIndeterminate = true
 
             popupMenu.menuInflater.inflate(R.menu.lineup_menu, menu)
 
-            StaticStore.setDisappear(prog, st)
+            StaticStore.setDisappear(progression, st)
 
             bck.setOnClickListener {
                 StaticStore.saveLineUp(this@LineUpScreen, true)
@@ -303,26 +304,26 @@ class LineUpScreen : AppCompatActivity() {
                 true
             }
 
-            val setspin = findViewById<Spinner>(R.id.setspin)
-            val luspin = findViewById<Spinner>(R.id.luspin)
+            val setMenu = findViewById<Spinner>(R.id.setspin)
+            val lineupMenu = findViewById<Spinner>(R.id.luspin)
 
-            if (setn >= BasisSet.list().size)
-                setn = BasisSet.list().size - 1
+            if (setIndex >= BasisSet.list().size)
+                setIndex = BasisSet.list().size - 1
 
-            BasisSet.setCurrent(BasisSet.list()[setn])
+            BasisSet.setCurrent(BasisSet.list()[setIndex])
 
-            val setname: MutableList<String> = ArrayList()
+            val setNameData: MutableList<String> = ArrayList()
 
             for (i in BasisSet.list().indices)
-                setname.add(BasisSet.list()[i].name)
+                setNameData.add(BasisSet.list()[i].name)
 
             var initialized = false
 
-            val adapter = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setname)
+            val adapter = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setNameData)
 
-            setspin.adapter = adapter
+            setMenu.adapter = adapter
 
-            setspin.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            setMenu.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (!initialized) {
                         initialized = true
@@ -337,15 +338,15 @@ class LineUpScreen : AppCompatActivity() {
                     editor.putInt("equip_set", position)
                     editor.apply()
 
-                    val luname: MutableList<String> = ArrayList()
+                    val lineupNameData: MutableList<String> = ArrayList()
 
                     for (i in BasisSet.current().lb.indices) {
-                        luname.add(BasisSet.current().lb[i].name)
+                        lineupNameData.add(BasisSet.current().lb[i].name)
                     }
 
-                    val adapter1 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, luname)
+                    val adapter1 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNameData)
 
-                    luspin.adapter = adapter1
+                    lineupMenu.adapter = adapter1
                     line.updateUnitSetting()
                     line.updateTreasureSetting()
                     line.updateConstructionSetting()
@@ -370,21 +371,21 @@ class LineUpScreen : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            val luname: MutableList<String> = ArrayList()
+            val lineupNameData: MutableList<String> = ArrayList()
 
-            if (lun >= BasisSet.current().lb.size)
-                lun = BasisSet.current().lb.size - 1
+            if (lineupIndex >= BasisSet.current().lb.size)
+                lineupIndex = BasisSet.current().lb.size - 1
 
-            BasisSet.current().sele = BasisSet.current().lb[lun]
+            BasisSet.current().sele = BasisSet.current().lb[lineupIndex]
 
             for (i in BasisSet.current().lb.indices) {
-                luname.add(BasisSet.current().lb[i].name)
+                lineupNameData.add(BasisSet.current().lb[i].name)
             }
 
-            val adapter1 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, luname)
+            val adapter1 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNameData)
 
-            luspin.adapter = adapter1
-            luspin.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            lineupMenu.adapter = adapter1
+            lineupMenu.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (!initialized)
                         return
@@ -420,7 +421,7 @@ class LineUpScreen : AppCompatActivity() {
                 menu.getItem(2).subMenu?.getItem(1)?.isEnabled = false
             }
 
-            schname.addTextChangedListener(object : TextWatcher {
+            searchBar.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -439,7 +440,7 @@ class LineUpScreen : AppCompatActivity() {
                         dialog.setContentView(R.layout.create_setlu_dialog)
 
                         val edit = dialog.findViewById<EditText>(R.id.setluedit)
-                        val setdone = dialog.findViewById<Button>(R.id.setludone)
+                        val done = dialog.findViewById<Button>(R.id.setludone)
                         val cancel = dialog.findViewById<Button>(R.id.setlucancel)
 
                         edit.hint = "set " + BasisSet.list().size
@@ -448,7 +449,7 @@ class LineUpScreen : AppCompatActivity() {
 
                         edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]))
 
-                        setdone.setOnClickListener {
+                        done.setOnClickListener {
                             if (edit.text.toString().isEmpty())
                                 BasisSet()
                             else {
@@ -468,8 +469,8 @@ class LineUpScreen : AppCompatActivity() {
 
                             val adapter2 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setNames)
 
-                            setspin.adapter = adapter2
-                            setspin.setSelection(setspin.count - 1)
+                            setMenu.adapter = adapter2
+                            setMenu.setSelection(setMenu.count - 1)
 
                             line.updateUnitSetting()
                             line.updateTreasureSetting()
@@ -498,7 +499,7 @@ class LineUpScreen : AppCompatActivity() {
                         dialog.setContentView(R.layout.create_setlu_dialog)
 
                         val edit = dialog.findViewById<EditText>(R.id.setluedit)
-                        val setdone = dialog.findViewById<Button>(R.id.setludone)
+                        val done = dialog.findViewById<Button>(R.id.setludone)
                         val cancel = dialog.findViewById<Button>(R.id.setlucancel)
 
                         edit.hint = "lineup " + BasisSet.current().lb.size
@@ -507,7 +508,7 @@ class LineUpScreen : AppCompatActivity() {
 
                         edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]))
 
-                        setdone.setOnClickListener {
+                        done.setOnClickListener {
                             if (edit.text.toString().isEmpty())
                                 BasisSet.current().add()
                             else {
@@ -526,8 +527,8 @@ class LineUpScreen : AppCompatActivity() {
 
                             val adapter2 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNames)
 
-                            luspin.adapter = adapter2
-                            luspin.setSelection(luspin.count - 1)
+                            lineupMenu.adapter = adapter2
+                            lineupMenu.setSelection(lineupMenu.count - 1)
 
                             line.updateUnitSetting()
                             line.updateUnitOrb()
@@ -546,7 +547,7 @@ class LineUpScreen : AppCompatActivity() {
                     }
                     R.id.lineup_copy_set -> {
                         StaticStore.set = BasisSet.current().copy()
-                        BasisSet.setCurrent(BasisSet.list()[setspin.selectedItemPosition])
+                        BasisSet.setCurrent(BasisSet.list()[setMenu.selectedItemPosition])
 
                         for(i in BasisSet.current().lb.indices) {
                             BasisSet.current().lb[i].name = BasisSet.current().lb[i].name
@@ -578,11 +579,11 @@ class LineUpScreen : AppCompatActivity() {
                         builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
                             val name = BasisSet.current().name
 
-                            if(setspin.selectedItemPosition != 0) {
-                                BasisSet.list().removeAt(setspin.selectedItemPosition)
-                                BasisSet.list().add(setspin.selectedItemPosition, s.copy())
+                            if(setMenu.selectedItemPosition != 0) {
+                                BasisSet.list().removeAt(setMenu.selectedItemPosition)
+                                BasisSet.list().add(setMenu.selectedItemPosition, s.copy())
                                 BasisSet.list().removeAt(BasisSet.list().size - 1)
-                                BasisSet.setCurrent(BasisSet.list()[setspin.selectedItemPosition])
+                                BasisSet.setCurrent(BasisSet.list()[setMenu.selectedItemPosition])
                                 BasisSet.current().name = name
                             } else {
                                 BasisSet.def().lb.clear()
@@ -597,14 +598,17 @@ class LineUpScreen : AppCompatActivity() {
 
                             line.updateLineUp()
                             line.invalidate()
-                            val luname1: MutableList<String> = ArrayList()
+
+                            val lineupNames: MutableList<String> = ArrayList()
+
                             var i = 0
+
                             while (i < BasisSet.current().lb.size) {
-                                luname1.add(BasisSet.current().lb[i].name)
+                                lineupNames.add(BasisSet.current().lb[i].name)
                                 i++
                             }
-                            val adapter11 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, luname1)
-                            luspin.adapter = adapter11
+                            val adapter11 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNames)
+                            lineupMenu.adapter = adapter11
                             StaticStore.showShortMessage(this@LineUpScreen, R.string.lineup_paste_set_done)
                             StaticStore.saveLineUp(this@LineUpScreen, true)
                         }
@@ -621,9 +625,9 @@ class LineUpScreen : AppCompatActivity() {
                         builder.setMessage(R.string.lineup_paste_lu_msg)
                         builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
                             val name = BasisSet.current().sele.name
-                            BasisSet.current().lb.removeAt(luspin.selectedItemPosition)
-                            BasisSet.current().lb.add(luspin.selectedItemPosition, l.copy())
-                            BasisSet.current().sele = BasisSet.current().lb[luspin.selectedItemPosition]
+                            BasisSet.current().lb.removeAt(lineupMenu.selectedItemPosition)
+                            BasisSet.current().lb.add(lineupMenu.selectedItemPosition, l.copy())
+                            BasisSet.current().sele = BasisSet.current().lb[lineupMenu.selectedItemPosition]
                             BasisSet.current().sele.name = name
                             line.updateLineUp()
                             line.invalidate()
@@ -640,11 +644,11 @@ class LineUpScreen : AppCompatActivity() {
                         dialog.setContentView(R.layout.create_setlu_dialog)
 
                         val edit = dialog.findViewById<EditText>(R.id.setluedit)
-                        val setdone = dialog.findViewById<Button>(R.id.setludone)
+                        val done = dialog.findViewById<Button>(R.id.setludone)
                         val cancel = dialog.findViewById<Button>(R.id.setlucancel)
-                        val setluname = dialog.findViewById<TextView>(R.id.setluname)
+                        val lineupNameTextBar = dialog.findViewById<TextView>(R.id.setluname)
 
-                        setluname.setText(R.string.lineup_renaming_set)
+                        lineupNameTextBar.setText(R.string.lineup_renaming_set)
 
                         edit.hint = BasisSet.current().name
 
@@ -652,24 +656,24 @@ class LineUpScreen : AppCompatActivity() {
 
                         edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]))
 
-                        setdone.setOnClickListener {
+                        done.setOnClickListener {
                             if (edit.text.toString().isNotEmpty()) {
                                 BasisSet.current().name = edit.text.toString()
 
-                                val setname1: MutableList<String> = ArrayList()
+                                val setNames: MutableList<String> = ArrayList()
                                 var i = 0
 
                                 while (i < BasisSet.list().size) {
-                                    setname1.add(BasisSet.list()[i].name)
+                                    setNames.add(BasisSet.list()[i].name)
                                     i++
                                 }
 
-                                val adapter22 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setname1)
-                                val pos = setspin.selectedItemPosition
+                                val adapter22 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setNames)
+                                val pos = setMenu.selectedItemPosition
 
-                                setspin.adapter = adapter22
+                                setMenu.adapter = adapter22
 
-                                setspin.setSelection(pos)
+                                setMenu.setSelection(pos)
 
                                 StaticStore.saveLineUp(this@LineUpScreen, true)
                             }
@@ -691,11 +695,11 @@ class LineUpScreen : AppCompatActivity() {
                         dialog.setContentView(R.layout.create_setlu_dialog)
 
                         val edit = dialog.findViewById<EditText>(R.id.setluedit)
-                        val setdone = dialog.findViewById<Button>(R.id.setludone)
+                        val done = dialog.findViewById<Button>(R.id.setludone)
                         val cancel = dialog.findViewById<Button>(R.id.setlucancel)
-                        val setluname = dialog.findViewById<TextView>(R.id.setluname)
+                        val lineupNameTextBar = dialog.findViewById<TextView>(R.id.setluname)
 
-                        setluname.setText(R.string.lineup_renaming_lu)
+                        lineupNameTextBar.setText(R.string.lineup_renaming_lu)
 
                         edit.hint = BasisSet.current().sele.name
 
@@ -703,22 +707,22 @@ class LineUpScreen : AppCompatActivity() {
 
                         edit.setHintTextColor(Color.argb(255 / 2, rgb[0], rgb[1], rgb[2]))
 
-                        setdone.setOnClickListener {
+                        done.setOnClickListener {
                             if (edit.text.toString().isNotEmpty()) {
                                 BasisSet.current().sele.name = edit.text.toString()
 
-                                val luname1: MutableList<String> = ArrayList()
+                                val lineupNames: MutableList<String> = ArrayList()
                                 var i = 0
 
                                 while (i < BasisSet.current().lb.size) {
-                                    luname1.add(BasisSet.current().lb[i].name)
+                                    lineupNames.add(BasisSet.current().lb[i].name)
                                     i++
                                 }
 
-                                val adapter11 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, luname1)
+                                val adapter11 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNames)
 
-                                luspin.adapter = adapter11
-                                luspin.setSelection(BasisSet.current().lb.size - 1)
+                                lineupMenu.adapter = adapter11
+                                lineupMenu.setSelection(BasisSet.current().lb.size - 1)
 
                                 StaticStore.saveLineUp(this@LineUpScreen, true)
                             }
@@ -740,18 +744,18 @@ class LineUpScreen : AppCompatActivity() {
                         BasisSet.current().copy()
                         BasisSet.list()[BasisSet.list().size - 1].name = "$origin`"
 
-                        val setname1: MutableList<String> = ArrayList()
+                        val setNames: MutableList<String> = ArrayList()
 
                         var i = 0
 
                         while (i < BasisSet.list().size) {
-                            setname1.add(BasisSet.list()[i].name)
+                            setNames.add(BasisSet.list()[i].name)
                             i++
                         }
-                        val adapter22 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setname1)
+                        val adapter22 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setNames)
 
-                        setspin.adapter = adapter22
-                        setspin.setSelection(BasisSet.list().size - 1)
+                        setMenu.adapter = adapter22
+                        setMenu.setSelection(BasisSet.list().size - 1)
 
                         StaticStore.saveLineUp(this@LineUpScreen, true)
                         StaticStore.showShortMessage(this@LineUpScreen, R.string.lineup_cloned_set)
@@ -765,19 +769,19 @@ class LineUpScreen : AppCompatActivity() {
 
                         BasisSet.current().lb.add(lu)
 
-                        val luname1: MutableList<String> = ArrayList()
+                        val lineupNames: MutableList<String> = ArrayList()
 
                         var i = 0
 
                         while (i < BasisSet.current().lb.size) {
-                            luname1.add(BasisSet.current().lb[i].name)
+                            lineupNames.add(BasisSet.current().lb[i].name)
                             i++
                         }
 
-                        val adapter11 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, luname1)
+                        val adapter11 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNames)
 
-                        luspin.adapter = adapter11
-                        luspin.setSelection(BasisSet.current().lb.size - 1)
+                        lineupMenu.adapter = adapter11
+                        lineupMenu.setSelection(BasisSet.current().lb.size - 1)
 
                         StaticStore.saveLineUp(this@LineUpScreen, true)
 
@@ -792,30 +796,30 @@ class LineUpScreen : AppCompatActivity() {
                         builder.setMessage(R.string.lineup_remove_set_msg)
 
                         builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
-                            if (setspin.selectedItemPosition >= BasisSet.list().size)
+                            if (setMenu.selectedItemPosition >= BasisSet.list().size)
                                 return@setPositiveButton
 
-                            BasisSet.list().removeAt(setspin.selectedItemPosition)
+                            BasisSet.list().removeAt(setMenu.selectedItemPosition)
 
-                            val pos = setspin.selectedItemPosition
+                            val pos = setMenu.selectedItemPosition
 
-                            val setname2: MutableList<String> = ArrayList()
+                            val setNames: MutableList<String> = ArrayList()
 
                             var i = 0
 
                             while (i < BasisSet.list().size) {
-                                setname2.add(BasisSet.list()[i].name)
+                                setNames.add(BasisSet.list()[i].name)
                                 i++
                             }
 
-                            val adapter23 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setname2)
+                            val adapter23 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, setNames)
 
-                            setspin.adapter = adapter23
+                            setMenu.adapter = adapter23
 
                             if (pos >= BasisSet.list().size)
-                                setspin.setSelection(BasisSet.list().size - 1)
+                                setMenu.setSelection(BasisSet.list().size - 1)
                             else
-                                setspin.setSelection(pos)
+                                setMenu.setSelection(pos)
 
                             try {
                                 StaticStore.saveLineUp(this@LineUpScreen, true)
@@ -835,17 +839,17 @@ class LineUpScreen : AppCompatActivity() {
                         builder.setTitle(R.string.lineup_removing_lu)
                         builder.setMessage(R.string.lineup_remove_lu_msg)
                         builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
-                            BasisSet.current().lb.removeAt(luspin.selectedItemPosition)
-                            val pos = luspin.selectedItemPosition
-                            val luname2: MutableList<String> = ArrayList()
+                            BasisSet.current().lb.removeAt(lineupMenu.selectedItemPosition)
+                            val pos = lineupMenu.selectedItemPosition
+                            val lineupNames: MutableList<String> = ArrayList()
                             var i = 0
                             while (i < BasisSet.current().lb.size) {
-                                luname2.add(BasisSet.current().lb[i].name)
+                                lineupNames.add(BasisSet.current().lb[i].name)
                                 i++
                             }
-                            val adapter12 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, luname2)
-                            luspin.adapter = adapter12
-                            if (pos >= BasisSet.current().lb.size) luspin.setSelection(BasisSet.current().lb.size - 1) else luspin.setSelection(pos)
+                            val adapter12 = ArrayAdapter(this@LineUpScreen, R.layout.spinneradapter, lineupNames)
+                            lineupMenu.adapter = adapter12
+                            if (pos >= BasisSet.current().lb.size) lineupMenu.setSelection(BasisSet.current().lb.size - 1) else lineupMenu.setSelection(pos)
 
                             try {
                                 StaticStore.saveLineUp(this@LineUpScreen, true)
@@ -893,8 +897,8 @@ class LineUpScreen : AppCompatActivity() {
                 }
             }
 
-            setspin.setSelection(setn)
-            luspin.setSelection(lun)
+            setMenu.setSelection(setIndex)
+            lineupMenu.setSelection(lineupIndex)
 
             tab.reassignVariables(line)
 
@@ -919,9 +923,9 @@ class LineUpScreen : AppCompatActivity() {
             })
 
             if (view == null)
-                StaticStore.setAppear(tabLayout, lineupPager, line, row, schname, searchLayout)
+                StaticStore.setAppear(tabLayout, lineupPager, line, row, searchBar, searchLayout)
             else
-                StaticStore.setAppear(tabLayout, lineupPager, line, row, view, schname, searchLayout)
+                StaticStore.setAppear(tabLayout, lineupPager, line, row, view, searchBar, searchLayout)
         }
     }
 
