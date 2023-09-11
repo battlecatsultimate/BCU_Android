@@ -65,6 +65,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
+import kotlin.math.max
+import kotlin.math.min
 
 class LineUpScreen : AppCompatActivity() {
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -387,7 +389,10 @@ class LineUpScreen : AppCompatActivity() {
                     if (!initialized)
                         return
 
-                    BasisSet.current().sele = BasisSet.current().lb[position]
+                    if (BasisSet.current().lb.isEmpty())
+                        return
+
+                    BasisSet.current().sele = BasisSet.current().lb[max(0, min(position, BasisSet.current().lb.size - 1))]
 
                     val preferences = getSharedPreferences(StaticStore.CONFIG, MODE_PRIVATE)
                     val editor = preferences.edit()
