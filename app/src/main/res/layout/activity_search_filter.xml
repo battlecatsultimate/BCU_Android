@@ -54,6 +54,28 @@
         app:layout_constraintTop_toTopOf="@+id/cstool"
         app:srcCompat="@drawable/back_button" />
 
+    <ProgressBar
+        android:id="@+id/prog"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cstool" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/load_process"
+        android:textColor="?attr/TextPrimary"
+        app:layout_constraintEnd_toEndOf="@+id/prog"
+        app:layout_constraintStart_toStartOf="@+id/prog"
+        app:layout_constraintTop_toBottomOf="@+id/prog" />
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/eschstat"
         android:layout_width="wrap_content"

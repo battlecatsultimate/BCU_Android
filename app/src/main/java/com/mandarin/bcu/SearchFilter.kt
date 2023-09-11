@@ -12,13 +12,18 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mandarin.bcu.androidutil.Definer
 import com.mandarin.bcu.androidutil.LocaleManager
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.AContext
@@ -32,6 +37,9 @@ import common.pack.Identifier
 import common.pack.UserProfile
 import common.util.Data
 import common.util.unit.Trait
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class SearchFilter : AppCompatActivity() {
@@ -120,74 +128,88 @@ class SearchFilter : AppCompatActivity() {
 
         setContentView(R.layout.activity_search_filter)
 
-        val tgor = findViewById<RadioButton>(R.id.schrdtgor)
-        val atkmu = findViewById<RadioButton>(R.id.schrdatkmu)
+        lifecycleScope.launch {
+            val scrollLayout = findViewById<NestedScrollView>(R.id.animsc)
+            val title = findViewById<TextView>(R.id.schnm)
+            val traitOr = findViewById<RadioButton>(R.id.schrdtgor)
+            val attackTypeOr = findViewById<RadioButton>(R.id.schrdatkor)
+            val abilityOr = findViewById<RadioButton>(R.id.schrdabor)
+            val multipleTarget = findViewById<RadioButton>(R.id.schrdatkmu)
+            val singleTarget = findViewById<RadioButton>(R.id.schrdatksi)
+            val abilityList = findViewById<RecyclerView>(R.id.schchabrec)
+            val traitList = findViewById<RecyclerView>(R.id.schchtgrec)
+            val stat = findViewById<FloatingActionButton>(R.id.eschstat)
+            val reset = findViewById<FloatingActionButton>(R.id.schreset)
+            val status = findViewById<TextView>(R.id.status)
+            val progress = findViewById<ProgressBar>(R.id.prog)
 
-        atkmu.compoundDrawablePadding = StaticStore.dptopx(16f, this)
+            StaticStore.setDisappear(scrollLayout, title, stat, reset)
 
-        val atksi = findViewById<RadioButton>(R.id.schrdatksi)
-
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            atkmu.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(211, 40f), null)
-            atksi.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(217, 40f), null)
-        } else {
-            atkmu.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(211, 32f), null)
-            atksi.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(217, 32f), null)
-        }
-
-        atksi.compoundDrawablePadding = StaticStore.dptopx(16f, this)
-
-        val atkor = findViewById<RadioButton>(R.id.schrdatkor)
-        val abor = findViewById<RadioButton>(R.id.schrdabor)
-
-        for (i in rareid.indices)
-            rarities[i] = findViewById(rareid[i])
-
-        for (i in atkid.indices) {
-            attacks[i] = findViewById(atkid[i])
-
-            if (i < atkid.size - 1) {
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                    attacks[i]?.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(atkdraw[i], 40f), null)
-                else
-                    attacks[i]?.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(atkdraw[i], 32f), null)
-
-                attacks[i]?.compoundDrawablePadding = StaticStore.dptopx(8f, this)
+            withContext(Dispatchers.IO) {
+                Definer.define(this@SearchFilter, { _ -> }, { t -> runOnUiThread { status.text = t }})
             }
-        }
 
-        val abrec = findViewById<RecyclerView>(R.id.schchabrec)
-        val tgrec = findViewById<RecyclerView>(R.id.schchtgrec)
+            multipleTarget.compoundDrawablePadding = StaticStore.dptopx(16f, this@SearchFilter)
 
-        abrec.isNestedScrollingEnabled = false
-
-        abilAdapter = SearchAbilityAdapter(this, abtool, abils, abdraw, abdrawf)
-        abilAdapter.setHasStableIds(true)
-
-        traitAdapter = SearchTraitAdapter(this, generateTraitToolTip(), generateTraitArray())
-        traitAdapter.setHasStableIds(true)
-
-        abrec.layoutManager = LinearLayoutManager(this)
-        abrec.adapter = abilAdapter
-
-        tgrec.layoutManager = LinearLayoutManager(this)
-        tgrec.adapter = traitAdapter
-
-        tgor.isChecked = true
-        atkor.isChecked = true
-        abor.isChecked = true
-
-        checker()
-
-        listeners()
-
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val back = findViewById<FloatingActionButton>(R.id.schbck)
-
-                back.performClick()
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                multipleTarget.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(211, 40f), null)
+                singleTarget.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(217, 40f), null)
+            } else {
+                multipleTarget.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(211, 32f), null)
+                singleTarget.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(217, 32f), null)
             }
-        })
+
+            singleTarget.compoundDrawablePadding = StaticStore.dptopx(16f, this@SearchFilter)
+
+            for (i in rareid.indices)
+                rarities[i] = findViewById(rareid[i])
+
+            for (i in atkid.indices) {
+                attacks[i] = findViewById(atkid[i])
+
+                if (i < atkid.size - 1) {
+                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                        attacks[i]?.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(atkdraw[i], 40f), null)
+                    else
+                        attacks[i]?.setCompoundDrawablesWithIntrinsicBounds(null, null, getResizeDraw(atkdraw[i], 32f), null)
+
+                    attacks[i]?.compoundDrawablePadding = StaticStore.dptopx(8f, this@SearchFilter)
+                }
+            }
+
+            abilityList.isNestedScrollingEnabled = false
+
+            abilAdapter = SearchAbilityAdapter(this@SearchFilter, abtool, abils, abdraw, abdrawf)
+            abilAdapter.setHasStableIds(true)
+
+            traitAdapter = SearchTraitAdapter(this@SearchFilter, generateTraitToolTip(), generateTraitArray())
+            traitAdapter.setHasStableIds(true)
+
+            abilityList.layoutManager = LinearLayoutManager(this@SearchFilter)
+            abilityList.adapter = abilAdapter
+
+            traitList.layoutManager = LinearLayoutManager(this@SearchFilter)
+            traitList.adapter = traitAdapter
+
+            traitOr.isChecked = true
+            attackTypeOr.isChecked = true
+            abilityOr.isChecked = true
+
+            checker()
+
+            listeners()
+
+            onBackPressedDispatcher.addCallback(this@SearchFilter, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val back = findViewById<FloatingActionButton>(R.id.schbck)
+
+                    back.performClick()
+                }
+            })
+
+            StaticStore.setAppear(scrollLayout, title, stat, reset)
+            StaticStore.setDisappear(status, progress)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
