@@ -95,6 +95,9 @@ class LUCatCombo : Fragment() {
             if (context == null)
                 return@OnItemClickListener
 
+            if (position >= StaticStore.combos.size)
+                return@OnItemClickListener
+
             val c = StaticStore.combos[position]
 
             posit = position
