@@ -82,6 +82,18 @@ class LineUpView : View {
      */
     val lu: LineUp
         get() {
+            if (BasisSet.current() == null) {
+                BasisSet.setCurrent(BasisSet.def())
+            }
+
+            if (BasisSet.current().sele == null) {
+                if (BasisSet.current().lb.isEmpty()) {
+                    BasisSet.current().add()
+                } else {
+                    BasisSet.current().sele = BasisSet.current().lb[0]
+                }
+            }
+
             return BasisSet.current().sele.lu
         }
     /**
