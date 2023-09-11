@@ -739,6 +739,9 @@ class LineUpScreen : AppCompatActivity() {
                         builder.setTitle(R.string.lineup_removing_set)
                         builder.setMessage(R.string.lineup_remove_set_msg)
                         builder.setPositiveButton(R.string.main_file_ok) { _: DialogInterface?, _: Int ->
+                            if (setspin.selectedItemPosition >= BasisSet.list().size)
+                                return@setPositiveButton
+
                             BasisSet.list().removeAt(setspin.selectedItemPosition)
                             val pos = setspin.selectedItemPosition
                             val setname2: MutableList<String> = ArrayList()
