@@ -77,6 +77,9 @@ object SoundHandler {
         if (speed > 3)
             return
 
+        if (ind >= play.size)
+            return
+
         if (play[ind])
             return
 
