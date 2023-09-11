@@ -129,7 +129,6 @@ class UnitInfo : AppCompatActivity() {
             progression.isIndeterminate = true
 
             StaticStore.setDisappear(unitStatPanel, animationButton, fruitPager, fruitText, separator, separator2, unitExplanationTitle)
-
             //Load Data
             withContext(Dispatchers.IO) {
                 Definer.define(this@UnitInfo, { _ -> }, { t -> runOnUiThread { st.text = t }})

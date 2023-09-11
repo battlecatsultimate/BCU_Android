@@ -8,13 +8,6 @@ import java.io.*
 import java.util.function.Supplier
 
 class BMBuilder : ImageBuilder<Bitmap>() {
-    companion object {
-        val option = BitmapFactory.Options().apply {
-            inScaled = true
-            inDensity = inTargetDensity
-        }
-    }
-
     @Throws(IOException::class)
     override fun write(img: FakeImage, fmt: String, o: Any): Boolean {
         val b = img.bimg() as Bitmap
@@ -33,7 +26,7 @@ class BMBuilder : ImageBuilder<Bitmap>() {
     override fun build(f: File?): FakeImage {
         f ?: return FIBM()
 
-        val b = BitmapFactory.decodeFile(f.absolutePath, option)
+        val b = BitmapFactory.decodeFile(f.absolutePath)
 
         return FIBM(b)
     }
@@ -43,7 +36,7 @@ class BMBuilder : ImageBuilder<Bitmap>() {
 
         val ins = sup.get()
 
-        val b = BitmapFactory.decodeStream(ins, null, option) ?: return FIBM()
+        val b = BitmapFactory.decodeStream(ins) ?: return FIBM()
 
         return FIBM(b)
     }

@@ -65,35 +65,35 @@ class EnemyRecycle : RecyclerView.Adapter<EnemyRecycle.ViewHolder> {
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pack = itemView.findViewById<Button>(R.id.eneminfpack)!!
-        val enemyPack = itemView.findViewById<TextView>(R.id.eneminfpackr)!!
-        val name = itemView.findViewById<TextView>(R.id.eneminfname)!!
-        val unitSwitch = itemView.findViewById<Button>(R.id.eneminffrse)!!
-        val enemyId = itemView.findViewById<TextView>(R.id.eneminfidr)!!
-        val enemyIcon = itemView.findViewById<ImageView>(R.id.eneminficon)!!
-        val enemhp = itemView.findViewById<TextView>(R.id.eneminfhpr)!!
-        val enemhb = itemView.findViewById<TextView>(R.id.eneminfhbr)!!
-        val enemmulti = itemView.findViewById<EditText>(R.id.eneminfmultir)!!
-        val enematkb = itemView.findViewById<Button>(R.id.eneminfatk)!!
-        val enematk = itemView.findViewById<TextView>(R.id.eneminfatkr)!!
-        val enematktimeb = itemView.findViewById<Button>(R.id.eneminfatktime)!!
-        val enematktime = itemView.findViewById<TextView>(R.id.eneminfatktimer)!!
-        val enemabilt = itemView.findViewById<TextView>(R.id.eneminfabiltr)!!
-        val enempreb = itemView.findViewById<Button>(R.id.eneminfpre)!!
-        val enempre = itemView.findViewById<TextView>(R.id.eneminfprer)!!
-        val enempostb = itemView.findViewById<Button>(R.id.eneminfpost)!!
-        val enempost = itemView.findViewById<TextView>(R.id.eneminfpostr)!!
-        val enemtbab = itemView.findViewById<Button>(R.id.eneminftba)!!
-        val enemtba = itemView.findViewById<TextView>(R.id.eneminftbar)!!
-        val enemtrait = itemView.findViewById<TextView>(R.id.eneminftraitr)!!
-        val enematkt = itemView.findViewById<TextView>(R.id.eneminfatktr)!!
-        val enemdrop = itemView.findViewById<TextView>(R.id.eneminfdropr)!!
-        val enemrange = itemView.findViewById<TextView>(R.id.eneminfranger)!!
-        val enembarrier = itemView.findViewById<TextView>(R.id.eneminfbarrierr)!!
-        val enemspd = itemView.findViewById<TextView>(R.id.eneminfspdr)!!
-        val none = itemView.findViewById<TextView>(R.id.eneminfnone)!!
-        val emabil = itemView.findViewById<RecyclerView>(R.id.eneminfabillist)!!
-        val enemamulti = itemView.findViewById<EditText>(R.id.eneminfamultir)!!
+        val pack = itemView.findViewById<Button>(R.id.eneminfpack)
+        val enemyPack = itemView.findViewById<TextView>(R.id.eneminfpackr)
+        val name = itemView.findViewById<TextView>(R.id.eneminfname)
+        val unitSwitch = itemView.findViewById<Button>(R.id.eneminffrse)
+        val enemyId = itemView.findViewById<TextView>(R.id.eneminfidr)
+        val enemyIcon = itemView.findViewById<ImageView>(R.id.eneminficon)
+        val enemhp = itemView.findViewById<TextView>(R.id.eneminfhpr)
+        val enemhb = itemView.findViewById<TextView>(R.id.eneminfhbr)
+        val enemmulti = itemView.findViewById<EditText>(R.id.eneminfmultir)
+        val enematkb = itemView.findViewById<Button>(R.id.eneminfatk)
+        val enematk = itemView.findViewById<TextView>(R.id.eneminfatkr)
+        val enematktimeb = itemView.findViewById<Button>(R.id.eneminfatktime)
+        val enematktime = itemView.findViewById<TextView>(R.id.eneminfatktimer)
+        val enemabilt = itemView.findViewById<TextView>(R.id.eneminfabiltr)
+        val enempreb = itemView.findViewById<Button>(R.id.eneminfpre)
+        val enempre = itemView.findViewById<TextView>(R.id.eneminfprer)
+        val enempostb = itemView.findViewById<Button>(R.id.eneminfpost)
+        val enempost = itemView.findViewById<TextView>(R.id.eneminfpostr)
+        val enemtbab = itemView.findViewById<Button>(R.id.eneminftba)
+        val enemtba = itemView.findViewById<TextView>(R.id.eneminftbar)
+        val enemtrait = itemView.findViewById<TextView>(R.id.eneminftraitr)
+        val enematkt = itemView.findViewById<TextView>(R.id.eneminfatktr)
+        val enemdrop = itemView.findViewById<TextView>(R.id.eneminfdropr)
+        val enemrange = itemView.findViewById<TextView>(R.id.eneminfranger)
+        val enembarrier = itemView.findViewById<TextView>(R.id.eneminfbarrierr)
+        val enemspd = itemView.findViewById<TextView>(R.id.eneminfspdr)
+        val none = itemView.findViewById<TextView>(R.id.eneminfnone)
+        val emabil = itemView.findViewById<RecyclerView>(R.id.eneminfabillist)
+        val enemamulti = itemView.findViewById<EditText>(R.id.eneminfamultir)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
