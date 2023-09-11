@@ -74,6 +74,10 @@ class PackManagement : AppCompatActivity() {
                 StaticStore.showShortMessage(this, R.string.pack_import_nofile)
 
                 return@registerForActivityResult
+            } catch (_: IllegalArgumentException) {
+                StaticStore.showShortMessage(this, R.string.pack_import_nofile)
+
+                return@registerForActivityResult
             }
 
             if(cursor != null) {
