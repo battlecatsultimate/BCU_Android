@@ -42,7 +42,7 @@ import com.mandarin.bcu.androidutil.supports.TranslationAnimator
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicExplanation
 import com.mandarin.bcu.androidutil.unit.adapters.DynamicFruit
 import com.mandarin.bcu.androidutil.unit.adapters.UnitInfoPager
-import com.mandarin.bcu.androidutil.unit.adapters.UnitinfRecycle
+import com.mandarin.bcu.androidutil.unit.adapters.UnitInfoRecycle
 import common.CommonStatic
 import common.io.json.JsonEncoder
 import common.pack.Identifier
@@ -377,7 +377,7 @@ class UnitInfo : AppCompatActivity() {
         val exp = findViewById<TextView>(R.id.unitinfexp)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = UnitinfRecycle(this, ArrayList(u.forms.map { f -> MultiLangCont.get(f) ?: f.names.toString() }), u.forms, u.id)
+        recyclerView.adapter = UnitInfoRecycle(this, ArrayList(u.forms.map { f -> MultiLangCont.get(f) ?: f.names.toString() }), u.forms, u.id)
 
         val tabNames = u.forms.mapIndexed { i, _ ->
             return@mapIndexed if (i in 0..2) {

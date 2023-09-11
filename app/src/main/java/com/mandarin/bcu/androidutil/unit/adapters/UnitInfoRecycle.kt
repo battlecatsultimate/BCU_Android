@@ -43,7 +43,7 @@ import common.util.unit.Form
 import common.util.unit.Level
 import common.util.unit.Unit
 
-class UnitinfRecycle(private val context: Activity, private val names: ArrayList<String>, private val forms: Array<Form>, private val data: Identifier<Unit>) : RecyclerView.Adapter<UnitinfRecycle.ViewHolder>() {
+class UnitInfoRecycle(private val context: Activity, private val names: ArrayList<String>, private val forms: Array<Form>, private val data: Identifier<Unit>) : RecyclerView.Adapter<UnitInfoRecycle.ViewHolder>() {
     private var fs = 0
     private val s: GetStrings = GetStrings(this.context)
     private val fragment = arrayOf(arrayOf("Immune to "), arrayOf(""))
@@ -492,25 +492,25 @@ class UnitinfRecycle(private val context: Activity, private val names: ArrayList
 
         viewHolder.unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val level = viewHolder.unitlevel.selectedItem as Int
-                val levelp = viewHolder.unitlevelp.selectedItem as Int
+                val level = (viewHolder.unitlevel.selectedItem ?: 1) as Int
+                val levelp = (viewHolder.unitlevelp.selectedItem ?: 0) as Int
 
-                this@UnitinfRecycle.level.setLevel(level)
+                this@UnitInfoRecycle.level.setLevel(level)
 
-                viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                viewHolder.unithp.text = s.getHP(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
 
                 if (f.du.rawAtkData().size > 1) {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                 } else {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getTotAtk(f, t, this@UnitinfRecycle.talents,
-                            this@UnitinfRecycle.level
+                        viewHolder.unitatk.text = s.getTotAtk(f, t, this@UnitInfoRecycle.talents,
+                            this@UnitInfoRecycle.level
                         )
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                 }
 
                 if(CommonStatic.getConfig().realLevel) {
@@ -527,22 +527,22 @@ class UnitinfRecycle(private val context: Activity, private val names: ArrayList
 
         viewHolder.unitlevelp.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val level = viewHolder.unitlevel.selectedItem as Int
-                val levelp = viewHolder.unitlevelp.selectedItem as Int
+                val level = (viewHolder.unitlevel.selectedItem ?: 1) as Int
+                val levelp = (viewHolder.unitlevelp.selectedItem ?: 0) as Int
 
-                this@UnitinfRecycle.level.setPlusLevel(levelp)
+                this@UnitInfoRecycle.level.setPlusLevel(levelp)
 
-                viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                viewHolder.unithp.text = s.getHP(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                 if (f.du.rawAtkData().size > 1) {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                 } else {
                     if (viewHolder.unitatkb.text == context.getString(R.string.unit_info_atk))
-                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                     else
-                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, this@UnitinfRecycle.level)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitInfoRecycle.talents, this@UnitInfoRecycle.level)
                 }
 
                 if(CommonStatic.getConfig().realLevel) {
@@ -602,19 +602,19 @@ class UnitinfRecycle(private val context: Activity, private val names: ArrayList
 
                         if (viewHolder.unitcd.text.toString().endsWith("s")) {
                             viewHolder.unitcd.text = s.getCD(f, t, 1,
-                                this@UnitinfRecycle.talents, level)
+                                this@UnitInfoRecycle.talents, level)
                         } else {
                             viewHolder.unitcd.text = s.getCD(f, t, 0,
-                                this@UnitinfRecycle.talents, level)
+                                this@UnitInfoRecycle.talents, level)
                         }
                     }
                 } else {
                     t.tech[0] = 1
 
                     if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                        viewHolder.unitcd.text = s.getCD(f, t, 1, this@UnitinfRecycle.talents, level)
+                        viewHolder.unitcd.text = s.getCD(f, t, 1, this@UnitInfoRecycle.talents, level)
                     } else {
-                        viewHolder.unitcd.text = s.getCD(f, t, 0, this@UnitinfRecycle.talents, level)
+                        viewHolder.unitcd.text = s.getCD(f, t, 0, this@UnitInfoRecycle.talents, level)
                     }
                 }
             }
@@ -659,19 +659,19 @@ class UnitinfRecycle(private val context: Activity, private val names: ArrayList
 
                         if (viewHolder.unitcd.text.toString().endsWith("s")) {
                             viewHolder.unitcd.text = s.getCD(f, t, 1,
-                                this@UnitinfRecycle.talents, level)
+                                this@UnitInfoRecycle.talents, level)
                         } else {
                             viewHolder.unitcd.text = s.getCD(f, t, 0,
-                                this@UnitinfRecycle.talents, level)
+                                this@UnitInfoRecycle.talents, level)
                         }
                     }
                 } else {
                     t.trea[2] = 0
 
                     if (viewHolder.unitcd.text.toString().endsWith("s")) {
-                        viewHolder.unitcd.text = s.getCD(f, t, 1, this@UnitinfRecycle.talents, level)
+                        viewHolder.unitcd.text = s.getCD(f, t, 1, this@UnitInfoRecycle.talents, level)
                     } else {
-                        viewHolder.unitcd.text = s.getCD(f, t, 0, this@UnitinfRecycle.talents, level)
+                        viewHolder.unitcd.text = s.getCD(f, t, 0, this@UnitInfoRecycle.talents, level)
                     }
                 }
             }
@@ -714,19 +714,19 @@ class UnitinfRecycle(private val context: Activity, private val names: ArrayList
 
                         if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
                             viewHolder.unitatk.text = s.getDPS(f, t,
-                                this@UnitinfRecycle.talents, level)
+                                this@UnitInfoRecycle.talents, level)
                         } else {
                             viewHolder.unitatk.text = s.getAtk(f, t,
-                                this@UnitinfRecycle.talents, level)
+                                this@UnitInfoRecycle.talents, level)
                         }
                     }
                 } else {
                     t.trea[0] = 0
 
                     if (viewHolder.unitatkb.text.toString() == context.getString(R.string.unit_info_dps)) {
-                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitinfRecycle.talents, level)
+                        viewHolder.unitatk.text = s.getDPS(f, t, this@UnitInfoRecycle.talents, level)
                     } else {
-                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitinfRecycle.talents, level)
+                        viewHolder.unitatk.text = s.getAtk(f, t, this@UnitInfoRecycle.talents, level)
                     }
                 }
             }
@@ -767,12 +767,12 @@ class UnitinfRecycle(private val context: Activity, private val names: ArrayList
                     if (text.toString().toInt() <= 300) {
                         t.trea[1] = text.toString().toInt()
 
-                        viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, level)
+                        viewHolder.unithp.text = s.getHP(f, t, this@UnitInfoRecycle.talents, level)
                     }
                 } else {
                     t.trea[1] = 0
 
-                    viewHolder.unithp.text = s.getHP(f, t, this@UnitinfRecycle.talents, level)
+                    viewHolder.unithp.text = s.getHP(f, t, this@UnitInfoRecycle.talents, level)
                 }
             }
         })
