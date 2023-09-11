@@ -569,8 +569,8 @@ class UnitInfoPager : Fragment() {
 
         unitlevel.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
-                val level = unitlevel.selectedItem as Int
-                val levelp = unitlevelp.selectedItem as Int
+                val level = (unitlevel.selectedItem ?: 1) as Int
+                val levelp = (unitlevelp.selectedItem ?: 0) as Int
 
                 this@UnitInfoPager.level.setLevel(level)
 
