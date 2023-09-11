@@ -715,7 +715,7 @@ open class CheckUpdateScreen : AppCompatActivity() {
                 StaticStore.getLang(shared.getInt("Language", 0))
             }
 
-            if (close)
+            if (close || isDestroyed || isFinishing)
                 return@launch
 
             if(PackConflict.conflicts.isEmpty()) {
