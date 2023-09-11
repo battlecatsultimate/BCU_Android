@@ -164,7 +164,9 @@ class BattlePrepare : AppCompatActivity() {
                         else
                             BasisSet.list().size - 1
 
-                    BasisSet.list()
+                    if (BasisSet.list().isEmpty() && BasisSet.def() != null) {
+                        BasisSet.list().add(BasisSet.def())
+                    }
 
                     BasisSet.setCurrent(BasisSet.list()[set])
 
