@@ -88,7 +88,7 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
                     dialog.setPositiveButton(R.string.remove) { _, _ ->
                         deletePack(p, f)
 
-                        pList.removeAt(position)
+                        rebuildPackList()
 
                         notifyDataSetChanged()
 
@@ -202,5 +202,13 @@ class PackManagementAdapter(private val ac: Activity, private val pList: ArrayLi
         }
 
         return false
+    }
+
+    private fun rebuildPackList() {
+        pList.clear()
+
+        for(pack in UserProfile.getUserPacks()) {
+            pList.add(pack)
+        }
     }
 }
