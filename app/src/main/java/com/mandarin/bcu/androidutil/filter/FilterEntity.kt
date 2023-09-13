@@ -115,6 +115,9 @@ object FilterEntity {
         for (i in p.units.list.indices) if (b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
             val u = p.units.list[i]
 
+            if (u.forms.any { f -> f.du == null || f.du.proc == null })
+                continue
+
             if (StaticStore.entityname.isNotEmpty()) {
                 var added = false
 
@@ -427,6 +430,9 @@ object FilterEntity {
         for(i in StaticStore.ludata.indices) {
             if(b0[i] && b1[i] && b2[i] && b3[i] && b4[i] && b5[i]) {
                 val u = Identifier.get(StaticStore.ludata[i]) ?: continue
+
+                if (u.forms.any { f -> f.du == null || f.du.proc == null })
+                    continue
 
                 if(StaticStore.entityname.isNotEmpty()) {
                     var added = false
