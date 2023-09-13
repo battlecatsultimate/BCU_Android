@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.battle.sound.SoundHandler
 import com.mandarin.bcu.androidutil.fakeandroid.BMBuilder
@@ -44,6 +45,9 @@ object Definer {
 
                 try {
                     AssetLoader.load(prog)
+
+                    FirebaseCrashlytics.getInstance().log("Read asset loader properly\n${VFile.getBCFileTree().list()}")
+
                     UserProfile.getBCData().load({ t -> text.accept(StaticStore.getLoadingText(context, t)) }, prog)
                 } catch (e: Exception) {
                     throw AssetException(e, "E/Definer::define - Failed to read asset")
