@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.media3.common.Player
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mandarin.bcu.BattleSimulation
 import com.mandarin.bcu.R
 import com.mandarin.bcu.androidutil.StaticStore
@@ -130,16 +131,18 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             for (f in fs) {
                 f ?: continue
 
-                f.anim.uni.check()
-
-                if (f.anim.uni.img.height == f.anim.uni.img.width) {
-                    val cut = ImgCut.newIns("./org/data/uni.imgcut")
-                    f.anim.uni.setCut(cut)
-                    f.anim.uni.img = f.anim.uni.img
-
+                try {
                     f.anim.check()
-                } else {
-                    f.anim.check()
+                } catch (err: Exception) {
+                    var logMessage = "Failed to load enemy animation\n\nEnemy : ${f.uid}"
+
+                    if (f.anim != null) {
+                        logMessage += "\nAnimation : ${f.anim}\n\nImgcut : ${f.anim.imgcut}\nMamodel : ${f.anim.mamodel}\nAnim : ${f.anim.anims}"
+                    }
+
+                    FirebaseCrashlytics.getInstance().log(logMessage)
+
+                    throw err
                 }
             }
         }
@@ -148,8 +151,21 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
             SoundHandler.lop = painter.bf.sb.st.mus0.get()?.loop ?: 0
         }
 
-        for (e in painter.bf.sb.st.data.allEnemy)
-            e.anim.check()
+        for (e in painter.bf.sb.st.data.allEnemy) {
+            try {
+                e.anim.check()
+            } catch (err: Exception) {
+                var logMessage = "Failed to load enemy animation\n\nEnemy : ${e.id}"
+
+                if (e.anim != null) {
+                    logMessage += "\nAnimation : ${e.anim}\n\nImgcut : ${e.anim.imgcut}\nMamodel : ${e.anim.mamodel}\nAnim : ${e.anim.anims}"
+                }
+
+                FirebaseCrashlytics.getInstance().log(logMessage)
+
+                throw err
+            }
+        }
 
         updater.run()
 
