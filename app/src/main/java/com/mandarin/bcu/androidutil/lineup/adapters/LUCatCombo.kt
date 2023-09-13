@@ -127,6 +127,9 @@ class LUCatCombo : Fragment() {
             if (posit < 0)
                 return@OnClickListener
 
+            if (posit >= StaticStore.combos.size)
+                return@OnClickListener
+
             val c = StaticStore.combos[posit]
 
             BasisSet.current().sele.lu.set(c.forms)
