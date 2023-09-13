@@ -373,7 +373,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                                         }
                                     }
 
-                                    updateDialog.show()
+                                    if (!isDestroyed && !isFinishing) {
+                                        updateDialog.show()
+                                    }
                                 }
                             }
                         }
@@ -424,7 +426,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                             }
                         }
 
-                        internetDialog.show()
+                        if (!isDestroyed && !isFinishing) {
+                            internetDialog.show()
+                        }
                     }
                 }
 
@@ -457,7 +461,9 @@ open class CheckUpdateScreen : AppCompatActivity() {
                         }
                     }
 
-                    internetDialog.show()
+                    if (!isDestroyed && !isFinishing) {
+                        internetDialog.show()
+                    }
                 }
 
                 if (close)
