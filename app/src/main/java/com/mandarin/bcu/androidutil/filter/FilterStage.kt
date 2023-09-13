@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.filter
 import android.content.Context
 import android.util.SparseArray
 import androidx.core.util.isNotEmpty
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mandarin.bcu.androidutil.StaticStore
 import com.mandarin.bcu.androidutil.io.ErrorLogWriter
 import common.pack.Identifier
@@ -15,6 +16,8 @@ import common.util.unit.AbEnemy
 object FilterStage {
     fun setFilter(name: String, stmname: String, enemies: ArrayList<Identifier<AbEnemy>>, enemorand: Boolean, music: String, bg: String, star: Int, bh: Int, bhop: Int, contin: Int, boss: Int, c: Context) : Map<String, SparseArray<ArrayList<Int>>> {
         val result = HashMap<String, SparseArray<ArrayList<Int>>>()
+
+        FirebaseCrashlytics.getInstance().log("Filtered enemy : $enemies")
 
         for(n in 0 until StaticStore.mapcode.size) {
             val i = StaticStore.mapcode[n]
@@ -46,7 +49,7 @@ object FilterStage {
                     val es = ArrayList<Identifier<AbEnemy>>()
 
                     for(d in s.data.datas) {
-                        val e = d.enemy
+                        val e = d.enemy ?: continue
 
                         if(!es.contains(e)) {
                             es.add(e)
@@ -125,11 +128,11 @@ object FilterStage {
 
         if(target.isEmpty()) return false
 
-        val targetid = ArrayList<Identifier<AbEnemy>>()
+        val targetID = ArrayList<Identifier<AbEnemy>>()
 
         for(ten in target) {
-            if (!contains(ten, targetid)) {
-                targetid.add(ten)
+            if (!contains(ten, targetID)) {
+                targetID.add(ten)
             }
         }
 
@@ -137,13 +140,13 @@ object FilterStage {
 
         if(orand) {
             for(i in src) {
-                if(contains(i, targetid))
+                if(contains(i, targetID))
                     return true
             }
 
             return false
         } else {
-            return containsAll(src, targetid)
+            return containsAll(src, targetID)
         }
     }
 

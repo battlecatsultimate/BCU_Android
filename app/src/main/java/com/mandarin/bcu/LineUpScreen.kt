@@ -308,7 +308,7 @@ class LineUpScreen : AppCompatActivity() {
             val lineupMenu = findViewById<Spinner>(R.id.luspin)
 
             if (setIndex >= BasisSet.list().size)
-                setIndex = BasisSet.list().size - 1
+                setIndex = max(0, BasisSet.list().size - 1)
 
             BasisSet.setCurrent(BasisSet.list()[setIndex])
 
