@@ -514,6 +514,14 @@ class LineUpView : View {
     }
 
     fun syncLineUp() {
+        lu.fs.forEachIndexed { row, forms ->
+            forms.forEachIndexed { col, form ->
+                if (form != null && (form.du == null || form.du.proc == null)) {
+                    lu.fs[row][col] = null
+                }
+            }
+        }
+
         lu.renew()
 
         lu.fs.forEachIndexed { x, forms ->
