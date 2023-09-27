@@ -27,31 +27,6 @@ object Revalidater {
             }
         }
 
-        if(StaticStore.mapcolcname.isNotEmpty()) {
-            StaticStore.mapcolcname.clear()
-
-            for(i in StaticStore.bcMapNames) {
-                StaticStore.mapcolcname.add(context.getString(i))
-            }
-
-            for(i in UserProfile.getAllPacks()) {
-                if(i is PackData.DefPack)
-                    continue
-                else if(i is PackData.UserPack) {
-                    if(i.mc.maps.list.isNotEmpty()) {
-                        var k = i.desc.names.toString()
-
-                        if(k.isEmpty()) {
-                            k = i.desc.id
-                        }
-
-                        StaticStore.mapcolcname.add(k)
-
-                    }
-                }
-            }
-        }
-
         LangLoader.readUnitLang(context)
         LangLoader.readEnemyLang(context)
         LangLoader.readStageLang(context)

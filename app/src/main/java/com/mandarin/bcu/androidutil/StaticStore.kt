@@ -42,6 +42,7 @@ import common.battle.BasisSet
 import common.io.json.JsonDecoder
 import common.pack.Identifier
 import common.pack.IndexContainer.Indexable
+import common.pack.PackData
 import common.pack.UserProfile
 import common.system.fake.FakeImage
 import common.system.files.VFile
@@ -189,7 +190,6 @@ object StaticStore {
 
     var SisOpen = false
     var bcMapNames = intArrayOf(R.string.stage_sol, R.string.stage_event, R.string.stage_collabo, R.string.stage_eoc, R.string.stage_ex, R.string.stage_dojo, R.string.stage_heavenly, R.string.stage_ranking, R.string.stage_challenge, R.string.stage_uncanny, R.string.stage_night, R.string.stage_baron, R.string.stage_enigma, R.string.stage_CA, R.string.stage_Q, R.string.stage_L, R.string.stage_ND)
-    var mapcolcname: ArrayList<String> = ArrayList()
     var mapcode: ArrayList<String> = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031", "000033", "000034"))
     var BCmaps = mapcode.size
     val BCMapCode = listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031", "000033", "000034")
@@ -302,7 +302,6 @@ object StaticStore {
         musicnames.clear()
         musicData.clear()
         durations.clear()
-        mapcolcname = ArrayList()
         eicons = null
         maplistClick = SystemClock.elapsedRealtime()
         stglistClick = SystemClock.elapsedRealtime()
@@ -349,7 +348,6 @@ object StaticStore {
         UserProfile.unloadAllUserPacks()
 
         mapcode = ArrayList(listOf("000000", "000001", "000002", "000003", "000004", "000006", "000007", "000011", "000012", "000013", "000014", "000024", "000025", "000027", "000031", "000033", "000034"))
-        mapcolcname.clear()
         PackConflict.conflicts.clear()
 
         packRead = false
@@ -1364,5 +1362,31 @@ object StaticStore {
 
     fun setDisappear(vararg views: View?) {
         views.filterNotNull().forEach { v -> v.visibility = View.GONE }
+    }
+
+    fun collectMapCollectionNames(context: Context) : ArrayList<String> {
+        val result = ArrayList<String>()
+
+        for(i in bcMapNames) {
+            result.add(context.getString(i))
+        }
+
+        for(i in UserProfile.getAllPacks()) {
+            if(i is PackData.DefPack)
+                continue
+            else if(i is PackData.UserPack) {
+                if(i.mc.maps.list.isNotEmpty()) {
+                    var k = i.desc.names.toString()
+
+                    if(k.isEmpty()) {
+                        k = i.desc.id
+                    }
+
+                    result.add(k)
+                }
+            }
+        }
+
+        return result
     }
 }

@@ -189,31 +189,13 @@ object Definer {
 
             val packs = UserProfile.getAllPacks()
 
-            if(StaticStore.mapcolcname.isEmpty()) {
-                if(packs.size != 1 && StaticStore.mapcode.size == StaticStore.BCmaps) {
-                    for(p in packs) {
-                        if(p is PackData.DefPack)
-                            continue
-                        else if(p is PackData.UserPack) {
-                            if(p.mc.maps.list.isNotEmpty()) {
-                                StaticStore.mapcode.add(p.mc.sid)
-                            }
-                        }
-                    }
-                }
-
-                for(i in StaticStore.bcMapNames) {
-                    StaticStore.mapcolcname.add(context.getString(i))
-                }
-
+            if(packs.size != 1 && StaticStore.mapcode.size == StaticStore.BCmaps) {
                 for(p in packs) {
                     if(p is PackData.DefPack)
                         continue
                     else if(p is PackData.UserPack) {
                         if(p.mc.maps.list.isNotEmpty()) {
-                            val k = StaticStore.getPackName(p.mc.sid)
-
-                            StaticStore.mapcolcname.add(k)
+                            StaticStore.mapcode.add(p.mc.sid)
                         }
                     }
                 }

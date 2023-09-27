@@ -10,7 +10,12 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.ProgressBar
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +41,7 @@ import common.util.stage.StageMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Locale
 
 class MapList : AppCompatActivity() {
     val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -49,34 +54,35 @@ class MapList : AppCompatActivity() {
 
             keys.sort()
 
-            val stageset = findViewById<Spinner>(R.id.stgspin)
-            val maplist = findViewById<ListView>(R.id.maplist)
-            val loadt = findViewById<TextView>(R.id.status)
+            val stageSet = findViewById<Spinner>(R.id.stgspin)
+            val mapList = findViewById<ListView>(R.id.maplist)
+            val status = findViewById<TextView>(R.id.status)
 
             if(f.isEmpty()) {
-                stageset.visibility = View.GONE
-                maplist.visibility = View.GONE
+                stageSet.visibility = View.GONE
+                mapList.visibility = View.GONE
 
-                loadt.visibility = View.VISIBLE
-                loadt.setText(R.string.filter_nores)
+                status.visibility = View.VISIBLE
+                status.setText(R.string.filter_nores)
             } else {
-                stageset.visibility = View.VISIBLE
-                maplist.visibility = View.VISIBLE
-                loadt.visibility = View.GONE
+                stageSet.visibility = View.VISIBLE
+                mapList.visibility = View.VISIBLE
+                status.visibility = View.GONE
 
-                val resmc = ArrayList<String>()
+                val mapCollectionResult = ArrayList<String>()
+                val collectionName = StaticStore.collectMapCollectionNames(this@MapList)
 
                 for (i in keys) {
                     val index = StaticStore.mapcode.indexOf(i)
 
                     if (index != -1) {
-                        resmc.add(StaticStore.mapcolcname[index])
+                        mapCollectionResult.add(collectionName[index])
                     }
                 }
 
                 var maxWidth = 0
 
-                val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this, R.layout.spinneradapter, resmc) {
+                val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this, R.layout.spinneradapter, mapCollectionResult) {
                     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
                         val v = super.getView(position, converView, parent)
 
@@ -106,13 +112,13 @@ class MapList : AppCompatActivity() {
                     }
                 }
 
-                val layout = stageset.layoutParams
+                val layout = stageSet.layoutParams
 
                 layout.width = maxWidth
 
-                stageset.layoutParams = layout
+                stageSet.layoutParams = layout
 
-                stageset.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                stageSet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
 
                     }
@@ -138,7 +144,7 @@ class MapList : AppCompatActivity() {
 
                             val mapListAdapter = MapListAdapter(this@MapList, resmapname)
 
-                            maplist.adapter = mapListAdapter
+                            mapList.adapter = mapListAdapter
                         } catch (e: NullPointerException) {
                             ErrorLogWriter.writeLog(e, StaticStore.upload, this@MapList)
                         } catch (e: IndexOutOfBoundsException) {
@@ -147,18 +153,18 @@ class MapList : AppCompatActivity() {
                     }
                 }
 
-                stageset.adapter = adapter
+                stageSet.adapter = adapter
 
-                val index = StaticStore.mapcode.indexOf(keys[stageset.selectedItemPosition])
+                val index = StaticStore.mapcode.indexOf(keys[stageSet.selectedItemPosition])
 
                 if (index == -1)
                     return@registerForActivityResult
 
                 val resmapname = ArrayList<Identifier<StageMap>>()
 
-                val resmaplist = f[keys[stageset.selectedItemPosition]] ?: return@registerForActivityResult
+                val resmaplist = f[keys[stageSet.selectedItemPosition]] ?: return@registerForActivityResult
 
-                val mc = MapColc.get(keys[stageset.selectedItemPosition])
+                val mc = MapColc.get(keys[stageSet.selectedItemPosition])
 
                 for(i in 0 until resmaplist.size()) {
                     val stm = mc.maps.list[resmaplist.keyAt(i)]
@@ -168,16 +174,16 @@ class MapList : AppCompatActivity() {
 
                 val mapListAdapter = MapListAdapter(this, resmapname)
 
-                maplist.adapter = mapListAdapter
+                mapList.adapter = mapListAdapter
 
-                maplist.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                mapList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                     if (SystemClock.elapsedRealtime() - StaticStore.maplistClick < StaticStore.INTERVAL)
                         return@OnItemClickListener
 
                     StaticStore.maplistClick = SystemClock.elapsedRealtime()
 
-                    val stm = if(maplist.adapter is MapListAdapter) {
-                        (maplist.adapter as MapListAdapter).getItem(position) ?: return@OnItemClickListener
+                    val stm = if(mapList.adapter is MapListAdapter) {
+                        (mapList.adapter as MapListAdapter).getItem(position) ?: return@OnItemClickListener
                     } else {
                         return@OnItemClickListener
                     }
@@ -241,7 +247,7 @@ class MapList : AppCompatActivity() {
             }
 
             if(filter == null) {
-                val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this@MapList, R.layout.spinneradapter, StaticStore.mapcolcname) {
+                val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this@MapList, R.layout.spinneradapter, StaticStore.collectMapCollectionNames(this@MapList)) {
                     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
                         val v = super.getView(position, converView, parent)
 
@@ -343,7 +349,8 @@ class MapList : AppCompatActivity() {
                     stageset.visibility = View.VISIBLE
                     maplist.visibility = View.VISIBLE
 
-                    val resmc = ArrayList<String>()
+                    val mapCollectionResult = ArrayList<String>()
+                    val collectionName = StaticStore.collectMapCollectionNames(this@MapList)
 
                     val keys = f.keys.toMutableList()
 
@@ -353,11 +360,11 @@ class MapList : AppCompatActivity() {
                         val index = StaticStore.mapcode.indexOf(i)
 
                         if (index != -1) {
-                            resmc.add(StaticStore.mapcolcname[index])
+                            mapCollectionResult.add(collectionName[index])
                         }
                     }
 
-                    val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this@MapList, R.layout.spinneradapter, resmc) {
+                    val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(this@MapList, R.layout.spinneradapter, mapCollectionResult) {
                         override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
                             val v = super.getView(position, converView, parent)
 
