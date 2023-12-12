@@ -224,7 +224,7 @@
     <string name="fruit11">무지개 개다래 열매</string>
     <string name="fruit10">노랑 개다래 열매</string>
     <string name="fruit1">보라 개다래 열매 씨앗</string>
-    <string name="unit_info_catfruit">개다래 정보</string>
+    <string name="unit_info_3rd">3단 진화 정보</string>
     <string name="enem_info_barrier">베리어</string>
     <string name="enem_info_drop">경험치</string>
     <string name="enem_info_exp">적 설명</string>
@@ -1014,4 +1014,6 @@
     <string name="main_denied_dialog_content">서버가 일시적으로 점검 중이거나 프록시 설정으로 인해 서버가 거부하여 연결에 실패했습니다</string>
     <string name="err_reason_lang">언어 데이터 손상\n\n언어 데이터는 유닛/적/스테이지 이름이나 설명 등의 정보를 표시하는데 매우 중요한 데이터 입니다. 알 수 없는 오류로 인해 앱이 잘못된 순서로 언어 데이터를 다운받았거나 다운로드가 잘못되어 언어 데이터가 손상된 것으로 보입니다</string>
     <string name="err_solution_lang">1. 아래의 버튼을 눌러 언어 데이터를 초기화 합니다\n- 이 때 앱 전체 데이터를 초기화 하는 것이 아니라 언어 데이터만 따로 초기화 하게 됩니다\n2. 초기화가 완료되면 앱은 자동으로 종료됩니다. 다시 앱을 열어서 언어 데이터를 다운받아 주세요</string>
+    <string name="unit_info_4th">4단 진화 정보</string>
+    <string name="unit_info_fourth">4단</string>
 </resources>

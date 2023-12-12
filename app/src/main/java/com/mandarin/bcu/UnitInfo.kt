@@ -54,7 +54,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class UnitInfo : AppCompatActivity() {
-    private val tabTitle = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third)
+    private val tabTitle = intArrayOf(R.string.unit_info_first, R.string.unit_info_second, R.string.unit_info_third, R.string.unit_info_fourth)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         savedInstanceState?.clear()
@@ -110,6 +110,8 @@ class UnitInfo : AppCompatActivity() {
             //Prepare
             val fruitText = findViewById<TextView>(R.id.cfinftext)
             val fruitPager = findViewById<ViewPager>(R.id.catfruitpager)
+            val ultraText = findViewById<TextView>(R.id.ultraformtext)
+            val ultraPager = findViewById<ViewPager>(R.id.ultraformpager)
             val animationButton = findViewById<Button>(R.id.animanim)
             val unitStatPanel = findViewById<CoordinatorLayout>(R.id.unitcoord)
             val back = findViewById<FloatingActionButton>(R.id.unitinfback)
@@ -122,13 +124,13 @@ class UnitInfo : AppCompatActivity() {
             val st = findViewById<TextView>(R.id.status)
             val unitTable = findViewById<ViewPager2>(R.id.unitinftable)
             val scrollView = findViewById<NestedScrollView>(R.id.unitinfscroll)
-            val separator = findViewById<View>(R.id.view2)
-            val separator2 = findViewById<View>(R.id.view)
+            val separator = findViewById<View>(R.id.view)
+            val separator2 = findViewById<View>(R.id.view2)
             val unitExplanationTitle = findViewById<TextView>(R.id.unitinfexp)
 
             progression.isIndeterminate = true
 
-            StaticStore.setDisappear(unitStatPanel, animationButton, fruitPager, fruitText, separator, separator2, unitExplanationTitle)
+            StaticStore.setDisappear(unitStatPanel, animationButton, fruitPager, fruitText, ultraPager, ultraText, separator, separator2, unitExplanationTitle)
             //Load Data
             withContext(Dispatchers.IO) {
                 Definer.define(this@UnitInfo, { _ -> }, { t -> runOnUiThread { st.text = t }})
@@ -138,7 +140,7 @@ class UnitInfo : AppCompatActivity() {
 
             //Load UI
             val tabNames = u.forms.mapIndexed { i, _ ->
-                return@mapIndexed if (i in 0..2) {
+                return@mapIndexed if (i in 0..3) {
                     getString(tabTitle[i])
                 } else {
                     if(Locale.getDefault().language == "en")
@@ -201,9 +203,15 @@ class UnitInfo : AppCompatActivity() {
             }
 
             if (u.info.evo != null) {
-                fruitPager.adapter = DynamicFruit(this@UnitInfo, data)
+                fruitPager.adapter = DynamicFruit(this@UnitInfo, data, true)
 
                 fruitPager.offscreenPageLimit = 1
+            }
+
+            if (u.info.zeroEvo != null) {
+                ultraPager.adapter = DynamicFruit(this@UnitInfo, data, false)
+
+                ultraPager.offscreenPageLimit = 1
             }
 
             supportActionBar?.elevation = 0F
@@ -302,7 +310,11 @@ class UnitInfo : AppCompatActivity() {
             StaticStore.setAppear(animationButton, unitStatPanel, treasureTab)
 
             if (u.info?.evo != null) {
-                StaticStore.setAppear(fruitPager, fruitText, separator2)
+                StaticStore.setAppear(fruitPager, fruitText, separator)
+            }
+
+            if (u.info?.zeroEvo != null) {
+                StaticStore.setAppear(ultraPager, ultraText)
             }
 
             val explanationExist = u.forms.any { f ->
@@ -322,7 +334,7 @@ class UnitInfo : AppCompatActivity() {
             }
 
             if (explanationExist) {
-                StaticStore.setAppear(separator, unitExplanationTitle)
+                StaticStore.setAppear(separator2, unitExplanationTitle)
             }
 
             tabs.getTabAt(StaticStore.unittabposition)?.select()
@@ -379,7 +391,7 @@ class UnitInfo : AppCompatActivity() {
         recyclerView.adapter = UnitInfoRecycle(this, ArrayList(u.forms.map { f -> MultiLangCont.get(f) ?: f.names.toString() }), u.forms, u.id)
 
         val tabNames = u.forms.mapIndexed { i, _ ->
-            return@mapIndexed if (i in 0..2) {
+            return@mapIndexed if (i in 0..3) {
                 getString(tabTitle[i])
             } else {
                 if(Locale.getDefault().language == "en")
@@ -427,7 +439,7 @@ class UnitInfo : AppCompatActivity() {
         val exp = findViewById<TextView>(R.id.unitinfexp)
 
         val tabNames = u.forms.mapIndexed { i, _ ->
-            return@mapIndexed if (i in 0..2) {
+            return@mapIndexed if (i in 0..3) {
                 getString(tabTitle[i])
             } else {
                 if(Locale.getDefault().language == "en")

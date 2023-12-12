@@ -67,22 +67,36 @@ object LangLoader {
                                 }
 
                                 var i = 0
+
                                 while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
                                     val lines = strs[i + 1].trim().split("<br>").toTypedArray()
+
                                     MultiLangCont.getStatic().FEXP.put(l.substring(1, l.length - 1), u.forms[i], lines)
+
                                     i++
                                 }
+                                
                                 j++
                             }
                         }
                         "CatFruitExplanation.txt" -> for (str in qs) {
                             val strs = str.trim().split("\t").toTypedArray()
+
                             val u = UserProfile.getBCData().units[CommonStatic.parseIntN(strs[0])] ?: continue
+
                             if (strs.size == 1) {
                                 continue
                             }
+
                             val lines = strs[1].replace("<br>", "\n")
+
                             MultiLangCont.getStatic().CFEXP.put(l.substring(1, l.length - 1), u.info, lines)
+
+                            if (strs.size == 3) {
+                                val ultraLines = strs[2].replace("<br>", "\n")
+
+                                MultiLangCont.getStatic().UFEXP.put(l.substring(1, l.length - 1), u.info, ultraLines)
+                            }
                         }
                         "ComboName.txt" -> for (str in qs) {
                             val strs = str.trim().split("\t").toTypedArray()

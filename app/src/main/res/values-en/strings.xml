@@ -210,7 +210,7 @@
     <string name="unit_info_text16">" (Reduces _% of duration)"</string>
     <string name="talen_warp">Res.Warp</string>
     <string name="unzip_fail">Unzip Failed…</string>
-    <string name="unit_info_catfruit">Cat Fruit Evolve</string>
+    <string name="unit_info_3rd">True Form Evolve</string>
     <string name="fruit1">Purple Catfruit Seed</string>
     <string name="fruit2">Red Catfruit Seed</string>
     <string name="fruit3">Blue Catfruit Seed</string>
@@ -1013,4 +1013,6 @@
     <string name="main_denied_dialog_content">Connection failed because server is either unavailable, or denied. This can be because server is under maintenance, or server denied because of proxy settings</string>
     <string name="err_reason_lang">Language data has been corrupted\n\nLanguage data is cruicial text data which is used for displaying unit/enemy/stage names, descriptions, and so on. It seems app downloaded language data in incorrect order due to any factors, so language data reading code caused error</string>
     <string name="err_solution_lang">1. Tap button below to reset language data\n- This doesn\'t reset whole app\'s data, so don\'t worry\n2. App will be closed once reset is done. Restart app to redownload language data again</string>
+    <string name="unit_info_4th">Ultra Form Evolve</string>
+    <string name="unit_info_fourth">Fourth</string>
 </resources>

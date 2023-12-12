@@ -13,7 +13,7 @@ import com.mandarin.bcu.androidutil.StaticStore
 import common.pack.Identifier
 import common.util.unit.Unit
 
-class DynamicFruit(private val activity: Activity, private val data: Identifier<Unit>) : PagerAdapter() {
+class DynamicFruit(private val activity: Activity, private val data: Identifier<Unit>, private val forTrueForm: Boolean) : PagerAdapter() {
     private val imgid = intArrayOf(R.id.fruit1, R.id.fruit2, R.id.fruit3, R.id.fruit4, R.id.fruit5, R.id.xp)
     private val txid = intArrayOf(R.id.fruittext1, R.id.fruittext2, R.id.fruittext3, R.id.fruittext4, R.id.fruittext5, R.id.xptext)
     private val cfdeid = intArrayOf(R.id.cfinf1, R.id.cfinf2, R.id.cfinf3)
@@ -54,7 +54,11 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
             cfdesc[i] = layout.findViewById(cfdeid[i])
         }
 
-        val evo = u.info.evo
+        val evo = if (forTrueForm) {
+            u.info.evo
+        } else {
+            u.info.zeroEvo
+        }
 
         val icon = StaticStore.fruit?.get((StaticStore.fruit?.size ?: 1) - 1) ?: StaticStore.empty(1, 1)
 
@@ -94,10 +98,14 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
                 fruittext[i]!!.text = ""
         }
 
-        val catfruitExplanation = u.info.catfruitExplanation
+        val catfruitExplanation = if (forTrueForm) {
+            u.info.catfruitExplanation
+        } else {
+            u.info.ultraFormEvolveExplanation
+        }
 
         if(catfruitExplanation != null) {
-            val lines = u.info.catfruitExplanation.split("\n")
+            val lines = catfruitExplanation.split("\n")
 
             for (i in cfdesc.indices) {
                 if (i >= lines.size) {
@@ -115,8 +123,6 @@ class DynamicFruit(private val activity: Activity, private val data: Identifier<
                 cfdesc[i]!!.visibility = View.GONE
             }
         }
-
-
 
         group.addView(layout)
 
