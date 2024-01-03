@@ -27,72 +27,73 @@ import kotlin.math.roundToInt
 class GetStrings(private val c: Context) {
     companion object {
         private val talData = intArrayOf(
-                -1, //0: ??
-                R.string.sch_abi_we, //1: Weaken
-                R.string.sch_abi_fr, //2: Freeze
-                R.string.sch_abi_sl, //3: Slow
-                R.string.sch_abi_ao, //4: Attacks Only
-                R.string.sch_abi_st, //5: Strong
-                R.string.sch_abi_re, //6: Resistant
-                R.string.sch_abi_md, //7: Massive Damage
-                R.string.sch_abi_kb, //8: Knockback
-                R.string.sch_abi_wa, //9: Warp
-                R.string.sch_abi_str, //10: Strengthen
-                R.string.sch_abi_su, //11: Survive
-                R.string.sch_abi_bd, //12: Base Destroyer
-                R.string.sch_abi_cr, //13: Critical
-                R.string.sch_abi_zk, //14: Zombie Killer
-                R.string.sch_abi_bb, //15: Barrier Breaker
-                R.string.sch_abi_em, //16: Extra Money
-                R.string.sch_abi_wv, //17: Wave
-                R.string.talen_we, //18: Res. Weaken
-                R.string.talen_fr, //19: Res. Freeze
-                R.string.talen_sl, //20: Res. Slow
-                R.string.talen_kb, //21: Res. Knockback
-                R.string.talen_wv, //22: Res. Wave
-                R.string.sch_abi_ws, //23: Wave Shield
-                R.string.talen_warp, //24: Res. Warp
-                R.string.unit_info_cost, //25: Cost
-                R.string.unit_info_cd, //26: Cooldown
-                R.string.unit_info_spd, //27: Speed
-                R.string.hb, //28: ??
-                R.string.sch_abi_ic, //29: Imu. Curse
-                R.string.talen_cu, //30: Res. Curse
-                R.string.unit_info_atk, //31: Attack Damage
-                R.string.unit_info_hp, //32: HP
-                R.string.sch_red, //33: Red Trait
-                R.string.sch_fl, //34: Float Trait
-                R.string.sch_bla, //35: Black Trait
-                R.string.sch_me, //36: Metal Trait
-                R.string.sch_an, //37: Angel Trait
-                R.string.sch_al, //38: Alien Trait
-                R.string.sch_zo, //39: Zombie Trait
-                R.string.sch_re, //40: Relic Trait
-                R.string.sch_wh, //41: White Trait
-                -1, //42: ??
-                -1, //43: ??
-                R.string.sch_abi_iw, //44: Imu. Weaken
-                R.string.sch_abi_if, //45: Imu. Freeze
-                R.string.sch_abi_is, //46: Imu. Slow
-                R.string.sch_abi_ik, //47: Imu. Knockback
-                R.string.sch_abi_iwv, //48: Imu. Wave
-                R.string.sch_abi_iwa, //49: Imu. Warp
-                R.string.sch_abi_sb, //50: Savage Blow
-                R.string.sch_abi_iv, //51: Invincibility
-                R.string.talen_poi, //52: Res. Poison
-                R.string.abi_ipoi, //53: Imu. Poison
-                R.string.talen_sur, //54: Res. Surge
-                R.string.sch_abi_imsu, //55: Imu. Surge
-                R.string.sch_abi_surge, //56: Surge Attack,
-                R.string.sch_de, //57: Aku
-                R.string.sch_abi_shb, //58: Shield breaker
-                R.string.sch_abi_ck, //59: Corpse killer
-                R.string.sch_abi_cu, //60: Curse
-                R.string.unit_info_tba, //61: TBA
-                R.string.sch_abi_mw, //62: Mini Wave
-                R.string.sch_abi_bk, //63: Colossus Slayer
-                R.string.sch_abi_bh, //64: Behemoth Hunter
-                R.string.sch_abi_ms //65: Mini Surge
+            -1, //0: ??
+            R.string.sch_abi_we, //1: Weaken
+            R.string.sch_abi_fr, //2: Freeze
+            R.string.sch_abi_sl, //3: Slow
+            R.string.sch_abi_ao, //4: Attacks Only
+            R.string.sch_abi_st, //5: Strong
+            R.string.sch_abi_re, //6: Resistant
+            R.string.sch_abi_md, //7: Massive Damage
+            R.string.sch_abi_kb, //8: Knockback
+            R.string.sch_abi_wa, //9: Warp
+            R.string.sch_abi_str, //10: Strengthen
+            R.string.sch_abi_su, //11: Survive
+            R.string.sch_abi_bd, //12: Base Destroyer
+            R.string.sch_abi_cr, //13: Critical
+            R.string.sch_abi_zk, //14: Zombie Killer
+            R.string.sch_abi_bb, //15: Barrier Breaker
+            R.string.sch_abi_em, //16: Extra Money
+            R.string.sch_abi_wv, //17: Wave
+            R.string.talen_we, //18: Res. Weaken
+            R.string.talen_fr, //19: Res. Freeze
+            R.string.talen_sl, //20: Res. Slow
+            R.string.talen_kb, //21: Res. Knockback
+            R.string.talen_wv, //22: Res. Wave
+            R.string.sch_abi_ws, //23: Wave Shield
+            R.string.talen_warp, //24: Res. Warp
+            R.string.unit_info_cost, //25: Cost
+            R.string.unit_info_cd, //26: Cooldown
+            R.string.unit_info_spd, //27: Speed
+            R.string.hb, //28: ??
+            R.string.sch_abi_ic, //29: Imu. Curse
+            R.string.talen_cu, //30: Res. Curse
+            R.string.unit_info_atk, //31: Attack Damage
+            R.string.unit_info_hp, //32: HP
+            R.string.sch_red, //33: Red Trait
+            R.string.sch_fl, //34: Float Trait
+            R.string.sch_bla, //35: Black Trait
+            R.string.sch_me, //36: Metal Trait
+            R.string.sch_an, //37: Angel Trait
+            R.string.sch_al, //38: Alien Trait
+            R.string.sch_zo, //39: Zombie Trait
+            R.string.sch_re, //40: Relic Trait
+            R.string.sch_wh, //41: White Trait
+            -1, //42: ??
+            -1, //43: ??
+            R.string.sch_abi_iw, //44: Imu. Weaken
+            R.string.sch_abi_if, //45: Imu. Freeze
+            R.string.sch_abi_is, //46: Imu. Slow
+            R.string.sch_abi_ik, //47: Imu. Knockback
+            R.string.sch_abi_iwv, //48: Imu. Wave
+            R.string.sch_abi_iwa, //49: Imu. Warp
+            R.string.sch_abi_sb, //50: Savage Blow
+            R.string.sch_abi_iv, //51: Invincibility
+            R.string.talen_poi, //52: Res. Poison
+            R.string.abi_ipoi, //53: Imu. Poison
+            R.string.talen_sur, //54: Res. Surge
+            R.string.sch_abi_imsu, //55: Imu. Surge
+            R.string.sch_abi_surge, //56: Surge Attack,
+            R.string.sch_de, //57: Aku
+            R.string.sch_abi_shb, //58: Shield breaker
+            R.string.sch_abi_ck, //59: Corpse killer
+            R.string.sch_abi_cu, //60: Curse
+            R.string.unit_info_tba, //61: TBA
+            R.string.sch_abi_mw, //62: Mini Wave
+            R.string.sch_abi_bk, //63: Colossus Slayer
+            R.string.sch_abi_bh, //64: Behemoth Hunter
+            R.string.sch_abi_ms, //65: Mini Surge
+            R.string.sch_abi_sh //66: Super Sage Slayer
         )
         private lateinit var talTool: Array<String>
         private val mapcolcid = arrayOf("N", "S", "C", "CH", "E", "T", "V", "R", "M", "A", "B", "RA", "H", "CA", "Q")

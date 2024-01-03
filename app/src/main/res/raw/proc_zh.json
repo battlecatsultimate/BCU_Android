@@ -1091,5 +1091,17 @@
                 "tooltip": null
             }
         }
+    },
+    "SPIRIT" : {
+        "abbr_name" : "spirit",
+        "full_name" : "Spirit Summon",
+        "tooltip": "Summons unit with invincibility and self-destruct automatically given, 150 range behind the summoner",
+        "format": "Summon (_entity(id)) as spirit",
+        "class": {
+            "id": {
+                "name": "entity ID",
+                "tooltip": null
+            }
+        }
     }
 }

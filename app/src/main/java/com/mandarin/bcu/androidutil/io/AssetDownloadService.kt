@@ -301,9 +301,6 @@ class AssetDownloadService : Service() {
                 if (service.status.isBlank())
                     return
 
-                println(service.status)
-                println(service.message)
-
                 service.sendBroadcast(service.status, service.message)
             }
         }

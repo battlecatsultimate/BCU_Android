@@ -263,10 +263,6 @@ class LineUpScreen : AppCompatActivity() {
                             posit = line.getTouchedUnit(event.x, event.y)
 
                             if (posit != null) {
-                                println(posit.contentToString())
-                            }
-
-                            if (posit != null) {
                                 line.prePosit = posit
                             }
                         }
@@ -976,8 +972,6 @@ class LineUpScreen : AppCompatActivity() {
 
             val frag = supportFragmentManager.findFragmentByTag("f$i")
 
-            println(supportFragmentManager.fragments)
-
             if(frag == null) {
                 Log.e("LUAdder:LUTab", "Failed to get fragment : $i")
             } else {
@@ -1001,8 +995,6 @@ class LineUpScreen : AppCompatActivity() {
             }
 
             val frag = supportFragmentManager.findFragmentByTag("f$i")
-
-            println(supportFragmentManager.fragments)
 
             if(frag == null) {
                 Log.e("LUAdder:LUTab", "Failed to get fragment : $i")

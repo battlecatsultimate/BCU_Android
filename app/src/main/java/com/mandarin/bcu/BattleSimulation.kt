@@ -70,6 +70,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.random.Random
 
+@SuppressLint("ClickableViewAccessibility")
 class BattleSimulation : AppCompatActivity() {
     var paused = false
         private set
@@ -300,7 +301,8 @@ class BattleSimulation : AppCompatActivity() {
                 var x = 0f
                 var y = 0f
 
-                battleView.setOnTouchListener(object : View.OnTouchListener {
+                battleView.setOnTouchListener(
+                object : View.OnTouchListener {
                     private var previousID = -1
                     private var preX = 0
 
@@ -946,11 +948,6 @@ class BattleSimulation : AppCompatActivity() {
         var changed = false
 
         if(st.lim != null && st.lim.lvr != null) {
-            println(st.lim.lvr.all.contentToString())
-            st.lim.lvr.rares.forEach {
-                println(it.contentToString())
-            }
-
             for(forms in lu.lu.fs) {
                 for(form in forms) {
                     form ?: continue

@@ -259,7 +259,7 @@ class PackManagement : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     StaticStore.resetUserPacks()
 
-                    Definer.define(this@PackManagement, {prog -> println(prog)}, this@PackManagement::updateText)
+                    Definer.define(this@PackManagement, {_ -> }, this@PackManagement::updateText)
 
                     Locale.getDefault().language
                     Revalidater.validate(this@PackManagement)

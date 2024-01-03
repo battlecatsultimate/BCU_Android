@@ -1016,4 +1016,7 @@
     <string name="err_solution_lang">1. 아래의 버튼을 눌러 언어 데이터를 초기화 합니다\n- 이 때 앱 전체 데이터를 초기화 하는 것이 아니라 언어 데이터만 따로 초기화 하게 됩니다\n2. 초기화가 완료되면 앱은 자동으로 종료됩니다. 다시 앱을 열어서 언어 데이터를 다운받아 주세요</string>
     <string name="unit_info_4th">4단 진화 정보</string>
     <string name="unit_info_fourth">4단</string>
+    <string name="sch_abi_sh">초현자 특효</string>
+    <string name="sch_abi_ss">정령 소환</string>
+    <string name="sch_ssg">초현자</string>
 </resources>

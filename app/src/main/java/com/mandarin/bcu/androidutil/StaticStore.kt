@@ -163,16 +163,16 @@ object StaticStore {
     var starDifficulty: Array<Bitmap>? = null
 
     /** Imgcut index list of ablities  */
-    var anumber = intArrayOf(203, 204, 206, 202, 209, 218, 227, 227, 227, 260, 258, 227, 227, 110, 227, 122, 114, 297, 300, 315)
+    var anumber = intArrayOf(203, 204, 206, 202, 209, 218, 227, 227, 227, 260, 258, 227, 227, 110, 227, 122, 114, 297, 300, 315, 319)
 
     /** Imgcut index list of procs  */
-    var pnumber = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 264, 296, 229, 205, 293, 208, 310, 239, 302, 213, 214, 215, 216, 210, 243, 262, 116, 237, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 43, 45, 47, 49, 51, 53, 109, 235, 241)
+    var pnumber = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 264, 296, 229, 205, 293, 208, 310, 239, 317, 302, 213, 214, 215, 216, 210, 243, 262, 116, 237, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 43, 45, 47, 49, 51, 53, 109, 235, 241)
 
     /** File index list of abilities  */
-    var afiles = arrayOf("", "", "", "", "", "", "SnipeX.png", "TimeX.png", "Ghost.png", "", "", "Suicide.png", "ThemeX.png", "", "BossWaveX.png", "", "", "", "", "")
+    var afiles = arrayOf("", "", "", "", "", "", "SnipeX.png", "TimeX.png", "Ghost.png", "", "", "Suicide.png", "ThemeX.png", "", "BossWaveX.png", "", "", "", "", "", "")
 
     /** File index list of procs  */
-    var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison.png", "Barrier.png", "DemonShield.png", "DeathSurge.png", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "Counter.png", "DmgCut.png", "DmgCap.png", "CritX.png", "PoisonX.png", "SealX.png", "MovingX.png", "SummonX.png", "ArmorBreakX.png", "SpeedX.png", "CannonX.png", "", "", "", "", "", "", "", "", "")
+    var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison.png", "Barrier.png", "DemonShield.png", "DeathSurge.png", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "Counter.png", "DmgCut.png", "DmgCap.png", "CritX.png", "PoisonX.png", "SealX.png", "MovingX.png", "SummonX.png", "ArmorBreakX.png", "SpeedX.png", "CannonX.png", "", "", "", "", "", "", "", "", "")
 
     //Variables for Unit
 

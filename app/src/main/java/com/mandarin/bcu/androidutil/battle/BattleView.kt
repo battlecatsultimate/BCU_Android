@@ -211,8 +211,6 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
                     es.anim.check()
             }
 
-            println(c.isHardwareAccelerated)
-
             if (!paused) {
                 if (spd > 0) {
                     var i = 0

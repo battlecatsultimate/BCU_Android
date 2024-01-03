@@ -148,8 +148,6 @@ class ApkDownload : AppCompatActivity() {
         val progress = findViewById<ProgressBar>(R.id.apkprog)
         val state = findViewById<TextView>(R.id.apkstate)
 
-        println(output)
-
         if (output.name.isBlank()) {
             state.setText(R.string.down_state_no)
 

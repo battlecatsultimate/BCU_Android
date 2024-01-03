@@ -197,9 +197,6 @@ class PackConfListAdapter(context: Context, name: ArrayList<String>) : ArrayAdap
                                 }
                             }
 
-                            println(PackConflictSolve.data)
-                            println(posit)
-
                             PackConflictSolve.data[posit] = pc.action
                         }
                     }

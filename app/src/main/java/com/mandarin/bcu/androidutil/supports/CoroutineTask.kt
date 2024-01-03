@@ -1,8 +1,10 @@
 package com.mandarin.bcu.androidutil.supports
 
 import android.util.Log
-import kotlinx.coroutines.*
-import kotlin.collections.ArrayList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 abstract class CoroutineTask<Data> {
     companion object {
@@ -58,8 +60,6 @@ abstract class CoroutineTask<Data> {
                 doSomething()
                 status = Status.DONE
                 getOut()
-
-                println(canceled)
 
                 withContext(Dispatchers.Main) {
                     if(!canceled) {

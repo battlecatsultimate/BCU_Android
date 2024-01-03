@@ -23,10 +23,19 @@ class CVGraphics : FakeGraphics {
             ftmt.clear()
         }
 
-        private val negate = floatArrayOf(-1f, 0f, 0f, 0f, 255f,
-                0f, -1f, 0f, 0f ,255f,
-                0f, 0f, -1f, 0f, 255f,
-                0f, 0f, 0f, 1f, 0f)
+        private val negate = floatArrayOf(
+            -1f, 0f , 0f , 0f, 255f,
+            0f , -1f, 0f , 0f ,255f,
+            0f , 0f , -1f, 0f, 255f,
+            0f , 0f , 0f , 1f, 0f
+        )
+
+        private val mask = floatArrayOf(
+            0f, 0f, 0f, 0f, 0f,
+            0f, 0f, 0f, 0f, 0f,
+            0f, 0f, 0f, 0f, 0f,
+            0f, 0f, 0f, 1f, 0f
+        )
 
         const val POSITIVE = 100
 
@@ -55,6 +64,7 @@ class CVGraphics : FakeGraphics {
     private val gradientPaint: Paint
 
     private val negative = ColorMatrixColorFilter(negate)
+    private val masking = ColorMatrixColorFilter(mask)
 
     private val m = Matrix()
     private val m2 = Matrix()
@@ -307,9 +317,11 @@ class CVGraphics : FakeGraphics {
                 }
             }
             FakeGraphics.GRAY -> {
-                bitmapPaint.colorFilter = negative
-                gradientPaint.colorFilter = negative
                 neg = true
+            }
+            FakeGraphics.MASK -> {
+                bitmapPaint.colorFilter = masking
+                bitmapPaint.alpha = p0
             }
             POSITIVE -> {
                 bitmapPaint.colorFilter = null
@@ -319,6 +331,11 @@ class CVGraphics : FakeGraphics {
                     neg = false
                 }
             }
+        }
+
+        if (neg && mode != POSITIVE && mode != FakeGraphics.MASK) {
+            bitmapPaint.colorFilter = negative
+            gradientPaint.colorFilter = negative
         }
     }
 
