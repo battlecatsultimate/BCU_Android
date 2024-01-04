@@ -333,9 +333,14 @@ class CVGraphics : FakeGraphics {
             }
         }
 
-        if (neg && mode != POSITIVE && mode != FakeGraphics.MASK) {
-            bitmapPaint.colorFilter = negative
-            gradientPaint.colorFilter = negative
+        if (mode != POSITIVE && mode != FakeGraphics.MASK) {
+            if (neg) {
+                bitmapPaint.colorFilter = negative
+                gradientPaint.colorFilter = negative
+            } else {
+                bitmapPaint.colorFilter = null
+                gradientPaint.colorFilter = null
+            }
         }
     }
 
