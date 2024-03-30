@@ -52,7 +52,7 @@ class SearchFilter : AppCompatActivity() {
     private val abtool = intArrayOf(
         R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_ao, R.string.sch_abi_st, R.string.sch_abi_re, R.string.sch_abi_it,
         R.string.sch_abi_md, R.string.sch_abi_id, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str,
-        R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_zk, R.string.sch_abi_ck, R.string.sch_abi_bb, R.string.sch_abi_shb,
+        R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_mk, R.string.sch_abi_zk, R.string.sch_abi_ck, R.string.sch_abi_bb, R.string.sch_abi_shb,
         R.string.sch_abi_sb, R.string.sch_abi_em, R.string.sch_abi_me, R.string.sch_abi_mw, R.string.sch_abi_wv, R.string.sch_abi_ms, R.string.sch_abi_surge,
         R.string.sch_abi_cs, R.string.sch_abi_ws, R.string.sch_abi_ss, R.string.sch_abi_bk, R.string.sch_abi_bh, R.string.sch_abi_sh, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is,
         R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.sch_abi_imsu, R.string.sch_abi_iwa, R.string.sch_abi_ic, R.string.sch_abi_impoi, R.string.sch_abi_wk,
@@ -70,7 +70,7 @@ class SearchFilter : AppCompatActivity() {
         intArrayOf(0, Data.AB_RESIST), intArrayOf(0, Data.AB_RESISTS), intArrayOf(0, Data.AB_MASSIVE),
         intArrayOf(0, Data.AB_MASSIVES), intArrayOf(1, Data.P_KB), intArrayOf(1, Data.P_WARP),
         intArrayOf(1, Data.P_CURSE), intArrayOf(1, Data.P_IMUATK), intArrayOf(1, Data.P_STRONG),
-        intArrayOf(1, Data.P_LETHAL), intArrayOf(1, Data.P_ATKBASE), intArrayOf(1, Data.P_CRIT),
+        intArrayOf(1, Data.P_LETHAL), intArrayOf(1, Data.P_ATKBASE), intArrayOf(1, Data.P_CRIT), intArrayOf(1, Data.P_METALKILL),
         intArrayOf(0, Data.AB_ZKILL), intArrayOf(0, Data.AB_CKILL), intArrayOf(1, Data.P_BREAK),
         intArrayOf(1, Data.P_SHIELDBREAK), intArrayOf(1, Data.P_SATK), intArrayOf(1, Data.P_BOUNTY),
         intArrayOf(0, Data.AB_METALIC), intArrayOf(1, Data.P_MINIWAVE), intArrayOf(1, Data.P_WAVE),
@@ -97,8 +97,8 @@ class SearchFilter : AppCompatActivity() {
 
     private val atkdraw = intArrayOf(212, 112)
 
-    private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 260, 300, 264, 296, 229, 205, 209, 293, 208, 310, 239, 315, 218, 317, 297, 302, 319, 213, 214, 215, 216, 210, 243, 262, 116, 237, 258, 110, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX")
+    private val abdraw = intArrayOf(195, 197, 198, 202, 203, 204, 122, 206, 114, 207, 266, 289, 231, 196, 199, 200, 201, 321, 260, 300, 264, 296, 229, 205, 209, 293, 208, 310, 239, 315, 218, 317, 297, 302, 319, 213, 214, 215, 216, 210, 243, 262, 116, 237, 258, 110, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+    private val abdrawf = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Burrow", "Revive", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX")
 
     private lateinit var abilAdapter: SearchAbilityAdapter
     private lateinit var traitAdapter: SearchTraitAdapter

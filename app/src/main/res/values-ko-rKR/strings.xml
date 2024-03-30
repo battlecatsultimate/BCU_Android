@@ -1019,4 +1019,8 @@
     <string name="sch_abi_sh">초현자 특효</string>
     <string name="sch_abi_ss">정령 소환</string>
     <string name="sch_ssg">초현자</string>
+    <string name="sch_abi_mk">메탈 킬러</string>
+    <string name="eff_guar">가드 (더미)</string>
+    <string name="eff_meki">메탈 킬러</string>
+    <string name="eff_mekie">메탈 킬러 적 측면</string>
 </resources>

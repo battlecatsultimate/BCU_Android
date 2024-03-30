@@ -52,7 +52,8 @@ class EffListPager<T> : Fragment() where T : AnimI<*, *> {
                 , R.string.eff_weaue, R.string.eff_minwv, R.string.eff_minwve, R.string.eff_atksmoke
                 , R.string.eff_whitesmok, R.string.eff_heal, R.string.eff_heale, R.string.eff_ds, R.string.eff_dse
                 , R.string.eff_cou, R.string.eff_coue, R.string.eff_cut, R.string.eff_cute, R.string.eff_cap, R.string.eff_cape
-                , R.string.eff_misu, R.string.eff_misue, R.string.eff_cosu, R.string.eff_cosue
+                , R.string.eff_misu, R.string.eff_misue, R.string.eff_cosu, R.string.eff_cosue, R.string.eff_guar, R.string.eff_meki
+                , R.string.eff_mekie
         )
 
         val canonID = intArrayOf(R.string.eff_defc, R.string.eff_slowc, R.string.eff_wallc

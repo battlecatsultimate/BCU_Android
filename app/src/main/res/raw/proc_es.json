@@ -1286,5 +1286,17 @@
                 "tooltip": null
             }
         }
+    },
+    "METALKILL" : {
+        "abbr_name": "m. killer",
+        "full_name": "Metal Killer",
+        "tooltip": "Decreases metal target's current HP with specified percentage value along with its normal attack too",
+        "format": "Metal Killer (_left)Decreases (mult)% of target's current HP(_right)",
+        "class": {
+            "mult": {
+                "name": "multiplier",
+                "tooltip": null
+            }
+        }
     }
 }

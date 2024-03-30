@@ -1018,4 +1018,8 @@
     <string name="sch_abi_sh">超賢者特効</string>
     <string name="sch_abi_ss">精霊召喚</string>
     <string name="sch_ssg">超賢者</string>
+    <string name="sch_abi_mk">メタルキラー</string>
+    <string name="eff_guar">ガード (ダミー)</string>
+    <string name="eff_meki">メタルキラー</string>
+    <string name="eff_mekie">敵側のメタルキラー</string>
 </resources>

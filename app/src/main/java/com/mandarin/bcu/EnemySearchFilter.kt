@@ -38,7 +38,7 @@ open class EnemySearchFilter : AppCompatActivity() {
     private val attacks = arrayOfNulls<CheckBox>(3)
     private val atkid = intArrayOf(R.id.eschchld, R.id.eschchom, R.id.eschchmu)
     private val atks = arrayOf("2", "4", "3")
-    private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_ck, R.string.sch_abi_bb, R.string.sch_abi_shb,
+    private val abtool = intArrayOf(R.string.sch_abi_we, R.string.sch_abi_fr, R.string.sch_abi_sl, R.string.sch_abi_kb, R.string.sch_abi_wa, R.string.sch_abi_cu, R.string.sch_abi_iv, R.string.sch_abi_str, R.string.sch_abi_su, R.string.sch_abi_bd, R.string.sch_abi_cr, R.string.sch_abi_mk, R.string.sch_abi_ck, R.string.sch_abi_bb, R.string.sch_abi_shb,
             R.string.sch_abi_mw, R.string.sch_abi_wv, R.string.sch_abi_ms, R.string.sch_abi_surge, R.string.sch_abi_cs, R.string.sch_abi_iw, R.string.sch_abi_if, R.string.sch_abi_is, R.string.sch_abi_ik, R.string.sch_abi_iwv, R.string.sch_abi_imsu, R.string.sch_abi_impoi, R.string.abi_bu, R.string.abi_rev, R.string.sch_abi_sb, R.string.sch_abi_poi, R.string.enem_info_barrier, R.string.sch_abi_ds, R.string.sch_abi_sd, R.string.abi_sui,
             R.string.abi_gh, R.string.abi_snk, R.string.abi_seal, R.string.abi_stt, R.string.abi_sum, R.string.abi_mvatk, R.string.abi_thch, R.string.abi_poi, R.string.abi_boswv, R.string.abi_armbr, R.string.abi_hast, R.string.sch_abi_cou, R.string.sch_abi_cap, R.string.sch_abi_cut,
             R.string.abi_imvatk, R.string.abi_isnk, R.string.abi_istt, R.string.abi_ipoi, R.string.abi_ithch, R.string.abi_iseal, R.string.abi_iboswv, R.string.abi_imcri, R.string.sch_abi_imusm, R.string.sch_abi_imar, R.string.sch_abi_imsp, R.string.sch_abi_imcn)
@@ -47,7 +47,7 @@ open class EnemySearchFilter : AppCompatActivity() {
     private val abils = arrayOf(intArrayOf(1, Data.P_WEAK), intArrayOf(1, Data.P_STOP),
         intArrayOf(1, Data.P_SLOW), intArrayOf(1, Data.P_KB), intArrayOf(1, Data.P_WARP),
         intArrayOf(1, Data.P_CURSE), intArrayOf(1, Data.P_IMUATK), intArrayOf(1, Data.P_STRONG),
-        intArrayOf(1, Data.P_LETHAL), intArrayOf(1, Data.P_ATKBASE), intArrayOf(1, Data.P_CRIT),
+        intArrayOf(1, Data.P_LETHAL), intArrayOf(1, Data.P_ATKBASE), intArrayOf(1, Data.P_CRIT), intArrayOf(1, Data.P_METALKILL),
         intArrayOf(0, Data.AB_CKILL), intArrayOf(1, Data.P_BREAK), intArrayOf(1, Data.P_SHIELDBREAK),
         intArrayOf(1, Data.P_MINIWAVE), intArrayOf(1, Data.P_WAVE), intArrayOf(1, Data.P_MINIVOLC),
         intArrayOf(1, Data.P_VOLC), intArrayOf(0, Data.AB_CSUR), intArrayOf(1, Data.P_IMUWEAK), intArrayOf(1, Data.P_IMUSTOP),
@@ -68,8 +68,8 @@ open class EnemySearchFilter : AppCompatActivity() {
 
     private val atkdraw = intArrayOf(212, 112)
 
-    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 300, 264, 296, 293, 208, 310, 239, 315, 213, 214, 215, 216, 210, 243, 237, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
-    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX", "CannonX")
+    private val abdraw = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 321, 300, 264, 296, 293, 208, 310, 239, 315, 213, 214, 215, 216, 210, 243, 237, -1, -1, 229, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+    private val abfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow", "Revive", "", "BCPoison", "Barrier", "DemonShield", "DeathSurge", "Suicide", "Ghost", "Snipe", "Seal", "Time", "Summon", "Moving", "Theme", "Poison", "BossWave", "ArmorBreak", "Speed", "Counter", "DmgCap", "DmgCut", "MovingX", "SnipeX", "TimeX", "PoisonX", "ThemeX", "SealX", "BossWaveX", "CritX", "SummonX", "ArmorBreakX", "SpeedX", "CannonX")
 
     private lateinit var abAdapter: SearchAbilityAdapter
     private lateinit var trAdapter: SearchTraitAdapter

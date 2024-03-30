@@ -166,13 +166,13 @@ object StaticStore {
     var anumber = intArrayOf(203, 204, 206, 202, 209, 218, 227, 227, 227, 260, 258, 227, 227, 110, 227, 122, 114, 297, 300, 315, 319)
 
     /** Imgcut index list of procs  */
-    var pnumber = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 264, 296, 229, 205, 293, 208, 310, 239, 317, 302, 213, 214, 215, 216, 210, 243, 262, 116, 237, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 43, 45, 47, 49, 51, 53, 109, 235, 241)
+    var pnumber = intArrayOf(195, 197, 198, 207, 266, 289, 231, 196, 199, 200, 201, 321, 264, 296, 229, 205, 293, 208, 310, 239, 317, 302, 213, 214, 215, 216, 210, 243, 262, 116, 237, 329, 330, 331, 332, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 227, 43, 45, 47, 49, 51, 53, 109, 235, 241)
 
     /** File index list of abilities  */
     var afiles = arrayOf("", "", "", "", "", "", "SnipeX.png", "TimeX.png", "Ghost.png", "", "", "Suicide.png", "ThemeX.png", "", "BossWaveX.png", "", "", "", "", "", "")
 
     /** File index list of procs  */
-    var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "BCPoison.png", "Barrier.png", "DemonShield.png", "DeathSurge.png", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "Counter.png", "DmgCut.png", "DmgCap.png", "CritX.png", "PoisonX.png", "SealX.png", "MovingX.png", "SummonX.png", "ArmorBreakX.png", "SpeedX.png", "CannonX.png", "", "", "", "", "", "", "", "", "")
+    var pfiles = arrayOf("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Burrow.png", "Revive.png", "Snipe.png", "Seal.png", "Time.png", "Summon.png", "Moving.png", "Theme.png", "Poison.png", "BossWave.png", "ArmorBreak.png", "Speed.png", "Counter.png", "DmgCut.png", "DmgCap.png", "CritX.png", "PoisonX.png", "SealX.png", "MovingX.png", "SummonX.png", "ArmorBreakX.png", "SpeedX.png", "CannonX.png", "", "", "", "", "", "", "", "", "")
 
     //Variables for Unit
 
@@ -502,6 +502,7 @@ object StaticStore {
 
         img15 = try {
             val png = VFile.get(path).data.img
+
             img.cut(png)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -516,9 +517,11 @@ object StaticStore {
         val path = "./org/page/img002.png"
         val imgcut = "./org/page/img002.imgcut"
         val img = ImgCut.newIns(imgcut)
+
         try {
             val png = VFile.get(path).data.img
             val imgs = img.cut(png)
+
             treasure = imgs[28].bimg() as Bitmap
         } catch (e: IOException) {
             e.printStackTrace()
@@ -533,15 +536,13 @@ object StaticStore {
      */
     fun getLang(lan: Int) {
         val language: String
+
         if (lan == 0) {
             language = Resources.getSystem().configuration.locales[0].language
             CommonStatic.getConfig().lang = listOf(*lang).indexOf(language) - 1
-            println("Auto Set : $language")
         } else {
-            println(lang[lan])
             CommonStatic.getConfig().lang = lan - 1
         }
-        println(CommonStatic.getConfig().lang)
 
         if (CommonStatic.getConfig().lang >= CommonStatic.Lang.LOC_CODE.size || CommonStatic.getConfig().lang < 0)
             CommonStatic.getConfig().lang = 0

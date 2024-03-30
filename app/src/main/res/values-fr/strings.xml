@@ -1018,4 +1018,8 @@
     <string name="sch_abi_sh">Super Sage Slayer</string>
     <string name="sch_abi_ss">Spirit Summon</string>
     <string name="sch_ssg">Super Sage</string>
+    <string name="sch_abi_mk">Metal Killer</string>
+    <string name="eff_guar">Guard (Dummy)</string>
+    <string name="eff_meki">Metal Killer</string>
+    <string name="eff_mekie">Metal Killer Enemy Side</string>
 </resources>

@@ -1016,7 +1016,11 @@
     <string name="err_solution_lang">1. Tap button below to reset language data\n- This doesn\'t reset whole app\'s data, so don\'t worry\n2. App will be closed once reset is done. Restart app to redownload language data again</string>
     <string name="unit_info_4th">Ultra Form Evolve</string>
     <string name="unit_info_fourth">第4形態</string>
-    <string name="sch_abi_sh">Super Sage Slayer</string>
-    <string name="sch_abi_ss">Spirit Summon</string>
-    <string name="sch_ssg">Super Sage</string>
+    <string name="sch_abi_sh">超賢者特效</string>
+    <string name="sch_abi_ss">召喚</string>
+    <string name="sch_ssg">超賢者</string>
+    <string name="sch_abi_mk">Metal Killer</string>
+    <string name="eff_guar">Guard (Dummy)</string>
+    <string name="eff_meki">Metal Killer</string>
+    <string name="eff_mekie">Metal Killer Enemy Side</string>
 </resources>

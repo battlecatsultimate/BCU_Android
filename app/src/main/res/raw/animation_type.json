@@ -74,5 +74,9 @@
     "DmgCap": {
         "FAIL" : "fail",
         "SUCCESS" : "success"
+    },
+    "GuardEff": {
+        "NONE": "default",
+        "BREAK": "break"
     }
 }
