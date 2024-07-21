@@ -9,7 +9,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\user\\Desktop\\Utility\\Plan\\KeyStore\\keystore.jks')
+            storeFile file('/Users/roguerouge/Downloads/BCU_Android/keystore.jks')
             storePassword 'battlecatsultimate'
             keyAlias 'key0'
             keyPassword 'battlecatsultimate'

@@ -1,6 +1,8 @@
 .gradle/*
 local.properties
 *.json
+keystore.jks
+**/*.DS_STORE
 
 /app/.cxx/*
 /app/.externalNativeBuild/*
