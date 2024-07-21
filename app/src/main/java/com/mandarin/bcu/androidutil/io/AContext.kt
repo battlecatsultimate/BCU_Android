@@ -237,19 +237,19 @@ class AContext : Context {
             return a.resources.openRawResource(R.raw.animation_type)
 
         return when(CommonStatic.getConfig().lang) {
-            0 -> {
+            CommonStatic.Lang.Locale.EN -> {
                 a.resources.openRawResource(R.raw.proc)
             }
-            1 -> {
+            CommonStatic.Lang.Locale.ZH -> {
                 a.resources.openRawResource(R.raw.proc_zh)
             }
-            2 -> {
+            CommonStatic.Lang.Locale.KR -> {
                 a.resources.openRawResource(R.raw.proc_kr)
             }
-            3 -> {
+            CommonStatic.Lang.Locale.JP -> {
                 a.resources.openRawResource(R.raw.proc_jp)
             }
-            8 -> {
+            CommonStatic.Lang.Locale.ES -> {
                 a.resources.openRawResource(R.raw.proc_es)
             }
             else -> {

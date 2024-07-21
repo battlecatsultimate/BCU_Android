@@ -5,6 +5,7 @@ import com.mandarin.bcu.androidutil.Interpret
 import com.mandarin.bcu.androidutil.StatFilterElement
 import com.mandarin.bcu.androidutil.StaticStore
 import common.CommonStatic
+import common.CommonStatic.Lang
 import common.battle.data.MaskEntity
 import common.pack.Identifier
 import common.pack.UserProfile
@@ -129,7 +130,7 @@ object FilterEntity {
 
                     name = Data.trio(i) + " - " + name.lowercase()
 
-                    added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                    added = if(CommonStatic.getConfig().lang.equals(Lang.Locale.KR) || lang == Interpret.KO) {
                         KoreanFilter.filter(name, StaticStore.entityname)
                     } else {
                         name.contains(StaticStore.entityname.lowercase())
@@ -272,7 +273,7 @@ object FilterEntity {
 
                     name = Data.trio(i) + " - " + name.lowercase()
 
-                    val added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                    val added = if(CommonStatic.getConfig().lang.equals(Lang.Locale.KR) || lang == Interpret.KO) {
                         KoreanFilter.filter(name, StaticStore.entityname)
                     } else {
                         name.contains(StaticStore.entityname.lowercase())
@@ -445,7 +446,7 @@ object FilterEntity {
 
                         name = Data.trio(u.id.id) + " - " + name.lowercase()
 
-                        added = if(CommonStatic.getConfig().lang == 2 || lang == Interpret.KO) {
+                        added = if(CommonStatic.getConfig().lang.equals(Lang.Locale.KR) || lang == Interpret.KO) {
                             KoreanFilter.filter(name, StaticStore.entityname)
                         } else {
                             name.contains(StaticStore.entityname.lowercase())

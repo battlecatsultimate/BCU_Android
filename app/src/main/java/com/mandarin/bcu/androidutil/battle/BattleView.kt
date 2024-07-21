@@ -493,7 +493,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private fun showBattleResult(win: Boolean) {
         val st = painter.bf.sb.st
 
-        if(win && CommonStatic.getConfig().exContinuation && st.info != null && (st.info.exConnection() || st.info.exStages != null)) {
+        if(win && CommonStatic.getConfig().exContinuation && st.info != null && (st.info.hasExConnection() || st.info.exStages != null)) {
             if(CommonStatic.getConfig().realEx) {
                 val stage = pickOneEXStage()
 
@@ -658,7 +658,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
     private fun getEXStages(st: Stage) : List<Stage> {
         val res = ArrayList<Stage>()
 
-        if(st.info.exConnection()) {
+        if(st.info.hasExConnection()) {
             val inf = st.info as DefStageInfo
             val min = inf.exStageIDMin
             val max = inf.exStageIDMax
@@ -704,7 +704,7 @@ class BattleView(context: Context, field: BattleField?, type: Int, axis: Boolean
 
         val st = painter.bf.sb.st
 
-        if(st.info.exConnection()) {
+        if(st.info.hasExConnection()) {
             val inf = st.info as DefStageInfo
             val min = inf.exStageIDMin
             val max = inf.exStageIDMax

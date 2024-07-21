@@ -166,7 +166,7 @@ class StatFilterElement(val type: Int, val option: Int, val lev: Int) {
                 return performData(result, orand, du.speed)
             }
             CD -> {
-                return performData(result, orand, t.getFinRes(du.respawn))
+                return performData(result, orand, t.getFinRes(du.respawn, false))
             }
             BARRIER -> {
                 return performData(result, orand, du.proc.BARRIER.health)

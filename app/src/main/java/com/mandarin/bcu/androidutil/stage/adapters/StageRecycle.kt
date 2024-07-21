@@ -331,7 +331,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         viewHolder.minres.text = toFrame(st.minSpawn, st.maxSpawn)
 
         if (st.info != null) {
-            if(st.info.exConnection() || st.info.exStages != null) {
+            if(st.info.hasExConnection() || st.info.exStages != null) {
                 val linearLayoutManager = LinearLayoutManager(activity)
 
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL

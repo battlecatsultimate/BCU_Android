@@ -3,6 +3,7 @@ package com.mandarin.bcu.androidutil.io
 import android.content.Context
 import com.mandarin.bcu.androidutil.StaticStore
 import common.CommonStatic
+import common.CommonStatic.Lang
 import common.pack.UserProfile
 import common.system.files.VFile
 import common.util.Data
@@ -15,7 +16,6 @@ import java.io.File
 object LangLoader {
     @Synchronized
     fun readUnitLang(c: Context) {
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/", "/th/")
         val files = arrayOf("UnitName.txt", "UnitExplanation.txt", "CatFruitExplanation.txt", "ComboName.txt")
 
         MultiLangCont.getStatic().FNAME.clear()
@@ -23,9 +23,9 @@ object LangLoader {
         MultiLangCont.getStatic().CFEXP.clear()
         MultiLangCont.getStatic().COMNAME.clear()
 
-        for (l in lan) {
+        for (l in Lang.Locale.values()) {
             for (n in files) {
-                val f = File("${StaticStore.getExternalAsset(c)}lang$l$n")
+                val f = File("${StaticStore.getExternalAsset(c)}lang/${l.code}/$n")
 
                 if (f.exists()) {
                     val qs = VFile.getFile(f).data.readLine()
@@ -46,7 +46,7 @@ object LangLoader {
                                 var i = 0
 
                                 while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
-                                    MultiLangCont.getStatic().FNAME.put(l.substring(1, l.length - 1), u.forms[i], strs[i + 1].trim())
+                                    MultiLangCont.getStatic().FNAME.put(l, u.forms[i], strs[i + 1].trim())
                                     i++
                                 }
 
@@ -71,7 +71,7 @@ object LangLoader {
                                 while (i < u.forms.size.coerceAtMost(strs.size - 1)) {
                                     val lines = strs[i + 1].trim().split("<br>").toTypedArray()
 
-                                    MultiLangCont.getStatic().FEXP.put(l.substring(1, l.length - 1), u.forms[i], lines)
+                                    MultiLangCont.getStatic().FEXP.put(l, u.forms[i], lines)
 
                                     i++
                                 }
@@ -90,12 +90,12 @@ object LangLoader {
 
                             val lines = strs[1].replace("<br>", "\n")
 
-                            MultiLangCont.getStatic().CFEXP.put(l.substring(1, l.length - 1), u.info, lines)
+                            MultiLangCont.getStatic().CFEXP.put(l, u.info, lines)
 
                             if (strs.size == 3) {
                                 val ultraLines = strs[2].replace("<br>", "\n")
 
-                                MultiLangCont.getStatic().UFEXP.put(l.substring(1, l.length - 1), u.info, ultraLines)
+                                MultiLangCont.getStatic().UFEXP.put(l, u.info, ultraLines)
                             }
                         }
                         "ComboName.txt" -> for (str in qs) {
@@ -107,7 +107,7 @@ object LangLoader {
                             val combo = getComboViaID(UserProfile.getBCData().combos.list, id) ?: continue
 
                             val name = strs[1].trim()
-                            MultiLangCont.getStatic().COMNAME.put(l.substring(1, l.length - 1), combo, name)
+                            MultiLangCont.getStatic().COMNAME.put(l, combo, name)
                         }
                     }
                 }
@@ -119,14 +119,13 @@ object LangLoader {
 
     @Synchronized
     fun readEnemyLang(c: Context) {
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/", "/th/")
         val files = arrayOf("EnemyName.txt", "EnemyExplanation.txt")
 
         MultiLangCont.getStatic().ENAME.clear()
         MultiLangCont.getStatic().EEXP.clear()
-        for (l in lan) {
+        for (l in Lang.Locale.values()) {
             for (n in files) {
-                val f = File("${StaticStore.getExternalAsset(c)}lang$l$n")
+                val f = File("${StaticStore.getExternalAsset(c)}lang/${l.code}/$n")
                 if (f.exists()) {
                     val qs = VFile.getFile(f).data.readLine()
 
@@ -137,19 +136,19 @@ object LangLoader {
                             val em = UserProfile.getBCData().enemies[CommonStatic.parseIntN(strs[0])] ?: continue
 
                             if (strs.size == 1)
-                                MultiLangCont.getStatic().ENAME.put(l.substring(1, l.length - 1), em, null)
+                                MultiLangCont.getStatic().ENAME.put(l, em, null)
                             else
-                                MultiLangCont.getStatic().ENAME.put(l.substring(1, l.length - 1), em, if (strs[1].trim().startsWith("【")) strs[1].trim().substring(1, strs[1].trim().length - 1) else strs[1].trim())
+                                MultiLangCont.getStatic().ENAME.put(l, em, if (strs[1].trim().startsWith("【")) strs[1].trim().substring(1, strs[1].trim().length - 1) else strs[1].trim())
                         }
                         "EnemyExplanation.txt" -> for (str in qs) {
                             val strs = str.trim().split("\t").toTypedArray()
                             val em = UserProfile.getBCData().enemies[CommonStatic.parseIntN(strs[0])]
                                     ?: continue
                             if (strs.size == 1)
-                                MultiLangCont.getStatic().EEXP.put(l.substring(1, l.length - 1), em, null)
+                                MultiLangCont.getStatic().EEXP.put(l, em, null)
                             else {
                                 val lines = strs[1].trim().split("<br>").toTypedArray()
-                                MultiLangCont.getStatic().EEXP.put(l.substring(1, l.length - 1), em, lines)
+                                MultiLangCont.getStatic().EEXP.put(l, em, lines)
                             }
                         }
                     }
@@ -161,8 +160,6 @@ object LangLoader {
 
     @Synchronized
     fun readStageLang(c: Context) {
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/","/fr/","/it/","/es/","/de/", "/th/")
-
         val file = "StageName.txt"
         val diff = "Difficulty.txt"
         val rewa = "RewardName.txt"
@@ -171,8 +168,8 @@ object LangLoader {
         MultiLangCont.getStatic().STNAME.clear()
         MultiLangCont.getStatic().RWNAME.clear()
 
-        for (l in lan) {
-            val f = File("${StaticStore.getExternalAsset(c)}lang$l$file")
+        for (l in Lang.Locale.values()) {
+            val f = File("${StaticStore.getExternalAsset(c)}lang/${l.code}/$file")
 
             if (f.exists()) {
                 val qs = VFile.getFile(f).data.readLine()
@@ -196,7 +193,7 @@ object LangLoader {
                         val mc = MapColc.get(Data.hex(id0)) ?: continue
 
                         if (ids.size == 1) {
-                            MultiLangCont.getStatic().MCNAME.put(l.substring(1, l.length - 1), mc, name)
+                            MultiLangCont.getStatic().MCNAME.put(l, mc, name)
                             continue
                         }
 
@@ -208,7 +205,7 @@ object LangLoader {
                         val stm = mc.maps.list[id1] ?: continue
 
                         if (ids.size == 2) {
-                            MultiLangCont.getStatic().SMNAME.put(l.substring(1, l.length - 1), stm, name)
+                            MultiLangCont.getStatic().SMNAME.put(l, stm, name)
 
                             continue
                         }
@@ -220,14 +217,14 @@ object LangLoader {
 
                         val st = stm.list.list[id2]
 
-                        MultiLangCont.getStatic().STNAME.put(l.substring(1, l.length - 1), st, name)
+                        MultiLangCont.getStatic().STNAME.put(l, st, name)
                     }
                 }
             }
         }
 
-        for (l in lan) {
-            val f = File("${StaticStore.getExternalAsset(c)}lang$l$rewa")
+        for (l in Lang.Locale.values()) {
+            val f = File("${StaticStore.getExternalAsset(c)}lang/${l.code}/$rewa")
 
             if (f.exists()) {
                 val qs = VFile.getFile(f).data.readLine()
@@ -245,9 +242,9 @@ object LangLoader {
 
                         for (id in ids) {
                             when {
-                                CommonStatic.isInteger(id) -> MultiLangCont.getStatic().RWNAME.put(l.substring(1, l.length - 1), id.toInt(), name)
-                                id.startsWith("S") -> MultiLangCont.getStatic().RWSTNAME.put(l.substring(1, l.length - 1), id.replace("S", "").toInt(), name)
-                                id.startsWith("I") -> MultiLangCont.getStatic().RWSVNAME.put(l.substring(1, l.length - 1), id.replace("I", "").toInt(), name)
+                                CommonStatic.isInteger(id) -> MultiLangCont.getStatic().RWNAME.put(l, id.toInt(), name)
+                                id.startsWith("S") -> MultiLangCont.getStatic().RWSTNAME.put(l, id.replace("S", "").toInt(), name)
+                                id.startsWith("I") -> MultiLangCont.getStatic().RWSVNAME.put(l, id.replace("I", "").toInt(), name)
                             }
                         }
                     }
@@ -303,10 +300,8 @@ object LangLoader {
         val medalName = "MedalName.txt"
         val medalExp = "MedalExplanation.txt"
 
-        val lan = arrayOf("/en/", "/zh/", "/kr/", "/jp/", "/fr/", "/it/", "/es/", "/de/", "/th/")
-
-        for(l in lan) {
-            val f = File("${StaticStore.getExternalAsset(c)}lang$l$medalName")
+        for (l in Lang.Locale.values()) {
+            val f = File("${StaticStore.getExternalAsset(c)}lang/${l.code}/$medalName")
 
             if(f.exists()) {
                 val qs = VFile.getFile(f).data.readLine()
@@ -324,12 +319,12 @@ object LangLoader {
                         val id = if (idText.isBlank()) 0 else idText.toInt()
                         val name = strs[1].trim()
 
-                        StaticStore.MEDNAME.put(l.substring(1, l.length - 1), id, name)
+                        StaticStore.MEDNAME.put(l, id, name)
                     }
                 }
             }
 
-            val g = File("${StaticStore.getExternalAsset(c)}lang$l$medalExp")
+            val g = File("${StaticStore.getExternalAsset(c)}lang/${l.code}/$medalExp")
 
             if(g.exists()) {
                 val qs = VFile.getFile(g).data.readLine()
@@ -347,7 +342,7 @@ object LangLoader {
                         val id = if (idText.isBlank()) 0 else idText.toInt()
                         val name = strs[1].trim().replace("<br>", "\n")
 
-                        StaticStore.MEDEXP.put(l.substring(1, l.length - 1), id, name)
+                        StaticStore.MEDEXP.put(l, id, name)
                     }
                 }
             }

@@ -52,6 +52,7 @@ import com.mandarin.bcu.androidutil.supports.LeakCanaryManager
 import com.mandarin.bcu.androidutil.supports.SingleClick
 import com.mandarin.bcu.androidutil.supports.StageBitmapGenerator
 import common.CommonStatic
+import common.CommonStatic.Lang
 import common.battle.BasisLU
 import common.battle.BasisSet
 import common.battle.SBCtrl
@@ -185,7 +186,7 @@ class BattleSimulation : AppCompatActivity() {
                     stgName = ""
 
                 val fontMod = when(locale) {
-                    0 -> StageBitmapGenerator.FONTMODE.EN
+                    Lang.Locale.EN -> StageBitmapGenerator.FONTMODE.EN
                     else -> StageBitmapGenerator.FONTMODE.GLOBAL
                 }
 

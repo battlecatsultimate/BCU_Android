@@ -61,7 +61,7 @@ class ExRecycle(private val st: Stage, private val activity: Activity) : Recycle
     private fun handleChance() : List<String> {
         val res = ArrayList<String>()
 
-        if(st.info.exConnection()) {
+        if (st.info.hasExConnection()) {
             val info = st.info as DefStageInfo
             val min = info.exStageIDMin
             val max = info.exStageIDMax
@@ -87,7 +87,7 @@ class ExRecycle(private val st: Stage, private val activity: Activity) : Recycle
     private fun handleStage() : List<Stage> {
         val res = ArrayList<Stage>()
 
-        if(st.info.exConnection()) {
+        if (st.info.hasExConnection()) {
             val info = st.info as DefStageInfo
             val min = info.exStageIDMin
             val max = info.exStageIDMax

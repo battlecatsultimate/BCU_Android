@@ -539,13 +539,10 @@ object StaticStore {
 
         if (lan == 0) {
             language = Resources.getSystem().configuration.locales[0].language
-            CommonStatic.getConfig().lang = listOf(*lang).indexOf(language) - 1
+            CommonStatic.getConfig().lang = CommonStatic.Lang.Locale.values()[listOf(*lang).indexOf(language) - 1];
         } else {
-            CommonStatic.getConfig().lang = lan - 1
+            CommonStatic.getConfig().lang = CommonStatic.Lang.Locale.values()[lan - 1];
         }
-
-        if (CommonStatic.getConfig().lang >= CommonStatic.Lang.LOC_CODE.size || CommonStatic.getConfig().lang < 0)
-            CommonStatic.getConfig().lang = 0
     }
 
     /**

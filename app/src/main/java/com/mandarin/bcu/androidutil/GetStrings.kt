@@ -508,9 +508,9 @@ class GetStrings(private val c: Context) {
             f.du
 
         return if (frse == 0)
-            t.getFinRes(du.respawn).toString() + "f"
+            t.getFinRes(du.respawn, false).toString() + "f"
         else
-            DecimalFormat("#.##").format(t.getFinRes(du.respawn).toDouble() / 30) + "s"
+            DecimalFormat("#.##").format(t.getFinRes(du.respawn, false).toDouble() / 30) + "s"
     }
 
     fun getAtk(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
@@ -743,7 +743,7 @@ class GetStrings(private val c: Context) {
         if (em == null)
             return ""
 
-        return (em.de.drop * t.dropMulti / 100).toInt().toString()
+        return (em.de.drop * t.getDropMulti(false) / 100).toInt().toString()
     }
 
     private fun getAtks(f: Form?, t: Treasure?, talent: Boolean, lvs: Level): String {
