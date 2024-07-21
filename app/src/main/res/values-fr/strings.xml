@@ -825,6 +825,7 @@
     <string name="eff_none">Rien</string>
     <string name="max_respawn">Max Réapparition</string>
     <string name="min_respawn">Min Réapparition</string>
+    <string name="boss_guard">Boss Guard</string>
     <string name="down_need_asset">Actifs obligatoires pas trouvés</string>
     <string name="eff_heal">Guérir</string>
     <string name="anim_entry">Entrer</string>

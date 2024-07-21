@@ -825,6 +825,7 @@
     <string name="eff_none">Нет</string>
     <string name="max_respawn">Макс. Респавн</string>
     <string name="min_respawn">Мин. Респавн</string>
+    <string name="boss_guard">Boss Guard</string>
     <string name="down_need_asset">Требуемые ресурсы не найдены</string>
     <string name="eff_heal">Лечение</string>
     <string name="anim_entry">Войти</string>

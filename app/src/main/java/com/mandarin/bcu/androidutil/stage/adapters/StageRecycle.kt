@@ -86,6 +86,7 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         val loop = itemView.findViewById<TextView>(R.id.stginfoloopt)!!
         val loop1 = itemView.findViewById<TextView>(R.id.stginfoloop1t)!!
         val minres = itemView.findViewById<TextView>(R.id.stginfominrest)!!
+        val bossGuard = itemView.findViewById<TextView>(R.id.stginfoguardval);
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -329,6 +330,11 @@ class StageRecycle(private val activity: Activity, private val data: Identifier<
         }
 
         viewHolder.minres.text = toFrame(st.minSpawn, st.maxSpawn)
+
+        viewHolder.bossGuard.text = if (st.bossGuard)
+            activity.getString(R.string.stg_info_poss)
+        else
+            activity.getString(R.string.stg_info_impo)
 
         if (st.info != null) {
             if(st.info.hasExConnection() || st.info.exStages != null) {

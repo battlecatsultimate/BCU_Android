@@ -68,13 +68,9 @@ class StageInfo : AppCompatActivity() {
         }
 
         LeakCanaryManager.initCanary(shared, application)
-
         DefineItf.check(this)
-
         AContext.check()
-
         (CommonStatic.ctx as AContext).updateActivity(this)
-
         setContentView(R.layout.activity_stage_info)
 
         val bck = findViewById<FloatingActionButton>(R.id.stginfobck)
@@ -92,7 +88,6 @@ class StageInfo : AppCompatActivity() {
 
         if (extra != null) {
             val data = StaticStore.transformIdentifier<Stage>(extra.getString("Data")) ?: return
-
             custom = extra.getBoolean("custom")
             
             lifecycleScope.launch {
@@ -115,33 +110,24 @@ class StageInfo : AppCompatActivity() {
                 }
 
                 st.setText(R.string.stg_info_loadfilt)
-
                 val stage = Identifier.get(data) ?: return@launch
 
                 progress.isIndeterminate = true
-
                 stageInfoPanel.layoutManager = LinearLayoutManager(this@StageInfo)
-
                 ViewCompat.setNestedScrollingEnabled(stageInfoPanel, false)
-
                 val stageRecycle = StageRecycle(this@StageInfo, data)
-
                 stageInfoPanel.adapter = stageRecycle
 
                 battle.setOnClickListener(object : SingleClick() {
                     override fun onSingleClick(v: View?) {
                         val intent = Intent(this@StageInfo, BattlePrepare::class.java)
-
                         intent.putExtra("Data", JsonEncoder.encode(data).toString())
 
                         val manager = stageInfoPanel.layoutManager
-
                         if (manager != null) {
                             val row = manager.findViewByPosition(0)
-
                             if (row != null) {
                                 val star = row.findViewById<Spinner>(R.id.stginfostarr)
-
                                 if (star != null)
                                     intent.putExtra("selection", star.selectedItemPosition)
                             }
@@ -152,7 +138,6 @@ class StageInfo : AppCompatActivity() {
                 })
 
                 title.text = MultiLangCont.get(stage) ?: stage.names.toString()
-
                 if(title.text.isBlank())
                     title.text = getStageName(stage.id.id)
 
@@ -165,9 +150,7 @@ class StageInfo : AppCompatActivity() {
                 ViewCompat.setNestedScrollingEnabled(stageEnemyPanel, false)
 
                 val enemyListRecycle = EnemyListRecycle(this@StageInfo, stage)
-
                 stageEnemyPanel.adapter = enemyListRecycle
-
                 if(stage.data.allEnemy.isEmpty()) {
                     stageEnemyPanel.visibility = View.GONE
                 }

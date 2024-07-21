@@ -826,6 +826,7 @@
     <string name="eff_none">無</string>
     <string name="max_respawn">最多重生</string>
     <string name="min_respawn">最少重生</string>
+    <string name="boss_guard">Boss Guard</string>
     <string name="down_need_asset">無法找到必要的資料</string>
     <string name="eff_heal">治療</string>
     <string name="anim_entry">進入</string>

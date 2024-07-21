@@ -555,6 +555,40 @@
         </TableRow>
 
         <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/stginfoguard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="12dp"
+                android:text="@string/boss_guard"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/stginfoguardval"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:background="@drawable/cell_shape"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/TextPrimary"
+                android:textSize="12sp" />
+
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

@@ -825,6 +825,7 @@
     <string name="eff_none">なし</string>
     <string name="max_respawn">最大再出現</string>
     <string name="min_respawn">最小再出現</string>
+    <string name="boss_guard">Boss Guard</string>
     <string name="down_need_asset">必要なアセットが見つかりません</string>
     <string name="eff_heal">回復</string>
     <string name="anim_entry">入る</string>
